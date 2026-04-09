@@ -1,0 +1,63 @@
+{
+  "name": "paperand",
+  "owner": "chiraitori",
+  "repo": "paperand",
+  "description": "AI instruction files for paperand by chiraitori",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "expo-react-native",
+      "path": ".agent/skills/expo-react-native",
+      "github_url": "https://github.com/chiraitori/paperand/tree/main/.agent/skills/expo-react-native",
+      "description": ""
+    },
+    {
+      "name": "extensions",
+      "path": ".agent/skills/extensions",
+      "github_url": "https://github.com/chiraitori/paperand/tree/main/.agent/skills/extensions",
+      "description": ""
+    },
+    {
+      "name": "notifications",
+      "path": ".agent/skills/notifications",
+      "github_url": "https://github.com/chiraitori/paperand/tree/main/.agent/skills/notifications",
+      "description": ""
+    }
+  ],
+  "claim_url": "https://tomevault.io/claim/chiraitori",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-04-09T14:35:00Z"
+}
