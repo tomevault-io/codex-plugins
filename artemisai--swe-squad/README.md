@@ -1,0 +1,23 @@
+# SWE-Squad
+
+> Config by [ArtemisAI](https://github.com/ArtemisAI/SWE-Squad) — distributed by [TomeVault](https://tomevault.io/claim/ArtemisAI)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [ArtemisAI/SWE-Squad](https://github.com/ArtemisAI/SWE-Squad).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Browse all formats: [https://tomevault.io/claim/ArtemisAI](https://tomevault.io/claim/ArtemisAI)
+
+---
+
+Converted and distributed by [TomeVault](https://tomevault.io) — AI instruction files for every platform.
+Is this your repo? [Claim it](https://tomevault.io/claim/ArtemisAI) to manage distribution.
