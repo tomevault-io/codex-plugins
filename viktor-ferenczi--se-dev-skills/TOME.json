@@ -1,0 +1,63 @@
+{
+  "name": "se-dev-skills",
+  "owner": "viktor-ferenczi",
+  "repo": "se-dev-skills",
+  "description": "AI instruction files for se-dev-skills by viktor-ferenczi",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "se-dev-mod",
+      "path": "skills/se-dev-mod",
+      "github_url": "https://github.com/viktor-ferenczi/se-dev-skills/tree/main/skills/se-dev-mod",
+      "description": ""
+    },
+    {
+      "name": "se-dev-script",
+      "path": "skills/se-dev-script",
+      "github_url": "https://github.com/viktor-ferenczi/se-dev-skills/tree/main/skills/se-dev-script",
+      "description": ""
+    },
+    {
+      "name": "se-dev-game-code",
+      "path": "skills/se-dev-game-code",
+      "github_url": "https://github.com/viktor-ferenczi/se-dev-skills/tree/main/skills/se-dev-game-code",
+      "description": ""
+    }
+  ],
+  "claim_url": "https://tomevault.io/claim/viktor-ferenczi",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-04-09T16:03:27Z"
+}
