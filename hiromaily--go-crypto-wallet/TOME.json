@@ -1,0 +1,141 @@
+{
+  "name": "go-crypto-wallet",
+  "owner": "hiromaily",
+  "repo": "go-crypto-wallet",
+  "description": "AI instruction files for go-crypto-wallet by hiromaily",
+  "type": "tome",
+  "source_format": ".cursor/rules/*.mdc",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "bch-development",
+      "path": ".claude/skills/bch-development",
+      "github_url": "https://github.com/hiromaily/go-crypto-wallet/tree/main/.claude/skills/bch-development",
+      "description": ""
+    },
+    {
+      "name": "btc-terminology",
+      "path": ".claude/skills/btc-terminology",
+      "github_url": "https://github.com/hiromaily/go-crypto-wallet/tree/main/.claude/skills/btc-terminology",
+      "description": ""
+    },
+    {
+      "name": "db-migration",
+      "path": ".claude/skills/db-migration",
+      "github_url": "https://github.com/hiromaily/go-crypto-wallet/tree/main/.claude/skills/db-migration",
+      "description": ""
+    },
+    {
+      "name": "devops",
+      "path": ".claude/skills/devops",
+      "github_url": "https://github.com/hiromaily/go-crypto-wallet/tree/main/.claude/skills/devops",
+      "description": ""
+    },
+    {
+      "name": "docs-update",
+      "path": ".claude/skills/docs-update",
+      "github_url": "https://github.com/hiromaily/go-crypto-wallet/tree/main/.claude/skills/docs-update",
+      "description": ""
+    },
+    {
+      "name": "fix-pr-review",
+      "path": ".claude/skills/fix-pr-review",
+      "github_url": "https://github.com/hiromaily/go-crypto-wallet/tree/main/.claude/skills/fix-pr-review",
+      "description": ""
+    },
+    {
+      "name": "git-workflow",
+      "path": ".claude/skills/git-workflow",
+      "github_url": "https://github.com/hiromaily/go-crypto-wallet/tree/main/.claude/skills/git-workflow",
+      "description": ""
+    },
+    {
+      "name": "github-issue-creation",
+      "path": ".claude/skills/github-issue-creation",
+      "github_url": "https://github.com/hiromaily/go-crypto-wallet/tree/main/.claude/skills/github-issue-creation",
+      "description": ""
+    },
+    {
+      "name": "go-development",
+      "path": ".claude/skills/go-development",
+      "github_url": "https://github.com/hiromaily/go-crypto-wallet/tree/main/.claude/skills/go-development",
+      "description": ""
+    },
+    {
+      "name": "knowledge-gap",
+      "path": ".claude/skills/knowledge-gap",
+      "github_url": "https://github.com/hiromaily/go-crypto-wallet/tree/main/.claude/skills/knowledge-gap",
+      "description": ""
+    },
+    {
+      "name": "label-context-mapping",
+      "path": ".claude/skills/label-context-mapping",
+      "github_url": "https://github.com/hiromaily/go-crypto-wallet/tree/main/.claude/skills/label-context-mapping",
+      "description": ""
+    },
+    {
+      "name": "makefile-update",
+      "path": ".claude/skills/makefile-update",
+      "github_url": "https://github.com/hiromaily/go-crypto-wallet/tree/main/.claude/skills/makefile-update",
+      "description": ""
+    },
+    {
+      "name": "shell-scripts",
+      "path": ".claude/skills/shell-scripts",
+      "github_url": "https://github.com/hiromaily/go-crypto-wallet/tree/main/.claude/skills/shell-scripts",
+      "description": ""
+    },
+    {
+      "name": "solidity-development",
+      "path": ".claude/skills/solidity-development",
+      "github_url": "https://github.com/hiromaily/go-crypto-wallet/tree/main/.claude/skills/solidity-development",
+      "description": ""
+    },
+    {
+      "name": "typescript-development",
+      "path": ".claude/skills/typescript-development",
+      "github_url": "https://github.com/hiromaily/go-crypto-wallet/tree/main/.claude/skills/typescript-development",
+      "description": ""
+    },
+    {
+      "name": "wallet-cli",
+      "path": ".claude/skills/wallet-cli",
+      "github_url": "https://github.com/hiromaily/go-crypto-wallet/tree/main/.claude/skills/wallet-cli",
+      "description": ""
+    }
+  ],
+  "claim_url": "https://tomevault.io/claim/hiromaily",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-04-09T15:03:34Z"
+}
