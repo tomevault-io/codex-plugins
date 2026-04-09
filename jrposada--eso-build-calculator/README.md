@@ -1,0 +1,23 @@
+# eso-build-calculator
+
+> Config by [jrposada](https://github.com/jrposada/eso-build-calculator) — distributed by [TomeVault](https://tomevault.io/claim/jrposada)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [jrposada/eso-build-calculator](https://github.com/jrposada/eso-build-calculator).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Browse all formats: [https://tomevault.io/claim/jrposada](https://tomevault.io/claim/jrposada)
+
+---
+
+Converted and distributed by [TomeVault](https://tomevault.io) — AI instruction files for every platform.
+Is this your repo? [Claim it](https://tomevault.io/claim/jrposada) to manage distribution.
