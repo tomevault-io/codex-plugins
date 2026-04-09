@@ -1,0 +1,57 @@
+{
+  "name": "azure-bicep-github-copilot",
+  "owner": "johnlokerse",
+  "repo": "azure-bicep-github-copilot",
+  "description": "AI instruction files for azure-bicep-github-copilot by johnlokerse",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "format-bicep",
+      "path": ".github/skills/format-bicep",
+      "github_url": "https://github.com/johnlokerse/azure-bicep-github-copilot/tree/main/.github/skills/format-bicep",
+      "description": ""
+    },
+    {
+      "name": "run-bicep-in-console",
+      "path": ".github/skills/run-bicep-in-console",
+      "github_url": "https://github.com/johnlokerse/azure-bicep-github-copilot/tree/main/.github/skills/run-bicep-in-console",
+      "description": ""
+    }
+  ],
+  "claim_url": "https://tomevault.io/claim/johnlokerse",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-04-09T15:05:15Z"
+}
