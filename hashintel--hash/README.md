@@ -1,0 +1,36 @@
+# hash
+
+> Tome by [hashintel](https://github.com/hashintel/hash) — distributed by [TomeVault](https://tomevault.io/claim/hashintel)
+
+AI instruction files for hash by hashintel
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `.windsurf/rules/*.md` in [hashintel/hash](https://github.com/hashintel/hash).
+
+## Also available for
+
+- **Claude Code** — `CLAUDE.md`
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+
+Browse all formats: [https://tomevault.io/claim/hashintel](https://tomevault.io/claim/hashintel)
+
+## Bundled Skills (8)
+
+- [documenting-rust-code](https://github.com/hashintel/hash/tree/main/.claude/skills/documenting-rust-code)
+- [exploring-rust-crates](https://github.com/hashintel/hash/tree/main/.claude/skills/exploring-rust-crates)
+- [handling-rust-errors](https://github.com/hashintel/hash/tree/main/.claude/skills/handling-rust-errors)
+- [managing-git-workflow](https://github.com/hashintel/hash/tree/main/.claude/skills/managing-git-workflow)
+- [skill-creator](https://github.com/hashintel/hash/tree/main/.claude/skills/skill-creator)
+- [testing-hashql](https://github.com/hashintel/hash/tree/main/.claude/skills/testing-hashql)
+- [writing-hashql-diagnostics](https://github.com/hashintel/hash/tree/main/.claude/skills/writing-hashql-diagnostics)
+- [writing-hashql-jexpr](https://github.com/hashintel/hash/tree/main/.claude/skills/writing-hashql-jexpr)
+
+---
+
+Converted and distributed by [TomeVault](https://tomevault.io) — AI instruction files for every platform.
+Is this your repo? [Claim it](https://tomevault.io/claim/hashintel) to manage distribution.
