@@ -1,0 +1,69 @@
+{
+  "name": "livro-pog",
+  "owner": "josenaldo",
+  "repo": "livro-pog",
+  "description": "AI instruction files for livro-pog by josenaldo",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "article-research",
+      "path": ".github/skills/article-research",
+      "github_url": "https://github.com/josenaldo/livro-pog/tree/main/.github/skills/article-research",
+      "description": ""
+    },
+    {
+      "name": "article-review",
+      "path": ".github/skills/article-review",
+      "github_url": "https://github.com/josenaldo/livro-pog/tree/main/.github/skills/article-review",
+      "description": ""
+    },
+    {
+      "name": "article-structure",
+      "path": ".github/skills/article-structure",
+      "github_url": "https://github.com/josenaldo/livro-pog/tree/main/.github/skills/article-structure",
+      "description": ""
+    },
+    {
+      "name": "next-upgrade",
+      "path": ".github/skills/next-upgrade",
+      "github_url": "https://github.com/josenaldo/livro-pog/tree/main/.github/skills/next-upgrade",
+      "description": ""
+    }
+  ],
+  "claim_url": "https://tomevault.io/claim/josenaldo",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-04-09T15:05:46Z"
+}
