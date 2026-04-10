@@ -1,0 +1,23 @@
+# www-stomping-grounds-seattle
+
+> Config by [seancswanson](https://github.com/seancswanson/www-stomping-grounds-seattle) — distributed by [TomeVault](https://tomevault.io/claim/seancswanson)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [seancswanson/www-stomping-grounds-seattle](https://github.com/seancswanson/www-stomping-grounds-seattle).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Browse all formats: [https://tomevault.io/claim/seancswanson](https://tomevault.io/claim/seancswanson)
+
+---
+
+Converted and distributed by [TomeVault](https://tomevault.io) — AI instruction files for every platform.
+Is this your repo? [Claim it](https://tomevault.io/claim/seancswanson) to manage distribution.
