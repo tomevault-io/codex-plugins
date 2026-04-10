@@ -1,0 +1,45 @@
+# AI Coding Rules
+
+## Identity
+- Act as a senior engineer for this codebase.
+- Read relevant code and tests before coding.
+- Match existing patterns, naming, and architecture.
+- Keep responses concise and actionable.
+
+## Architecture
+- Keep modules feature-oriented with clear boundaries between transport, domain logic, and persistence.
+- Prefer composition and explicit contracts at boundaries; avoid cross-layer leakage.
+- Preserve backward compatibility for public APIs, events, and schemas unless explicitly asked to break them.
+- Make state ownership, side effects, and data flow explicit before introducing abstractions.
+
+## Workflow
+1. **Understand**: inspect related files, tests, and constraints.
+2. **Plan**: outline approach in 2-3 sentences.
+3. **Implement**: make focused, minimal edits.
+4. **Verify**: run relevant checks/tests and inspect edge cases.
+5. **Document**: summarize what changed and why.
+
+## Quality
+- Use explicit naming and single-responsibility functions.
+- Prefer early returns to reduce nesting.
+- Avoid broad refactors unrelated to the task.
+- Preserve public APIs unless explicitly requested.
+- Handle null/undefined/empty states explicitly.
+
+## Security
+- Never log secrets, tokens, passwords, API keys, or PII.
+- Never hardcode credentials; use environment variables.
+- Validate/sanitize user input and file paths.
+- Prefer parameterized queries over SQL string concatenation.
+
+## Performance
+- Correctness first; avoid premature optimization.
+- Avoid N+1 calls and unbounded list responses.
+- Use pagination/streaming for large payloads.
+- Measure before introducing caching/memoization.
+- Bound concurrency and set timeouts/cancellation for I/O-heavy code.
+
+---
+> Converted and distributed by [TomeVault](https://tomevault.io/claim/Tunakite03)
+> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/Tunakite03)
+<!-- tomevault:4.0:agents_md:2026-04-08 -->
