@@ -1,0 +1,23 @@
+# rental-baju
+
+> Config by [EviewNicks](https://github.com/EviewNicks/rental-baju) — distributed by [TomeVault](https://tomevault.io/claim/EviewNicks)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `.cursor/rules/*.mdc` in [EviewNicks/rental-baju](https://github.com/EviewNicks/rental-baju).
+
+## Also available for
+
+- **Claude Code** — `CLAUDE.md`
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Browse all formats: [https://tomevault.io/claim/EviewNicks](https://tomevault.io/claim/EviewNicks)
+
+---
+
+Converted and distributed by [TomeVault](https://tomevault.io) — AI instruction files for every platform.
+Is this your repo? [Claim it](https://tomevault.io/claim/EviewNicks) to manage distribution.
