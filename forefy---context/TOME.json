@@ -1,0 +1,57 @@
+{
+  "name": ".context",
+  "owner": "forefy",
+  "repo": ".context",
+  "description": "AI instruction files for .context by forefy",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "auditor-quiz",
+      "path": "skills/auditor-quiz",
+      "github_url": "https://github.com/forefy/.context/tree/main/skills/auditor-quiz",
+      "description": ""
+    },
+    {
+      "name": "infrastructure-audit",
+      "path": "skills/infrastructure-audit",
+      "github_url": "https://github.com/forefy/.context/tree/main/skills/infrastructure-audit",
+      "description": ""
+    }
+  ],
+  "claim_url": "https://tomevault.io/claim/forefy",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-04-10T03:30:59Z"
+}
