@@ -1,0 +1,23 @@
+# prompthub
+
+> Config by [hrdmtr](https://github.com/hrdmtr/prompthub) — distributed by [TomeVault](https://tomevault.io/claim/hrdmtr)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [hrdmtr/prompthub](https://github.com/hrdmtr/prompthub).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Browse all formats: [https://tomevault.io/claim/hrdmtr](https://tomevault.io/claim/hrdmtr)
+
+---
+
+Converted and distributed by [TomeVault](https://tomevault.io) — AI instruction files for every platform.
+Is this your repo? [Claim it](https://tomevault.io/claim/hrdmtr) to manage distribution.
