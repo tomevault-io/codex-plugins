@@ -1,0 +1,57 @@
+{
+  "name": "docs",
+  "owner": "langchain-ai",
+  "repo": "docs",
+  "description": "AI instruction files for docs by langchain-ai",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "langgraph-docs",
+      "path": "libs/cli/examples/skills/langgraph-docs",
+      "github_url": "https://github.com/langchain-ai/docs/tree/main/libs/cli/examples/skills/langgraph-docs",
+      "description": ""
+    },
+    {
+      "name": "langgraph-docs",
+      "path": "examples/skills/langgraph-docs",
+      "github_url": "https://github.com/langchain-ai/docs/tree/main/examples/skills/langgraph-docs",
+      "description": ""
+    }
+  ],
+  "claim_url": "https://tomevault.io/claim/langchain-ai",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-04-10T21:30:46Z"
+}
