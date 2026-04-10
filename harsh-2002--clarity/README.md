@@ -1,0 +1,23 @@
+# Clarity
+
+> Config by [Harsh-2002](https://github.com/Harsh-2002/Clarity) — distributed by [TomeVault](https://tomevault.io/claim/Harsh-2002)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [Harsh-2002/Clarity](https://github.com/Harsh-2002/Clarity).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Browse all formats: [https://tomevault.io/claim/Harsh-2002](https://tomevault.io/claim/Harsh-2002)
+
+---
+
+Converted and distributed by [TomeVault](https://tomevault.io) — AI instruction files for every platform.
+Is this your repo? [Claim it](https://tomevault.io/claim/Harsh-2002) to manage distribution.
