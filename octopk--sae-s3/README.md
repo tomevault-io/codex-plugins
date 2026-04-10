@@ -1,0 +1,23 @@
+# SAE_S3
+
+> Config by [OctoPK](https://github.com/OctoPK/SAE_S3) — distributed by [TomeVault](https://tomevault.io/claim/OctoPK)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `copilot-instructions.md` in [OctoPK/SAE_S3](https://github.com/OctoPK/SAE_S3).
+
+## Also available for
+
+- **Claude Code** — `CLAUDE.md`
+- **Codex** — `AGENTS.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Browse all formats: [https://tomevault.io/claim/OctoPK](https://tomevault.io/claim/OctoPK)
+
+---
+
+Converted and distributed by [TomeVault](https://tomevault.io) — AI instruction files for every platform.
+Is this your repo? [Claim it](https://tomevault.io/claim/OctoPK) to manage distribution.
