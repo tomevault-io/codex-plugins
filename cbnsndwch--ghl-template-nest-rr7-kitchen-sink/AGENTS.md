@@ -1,0 +1,115 @@
+# GitHub Copilot Instructions
+
+## Project Overview
+
+This is a monorepo template for building HighLevel Marketplace applications using NestJS, with modular SDK packages for the HighLevel API.
+
+## Commit Message Conventions
+
+This project uses **Conventional Commits** format for all commit messages. Do NOT use Gitmoji emojis.
+
+### Format
+
+```markdown
+<type>(<scope>): <subject>
+
+<body>
+
+<footer>
+```
+
+### Types
+
+- **feat**: A new feature
+- **fix**: A bug fix
+- **docs**: Documentation only changes
+- **style**: Changes that do not affect the meaning of the code (white-space, formatting, etc)
+- **refactor**: A code change that neither fixes a bug nor adds a feature
+- **perf**: A code change that improves performance
+- **test**: Adding missing tests or correcting existing tests
+- **build**: Changes that affect the build system or external dependencies
+- **ci**: Changes to CI configuration files and scripts
+- **chore**: Other changes that don't modify src or test files
+- **revert**: Reverts a previous commit
+
+### Scope (Optional)
+
+The scope should be the name of the package affected:
+
+- `contracts` - @cbnsndwch/ghl-app-contracts
+- `sdk` - @cbnsndwch/ghl-sdk
+- `sdk-core` - @cbnsndwch/ghl-sdk-core
+- `sdk-storage` - @cbnsndwch/ghl-sdk-storage
+- `sdk-storage-memory` - @cbnsndwch/ghl-sdk-storage-memory
+- `sdk-storage-mongodb` - @cbnsndwch/ghl-sdk-storage-mongodb
+- `sdk-webhooks` - @cbnsndwch/ghl-sdk-webhooks
+- `server` - apps/server (NestJS API)
+
+### Examples
+
+```text
+feat(sdk-core): add support for Voice AI API endpoints
+fix(sdk-webhooks): handle signature verification errors gracefully
+docs: update README with installation instructions
+build: setup changesets for package publishing
+refactor(server): simplify SSO authentication flow
+test(sdk-storage-memory): add unit tests for session storage
+```
+
+## Versioning and Publishing
+
+This project uses **Changesets** for version management and publishing.
+
+### Workflow
+
+- **develop** = development branch (version PRs created here)
+- **main** = production branch (releases published from here)
+
+### When you make changes to published packages
+
+1. Make your changes on `develop` branch
+2. Create a changeset: `pnpm changeset`
+3. Commit the changeset with your changes
+4. Push to `develop`
+5. GitHub Actions will create/update a Version PR
+6. Merge Version PR to `develop`
+7. Merge `develop` → `main` to trigger release
+
+### Changeset Messages
+
+Write developer-focused summaries that will appear in CHANGELOGs:
+
+- Explain WHAT changed
+- Explain WHY (if not obvious)
+- Include code examples for API changes
+- Note breaking changes clearly
+
+See `docs/RELEASE_PROCESS.md` for detailed release workflow.
+
+## Code Style
+
+- **TypeScript**: Strict mode enabled
+- **ESM-only**: Use `import`/`export`, not `require()`
+- **Formatting**: Prettier (run `pnpm format`)
+- **Linting**: oxlint with TypeScript (run `pnpm lint`)
+
+## Development Workflow
+
+1. Make changes to code
+2. Run `pnpm lint` to check for issues
+3. Create a changeset if modifying published packages
+4. Commit using conventional commit format
+5. Push and create PR
+
+## Package Publishing Strategy
+
+- Libraries in `libs/*` are published to npm as public packages
+- The CLI app (`apps/cli`) is published to npm as a public package
+- The server app (`apps/server`) is not published
+- Use semantic versioning: MAJOR.MINOR.PATCH
+- All packages should maintain CHANGELOG.md via changesets
+
+---
+> Converted and distributed by [TomeVault](https://tomevault.io/claim/cbnsndwch)
+> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/cbnsndwch)
+<!-- tomevault:4.0:agents_md:2026-04-07 -->
