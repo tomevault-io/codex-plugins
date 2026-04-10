@@ -1,0 +1,23 @@
+# useful-scripts
+
+> Config by [0xeb](https://github.com/0xeb/useful-scripts) — distributed by [TomeVault](https://tomevault.io/claim/0xeb)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [0xeb/useful-scripts](https://github.com/0xeb/useful-scripts).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Browse all formats: [https://tomevault.io/claim/0xeb](https://tomevault.io/claim/0xeb)
+
+---
+
+Converted and distributed by [TomeVault](https://tomevault.io) — AI instruction files for every platform.
+Is this your repo? [Claim it](https://tomevault.io/claim/0xeb) to manage distribution.
