@@ -1,0 +1,19 @@
+# Copilot Instructions for NeonGambit
+
+- **App shape**: React 18 + TypeScript SPA with React Router, Zustand stores, Tailwind styling. Main shell in [src/App.tsx](src/App.tsx) sets protected vs public routes, theme toggle, and the play dropdown. Entry point at [src/main.tsx](src/main.tsx).
+- **State stores**: Auth + theme persisted via Zustand `persist` (storage keys `auth-storage`, `theme-storage`). Auth store and API helpers live in [src/store/authStore.ts](src/store/authStore.ts); theme in [src/store/themeStore.ts](src/store/themeStore.ts). Chess session state (timers, FEN, preferences) is centralized in [src/store/chessStore.ts](src/store/chessStore.ts); prefer updating through its setters instead of local component state.
+- **Auth flow**: Cookie-based session against the Express API (`/api/login`, `/api/register`, `/api/me`, `/api/logout`). `AuthChecker` in [src/App.tsx](src/App.tsx) calls `authApi.getMe()` on load; protected routes redirect unauthenticated users to `/login`. When adding network calls, use `credentials: "include"` like existing helpers.
+- **Backend**: Express + Mongo in [server/index.js](server/index.js). Requires `.env` at repo root with `MONGODB_URL`. Start with `cd server && npm install && npm run dev`. CORS allows `http://localhost:5173`. Game history stored in `History` model; fields match [src/historyTypes.ts](src/historyTypes.ts) for replay screens.
+- **Frontend dev**: From repo root run `npm install` then `npm run dev -- --host localhost --port 5173` (see startText). Build via `npm run build`; preview with `npm run preview`.
+- **Chess play loop**: Core helpers in [src/chess/useChessGame.ts](src/chess/useChessGame.ts) (move validation, highlights, FEN, history) and [src/chess/usePreMove.ts](src/chess/usePreMove.ts) (premove state + teal highlight styles). Stockfish wrapper uses a web worker in [src/chess/StockfishEngine.ts](src/chess/StockfishEngine.ts) targeting [public/stockfish.js](public/stockfish.js); choose play style/skill via `setPlayStyle`/`setSkillLevel`.
+- **Replay system**: [src/hooks/useGameReplay.ts](src/hooks/useGameReplay.ts) rebuilds positions from `GameHistory` (moves array preferred; PGN fallback), computes captured lists and move rows, supports autoplay, board flip, and PGN download. If no analysis is stored, it spins up the stockfish worker to compute evaluations client-side. UI components live under [src/components/replay](src/components/replay).
+- **Data seeds**: Time controls, puzzles, courses, live matches in [src/data/mockData.ts](src/data/mockData.ts). Dashboard and dropdowns read from `timeFormats`; defaults to Rapid in `App`.
+- **Routing/layout conventions**: Sidebar is global except pages with their own layout (`/watch`, `/community`, `/settings`, `/login`, `/register`, `/replay/:id`). Play dropdown hidden on `/play`. Protected routes wrap most pages; public wrapper redirects logged-in users away from auth pages.
+- **Styling**: Tailwind everywhere; dark mode toggled by adding `dark` class to `document.documentElement` via `useThemeStore`. Avoid inline CSS except chessboard highlight styles already centralized in chess hooks.
+- **Environment**: Frontend reads `VITE_API_URL` (fallback `http://localhost:3001`) for API calls. Ensure stockfish worker remains in `public/stockfish.js` so `new Worker("/stockfish.js")` resolves.
+- **When extending**: Prefer adding chess-related state to `chessStore` to keep timers/FEN/moves in sync. For new API endpoints mirror schema in [src/historyTypes.ts](src/historyTypes.ts) and update server CORS/paths accordingly. Keep route guards aligned with auth store flags (`isAuthenticated`, `isLoading`).
+
+---
+> Converted and distributed by [TomeVault](https://tomevault.io/claim/bilguunbekyu-cell)
+> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/bilguunbekyu-cell)
+<!-- tomevault:4.0:agents_md:2026-04-08 -->
