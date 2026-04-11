@@ -4,7 +4,7 @@
   "repo": "respaldo",
   "description": "",
   "type": "config",
-  "source_format": "CLAUDE.md",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "claim_url": "https://tomevault.io/claim/alecscodes",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-09T17:10:49Z"
+  "distributed_at": "2026-04-11T20:36:47Z"
 }
