@@ -1,0 +1,73 @@
+# SIDFlow Copilot Guardrails
+
+## Agent quickstart
+- Read `AGENTS.md` at the repo root for repo-wide agent behavior, ExecPlan usage, and multi-hour workflow expectations.
+- Read `PLANS.md` and follow it for any multi-step work.
+- For Cursor users: also honor `.cursorrules` at the repo root; it mirrors these guardrails and points to the same execution plan.
+- For short Q&A or trivial code snippets, you may answer directly, but prefer making concrete edits and running fast checks when feasible.
+
+## Agent autonomy and execution plans
+- This repository opts into persistent, autonomous agents. When you begin any non-trivial task, first load and follow the central execution plan in `PLANS.md` at the repo root. Treat it as the single source of truth for plan-then-act, progress logging, quality gates, and verification.
+- Do not stop early. Continue working until the user’s request is fully satisfied or you are genuinely blocked by missing credentials or external access. Prefer research and reasonable assumptions over asking for clarification; document assumptions you make in your plan’s Decision Log.
+- Keep going across long sessions. Use the plan’s Progress, Surprises & Discoveries, Decision Log, and Outcomes sections to maintain continuity over hours of work. Always update these sections as you proceed.
+- Always run quick validation after substantive edits (Build, Lint/Typecheck, Tests). Record PASS/FAIL and errors encountered in the plan’s Progress section and iterate up to three targeted fixes before surfacing a summary to the user.
+- Prefer minimal, additive edits; keep public APIs stable unless the task requires changes. Preserve repository coding conventions and shared utilities as defined below.
+
+## Architecture & Data Flow
+- SIDFlow is a CLI-first pipeline: fetch SID collections (currently HVSC via `@sidflow/fetch`), classify audio (`@sidflow/classify`), train ML (`@sidflow/train`), and play/recommend (`@sidflow/play`); each stage reads/writes `data/` JSONL and relies on `.sidflow.json` paths.
+- The project is designed to work with any locally available SID file collection, not just HVSC. While the fetch feature currently focuses on HVSC, the classification, training, playback, and browsing features work with any SID files in the configured collection path.
+- Classification splits into WAV cache rendering, heuristic feature extraction (`heuristicFeatureExtractor`), auto-tag generation, and JSONL emission; reuse the planner in `packages/sidflow-classify/src/index.ts`.
+- Training consumes `data/classified` and `data/feedback` JSONL, merges explicit/implicit samples, and persists LanceDB-ready artifacts under `data/model`; respect feedback weights defined in `@sidflow/train`.
+- Scripts in `scripts/` are thin wrappers invoking the package CLIs; treat them as the contract for end-to-end flows and keep CLI UX stable.
+
+## Shared Libraries & Conventions
+- Keep shared utilities in `@sidflow/common` (config loader, deterministic JSON, logger, retry, LanceDB builder) and import rather than reimplementing.
+- Always load configuration through `loadConfig` and honor `--config` overrides; cache resets via `resetConfigCache` in long-running tools.
+- Serialize JSON with `stringifyDeterministic` to avoid diff churn and normalize nested structures before writing.
+- Use `fs/promises` helpers like `ensureDir`/`pathExists` from `common/fs.ts`; extend these utilities instead of mixing sync APIs.
+
+## CLI Patterns
+- Follow the CLI structure: parse args in `cli.ts`, call a `plan*` function to validate inputs, then run pure helpers that accept explicit dependencies (see `runClassifyCli` and `runFetchCli`).
+- Provide progress reporting via callbacks with throttling (`createProgressLogger` in classify CLI) to keep TTY output smooth.
+- Archive extraction relies on bundled `7zip-min` helpers that should be injected via shared utilities.
+
+## Data & Persistence
+- `.sidflow.json` defines `sidPath` (the path to the local SID collection, regardless of source), `audioCachePath`, `tagsPath`, optional `classifiedPath`; default to config values but accept explicit paths when provided by callers.
+- Classification writes metadata and tags using `resolve*` helpers and stores WAV hashes in sidecar `.hash` files—preserve this caching scheme.
+- Feedback logs (via `@sidflow/common`) are date-partitioned under `data/feedback/<year>/<month>/<day>/events.jsonl`; consumers must tolerate missing folders and skip corrupt lines with warnings, not hard failures.
+- Store derived artifacts (manifest, LanceDB) with deterministic checksums using `generateManifest` in `common/lancedb-builder.ts`.
+
+## Tooling & Dependencies
+- Bun is the runtime: install deps with `bun install`; build with `bun run build`; execute tests and CLIs through `bun run ...`.
+- LanceDB (`vectordb`) powers similarity search; ensure builds call `buildDatabase` before generating manifests.
+- Archive extraction uses the `7zip-min` npm dependency bundled with the workspace.
+
+## Testing & Quality Gates
+
+### Coverage
+- `bun run test` runs with coverage enabled (see the root `package.json` script for flags/excludes).
+- Avoid hard-coding “current coverage %” or other time-sensitive baselines in docs; if you need to discuss coverage, describe the mechanism and where CI reports it (Codecov / CI output).
+
+### Required commands (local and CI-aligned)
+- **Build / typecheck**: `bun run build` (runs workspace install, upstream WASM check, then `tsc -b`)
+- **Unit tests (+ coverage)**: `bun run test` (runs build first)
+- **E2E**: `bun run test:e2e` (runs build first, then Playwright from `packages/sidflow-web`)
+- **Config validation**: `bun run validate:config`
+
+### Playwright setup
+- If browsers are missing, run `bun run setup:tests` (installs deps + ensures Playwright browser availability).
+
+### Stability expectations
+- Keep tests deterministic: avoid `waitForTimeout` in Playwright; prefer specific waits/selectors and explicit `data-testid` attributes where needed.
+- Follow the stricter “3× consecutive green runs” rules in `AGENTS.md` for any work that changes behavior or tests.
+
+## Coding Practices
+- Stick to strict TypeScript (`tsconfig.base.json`); avoid `any`, keep types explicit, and expose pure helpers for unit testing.
+- Compose functionality from small functions; use concise comments only to explain non-obvious steps (e.g., cache heuristics).
+- Use shared error types like `SidflowConfigError` for config issues and preserve informative messaging when wrapping errors.
+- Never duplicate logging/serialization patterns; extend `@sidflow/common` if a new cross-cutting helper is required.
+
+---
+> Converted and distributed by [TomeVault](https://tomevault.io/claim/chrisgleissner)
+> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/chrisgleissner)
+<!-- tomevault:4.0:agents_md:2026-04-08 -->
