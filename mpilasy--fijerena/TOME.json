@@ -4,7 +4,7 @@
   "repo": "fijerena",
   "description": "",
   "type": "config",
-  "source_format": "GEMINI.md",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "claim_url": "https://tomevault.io/claim/mpilasy",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-10T01:58:36Z"
+  "distributed_at": "2026-04-11T21:37:11Z"
 }
