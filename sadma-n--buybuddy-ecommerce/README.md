@@ -1,0 +1,23 @@
+# BuyBuddy-Ecommerce
+
+> Config by [SADMA-N](https://github.com/SADMA-N/BuyBuddy-Ecommerce) — distributed by [TomeVault](https://tomevault.io/claim/SADMA-N)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `GEMINI.md` in [SADMA-N/BuyBuddy-Ecommerce](https://github.com/SADMA-N/BuyBuddy-Ecommerce).
+
+## Also available for
+
+- **Claude Code** — `CLAUDE.md`
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Windsurf** — `project-config.md`
+
+Browse all formats: [https://tomevault.io/claim/SADMA-N](https://tomevault.io/claim/SADMA-N)
+
+---
+
+Converted and distributed by [TomeVault](https://tomevault.io) — AI instruction files for every platform.
+Is this your repo? [Claim it](https://tomevault.io/claim/SADMA-N) to manage distribution.
