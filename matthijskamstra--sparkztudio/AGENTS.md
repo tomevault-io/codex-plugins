@@ -1,0 +1,330 @@
+# GitLab Copilot Integratie
+
+Richtlijnen voor GitLab AI Copilot en CI/CD workflows voor Spark Studio.
+
+## 🤖 AI Copilot Prompting
+
+### Goede Prompts voor dit Project
+
+#### 1. Feature Requests
+
+```markdown
+Voeg [feature] toe aan Spark Studio.
+
+Context:
+
+- This is a web-based Flash-like animation tool
+- Uses SVG for shapes and Canvas for rendering
+- Model class is singleton pattern
+- Animation interpolation via Inter class
+
+Requirements:
+
+- Must work with existing ProjectVars structure
+- Should follow class naming patterns (PascalCase)
+- LocalStorage persistence required
+- Add to appropriate module (timeline.js, properties.js, etc)
+```
+
+#### 2. Bug Fixes
+
+```markdown
+Fix bug: [problem description]
+
+Relevant files:
+
+- [file 1]
+- [file 2]
+
+Expected behavior: [what should happen]
+Current behavior: [what happens instead]
+
+Stack trace/logs:
+[paste debug output]
+```
+
+#### 3. Refactoring
+
+```markdown
+Refactor [module/function] for [goal: performance/readability/etc]
+
+Current implementation:
+
+- [briefly describe]
+- Performance issue: [specific metric]
+
+Constraints:
+
+- Must maintain singleton pattern
+- Must not break existing API
+- Must preserve DOM element IDs
+```
+
+### Slechte Prompts (Voorkomen!)
+
+❌ "Fix everything"
+❌ "Make it better"
+❌ "Add Flash features" (too vague)
+❌ Lange code snippets zonder context
+
+✅ Specifieke, focus-gebiedprobleemstellingen met context
+
+## 📊 GitLab CI/CD Pipeline
+
+### Node Build & Minify
+
+Spark Studio bewaart `node/` voor build tools:
+
+```
+node/
+├── minify.js      # Terser minification
+├── export.js      # SVG export generator
+└── package.json   # Dependencies: svgo, terser
+```
+
+### Voorgestelde .gitlab-ci.yml
+
+```yaml
+stages:
+  - test
+  - build
+  - deploy
+
+test:
+  stage: test
+  script:
+    - npm --prefix node install
+    - npm --prefix node test
+  only:
+    - merge_requests
+
+minify:
+  stage: build
+  script:
+    - npm --prefix node install
+    - node node/minify.js
+  artifacts:
+    paths:
+      - js/**/*.min.js
+    expire_in: 1 week
+  only:
+    - main
+    - develop
+
+pages:
+  stage: deploy
+  script:
+    - mkdir -p public
+    - cp -r index.html css js images examples public/
+    - cp public/index.html public/404.html
+  artifacts:
+    paths:
+      - public
+  only:
+    - main
+```
+
+## 🔀 Branch Strategy
+
+```
+main
+├── develop          # Integration branch
+│   ├── feature/keyframe-system
+│   ├── feature/layer-management
+│   ├── feature/property-panel
+│   └── bugfix/timeline-sync
+```
+
+## 📝 Commit Message Convention
+
+```
+[type]([scope]): [subject]
+
+[body]
+[footer]
+```
+
+### Types
+
+- `feat`: Nieuw feature
+- `fix`: Bug fix
+- `refactor`: Code restructuring
+- `perf`: Performance improvement
+- `test`: Test toe voegen
+- `docs`: Documentation
+- `style`: Formatting (geen logic change)
+
+### Scopes
+
+`model`, `canvas`, `timeline`, `export`, `properties`, `menu`, `shortcuts`, `layout`
+
+### Voorbeelden
+
+```
+feat(timeline): implement keyframe markers in UI
+fix(inter): correct color interpolation for hex values
+refactor(canvas): extract SVG rendering to separate module
+perf(export): add virtual scrolling for large frame counts
+docs(claude): update architecture section
+```
+
+## 🐛 Issue Templates
+
+### Feature Request Template
+
+```markdown
+## 🎯 Feature Request
+
+### Title
+
+[Clear, one-line description]
+
+### Description
+
+[Why this feature is needed]
+
+### Acceptance Criteria
+
+- [ ] Criterion 1
+- [ ] Criterion 2
+- [ ] Works with existing ProjectVars
+
+### Related Files
+
+- js/[module].js
+- index.html (if UI changes)
+
+### Priority
+
+- [ ] Critical (blocks other work)
+- [ ] High (needed for core workflow)
+- [ ] Medium (nice to have)
+- [ ] Low (polish)
+```
+
+### Bug Report Template
+
+````markdown
+## 🐛 Bug Report
+
+### Summary
+
+[One-line description]
+
+### Steps to Reproduce
+
+1. ...
+2. ...
+3. ...
+
+### Expected vs Actual
+
+- Expected: [what should happen]
+- Actual: [what happens instead]
+
+### Environment
+
+- Browser: [Chrome/Firefox/Safari/Edge]
+- OS: [macOS/Windows/Linux]
+
+### Logs
+
+```javascript
+[Console output/stack trace]
+```
+````
+
+### Related Files
+
+- [File1].js
+- [File2].js
+
+## 🚀 Release Checklist
+
+Voor releases naar main (GitHub Pages):
+
+- [ ] Alle features in CLAUDE.md en TODO.md zijn getest
+- [ ] Minify run: `npm --prefix node run minify` werkt
+- [ ] Geen console.errors (alleen IS_DEBUG console.logs)
+- [ ] LocalStorage tests uitvoerd
+- [ ] Video export werkt in Chrome/Firefox
+- [ ] SVG import/export roundtrip werkt
+- [ ] README.md is bijgewerkt met nieuwe features
+- [ ] Version bumped in `js/globals.js`
+- [ ] CHANGELOG.md entry toegevoegd
+
+## 📚 Version Control Best Practices
+
+### Wat WEL committen
+
+- Source code (JavaScript, HTML, CSS)
+- CLAUDE.md, README.md, TODO.md documentatie
+- Examples in `examples/` folder
+- Design docs in `design/`
+
+### Wat NIET committen
+
+- `node_modules/` (use .gitignore)
+- `.vscode/settings.json` (personal)
+- `*.min.js` (generated by build)
+- Local project files (temporary saves)
+
+### Huidge .gitignore checken
+
+```
+
+node_modules/
+\*.min.js
+.DS_Store
+.vscode/settings.json
+
+```
+
+## 🔍 Code Review Checklist
+
+Voordat merge naar develop/main:
+
+- [ ] Volgt naming conventions
+- [ ] Geen duplicate code (DRY principle)
+- [ ] IS_DEBUG mode proper staat afgesteld
+- [ ] LocalStorage calls zijn aanwezig (if state changes)
+- [ ] Geen console errors in production
+- [ ] Works in meerdere browsers (Chrome, Firefox)
+- [ ] Performance voor 100+ frames is acceptable
+- [ ] Documentation/comments toegevoegd
+
+## 🎓 Copilot Coaching
+
+### Wat AI goed kan doen voor Spark Studio
+
+✅ Boilerplate code genereren (getters/setters, event listeners)
+✅ Bug fixes aanbieden (met tests)
+✅ Refactoring suggestions
+✅ SVG/Canvas API vragen beantwoorden
+✅ Documentation schrijven
+✅ Test cases genereren
+
+### Waar AI voorzichtig mee moet zijn
+
+⚠️ Architectural decisions (zelf bepalen)
+⚠️ Feature scope (kan overambitious zijn)
+⚠️ Performance claims (testen!)
+⚠️ Cross-browser compatibility (varies!)
+⚠️ Singleton pattern (kan niet altijd toepassen)
+
+### Prompts die goed werken
+
+1. "Genereer unit tests voor TimelineClass met Jest"
+2. "Refactor deze function voor readability, keep same API"
+3. "Explain hoe SVG Canvas rendering werkt in inter.js"
+4. "Generate a ColorConverter test for rgb/hex conversion"
+5. "Add TypeScript types voor ProjectVars interface"
+
+---
+
+**Bijgewerkt**: 3 Maart 2026
+
+---
+> Converted and distributed by [TomeVault](https://tomevault.io/claim/MatthijsKamstra)
+> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/MatthijsKamstra)
+<!-- tomevault:4.0:agents_md:2026-04-08 -->
