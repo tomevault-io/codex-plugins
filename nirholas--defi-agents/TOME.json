@@ -4,7 +4,7 @@
   "repo": "defi-agents",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "GEMINI.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "claim_url": "https://tomevault.io/claim/nirholas",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-10T03:08:07Z"
+  "distributed_at": "2026-04-11T12:39:01Z"
 }
