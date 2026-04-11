@@ -1,0 +1,20 @@
+# Copilot Instructions for dtails
+
+- **Architecture**: Vite + React 18 (HashRouter) frontend in root; Express 4 + PostgreSQL backend in `server/` with routers `routes/blogs.js` and `routes/case-studies.js`. No global state manager; pages fetch data directly. Frontend is a pure UI layer that only communicates with backend via HTTP APIs - NO direct Supabase client usage.
+- **Local dev**: `npm install` then `npm run dev` (frontend). Backend: `cd server && npm install && npm start` (listens on `PORT` or `10000`). Frontend expects an API base URL; default is Render deployment via `VITE_BACKEND_URL` fallback to `https://dtales-backend.onrender.com` in `src/lib/api.ts`.
+- **Env vars**: Frontend reads `VITE_BACKEND_URL` (only environment variable for backend API URL); all API calls use the helpers in `src/lib/api.ts` (`apiFetch`, `apiPost`, `apiPut`, `apiDelete`) and `src/lib/uploads.ts` (`uploadImage`, `uploadDocx`). Backend needs `DATABASE_URL` (Postgres) and optional `FRONTEND_URL` for CORS; `NODE_ENV=production` enables SSL.
+- **Backend endpoints**: Mounted under `/api`. Blogs: `GET /blogs` (all), `GET /blogs/public`, `GET /blogs/:id`, `POST /blogs`, `PUT /blogs/:id`, `DELETE /blogs/:id`. Case studies: `GET /case-studies`, `GET /case-studies/:id`, `POST /case-studies`, `PUT /case-studies/:id`, `DELETE /case-studies/:id`. Payloads persist JSON `content` objects that usually contain `html`.
+- **DB expectations**: Tables `blogs` and `case_studies` with columns matching router queries (`title`, `slug`, `client`, `content` JSON, `cover_image_url`, `published`, timestamps). Updates set `updated_at = NOW()`; delete responses return 204.
+- **Frontend data fetching**: Prefer the typed helpers in `src/lib/api.ts` (`apiFetch`, `apiPost`, `apiPut`, `apiDelete`) that apply the base URL and JSON headers. Current pages `Blogs`, `BlogDetails`, and `CaseStudies` already use `apiFetch`; admin pages (`AdminBlogEditor`, `AdminBlogsManage`) still call `fetch` with hardcoded URLs—update to the helpers when touching them.
+- **Routing/auth**: App uses `HashRouter`. Protected routes wrap admin pages with `ProtectedRoute`, which checks `sessionStorage.isAdminLoggedIn === 'true'`. Login is entirely client-side with the hardcoded credentials in `pages/Login.tsx`; successful login sets the sessionStorage flag. Logout in `AdminDashboard` clears that flag.
+- **Editor/publishing flow**: `AdminBlogEditor` uses TipTap (`@tiptap/react` with StarterKit, Image, Link, Underline). It stores rich text via `editor.getHTML()` into `content: { html }`; keep this shape consistent so public pages rendering with `dangerouslySetInnerHTML` stay safe and predictable.
+- **Styling**: Tailwind utility classes are applied inline; theming uses custom colors (e.g., `bg-[#0020BF]`, gradients). Keep new components consistent with this approach; there is no global Tailwind config shown, so follow existing class patterns.
+- **API errors/loading UX**: Public pages display simple loading/error states; follow that pattern (set `loading`, `error`, render messages) and keep gradients/backgrounds consistent.
+- **Security notes**: No server-side auth; do not introduce sensitive secrets client-side. Backend CORS allows `FRONTEND_URL` or `*`; if changing, ensure frontend base URL matches.
+- **Testing**: No automated tests present. When adding code, rely on manual flows: `npm run dev` for frontend, `npm start` in `server/` for API.
+- **Files to reference**: API helpers `src/lib/api.ts`; routing and guards `App.tsx`; public data usage `pages/Blogs.tsx`, `pages/BlogDetails.tsx`, `pages/CaseStudies.tsx`; admin flows `pages/AdminBlogEditor.tsx`, `pages/AdminBlogsManage.tsx`, `pages/Login.tsx`; backend entry `server/index.js` and routes under `server/routes/`.
+
+---
+> Converted and distributed by [TomeVault](https://tomevault.io/claim/bindum-dtales)
+> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/bindum-dtales)
+<!-- tomevault:4.0:agents_md:2026-04-08 -->
