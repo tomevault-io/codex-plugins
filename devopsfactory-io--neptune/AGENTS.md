@@ -1,0 +1,13 @@
+
+# Documentation and AI Context
+
+After making changes to code, config, or CI:
+
+1. **Delegate**: Delegate documentation updates to the **documentation-maintainer** subagent so it can run the full maintain-documentation checklist (README, docs/, examples/, AGENTS.md, .cursor/rules, .cursor/commands, .cursor/skills).
+2. **Do not edit plan files** (e.g. `neptune_go_rewrite*.plan.md`, `ai_agent_config*.plan.md`) unless the user explicitly asks.
+
+The **documentation-maintainer** subagent (`.cursor/agents/documentation-maintainer.md`) embodies the project skill **maintain-documentation** (`.cursor/skills/maintain-documentation/`); use the subagent for the full checklist and when to update each artifact.
+
+---
+> Converted and distributed by [TomeVault](https://tomevault.io/claim/devopsfactory-io) — claim your Tome and manage your conversions.
+<!-- tomevault:4.0:agents_md:2026-04-10 -->
