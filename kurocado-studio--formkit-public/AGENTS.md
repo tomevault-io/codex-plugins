@@ -1,0 +1,8 @@
+- Use Vercel's KV database to store and retrieve session data.
+- Utilize `kv.set`, `kv.get`, and `kv.delete` to manage data.
+- Ensure the database operations are asynchronous to avoid blocking server-side rendering (SSR).
+
+---
+> Converted and distributed by [TomeVault](https://tomevault.io/claim/Kurocado-Studio)
+> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/Kurocado-Studio)
+<!-- tomevault:4.0:agents_md:2026-04-08 -->
