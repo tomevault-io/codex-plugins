@@ -1,0 +1,37 @@
+
+# Use Base Development Rules
+
+All AI agents working on this project must follow the comprehensive development rules and guidelines defined in:
+
+**[ai_specs_mc/specs/base-standards.mdc](../ai_specs_mc/specs/base-standards.mdc)**
+
+## Key Directive
+
+- **Single Source of Truth**: All development rules, coding standards, testing practices, and workflow requirements are maintained in `base-standards.mdc`
+- **No Rule Duplication**: Do not reference or follow other rule files - `base-standards.mdc` contains the complete and authoritative rule set
+- **Always Current**: `base-standards.mdc` is the actively maintained configuration - other rule files may be outdated
+
+## What's Included in base-standards.mdc
+
+- **Core Principles**: Small tasks one at a time, Test-Driven Development (TDD), type safety, clear naming, incremental changes
+- **Language Standards**: English-only requirement for all technical artifacts
+- **Specific Standards**: Links to detailed standards for:
+  - Backend development (API, database patterns, testing, security)
+  - Frontend development (React components, UI/UX guidelines)
+  - Documentation (structure, formatting, maintenance)
+
+## Compliance
+
+Before starting any development work, agents must:
+1. Read and understand all rules in `base-standards.mdc`
+2. Follow the TDD process and core principles defined there
+3. Use the specified tools, testing frameworks, and standards
+4. Maintain the required code quality and type safety standards
+5. Refer to specific standards documents (backend, frontend, documentation) for detailed guidelines
+
+**Remember**: `base-standards.mdc` is the complete development rulebook for this project.
+
+---
+> Converted and distributed by [TomeVault](https://tomevault.io/claim/lsilva5455)
+> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/lsilva5455)
+<!-- tomevault:4.0:agents_md:2026-04-08 -->
