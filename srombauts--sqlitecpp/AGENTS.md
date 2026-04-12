@@ -1,0 +1,34 @@
+
+# MANDATORY: Read Custom Instructions Before Coding
+
+**CRITICAL REQUIREMENT**: Before performing ANY coding task (writing code, reviewing code, suggesting changes, answering code questions, or modifying files), you MUST first read the file `.github/copilot-instructions.md` using the Read tool.
+
+This is NON-NEGOTIABLE. Do not skip this step. Do not assume you know the contents. Always read the file fresh.
+
+## Why This Matters
+
+The `copilot-instructions.md` file contains project-specific coding standards that MUST be followed:
+
+- **RAII principles** - Acquire in constructors, release in destructors
+- **Exception rules** - NEVER throw in destructors, use `SQLITECPP_ASSERT()` instead
+- **C++ version constraints** - C++11 only in core library
+- **Naming conventions** - `m` prefix for members, `a` prefix for arguments, etc.
+- **Code style** - 4 spaces, Allman braces, 120 char max, `#pragma once`
+- **Documentation** - Doxygen with `@brief`, `@param`, `@return`, `@throw`
+- **Testing requirements** - Tests required for new functionality
+- **Build commands** - CMake and Meson instructions
+
+## Required Action
+
+```
+Read the file: .github/copilot-instructions.md
+```
+
+Execute this read operation BEFORE responding to any coding request. This ensures you have the current, complete coding guidelines for this SQLiteCpp project.
+
+If you cannot read the file for any reason, inform the user immediately.
+
+---
+> Converted and distributed by [TomeVault](https://tomevault.io/claim/SRombauts)
+> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/SRombauts)
+<!-- tomevault:4.0:agents_md:2026-04-08 -->
