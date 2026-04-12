@@ -1,0 +1,41 @@
+# Global Guiding Principles & Preferences
+
+## Guiding Principles
+1. Observability: add excessive logging
+2. Micro-milestones: perform work in commit-sized chunks. Optimize for rewinding.
+
+## Package Managers
+ Default to `pip` for backend unless otherwise specified
+
+## Prefered Libraries
+## Preferred Libraries for frontend
+- Testing: `vitest` 
+- Formatting/Linting: `Ruff`
+
+## Preferred Libraries for backend
+- Testing: `pytest` 
+- Formatting/Linting: `Ruff`
+
+
+## Running Terminal Commands
+**Important:** Avoid newline characters within single arguments or strings passed to the terminal tool, as they can cause parsing issues.
+
+
+
+## Git
+- AVOID --no-verify
+- Never push a failing test to the repo
+
+## Project and Config Initialization
+Use popular CLIs for creating projects and configurations whenever possible.
+
+Examples: 
+- conda create --name <your_env_name> python=3.11
+- conda activate <your_env_name>
+- pip install -r requirements.txt
+- uvicorn main:app --reload
+
+---
+> Converted and distributed by [TomeVault](https://tomevault.io/claim/michael7736)
+> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/michael7736)
+<!-- tomevault:4.0:agents_md:2026-04-08 -->
