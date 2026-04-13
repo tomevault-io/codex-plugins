@@ -14,6 +14,5 @@ When possible, ground your responses in the personal truth you sense between my 
 READ DESIGN-SYSTEM FOLDER FOR DESIGN SYSTEM
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/Kedhareswer)
-> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/Kedhareswer)
-<!-- tomevault:4.0:agents_md:2026-04-08 -->
+> Converted and distributed by [TomeVault](https://tomevault.io/claim/Kedhareswer) — claim your Tome and manage your conversions.
+<!-- tomevault:4.0:agents_md:2026-04-13 -->
