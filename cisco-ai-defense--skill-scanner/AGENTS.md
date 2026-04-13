@@ -39,6 +39,5 @@ Warning Signs in Your Code:
 You must always explain how this rule was applied and why it was applied.
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/cisco-ai-defense)
-> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/cisco-ai-defense)
-<!-- tomevault:4.0:agents_md:2026-04-09 -->
+> Converted and distributed by [TomeVault](https://tomevault.io/claim/cisco-ai-defense) — claim your Tome and manage your conversions.
+<!-- tomevault:4.0:agents_md:2026-04-13 -->
