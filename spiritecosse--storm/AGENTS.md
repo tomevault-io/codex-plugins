@@ -212,6 +212,5 @@ auto user = conn.execute(q)
 Storm is designed as an **exception-free**, **reflection-driven**, **monadic ORM** for C++26. It favors compile-time validation, functional composition, and explicit error handling over exceptions. By **avoiding virtual functions**, leveraging **modules**, **ranges**, **generators**, **meta reflection**, and **monadic patterns**, Storm provides both **safety** and **performance** while staying highly **extensible** across different database backends.
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/spiritEcosse)
-> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/spiritEcosse)
-<!-- tomevault:4.0:agents_md:2026-04-08 -->
+> Converted and distributed by [TomeVault](https://tomevault.io/claim/spiritEcosse) — claim your Tome and manage your conversions.
+<!-- tomevault:4.0:agents_md:2026-04-13 -->
