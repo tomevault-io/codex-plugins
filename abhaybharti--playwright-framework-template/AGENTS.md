@@ -156,6 +156,5 @@ typescript
 -   Deviating from the specified POM structure and locator strategies.
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/abhaybharti)
-> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/abhaybharti)
-<!-- tomevault:4.0:agents_md:2026-04-08 -->
+> Converted and distributed by [TomeVault](https://tomevault.io/claim/abhaybharti) — claim your Tome and manage your conversions.
+<!-- tomevault:4.0:agents_md:2026-04-13 -->
