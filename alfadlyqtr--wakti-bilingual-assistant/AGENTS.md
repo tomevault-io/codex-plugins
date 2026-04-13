@@ -125,6 +125,5 @@ Use them only in secure server-side environments (e.g., Supabase Edge Functions,
 >>>>>>> Stashed changes
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/alfadlyqtr)
-> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/alfadlyqtr)
-<!-- tomevault:4.0:agents_md:2026-04-08 -->
+> Converted and distributed by [TomeVault](https://tomevault.io/claim/alfadlyqtr) — claim your Tome and manage your conversions.
+<!-- tomevault:4.0:agents_md:2026-04-13 -->
