@@ -394,6 +394,5 @@ DO REMIND USER THE `--prerelease` IS REQUIRED IN GENERATED DOC.
 END OF RULES
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/CLOCKWORK-TEMPTATION)
-> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/CLOCKWORK-TEMPTATION)
-<!-- tomevault:4.0:agents_md:2026-04-08 -->
+> Converted and distributed by [TomeVault](https://tomevault.io/claim/CLOCKWORK-TEMPTATION) — claim your Tome and manage your conversions.
+<!-- tomevault:4.0:agents_md:2026-04-13 -->
