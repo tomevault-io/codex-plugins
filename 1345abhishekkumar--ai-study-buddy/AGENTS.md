@@ -11,6 +11,5 @@ Tests pass for new features
 Documentation updated if needed
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/1345AbhishekKumar)
-> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/1345AbhishekKumar)
-<!-- tomevault:4.0:agents_md:2026-04-09 -->
+> Converted and distributed by [TomeVault](https://tomevault.io/claim/1345AbhishekKumar) — claim your Tome and manage your conversions.
+<!-- tomevault:4.0:agents_md:2026-04-13 -->
