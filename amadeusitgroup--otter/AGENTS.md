@@ -27,6 +27,5 @@ All formatting rules (charset, indentation, line endings, etc.) are defined in `
 - **Co-locate tests** with source files (e.g., `foo.service.ts` and `foo.service.spec.ts`)
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/AmadeusITGroup)
-> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/AmadeusITGroup)
-<!-- tomevault:4.0:agents_md:2026-04-09 -->
+> Converted and distributed by [TomeVault](https://tomevault.io/claim/AmadeusITGroup) — claim your Tome and manage your conversions.
+<!-- tomevault:4.0:agents_md:2026-04-13 -->
