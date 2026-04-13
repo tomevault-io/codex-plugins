@@ -234,6 +234,5 @@ Focus on following existing patterns rather than introducing new approaches. The
 - **Avoid duplication** - Always merge functionality into existing components rather than creating duplicated files with prefix variations
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/superWorldSavior)
-> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/superWorldSavior)
-<!-- tomevault:4.0:agents_md:2026-04-08 -->
+> Converted and distributed by [TomeVault](https://tomevault.io/claim/superWorldSavior) — claim your Tome and manage your conversions.
+<!-- tomevault:4.0:agents_md:2026-04-13 -->
