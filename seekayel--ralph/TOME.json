@@ -1,0 +1,51 @@
+{
+  "name": "ralph",
+  "owner": "seekayel",
+  "repo": "ralph",
+  "description": "AI instruction files for ralph by seekayel",
+  "type": "tome",
+  "source_format": "CLAUDE.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "code-review",
+      "path": "_agents/skills/code-review",
+      "github_url": "https://github.com/seekayel/ralph/tree/main/_agents/skills/code-review",
+      "description": ""
+    }
+  ],
+  "claim_url": "https://tomevault.io/claim/seekayel",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-04-13T05:40:31Z"
+}
