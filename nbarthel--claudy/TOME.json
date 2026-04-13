@@ -1,0 +1,51 @@
+{
+  "name": "claudy",
+  "owner": "nbarthel",
+  "repo": "claudy",
+  "description": "AI instruction files for claudy by nbarthel",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "agent-coordination-patterns",
+      "path": "plugins/rails-workflow/skills/agent-coordination-patterns",
+      "github_url": "https://github.com/nbarthel/claudy/tree/main/plugins/rails-workflow/skills/agent-coordination-patterns",
+      "description": ""
+    }
+  ],
+  "claim_url": "https://tomevault.io/claim/nbarthel",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-04-13T01:30:06Z"
+}
