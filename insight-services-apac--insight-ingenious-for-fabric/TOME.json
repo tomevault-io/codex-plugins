@@ -4,7 +4,7 @@
   "repo": "Insight_Ingenious_For_Fabric",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "GEMINI.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "claim_url": "https://tomevault.io/claim/Insight-Services-APAC",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-11T17:42:54Z"
+  "distributed_at": "2026-04-13T08:47:31Z"
 }
