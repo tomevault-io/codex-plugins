@@ -36,6 +36,5 @@ You HAVE access to terminal, so you should RUN TERMINAL COMMANDS when needed.
 - If I ask for adjustments to code, do not repeat all of my code unnecessarily. Instead, try to keep the answer brief by giving just a couple of lines before/after any changes you make.
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/devclarityai)
-> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/devclarityai)
-<!-- tomevault:4.0:agents_md:2026-04-09 -->
+> Converted and distributed by [TomeVault](https://tomevault.io/claim/devclarityai) — claim your Tome and manage your conversions.
+<!-- tomevault:4.0:agents_md:2026-04-13 -->
