@@ -1,16 +1,13 @@
 <laravel-boost-guidelines>
+=== herd rules ===
 
-=== tailwindcss/core rules ===
+# Laravel Herd
 
-# Tailwind CSS
-
-- Always use existing Tailwind conventions; check project patterns before adding new ones.
-- IMPORTANT: Always use `search-docs` tool for version-specific Tailwind CSS documentation and updated code examples. Never rely on training data.
-- IMPORTANT: Activate `tailwindcss-development` every time you're working with a Tailwind CSS or styling-related task.
+- The application is served by Laravel Herd and will be available at: `https?://[kebab-case-project-dir].test`. Use the `get-absolute-url` tool to generate valid URLs for the user.
+- You must not run any commands to make the site available via HTTP(S). It is always available through Laravel Herd.
 
 </laravel-boost-guidelines>
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/timjossund)
-> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/timjossund)
-<!-- tomevault:4.0:agents_md:2026-04-09 -->
+> Converted and distributed by [TomeVault](https://tomevault.io/claim/timjossund) — claim your Tome and manage your conversions.
+<!-- tomevault:4.0:agents_md:2026-04-13 -->
