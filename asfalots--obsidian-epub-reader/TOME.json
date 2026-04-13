@@ -4,7 +4,7 @@
   "repo": "obsidian-epub-reader",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": ".cursor/rules/*.mdc",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "claim_url": "https://tomevault.io/claim/asfalots",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-10T03:03:16Z"
+  "distributed_at": "2026-04-13T09:40:02Z"
 }
