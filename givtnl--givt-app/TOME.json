@@ -4,7 +4,7 @@
   "repo": "givt-app",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": ".cursor/rules/*.mdc",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "claim_url": "https://tomevault.io/claim/givtnl",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-11T17:43:06Z"
+  "distributed_at": "2026-04-13T19:36:44Z"
 }
