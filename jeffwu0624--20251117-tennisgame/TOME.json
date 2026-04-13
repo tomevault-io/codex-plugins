@@ -4,7 +4,7 @@
   "repo": "20251117_TennisGame",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "GEMINI.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "claim_url": "https://tomevault.io/claim/jeffwu0624",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-13T06:46:53Z"
+  "distributed_at": "2026-04-13T22:40:41Z"
 }
