@@ -277,6 +277,5 @@ Use `test/example_log_cookies.js` as a ready-to-run sample for `--run-js-file`:
 ```
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/mfuentescas)
-> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/mfuentescas)
-<!-- tomevault:4.0:agents_md:2026-04-08 -->
+> Converted and distributed by [TomeVault](https://tomevault.io/claim/mfuentescas) — claim your Tome and manage your conversions.
+<!-- tomevault:4.0:agents_md:2026-04-13 -->
