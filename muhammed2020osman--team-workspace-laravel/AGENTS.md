@@ -525,6 +525,5 @@ try {
 *These comprehensive rules should be followed consistently across the entire project to ensure code quality, security, and maintainability.*
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/muhammed2020osman)
-> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/muhammed2020osman)
-<!-- tomevault:4.0:agents_md:2026-04-08 -->
+> Converted and distributed by [TomeVault](https://tomevault.io/claim/muhammed2020osman) — claim your Tome and manage your conversions.
+<!-- tomevault:4.0:agents_md:2026-04-13 -->
