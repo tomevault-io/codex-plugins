@@ -10,6 +10,5 @@
 7. ApiResult هو المصدر الوحيد للتعامل مع نتائج الـ API والـ Firebase.
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/HishamKoptaN)
-> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/HishamKoptaN)
-<!-- tomevault:4.0:agents_md:2026-04-08 -->
+> Converted and distributed by [TomeVault](https://tomevault.io/claim/HishamKoptaN) — claim your Tome and manage your conversions.
+<!-- tomevault:4.0:agents_md:2026-04-13 -->
