@@ -157,6 +157,5 @@ The Canvas supports multiple versions of the ODA Component Specification:
 Always check component version compatibility when making changes to operators or webhooks.
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/tmforum-oda)
-> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/tmforum-oda)
-<!-- tomevault:4.0:agents_md:2026-04-08 -->
+> Converted and distributed by [TomeVault](https://tomevault.io/claim/tmforum-oda) — claim your Tome and manage your conversions.
+<!-- tomevault:4.0:agents_md:2026-04-13 -->
