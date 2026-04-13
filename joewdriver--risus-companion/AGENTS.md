@@ -3,4 +3,4 @@ All methods should be have a docstring explaining what they do.  Include paramet
 
 ---
 > Converted and distributed by [TomeVault](https://tomevault.io/claim/joewdriver) — claim your Tome and manage your conversions.
-<!-- tomevault:4.0:agents_md:2026-04-09 -->
+<!-- tomevault:4.0:agents_md:2026-04-13 -->
