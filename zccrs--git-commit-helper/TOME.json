@@ -4,7 +4,7 @@
   "repo": "git-commit-helper",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": ".cursor/rules/*.mdc",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "claim_url": "https://tomevault.io/claim/zccrs",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-10T04:12:26Z"
+  "distributed_at": "2026-04-13T10:51:17Z"
 }
