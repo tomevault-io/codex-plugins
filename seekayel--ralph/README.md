@@ -1,0 +1,30 @@
+# AI instruction files for ralph
+
+> Sourced from [seekayel/ralph](https://github.com/seekayel/ralph) and converted for every major platform by [TomeVault](https://tomevault.io)
+
+AI instruction files for ralph by seekayel
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [seekayel/ralph](https://github.com/seekayel/ralph).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+## Bundled Skills (1)
+
+- [code-review](https://github.com/seekayel/ralph/tree/main/_agents/skills/code-review)
+
+Quality verified by TomeVault's automated analysis pipeline. [View quality report](https://tomevault.io/claim/seekayel#quality)
+
+---
+
+Explore more instruction files on [TomeVault](https://tomevault.io) — the open index of AI config files for every platform.
+
+<!-- genome:a-e-q -->
