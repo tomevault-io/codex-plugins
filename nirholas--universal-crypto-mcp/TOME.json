@@ -4,7 +4,7 @@
   "repo": "universal-crypto-mcp",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "GEMINI.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "claim_url": "https://tomevault.io/claim/nirholas",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-10T06:39:23Z"
+  "distributed_at": "2026-04-14T15:06:01Z"
 }
