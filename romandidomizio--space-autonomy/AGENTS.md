@@ -120,6 +120,5 @@ By the end of this project, Roman will:
 * Have built the entire AegisNav system line-by-line, with real learning at every stage
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/romandidomizio)
-> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/romandidomizio)
-<!-- tomevault:4.0:agents_md:2026-04-09 -->
+> Converted and distributed by [TomeVault](https://tomevault.io/claim/romandidomizio) — claim your Tome and manage your conversions.
+<!-- tomevault:4.0:agents_md:2026-04-13 -->
