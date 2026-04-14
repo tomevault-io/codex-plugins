@@ -120,6 +120,5 @@ These guidelines are tailored for the current project state. Follow them when im
 Adhere strictly to these guidelines to maintain real-time safety, clarity, and reliability of the system.
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/idealinvestse)
-> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/idealinvestse)
-<!-- tomevault:4.0:agents_md:2026-04-08 -->
+> Converted and distributed by [TomeVault](https://tomevault.io/claim/idealinvestse) — claim your Tome and manage your conversions.
+<!-- tomevault:4.0:agents_md:2026-04-13 -->
