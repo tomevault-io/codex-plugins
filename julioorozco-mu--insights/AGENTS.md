@@ -60,6 +60,5 @@ You must stick to these exact tokens. Do not hallucinate other shades.
     - Cards, sliders, paleta, etc. según el JSON.
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/julioorozco-mu)
-> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/julioorozco-mu)
-<!-- tomevault:4.0:agents_md:2026-04-08 -->
+> Converted and distributed by [TomeVault](https://tomevault.io/claim/julioorozco-mu) — claim your Tome and manage your conversions.
+<!-- tomevault:4.0:agents_md:2026-04-13 -->
