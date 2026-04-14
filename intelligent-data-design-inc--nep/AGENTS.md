@@ -66,6 +66,5 @@ make -j$(nproc) -C build && ctest --test-dir build
 - **Test failures**: Run `make check VERBOSE=1` for detailed output
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/Intelligent-Data-Design-Inc)
-> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/Intelligent-Data-Design-Inc)
-<!-- tomevault:4.0:agents_md:2026-04-08 -->
+> Converted and distributed by [TomeVault](https://tomevault.io/claim/Intelligent-Data-Design-Inc) — claim your Tome and manage your conversions.
+<!-- tomevault:4.0:agents_md:2026-04-13 -->
