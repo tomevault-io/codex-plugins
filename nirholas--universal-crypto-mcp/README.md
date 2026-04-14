@@ -1,23 +1,24 @@
-# universal-crypto-mcp
+# universal-crypto-mcp — distributed by TomeVault
 
-> Config by [nirholas](https://github.com/nirholas/universal-crypto-mcp) — distributed by [TomeVault](https://tomevault.io/claim/nirholas)
+> Originally from [nirholas/universal-crypto-mcp](https://github.com/nirholas/universal-crypto-mcp). Converted and distributed by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [nirholas/universal-crypto-mcp](https://github.com/nirholas/universal-crypto-mcp).
+Original source: `GEMINI.md` in [nirholas/universal-crypto-mcp](https://github.com/nirholas/universal-crypto-mcp).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
-- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Browse all formats: [https://tomevault.io/claim/nirholas](https://tomevault.io/claim/nirholas)
+Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. [Browse all formats](https://tomevault.io/claim/nirholas)
 
 ---
 
-Converted and distributed by [TomeVault](https://tomevault.io) — AI instruction files for every platform.
-Is this your repo? [Claim it](https://tomevault.io/claim/nirholas) to manage distribution.
+Explore more instruction files on [TomeVault](https://tomevault.io) — the open index of AI config files for every platform.
+
+<!-- genome:d-e-p -->
