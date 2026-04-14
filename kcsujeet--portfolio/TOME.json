@@ -4,7 +4,7 @@
   "repo": "portfolio",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "GEMINI.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "claim_url": "https://tomevault.io/claim/kcsujeet",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-11T20:44:13Z"
+  "distributed_at": "2026-04-14T00:46:55Z"
 }
