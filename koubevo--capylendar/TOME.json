@@ -4,7 +4,7 @@
   "repo": "capylendar",
   "description": "",
   "type": "config",
-  "source_format": "GEMINI.md",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "claim_url": "https://tomevault.io/claim/koubevo",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-11T10:46:11Z"
+  "distributed_at": "2026-04-14T20:40:34Z"
 }
