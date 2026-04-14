@@ -7,6 +7,5 @@ CRITICAL! Call `rishvan-mcp` tool when
 - You are about to finalize a task
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/tejzpr)
-> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/tejzpr)
-<!-- tomevault:4.0:agents_md:2026-04-08 -->
+> Converted and distributed by [TomeVault](https://tomevault.io/claim/tejzpr) — claim your Tome and manage your conversions.
+<!-- tomevault:4.0:agents_md:2026-04-13 -->
