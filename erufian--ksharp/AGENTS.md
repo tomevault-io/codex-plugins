@@ -9,6 +9,5 @@ Use the following paths to locate documentation about the K language:
 - Run the test project from path T:\\_src\\github.com\\ERufian\\ksharp\\K3CSharp.Tests using: dotnet run
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/ERufian)
-> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/ERufian)
-<!-- tomevault:4.0:agents_md:2026-04-08 -->
+> Converted and distributed by [TomeVault](https://tomevault.io/claim/ERufian) — claim your Tome and manage your conversions.
+<!-- tomevault:4.0:agents_md:2026-04-13 -->
