@@ -91,6 +91,5 @@ NEVER remove existing logic or structure unless you fully understand and justify
 NEVER create bloated files — enforce strict modularity and separation as a core rule.
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/www-e)
-> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/www-e)
-<!-- tomevault:4.0:agents_md:2026-04-08 -->
+> Converted and distributed by [TomeVault](https://tomevault.io/claim/www-e) — claim your Tome and manage your conversions.
+<!-- tomevault:4.0:agents_md:2026-04-13 -->
