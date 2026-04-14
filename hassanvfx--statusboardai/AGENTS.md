@@ -116,6 +116,5 @@ If using ClineFlow's reference system:
 For questions or issues, see: https://github.com/hassanvfx/clineflow
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/hassanvfx)
-> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/hassanvfx)
-<!-- tomevault:4.0:agents_md:2026-04-08 -->
+> Converted and distributed by [TomeVault](https://tomevault.io/claim/hassanvfx) — claim your Tome and manage your conversions.
+<!-- tomevault:4.0:agents_md:2026-04-13 -->
