@@ -1,0 +1,11 @@
+The project is based on a few core concepts that must be accurately represented in the [schema.json](mdc:token-model/packages/data-model/src/schema.json) and web application user interface throughout development:
+1. "Resolved value type" is a type that corresponds with existing or known value types in UI development. These are things like "color", "font", "gap", and "shadow".
+2. "Dimensions" are a group of mutually exclusive modes, with a common conceptual theme
+3. "Modes" are specific options of a dimension, and only exist within a single dimension ever. They cannot be repeated as an option for any other dimension
+4. "Token collections" are a categorization option for data managers to group tokens in ways that are more complex (or simpler) than traditional grouping of resolved value type. Collections can have multiple resolved value types that they support, and are a universal grouping for token data within the interface and other future applications
+5. "Aliases" are when the value of a token references another token. The resolved value type for an alias will always be the resolved value type of the token it is referencing.
+
+---
+> Converted and distributed by [TomeVault](https://tomevault.io/claim/NateBaldwinDesign)
+> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/NateBaldwinDesign)
+<!-- tomevault:4.0:agents_md:2026-04-09 -->
