@@ -4,7 +4,7 @@
   "repo": "agent-farm",
   "description": "",
   "type": "config",
-  "source_format": "CLAUDE.md",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "claim_url": "https://tomevault.io/claim/agentic-dev-io",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-10T12:57:12Z"
+  "distributed_at": "2026-04-14T09:46:26Z"
 }
