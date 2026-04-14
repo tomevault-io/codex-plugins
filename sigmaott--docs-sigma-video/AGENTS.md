@@ -13,6 +13,5 @@ Tôi cần đảm bảo các quy tắc sau:
 - lưu ý dịch và bổ sung đủ nếu thiếu tài liệu tiếng anh hoặc tiếng việt, ví dụ nếu bên tiếng việt đang sửa mà thiếu bên tiếng anh thì dịch bổ sung.. 
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/sigmaott)
-> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/sigmaott)
-<!-- tomevault:4.0:agents_md:2026-04-08 -->
+> Converted and distributed by [TomeVault](https://tomevault.io/claim/sigmaott) — claim your Tome and manage your conversions.
+<!-- tomevault:4.0:agents_md:2026-04-13 -->
