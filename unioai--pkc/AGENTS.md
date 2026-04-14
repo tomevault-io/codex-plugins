@@ -102,6 +102,5 @@ Before implementing any UI element, check this order:
 5. Validate functionality and appearance after each component migration
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/Unioai)
-> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/Unioai)
-<!-- tomevault:4.0:agents_md:2026-04-09 -->
+> Converted and distributed by [TomeVault](https://tomevault.io/claim/Unioai) — claim your Tome and manage your conversions.
+<!-- tomevault:4.0:agents_md:2026-04-13 -->
