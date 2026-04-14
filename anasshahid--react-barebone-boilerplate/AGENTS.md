@@ -48,6 +48,5 @@ The core project structure is given below:
     - routes.jsx // routes.jsx file in the feature directory is where the routes for this feature are housed. We use react-router-dom for routing. Pages correspond directly to the routes and the route only renders a page (never a component from components directory)
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/AnasShahid)
-> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/AnasShahid)
-<!-- tomevault:4.0:agents_md:2026-04-08 -->
+> Converted and distributed by [TomeVault](https://tomevault.io/claim/AnasShahid) — claim your Tome and manage your conversions.
+<!-- tomevault:4.0:agents_md:2026-04-13 -->
