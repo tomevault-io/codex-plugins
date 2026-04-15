@@ -4,7 +4,7 @@
   "repo": "mknostribe",
   "description": "",
   "type": "config",
-  "source_format": "CLAUDE.md",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "claim_url": "https://tomevault.io/claim/sepehr-safari",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-10T16:42:56Z"
+  "distributed_at": "2026-04-15T04:53:46Z"
 }
