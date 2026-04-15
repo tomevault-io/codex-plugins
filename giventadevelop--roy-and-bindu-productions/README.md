@@ -5,13 +5,13 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [giventadevelop/roy-and-bindu-productions](https://github.com/giventadevelop/roy-and-bindu-productions).
+Original source: `.cursor/rules/*.mdc` in [giventadevelop/roy-and-bindu-productions](https://github.com/giventadevelop/roy-and-bindu-productions).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
-- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
