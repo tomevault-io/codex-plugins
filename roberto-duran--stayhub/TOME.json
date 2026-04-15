@@ -4,7 +4,7 @@
   "repo": "StayHub",
   "description": "",
   "type": "config",
-  "source_format": "CLAUDE.md",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "claim_url": "https://tomevault.io/claim/roberto-duran",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-14T18:50:30Z"
+  "distributed_at": "2026-04-15T16:16:56Z"
 }
