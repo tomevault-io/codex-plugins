@@ -1,23 +1,28 @@
-# mkgroups
+# AI instruction files for mkgroups
 
-> Config by [sepehr-safari](https://github.com/sepehr-safari/mkgroups) — distributed by [TomeVault](https://tomevault.io/claim/sepehr-safari)
+> Sourced from [sepehr-safari/mkgroups](https://github.com/sepehr-safari/mkgroups) and converted for every major platform by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [sepehr-safari/mkgroups](https://github.com/sepehr-safari/mkgroups).
+Original source: `copilot-instructions.md` in [sepehr-safari/mkgroups](https://github.com/sepehr-safari/mkgroups).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Browse all formats: [https://tomevault.io/claim/sepehr-safari](https://tomevault.io/claim/sepehr-safari)
+From a repo with 0+ stars on GitHub. [See the full profile](https://tomevault.io/claim/sepehr-safari)
 
 ---
 
-Converted and distributed by [TomeVault](https://tomevault.io) — AI instruction files for every platform.
-Is this your repo? [Claim it](https://tomevault.io/claim/sepehr-safari) to manage distribution.
+Install this config instantly:
+```
+npx tomevault install sepehr-safari/mkgroups
+```
+Or browse all formats at [https://tomevault.io/claim/sepehr-safari](https://tomevault.io/claim/sepehr-safari).
+
+<!-- genome:a-i-s -->
