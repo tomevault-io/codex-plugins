@@ -4,7 +4,7 @@
   "repo": "gll-wordpress-plugin",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "claim_url": "https://tomevault.io/claim/CWBudde",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-11T19:45:47Z"
+  "distributed_at": "2026-04-16T07:01:59Z"
 }
