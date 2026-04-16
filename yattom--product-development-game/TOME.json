@@ -4,7 +4,7 @@
   "repo": "product-development-game",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "GEMINI.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "claim_url": "https://tomevault.io/claim/yattom",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-10T03:07:35Z"
+  "distributed_at": "2026-04-16T23:37:55Z"
 }
