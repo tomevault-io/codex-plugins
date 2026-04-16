@@ -4,7 +4,7 @@
   "repo": "taxbridge",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": ".windsurf/rules/*.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "claim_url": "https://tomevault.io/claim/Scardubu",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-15T18:09:45Z"
+  "distributed_at": "2026-04-16T21:53:52Z"
 }
