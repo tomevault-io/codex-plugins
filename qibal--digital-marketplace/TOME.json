@@ -4,7 +4,7 @@
   "repo": "digital_marketplace",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": ".windsurf/rules/*.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "claim_url": "https://tomevault.io/claim/qibal",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-14T18:43:58Z"
+  "distributed_at": "2026-04-16T02:32:47Z"
 }
