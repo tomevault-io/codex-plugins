@@ -4,7 +4,7 @@
   "repo": "Obfussor",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": ".cursor/rules/*.mdc",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "claim_url": "https://tomevault.io/claim/firuslab",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-13T16:36:38Z"
+  "distributed_at": "2026-04-16T11:06:01Z"
 }
