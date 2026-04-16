@@ -4,7 +4,7 @@
   "repo": "audiobookshelf-hardcover-sync",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": ".windsurf/rules/*.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "claim_url": "https://tomevault.io/claim/drallgood",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-10T06:50:27Z"
+  "distributed_at": "2026-04-16T18:07:19Z"
 }
