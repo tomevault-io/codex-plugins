@@ -13,6 +13,5 @@
 If changing this file then ensure to always keep `AGENTS.md`, `GEMINI.md` and `.github/copilot-instructions.md` in sync
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/dave1010)
-> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/dave1010)
-<!-- tomevault:4.0:agents_md:2026-04-07 -->
+> Converted and distributed by [TomeVault](https://tomevault.io/claim/dave1010) — claim your Tome and manage your conversions.
+<!-- tomevault:4.0:agents_md:2026-04-13 -->
