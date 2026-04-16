@@ -1,23 +1,24 @@
 # audiobookshelf-hardcover-sync
 
-> Config by [drallgood](https://github.com/drallgood/audiobookshelf-hardcover-sync) — distributed by [TomeVault](https://tomevault.io/claim/drallgood)
+> Tome by [drallgood](https://github.com/drallgood/audiobookshelf-hardcover-sync) — distributed by [TomeVault](https://tomevault.io/claim/drallgood)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [drallgood/audiobookshelf-hardcover-sync](https://github.com/drallgood/audiobookshelf-hardcover-sync).
+Original source: `.windsurf/rules/*.md` in [drallgood/audiobookshelf-hardcover-sync](https://github.com/drallgood/audiobookshelf-hardcover-sync).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
-- **Windsurf** — `project-config.md`
 
-Browse all formats: [https://tomevault.io/claim/drallgood](https://tomevault.io/claim/drallgood)
+From a repo with 0+ stars on GitHub. [See the full profile](https://tomevault.io/claim/drallgood)
 
 ---
 
-Converted and distributed by [TomeVault](https://tomevault.io) — AI instruction files for every platform.
-Is this your repo? [Claim it](https://tomevault.io/claim/drallgood) to manage distribution.
+Is this your repo? [Claim it](https://tomevault.io/claim/drallgood) to manage distribution and track installs.
+
+<!-- genome:t-c-s -->
