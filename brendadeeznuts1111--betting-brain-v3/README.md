@@ -5,13 +5,13 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [brendadeeznuts1111/betting-brain-v3](https://github.com/brendadeeznuts1111/betting-brain-v3).
+Original source: `.cursor/rules/*.mdc` in [brendadeeznuts1111/betting-brain-v3](https://github.com/brendadeeznuts1111/betting-brain-v3).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
-- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
