@@ -4,7 +4,7 @@
   "repo": "Cubicler",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "claim_url": "https://tomevault.io/claim/Cubicler",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-10T03:07:51Z"
+  "distributed_at": "2026-04-17T06:00:27Z"
 }
