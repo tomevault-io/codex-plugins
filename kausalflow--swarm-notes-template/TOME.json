@@ -4,7 +4,7 @@
   "repo": "swarm-notes-template",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": ".cursor/rules/*.mdc",
   "formats": [
     {
       "format": "claude_md",
@@ -38,7 +38,8 @@
     }
   ],
   "skills": [],
+  "source_url": "https://github.com/kausalflow/swarm-notes-template",
   "claim_url": "https://tomevault.io/claim/kausalflow",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-10T07:13:22Z"
+  "distributed_at": "2026-04-17T12:00:51Z"
 }
