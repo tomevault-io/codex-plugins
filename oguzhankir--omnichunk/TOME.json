@@ -4,7 +4,7 @@
   "repo": "omnichunk",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": ".cursor/rules/*.mdc",
   "formats": [
     {
       "format": "claude_md",
@@ -38,7 +38,8 @@
     }
   ],
   "skills": [],
+  "source_url": "https://github.com/oguzhankir/omnichunk",
   "claim_url": "https://tomevault.io/claim/oguzhankir",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-16T17:49:25Z"
+  "distributed_at": "2026-04-19T09:31:26Z"
 }
