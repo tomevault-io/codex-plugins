@@ -2,7 +2,7 @@
   "name": "prpm",
   "owner": "pr-pm",
   "repo": "prpm",
-  "description": "AI instruction files for prpm by pr-pm",
+  "description": "AI instruction skills by pr-pm",
   "type": "tome",
   "source_format": ".cursor/rules/*.mdc",
   "formats": [
@@ -249,7 +249,7 @@
       "description": ""
     }
   ],
-  "claim_url": "https://tomevault.io/claim/pr-pm",
+  "source_url": "https://github.com/pr-pm/prpm",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-09T15:59:50Z"
+  "distributed_at": "2026-04-19T14:34:52Z"
 }
