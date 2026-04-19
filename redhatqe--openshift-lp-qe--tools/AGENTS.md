@@ -100,6 +100,5 @@ Scope: Each `.AI_HISTORY.md` tracks changes in its directory and sub-directories
 `.AI_HISTORY.md`, record at the level that best fits the context of the change.
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/RedHatQE)
-> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/RedHatQE)
-<!-- tomevault:4.0:agents_md:2026-04-09 -->
+> Converted and distributed by [TomeVault](https://tomevault.io/claim/RedHatQE) — claim your Tome and manage your conversions.
+<!-- tomevault:4.0:agents_md:2026-04-14 -->
