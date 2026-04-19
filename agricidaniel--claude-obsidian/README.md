@@ -1,21 +1,23 @@
-# claude-obsidian — distributed by TomeVault
+# claude-obsidian
 
-> Originally from [AgriciDaniel/claude-obsidian](https://github.com/AgriciDaniel/claude-obsidian). Converted and distributed by [TomeVault](https://tomevault.io)
+> Source: [AgriciDaniel/claude-obsidian](https://github.com/AgriciDaniel/claude-obsidian) — distributed by [TomeVault](https://tomevault.io)
+
+Claude + Obsidian knowledge companion. Persistent, compounding wiki vault based on Karpathy's LLM Wiki pattern. /wiki /save /autoresearch
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.windsurf/rules/*.md` in [AgriciDaniel/claude-obsidian](https://github.com/AgriciDaniel/claude-obsidian).
+Original source: `copilot-instructions.md` in [AgriciDaniel/claude-obsidian](https://github.com/AgriciDaniel/claude-obsidian).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
 
-From a repo with 0+ stars on GitHub. [See the full profile](https://tomevault.io/claim/AgriciDaniel)
+From [AgriciDaniel/claude-obsidian](https://github.com/AgriciDaniel/claude-obsidian) — a repo with 2075+ stars on GitHub.
 
 ---
 
