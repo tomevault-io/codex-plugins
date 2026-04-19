@@ -4,7 +4,7 @@
   "repo": "yakbak",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": ".cursor/rules/*.mdc",
   "formats": [
     {
       "format": "claude_md",
@@ -39,7 +39,6 @@
   ],
   "skills": [],
   "source_url": "https://github.com/derekross/yakbak",
-  "claim_url": "https://tomevault.io/claim/derekross",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-19T02:40:51Z"
+  "distributed_at": "2026-04-19T11:34:17Z"
 }
