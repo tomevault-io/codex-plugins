@@ -5,17 +5,17 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [derekross/yakbak](https://github.com/derekross/yakbak).
+Original source: `.cursor/rules/*.mdc` in [derekross/yakbak](https://github.com/derekross/yakbak).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Quality verified by TomeVault's automated analysis pipeline. [View quality report](https://tomevault.io/claim/derekross#quality)
+Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/derekross/yakbak](https://github.com/derekross/yakbak)
 
 ---
 
@@ -23,6 +23,6 @@ Install this config instantly:
 ```
 npx tomevault install derekross/yakbak
 ```
-Or browse all formats at [https://tomevault.io/claim/derekross](https://tomevault.io/claim/derekross).
+Source: [github.com/derekross/yakbak](https://github.com/derekross/yakbak).
 
 <!-- genome:d-i-q -->
