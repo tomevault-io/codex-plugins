@@ -1,24 +1,24 @@
 # duck-dag
 
-> Tome by [ray-harrison](https://github.com/ray-harrison/duck-dag) — distributed by [TomeVault](https://tomevault.io/claim/ray-harrison)
+> Tome by [ray-harrison](https://github.com/ray-harrison/duck-dag) — distributed by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [ray-harrison/duck-dag](https://github.com/ray-harrison/duck-dag).
+Original source: `.cursor/rules/*.mdc` in [ray-harrison/duck-dag](https://github.com/ray-harrison/duck-dag).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From a repo with 0+ stars on GitHub. [See the full profile](https://tomevault.io/claim/ray-harrison)
+From [ray-harrison/duck-dag](https://github.com/ray-harrison/duck-dag) — a repo with 0+ stars on GitHub.
 
 ---
 
-Is this your repo? [Claim it](https://tomevault.io/claim/ray-harrison) to manage distribution and track installs.
+Own this repo? Install the TomeVault Relay to keep every platform's copy in sync on every push: [https://tomevault.io/install](https://tomevault.io/install).
 
 <!-- genome:t-c-s -->
