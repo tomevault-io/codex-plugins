@@ -1,0 +1,44 @@
+{
+  "name": "LittleCrawler",
+  "owner": "pbeenigg",
+  "repo": "LittleCrawler",
+  "description": "LittleCrawler\uff08\u5c0f\u722c\u866b\uff09\uff0c\u652f\u6301\u5c0f\u7ea2\u4e66\uff08xhs\uff09\uff5c \u77e5\u4e4e\uff08zh\uff09|  \u95f2\u9c7c\uff08xy\uff09\u5e73\u53f0\u7684\u516c\u5f00\u4fe1\u606f\u6293\u53d6\u3002",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/pbeenigg/LittleCrawler",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-04-20T16:24:20Z"
+}
