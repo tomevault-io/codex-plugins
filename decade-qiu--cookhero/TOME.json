@@ -1,0 +1,44 @@
+{
+  "name": "CookHero",
+  "owner": "Decade-qiu",
+  "repo": "CookHero",
+  "description": "CookHero\u662f\u4e00\u4e2a\u57fa\u4e8e LLM + RAG + Agent + \u591a\u6a21\u6001\u7684\u667a\u80fd\u996e\u98df\u4e0e\u70f9\u996a\u7ba1\u7406\u5e73\u53f0\uff0c\u652f\u6301\u667a\u80fd\u83dc\u8c31\u67e5\u8be2\u3001\u4e2a\u6027\u5316\u996e\u98df\u8ba1\u5212\u3001AI \u996e\u98df\u8bb0\u5f55\u3001\u8425\u517b\u5206\u6790\u3001Web \u641c\u7d22\u589e\u5f3a\uff0c\u4ee5\u53ca\u53ef\u6269\u5c55\u7684 ReAct Agent / Subagent \u5de5\u5177\u4f53\u7cfb\uff0c\u5e2e\u52a9\u53a8\u623f\u65b0\u624b\u8f7b\u677e\u6210\u4e3a\u201c\u70f9\u996a\u82f1\u96c4\u201d\u3002",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/Decade-qiu/CookHero",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-04-20T20:00:23Z"
+}
