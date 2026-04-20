@@ -1,0 +1,147 @@
+{
+  "name": "langgraphgo",
+  "owner": "smallnest",
+  "repo": "langgraphgo",
+  "description": "\u529f\u80fd\u90a3\u4e48\u5f3a\u5927\uff0c\u4ee3\u7801\u5982\u6b64\u7b80\u5355",
+  "type": "tome",
+  "source_format": "CLAUDE.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "baoyu-comic",
+      "path": "examples/comic_skill_example/skills/baoyu-comic",
+      "github_url": "https://github.com/smallnest/langgraphgo/tree/main/examples/comic_skill_example/skills/baoyu-comic",
+      "description": ""
+    },
+    {
+      "name": "baoyu-image-gen",
+      "path": "examples/comic_skill_example/skills/baoyu-image-gen",
+      "github_url": "https://github.com/smallnest/langgraphgo/tree/main/examples/comic_skill_example/skills/baoyu-image-gen",
+      "description": ""
+    },
+    {
+      "name": "code-review",
+      "path": "testdata/skills/code-review",
+      "github_url": "https://github.com/smallnest/langgraphgo/tree/main/testdata/skills/code-review",
+      "description": ""
+    },
+    {
+      "name": "code-review",
+      "path": "testdata/skills/code-review/code-review",
+      "github_url": "https://github.com/smallnest/langgraphgo/tree/main/testdata/skills/code-review/code-review",
+      "description": ""
+    },
+    {
+      "name": "coze-api",
+      "path": "testdata/skills/coze-api/coze-api",
+      "github_url": "https://github.com/smallnest/langgraphgo/tree/main/testdata/skills/coze-api/coze-api",
+      "description": ""
+    },
+    {
+      "name": "crewai-developer",
+      "path": "testdata/skills/crewai-developer/crewai-developer",
+      "github_url": "https://github.com/smallnest/langgraphgo/tree/main/testdata/skills/crewai-developer/crewai-developer",
+      "description": ""
+    },
+    {
+      "name": "feature-builder",
+      "path": "testdata/skills/feature-builder",
+      "github_url": "https://github.com/smallnest/langgraphgo/tree/main/testdata/skills/feature-builder",
+      "description": ""
+    },
+    {
+      "name": "flutter-api",
+      "path": "testdata/skills/flutter-api/flutter-api",
+      "github_url": "https://github.com/smallnest/langgraphgo/tree/main/testdata/skills/flutter-api/flutter-api",
+      "description": ""
+    },
+    {
+      "name": "frontend-design",
+      "path": "testdata/skills/frontend-design",
+      "github_url": "https://github.com/smallnest/langgraphgo/tree/main/testdata/skills/frontend-design",
+      "description": ""
+    },
+    {
+      "name": "hello_world",
+      "path": "examples/goskills_example/goskills_example/skills/hello_world",
+      "github_url": "https://github.com/smallnest/langgraphgo/tree/main/examples/goskills_example/goskills_example/skills/hello_world",
+      "description": ""
+    },
+    {
+      "name": "markitdown",
+      "path": "testdata/skills/markitdown",
+      "github_url": "https://github.com/smallnest/langgraphgo/tree/main/testdata/skills/markitdown",
+      "description": ""
+    },
+    {
+      "name": "mcp-builder",
+      "path": "testdata/skills/mcp-builder",
+      "github_url": "https://github.com/smallnest/langgraphgo/tree/main/testdata/skills/mcp-builder",
+      "description": ""
+    },
+    {
+      "name": "playwright-skill",
+      "path": "testdata/skills/playwright-skill",
+      "github_url": "https://github.com/smallnest/langgraphgo/tree/main/testdata/skills/playwright-skill",
+      "description": ""
+    },
+    {
+      "name": "prompt-optimizer",
+      "path": "testdata/skills/prompt-optimizer",
+      "github_url": "https://github.com/smallnest/langgraphgo/tree/main/testdata/skills/prompt-optimizer",
+      "description": ""
+    },
+    {
+      "name": "react-component-generator",
+      "path": "testdata/skills/react-component-generator",
+      "github_url": "https://github.com/smallnest/langgraphgo/tree/main/testdata/skills/react-component-generator",
+      "description": ""
+    },
+    {
+      "name": "request-analyzer",
+      "path": "testdata/skills/request-analyzer",
+      "github_url": "https://github.com/smallnest/langgraphgo/tree/main/testdata/skills/request-analyzer",
+      "description": ""
+    },
+    {
+      "name": "ui-analyzer",
+      "path": "testdata/skills/ui-analyzer",
+      "github_url": "https://github.com/smallnest/langgraphgo/tree/main/testdata/skills/ui-analyzer",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/smallnest/langgraphgo",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-04-20T19:39:48Z"
+}
