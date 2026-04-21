@@ -1,0 +1,44 @@
+{
+  "name": "knwler",
+  "owner": "Orbifold",
+  "repo": "knwler",
+  "description": "Knwler is a lightweight, single-file Python tool that extracts structured knowledge graphs from documents using AI. Feed it a PDF or text file and receive a richly connected network of entities, relationships, and topics \u2014 complete with an interactive HTML report and exports ready for your favorite graph analytics platform.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/Orbifold/knwler",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-04-21T07:48:56Z"
+}
