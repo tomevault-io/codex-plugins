@@ -1,0 +1,332 @@
+# skillkit
+
+**skillkit** is a Python library that implements Anthropic's Agent Skills functionality, enabling LLM-powered agents to autonomously discover and utilize packaged expertise. The library provides:
+
+- Multi-source skill discovery from personal directories, project directories, and plugins
+- SKILL.md parsing with YAML frontmatter validation
+- Progressive disclosure pattern (metadata loading → on-demand content)
+- Framework integrations (LangChain, LlamaIndex, CrewAI, Haystack, Google ADK)
+- Security features (path traversal prevention, permission checks)
+- Model-agnostic design supporting Claude, GPT, Gemini, and open-source LLMs
+
+## Development Approach
+
+This project follows a **Vertical Slice MVP strategy** to deliver working functionality quickly:
+
+- **v0.1 (Released)**: Core functionality + LangChain integration (sync only)
+- **v0.2 (Released)**: Async support + multi-source discovery + plugin integration
+- **v0.3 (Released)**: Script execution with security controls
+- **v1.0 (Planned)**: Additional framework integrations + production polish + comprehensive documentation + 90% test coverage
+
+### Current Focus (v0.4)
+
+The v0.4 release implements advanced progressive disclosure with intelligent caching:
+
+1. **LRU Content Cache**: In-memory cache with configurable size (default: 100 entries)
+2. **Mtime-based Invalidation**: Automatic cache invalidation when SKILL.md files are modified
+3. **Argument Normalization**: Whitespace variations map to same cache entry for maximum efficiency
+4. **Thread-Safe Concurrency**: Per-skill asyncio locks enable safe parallel invocations
+5. **Cache Management API**: get_cache_stats(), clear_cache() for monitoring and control
+6. **Performance**: <1ms cache hits vs 10-25ms first invocation (up to 25x faster)
+7. **Memory Efficient**: ~2.1KB per cached entry, ~5MB cache overhead
+8. **High Hit Rate**: 80%+ cache hit rate achievable with typical usage patterns
+9. **Script Integration**: Script detection integrates with Level 2 caching lifecycle
+10. **Backward Compatible**: 100% compatible with v0.1/v0.2/v0.3 APIs
+
+**What's deferred to v1.0+**: Additional framework integrations (LlamaIndex, CrewAI, Haystack), advanced argument schemas, CI/CD pipeline, 90% test coverage.
+
+## Key Architectural Decisions
+
+### Core Architecture (v0.1)
+The foundation is built on 8 critical decisions (see `specs/001-mvp-langchain-core/research.md` for rationale):
+
+1. **Progressive Disclosure Pattern**: Two-tier architecture (SkillMetadata + Skill) with lazy content loading achieves 80% memory reduction
+2. **Framework-Agnostic Core**: Zero dependencies in core modules; optional framework integrations via extras
+3. **$ARGUMENTS Substitution**: `string.Template` for security + standard escaping (`$$ARGUMENTS`), 1MB size limit, suspicious pattern detection
+4. **Error Handling**: Graceful degradation during discovery, strict exceptions during invocation, 11-exception hierarchy
+5. **YAML Parsing**: `yaml.safe_load()` with cross-platform support, detailed error messages, typo detection
+6. **LangChain Integration**: StructuredTool with closure capture pattern
+7. **Testing**: 70% coverage with pytest, parametrized tests, fixtures in conftest.py
+8. **Performance-First Design**: Optimized for LLM-bound workflows
+
+### v0.2 Enhancements
+Additional architectural patterns added in v0.2:
+
+1. **Async-First I/O**: Full async/await support with `aiofiles` for non-blocking file operations, enabling concurrent skill discovery and invocation
+2. **Multi-Source Resolution**: Priority-based discovery (project:100, config:50, plugins:10, custom:5) with fully qualified names (`plugin:skill-name`)
+3. **Plugin Architecture**: MCPB manifest parsing with namespace isolation and conflict resolution
+4. **Secure Path Resolution**: Traversal prevention, symlink validation, and file reference security
+5. **Backward Compatibility**: All v0.1 sync APIs preserved; async methods are additive (`discover()` + `adiscover()`)
+
+**Security Validated**: All decisions reviewed against 2024-2025 Python library best practices (scores 8-9.5/10).
+
+## Documentation
+
+Main project documentation is located in the `.docs/` directory:
+
+### `.docs/SKILL format specification`
+- Full specification for skills and SKILL.md
+
+### `.specify/` folder
+This project was developed using speckit method. all development phases have been documented thoroughly inside `.specify/` folder
+
+## Project Status
+
+**Current Phase**: ✅ v0.4.0 RELEASED
+
+**v0.1 Completed**:
+- ✅ Core functionality (discovery, parsing, models, manager, processors)
+- ✅ LangChain integration with StructuredTool (sync)
+- ✅ Progressive disclosure pattern with lazy loading
+- ✅ YAML frontmatter parsing and validation
+- ✅ Argument substitution with security features
+- ✅ 70%+ test coverage with comprehensive test suite
+- ✅ Published to PyPI
+
+**v0.2 Completed**:
+- ✅ Full async/await support (`adiscover()`, `ainvoke_skill()`)
+- ✅ Multi-source skill discovery (project, Anthropic config, plugins, custom paths)
+- ✅ Plugin ecosystem with MCPB manifest support
+- ✅ Priority-based conflict resolution
+- ✅ Fully qualified skill names (`plugin:skill-name`)
+- ✅ Nested directory structures (up to 5 levels)
+- ✅ Secure file path resolution with traversal prevention
+- ✅ LangChain async integration
+- ✅ Updated examples (async_usage.py, multi_source.py, file_references.py)
+- ✅ Backward compatible with v0.1
+
+**v0.3 Completed**:
+- ✅ Script execution (Python, Shell, JavaScript, Ruby, Perl)
+- ✅ Security controls (path validation, timeout enforcement)
+- ✅ Environment variable injection (SKILL_NAME, SKILL_BASE_DIR, SKILL_VERSION, SKILLKIT_VERSION)
+- ✅ Automatic script detection (recursive, up to 5 levels)
+- ✅ LangChain script tool integration
+
+**v0.4 Completed**:
+- ✅ Advanced Progressive Disclosure with LRU content caching
+- ✅ Mtime-based automatic cache invalidation
+- ✅ Argument normalization for maximum cache efficiency
+- ✅ Thread-safe concurrent invocations (per-skill asyncio locks)
+- ✅ Cache management API (get_cache_stats, clear_cache, aclear_cache)
+- ✅ Performance: <1ms cache hits, 80%+ hit rate achievable
+- ✅ Memory efficient: ~2.1KB per entry, ~5MB overhead
+- ✅ Script detection cache integration at Level 2
+- ✅ New example: caching_demo.py
+- ✅ 83.76% test coverage (407 tests passed)
+- ✅ 100% backward compatible with v0.1/v0.2/v0.3
+
+## Development Environment
+
+This project uses Python Python 3.10+ .
+
+**Virtual Environment Setup**:
+```bash
+python3.10 -m venv .venv
+source .venv/bin/activate
+pip install -e ".[dev]"
+```
+
+**Development Commands**:
+- Run examples:
+  - `python examples/basic_usage.py` (sync and async patterns)
+  - `python examples/async_usage.py` (FastAPI integration)
+  - `python examples/langchain_agent.py` (sync and async LangChain)
+  - `python examples/multi_source.py` (multi-source discovery)
+  - `python examples/file_references.py` (secure file resolution)
+  - `python examples/caching_demo.py` (cache performance demo - NEW v0.4)
+- Run tests: `pytest` (83.76% coverage)
+- Run specific test markers: `pytest -m async` or `pytest -m integration`
+- Lint code: `ruff check src/skillkit`
+- Format code: `ruff format src/skillkit`
+- Type check: `mypy src/skillkit --strict`
+
+## Project Structure
+
+### Repository Current Structure (Implemented)
+
+```
+skillkit/
+├── src/
+│   └── skillkit/
+│       ├── __init__.py             # Public API exports + NullHandler
+│       ├── core/                   # Framework-agnostic core
+│       │   ├── __init__.py         # Core module exports
+│       │   ├── discovery.py        # SkillDiscovery: filesystem scanning
+│       │   ├── parser.py           # SkillParser: YAML parsing
+│       │   ├── models.py           # SkillMetadata, Skill dataclasses
+│       │   ├── manager.py          # SkillManager: orchestration
+│       │   ├── processors.py       # ContentProcessor strategies
+│       │   └── exceptions.py       # Exception hierarchy
+│       ├── integrations/           # Framework-specific adapters
+│       │   ├── __init__.py         # Integration exports
+│       │   └── langchain.py        # LangChain StructuredTool adapter
+│       └── py.typed                # PEP 561 type hints marker
+├── tests/                          # Test suite (mirrors src/)
+│   ├── conftest.py                 # Shared fixtures
+│   ├── test_discovery.py           # Discovery tests
+│   ├── test_parser.py              # Parser tests
+│   ├── test_models.py              # Dataclass tests
+│   ├── test_processors.py          # Processor tests
+│   ├── test_manager.py             # Manager tests
+│   ├── test_langchain.py           # LangChain integration tests
+│   └── fixtures/
+│       └── skills/                 # Test SKILL.md files
+│           ├── valid-skill/
+│           ├── missing-name-skill/
+│           ├── invalid-yaml-skill/
+│           └── arguments-test-skill/
+├── examples/                       # Usage examples
+│   ├── basic_usage.py              # Standalone usage
+│   └── langchain_agent.py          # LangChain integration
+│   └── skills/                     # Examples skills folders
+├── pyproject.toml                  # Package configuration (PEP 621)
+├── README.md                       # Installation + quick start
+├── LICENSE                         # MIT license
+└── .gitignore                      # Python-standard ignores
+```
+
+**Key Design Decisions**:
+- **Framework-agnostic core**: `src/skillkit/core/` has zero dependencies (stdlib + PyYAML only)
+- **Optional integrations**: `src/skillkit/integrations/` requires framework-specific extras
+- **Test structure**: Mirrors source for clarity (`test_*.py` for each module)
+- **Modern packaging**: PEP 621 `pyproject.toml` with optional dependencies (`[langchain]`, `[dev]`)
+
+### Python Version
+- **Minimum**: Python 3.10 (supported with minor memory trade-offs)
+- **Recommended**: Python 3.10+ (optimal memory efficiency via slots + cached_property)
+- **Memory impact**: Python 3.10+ provides 60% memory reduction per instance via `slots=True` compared to Python 3.9
+- **Important**: always run python commands inside venv for correct python library management
+
+### Core Dependencies
+- **PyYAML 6.0+**: YAML frontmatter parsing with `yaml.safe_load()` security
+- **aiofiles 23.0+**: Async file I/O for non-blocking operations (v0.2+)
+- **Python stdlib**: pathlib, dataclasses, functools, typing, re, logging, string.Template, asyncio
+
+### Optional Dependencies
+- **langchain-core 0.1.0+**: StructuredTool integration with async support (install: `pip install skillkit[langchain]`)
+- **pydantic 2.0+**: Input schema validation (explicit dependency despite being transitive from langchain-core)
+
+### Development Dependencies
+- **pytest 7.0+**: Test framework with 70% coverage target
+- **pytest-cov 4.0+**: Coverage measurement
+- **ruff 0.1.0+**: Fast linting and formatting (replaces black + flake8)
+- **mypy 1.0+**: Type checking in strict mode
+
+### Storage & Distribution
+- **Storage**: Filesystem-based (`.claude/skills/` directory with SKILL.md files)
+- **Packaging**: PEP 621 `pyproject.toml` with hatchling or setuptools 61.0+
+- **Distribution**: PyPI (`pip install skillkit`)
+
+### Performance Characteristics
+- **Discovery**: ~5-10ms per skill (YAML parsing dominates)
+- **Invocation (cache miss)**: ~10-25ms overhead (file I/O ~10-20ms + processing ~1-5ms)
+- **Invocation (cache hit)**: <1ms (memory lookup only) ⚡ NEW in v0.4
+- **Cache hit rate**: 80%+ with typical usage patterns ⚡ NEW in v0.4
+- **Memory**: ~2-2.5MB for 100 skills metadata + ~210KB for 100 cached entries (Level 2)
+
+## Changelog
+
+### v0.4.0 (Released)
+- **Advanced Progressive Disclosure**: LRU content cache with configurable size (default: 100 entries)
+- **Mtime-based Cache Invalidation**: Automatic invalidation when SKILL.md files are modified
+- **Argument Normalization**: Whitespace variations map to same cache entry for maximum efficiency
+- **Thread-Safe Concurrency**: Per-skill asyncio locks enable safe parallel invocations
+- **Cache Management API**: get_cache_stats(), clear_cache(), aclear_cache() for monitoring and control
+- **Performance**: <1ms cache hits vs 10-25ms first invocation (up to 25x faster)
+- **Memory Efficient**: ~2.1KB per cached entry, ~5MB cache overhead
+- **High Hit Rate**: 80%+ cache hit rate achievable with typical usage patterns
+- **Script Integration**: Script detection integrates with Level 2 caching lifecycle
+- **New Example**: examples/caching_demo.py demonstrating cache efficiency
+- **Test Coverage**: 83.76% (407 tests passed)
+- **Backward Compatible**: 100% compatible with v0.1/v0.2/v0.3 APIs
+
+### v0.3.0 (Released)
+- **Script Execution**: Execute Python, Shell, JavaScript, Ruby, and Perl scripts from skills
+- **Security Controls**: Path traversal prevention, timeout enforcement
+- **Environment Injection**: Automatic SKILL_NAME, SKILL_BASE_DIR, SKILL_VERSION, SKILLKIT_VERSION variables
+- **Automatic Detection**: Scripts discovered recursively in skill directories
+- **LangChain Integration**: Each script exposed as separate StructuredTool (`{skill-name}.{script-name}`)
+- **Robust Error Handling**: Comprehensive exception hierarchy for script-related errors
+- **Audit Logging**: All script executions logged with metadata
+- **Cross-Platform**: Works on Linux, macOS, and Windows
+- **Backward Compatible**: All v0.1/v0.2 APIs remain unchanged
+- **Note**: Tool restriction enforcement removed and postponed
+
+### v0.2.0 (Released)
+- **Async Support**: Full async/await implementation with `adiscover()` and `ainvoke_skill()`
+- **Multi-Source Discovery**: Project dirs, Anthropic config, plugins, custom paths with priority resolution
+- **Plugin Ecosystem**: MCPB manifest support with namespaced skill access
+- **Nested Directories**: Discover skills up to 5 levels deep
+- **Secure Path Resolution**: Traversal prevention and reference validation
+- **LangChain Async**: Full async integration for LangChain agents
+- **New Examples**: async_usage.py, multi_source.py, file_references.py
+- **Backward Compatible**: All v0.1 APIs preserved
+
+### v0.1.0 (Released)
+- **Core Functionality**: Skill discovery, parsing, and invocation
+- **Progressive Disclosure**: Lazy loading with 80% memory reduction
+- **LangChain Integration**: StructuredTool adapter (sync only)
+- **Security Features**: YAML safe loading, argument substitution validation
+- **Testing**: 70%+ coverage with pytest
+- **Documentation**: Comprehensive README and examples
+- **PyPI Distribution**: Published as `pip install skillkit`
+
+## Active Technologies
+- **Python**: 3.10+ (minimum for full async support)
+- **Core**: PyYAML 6.0+, aiofiles 23.0+
+- **Integrations**: langchain-core 0.1.0+, pydantic 2.0+
+- **Storage**: Filesystem-based (`.claude/skills/` directories, `.claude-plugin/plugin.json` manifests)
+- **Testing**: pytest 7.0+, pytest-cov 4.0+, pytest-asyncio 0.21+
+- **Quality**: ruff 0.1.0+, mypy 1.0+
+- Filesystem-based (scripts stored in skill directories: `scripts/` or skill root) (001-script-execution)
+- Python 3.10+ (minimum for existing skillkit v0.3.0 compatibility) + PyYAML 6.0+ (existing), aiofiles 23.0+ (existing), subprocess (stdlib), pathlib (stdlib) (001-script-execution)
+- Filesystem-based (Python source files and test files to be modified/removed) (001-script-execution)
+- Python 3.10+ (minimum for existing skillkit v0.3.0 compatibility) + PyYAML 6.0+ (existing), subprocess (stdlib), pathlib (stdlib), json (stdlib) (001-script-execution)
+- Python 3.10+ (minimum for full async support with aiofiles and asyncio) + PyYAML 6.0+ (YAML parsing), aiofiles 23.0+ (async file I/O), Python stdlib (pathlib, functools, dataclasses, typing, asyncio, logging) (001-advanced-progressive-disclosure)
+- Filesystem-based (SKILL.md files in `.claude/skills/` directories, in-memory LRU cache for processed content) (001-advanced-progressive-disclosure)
+
+## Quick Reference for AI Agents
+
+### Key Files and Locations
+- **Main source**: `src/skillkit/core/` (discovery.py, parser.py, models.py, manager.py, processors.py)
+- **Integrations**: `src/skillkit/integrations/langchain.py`
+- **Tests**: `tests/` (mirrors src/ structure)
+- **Examples**: `examples/` (basic_usage.py, async_usage.py, langchain_agent.py, multi_source.py, file_references.py)
+- **Config**: `pyproject.toml` (package metadata, dependencies, build config)
+- **Documentation**: `README.md` (user-facing), `CLAUDE.md` (agent context), `.docs/` (specs)
+
+### Common Development Tasks
+1. **Add new feature**: Update relevant module in `src/skillkit/core/`, add tests in `tests/`, update examples if needed
+2. **Add framework integration**: Create new file in `src/skillkit/integrations/`, add optional dependency in `pyproject.toml`
+3. **Update tests**: Run `pytest -v` to verify, `pytest -m async` for async tests, `pytest --cov` for coverage
+4. **Add example**: Create new file in `examples/`, ensure it's referenced in README.md
+5. **Release new version**: Update version in `pyproject.toml`, update CHANGELOG in README.md and CLAUDE.md, run `python -m build`
+
+### Testing Strategy
+- **Unit tests**: Each module has corresponding test file (test_discovery.py, test_parser.py, etc.)
+- **Integration tests**: test_langchain.py, test_manager.py (marked with `@pytest.mark.integration`)
+- **Async tests**: Marked with `@pytest.mark.asyncio` (requires pytest-asyncio)
+- **Fixtures**: Defined in `tests/conftest.py` and `tests/fixtures/skills/`
+- **Coverage target**: 70%+ (current: 83.76%)
+
+### Code Quality Standards
+- **Formatting**: Use `ruff format src/skillkit` (no config needed, uses defaults)
+- **Linting**: Use `ruff check src/skillkit` (rules in pyproject.toml)
+- **Type checking**: Use `mypy src/skillkit --strict` (strictest mode)
+- **Docstrings**: Google-style docstrings for all public APIs
+- **Comments**: Explain "why", not "what" (code should be self-documenting)
+
+### API Design Principles
+1. **Backward compatibility**: Never break existing APIs, only add new ones
+2. **Async additive**: Async methods complement sync (e.g., `discover()` + `adiscover()`)
+3. **Graceful degradation**: Discovery failures log warnings, invocation failures raise exceptions
+4. **Progressive disclosure**: Metadata loads first, content loads on-demand
+5. **Security first**: Always validate paths, sanitize inputs, use safe YAML loading
+
+## Recent Changes
+- 001-advanced-progressive-disclosure: Added Python 3.10+ (minimum for full async support with aiofiles and asyncio) + PyYAML 6.0+ (YAML parsing), aiofiles 23.0+ (async file I/O), Python stdlib (pathlib, functools, dataclasses, typing, asyncio, logging)
+- 001-advanced-progressive-disclosure: Added Python 3.10+ (minimum for full async support with aiofiles and asyncio) + PyYAML 6.0+ (YAML parsing), aiofiles 23.0+ (async file I/O), Python stdlib (pathlib, functools, dataclasses, typing, asyncio, logging)
+
+---
+> Source: [maxvaega/skillkit](https://github.com/maxvaega/skillkit) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-04-21 -->
