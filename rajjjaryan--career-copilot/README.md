@@ -7,14 +7,14 @@ AI-powered job search pipeline built on GitHub Copilot CLI
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [RajjjAryan/career-copilot](https://github.com/RajjjAryan/career-copilot).
+Original source: `copilot-instructions.md` in [RajjjAryan/career-copilot](https://github.com/RajjjAryan/career-copilot).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/RajjjAryan/career-copilot](https://github.com/RajjjAryan/career-copilot)
