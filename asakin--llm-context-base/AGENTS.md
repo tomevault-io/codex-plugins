@@ -1,3 +1,5 @@
+<!-- Real instructions live in _config/config.md and _meta/instructions/general.md. This file only bootstraps GitHub Copilot into those. -->
+
 ## STEP 0: Framework mode check (run this first)
 
 Check whether `_config/.framework-mode` exists.
@@ -28,8 +30,8 @@ Allow me to get ready first!
 
 Follow the Session Start Protocol defined in `_config/config.md`, then `_meta/instructions/general.md`. All instructions are there.
 
-This file exists only to bootstrap Cursor into the system. The real instructions are LLM-agnostic and live in the files above.
+This file exists only to bootstrap GitHub Copilot into the system. The real instructions are LLM-agnostic and live in the files above.
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/asakin) — claim your Tome and manage your conversions.
-<!-- tomevault:4.0:agents_md:2026-04-10 -->
+> Source: [asakin/llm-context-base](https://github.com/asakin/llm-context-base) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-04-21 -->
