@@ -1,0 +1,44 @@
+{
+  "name": "dev-playbooks-cn",
+  "owner": "Darkbluelr",
+  "repo": "dev-playbooks-cn",
+  "description": "\u5728\u4e0d\u53ef\u9760\u7684 AI \u4e4b\u4e0a\u6784\u5efa\u53ef\u9760\u7684\u8f6f\u4ef6\u3002\u901a\u8fc7 SSOT\u3001Knife \u5207\u7247\u3001\u8d28\u91cf\u95f8\u95e8\u4e0e\u8bc1\u636e\u95ed\u73af\uff0c\u8ba9\u5355\u4eba\u9a7e\u9a6d\u5927\u578b AI \u9879\u76ee\u3002",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/Darkbluelr/dev-playbooks-cn",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-04-22T16:04:26Z"
+}
