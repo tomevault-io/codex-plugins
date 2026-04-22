@@ -1,0 +1,99 @@
+{
+  "name": "foundry-agent-webapp",
+  "owner": "microsoft-foundry",
+  "repo": "foundry-agent-webapp",
+  "description": "GitHub Copilot enabled repo for building and deploying a web application with Entra ID authentication and integrated with Azure AI Foundry Agents.",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "deploying-to-azure",
+      "path": ".github/skills/deploying-to-azure",
+      "github_url": "https://github.com/microsoft-foundry/foundry-agent-webapp/tree/main/.github/skills/deploying-to-azure",
+      "description": ""
+    },
+    {
+      "name": "implementing-chat-streaming",
+      "path": ".github/skills/implementing-chat-streaming",
+      "github_url": "https://github.com/microsoft-foundry/foundry-agent-webapp/tree/main/.github/skills/implementing-chat-streaming",
+      "description": ""
+    },
+    {
+      "name": "researching-azure-ai-sdk",
+      "path": ".github/skills/researching-azure-ai-sdk",
+      "github_url": "https://github.com/microsoft-foundry/foundry-agent-webapp/tree/main/.github/skills/researching-azure-ai-sdk",
+      "description": ""
+    },
+    {
+      "name": "testing-with-playwright",
+      "path": ".github/skills/testing-with-playwright",
+      "github_url": "https://github.com/microsoft-foundry/foundry-agent-webapp/tree/main/.github/skills/testing-with-playwright",
+      "description": ""
+    },
+    {
+      "name": "troubleshooting-authentication",
+      "path": ".github/skills/troubleshooting-authentication",
+      "github_url": "https://github.com/microsoft-foundry/foundry-agent-webapp/tree/main/.github/skills/troubleshooting-authentication",
+      "description": ""
+    },
+    {
+      "name": "validating-ui-features",
+      "path": ".github/skills/validating-ui-features",
+      "github_url": "https://github.com/microsoft-foundry/foundry-agent-webapp/tree/main/.github/skills/validating-ui-features",
+      "description": ""
+    },
+    {
+      "name": "writing-bicep-templates",
+      "path": ".github/skills/writing-bicep-templates",
+      "github_url": "https://github.com/microsoft-foundry/foundry-agent-webapp/tree/main/.github/skills/writing-bicep-templates",
+      "description": ""
+    },
+    {
+      "name": "writing-csharp-code",
+      "path": ".github/skills/writing-csharp-code",
+      "github_url": "https://github.com/microsoft-foundry/foundry-agent-webapp/tree/main/.github/skills/writing-csharp-code",
+      "description": ""
+    },
+    {
+      "name": "writing-typescript-code",
+      "path": ".github/skills/writing-typescript-code",
+      "github_url": "https://github.com/microsoft-foundry/foundry-agent-webapp/tree/main/.github/skills/writing-typescript-code",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/microsoft-foundry/foundry-agent-webapp",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-04-22T23:36:05Z"
+}
