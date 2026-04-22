@@ -1,0 +1,26 @@
+# AI instruction files for radon
+
+> Sourced from [joemccann/radon](https://github.com/joemccann/radon) and converted for every major platform by [TomeVault](https://tomevault.io)
+
+Radon is a market-structure reconstruction system that detects institutional positioning and turns it into convex options trades using dark pool flow, volatility signals, and cross-asset positioning data.  Detects hidden positioning through dark pool, options flow, and cross-asset signals.
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `copilot-instructions.md` in [joemccann/radon](https://github.com/joemccann/radon).
+
+## Also available for
+
+- **Claude Code** — `CLAUDE.md`
+- **Codex** — `AGENTS.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/joemccann/radon](https://github.com/joemccann/radon)
+
+---
+
+Own this repo? Install the TomeVault Relay to keep every platform's copy in sync on every push: [https://tomevault.io/install](https://tomevault.io/install).
+
+<!-- genome:a-c-q -->
