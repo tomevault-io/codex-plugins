@@ -1,0 +1,470 @@
+# PolyPilot — Copilot Instructions
+
+## SDK-First Development
+
+Before implementing new session lifecycle, orchestration, watchdog, or event handling code, check the Copilot SDK API surface. The `copilot-sdk-reference` skill has the complete v0.2.2 API reference (453 types, 76 events, 6 hooks, 16 RPC APIs). The `processing-state-safety` and `multi-agent-orchestration` skills each contain SDK migration matrices for their domains. Prefer SDK APIs over custom implementations. When custom code is necessary, add a `// SDK-gap: <reason>` comment explaining why.
+
+### SDK Update Audit (run when bumping `GitHub.Copilot.SDK` version)
+
+When the user says **"Run the SDK update audit"** or updates the SDK NuGet package version:
+
+1. **Diff the XML docs** to find new/removed/changed types:
+   ```bash
+   diff <(grep 'member name="T:' ~/.nuget/packages/github.copilot.sdk/OLD_VERSION/lib/net8.0/GitHub.Copilot.SDK.xml | sort) \
+        <(grep 'member name="T:' ~/.nuget/packages/github.copilot.sdk/NEW_VERSION/lib/net8.0/GitHub.Copilot.SDK.xml | sort)
+   ```
+2. **Update `.claude/skills/copilot-sdk-reference/SKILL.md`** — add new types, events, RPC APIs, hooks, SessionConfig properties. Update version number and version history table.
+3. **Re-check migration matrices** in `processing-state-safety` and `multi-agent-orchestration` skills — any "Not adopted" items now have better SDK support? Any new APIs that replace custom code?
+4. **Update `.github/copilot-instructions.md`** — SDK Event Flow, SDK Data Types, and any behavioral claims that changed.
+5. **Check for JS-only features that moved to .NET** — especially `AgentStop`/`SubagentStop` hooks.
+6. **Create a PR** with all changes and run the multi-model review process.
+
+## Build & Deploy Commands
+
+### Mac Catalyst (primary dev target)
+```bash
+PolyPilot/relaunch.sh      # Build + async hot-relaunch (ALWAYS use this after code changes)
+PolyPilot/relaunch.sh --sync  # Build + blocking relaunch (for interactive terminal use only)
+dotnet build -f net10.0-maccatalyst   # Build only
+```
+
+> **Run relaunch.sh from YOUR worktree**, not from `~/Projects/AutoPilot/PolyPilot/`.
+> The script is tracked in git at `PolyPilot/relaunch.sh` and uses `dirname "$0"` to
+> resolve its build directory, so each worktree's copy builds its own code.
+
+#### ⚠️ Relaunch from a Copilot agent session
+
+`relaunch.sh` is **async by default** — it returns immediately after a successful build, then kills the old UI and launches the new one in a detached background process after a 10-second delay. This is critical because PolyPilot hosts the Copilot sessions via TCP to the persistent CLI server. If the script blocked and killed the UI synchronously, the TCP connection would drop mid-tool-call and the agent's turn would be interrupted.
+
+> **🚨 RULES FOR CALLING RELAUNCH.SH 🚨**
+> 1. Do NOT chain ANYTHING after `./relaunch.sh` in the same bash call — no `&&`, `;`, `|`, `sleep`.
+> 2. You have ~10 seconds after relaunch.sh returns to make additional quick tool calls
+>    (e.g., `maui devflow wait`, `tail`, short verification commands). Use this window
+>    to keep working — verify the relaunch, reconnect to MauiDevFlow, test your changes.
+> 3. If one tool call gets interrupted by the kill, that's OK — the CLI keeps your session
+>    alive. Just continue on the next turn.
+> 4. Do NOT make long-running tool calls (>8s) after relaunch — they will be interrupted.
+
+**Correct pattern — keep working after relaunch:**
+```bash
+# Tool call 1: relaunch (returns immediately after build)
+PolyPilot/relaunch.sh
+```
+After relaunch.sh returns, the old UI will be killed in ~10s and a new one launched.
+Your turn may get interrupted if a tool call is in-flight when the kill happens — that's OK,
+the CLI keeps your session alive. On your next turn, verify and continue:
+```bash
+# Next turn: verify relaunch + reconnect to MauiDevFlow
+tail -3 ~/.polypilot/relaunch.log && maui devflow wait --timeout 30
+```
+```bash
+# Then test your changes via CDP
+maui devflow cdp Runtime evaluate '...'
+```
+
+**NEVER do this:**
+```bash
+# ❌ WRONG — chaining in the same bash call blocks the tool return
+PolyPilot/relaunch.sh && sleep 15 && cat ~/.polypilot/relaunch.log
+
+# ❌ WRONG — sleep/long commands chained after relaunch
+PolyPilot/relaunch.sh; sleep 10; tail ~/.polypilot/relaunch.log
+```
+
+The `--sync` flag restores the old blocking behavior (for human terminal use only — NEVER use from an agent).
+
+### Tests
+```bash
+cd ../PolyPilot.Tests && dotnet test              # Run all tests
+cd ../PolyPilot.Tests && dotnet test --filter "FullyQualifiedName~ChatMessageTests"  # Run one test class
+cd ../PolyPilot.Tests && dotnet test --filter "FullyQualifiedName~ChatMessageTests.UserMessage_SetsRoleAndType"  # Single test
+```
+The test project lives at `../PolyPilot.Tests/` (sibling directory). It includes source files from the main project via `<Compile Include>` links because the MAUI project can't be directly referenced from a plain `net10.0` test project. When adding new model or utility classes, add a corresponding `<Compile Include>` entry to the test csproj if the file has no MAUI dependencies.
+
+**Always run tests after modifying models, bridge messages, or serialization logic.** When adding new features or changing existing behavior, update or add tests to match. The tests serve as a living specification of the app's data contracts and parsing logic.
+
+> ⚠️ **Zero tolerance for test failures.** When you encounter test failures — whether caused by your changes or pre-existing — **always fix them**. Never dismiss failures as "pre-existing" or "unrelated". If tests fail, they must be fixed before the task is complete. A green test suite is a hard requirement for every PR.
+>
+> **For worker/implementer agents specifically:** You are NEVER allowed to report a test failure as "pre-existing" and move on. If you discover a test failure that existed before your change, you must still fix it as part of your task. Saying "pre-existing failure, not caused by my changes" without fixing it is a task failure. Fix the test or fix the production code — whichever is correct — then verify the suite is green.
+
+### Android
+```bash
+dotnet build -f net10.0-android                  # Build only
+dotnet build -f net10.0-android -t:Install       # Build + deploy to connected device (use this, not bare `adb install`)
+adb shell am start -n com.microsoft.PolyPilot/crc64ef8e1bf56c865459.MainActivity   # Launch
+```
+Fast Deployment requires `dotnet build -t:Install` — it pushes assemblies to `.__override__` on device.
+
+> ⚠️ **WiFi ADB on macOS**: Do NOT use `adb kill-server` (wipes TLS pairing keys; proxy dies).
+> Build with `-p:EmbedAssembliesIntoApk=true` for WiFi deploy (Fast Deployment APKs are stale).
+> macOS firewall blocks ADB's outbound TLS — a Python TCP proxy is required.
+> **Full playbook**: `.claude/skills/android-wifi-deploy/SKILL.md`
+
+**Package name**: `com.microsoft.PolyPilot` (not `com.companyname.PolyPilot`)  
+**Launch activity**: `crc64ef8e1bf56c865459.MainActivity`
+
+### Windows
+```bash
+dotnet build -f net10.0-windows10.0.19041.0       # Build only
+dotnet run -f net10.0-windows10.0.19041.0          # Build + launch
+```
+
+### iOS (physical device)
+```bash
+dotnet build -f net10.0-ios -r ios-arm64         # Build only
+xcrun devicectl device install app --device <UDID> bin/Debug/net10.0-ios/ios-arm64/PolyPilot.app/
+xcrun devicectl device process launch --device <UDID> com.companyname.PolyPilot
+```
+Do NOT use `dotnet build -t:Run` for physical iOS — it hangs waiting for the app to exit.
+
+### iOS Simulator
+```bash
+dotnet build -f net10.0-ios -t:Run -p:_DeviceName=:v2:udid=<UDID>
+```
+
+### MauiDevFlow (UI inspection & debugging)
+The app integrates `Microsoft.Maui.DevFlow.Agent` + `Microsoft.Maui.DevFlow.Blazor` for remote UI inspection. See `.claude/skills/maui-ai-debugging/SKILL.md` for the full command reference.
+```bash
+maui devflow MAUI status           # Agent connection
+maui devflow cdp status            # CDP/Blazor WebView
+maui devflow MAUI tree             # Visual tree
+maui devflow cdp snapshot          # DOM snapshot (best for AI)
+maui devflow MAUI logs             # Application ILogger output
+```
+For Android, always run `adb reverse tcp:9223 tcp:9223` after deploy.
+
+## Architecture
+
+**See `docs/multi-agent-orchestration.md` for the multi-agent architecture spec** (orchestration modes, reflection loop, sentinel protocol, invariants, Squad integration). Test scenarios in `PolyPilot.Tests/Scenarios/multi-agent-scenarios.json`. Read these before modifying orchestration, reconciliation, or TCS completion logic.
+
+### Squad Integration
+PolyPilot discovers [bradygaster/squad](https://github.com/bradygaster/squad) team definitions from `.squad/` (or legacy `.ai-team/`) directories in the worktree root. Each agent's `charter.md` becomes a worker system prompt, `team.md` defines the roster, `decisions.md` provides shared context injected into all worker prompts, and `routing.md` is injected into the orchestrator's planning prompt. Repo-level teams appear in a **"📂 From Repo"** section in the preset picker, above built-in presets.
+
+**Squad write-back:** When saving a multi-agent group as a preset, PolyPilot writes the team definition back to `.squad/` format in the worktree root via `SquadWriter`. This creates `team.md`, `agents/{name}/charter.md`, and optional `decisions.md`/`routing.md`. The preset is also saved to `presets.json` as a personal backup. This enables round-tripping: discover → modify → save back → share via repo.
+
+**Preset priority (three-tier merge):** Built-in presets are always shown and cannot be overridden. User presets (`~/.polypilot/presets.json`) and repo teams (`.squad/`) with the same name as a built-in are skipped. The preset picker shows three sections: "📂 From Repo" (with delete button), "⚙️ Built-in", and "👤 My Presets".
+
+**Group deletion:** Deleting a multi-agent team closes and removes all its sessions (they're meaningless without the team). Deleting a regular group moves sessions to the default group.
+
+This is a .NET MAUI Blazor Hybrid app targeting Mac Catalyst, Android, and iOS. It manages multiple GitHub Copilot CLI sessions through a native GUI.
+
+### Three-Layer Stack
+1. **Blazor UI** (`Components/`) — Razor components rendered in a BlazorWebView. All styling is CSS in `wwwroot/app.css` and scoped `.razor.css` files.
+2. **Service Layer** (`Services/`) — `CopilotService` (singleton) manages sessions via `ConcurrentDictionary<string, SessionState>`. Events from the SDK arrive on background threads and are marshaled to the UI thread via `SynchronizationContext.Post`.
+3. **SDK** — `GitHub.Copilot.SDK` (`CopilotClient`/`CopilotSession`) communicates with the Copilot CLI process via ACP (Agent Control Protocol) over stdio or TCP.
+
+### Connection Modes
+- **Embedded** (fallback): SDK spawns copilot via stdio, dies with app.
+- **Persistent** (default on desktop): App spawns a detached `copilot --headless` server tracked via PID file; survives restarts.
+- **Remote**: Connects to a remote server URL (e.g., DevTunnel). Only mode available on mobile.
+- **Demo**: Local mock responses for testing without a network connection.
+
+Mode and CLI source selections persist immediately to `~/.polypilot/settings.json` when the user clicks the corresponding card — no "Save & Reconnect" needed for the choice itself. "Save & Reconnect" is only needed to actually reconnect with the new settings.
+
+### Mode Switching & Session Persistence
+When switching between Embedded and Persistent modes (via Settings → Save & Reconnect), `ReconnectAsync` tears down the existing client and restores sessions from disk. Key safety mechanisms:
+
+1. **Merge-based `SaveActiveSessionsToDisk()`** — reads the existing `active-sessions.json` and preserves entries whose session directory still exists on disk, even if not currently in memory. This prevents partial restores from clobbering the full list. The merge logic is in `CopilotService.Persistence.cs` → `MergeSessionEntries()` (static, testable).
+
+2. **`_closedSessionIds`** — tracks sessions explicitly closed by the user so the merge doesn't re-add them. Cleared on `ReconnectAsync`.
+
+3. **`IsRestoring` flag** — set during `RestorePreviousSessionsAsync`. Guards per-session `SaveActiveSessionsToDisk()` and `ReconcileOrganization()` calls to avoid unnecessary disk I/O and race conditions during bulk restore.
+
+4. **Persistent fallback notice** — if `InitializeAsync` can't start the persistent server, it falls back to Embedded and sets `FallbackNotice` with a visible warning banner on the Dashboard.
+
+### WebSocket Bridge (Remote Viewer Protocol)
+`WsBridgeServer` runs on the desktop app and exposes session state over WebSocket. `WsBridgeClient` runs on mobile apps to receive live updates and send commands. The protocol is defined in `Models/BridgeMessages.cs` with typed payloads and message type constants in `BridgeMessageTypes`.
+
+`DevTunnelService` manages a `devtunnel host` process to expose the bridge over the internet, with QR code scanning for easy mobile setup (`QrScannerPage.xaml`).
+
+### Platform Differences
+`Models/PlatformHelper.cs` exposes `IsDesktop`/`IsMobile` and controls which `ConnectionMode`s are available. Mobile can only use Remote mode. Desktop defaults to Persistent.
+
+**Mobile-only behavior:**
+- Desktop menu items (Fix with Copilot, Copilot Console, Terminal, VS Code) are hidden via `PlatformHelper.IsDesktop` guards in `SessionListItem.razor`.
+- Report Bug opens the browser with a pre-filled GitHub issue URL via `Launcher.Default.OpenAsync` instead of the inline sidebar form.
+- Processing status indicator shows elapsed time and tool round count, synced via bridge.
+
+**Editor preference:**
+- `Editor` setting (`VsCodeVariant.Stable`/`Insiders`) in `ConnectionSettings` controls which VS Code binary (`code`/`code-insiders`) is launched from session context menus.
+- Configurable in Settings → UI → Editor (desktop only). Persists in `settings.json`.
+
+## Critical Conventions
+
+### Explore Before Implementing
+Before implementing any new feature that touches session state, multi-agent orchestration, or event handling:
+1. **Grep the codebase for existing patterns** — check for enums (`MultiAgentRole`), existing timestamp fields, helper methods, and utility functions that already solve your problem. Do a quick exploration pass before writing a single line.
+2. **Check the skills** — `processing-state-safety`, `multi-agent-orchestration`, and `copilot-sdk-reference` contain domain knowledge that prevents common mistakes. Read the relevant skill BEFORE designing your approach.
+3. **Use existing data over new fields** — derive state from timestamps, History contents, event logs, or existing model properties. Adding new state fields creates maintenance burden.
+
+### No New Companion-Pair State Fields
+**AVOID** adding new fields to `AgentSessionInfo`, `SessionState`, or other turn-lifecycle state holders that must be maintained across multiple code paths. The 13-PR `IsProcessing` regression history proves this pattern is the #1 source of bugs — every new field that requires set/clear across N paths will eventually have a path that forgets.
+
+Instead:
+- **Derive state from existing data** (compare timestamps, check History contents, read events.jsonl)
+- **Use SDK events** rather than tracking state manually
+- If you MUST add a new field, document every set/clear site and add behavioral coverage for the lifecycle; site-count checks are acceptable only as supplementary invariant guards
+
+### Behavioral Tests Over Structural Tests
+When adding new detection, diagnostic, or business logic:
+- **Write behavioral tests** — inject real objects (sessions, groups, state), execute the method, verify actual outputs (messages added, return values, state changes)
+- **Do NOT rely on structural tests** (grep source code for string patterns) as primary coverage — they verify code exists, not that it works correctly
+- Structural tests are acceptable as **supplementary** invariant guards (e.g., "method X must be called after method Y"), but never as the only tests for logic
+
+### Build & Launch
+- **NEVER use `--no-build`** when running the app (`dotnet run`). Always do a full build to catch and fix compile errors before launching. Using `--no-build` can cause silent crashes from stale binaries.
+
+### Git Workflow
+- **NEVER commit or push directly to `main`** — always create a feature branch and open a PR, even for single-line fixes. Use `git checkout -b <branch> origin/main` to create the branch, make your changes, push the branch, then open a PR. No exceptions.
+- **NEVER use `git push --force`** — always use `git push --force-with-lease` instead when a force push is needed (e.g., after a rebase). This prevents overwriting remote changes made by others.
+- **NEVER commit screenshots, images, or binary files** — use `git diff --stat` or `git status` before committing to verify no `.png`, `.jpg`, `.bmp`, or other image files are staged. Screenshots from PolyPilot (e.g., `screenshot_*.png`) are generated locally and must NEVER be committed. The `.gitignore` blocks common patterns, but always double-check.
+- **NEVER use `git add -A` or `git add .` blindly** — always review what's being staged first with `git status`. Prefer `git add <specific-files>` when possible to avoid accidentally committing generated files.
+- **When creating a new branch for a PR**, always base it on `upstream/main` (or `origin/main`). Do NOT branch from whatever HEAD happens to be — the repo may be on a feature branch. Use `git checkout -b <branch> upstream/main`. After creating the branch, verify with `git log --oneline upstream/main..HEAD` that only your commits appear.
+- **NEVER use `git commit --amend`** unless the user explicitly asks for it. Always add new commits on top. This preserves history so reviewers and other agents can see what changed between iterations.
+- When contributing to an existing PR, prefer adding commits on top. Rebase only when explicitly asked.
+- Use `git add -f` when adding files matched by `.gitignore` patterns (e.g., `*.app/` catches `PolyPilot/`).
+
+### No `static readonly` fields that call platform APIs
+`static readonly` fields are evaluated during type initialization — before MAUI's platform layer is ready on Android/iOS. This causes `TypeInitializationException` crashes.
+
+**Always use lazy properties instead:**
+```csharp
+// ❌ WRONG — crashes on Android/iOS
+private static readonly string MyPath = Path.Combine(FileSystem.AppDataDirectory, "file.json");
+
+// ✅ CORRECT — deferred until first access
+private static string? _myPath;
+private static string MyPath => _myPath ??= Path.Combine(FileSystem.AppDataDirectory, "file.json");
+```
+
+This applies to `FileSystem.AppDataDirectory`, `Environment.GetFolderPath()`, and any Android/iOS-specific API. See `CopilotService.cs` (lines 19-59) and `ConnectionSettings.cs` (lines 29-53) for examples.
+
+### File paths on iOS/Android vs desktop
+- **Desktop**: Use `Environment.SpecialFolder.UserProfile` → `~/.copilot/`
+- **iOS/Android**: Use `FileSystem.AppDataDirectory` (persistent across restarts). `Environment.SpecialFolder.LocalApplicationData` on iOS resolves to a cache directory that can be purged.
+- Always wrap in try/catch with `Path.GetTempPath()` fallback.
+
+### Linker / Trimmer
+`<TrimmerRootAssembly Include="GitHub.Copilot.SDK" />` in the csproj prevents the linker from stripping SDK event types needed for runtime pattern matching. Do NOT remove this.
+
+### Mac Catalyst Sandbox
+Disabled in `Platforms/MacCatalyst/Entitlements.plist` — required for spawning copilot CLI processes and binding network ports.
+
+### Edge-to-edge on Android (.NET 10)
+.NET 10 MAUI defaults `ContentPage.SafeAreaEdges` to `None` (edge-to-edge). For this Blazor app, safe area insets are handled entirely in CSS/JS — do NOT set `SafeAreaEdges="Container"` on MainPage.xaml or add `padding-bottom` on body, as this causes double-padding.
+
+### SDK Event Flow
+When a prompt is sent, the SDK emits events processed by `HandleSessionEvent` in order:
+1. `SessionUsageInfoEvent` → server acknowledged, sets `ProcessingPhase=1`
+2. `AssistantTurnStartEvent` → model generating, sets `ProcessingPhase=2`
+3. `AssistantReasoningDeltaEvent` → streaming reasoning chunks (if model supports reasoning)
+4. `AssistantReasoningEvent` → complete reasoning content
+5. `AssistantMessageDeltaEvent` → streaming content chunks
+6. `AssistantMessageEvent` → full message (may include tool requests)
+7. `ToolExecutionStartEvent` → tool activity starts, sets `ProcessingPhase=3`, increments `ToolCallCount` on complete
+8. `ToolExecutionCompleteEvent` → tool done, increments `ToolCallCount`
+9. `AssistantIntentEvent` → intent/plan updates
+10. `AssistantTurnEndEvent` → end of a sub-turn, tool loop continues. `FlushCurrentResponse` persists accumulated text before the next sub-turn.
+11. `SessionIdleEvent` → turn complete, response finalized. **Unless** `Data.BackgroundTasks` has active agents/shells — then flushes text, logs `[IDLE-DEFER]`, and keeps `IsProcessing=true` (PR #399).
+
+Additional SDK events (not in the main flow but emitted during sessions):
+- `AssistantUsageEvent` — per-call token usage, cost, latency metrics
+- `AssistantStreamingDeltaEvent` — low-level streaming delta
+- `SubagentStartedEvent` / `SubagentCompletedEvent` / `SubagentFailedEvent` / `SubagentSelectedEvent` / `SubagentDeselectedEvent` — subagent lifecycle
+- `SessionPlanChangedEvent` — plan file created/updated/deleted
+- `SessionModeChangedEvent` — mode switched (interactive/plan/autopilot)
+- `SessionModelChangeEvent` — model switched mid-session (includes `PreviousModel`/`NewModel` and `PreviousReasoningEffort`/`ReasoningEffort`)
+- `SessionCompactionStartEvent` / `SessionCompactionCompleteEvent` — context compaction
+- `SessionTruncationEvent` — context truncated
+- `SessionHandoffEvent` — session handoff (source, context, repository info)
+- `SkillInvokedEvent` — a skill was invoked
+- `SessionBackgroundTasksChangedEvent` — background task status changed
+- `CapabilitiesChangedEvent` — session capabilities changed (new in v0.2.1)
+- `SamplingRequestedEvent` / `SamplingCompletedEvent` — MCP sampling (new in v0.2.1)
+
+See the `copilot-sdk-reference` skill (PR #486) for the complete list of 76 event types.
+
+### Processing Status Indicator
+`AgentSessionInfo` tracks three fields for the processing status UI:
+- `ProcessingStartedAt` (DateTime?) — set to `DateTime.UtcNow` in `SendPromptAsync`
+- `ToolCallCount` (int) — incremented on each `ToolExecutionCompleteEvent`
+- `ProcessingPhase` (int) — 0=Sending, 1=ServerConnected, 2=Thinking, 3=Working
+
+All three are reset in `SendPromptAsync` (new turn) and cleared in `CompleteResponse` (turn done) and `AbortSessionAsync` (user stop). They're synced to mobile via `SessionSummary` in the bridge protocol.
+
+The UI shows: "Sending…" → "Server connected…" → "Thinking…" → "Working · Xm Xs · N tool calls…".
+
+### Abort Behavior
+`AbortSessionAsync` must clear ALL processing state — see `.claude/skills/processing-state-safety/SKILL.md` for the full cleanup checklist and the paths that clear `IsProcessing`.
+
+### ⚠️ IsProcessing Cleanup Invariant
+**CRITICAL**: Every code path that sets `IsProcessing = false` must clear 9 companion fields and call `FlushCurrentResponse`. This is the most recurring bug category (13 PRs of fix/regression cycles). **Read `.claude/skills/processing-state-safety/SKILL.md` before modifying ANY processing path.** There are 15+ such paths across CopilotService.cs, Events.cs, Bridge.cs, Organization.cs, and Providers.cs.
+
+### Content Persistence
+`FlushCurrentResponse` is also called on `AssistantTurnEndEvent` to persist accumulated response text at each sub-turn boundary. This prevents content loss if the app restarts between `turn_end` and `session.idle`. When the IDLE-DEFER logic defers `session.idle` (active background tasks), the flush ensures content from the foreground turn is saved. The flush includes a dedup guard to prevent duplicate messages from event replay on resume.
+
+### Processing Watchdog
+The processing watchdog (`RunProcessingWatchdogAsync` in `CopilotService.Events.cs`) detects stuck sessions by checking how long since the last SDK event. It checks every 15 seconds and has three timeout tiers:
+- **30 seconds** (resume quiescence) — for resumed sessions with zero SDK events since restart. Assumes the turn already finished before the restart. **Bypassed** when the events file shows recent activity (< 120s old) — in that case, the session was genuinely active and gets the longer timeout.
+- **120 seconds** (inactivity timeout) — for sessions with no tool activity
+- **600 seconds** (tool execution timeout) — used when ANY of these are true:
+  - A tool call is actively running (`ActiveToolCallCount > 0`)
+  - The session was resumed mid-turn after app restart (`IsResumed`)
+  - Tools have been used this turn (`HasUsedToolsThisTurn`) — even between tool rounds when the model is thinking
+
+**Live-event-stream gap (PR #619)**: `ToolExecutionStartEvent` may not be delivered via the live SDK event stream even though the CLI is actively executing a tool (the event only appears in `events.jsonl`). This causes `ActiveToolCallCount` to remain 0 during tool execution. Two mechanisms compensate:
+1. **TurnEnd fallback**: After the 34s extended wait, checks `GetLastEventType()` on `events.jsonl`. If the last event is `tool.execution_start`, defers to the watchdog instead of completing prematurely. Also checks `events.jsonl` freshness (`TurnEndFallbackFreshnessSeconds = 30`) with a 15s recheck (`TurnEndFallbackRecheckMs`).
+2. **Watchdog Case B pre-check**: Before running Case B completion logic, checks `GetLastEventType()`. If `tool.execution_start`, resets the inactivity timer and continues — same as Case A server-alive behavior. This allows tools of any duration to complete.
+
+For multi-agent sessions, Case B also checks **file-size-growth**: if events.jsonl hasn't grown for `WatchdogCaseBMaxStaleChecks` (2) consecutive deferrals, the session is force-completed — the connection is dead. This catches `ConnectionLostException` scenarios where mtime stays fresh but no new data arrives, reducing detection from 30+ min to ~360s (3 cycles: 1 baseline + 2 stale checks). The 1800s freshness window is preserved.
+
+Note: `session.idle` is an ephemeral event (`ephemeral: true` in the SDK schema) — it is delivered over the live event stream but intentionally NOT written to `events.jsonl`. When `session.idle` includes active `backgroundTasks` (sub-agents, shells), the IDLE-DEFER logic defers completion until a subsequent idle arrives with empty/null backgroundTasks. In rare cases where `IsProcessing` was already cleared (by watchdog timeout or reconnect) before the deferred idle arrives, the session may appear stuck until the watchdog fires again — see issue #403.
+
+When `session.idle` with active `backgroundTasks` arrives but `IsProcessing` is already `false`, the handler re-arms: sets `IsProcessing = true`, `HasUsedToolsThisTurn = true` (600s timeout), restarts watchdog, logs `[IDLE-DEFER-REARM]`. This prevents zero-idle symptoms where IDLE-DEFER fires once but subsequent idles are no-ops.
+
+When the watchdog fires, it marshals state mutations to the UI thread via `InvokeOnUI()` and adds a system warning message.
+
+### Diagnostic Log Tags
+The event diagnostics log (`~/.polypilot/event-diagnostics.log`) uses these tags:
+- `[SEND]` — prompt sent, IsProcessing set to true
+- `[EVT]` — SDK event received (only SessionIdleEvent, AssistantTurnEndEvent, SessionErrorEvent)
+- `[IDLE]` — SessionIdleEvent dispatched to CompleteResponse
+- `[IDLE-DEFER]` — SessionIdleEvent deferred due to active background tasks (agents/shells)
+- `[IDLE-DEFER-REARM]` — SessionIdleEvent re-armed IsProcessing after it was already cleared
+- `[COMPLETE]` — CompleteResponse executed or skipped
+- `[RECONNECT]` — session replaced after disconnect
+- `[ERROR]` — SessionErrorEvent or SendAsync/reconnect failure cleared IsProcessing
+- `[ABORT]` — user-initiated abort cleared IsProcessing
+- `[BRIDGE-COMPLETE]` — bridge OnTurnEnd cleared IsProcessing
+- `[INTERRUPTED]` — app restart detected interrupted turn (watchdog timeout after resume)
+- `[WATCHDOG]` — watchdog clearing IsResumed or timing out a stuck session
+- `[IDLE-FALLBACK]` — TurnEnd fallback timer fired, skipped (tools active/fresh events), or deferred to watchdog
+- `[TOOL-HEALTH]` — tool health check (events flowing, server liveness, stale detection)
+
+Every code path that sets `IsProcessing = false` MUST have a diagnostic log entry. This is critical for debugging stuck-session issues.
+
+### Thread Safety: IsProcessing Mutations
+All mutations to `state.Info.IsProcessing` must be marshaled to the UI thread. SDK events arrive on background threads. Use `InvokeOnUI()` (not bare `Invoke()`) to combine state mutation + notification in a single callback. Key patterns:
+- **CompleteResponse**: Already runs on UI thread (dispatched via `Invoke()`)
+- **Watchdog callback**: Uses `InvokeOnUI()` with generation guard
+- **SessionErrorEvent**: Uses `InvokeOnUI()` to combine OnError + IsProcessing + OnStateChanged
+- **Resume fallback**: Removed (watchdog handles it)
+- **SendAsync error paths**: Run on UI thread inline (in SendPromptAsync's catch blocks)
+
+### Model Selection
+The model is set at **session creation time** via `SessionConfig.Model`. The SDK provides `session.Rpc.Model.SwitchToAsync(model, reasoningEffort?)` for mid-session model switching, but PolyPilot has not adopted it — currently the session must be destroyed and recreated to change models. `MessageOptions` has no `Model` property (no per-message model selection).
+
+When a user changes the model via the UI dropdown:
+- `session.Model` is updated locally (affects UI display only)
+- The SDK continues using the original model from session creation
+- To truly switch models, the session must be destroyed and recreated (or `SwitchToAsync` could be adopted)
+
+`GetSessionModel` prioritizes: (1) user's explicit choice (`session.Model`), (2) backend-reported model from usage info, (3) `DefaultModel` fallback. `ShouldAcceptObservedModel()` in `ModelHelper.cs` prevents `SessionUsageInfoEvent` and `AssistantUsageEvent` from overwriting an explicit user model selection — the observed model is only accepted if no explicit choice was made or if the observed model matches the explicit choice.
+
+### SDK Data Types
+- `AssistantUsageData` properties (`InputTokens`, `OutputTokens`, `CacheReadTokens`, `CacheWriteTokens`) are `Double?` not `int?`
+- Use `Convert.ToInt32(value)` for conversion, not `value as int?`
+- `AssistantUsageData` also includes: `Model`, `Cost` (billing multiplier), `Duration` (ms), `TtftMs` (time to first token), `InterTokenLatencyMs`, `ReasoningEffort`, `Initiator` (e.g., "sub-agent", "mcp-sampling"), `CopilotUsage`, `ApiCallId`, `ProviderCallId`, `ParentToolCallId`
+- `QuotaSnapshots` is `Dictionary<string, object>` with `JsonElement` values — the typed fields (`EntitlementRequests`, `UsedRequests`, `RemainingPercentage`, `Overage`, `OverageAllowedWithExhaustedQuota`, `ResetDate`) are defined on `Rpc.AccountGetQuotaResultQuotaSnapshotsValue`
+- `SessionIdleData` includes `Aborted` (bool?, true when turn was cancelled via abort). **Note (v0.2.2):** `BackgroundTasks` was removed from `SessionIdleData` — background task tracking is now exclusively via `SessionBackgroundTasksChangedEvent`. The idle handler reads tracked state from `DeferredBackgroundTaskFingerprint`/`DeferredBackgroundTasksFirstSeenAtTicks` (set by the background tasks changed handler).
+- `MessageOptions` has 3 properties: `Prompt`, `Attachments`, `Mode` — no `Model` or `ReasoningEffort` (those are session-level via `SwitchToAsync`)
+
+### Blazor Input Performance
+Avoid `@bind:event="oninput"` — causes round-trip lag per keystroke. Use plain HTML inputs with JS event listeners and read values via `JS.InvokeAsync<string>("eval", "document.getElementById('id')?.value")` on submit.
+
+### Render Performance
+`SaveActiveSessionsToDisk`, `SaveOrganization`, and `SaveUiState` use timer-based debounce (2s/2s/1s) — **must flush in DisposeAsync**. `LoadPersistedSessions()` scans all session directories (750+) — **never call from render-triggered paths**. `GetOrganizedSessions()` is cached with hash-key invalidation. `_sessionSwitching` flag must stay true until `SafeRefreshAsync` reads it. See `.claude/skills/performance-optimization/SKILL.md` for detailed invariants.
+
+For detailed stuck-session debugging knowledge (8 invariants from 7 PRs of fix cycles), see `.claude/skills/processing-state-safety/SKILL.md`.
+
+### Smart Completion Scan
+**Smart completion scan:** `assistant.turn_end` and `assistant.message` are not unconditionally terminal — they appear between every tool round. `IsSessionStillProcessing` uses `IsCleanNoToolSubturn()` to scan backward from the last event within the current sub-turn (bounded by `assistant.turn_start`/`session.resume`/`session.start`). If any `tool.execution_*` event is found in the current sub-turn, the session is considered still processing. Clean no-tool turns are detected immediately, eliminating the 600s watchdog delay for simple conversations.
+
+### Session Persistence
+- Active sessions: `~/.polypilot/active-sessions.json` (includes `LastPrompt` — last user message if session was processing during save)
+- Session state: `~/.copilot/session-state/<guid>/events.jsonl` (SDK-managed, stays in ~/.copilot)
+- UI state: `~/.polypilot/ui-state.json`
+- Settings: `~/.polypilot/settings.json`
+- Crash log: `~/.polypilot/crash.log`
+- Organization: `~/.polypilot/organization.json`
+- Server PID: `~/.polypilot/server.pid`
+- Repos/worktrees: `~/.polypilot/repos.json`, `~/.polypilot/repos/`, `~/.polypilot/worktrees/`
+
+## Remote Mode (WsBridge Protocol)
+
+### Architecture
+Mobile apps connect to the desktop server via WebSocket. `WsBridgeServer` runs on desktop (port 4322), `WsBridgeClient` runs on mobile. The protocol is JSON-based state-sync defined in `Models/BridgeMessages.cs`.
+
+### Common Pitfalls for Future Agents
+
+1. **Remote mode operations must be handled separately.** Any `CopilotService` method that touches `state.Session` (the SDK `CopilotSession`) will crash in remote mode because `state.Session` is `null!`. Always check `IsRemoteMode` first and delegate to `_bridgeClient`.
+
+2. **Optimistic adds need full state.** When adding a session optimistically in remote mode (before server confirms), you must:
+   - Add to `_sessions` dictionary
+   - Add to `_pendingRemoteSessions` (prevents `SyncRemoteSessions` from removing it)
+   - Add `SessionMeta` to `Organization.Sessions` (or `GetOrganizedSessions()` won't render it)
+   - Do all this BEFORE awaiting the bridge send (race condition with server response)
+
+3. **Thread safety.** `SyncRemoteSessions` runs on the bridge client's background thread. `_sessions` is `ConcurrentDictionary` (safe). `_pendingRemoteSessions` is `ConcurrentDictionary` (safe). But `Organization.Sessions` is a plain `List<SessionMeta>` — access from the UI thread only.
+
+4. **Adding new bridge commands.** When adding client→server commands:
+   - Add a constant to `BridgeMessageTypes` in `BridgeMessages.cs`
+   - Add a payload class if needed (or reuse `SessionNamePayload`)
+   - Add the send method to `WsBridgeClient`
+   - Add a `case` handler in `WsBridgeServer.HandleClientMessage()`
+   - Add the remote-mode delegation in `CopilotService`
+   - Add tests in `RemoteModeTests.cs`
+
+5. **DevTunnel strips auth headers.** The `X-Tunnel-Authorization` header is consumed by DevTunnel infrastructure. `WsBridgeServer.ValidateClientToken` trusts loopback connections since DevTunnel proxies to localhost after its own auth.
+
+### Test Coverage
+Test files in `PolyPilot.Tests/`:
+- `BridgeMessageTests.cs` — Bridge protocol serialization, type constants
+- `RemoteModeTests.cs` — Remote mode payloads, organization state, chat serialization
+- `ChatMessageTests.cs` — Chat message factory methods, state transitions
+- `AgentSessionInfoTests.cs` — Session info properties, history, queue, processing status fields
+- `SessionOrganizationTests.cs` — Groups, sorting, metadata
+- `ConnectionSettingsTests.cs` — Settings persistence
+- `CopilotServiceInitializationTests.cs` — Initialization error handling, mode switching, fallback notices, CLI source persistence
+- `SessionPersistenceTests.cs` — Merge-based `SaveActiveSessionsToDisk()`, closed session exclusion, directory checks
+- `ScenarioReferenceTests.cs` — Validates UI scenario JSON + cross-references with unit tests
+- `EventsJsonlParsingTests.cs` — SDK event log parsing
+- `PlatformHelperTests.cs` — Platform detection
+- `ToolResultFormattingTests.cs` — Tool output formatting
+- `UiStatePersistenceTests.cs` — UI state save/load
+- `ProcessingWatchdogTests.cs` — Watchdog constants, timeout selection, HasUsedToolsThisTurn, IsResumed, abort clears queue and processing status
+- `BackgroundTasksIdleTests.cs` — IDLE-DEFER background tasks handling, HasActiveBackgroundTasks
+- `CliPathResolutionTests.cs` — CLI path resolution
+- `InitializationModeTests.cs` — Mode initialization
+- `PersistentModeTests.cs` — Persistent mode behavior
+- `ReflectionCycleTests.cs` — Reflection cycle logic
+- `SessionDisposalResilienceTests.cs` — Session disposal
+- `RenderThrottleTests.cs` — Render throttling
+- `DevTunnelServiceTests.cs` — DevTunnel service
+- `WsBridgeServerAuthTests.cs` — Bridge auth
+- `ModelSelectionTests.cs` — Model selection
+
+UI scenario definitions live in `PolyPilot.Tests/Scenarios/mode-switch-scenarios.json` — executable via MauiDevFlow CDP commands against a running app.
+
+Tests include source files via `<Compile Include>` links in the csproj. When adding new model classes, add a corresponding link entry.
+
+### Test Safety
+
+#### ⚠️ CRITICAL: Test File System Isolation
+Tests MUST NEVER read from or write to the real `~/.polypilot/` directory. `TestSetup.cs` contains a `[ModuleInitializer]` that calls `CopilotService.SetBaseDirForTesting()` to redirect ALL file I/O (organization.json, active-sessions.json, ui-state.json, etc.) to a per-process temp directory. This runs automatically before any test.
+
+**Why this matters:** Without isolation, tests that call `CreateGroup`, `SaveOrganization`, `FlushSaveActiveSessionsToDisk`, etc. overwrite the user's real data files — destroying squad groups, session metadata, and settings. This caused production data loss (squad groups destroyed) multiple times before the guard was added.
+
+**Guard tests:** `TestIsolationGuardTests.cs` contains 4 tests that verify isolation is active. If any of these fail, ALL other test results are suspect because they may have corrupted real user data.
+
+**When adding new file paths to CopilotService:** You MUST also clear the corresponding backing field in `SetBaseDirForTesting()`, or the new path will leak to the real filesystem.
+
+#### Other test safety rules
+- Tests must **NEVER** call `ConnectionSettings.Save()` or `ConnectionSettings.Load()` — these read/write `~/.polypilot/settings.json` which is shared with the running app.
+- All tests use `ReconnectAsync(settings)` with an in-memory settings object.
+- Never use `ConnectionMode.Embedded` in tests — it spawns real copilot processes. Use `ConnectionMode.Persistent` with port 19999 for deterministic failures, or `ConnectionMode.Demo` for success paths.
+- CopilotService dependencies are injected via interfaces: `IChatDatabase`, `IServerManager`, `IWsBridgeClient`, `IDemoService`. Test stubs live in `TestStubs.cs`.
+
+---
+> Source: [PureWeen/PolyPilot](https://github.com/PureWeen/PolyPilot) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-04-21 -->
