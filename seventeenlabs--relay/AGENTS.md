@@ -1,0 +1,18 @@
+- [x] Verify that the copilot-instructions.md file in the .github directory is created.
+- [x] Clarify Project Requirements
+- [x] Scaffold the Project
+- [x] Customize the Project
+- [x] Install Required Extensions
+- [x] Compile the Project
+- [x] Create and Run Task
+- [x] Launch the Project
+- [x] Ensure Documentation is Complete
+
+- Project: Relay
+- Stack: Electron + Vite + React + TypeScript
+- Backend model: configurable OpenClaw endpoint for local, VPS, or custom URL routing
+- Notes: no VS Code extensions required for this scaffold
+
+---
+> Source: [SeventeenLabs/relay](https://github.com/SeventeenLabs/relay) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-04-22 -->
