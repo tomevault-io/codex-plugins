@@ -2,17 +2,15 @@
 
 > Source: [lyehe/porterminal](https://github.com/lyehe/porterminal) — distributed by [TomeVault](https://tomevault.io)
 
-Quick n' dirty web terminal tunneling your phone & pc
-
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [lyehe/porterminal](https://github.com/lyehe/porterminal).
+Original source: `CLAUDE.md` in [lyehe/porterminal](https://github.com/lyehe/porterminal).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
