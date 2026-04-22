@@ -1,0 +1,93 @@
+{
+  "name": "agentbox",
+  "owner": "rcarmo",
+  "repo": "agentbox",
+  "description": "Contain your coding agents (literally)",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "swift",
+      "path": "skel/.github/skills/swift",
+      "github_url": "https://github.com/rcarmo/agentbox/tree/main/skel/.github/skills/swift",
+      "description": ""
+    },
+    {
+      "name": "workflow",
+      "path": "skel/.github/skills/workflow",
+      "github_url": "https://github.com/rcarmo/agentbox/tree/main/skel/.github/skills/workflow",
+      "description": ""
+    },
+    {
+      "name": "docker",
+      "path": "skel/.github/skills/docker",
+      "github_url": "https://github.com/rcarmo/agentbox/tree/main/skel/.github/skills/docker",
+      "description": ""
+    },
+    {
+      "name": "frontend",
+      "path": "skel/.github/skills/frontend",
+      "github_url": "https://github.com/rcarmo/agentbox/tree/main/skel/.github/skills/frontend",
+      "description": ""
+    },
+    {
+      "name": "github-actions",
+      "path": "skel/.github/skills/github-actions",
+      "github_url": "https://github.com/rcarmo/agentbox/tree/main/skel/.github/skills/github-actions",
+      "description": ""
+    },
+    {
+      "name": "go",
+      "path": "skel/.github/skills/go",
+      "github_url": "https://github.com/rcarmo/agentbox/tree/main/skel/.github/skills/go",
+      "description": ""
+    },
+    {
+      "name": "python",
+      "path": "skel/.github/skills/python",
+      "github_url": "https://github.com/rcarmo/agentbox/tree/main/skel/.github/skills/python",
+      "description": ""
+    },
+    {
+      "name": "release",
+      "path": "skel/.github/skills/release",
+      "github_url": "https://github.com/rcarmo/agentbox/tree/main/skel/.github/skills/release",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/rcarmo/agentbox",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-04-22T15:41:13Z"
+}
