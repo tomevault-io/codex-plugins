@@ -7,7 +7,7 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman).
+Original source: `.windsurf/rules/*.md` in [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman).
 
 ## Also available for
 
@@ -15,7 +15,7 @@ Original source: `GEMINI.md` in [JuliusBrussee/caveman](https://github.com/Juliu
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
-- **Windsurf** — `project-config.md`
+- **Gemini CLI** — `GEMINI.md`
 
 From [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) — a repo with 38711+ stars on GitHub.
 
