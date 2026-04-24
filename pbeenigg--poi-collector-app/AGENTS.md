@@ -1,4 +1,3 @@
-
 # POI Collector App - AI Coding Instructions
 
 ## 项目概述
