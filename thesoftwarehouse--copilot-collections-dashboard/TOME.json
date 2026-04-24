@@ -1,0 +1,51 @@
+{
+  "name": "copilot-collections",
+  "owner": "TheSoftwareHouse",
+  "repo": "copilot-collections-dashboard",
+  "description": "Analytics dashboard for GitHub Copilot usage \u2014 track seats, teams, spending, and premium requests across your organization to optimize adoption and control costs.",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "tsh-implementing-ci-cd",
+      "path": ".github/skills/tsh-implementing-ci-cd",
+      "github_url": "https://github.com/TheSoftwareHouse/copilot-collections-dashboard/tree/main/.github/skills/tsh-implementing-ci-cd",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/TheSoftwareHouse/copilot-collections-dashboard",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-04-24T08:30:50Z"
+}
