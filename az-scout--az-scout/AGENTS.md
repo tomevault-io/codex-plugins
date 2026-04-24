@@ -1,0 +1,97 @@
+# Copilot Instructions for az-scout
+
+## Project overview
+
+`az-scout` is a Python web tool that visualizes Azure Availability Zone logical-to-physical mappings across subscriptions. It uses a FastAPI backend and an MCP server, both calling shared Azure ARM REST API helpers, and a frontend with D3.js for graph rendering and vanilla JavaScript.
+
+## Tech stack
+
+- **Backend:** Python 3.11+, FastAPI 0.115+, uvicorn (ASGI server), click (CLI), azure-identity (DefaultAzureCredential), requests
+- **MCP:** mcp[cli] (FastMCP), stdio and Streamable HTTP transports
+- **Frontend:** Vanilla JavaScript (no framework), D3.js v7, CSS custom properties (dark/light themes)
+- **Packaging:** hatchling + hatch-vcs, CalVer (`YYYY.MM.MICRO`), src-layout
+- **Tools:** uv (package manager), ruff (lint + format), mypy (strict), pytest, pre-commit
+
+## Project structure
+
+```
+src/az_scout/
+├── app.py              # FastAPI bootstrap, lifespan, MCP mount, index + chat routes
+├── logging_config.py   # Unified coloured logging (shared by core + plugins)
+├── cli.py              # Click CLI (web + mcp subcommands)
+├── plugin_api.py       # Public protocol + dataclasses for plugin authors
+├── plugin_manager.py   # Install/validate/uninstall plugins (GitHub + PyPI)
+├── plugins.py          # Plugin discovery, registration, hot-reload
+├── azure_api/          # Shared Azure ARM logic (auth, pagination, data functions)
+├── scoring/            # Deployment Confidence Score (shared by plugins)
+├── services/           # Business logic (deployment planner, AI chat, etc.)
+├── models/             # Pydantic models (deployment plan)
+├── routes/             # API routes (discovery, plugin manager, auth)
+├── internal_plugins/   # Built-in plugins (topology, planner)
+├── templates/          # Jinja2 templates (index.html, login.html)
+└── static/             # JS, CSS, images
+tests/                  # pytest unit tests + e2e (Playwright)
+```
+
+## Code conventions
+
+- **Python:** All functions must have type annotations (`disallow_untyped_defs = true`). Follow ruff rules: `E, F, I, W, UP, B, SIM`. Line length is 100.
+- **JavaScript:** Vanilla JS only — no npm, no bundler, no frameworks. Use `const`/`let` (never `var`). Functions and variables use `camelCase`.
+- **CSS:** Use CSS custom properties for theming. Both light and dark themes must be maintained.
+- **HTML:** Minimal Jinja2 templating. Static assets referenced via `url_for('static', ...)`.
+
+## Quality checks
+
+Before committing, ensure all checks pass:
+
+```bash
+uv run ruff check src/ tests/
+uv run ruff format --check src/ tests/
+uv run mypy src/
+uv run pytest
+```
+
+Pre-commit hooks run these automatically on `git commit`.
+
+## Versioning
+
+- Version is derived from git tags via `hatch-vcs` — never hardcode a version.
+- Tags follow CalVer: `v2026.2.0`, `v2026.2.1`, etc.
+- Update `CHANGELOG.md` before tagging a release.
+
+## Design rules
+
+### Do
+
+- Reuse `azure_api/` for all Azure ARM interactions.
+- Keep FastAPI routes and MCP tools as thin wrappers.
+- Include full type annotations on all public functions.
+- Preserve dark/light theme compatibility.
+
+### Do NOT
+
+- Do NOT call Azure ARM APIs directly from route handlers or MCP tools.
+- Do NOT introduce frontend frameworks, npm, or build tooling.
+- Do NOT introduce global mutable state.
+- Do NOT perform heavy imports at module import time.
+- Do NOT change API response shapes without updating tests.
+
+## Code generation expectations
+
+- Always include type annotations with explicit return types.
+- Prefer small pure functions. Prefer clarity over cleverness.
+- Avoid metaprogramming and dynamic attribute access.
+- Avoid magic constants — define named constants.
+
+## Contextual instructions
+
+Domain-specific guidance is loaded automatically via file instructions:
+
+- **`azure-api.instructions.md`** — ARM patterns, auth, pagination (when editing `azure_api/`)
+- **`obo-auth.instructions.md`** — OBO flow, sessions, admin roles (when editing auth files)
+- **`frontend.instructions.md`** — JS/CSS/template conventions (when editing `static/` or `templates/`)
+- **`plugin-dev.instructions.md`** — Plugin protocol, conventions, testing (when editing plugin code)
+
+---
+> Source: [az-scout/az-scout](https://github.com/az-scout/az-scout) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-04-24 -->
