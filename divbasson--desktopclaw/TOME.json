@@ -1,0 +1,44 @@
+{
+  "name": "DesktopClaw",
+  "owner": "divbasson",
+  "repo": "DesktopClaw",
+  "description": "DesktopClaw is a state-aware desktop pet interface for your OpenClaw instance. It brings your AI to life as a reactive companion you can interact with via voice or text, while providing real-time session visibility, task feedback, and quick action triggers through a persistent, animated desktop presence.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/divbasson/DesktopClaw",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-04-24T04:50:24Z"
+}
