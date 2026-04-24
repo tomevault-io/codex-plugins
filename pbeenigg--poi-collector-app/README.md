@@ -7,15 +7,15 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.windsurf/rules/*.md` in [pbeenigg/poi_collector_app](https://github.com/pbeenigg/poi_collector_app).
+Original source: `copilot-instructions.md` in [pbeenigg/poi_collector_app](https://github.com/pbeenigg/poi_collector_app).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
 
 Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/pbeenigg/poi_collector_app](https://github.com/pbeenigg/poi_collector_app)
 
