@@ -1,0 +1,63 @@
+{
+  "name": "go-rdp",
+  "owner": "rcarmo",
+  "repo": "go-rdp",
+  "description": "A Go-backed web RDP client (and reference client implementation)",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "go",
+      "path": "skel/.github/skills/go",
+      "github_url": "https://github.com/rcarmo/go-rdp/tree/main/skel/.github/skills/go",
+      "description": ""
+    },
+    {
+      "name": "go",
+      "path": ".github/skills/go",
+      "github_url": "https://github.com/rcarmo/go-rdp/tree/main/.github/skills/go",
+      "description": ""
+    },
+    {
+      "name": "go",
+      "path": ".github/skills/go",
+      "github_url": "https://github.com/rcarmo/go-rdp/tree/main/.github/skills/go",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/rcarmo/go-rdp",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-04-24T16:35:08Z"
+}
