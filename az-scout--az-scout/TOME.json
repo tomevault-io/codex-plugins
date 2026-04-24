@@ -1,0 +1,44 @@
+{
+  "name": "az-scout",
+  "owner": "az-scout",
+  "repo": "az-scout",
+  "description": "Scout Azure regions for VM availability, zone mappings, pricing, spot scores, and quota \u2014 then plan deployments with confidence.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/az-scout/az-scout",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-04-24T13:54:27Z"
+}
