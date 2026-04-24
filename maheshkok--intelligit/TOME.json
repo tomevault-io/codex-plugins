@@ -1,0 +1,44 @@
+{
+  "name": "IntelliGit",
+  "owner": "MaheshKok",
+  "repo": "IntelliGit",
+  "description": "IntelliJ-style Git experience for VS Code. A full-featured Git GUI with commit graph visualization, branch management, intelligent file staging, and a shelf (stash) system \u2014 all designed to match the workflow developers know from IntelliJ IDEA and PyCharm.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/MaheshKok/IntelliGit",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-04-24T13:44:16Z"
+}
