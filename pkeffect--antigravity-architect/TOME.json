@@ -1,0 +1,44 @@
+{
+  "name": "Antigravity-Architect",
+  "owner": "pkeffect",
+  "repo": "Antigravity-Architect",
+  "description": "Antigravity Architect is the definitive Agent-First project engine. It is a modular, zero-dependency Python package that generates Living Repositories\u2014complete development environments designed from the ground up to be self-describing, self-protecting, and self-evolving for AI coding agents like Gemini, Claude, and GPT-4.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/pkeffect/Antigravity-Architect",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-04-24T16:39:25Z"
+}
