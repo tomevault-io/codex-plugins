@@ -1,0 +1,63 @@
+{
+  "name": "copilot-ralph-mode",
+  "owner": "sepehrbayat",
+  "repo": "copilot-ralph-mode",
+  "description": "\ud83d\udd04 Ralph Wiggum iterative AI development loops for GitHub Copilot. Self-referential coding automation that keeps improving until done. Cross-platform Python tool.",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "code-analysis",
+      "path": ".github/skills/code-analysis",
+      "github_url": "https://github.com/sepehrbayat/copilot-ralph-mode/tree/main/.github/skills/code-analysis",
+      "description": ""
+    },
+    {
+      "name": "ralph-iteration",
+      "path": ".github/skills/ralph-iteration",
+      "github_url": "https://github.com/sepehrbayat/copilot-ralph-mode/tree/main/.github/skills/ralph-iteration",
+      "description": ""
+    },
+    {
+      "name": "test-runner",
+      "path": ".github/skills/test-runner",
+      "github_url": "https://github.com/sepehrbayat/copilot-ralph-mode/tree/main/.github/skills/test-runner",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/sepehrbayat/copilot-ralph-mode",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-04-25T10:33:09Z"
+}
