@@ -1,21 +1,21 @@
-# HomeIQ — distributed by TomeVault
+# HomeIQ
 
-> Originally from [wtthornton/HomeIQ](https://github.com/wtthornton/HomeIQ). Converted and distributed by [TomeVault](https://tomevault.io)
+> Source: [wtthornton/HomeIQ](https://github.com/wtthornton/HomeIQ) — distributed by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [wtthornton/HomeIQ](https://github.com/wtthornton/HomeIQ).
+Original source: `.cursor/rules/*.mdc` in [wtthornton/HomeIQ](https://github.com/wtthornton/HomeIQ).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From a repo with 0+ stars on GitHub. [See the full profile](https://tomevault.io/claim/wtthornton)
+From [wtthornton/HomeIQ](https://github.com/wtthornton/HomeIQ) — a repo with 0+ stars on GitHub.
 
 ---
 
