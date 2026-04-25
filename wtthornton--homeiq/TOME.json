@@ -4,7 +4,7 @@
   "repo": "HomeIQ",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": ".cursor/rules/*.mdc",
   "formats": [
     {
       "format": "claude_md",
@@ -38,7 +38,7 @@
     }
   ],
   "skills": [],
-  "claim_url": "https://tomevault.io/claim/wtthornton",
+  "source_url": "https://github.com/wtthornton/HomeIQ",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-16T00:03:33Z"
+  "distributed_at": "2026-04-25T05:05:55Z"
 }
