@@ -1,21 +1,21 @@
-# MachinaAnalytica — distributed by TomeVault
+# MachinaAnalytica
 
-> Originally from [ZyadYhia/MachinaAnalytica](https://github.com/ZyadYhia/MachinaAnalytica). Converted and distributed by [TomeVault](https://tomevault.io)
+> Source: [ZyadYhia/MachinaAnalytica](https://github.com/ZyadYhia/MachinaAnalytica) — distributed by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [ZyadYhia/MachinaAnalytica](https://github.com/ZyadYhia/MachinaAnalytica).
+Original source: `CLAUDE.md` in [ZyadYhia/MachinaAnalytica](https://github.com/ZyadYhia/MachinaAnalytica).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Quality verified by TomeVault's automated analysis pipeline. [View quality report](https://tomevault.io/claim/ZyadYhia#quality)
+Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/ZyadYhia/MachinaAnalytica](https://github.com/ZyadYhia/MachinaAnalytica)
 
 ---
 
