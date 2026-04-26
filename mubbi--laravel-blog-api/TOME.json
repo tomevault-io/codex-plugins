@@ -4,7 +4,7 @@
   "repo": "laravel-blog-api",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": ".cursor/rules/*.mdc",
   "formats": [
     {
       "format": "claude_md",
@@ -38,7 +38,7 @@
     }
   ],
   "skills": [],
-  "claim_url": "https://tomevault.io/claim/mubbi",
+  "source_url": "https://github.com/mubbi/laravel-blog-api",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-11T17:41:19Z"
+  "distributed_at": "2026-04-26T15:58:02Z"
 }
