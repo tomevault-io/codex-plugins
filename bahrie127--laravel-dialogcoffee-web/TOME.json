@@ -4,7 +4,7 @@
   "repo": "laravel-dialogcoffee-web",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -38,7 +38,7 @@
     }
   ],
   "skills": [],
-  "claim_url": "https://tomevault.io/claim/bahrie127",
+  "source_url": "https://github.com/bahrie127/laravel-dialogcoffee-web",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-15T22:11:29Z"
+  "distributed_at": "2026-04-26T20:47:21Z"
 }
