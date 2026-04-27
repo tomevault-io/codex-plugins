@@ -1,0 +1,63 @@
+{
+  "name": "vibe-wpf",
+  "owner": "jonathanpeppers",
+  "repo": "vibe-wpf",
+  "description": "This is a sample for the \"vibe code inner loop\" seeing how we might leverage dotnet-watch & screenshots together to vibe.",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "restart",
+      "path": ".github/skills/restart",
+      "github_url": "https://github.com/jonathanpeppers/vibe-wpf/tree/main/.github/skills/restart",
+      "description": ""
+    },
+    {
+      "name": "screenshot",
+      "path": ".github/skills/screenshot",
+      "github_url": "https://github.com/jonathanpeppers/vibe-wpf/tree/main/.github/skills/screenshot",
+      "description": ""
+    },
+    {
+      "name": "tree",
+      "path": ".github/skills/tree",
+      "github_url": "https://github.com/jonathanpeppers/vibe-wpf/tree/main/.github/skills/tree",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/jonathanpeppers/vibe-wpf",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-04-27T00:31:25Z"
+}
