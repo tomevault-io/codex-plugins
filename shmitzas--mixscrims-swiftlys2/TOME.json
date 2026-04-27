@@ -1,0 +1,44 @@
+{
+  "name": "MixScrims-SwiftlyS2",
+  "owner": "shmitzas",
+  "repo": "MixScrims-SwiftlyS2",
+  "description": "Faceit-style PUG matches for CS2 - managed entirely in-game, no external tools required",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/shmitzas/MixScrims-SwiftlyS2",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-04-27T00:38:43Z"
+}
