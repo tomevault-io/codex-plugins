@@ -7,13 +7,13 @@ Design thinking agentic engineering framework
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [CGSOG-JumpStarts/JumpStart-AutoNav](https://github.com/CGSOG-JumpStarts/JumpStart-AutoNav).
+Original source: `copilot-instructions.md` in [CGSOG-JumpStarts/JumpStart-AutoNav](https://github.com/CGSOG-JumpStarts/JumpStart-AutoNav).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
