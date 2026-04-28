@@ -1,0 +1,44 @@
+{
+  "name": "teamfuse",
+  "owner": "agentdmai",
+  "repo": "teamfuse",
+  "description": "Fuse Claude Code agents into a working team. AgentDM-powered template with a cabinet-style control panel, five starter roles",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/agentdmai/teamfuse",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-04-28T15:49:26Z"
+}
