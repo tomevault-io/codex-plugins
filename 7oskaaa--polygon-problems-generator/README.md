@@ -1,0 +1,28 @@
+# polygon-problems-generator
+
+> Tome by [7oSkaaa](https://github.com/7oSkaaa/polygon-problems-generator) — distributed by [TomeVault](https://tomevault.io)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `copilot-instructions.md` in [7oSkaaa/polygon-problems-generator](https://github.com/7oSkaaa/polygon-problems-generator).
+
+## Also available for
+
+- **Claude Code** — `CLAUDE.md`
+- **Codex** — `AGENTS.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/7oSkaaa/polygon-problems-generator](https://github.com/7oSkaaa/polygon-problems-generator)
+
+---
+
+Install this config instantly:
+```
+npx tomevault install 7oSkaaa/polygon-problems-generator
+```
+Source: [github.com/7oSkaaa/polygon-problems-generator](https://github.com/7oSkaaa/polygon-problems-generator).
+
+<!-- genome:t-i-p -->
