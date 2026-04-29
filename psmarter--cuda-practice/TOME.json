@@ -1,0 +1,44 @@
+{
+  "name": "CUDA-Practice",
+  "owner": "psmarter",
+  "repo": "CUDA-Practice",
+  "description": "CUDA\u7f16\u7a0b\u7ec3\u4e60\u9879\u76ee-Hands-on CUDA kernels and performance optimization, covering GEMM, FlashAttention, Tensor Cores, CUTLASS, quantization, KV cache, NCCL, and profiling.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/psmarter/CUDA-Practice",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-04-29T11:31:01Z"
+}
