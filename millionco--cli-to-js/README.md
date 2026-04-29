@@ -1,0 +1,30 @@
+# cli-to-js
+
+> Source: [millionco/cli-to-js](https://github.com/millionco/cli-to-js) — distributed by [TomeVault](https://tomevault.io)
+
+Turn any CLI into a JavaScript API
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [millionco/cli-to-js](https://github.com/millionco/cli-to-js).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+From [millionco/cli-to-js](https://github.com/millionco/cli-to-js) — a repo with 365+ stars on GitHub.
+
+---
+
+Install this config instantly:
+```
+npx tomevault install millionco/cli-to-js
+```
+Source: [github.com/millionco/cli-to-js](https://github.com/millionco/cli-to-js).
+
+<!-- genome:d-i-s -->
