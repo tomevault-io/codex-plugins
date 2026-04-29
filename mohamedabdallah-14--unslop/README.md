@@ -7,14 +7,14 @@ Make AI output sound human. Strips AI-isms (sycophancy, stock vocab, hedging sta
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [MohamedAbdallah-14/unslop](https://github.com/MohamedAbdallah-14/unslop).
+Original source: `GEMINI.md` in [MohamedAbdallah-14/unslop](https://github.com/MohamedAbdallah-14/unslop).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
-- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 From [MohamedAbdallah-14/unslop](https://github.com/MohamedAbdallah-14/unslop) — a repo with 7+ stars on GitHub.
