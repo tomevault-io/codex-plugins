@@ -4,7 +4,7 @@
   "repo": "amrutbaa.com",
   "description": "",
   "type": "config",
-  "source_format": ".cursor/rules/*.mdc",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -38,7 +38,7 @@
     }
   ],
   "skills": [],
-  "claim_url": "https://tomevault.io/claim/prinkitpatel",
+  "source_url": "https://github.com/prinkitpatel/amrutbaa.com",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-16T02:58:16Z"
+  "distributed_at": "2026-04-30T19:46:51Z"
 }
