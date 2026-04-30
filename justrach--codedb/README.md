@@ -7,12 +7,12 @@ Zig code intelligence server and MCP toolset for AI agents. Fast tree, outline, 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [justrach/codedb](https://github.com/justrach/codedb).
+Original source: `CLAUDE.md` in [justrach/codedb](https://github.com/justrach/codedb).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
