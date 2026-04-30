@@ -1,0 +1,30 @@
+# maple
+
+> Tome by [Makisuo](https://github.com/Makisuo/maple) — distributed by [TomeVault](https://tomevault.io)
+
+OpenTelemetry observability platform
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [Makisuo/maple](https://github.com/Makisuo/maple).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+From [Makisuo/maple](https://github.com/Makisuo/maple) — a repo with 270+ stars on GitHub.
+
+---
+
+Install this config instantly:
+```
+npx tomevault install Makisuo/maple
+```
+Source: [github.com/Makisuo/maple](https://github.com/Makisuo/maple).
+
+<!-- genome:t-i-s -->
