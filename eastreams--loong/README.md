@@ -1,0 +1,30 @@
+# loong
+
+> Tome by [eastreams](https://github.com/eastreams/loong) — distributed by [TomeVault](https://tomevault.io)
+
+Lightweight, clear, and fully extensible AI agent infrastructure — learn easily, customize anything 🐉
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [eastreams/loong](https://github.com/eastreams/loong).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/eastreams/loong](https://github.com/eastreams/loong)
+
+---
+
+Install this config instantly:
+```
+npx tomevault install eastreams/loong
+```
+Source: [github.com/eastreams/loong](https://github.com/eastreams/loong).
+
+<!-- genome:t-i-p -->
