@@ -7,12 +7,12 @@ mo is a Markdown viewer that opens .md files in a browser.
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [k1LoW/mo](https://github.com/k1LoW/mo).
+Original source: `CLAUDE.md` in [k1LoW/mo](https://github.com/k1LoW/mo).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
