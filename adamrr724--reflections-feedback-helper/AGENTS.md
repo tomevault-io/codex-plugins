@@ -1,0 +1,416 @@
+# Reflections & Feedback Workspace - Copilot Instructions
+
+## Purpose
+
+This workspace helps GitHub employees write performance reflections and peer feedback through a guided, interactive process. Copilot pulls real-time data from GitHub and references official guidance from Copilot Spaces.
+
+## First-Time Setup Check
+
+**Before starting any workflow**, check if the ADX integration is set up by verifying the Python virtual environment exists at `tools/.venv/`. If it does NOT exist, set it up for the user:
+
+> "Before we begin, let me set up the ADX integration so I can automatically pull your support metrics (CSAT, tickets, IR Met, escalations, etc.)."
+
+**Step 1: Install dependencies** — Run this directly in the terminal for the user (do NOT ask them to run it themselves):
+```bash
+cd tools && python3 -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt
+```
+
+**Step 2: Azure authentication** — First check whether Azure CLI is installed by running `which az`. Then tell the user:
+> "The MCP server needs your **@githubazure.com** credentials to access the ADX clusters. You have two options: (a) Azure CLI (`az login`) or (b) the VS Code Azure extension. If you've already signed in via either with that account, you're all set."
+
+- **If `az` is installed and the user needs to sign in:** offer to run `az login` for them in the terminal (sign in with **@githubazure.com**, not @github.com).
+- **If `az` is NOT installed:** offer two paths and let the user choose:
+  1. Install Azure CLI (`brew install azure-cli`) and then run `az login`.
+  2. Use the VS Code Azure extension instead — install the [Azure Account](https://marketplace.visualstudio.com/items?itemName=ms-vscode.azure-account) extension and sign in via the Accounts icon in the bottom-left of VS Code with their **@githubazure.com** email.
+  3. Skip auth setup and rely on the interactive browser fallback (the Kusto MCP server will pop a browser on the first query).
+
+**Step 3: Verify MCP connections** — After setup (or if `tools/.venv/` already exists), verify **both** MCP servers are connected before proceeding:
+
+1. **ADX MCP** — Try listing ADX clusters (e.g., call `list_clusters`). If it returns `gh-analytics` and `dotcomro`, ADX is working.
+2. **GitHub MCP** — Try a simple GitHub MCP call (e.g., `get_me` to fetch the authenticated user). If it returns a valid user, GitHub MCP is working.
+
+**If both succeed:** Confirm to the user and proceed to the requested workflow.
+
+**If one or both fail:** Tell the user which connection(s) failed and offer two options:
+> "It looks like **[ADX/GitHub/both]** MCP isn't connected yet. I can help troubleshoot this, or you can skip it and we'll work with whatever data you can provide manually. What would you prefer?"
+
+- **Troubleshoot ADX:** Check Azure auth (`az login` if Azure CLI is installed, or VS Code Azure extension sign-in), verify the MCP server config in `.vscode/mcp.json`, refer to README troubleshooting section.
+- **Troubleshoot GitHub:** Verify the GitHub MCP server is enabled in VS Code's MCP settings, check that the `github` server entry in `.vscode/mcp.json` is correct.
+- **Skip:** Continue without the failed integration — note which data will need to be provided manually (ADX metrics, GitHub contributions, or both) and adjust the workflow accordingly.
+
+If `tools/.venv/` already exists, skip Steps 1–2 and go directly to Step 3 (verify connections).
+
+---
+
+## Required Copilot Spaces
+
+**ALWAYS query these Copilot Spaces for the latest official questions and guidance:**
+
+| Space | URL | Use For |
+|-------|-----|---------|
+| **IC Reflections FY26** | https://github.com/copilot/spaces/github/998 | Official reflection questions, performance philosophy, GitHub values |
+| **Peer & Manager Feedback** | https://github.com/copilot/spaces/github/50 | Official 3-question feedback template, Manager Fundamentals |
+| **Support Repository Reference** | https://github.com/copilot/spaces/github/1106 | Support career ladder, level expectations, promotion criteria. Backed by the entire [github/support](https://github.com/github/support) repository — query it directly (via GitHub MCP or `mcp_github_get_copilot_space`) for ladder docs, role definitions, processes, and team guidance. |
+
+**CRITICAL:** Always pull the latest from these Spaces before starting any workflow.
+
+---
+
+## Spaces Cache Management
+
+Official Copilot Spaces content is cached locally in `spaces_cache/` at the workspace root. Each Space has its own subdirectory; one Space may contribute multiple documents.
+
+| Source Space | Cache Directory | Primary File(s) |
+|--------------|-----------------|-----------------|
+| IC Reflections FY26 (github/998) | `spaces_cache/ic-reflections-fy26/` | `reflection-questions.md` |
+| Peer & Manager Feedback (github/50) | `spaces_cache/peer-manager-feedback/` | `peer-feedback-questions.md` |
+| Support Repository Reference (github/1106) | `spaces_cache/support-repository-reference/` | `careers/` directory from [github/support](https://github.com/github/support) — includes `level-expectations/`, `promotion/`, `hiring/`, `onboarding/`, `training/`. Use these local files first; fall back to live GitHub MCP queries against `github/support` for content outside the `careers/` tree. |
+
+When a Space returns multiple documents, save each as a separate file inside that Space's subdirectory using a clear, descriptive filename. Cross-cutting reference material (GitHub Mission & Values, Manager Fundamentals, Leadership Principles) currently lives under `spaces_cache/peer-manager-feedback/` and should be referenced from both reflection and feedback workflows to ground language in GitHub Values and Leadership Principles.
+
+**Load order for every workflow:**
+
+1. **Try live fetch first.** Call `mcp_github_get_copilot_space` for the relevant Space. If it succeeds and returns readable content:
+   - Compare against the cached file. If content differs (or no cache exists), **overwrite the cache file** with the fresh content and briefly tell the user: "I refreshed the cached [questions/template] from the [Space name] Space."
+   - Use the fresh content for the workflow.
+2. **Fall back to cache.** If the live fetch fails, returns unresolvable URIs, or is unavailable in the current agent mode, read the corresponding `spaces_cache/*.md` file and proceed. Do not block the workflow on a failed fetch.
+3. **No cache + no live fetch.** Ask the user to paste the content, then save it to the correct `spaces_cache/*.md` path for future runs.
+
+**Rules:**
+- Never silently skip the live-fetch attempt — always try it first so the cache stays current.
+- Only overwrite a cache file when you have successfully retrieved fresh Space content.
+- Keep cache files as clean markdown (questions and guidance only, no metadata wrappers).
+
+---
+
+## Guided Reflection Workflow
+
+When a user says **"Help me write my reflection"** or **"Start my reflection"**, follow this interactive process:
+
+### Step 1: Pull Official Guidance
+
+Follow the **Spaces Cache Management** protocol (see section below) to load the reflection questions from `spaces_cache/ic-reflections-fy26/` (and any relevant files in `spaces_cache/support-repository-reference/`), attempting a refresh from the **IC Reflections FY26** Space (github/998) and the **Support Repository Reference** Space (github/1106) when possible.
+
+Confirm to the user what questions they'll be answering before proceeding.
+
+### Step 2: Collect Required Info (All Upfront)
+
+Ask all three questions together so data pulls can start immediately:
+
+> "Before I start gathering your data, I need a few things:
+> 1. **GitHub handle** — e.g., `adamrr724`
+> 2. **Reflection period** — date range (e.g., July 2025 - December 2025)
+> 3. **Current level** — Support Engineer II, Support Engineer III, Senior Support Engineer, or Staff Support Engineer"
+
+Once all three are provided, proceed to Step 3 immediately.
+
+### Step 3: Load Level Expectations FIRST (informs ADX pull)
+
+**Before launching ADX queries**, read the user's level-expectations doc from the cached careers directory so the metrics pull is tailored to what matters for their level:
+
+| User level | Cached file |
+|------------|-------------|
+| Support Engineer II/III/Senior (Technical) | `spaces_cache/support-repository-reference/careers/level-expectations/support-engineer-technical.md` |
+| Support Engineer (Enterprise) | `.../support-engineer-enterprise.md` |
+| Support Engineer (Premium) | `.../support-engineer-premium.md` |
+| Support Engineer (Security & Revenue) | `.../support-engineer-security-revenue.md` |
+| Staff Support Engineer | `.../staff-support-engineer.md` |
+| Senior Escalation Engineer | `.../senior-escalation-engineer.md` |
+| Support Delivery SE | `.../supportdelivery-SE-expectations.md` |
+
+Extract the **expectation areas emphasized at the user's level** (e.g., ticket complexity, priority/on-call, escalations/IC work, cross-squad contributions, mentoring, KB/enablement, engineering collaboration, customer tier handling). Keep those focus areas in context — they drive both (a) which ADX metrics to emphasize in Step 4 and (b) how to frame evidence in the draft.
+
+Also briefly read `spaces_cache/support-repository-reference/careers/level-expectations/Comparison-Metric-report.md` so the comparison guidance (squad/team/region slicers) matches how PowerBI users see it.
+
+### Step 4: Launch Data Pulls in Parallel
+
+**Kick off all automated data gathering simultaneously** using subagents or parallel tool calls. Do NOT wait for one to finish before starting the next.
+
+**In parallel:**
+
+#### 4a. GitHub MCP Pull (subagent)
+- Use GitHub MCP to pull all contributions (PRs, reviews, issues, commits) for the period
+- Save to `reflection/contributions/github_contributions.md`
+- Auto-populate KB/documentation contributions, engineering issues, collaboration activity
+- **Level-tailored emphasis:** If the level expectations highlight engineering collaboration, mentoring, cross-squad reviews, or KB authoring, flag those contributions specifically in the output.
+
+#### 4b. ADX Metrics Pull (subagent, informed by level expectations)
+If ADX data is available (via Kusto MCP, Azure CLI, or user-provided query results), use the KQL queries in `reflection/adx_queries.md`. **Run the full metric suite, but prioritize and annotate results against the level's focus areas:**
+
+Core metrics (always pull):
+
+- **CSAT** — avg score, total surveys, rating breakdown (from `supportv3_ticket_csat_survey_fact`)
+- **IR Met / SLA compliance** — percentage and counts (from `supportv3_ticket_fact`)
+- **Ticket volume** — tickets solved, avg handle time, avg first response time (from `supportv3_ticket_fact`)
+- **Urgent/High-Priority tickets** — breakdown by priority level and `was_urgent`/`is_escalated` flags (from `supportv3_ticket_dim`)
+- **Customer tier breakdown** — tickets by offering type: Premium Plus > Premium Standard > Non-Premium (from `supportv3_ticket_dim`)
+- **Squad contribution share** — your % of squad's total ticket volume
+- **Escalations** — IC issues with severity, EPD SLA compliance, avg response time (from `supportv3_escalations_issue_dim` + `supportv3_escalations_issue_fact`)
+- **Team & Region breakdown** — tickets by support team (Enterprise, Technical, Premium, Security & Revenue) and region (AMER, EMEA, APAC)
+- **Collaboration footprint** — IC comments, unique issues/repos (from `supportv3_ic_comment_issue_fact`)
+- **Zendesk collaboration** — tickets followed/CC'd (from `zendesk.tickets`)
+- **Squad comparisons** — anonymous aggregate stats (avg, median, p25, p75) for CSAT, tickets, IR Met, escalations, and urgent/high tickets across your squad
+- **Team comparisons** — anonymous aggregate stats by support team
+- **Region comparisons** — anonymous aggregate stats by AMER/EMEA/APAC
+
+**Level-based emphasis** (annotate these as the "signal metrics" for the user's level):
+
+| Level focus area (from expectations doc) | ADX metric to highlight |
+|------------------------------------------|-------------------------|
+| Ticket complexity / independence | Avg handle time vs. squad, Premium Plus share, urgent ticket share |
+| Priority & on-call | `was_urgent` count, after-hours urgent tickets, IR Met on urgent |
+| Escalations to EPD | IC issue count, severity mix, EPD response time, escalations filed |
+| Cross-squad / cross-team contribution | Tickets outside primary squad, team breakdown |
+| Customer tier expectations | Premium Plus vs. Standard vs. Non-Premium breakdown |
+| Mentoring / onboarding | Zendesk CC/follower volume (signal of shadowing/coaching) |
+| Engineering collaboration | IC comment count, unique repos, KB/doc PRs |
+| Squad leadership (Senior/Staff) | % of squad volume, comparison to p75 |
+
+Do **not** hide core metrics even if they aren't emphasized at the level — present everything, but lead with the signal metrics.
+
+**Privacy Rule:** Comparative queries must ONLY return **aggregated, anonymous statistics** (averages, medians, percentiles). NEVER include names, handles, or individually identifiable data about other employees. All peer comparisons are group-level only.
+
+**ADX Connection Details:**
+| Cluster | Database | Use For |
+|---------|----------|---------|
+| `gh-analytics.eastus.kusto.windows.net` | `service_cs_analytics` | Ticket metrics, IC issues/PRs, user dim |
+| `gh-analytics.eastus.kusto.windows.net` | `zendesk` | Raw Zendesk data (followers, CCs) |
+| `dotcomro.eastus2.kusto.windows.net` | `Dotcom` | Dotcom entity data |
+
+**How to use:**
+1. Ask the user for their **GitHub handle** to resolve their user ID via `supportv3_user_dim`
+2. Use the reflection period dates as `{{START_DATE}}` and `{{END_DATE}}`
+3. If a Kusto MCP or CLI is available, run queries automatically and populate `support-metrics.md`
+4. If not, tell the user:
+   > "I have KQL queries ready to pull your metrics from ADX. You can run them in [Kusto Web Explorer](https://dataexplorer.azure.com/) and paste the results here, or I can fill in what you tell me manually."
+5. Populate the ADX-sourced fields in `reflection/contributions/support-metrics.md`, tagging which are the "signal metrics" for their level.
+
+#### 4c. While Data Pulls Run — Ask for Additional Context
+
+**Do not wait** for GitHub/ADX pulls to complete. While they run, immediately proceed to gather user input. Shape the prompt around gaps the level expectations flagged (e.g., if mentoring is a signal area, ask about it explicitly):
+
+> "While I pull your GitHub contributions and ADX metrics, let me ask a few more questions..."
+
+Then ask:
+> "What other accomplishments would you like to include? Think about:
+> - Training or certifications completed
+> - Mentoring or onboarding new team members
+> - Cross-team collaborations
+> - Process improvements
+> - Anything not captured in GitHub or ADX"
+
+If the user provides additional accomplishments, create `reflection/contributions/other_accomplishments.md` and save the responses there.
+
+### Step 5: Present All Gathered Data & Fill Gaps
+
+Once all parallel pulls are complete, present a combined summary:
+
+> **Disclaimer:** Always verify this contribution data before including it in your reflection. Cross-reference against **Zendesk**, **PowerBI**, and **Medallia** for posterity.
+
+Present GitHub contributions + ADX metrics together and ask:
+> "Here's everything I gathered: [summary of GitHub PRs/issues + ADX metrics]. Does this look right? Anything to correct or add?"
+
+When presenting contributions, include direct links where available:
+- **Zendesk tickets:** `https://github.zendesk.com/agent/tickets/{id}`
+- **GitHub issues/PRs:** Full GitHub URL from MCP data
+- **IC issues:** Link if available from repository + issue number
+
+Then ask for any **remaining** metrics not yet filled:
+
+1. > "What was your **CSAT** this cycle? (target ≥4.5)"
+2. > "What was your **IR Met** percentage? (target ≥95%)"
+3. > "How many **tickets did you solve** vs. squad baseline?"
+4. > "Any notable **escalations** you filed? (Sev1/Sev2 counts)"
+
+Save responses to `reflection/contributions/support-metrics.md`.
+
+### Step 5: Generate Contributions Summary
+- Compile all gathered data into a comprehensive contributions document
+- Present it to the user and ask:
+> "Here's your contributions summary. Would you like to review and make any edits before I draft your reflection?"
+
+Wait for user confirmation or edits.
+
+### Step 6: Draft the Reflection
+- Using the official questions from the Space and all gathered evidence
+- Reference the **Support Repository Reference** Space level expectations for their role (Support Engineer II/III/Senior/Staff)
+- Frame accomplishments in terms of how they demonstrate performance at or above their level
+- Draft answers to each reflection question
+- Save to `reflection_draft/reflection_[period].md`
+- **Display the full draft directly in the chat window** so the user can review without opening the file
+- Tell the user which file the draft was saved to (e.g., "Saved to `reflection_draft/reflection_jul-dec_2025.md`")
+- Ask:
+> "Here's your draft reflection. Would you like me to revise anything?"
+
+---
+
+## Guided Feedback Workflow
+
+When a user says **"Write feedback for [name]"** or **"Start feedback for [name]"**, follow this interactive process:
+
+### Step 1: Pull Official Template
+
+Follow the **Spaces Cache Management** protocol (see section below) to load the feedback template from `spaces_cache/peer-manager-feedback/`, attempting a refresh from the **Peer & Manager Feedback** Space (github/50) when possible.
+
+Confirm the questions to the user before proceeding.
+
+### Step 2: Collect Required Info (Upfront)
+
+Ask:
+> "Before I start, I need a few things:
+> 1. **Your GitHub handle** — e.g., `adamrr724`
+> 2. **[name]'s GitHub handle** — so I can look up collaboration data
+> 3. **Feedback period** — date range (e.g., July 2025 - December 2025)"
+
+Once all three are provided, proceed to Step 3 immediately.
+
+### Step 3: Launch Collaboration Lookups in Parallel
+
+**Kick off all data gathering simultaneously.** Do NOT wait for one to finish before starting the next.
+
+**In parallel:**
+
+#### 3a. ADX Ticket Collaboration (subagent)
+Use the Kusto MCP to find shared ticket activity between the two users:
+1. Resolve both users' `zendesk_user_id` and `dotcom_id` via `supportv3_user_dim`
+2. Query `zendesk.ticket_events` to find tickets where **both users made updates** (internal notes, public replies, reassignments) during the feedback period
+3. Query `supportv3_ic_comment_issue_fact` to find **IC issues where both users commented** during the period, with repository breakdown
+4. Summarize: shared ticket count, shared IC issue count, repos in common
+
+#### 3b. GitHub Collaboration (subagent)
+Use the GitHub MCP to find shared GitHub activity:
+1. Search for **PRs authored by one and reviewed by the other** (both directions)
+2. Search for **issues where both users commented**
+3. Search for **shared repository contributions** (commits, PRs)
+4. Summarize: shared PRs/reviews, shared issues, repos in common
+
+#### 3c. While Data Pulls Run — Ask for Feedback Details
+
+**Do not wait** for ADX/GitHub pulls to complete. While they run, immediately ask — and make clear that **responses don't need to be formal; you'll clean them up later**:
+
+> "While I pull your collaboration data with **[name]**, tell me whatever comes to mind — bullets, rough notes, fragments are fine. It doesn't need to be polished; I'll shape it into the final feedback. A few things to cover:
+>
+> - Projects or tickets you worked on together (names/links work)
+> - Something **[name]** does well — a skill, habit, or moment that stood out
+> - Something they could grow in — a pattern you've noticed
+> - Anything else about working with them — tone, collaboration style, a specific interaction"
+
+If it's **manager feedback**, use the Model/Coach/Care + DI&B prompts instead, with the same framing:
+
+> "Same thing — rough notes are fine, I'll polish it:
+>
+> - Something they do well in **Model / Coach / Care**
+> - Something they could improve in **Model / Coach / Care**
+> - What you value most about working with them
+> - Which DI&B priority they most exemplify (inclusion modeling / bias awareness / diverse hiring & career acceleration)"
+
+Save whatever the user gives you — however rough — to `feedback/recipients/[name].md`.
+
+### Step 4: Present Collaboration Data & Review
+
+Once all parallel pulls are complete, present the collaboration summary:
+
+> "Here's what I found about your collaboration with **[name]**:
+> - **Shared Zendesk tickets:** [count] tickets where you both made updates
+> - **Shared IC issues:** [count] issues where you both commented ([repos])
+> - **GitHub activity:** [PRs reviewed, shared issues, etc.]
+>
+> **Notable examples:**
+> - [Ticket subject] ([link](https://github.zendesk.com/agent/tickets/ID)) — [priority], [premium/urgent flags], [who was assignee]
+> - [Ticket subject] ([link](https://github.zendesk.com/agent/tickets/ID)) — [context]
+>
+> Would you like to reference any of these in your feedback? I can weave specific collaboration examples into the draft."
+
+**Important:** Always include clickable Zendesk links (`https://github.zendesk.com/agent/tickets/{id}`) and GitHub issue/PR links when presenting collaboration data. Prioritize showing high-priority, urgent, Premium Plus, and escalated tickets as examples.
+
+Then present the gathered notes alongside the collaboration data and ask:
+> "Here's everything I have for [name]'s feedback. Would you like to add or change anything before I draft the final version?"
+
+Wait for user confirmation or edits.
+
+### Step 5: Draft the Feedback
+- Format answers using the official 3-question template
+- Where the user opted in, incorporate collaboration data as concrete evidence
+- Save to `feedback_draft/[name].md`
+- **Display the full draft directly in the chat window** so the user can review without opening the file
+- Tell the user which file the draft was saved to (e.g., "Saved to `feedback_draft/vance.md`")
+- Ask if revisions are needed
+
+---
+
+## Workspace Structure
+
+```
+spaces_cache/                    # Cached Copilot Spaces content (auto-refreshed, one subdir per Space)
+  ic-reflections-fy26/
+    reflection-questions.md
+  peer-manager-feedback/
+    peer-feedback-questions.md
+  support-repository-reference/   # Optional ladder/level docs
+reflection/
+  contributions_template.md      # Template for GitHub contributions
+  support-metrics_template.md    # Template for support metrics
+  contributions/
+    github_contributions.md      # Auto-generated from MCP
+    support-metrics.md           # Created from template, filled by user
+    other_accomplishments.md     # Created only if user has additional items
+reflection_draft/                # Generated reflection drafts
+feedback/
+  recipients/
+    recipient_template.md        # Template for new recipients
+    [name].md                    # Notes per person
+feedback_draft/                  # Generated feedback drafts
+```
+
+---
+
+## Writing Guidelines
+
+- **Be specific** — Use concrete examples with metrics
+- **Performance = Impact** — Focus on outcomes, not activity
+- **Write naturally** — Conversational, not corporate
+- **Use paragraphs** — Avoid excessive bullet points in final output
+- **Quantify** — Numbers make impact tangible
+
+### Workday-compatible output (REQUIRED for reflection and feedback drafts)
+
+Final reflection and feedback drafts are pasted into Workday, which does **not** render markdown. Follow these rules for any draft saved to `reflection_draft/` or `feedback_draft/`:
+
+- **No markdown syntax.** No `#` headings, no `**bold**`, no `*italics*`, no `> blockquotes`, no ``backticks``, no `[text](url)` link syntax, no `|` tables, no `---` separators.
+- **Plain section labels.** Use labels like `Question 1:` or `Goals:` on their own line, optionally followed by a blank line. Do not use markdown heading characters.
+- **Emphasis via ALL CAPS or punctuation**, sparingly — e.g., `IR Met: 83% (target 95%)` rather than `**IR Met: 83%**`.
+- **Links as bare URLs.** Paste `https://github.com/github/support/issues/2449` directly in the sentence, not as `[#2449](...)`.
+- **Lists.** Use a single leading hyphen followed by a space (`- item`) or numbered lists (`1. item`) — these survive the paste. Avoid nested bullets.
+- **Inline code / file paths** — render as plain text (no backticks).
+- **Paragraphs over bullets** for narrative sections (Q1, Q2). Bullets are fine for the goals list.
+- **One blank line between paragraphs** — double blank lines are fine as visual separators but avoid rule lines (`---`).
+- **Keep a metadata block at the top** as plain labeled lines (e.g., `Period: October 15, 2025 – April 17, 2026`), not a markdown front-matter block.
+
+Exploratory material (support-metrics.md, contributions files, in-chat analysis) can still use markdown freely — only the final `reflection_draft/*.md` and `feedback_draft/*.md` files must be Workday-ready plain text.
+
+---
+
+## Quick Commands
+
+| User Says | Copilot Does |
+|-----------|--------------|
+| "Get started" / "Let's get started" | Run First-Time Setup Check, then ask what they'd like to do |
+| "Start my reflection" | Run guided reflection workflow |
+| "Write feedback for [name]" | Run guided feedback workflow |
+| "Pull my contributions from [dates]" | MCP pull only, save to contributions folder |
+| "Start fresh for next cycle" | Archive current work, clear contribution files |
+
+---
+
+## Cycle Reset Process
+
+When starting a new reflection cycle:
+1. Move current drafts to `reflection_draft/archive/[cycle]/`
+2. Delete `reflection/contributions/support-metrics.md` and `reflection/contributions/other_accomplishments.md` (if exists)
+3. Clear `reflection/contributions/github_contributions.md` content
+4. Pull fresh contributions for new date range
+5. Query Spaces for any updated questions/guidance
+
+---
+> Source: [adamrr724/reflections-feedback-helper](https://github.com/adamrr724/reflections-feedback-helper) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-04-30 -->
