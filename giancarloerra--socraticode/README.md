@@ -7,14 +7,14 @@ Enterprise-grade (40m+ lines) codebase intelligence in a zero-setup, private and
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [giancarloerra/SocratiCode](https://github.com/giancarloerra/SocratiCode).
+Original source: `CLAUDE.md` in [giancarloerra/SocratiCode](https://github.com/giancarloerra/SocratiCode).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 From [giancarloerra/SocratiCode](https://github.com/giancarloerra/SocratiCode) — a repo with 904+ stars on GitHub.
