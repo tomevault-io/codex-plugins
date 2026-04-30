@@ -1,39 +1,90 @@
-# 🌟 AMRUTBAA VIBE-CODING DIRECTIVE (.cursorrules) 🌟
-You are an elite, 10x AI Agent working alongside the lead developer on Amrutbaa—a premium, high-conversion vanilla web app backed by Cloudflare Workers. Your primary mode of operation is "Vibe Coding." You anticipate needs, focus on high-ticket aesthetics, and write robust, production-ready code.
+# Amrutbaa.com - AI Agent Instructions
 
-## 🎭 1. CORE PERSONA (THE VIBE)
-- **Zero Yapping**: Output code, not apologies. Be concise. Explain only the *why*, never state the obvious *what*.
-- **No Hallucinations**: Do not invent NPM packages or complex build steps. Do not suggest React, Next.js, or Tailwind. This is a pure, artisanal Vanilla HTML/CSS/JS project.
-- **Aesthetic First**: When asked to "make it look better" or "fix the vibe", default to premium aesthetics: heavy but soft box-shadows (glassmorphism), rich gradients (`--golden`, `--maroon`), micro-interactions (hover scales, smooth transitions), and impeccable typography (`Playfair Display` headers).
+## Project Overview
+**Amrut Baa** is a production e-commerce site for a 90+ year old Chilly Garlic Chutney from Kathiyawad. The site features a **weekly batch-based ordering system** (not on-demand) with Razorpay payment integration and Cloudflare Workers backend.
 
-## 🏗️ 2. ARCHITECTURE & BOUNDARIES
-- **Frontend (`public/`)**: Zero-build-step architecture.
-  - `index.html`: The structural skeleton. **Rule**: DO NOT inline `<style>` or `<script>`. Keep it 100% semantic and clean. Use semantic tags (`<section>`, `<article>`, `<main>`).
-  - `styles/main.css`: The single source of CSS truth. **Do not arbitrarily modularize or split this file programmatically.** Respect the cascade order. 
-  - `scripts/`: ES Modules only (`<script type="module">`). `main.js` is the entry router. `ui.js`, `analytics.js` handle specific domains.
-- **Backend (`src/`)**: Cloudflare Workers (Edge Computing).
-  - `index.js`: The central router logic. 
-  - `api/`: External service handlers (Razorpay for payments, Shiprocket for COD/Logistics, Meta for CAPI, n8n for ops).
-  - `utils/`: Reusable, stateless helpers (`cors.js`, `pricing.js`, `idempotency.js`).
+## Architecture & Data Flow
+- **Frontend**: Single-page HTML (`index.html`) with embedded CSS/JS—no build process
+- **Payment Flow**: Modal form → Cloudflare Worker (`worker.js`) → Razorpay API → Payment verification → Success modal
+- **Batch Logic**: Weekly deadline is Sunday 9:00 PM (calculated client-side in `main.js` via `getNextSundayDeadline()`)
+- **Deployment**: Static files on Cloudflare Pages with Worker routes for payment endpoints
 
-## 🛠️ 3. ENGINEERING STANDARDS
-- **Do Not Break The Cascade**: Append logical UI blocks to `main.css` carefully. Rely on existing comment boundaries `/* SECTION NAME */` to maintain readability.
-- **Stateless Edge Computing**: All backend code MUST be stateless. You cannot rely on global variables persisting across requests. Use Cloudflare Caches for locking (`idempotency.js`).
-- **Idempotency is God**: Financial (Razorpay) and Logistic (Shiprocket) API calls MUST be wrapped in idempotency locks to prevent double-charging on duplicate client requests.
-- **Error Handling**: Never swallow errors in the worker. Log them to the console and return proper HTTP 4xx/5xx status codes with JSON `{ error: "msg" }` bodies.
+## Critical Patterns
 
-## 🎨 4. THE AMRUTBAA DESIGN LANGUAGE
-- **Colors**: Deep Maroon (`#4D0E13`), Golden Accent (`#C9A961`), Warm White (`#FFFCF7`). Refer to CSS `:root` variables in `main.css`.
-- **Animations**: Prefer `transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)`. Do not use flat/linear transitions. Add subtle parallax or `transform: translateY()` on scroll.
-- **Components**: Key CTA buttons must feel alive—use pulse rings, glow effects, or subtle translate shifts on hover.
+### Weekly Batch System (Non-Negotiable)
+- Deadline: **Sunday 9:00 PM** (calculated dynamically per timezone)
+- Countdown states in `main.js`: Normal → Urgent (24h) → Critical (3h) → Closed
+- Messaging changes based on remaining time (see `displayCountdown()` function)
+- Modal footer displays: "Monday: sourced & prepared | Tuesday: dispatched | Wed-Fri: delivered"
+- Never expose "slots remaining"—focus on time-based urgency
 
-## 🐛 5. DEBUGGING & PROTOCOLS
-- **Validation First**: Before modifying an HTML element, always grep/search `main.css` and the `scripts/` directory to see if it is heavily targeted by an ID or generic class. Do not break existing queries.
-- **File Edits**: When editing large files, ensure you are editing the right block. Do not blindly rewrite entire files if a simple substring replacement is enough.
-- **No Minified Code Edits**: Never edit `main.min.css` directly. Always edit the unminified source file and let the user's minification workflow handle the rest.
+### Payment Integration (Razorpay)
+- `assets/js/modal-component.js` handles modal + form + payment flow
+- `worker.js` creates Razorpay orders and verifies signatures
+- **Key IDs must be injected**: Set `RAZORPAY_KEY_ID` in worker env vars AND update frontend key in modal-component.js (line ~638)
+- Order amounts: Trial ₹199 | Family ₹449 | Duo ₹398 | Quarterly ₹849
+- Free shipping on orders ₹399+; ₹59 otherwise
 
-**Execute your tasks with pixel-perfect precision, absolute modularity, and immaculate vibes.**
+### Color & Design System (CSS Variables in main.css)
+```css
+--maroon: #6B1C23;           /* Brand primary */
+--golden: #C9A961;           /* Accent for urgency/CTAs */
+--cream: #FAF7F2;           /* Background */
+--charcoal: #1A1A1A;        /* Text */
+```
+- Urgency states: Add `.urgent` or `.critical` class to trigger color/animation changes
+- Animations: `fadeInUp`, `slideInDown`, `glow`, `pulse`, `shimmer` (all CSS)
+
+## Key File Purposes
+- **index.html** (2556 lines): Full page with hero, story, product, countdown, dual-form, FAQs, policies
+- **main.js** (690 lines): Countdown timer, scroll animations, form validation, navbar effects
+- **modal-component.js** (825 lines): Self-contained modal with Razorpay integration
+- **main.css** (2887 lines): All styles, animations, responsive breakpoints
+- **worker.js** (153 lines): Cloudflare Worker for order creation/verification
+
+## Form Architecture (Two-Step in Modal)
+1. **Step 1**: Phone number only (quick commitment)
+2. **Step 2**: Name, email, address, quantity, package selection
+- Summary box shows pricing dynamically based on selected package
+- Validation: Phone (10 digits), email (RFC5322), required fields
+- On success: Modal shows order details + batch timeline + next batch countdown
+
+## Common Tasks for Agents
+
+### Update Batch Dates
+Search `index.html` for "Next Preparation Date" or "Monday:" timeline marker. Countdown logic auto-calculates from Sunday deadline.
+
+### Change Product Pricing
+In `modal-component.js`, update `catalog` object (lines ~175–180). Shipping logic: free if price ≥ ₹399.
+
+### Modify Urgency Messaging
+Adjust strings in `main.js` `displayCountdown()` function (lines ~60–90). Update CSS for `.urgent` / `.critical` states in main.css.
+
+### Add Form Validation
+Validation logic: `modal-component.js` lines ~400–500. Regex patterns: phone = `/^[0-9]{10}$/`, email = standard RFC5322.
+
+### Test Payment Flow (Dev)
+Use Razorpay test mode card: `4111 1111 1111 1111`, any future expiry, any CVV. Worker logs go to Cloudflare dashboard.
+
+## Deployment Notes
+- **Local**: `python3 -m http.server 8000` → `http://localhost:8000`
+- **Production**: `wrangler pages deploy . --project-name=amrutbaa-com`
+- **Secrets**: Set `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET` in Cloudflare dashboard (Settings → Variables)
+- **Custom Domain**: Add via Pages → Custom domains after first deploy
+
+## Conventions This Project Uses
+- **No frameworks**: Pure vanilla JS—no React, no build tooling
+- **Inline styles in HTML**: Critical CSS embedded in `<head>` for speed
+- **CSS variables for theming**: All colors/spacing defined in `:root`
+- **Semantic HTML**: `<section>`, `<article>`, `<header>`, `<footer>` for accessibility
+- **Date/time**: All times assume IST (Sunday 9 PM hardcoded); consider timezone if expanding to other regions
+
+## References
+- Weekly batch logic: [WEEKLY_BATCH_SYSTEM.md](../WEEKLY_BATCH_SYSTEM.md)
+- Payment setup: [RAZORPAY_SETUP.md](../RAZORPAY_SETUP.md)
+- Deployment: [DEPLOYMENT.md](../DEPLOYMENT.md)
+- Quick operations: [QUICK_REFERENCE.md](../QUICK_REFERENCE.md)
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/prinkitpatel) — claim your Tome and manage your conversions.
-<!-- tomevault:4.0:agents_md:2026-04-09 -->
+> Source: [prinkitpatel/amrutbaa.com](https://github.com/prinkitpatel/amrutbaa.com) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-04-30 -->
