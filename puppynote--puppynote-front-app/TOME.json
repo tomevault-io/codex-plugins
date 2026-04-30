@@ -4,7 +4,7 @@
   "repo": "puppynote-front-app",
   "description": "[NATIVE] Puppynote \ubc18\ub824\ub3d9\ubb3c \uad00\ub9ac \uc571",
   "type": "config",
-  "source_format": "GEMINI.md",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/PuppyNote/puppynote-front-app",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-30T11:37:59Z"
+  "distributed_at": "2026-04-30T11:39:17Z"
 }
