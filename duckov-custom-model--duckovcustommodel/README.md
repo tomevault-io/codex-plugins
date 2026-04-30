@@ -7,13 +7,13 @@ Custom Model Manager for Escape from Duckov
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [Duckov-Custom-Model/DuckovCustomModel](https://github.com/Duckov-Custom-Model/DuckovCustomModel).
+Original source: `copilot-instructions.md` in [Duckov-Custom-Model/DuckovCustomModel](https://github.com/Duckov-Custom-Model/DuckovCustomModel).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
