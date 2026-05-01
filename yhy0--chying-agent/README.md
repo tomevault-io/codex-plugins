@@ -2,20 +2,22 @@
 
 > Sourced from [yhy0/CHYing-agent](https://github.com/yhy0/CHYing-agent) and converted for every major platform by [TomeVault](https://tomevault.io)
 
+腾讯云黑客松 - 智能渗透挑战赛 Top9
+
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [yhy0/CHYing-agent](https://github.com/yhy0/CHYing-agent).
+Original source: `CLAUDE.md` in [yhy0/CHYing-agent](https://github.com/yhy0/CHYing-agent).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Quality verified by TomeVault's automated analysis pipeline. [View quality report](https://tomevault.io/claim/yhy0#quality)
+Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/yhy0/CHYing-agent](https://github.com/yhy0/CHYing-agent)
 
 ---
 
