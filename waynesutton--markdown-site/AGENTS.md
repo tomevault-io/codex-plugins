@@ -1,50 +1,65 @@
 
+# Convex doctor code quality
+
+This codebase maintains a 100/100 convex-doctor score. All new Convex code must follow these patterns to avoid regressions.
+
+## Security
+
+- Never use `api.*` for server-to-server calls. Always use `internal.*` references.
+- All HTTP actions and public endpoints must check authentication unless they are intentionally public (RSS, sitemap, CORS preflight).
+- Never expose Node actions directly to the browser. Use mutation-scheduled internal actions with a job table for status tracking.
+- Public functions use `query`, `mutation`, `action`. Internal functions use `internalQuery`, `internalMutation`, `internalAction`.
+
+## Correctness
+
+- Never use `Date.now()` inside a query function. It breaks caching and reactivity. Accept a `now` argument or compute timestamps in mutations/actions.
+- Use `.unique()` for lookups on indexes that enforce uniqueness by design. Use `.first()` only for intentional ordered picks where multiple rows are expected.
+- Never use `.collect().filter()`. Use `.withIndex()` and iterate directly, or use `.take(n)` for bounded results.
+
+## Performance
+
+- Bound all public `.collect()` calls with `.take(n)` or pagination.
+- Batch sequential `ctx.runQuery` and `ctx.runMutation` calls in actions. Create a single internal query that returns all needed data instead of making multiple separate calls.
+- Use indexes for all query patterns. Never scan full tables.
+- Avoid N+1 query patterns. Batch document fetches into internal queries that accept arrays of IDs.
+
+## Schema
+
+- Name indexes with `by_` prefix and snake_case: `by_slug`, `by_published`, `by_session_and_context`.
+- Add indexes for foreign key fields that have query patterns against them.
+- Do not add indexes for foreign keys inside nested arrays (Convex cannot index into arrays).
+- Remove redundant indexes that are prefixes of existing compound indexes.
+
+## Architecture
+
+- Keep handlers focused. Extract helper functions for email templates, data transformation, and multi-step logic.
+- Per-handler auth checks are intentional in this codebase. Do not extract auth into middleware or shared wrappers.
+- Organize files by domain (posts, pages, newsletter, stats). Do not split purely for file size.
+- Use `ConvexError` instead of `throw new Error(...)` in user-facing handlers when the error message should reach the client.
+
+## Queued job pattern
+
+For any background work triggered from the browser:
+
+1. Create a job table in `convex/schema.ts` with `status`, `result`, `error` fields
+2. Public mutation inserts a pending job and calls `ctx.scheduler.runAfter(0, internal...)`
+3. Public query returns job status for the UI
+4. Internal action processes the job and updates status on success or failure
+
+Examples: `aiImageJobs.ts`, `importJobs.ts`, `semanticSearchJobs.ts`
+
+## Suppression config
+
+Intentional suppressions live in `convex-doctor.toml` at the repo root. Each suppression includes rationale. Do not add new suppressions without documenting why.
+
+## Running convex-doctor
+
+```bash
+npx convex-doctor@latest
+```
+
+Run after any changes to Convex functions, schema, or HTTP routes. The score must stay at 100/100 with 0 errors and 0 warnings.
+
 ---
-
-description: Critical Git Safety Protocol
-globs:
-alwaysApply: true
-
----
-
-## Critical Git Safety Protocol
-
-**🚨 NEVER USE `git checkout` TO REVERT CHANGES 🚨**
-
-**MANDATORY GIT SAFETY RULES:**
-
-- **NEVER run `git checkout -- <file>`** without first examining what you're about to destroy
-- **ALWAYS use `git diff <file>`** to see exactly what changes will be lost
-- **MANUALLY undo changes** by editing files to revert specific problematic sections
-- **Preserve valuable work** — if user says changes are bad, ask which specific parts to revert
-- **`git checkout` destroys ALL changes** — this can eliminate hours of valuable progress
-- **When user asks to "undo" changes**: Read the current file, identify problematic sections, and manually edit to fix them
-
-**Why this matters**: Using `git checkout` blindly can destroy sophisticated implementations, complex prompts, provider-specific logic, and other valuable work that took significant time to develop.
-
-## Git Safety Rules - CRITICAL
-
-**NEVER run these commands without explicit user approval:**
-
-- `git reset --hard` - Destroys uncommitted changes permanently
-- `git checkout -- .` - Discards all working directory changes
-- `git clean -fd` - Deletes untracked files permanently
-- `git stash drop` - Deletes stashed changes
-
-**ALWAYS before any git operation:**
-
-1. Run `git status` first to check for uncommitted changes
-2. If there are uncommitted changes, STOP and ASK the user before proceeding
-3. Suggest `git stash` to preserve changes if needed
-
-**If user asks to "revert" something:**
-
-1. First clarify: revert committed changes or uncommitted changes?
-2. Show what will be affected before doing anything
-3. Get explicit confirmation for destructive operations
-
-This rule exists because careless git operations destroyed 2 days of work.
-
----
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/waynesutton) — claim your Tome and manage your conversions.
-<!-- tomevault:4.0:agents_md:2026-04-09 -->
+> Source: [waynesutton/markdown-site](https://github.com/waynesutton/markdown-site) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-04-20 -->
