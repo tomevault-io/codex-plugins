@@ -4,7 +4,7 @@
   "repo": "vibing-steampunk",
   "description": "vs-punk: ADT to MCP bridge - Vibe code in ABAP / AMDP",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/oisee/vibing-steampunk",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-20T20:04:02Z"
+  "distributed_at": "2026-05-01T15:32:40Z"
 }
