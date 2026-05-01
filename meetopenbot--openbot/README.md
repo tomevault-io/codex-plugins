@@ -2,6 +2,8 @@
 
 > Sourced from [meetopenbot/openbot](https://github.com/meetopenbot/openbot) and converted for every major platform by [TomeVault](https://tomevault.io)
 
+Meet OpenBot. Your own personal AI assistant. 
+
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
