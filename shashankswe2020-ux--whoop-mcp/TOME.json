@@ -4,7 +4,7 @@
   "repo": "whoop-mcp",
   "description": "MCP server to connect to whoop API",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/shashankswe2020-ux/whoop-mcp",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-21T02:08:28Z"
+  "distributed_at": "2026-05-01T22:13:11Z"
 }
