@@ -1,5 +1,5 @@
 
-See [skills/trend-to-product-mapper/SKILL.md](../../skills/trend-to-product-mapper/SKILL.md) for full instructions and output schema.
+See [skills/user-background-interviewer/SKILL.md](../../skills/user-background-interviewer/SKILL.md) for full instructions and output schema.
 
 ---
 > Source: [MaxKmet/idea-validation-agents](https://github.com/MaxKmet/idea-validation-agents) — distributed by [TomeVault](https://tomevault.io).
