@@ -1,75 +1,115 @@
 
 
-# DAT SDK Conventions (iOS)
+# Debugging (iOS)
 
-## Architecture
+Guide for diagnosing common issues with DAT SDK integrations.
 
-The SDK is organized into three modules:
-- **MWDATCore**: Device discovery, registration, permissions, device selectors
-- **MWDATCamera**: StreamSession, VideoFrame, photo capture
-- **MWDATMockDevice**: MockDeviceKit for testing without hardware
+## Quick diagnosis
 
-## Swift Patterns
-
-- Use `async/await` for all SDK operations — the SDK is fully async
-- Use `AsyncSequence` / publisher `.listen {}` for observing streams
-- Annotate UI-updating code with `@MainActor`
-- Never block the main thread with frame processing
-- Handle errors with do/catch — the SDK throws typed errors
-
-## Naming Conventions
-
-| Type | Convention | Example |
-|------|-----------|---------|
-| Entry point | `Wearables.shared` | `Wearables.shared.startRegistration()` |
-| Sessions | `*Session` | `StreamSession`, `DeviceStateSession` |
-| Selectors | `*DeviceSelector` | `AutoDeviceSelector`, `SpecificDeviceSelector` |
-| Config | `*Config` | `StreamSessionConfig` |
-| Publishers | `*Publisher` | `statePublisher`, `videoFramePublisher` |
-
-## Imports
-
-```swift
-import MWDATCore    // Registration, devices, permissions
-import MWDATCamera  // StreamSession, VideoFrame, photo capture
+```text
+Device not connecting?
+│
+├── Is Developer Mode enabled? → Enable in Meta AI app settings
+│
+├── Is device registered? → Check registration state
+│
+├── Is device in range? → Bluetooth on, glasses powered on
+│
+├── Is the app registered? → Check registrationStateStream()
+│
+└── Stream stuck in waitingForDevice? → Check device availability
 ```
 
-For testing:
-```swift
-import MWDATMockDevice  // MockDeviceKit, MockRaybanMeta, MockCameraKit
+## Developer Mode
+
+Developer Mode must be enabled for 3P apps to access device features.
+
+### Enabling Developer Mode
+
+1. Open Meta AI app on phone
+2. Go to Settings → (Your connected glasses)
+3. Find "Developer Mode" toggle
+4. Toggle ON
+5. Device may restart
+
+### Symptoms of Developer Mode disabled
+
+- Registration completes but device never connects
+- StreamSession stuck in `waitingForDevice`
+- Permission requests fail or never appear
+
+### Common gotchas
+
+- Developer Mode toggles **off** after firmware updates — re-enable it
+- Developer Mode is per-device — enable for each glasses pair
+- Some features need additional permissions beyond Developer Mode
+
+## StreamSession state issues
+
+### Expected flow
+
+```text
+stopped → waitingForDevice → starting → streaming → stopped
 ```
 
-## Key Types
+### Stuck in waitingForDevice
 
-- `Wearables` — SDK entry point. Call `Wearables.configure()` at launch, then use `Wearables.shared`
-- `StreamSession` — Camera streaming session. Create with config + device selector
-- `VideoFrame` — Individual video frame with `.makeUIImage()` convenience
-- `AutoDeviceSelector` — Automatically selects the best available device
-- `SpecificDeviceSelector` — Selects a specific device by identifier
-- `StreamSessionConfig` — Configure video codec, resolution, frame rate
-- `MockDeviceKit` — Factory for creating simulated devices in tests
+- Device not in range or not connected
+- Device not reporting availability
+- DeviceSelector not matching any device
 
-## Error Handling
+### Unexpected stop
+
+- Device disconnected (out of range, battery died)
+- Channel closed by device
+- Error in frame processing
+
+## Version compatibility
+
+Ensure compatible versions of SDK, Meta AI app, and glasses firmware:
+
+| SDK | Meta AI App | Ray-Ban Meta | Meta Ray-Ban Display |
+|-----|-------------|--------------|----------------------|
+| 0.6.0 | Check [version dependencies](https://wearables.developer.meta.com/docs/version-dependencies) | Check docs | Check docs |
+| 0.4.0 | V254 | V20 | V21 |
+| 0.3.0 | V249 | V20 | — |
+
+## Known issues
+
+| Issue | Workaround |
+|-------|-----------|
+| No internet → registration fails | Internet required for registration |
+| Streams started with glasses doffed pause when donned | Unpause by tapping side of glasses |
+| `DeviceStateSession` unreliable with camera stream | Avoid using `DeviceStateSession` |
+| [iOS] Meta Ray-Ban Display: no audio feedback on pause/resume | Will be fixed in future release |
+
+## Adding debug logging
 
 ```swift
-do {
-    try Wearables.configure()
-} catch {
-    // Handle configuration error
-}
+import os
 
-do {
-    try Wearables.shared.startRegistration()
-} catch {
-    // Handle registration error
-}
+private let logger = Logger(subsystem: "com.yourapp", category: "Wearables")
+
+// In your streaming code:
+logger.debug("Stream state changed to: \(state)")
+logger.error("Stream error: \(error)")
 ```
+
+## Checklist
+
+- [ ] Developer Mode enabled in Meta AI app
+- [ ] Meta AI app updated to compatible version
+- [ ] Glasses firmware updated to compatible version
+- [ ] Internet connection available for registration
+- [ ] Bluetooth enabled on phone
+- [ ] Correct URL scheme configured in Info.plist
+- [ ] Background modes enabled (bluetooth-peripheral, external-accessory)
 
 ## Links
 
-- [iOS API Reference](https://wearables.developer.meta.com/docs/reference/ios_swift/dat/0.6)
-- [Developer Documentation](https://wearables.developer.meta.com/docs/develop/)
-- [GitHub Repository](https://github.com/facebook/meta-wearables-dat-ios)
+- [Known issues](https://wearables.developer.meta.com/docs/knownissues)
+- [Version dependencies](https://wearables.developer.meta.com/docs/version-dependencies)
+- [Troubleshooting discussions](https://github.com/facebook/meta-wearables-dat-ios/discussions)
 
 ---
 > Source: [facebook/meta-wearables-dat-ios](https://github.com/facebook/meta-wearables-dat-ios) — distributed by [TomeVault](https://tomevault.io).
