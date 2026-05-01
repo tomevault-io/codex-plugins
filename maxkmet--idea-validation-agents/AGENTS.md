@@ -1,5 +1,5 @@
 
-See [skills/pricing-and-wtp/SKILL.md](../../skills/pricing-and-wtp/SKILL.md) for full instructions and output schema.
+See [skills/retention-predictor/SKILL.md](../../skills/retention-predictor/SKILL.md) for full instructions and output schema.
 
 ---
 > Source: [MaxKmet/idea-validation-agents](https://github.com/MaxKmet/idea-validation-agents) — distributed by [TomeVault](https://tomevault.io).
