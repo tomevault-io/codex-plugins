@@ -7,14 +7,14 @@ Smart local file search app that understands your files
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [Hamza5/file-brain](https://github.com/Hamza5/file-brain).
+Original source: `CLAUDE.md` in [Hamza5/file-brain](https://github.com/Hamza5/file-brain).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/Hamza5/file-brain](https://github.com/Hamza5/file-brain)
