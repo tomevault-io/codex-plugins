@@ -4,7 +4,7 @@
   "repo": "LeanKG",
   "description": "LeanKG: Stop Burning Tokens. Start Coding Lean.",
   "type": "config",
-  "source_format": "GEMINI.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/FreePeak/LeanKG",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-21T01:50:05Z"
+  "distributed_at": "2026-05-01T19:51:50Z"
 }
