@@ -7,13 +7,13 @@ Framework for AI agents to build and maintain an Obsidian wiki using Karpathy's 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [Ar9av/obsidian-wiki](https://github.com/Ar9av/obsidian-wiki).
+Original source: `.cursor/rules/*.mdc` in [Ar9av/obsidian-wiki](https://github.com/Ar9av/obsidian-wiki).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
-- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
