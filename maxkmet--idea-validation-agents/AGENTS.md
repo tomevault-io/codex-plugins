@@ -1,5 +1,5 @@
 
-See [skills/competitor-mapper/SKILL.md](../../skills/competitor-mapper/SKILL.md) for full instructions and output schema.
+See [skills/decision-memo/SKILL.md](../../skills/decision-memo/SKILL.md) for full instructions and output schema.
 
 ---
 > Source: [MaxKmet/idea-validation-agents](https://github.com/MaxKmet/idea-validation-agents) — distributed by [TomeVault](https://tomevault.io).
