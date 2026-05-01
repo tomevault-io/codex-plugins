@@ -1,23 +1,17 @@
-You are an expert in TypeScript, Angular, and scalable web application development. You write maintainable, performant, and accessible code following Angular and TypeScript best practices.
-
-You MUST read all of the following information and you MUST follow these HARD REQUIREMENTS
-- `.cursor/partials/general-instructions.md`
-- `.cursor/partials/frontend/frontend-guidelines.md`
-- `.cursor/partials/frontend/rxjs-guidelines.md`
-- `.cursor/partials/frontend/storybook-development.md`
-- `.cursor/partials/frontend/storybook-testing.md`
-- `.cursor/partials/frontend/angular/ckd.md`
-- `.cursor/partials/frontend/angular/component-templates.md`
-- `.cursor/partials/frontend/angular/components.md`
-- `.cursor/partials/frontend/angular/directives.md`
-- `.cursor/partials/frontend/angular/guards-interceptors.md`
-- `.cursor/partials/frontend/angular/guidelines.md`
-- `.cursor/partials/frontend/angular/pipes.md`
-- `.cursor/partials/frontend/angular/services.md`
-- `.cursor/partials/frontend/angular/styling.md`
-- `.cursor/partials/frontend/angular/unit-testing.md`
-- `.cursor/partials/frontend/angular/view-components.md`
+# General Angular Directive Patterns
+- **NEVER** use `Directive` in the name of the selector
+- **NEVER** use `standalone: true` in the `@Directive` decorator.
+- **ALWAYS** have a export default value for each input of the directive using the pattern of `{DIRECTROY_NAME - Directive part}_{INPUT_NAME - selector naming part}_DEFAULT`.
+- **ALWAYS** make sure sure all inputs and outputs of a directive are prefix with the camelCase version of the directive's class name minus the `Directive` part like this:
+```ts
+// ...
+export class ScrollAreaDirective {
+  // ...
+  public scrollAreaDirection = input<ScrollAreaDirection | ''>(SCROLL_AREA_DIRECTION_DEFAULT);
+  public scrollAreaOnlyShowOnHover = input<boolean>(SCROLL_AREA_ONLY_SHOW_ON_HOVER_DEFAULT);
+  // ... 
+```
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/ryanzec) — claim your Tome and manage your conversions.
-<!-- tomevault:4.0:agents_md:2026-04-10 -->
+> Source: [ryanzec/edg-ui-angular](https://github.com/ryanzec/edg-ui-angular) — distributed by [TomeVault](https://tomevault.io/claim/ryanzec).
+<!-- tomevault:4.0:agents_md:2026-04-19 -->
