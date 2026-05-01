@@ -1,32 +1,5 @@
 
-# Effect Dependency Injection
-
-**Prefer `yield* Dependency`** over passing dependencies as function arguments.
-
-## ❌ Avoid
-
-```typescript
-const getUser = (db: Database, userId: string) =>
-  Effect.gen(function* () {
-    return yield* db.query("users", userId);
-  });
-```
-
-## ✅ Prefer
-
-```typescript
-const getUser = (userId: string) =>
-  Effect.gen(function* () {
-    const db = yield* Database;
-    return yield* db.query("users", userId);
-  });
-```
-
-## Last Resort: When to Pass as Arguments
-
-- Interfacing with non-Effect code
-- Dynamic implementation selection at runtime
-- Measured performance-critical paths
+You have access to the Effect MCP server which you can use to look up information about Effect.
 
 ---
 > Source: [RhysSullivan/fastergh](https://github.com/RhysSullivan/fastergh) — distributed by [TomeVault](https://tomevault.io).
