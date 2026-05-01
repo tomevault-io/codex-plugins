@@ -7,13 +7,13 @@ WebCode is a browser-based AI coding platform that lets you remotely run CLI ass
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [shuyu-labs/WebCode](https://github.com/shuyu-labs/WebCode).
+Original source: `.cursor/rules/*.mdc` in [shuyu-labs/WebCode](https://github.com/shuyu-labs/WebCode).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
-- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
