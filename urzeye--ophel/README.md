@@ -7,12 +7,12 @@ Turn AI conversations into organized, reusable workflows — across major AI pla
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [urzeye/ophel](https://github.com/urzeye/ophel).
+Original source: `CLAUDE.md` in [urzeye/ophel](https://github.com/urzeye/ophel).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
