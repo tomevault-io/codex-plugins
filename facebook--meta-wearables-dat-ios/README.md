@@ -7,13 +7,13 @@ Meta Wearables Device Access Toolkit for iOS
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [facebook/meta-wearables-dat-ios](https://github.com/facebook/meta-wearables-dat-ios).
+Original source: `.cursor/rules/*.mdc` in [facebook/meta-wearables-dat-ios](https://github.com/facebook/meta-wearables-dat-ios).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
