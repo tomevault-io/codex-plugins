@@ -7,14 +7,14 @@ Plugin suite + bundled MCP servers for Claude Code. Full delivery lifecycle: Agi
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [levnikolaevich/claude-code-skills](https://github.com/levnikolaevich/claude-code-skills).
+Original source: `CLAUDE.md` in [levnikolaevich/claude-code-skills](https://github.com/levnikolaevich/claude-code-skills).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/levnikolaevich/claude-code-skills](https://github.com/levnikolaevich/claude-code-skills)
