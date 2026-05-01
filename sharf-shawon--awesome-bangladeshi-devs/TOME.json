@@ -4,7 +4,7 @@
   "repo": "Awesome-Bangladeshi-Devs",
   "description": "Awesome list of Top Performing Bangladeshi Developers on Github",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "GEMINI.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/sharf-shawon/Awesome-Bangladeshi-Devs",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-01T21:31:39Z"
+  "distributed_at": "2026-05-01T21:32:48Z"
 }
