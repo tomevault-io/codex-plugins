@@ -2,6 +2,8 @@
 
 > Source: [waynesutton/markdown-site](https://github.com/waynesutton/markdown-site) — distributed by [TomeVault](https://tomevault.io)
 
+An open-source publishing framework built for AI agents and developers to ship websites, docs, or blogs. Write markdown, sync from the terminal. Your content is instantly available to browsers, LLMs, and AI agents. Built on Convex and Netlify.
+
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
@@ -15,7 +17,7 @@ Original source: `.cursor/rules/*.mdc` in [waynesutton/markdown-site](https://gi
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [waynesutton/markdown-site](https://github.com/waynesutton/markdown-site) — a repo with 0+ stars on GitHub.
+From [waynesutton/markdown-site](https://github.com/waynesutton/markdown-site) — a repo with 609+ stars on GitHub.
 
 ---
 
