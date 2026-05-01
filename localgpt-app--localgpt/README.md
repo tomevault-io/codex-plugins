@@ -7,12 +7,12 @@ Local AI assistant, dreaming explorable worlds.
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [localgpt-app/localgpt](https://github.com/localgpt-app/localgpt).
+Original source: `CLAUDE.md` in [localgpt-app/localgpt](https://github.com/localgpt-app/localgpt).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
