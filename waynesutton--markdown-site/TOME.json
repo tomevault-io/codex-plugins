@@ -2,7 +2,7 @@
   "name": "markdown-site",
   "owner": "waynesutton",
   "repo": "markdown-site",
-  "description": "",
+  "description": "An open-source publishing framework built for AI agents and developers to ship websites, docs, or blogs. Write markdown, sync from the terminal. Your content is instantly available to browsers, LLMs, and AI agents. Built on Convex and Netlify.",
   "type": "config",
   "source_format": ".cursor/rules/*.mdc",
   "formats": [
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/waynesutton/markdown-site",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-20T12:38:27Z"
+  "distributed_at": "2026-05-01T11:58:14Z"
 }
