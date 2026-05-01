@@ -2,6 +2,8 @@
 
 > Sourced from [tetherto/qvac](https://github.com/tetherto/qvac) and converted for every major platform by [TomeVault](https://tomevault.io)
 
+QVAC - Local AI SDK and libraries for building private, cross-platform, peer-to-peer AI applications. Run LLMs, speech-to-text, translation, and more locally on Linux, macOS, Windows, Android, and iOS.
+
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
