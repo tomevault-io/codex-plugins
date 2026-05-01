@@ -1,0 +1,26 @@
+# Tele-Bot
+
+> Source: [MaxMiksa/Tele-Bot](https://github.com/MaxMiksa/Tele-Bot) — distributed by [TomeVault](https://tomevault.io)
+
+A clean Bot running on your PC, interacting with you on Telegram via Claude or Codex.
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [MaxMiksa/Tele-Bot](https://github.com/MaxMiksa/Tele-Bot).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+From [MaxMiksa/Tele-Bot](https://github.com/MaxMiksa/Tele-Bot) — a repo with 53+ stars on GitHub.
+
+---
+
+Explore more instruction files on [TomeVault](https://tomevault.io) — the open index of AI config files for every platform.
+
+<!-- genome:d-e-s -->
