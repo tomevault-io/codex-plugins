@@ -7,13 +7,13 @@ Scholar All-In-One: A research infrastructure for AI agents
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [ZimoLiao/scholaraio](https://github.com/ZimoLiao/scholaraio).
+Original source: `.cursor/rules/*.mdc` in [ZimoLiao/scholaraio](https://github.com/ZimoLiao/scholaraio).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
-- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
