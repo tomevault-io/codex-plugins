@@ -2,6 +2,8 @@
 
 > Sourced from [waynesutton/opensync](https://github.com/waynesutton/opensync) and converted for every major platform by [TomeVault](https://tomevault.io)
 
+Cloud-synced dashboards for OpenCode and Claude Code. Track sessions, search with semantic lookup, export eval datasets.
+
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
