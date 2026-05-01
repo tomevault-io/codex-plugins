@@ -4,7 +4,7 @@
   "repo": "edg-ui-angular",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": ".cursor/rules/*.mdc",
   "formats": [
     {
       "format": "claude_md",
@@ -38,7 +38,7 @@
     }
   ],
   "skills": [],
-  "claim_url": "https://tomevault.io/claim/ryanzec",
+  "source_url": "https://github.com/ryanzec/edg-ui-angular",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-14T20:31:31Z"
+  "distributed_at": "2026-05-01T04:26:39Z"
 }
