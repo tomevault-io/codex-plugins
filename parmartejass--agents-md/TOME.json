@@ -4,7 +4,7 @@
   "repo": "AGENTS.MD",
   "description": "Fundamental Instructions",
   "type": "config",
-  "source_format": ".cursor/rules/*.mdc",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/parmartejass/AGENTS.MD",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-02T16:02:36Z"
+  "distributed_at": "2026-05-02T19:36:38Z"
 }
