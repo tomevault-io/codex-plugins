@@ -1,0 +1,75 @@
+{
+  "name": "hyaway",
+  "owner": "hyaway",
+  "repo": "hyaway",
+  "description": "hyAway.com site",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "create-release",
+      "path": ".github/skills/create-release",
+      "github_url": "https://github.com/hyaway/hyaway/tree/main/.github/skills/create-release",
+      "description": ""
+    },
+    {
+      "name": "update-changelog",
+      "path": ".github/skills/update-changelog",
+      "github_url": "https://github.com/hyaway/hyaway/tree/main/.github/skills/update-changelog",
+      "description": ""
+    },
+    {
+      "name": "vercel-composition-patterns",
+      "path": ".github/skills/vercel-composition-patterns",
+      "github_url": "https://github.com/hyaway/hyaway/tree/main/.github/skills/vercel-composition-patterns",
+      "description": ""
+    },
+    {
+      "name": "vercel-react-best-practices",
+      "path": ".github/skills/vercel-react-best-practices",
+      "github_url": "https://github.com/hyaway/hyaway/tree/main/.github/skills/vercel-react-best-practices",
+      "description": ""
+    },
+    {
+      "name": "web-design-guidelines",
+      "path": ".github/skills/web-design-guidelines",
+      "github_url": "https://github.com/hyaway/hyaway/tree/main/.github/skills/web-design-guidelines",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/hyaway/hyaway",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-02T18:43:31Z"
+}
