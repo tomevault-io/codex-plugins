@@ -4,7 +4,7 @@
   "repo": "crest",
   "description": "An open source, AI-native terminal.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/s-zx/crest",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-21T04:31:19Z"
+  "distributed_at": "2026-05-02T00:53:43Z"
 }
