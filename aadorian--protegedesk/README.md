@@ -7,13 +7,13 @@ Modern web-based ontology editor with AI assistance, built with Next.js, React F
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [aadorian/ProtegeDesk](https://github.com/aadorian/ProtegeDesk).
+Original source: `copilot-instructions.md` in [aadorian/ProtegeDesk](https://github.com/aadorian/ProtegeDesk).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
