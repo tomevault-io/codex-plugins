@@ -1,0 +1,44 @@
+{
+  "name": "Mini-Window-Browser",
+  "owner": "azurplain",
+  "repo": "Mini-Window-Browser",
+  "description": "\u4e13\u4e3a\u5355\u5c4f\u73a9\u5bb6\u6253\u9020\u7684 Windows \u753b\u4e2d\u753b\u6d4f\u89c8\u5668\u3002\u6838\u5fc3\u529f\u80fd\uff1a\u3010\u6c89\u6d78\u5f0f\u6316\u5b54/\u9f20\u6807\u7a7f\u900f\u3011\u6302\u673a\u4e0d\u6321\u64cd\u4f5c\u3001\u3010\u573a\u666f\u9884\u8bbe\u3011\u4e00\u952e\u5207\u6362\u7a97\u53e3\u5e03\u5c40\u3001\u8001\u677f\u952e\u53ca\u4e66\u7b7e\u7ba1\u7406\u3002\u57fa\u4e8e C++ / WebView2 \u5f00\u53d1\u3002\u4e3b\u8981\u7528\u4e8e\u4e00\u4e2a\u5c4f\u5e55\u809d\u5730\u56fe\uff0c\u60a8\u4e5f\u53ef\u4ee5\u7528\u5230\u5176\u4ed6\u65b9\u4fbf\u7684\u5408\u6cd5\u7528\u9014\u3002",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/azurplain/Mini-Window-Browser",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-02T15:54:03Z"
+}
