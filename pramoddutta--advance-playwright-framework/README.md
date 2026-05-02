@@ -1,21 +1,23 @@
-# Advance-Playwright-Framework — distributed by TomeVault
+# Advance-Playwright-Framework
 
-> Originally from [PramodDutta/Advance-Playwright-Framework](https://github.com/PramodDutta/Advance-Playwright-Framework). Converted and distributed by [TomeVault](https://tomevault.io)
+> Source: [PramodDutta/Advance-Playwright-Framework](https://github.com/PramodDutta/Advance-Playwright-Framework) — distributed by [TomeVault](https://tomevault.io)
+
+Advance Playwright Framework
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [PramodDutta/Advance-Playwright-Framework](https://github.com/PramodDutta/Advance-Playwright-Framework).
+Original source: `copilot-instructions.md` in [PramodDutta/Advance-Playwright-Framework](https://github.com/PramodDutta/Advance-Playwright-Framework).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From a repo with 0+ stars on GitHub. [See the full profile](https://tomevault.io/claim/PramodDutta)
+From [PramodDutta/Advance-Playwright-Framework](https://github.com/PramodDutta/Advance-Playwright-Framework) — a repo with 16+ stars on GitHub.
 
 ---
 
@@ -23,6 +25,6 @@ Install this config instantly:
 ```
 npx tomevault install PramodDutta/Advance-Playwright-Framework
 ```
-Or browse all formats at [https://tomevault.io/claim/PramodDutta](https://tomevault.io/claim/PramodDutta).
+Source: [github.com/PramodDutta/Advance-Playwright-Framework](https://github.com/PramodDutta/Advance-Playwright-Framework).
 
 <!-- genome:d-i-s -->
