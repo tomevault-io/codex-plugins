@@ -1,0 +1,44 @@
+{
+  "name": "aws-certified-app",
+  "owner": "thisisrober",
+  "repo": "aws-certified-app",
+  "description": "Interactive simulator for practicing the AWS Cloud Practitioner exam. Includes domain-specific tests, a full 90-minute mock exam, immediate feedback, performance analysis, and a concept map.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/thisisrober/aws-certified-app",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-02T19:08:03Z"
+}
