@@ -1,6 +1,8 @@
 # flutter-agent-panel
 
-> Tome by [Poorgramer-Zack](https://github.com/Poorgramer-Zack/flutter-agent-panel) — distributed by [TomeVault](https://tomevault.io/claim/Poorgramer-Zack)
+> Tome by [Poorgramer-Zack](https://github.com/Poorgramer-Zack/flutter-agent-panel) — distributed by [TomeVault](https://tomevault.io)
+
+A modern, user-friendly terminal emulator designed to enhance your AI pair‑coding experience.
 
 ## Codex Config
 
@@ -15,7 +17,7 @@ Original source: `copilot-instructions.md` in [Poorgramer-Zack/flutter-agent-pan
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. [Browse all formats](https://tomevault.io/claim/Poorgramer-Zack)
+Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/Poorgramer-Zack/flutter-agent-panel](https://github.com/Poorgramer-Zack/flutter-agent-panel)
 
 ---
 
