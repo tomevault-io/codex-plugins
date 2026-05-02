@@ -2,9 +2,9 @@
   "name": "Advance-Playwright-Framework",
   "owner": "PramodDutta",
   "repo": "Advance-Playwright-Framework",
-  "description": "",
+  "description": "Advance Playwright Framework",
   "type": "config",
-  "source_format": ".cursor/rules/*.mdc",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -38,7 +38,7 @@
     }
   ],
   "skills": [],
-  "claim_url": "https://tomevault.io/claim/PramodDutta",
+  "source_url": "https://github.com/PramodDutta/Advance-Playwright-Framework",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-16T11:37:24Z"
+  "distributed_at": "2026-05-02T19:59:53Z"
 }
