@@ -1,23 +1,26 @@
-# w3ag
+# AI instruction files for w3ag
 
-> Config by [nirholas](https://github.com/nirholas/w3ag) — distributed by [TomeVault](https://tomevault.io/claim/nirholas)
+> Sourced from [nirholas/w3ag](https://github.com/nirholas/w3ag) and converted for every major platform by [TomeVault](https://tomevault.io)
+
+Web3 Accessibility Guidelines (W3AG) is the first open standard for making blockchain, DeFi, and crypto applications accessible to people with disabilities. Covers wallet UX, transaction signing, address readability, and more.
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [nirholas/w3ag](https://github.com/nirholas/w3ag).
+Original source: `GEMINI.md` in [nirholas/w3ag](https://github.com/nirholas/w3ag).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
-- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Browse all formats: [https://tomevault.io/claim/nirholas](https://tomevault.io/claim/nirholas)
+From [nirholas/w3ag](https://github.com/nirholas/w3ag) — a repo with 23+ stars on GitHub.
 
 ---
 
-Converted and distributed by [TomeVault](https://tomevault.io) — AI instruction files for every platform.
-Is this your repo? [Claim it](https://tomevault.io/claim/nirholas) to manage distribution.
+Own this repo? Install the TomeVault Relay to keep every platform's copy in sync on every push: [https://tomevault.io/install](https://tomevault.io/install).
+
+<!-- genome:a-c-s -->
