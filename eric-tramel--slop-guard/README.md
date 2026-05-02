@@ -1,0 +1,26 @@
+# slop-guard
+
+> Tome by [eric-tramel](https://github.com/eric-tramel/slop-guard) — distributed by [TomeVault](https://tomevault.io)
+
+Slop Scoring to Stop Slop
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [eric-tramel/slop-guard](https://github.com/eric-tramel/slop-guard).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/eric-tramel/slop-guard](https://github.com/eric-tramel/slop-guard)
+
+---
+
+Own this repo? Install the TomeVault Relay to keep every platform's copy in sync on every push: [https://tomevault.io/install](https://tomevault.io/install).
+
+<!-- genome:t-c-p -->
