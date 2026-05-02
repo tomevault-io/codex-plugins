@@ -1,23 +1,26 @@
 # lyra-tool-discovery
 
-> Config by [nirholas](https://github.com/nirholas/lyra-tool-discovery) — distributed by [TomeVault](https://tomevault.io/claim/nirholas)
+> Tome by [nirholas](https://github.com/nirholas/lyra-tool-discovery) — distributed by [TomeVault](https://tomevault.io)
+
+AI powered automation toolkit which acts as an agent that discovers MCP servers for you. Point it at GitHub/npm/configure your own discovery, let GPT or Claude analyze the API or MCP or any tool, get ready-to-ship plugin configs. Zero manual work.
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [nirholas/lyra-tool-discovery](https://github.com/nirholas/lyra-tool-discovery).
+Original source: `GEMINI.md` in [nirholas/lyra-tool-discovery](https://github.com/nirholas/lyra-tool-discovery).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
-- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Browse all formats: [https://tomevault.io/claim/nirholas](https://tomevault.io/claim/nirholas)
+Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/nirholas/lyra-tool-discovery](https://github.com/nirholas/lyra-tool-discovery)
 
 ---
 
-Converted and distributed by [TomeVault](https://tomevault.io) — AI instruction files for every platform.
-Is this your repo? [Claim it](https://tomevault.io/claim/nirholas) to manage distribution.
+Own this repo? Install the TomeVault Relay to keep every platform's copy in sync on every push: [https://tomevault.io/install](https://tomevault.io/install).
+
+<!-- genome:t-c-p -->
