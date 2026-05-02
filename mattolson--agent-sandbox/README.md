@@ -1,0 +1,30 @@
+# AI instruction files for agent-sandbox
+
+> Sourced from [mattolson/agent-sandbox](https://github.com/mattolson/agent-sandbox) and converted for every major platform by [TomeVault](https://tomevault.io)
+
+Secure local dev environment for AI agent collaboration
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [mattolson/agent-sandbox](https://github.com/mattolson/agent-sandbox).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+From [mattolson/agent-sandbox](https://github.com/mattolson/agent-sandbox) — a repo with 165+ stars on GitHub.
+
+---
+
+Install this config instantly:
+```
+npx tomevault install mattolson/agent-sandbox
+```
+Source: [github.com/mattolson/agent-sandbox](https://github.com/mattolson/agent-sandbox).
+
+<!-- genome:a-i-s -->
