@@ -1,0 +1,24 @@
+# AI instruction files for ai-native-engineering
+
+> Sourced from [TatsukiMeng/ai-native-engineering](https://github.com/TatsukiMeng/ai-native-engineering) and converted for every major platform by [TomeVault](https://tomevault.io)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `.cursor/rules/*.mdc` in [TatsukiMeng/ai-native-engineering](https://github.com/TatsukiMeng/ai-native-engineering).
+
+## Also available for
+
+- **Claude Code** — `CLAUDE.md`
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+From [TatsukiMeng/ai-native-engineering](https://github.com/TatsukiMeng/ai-native-engineering) — a repo with 56+ stars on GitHub.
+
+---
+
+Explore more instruction files on [TomeVault](https://tomevault.io) — the open index of AI config files for every platform.
+
+<!-- genome:a-e-s -->
