@@ -4,7 +4,7 @@
   "repo": "icm",
   "description": "Permanent memory for AI agents. Single binary, zero dependencies, MCP native.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/rtk-ai/icm",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-21T10:44:56Z"
+  "distributed_at": "2026-05-02T10:14:43Z"
 }
