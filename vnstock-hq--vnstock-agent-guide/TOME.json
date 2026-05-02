@@ -1,0 +1,44 @@
+{
+  "name": "vnstock-agent-guide",
+  "owner": "vnstock-hq",
+  "repo": "vnstock-agent-guide",
+  "description": "Repository c\u1eadp nh\u1eadt \u0111\u1ea7y \u0111\u1ee7 v\u00e0 to\u00e0n di\u1ec7n nh\u1ea5t v\u1ec1 t\u00e0i li\u1ec7u h\u01b0\u1edbng d\u1eabn s\u1eed d\u1ee5ng v\u00e0 tham chi\u1ebfu h\u00e0m, h\u1ed7 tr\u1ee3 t\u1ed1t nh\u1ea5t cho AI Agent",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/vnstock-hq/vnstock-agent-guide",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-02T22:29:53Z"
+}
