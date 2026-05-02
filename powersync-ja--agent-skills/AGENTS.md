@@ -1,0 +1,14 @@
+
+# PowerSync agent skills
+
+When editing or when the user’s task involves PowerSync:
+
+1. Open **skills/powersync/AGENTS.md** and follow **Agent compliance** and the numbered onboarding playbook. Do not assume backend or Cloud vs self-hosted.
+2. Prefer the **PowerSync CLI** per that file; do not hand-roll deployable config unless the user explicitly cannot use the CLI.
+3. **`powersync login`** is for **PowerSync Cloud** (PAT) only — not for authenticating to a **self-hosted** service. Self-hosted: `powersync init self-hosted`, Docker commands, `PS_ADMIN_TOKEN` on the service.
+
+If instructions here conflict with a “faster” approach, the playbook wins unless the user explicitly overrides.
+
+---
+> Source: [powersync-ja/agent-skills](https://github.com/powersync-ja/agent-skills) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-04-24 -->
