@@ -4,7 +4,7 @@
   "repo": "intent",
   "description": "Design with Intent: A collection of specialized AI agents and skills for experience design and strategy.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": ".cursor/rules/*.mdc",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/ghaida/intent",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-23T16:51:58Z"
+  "distributed_at": "2026-05-02T10:01:12Z"
 }
