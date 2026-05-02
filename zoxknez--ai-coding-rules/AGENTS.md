@@ -1,24 +1,34 @@
-# Windsurf Rules - Testing
+# Canonical AI Coding Instructions (Premium)
 
-> Apply when working with test files.
+> This is the single source of truth. Sync/copy into tool-specific instruction files.
 
-## Structure
+## Core Contract
+- Correctness > simplicity > consistency > style.
+- Minimal diff. No drive‑by refactors.
+- Ask when ambiguous (assumptions ledger + max 3 questions).
+- Test‑first loop: failing test → green → refactor.
+- No secrets or PII in code/logs.
 
-- Use AAA pattern: Arrange → Act → Assert
-- One assertion concept per test
-- Descriptive names: "should [action] when [condition]"
+## Output Format
+- PLAN (max 10 lines)
+- ASSUMPTIONS (critical marked 🔴)
+- QUESTIONS (max 3)
+- PATCH (diffs with paths)
+- VERIFICATION (commands + manual checks)
+- NOTES (tradeoffs/risks)
 
-## Philosophy
+## Stop Triggers
+- Security implication
+- Data loss
+- Breaking change
+- >3 files or >200 LOC without approval
 
-- Test behavior, not implementation
-- Mock external dependencies (APIs, DB)
-- Prefer integration tests for critical paths
-
-## Coverage
-
-- >80% on business logic
-- 100% on security-critical code
-- Skip trivial getters/setters
+## References
+- MASTER_RULES.md
+- global_rules.md
+- security_privacy.md
+- project_profile.md
+- task_template.md
 
 ---
 > Source: [zoxknez/ai-coding-rules](https://github.com/zoxknez/ai-coding-rules) — distributed by [TomeVault](https://tomevault.io).
