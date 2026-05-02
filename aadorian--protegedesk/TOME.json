@@ -4,7 +4,7 @@
   "repo": "ProtegeDesk",
   "description": "Modern web-based ontology editor with AI assistance, built with Next.js, React Flow, and WebAssembly reasoning. Features intelligent editing, graph visualization, and LLM-powered ontology generation.",
   "type": "config",
-  "source_format": ".cursor/rules/*.mdc",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/aadorian/ProtegeDesk",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-02T19:44:23Z"
+  "distributed_at": "2026-05-02T22:02:07Z"
 }
