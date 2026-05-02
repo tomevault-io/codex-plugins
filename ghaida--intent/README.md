@@ -7,13 +7,13 @@ Design with Intent: A collection of specialized AI agents and skills for experie
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [ghaida/intent](https://github.com/ghaida/intent).
+Original source: `.cursor/rules/*.mdc` in [ghaida/intent](https://github.com/ghaida/intent).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
