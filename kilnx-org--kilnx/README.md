@@ -7,13 +7,13 @@ The backend language for the htmx era
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [kilnx-org/kilnx](https://github.com/kilnx-org/kilnx).
+Original source: `.cursor/rules/*.mdc` in [kilnx-org/kilnx](https://github.com/kilnx-org/kilnx).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
