@@ -2,9 +2,9 @@
   "name": "lyra-intel",
   "owner": "nirholas",
   "repo": "lyra-intel",
-  "description": "",
+  "description": "Lyra Intel is an intelligence platform designed to analyze repositories of any size - from small projects to enterprise monorepos with millions of lines of code. With 70+ components, it provides end-to-end analysis, security scanning, AI integration, and more. ",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "GEMINI.md",
   "formats": [
     {
       "format": "claude_md",
@@ -38,7 +38,7 @@
     }
   ],
   "skills": [],
-  "claim_url": "https://tomevault.io/claim/nirholas",
+  "source_url": "https://github.com/nirholas/lyra-intel",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-10T03:08:38Z"
+  "distributed_at": "2026-05-02T22:04:48Z"
 }
