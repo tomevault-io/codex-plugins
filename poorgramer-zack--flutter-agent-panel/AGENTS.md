@@ -1,71 +1,75 @@
-# Flutter Agent Panel Development Guidelines
-*Core Principles for BLoC & Shadcn UI Development*
+# Copilot Instructions for `flutter_agent_panel`
 
-## Purpose & Scope
-This document outlines the coding standards, architectural patterns, and development workflows for the `flutter_agent_panel` project. It serves as a guide for GitHub Copilot and developers to maintain consistency across the codebase.
+## Build, lint, and test commands
 
----
-
-## Naming Conventions
-- **Feature-First**: Organise code by feature (e.g., `lib/features/terminal`).
-- **Widgets**: Use classes for widgets (e.g., `class MyWidget extends StatelessWidget`) rather than helper methods (e.g., `Widget _buildMyWidget()`).
-- **Files**: Use `snake_case` for filenames and `PascalCase` for class names.
-
-## Code Style
-- **Architecture**: Strictly follow the **Feature-First** architecture.
-- **State Management**: Use `flutter_bloc` and `hydrated_bloc` for state. Business logic must be separated from UI logic.
-- **UI Components**: Use `shadcn_ui` components and tokens. Access theme data via `context.theme`.
-- **Layout**: Use `Gap` for spacing instead of `SizedBox`.
-- **Responsiveness**: Use `flutter_screenutil` extensions (`.w`, `.h`, `.sp`, `.r`) for all fixed dimensions.
-- **Localization**: All UI strings must be localized using `context.t` or `AppLocalizations.of(context)`. Hardcoded strings should be moved to ARB files.
-- **Imports**: Use relative imports within the same feature folder; use absolute imports for `core/` or `shared/` packages.
-
-## Error Handling
-- Catch PTY and process-level errors in the service layer and propagate them to the UI via BLoC states.
-- Use Toast notifications or error chips to inform the user of failures.
-
-## Security
-- Never hardcode API keys or sensitive agent configurations. Use the provided `UserConfigService` or environment variables.
-
----
-
-## Code Examples
-```dart
-// Correct pattern: Using Gap, screenutil extensions, and localized strings
-Column(
-  children: [
-    Text(
-      context.t.welcomeMessage,
-      style: TextStyle(fontSize: 18.sp, color: context.theme.colorScheme.foreground),
-    ),
-    const Gap(16),
-    const UserProfileSection(),
-  ],
-)
-
-// Incorrect pattern: Using SizedBox, hardcoded numbers, and non-localized strings
-Column(
-  children: [
-    Text('Welcome'),
-    SizedBox(height: 16),
-    _buildProfile(), // Helper method instead of Widget class
-  ],
-)
+### Root app (desktop Flutter)
+```bash
+fvm flutter pub get
+fvm dart run lean_builder build --delete-conflicting-outputs
+fvm flutter gen-l10n
+fvm dart format --set-exit-if-changed .
+fvm flutter analyze
+fvm flutter build windows --release
+fvm flutter build macos --release
+fvm flutter build linux --release
 ```
 
+### Pre-push checks used by repository hook
+```bash
+fvm flutter analyze
+fvm dart format --set-exit-if-changed lib/
+```
+
+### Tests
+- Root `test/` is currently empty.
+- Active tests are in `packages/xterm/test/`.
+
+```bash
+# Run all xterm tests
+cd packages/xterm
+fvm flutter test
+
+# Run a single test file
+fvm flutter test test/src/core/escape/parser_test.dart
+```
+
+## High-level architecture
+
+- App bootstrap (`lib/main.dart`) initializes config/log directories, crash logging, app logger, global Flutter/zone error handlers, `window_manager`, and HydratedBloc storage at `~/.flutter-agent-panel/storage` before `runApp`.
+- App composition (`lib/app.dart`) uses three core blocs:
+  - `WorkspaceBloc` (Hydrated): persisted workspaces and serialized `TerminalConfig`.
+  - `SettingsBloc` (Hydrated): persisted theme/font/locale/shell/agent settings.
+  - `TerminalBloc` (non-hydrated): live PTY + terminal runtime state.
+- Routing (`lib/core/router/app_router.dart`) is nested: `AppShellView (/)` → `WorkspaceWrapperView (/workspace)` → `WorkspaceView (/:workspaceId)` → `TerminalView (terminal/:terminalId)`.
+- Cross-feature runtime flow:
+  - `WorkspaceView` issues `SyncWorkspaceTerminals` from persisted workspace configs.
+  - `TerminalBloc` creates/disposes/restarts `TerminalNode` (xterm `Terminal` + `IsolatePty`) and tracks pending/restarting/error states.
+  - `WorkspaceBloc` stays as source of truth for terminal metadata; `TerminalBloc` owns non-serializable runtime objects.
+- Repo is a Flutter workspace with local packages:
+  - `packages/flutter_pty`: native PTY bindings (ConPTY/POSIX).
+  - `packages/xterm`: terminal emulation/rendering engine.
+
+## Key conventions specific to this repository
+
+- Do not edit generated files directly:
+  - `lib/core/router/app_router.gr.dart` (regenerate with `fvm dart run lean_builder build`)
+  - `lib/core/l10n/app_localizations*.dart` (regenerate with `fvm flutter gen-l10n`)
+  - `packages/flutter_pty/lib/src/flutter_pty_bindings_generated.dart` (regenerate with `fvm flutter pub run ffigen --config ffigen.yaml` from `packages/flutter_pty`)
+  - `*.mocks.dart` files
+- State updates are immutable: copy list/map first, then emit with `copyWith`; avoid direct list mutation in bloc handlers.
+- `AppSettings.copyWith` uses explicit clear flags (`clearCustomTerminalThemeJson`, `clearSelectedCustomShellId`, `clearAppFontFamily`) for nullable fields.
+- UI code relies on context extensions (`context.t`, `context.theme`, `context.colorScheme`) from `lib/core/extensions/context_extension.dart`.
+- UI strings should go through localization (`assets/l10n/*.arb` + `fvm flutter gen-l10n`), not hardcoded text.
+- Layout/style conventions used across feature guides:
+  - use `Gap` instead of `SizedBox` for spacing
+  - use `flutter_screenutil` (`.w/.h/.sp/.r`) for fixed dimensions
+- Terminal spawning conventions are centralized in `TerminalBloc._createTerminalNode`:
+  - environment merge includes `TERM=xterm-256color` and `COLORTERM=truecolor`
+  - shell-specific wrapping differs for PowerShell / cmd / WSL / bash
+  - PTY I/O runs through `IsolatePty` (avoid blocking main isolate)
+- User config and runtime artifacts are stored under `~/.flutter-agent-panel` (themes, schema, logs, hydrated storage).
+- Import style in existing project docs: prefer relative imports inside feature folders; use absolute imports for `core/` and `shared/`.
+
 ---
-
-## [Optional] Task-Specific or Advanced Sections
-
-### Framework-Specific Rules
-- **Terminal**: Low-level terminal logic is handled in `packages/flutter_pty` and `packages/xterm`.
-- **Code Generation**: Always run `dart run lean_builder build --delete-conflicting-outputs` after modifying files that use `auto_route`.
-- **Linting**: Adhere to `analysis_options.yaml`. Run `flutter analyze` before committing.
-
-### Advanced Tips & Edge Cases
-- When adding new agents, ensure they are registered in the `SettingsBloc` and support the default agent list.
-- Use `HydratedBloc` for any state that needs to persist across app restarts.
-
----
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/Poorgramer-Zack) — claim your Tome and manage your conversions.
-<!-- tomevault:4.0:agents_md:2026-04-10 -->
+> Source: [Poorgramer-Zack/flutter-agent-panel](https://github.com/Poorgramer-Zack/flutter-agent-panel) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-05-02 -->
