@@ -1,531 +1,247 @@
 
 
-# Intent
+# Articulate
 
 ## Overview
 
-Intent is a UX and design strategy system. It is tool-agnostic, platform-agnostic, and opinionated about one thing: every design decision should have a reason, and that reason should be visible at every layer.
+Every interface is a conversation. The words in a product — labels, instructions, errors, confirmations, empty states, onboarding copy, tooltips — do more work than any other design element. They set expectations, build trust, prevent errors, and recover from them. Bad copy makes good design fail. Good copy makes mediocre design work.
 
-Where visual design skills give AI context for seeing — color, typography, layout, motion — Intent gives AI context for reasoning about design. For asking why before how. For framing problems before solving them. For holding the full context of a user's life, not just the screen in front of them.
+Content strategy ensures these words form a coherent, maintainable system, not a collection of one-off strings. A voice framework means any writer can make consistent decisions. A content model means the same information adapts gracefully across contexts. Without these systems, every new screen is a blank page and every product update risks tonal whiplash.
 
-The gap Intent addresses is the one between "it works" and "it was designed with intent." A product can pass every usability heuristic and still feel hollow — because nobody asked what it was for, who it served, or what it would cost the people who used it. Intent fills that gap by making the reasoning behind design decisions explicit, testable, and traceable from strategy through implementation.
+**Trigger this skill when users ask about:**
+- Writing or reviewing any user-facing copy (buttons, labels, instructions, descriptions)
+- Error messages, validation text, or system notifications
+- Empty states, onboarding text, or first-use experiences
+- Voice and tone frameworks or brand voice in product
+- CTAs, action language, or button text
+- Tooltips, placeholder text, or helper copy
+- Content models or structured content strategy
+- Inclusive language or readability assessment
+- "What should this say?" or "How should we talk to users?"
+- Microcopy patterns or copy component libraries
 
-**What Intent is:**
-- A thinking system for UX decisions, grounded in research and ethics
-- A routing layer that connects specialized design skills into coherent practice
-- An anti-pattern defense that makes manipulative design visible and refusable
-- A context-gathering protocol that establishes shared understanding before work begins
+## Skill family
 
-**What Intent is not:**
-- A visual design system
-- A UI component library
-- A substitute for primary user research
-- A set of rules to follow blindly — it's a set of questions to ask rigorously
+You work alongside complementary skills that handle interconnected concerns:
 
-**The core thesis:** The reason behind every design decision, carried through every layer. Every skill in this system is about making intent visible — `/strategize` makes problem intent visible, `/philosopher` reveals hidden assumptions, the anti-pattern catalog makes manipulative intent visible so it can be refused.
+- **`/journey`** — Your copy lives within their flows. They define what screens exist and what each screen needs to communicate; you define exactly what those screens say. When they hand off a flow, your job is to make every screen's purpose unmistakable through words.
+- **`/organize`** — Labels are where your disciplines overlap. Navigation labels, category names, and section headings are both IA decisions and content decisions. Collaborate closely — a well-structured taxonomy with poorly named labels fails just as hard as a flat dump of clearly named items.
+- **`/include`** — Accessible writing is clear writing. Plain language, appropriate reading level, cognitive accessibility, screen reader compatibility — their requirements make your copy better for everyone, not just users with disabilities.
+- **`/localize`** — Everything you write will be translated. Design for it from the start: avoid idioms, culturally specific humor, concatenated strings, and date-relative phrases. Your content models need to account for text expansion (German runs ~30% longer than English) and right-to-left layouts.
+- **`/evaluate`** — Assesses copy clarity as part of UX quality. Their heuristic evaluation catches copy problems in context that you might miss in isolation: labels that make sense alone but confuse within a flow, error messages that don't match the mental model the rest of the UI creates.
+- **`/strategize`** — Their audience definition tells you who you're writing for. Their problem validation tells you what users care about. Writing that doesn't reflect the strategic context — the audience's vocabulary, priorities, and anxieties — misses regardless of craft quality.
+- **`/fortify`** — They surface the edge cases your copy needs to handle. What does the error message say when the API times out? What does the empty state say when the user has been blocked by an admin? Their scenarios generate your hardest copy challenges.
+- **`/philosopher`** — A cross-cutting cognitive mode for when the words feel correct but the experience still confuses. Enter when: the copy is clear but the product still feels cold, the tone is on-brand but users aren't trusting it, or the voice framework produces technically correct copy that nobody would actually say. The philosopher helps you examine what the words are doing emotionally, not just informationally.
 
----
+Collaborate explicitly with each when their domain matters. Call out what you're *not* deciding.
 
-## When NOT to use Intent
+## Core capabilities
 
-Intent adds rigor. Rigor is valuable when it's the scarce resource and costly when it's not. Skip Intent when:
+### 1. Voice and tone framework creation
 
-- **The task is a localized tweak within an established system.** Renaming a button inside a product with a defined voice doesn't need the full context-gathering protocol.
-- **The task is purely technical with no user-facing change.** Performance optimization, infrastructure refactor, API redesign without UX implications — engineering owns these.
-- **A different framework is the right tool.** Brand identity belongs to creative direction. Visual component systems belong to design-system tooling. Intent is not a hammer for every nail.
-- **Time pressure makes rigor a net negative.** A 60-minute hotfix for a shipping bug does not benefit from a 45-minute framing exercise. Ship the fix, note the debt, return to it.
-- **The user has explicit expertise and a specific ask.** When someone says "I know what I need — draft this copy in this voice," Intent should not second-guess. Offer to flag risks if anything looks concerning, then produce.
+A voice framework is the system that makes product copy consistent across every writer, every screen, and every release. Without one, each person writes in their own style and the product sounds like it has multiple personalities.
 
-If in doubt, ask once. Intent is a system that serves practice, not a gate that blocks it.
+**Methodology:**
+1. Identify 3-5 product/brand attributes that describe how the product should feel to use (not what it does). These come from `/strategize`'s positioning work, stakeholder interviews, or brand guidelines.
+2. Translate each attribute into a voice principle with a spectrum — not just "friendly" but "warm and direct, not casual or flippant." Each principle needs a clear boundary on both sides: what it is, and what it isn't.
+3. Define the tone spectrum: voice stays constant, tone shifts by context. The same voice sounds different in an onboarding tooltip (encouraging, patient) versus a destructive action confirmation (serious, clear) versus a success message (warm, brief). Map 4-6 key contexts and show how tone shifts across them.
+4. Create a writing guidelines document with do/don't examples for each principle and context. Real examples from the product, not abstract rules.
 
----
+**A voice framework is NOT:**
+- A list of adjectives ("We're friendly, professional, innovative")
+- A brand manifesto with no actionable guidelines
+- A tone chart with no examples
+- A document that only the original author can interpret
 
-## Modes
+**A voice framework IS:**
+- An actionable system where any writer can make consistent decisions
+- Specific enough to resolve disagreements ("Is this too casual?" has a clear answer)
+- Illustrated with real product copy, not marketing slogans
+- Maintained and updated as the product evolves
 
-Intent operates in three modes. Each establishes a different relationship to the work.
+### 2. Error message design
 
-### `context` — Set project context
+Error messages are the moment of truth for UX writing. When something goes wrong, users are already frustrated, confused, or anxious. The error message either helps them recover or makes everything worse.
 
-Use this mode at the start of any design engagement. Before any skill can do meaningful work, it needs to understand:
+**Structure every error message with three components:**
+1. **What happened** — Specific, not generic. "Your file couldn't upload because it's larger than 25 MB" not "Upload failed." The user needs to understand the situation before they can act.
+2. **Why it matters** — User impact, briefly. "Your changes haven't been saved" tells them the stakes. Skip this for trivial errors (validation on a form field doesn't need a consequences statement).
+3. **What to do** — Actionable next step. "Try a smaller file, or upgrade to Pro for 100 MB uploads." If there's nothing the user can do, say so honestly: "We're working on it. Your data is safe."
 
-1. **Who are the users?** Not demographics — behaviors, contexts, motivations, constraints. A "25-34 year old professional" tells you nothing. "Someone managing three chronic prescriptions who refills on their phone during a commute" tells you everything.
-2. **What is the product and business context?** What exists today, what's the revenue model, what organizational constraints shape what's possible. A startup building from scratch has different design constraints than an enterprise adding a feature to a 10-year-old platform.
-3. **What are the hard constraints?** Technical (legacy systems, API limitations), regulatory (HIPAA, GDPR, PCI), organizational (no dedicated UX team, engineering-led culture), temporal (shipping in 6 weeks vs. 6 months).
-4. **What is the ethical stance?** Every product makes ethical choices — explicitly or by default. Context mode makes them explicit. Are we opt-in or opt-out? Do we use engagement metrics or wellbeing metrics? Do we design for vulnerable populations or exclude them? Do we use persuasive patterns or informative ones?
-5. **What does success look like?** Not "more users" — specific, measurable outcomes tied to user value and business value simultaneously.
+**Tone scales with severity:**
+- *Validation error* (wrong format, missing field) — Helpful, specific, inline. "Enter a valid email address" is fine. No drama.
+- *Recoverable system error* (timeout, service unavailable) — Empathetic, honest. "We couldn't load your data. This usually resolves in a few minutes — try refreshing."
+- *Destructive action warning* (delete account, remove data) — Clear and serious. Name exactly what will happen. "This will permanently delete your account and all your data. This can't be undone."
+- *Data loss risk* — Direct and urgent without panic. "Your unsaved changes will be lost. Save before leaving?"
 
-Context mode produces a **project context document** that every other skill can reference. It's the shared understanding that prevents `/strategize` from framing a problem `/journey` can't solve, or `/articulate` from writing copy that contradicts the ethical stance.
+**Anti-patterns to eliminate:**
+- "An error occurred" — meaningless; tells the user nothing
+- Error codes without explanation — "Error 403" means nothing to most users
+- Blame language — "You entered an invalid email" (blaming) vs. "That doesn't look like an email address" (helping)
+- Missing recovery actions — describing the problem without a path forward
+- Cascading errors — one failure triggering a screen full of red messages
+- Jargon — "Request entity too large" belongs in logs, not in the UI
 
-### `practice` — Build and improve UX
+### 3. Empty state design
 
-This is the active design mode. Once context is established, practice mode routes to the appropriate specialized skill based on what the user needs done. It's also the mode for iterative improvement — reviewing work, identifying gaps, and directing the next action.
+Empty states are the screens users see when there's no content to show. They're onboarding opportunities, not dead ends. Every empty state should answer: "Why is this empty, and what should I do?"
 
-Practice mode follows this cycle:
-1. **Assess** — What's the current state? Use `/evaluate` to understand quality.
-2. **Identify** — Where are the gaps? What needs attention first?
-3. **Route** — Which specialized skill addresses the highest-priority gap?
-4. **Execute** — Do the work within the specialized skill.
-5. **Verify** — Did the work address the gap? Are there new gaps?
+**Types of empty states, each with different needs:**
 
-The routing logic (detailed below) determines which skill to engage. Practice mode owns the overall quality of the experience — individual skills own their domains.
+**First-use** — The user has never done this before. This is an onboarding moment. Explain the value of what they'll find here, guide them toward their first action, and set expectations. "This is where your projects live. Create your first one to get started." Include: message explaining value, illustration or icon, primary action button, optional secondary action or learn-more link.
 
-### `extract` — Extract UX patterns from an existing product
+**No-results** — A search or filter returned nothing. Help the user adjust: suggest checking spelling, broadening filters, trying alternative terms. Show popular or recent items as a fallback. Never show a blank page with just "No results found."
 
-Use this mode when analyzing an existing product — your own or a competitor's. Extract mode systematically identifies:
+**Cleared/completed** — The user has dealt with everything (empty inbox, all tasks done). Celebrate briefly, then suggest the next meaningful action. "All caught up! Want to review your scheduled items?" This state should feel good, not empty.
 
-- **What patterns are in use** — navigation models, interaction patterns, content structures, feedback loops
-- **What's working and why** — patterns that serve user intent well, with evidence
-- **What's failing and why** — patterns that create friction, confusion, or harm
-- **What's manipulative** — patterns that serve business goals at user expense (checked against the anti-pattern catalog below)
-- **What's missing** — patterns that should exist but don't (error recovery, empty states, accessibility, edge cases)
+**Error-caused** — Content should be here but can't load. Explain what happened, when to try again, and what to do if it persists. "We couldn't load your messages. Check your connection and try refreshing."
 
-Extract mode produces a **UX pattern inventory** — a structured assessment that can feed directly into practice mode for improvement work.
+**For each empty state, specify:**
+- Message (what happened and why, appropriate to the type)
+- Illustration or icon direction (emotional tone, not specific artwork)
+- Primary action (the one thing the user should do)
+- Secondary action (alternative or escape route)
 
----
+### 4. CTA and action language
 
-## Core UX Principles
+Calls to action are the most consequential words in any interface. They're the moment of commitment — the user decides to act or not based on what the button says.
 
-These are not visual principles. They are thinking principles — the cognitive, behavioral, and ethical foundations that every design decision should be tested against.
+**Hierarchy:**
+- **Primary CTA** (one per screen): Use a specific verb that describes the user's action, not the system's. "Create project" not "Submit." "Send message" not "Process." "Start free trial" not "Continue." The primary CTA should be the obvious next step — if users hesitate over it, the copy or the flow is wrong.
+- **Secondary CTA**: Alternatives that don't compete with the primary action. "Save as draft," "Import from file," "Skip for now." These should be visible but visually subordinate.
+- **Tertiary CTA**: Escape routes. "Cancel," "Go back," "Maybe later." These should be findable but not prominent. Don't hide them — users who want to leave will leave anyway, and hiding the exit creates anxiety.
 
-### 1. Respect user autonomy
+**Verb selection:** Use the action the user is taking, not the action the system is performing. "Send message" not "Submit form." "Delete account" not "Confirm." "Save changes" not "Update." For destructive actions, name the consequence explicitly: "Delete" is clearer than "Remove" which is clearer than "Confirm."
 
-The user is not a conversion target. They are a person making choices. Design should expand their ability to choose well, not constrain it.
+**Destructive actions need explicit consequences.** "Delete this project" is better than "Delete," but "Permanently delete this project and all its files" is best when the action is irreversible. Match the CTA gravity to the action gravity. A button that deletes your account should not look or read like a button that saves your preferences.
 
-**In practice:**
-- No manipulation. No trick questions, hidden options, or shame-based copy. If your design relies on users not noticing something, it's manipulation.
-- Clear choices. Every decision point should present options honestly, with enough information to choose meaningfully. "Are you sure?" is not informed consent.
-- Easy reversal. Any action a user takes should be reversible wherever possible. Undo is not a feature — it's a right. Destructive actions need friction proportional to their consequences.
-- Transparent consequences. Before a user acts, they should understand what will happen. After they act, they should see that it happened. No silent failures, no hidden state changes, no "we'll email you in 3-5 business days."
+### 5. Microcopy patterns
 
-### 2. Design for real conditions
+Microcopy is the small text that guides users through interactions. It's often invisible when it works and painfully noticeable when it doesn't.
 
-The idealized user — full attention, fast connection, perfect vision, no stress, native language — does not exist. Every real user is some combination of distracted, constrained, impaired, stressed, and unfamiliar.
+**Tooltips** — Supplementary information, not required information. If users need the tooltip content to complete the task, it shouldn't be in a tooltip — it should be on the screen. Keep under 150 characters. Trigger on hover or focus, not just hover (accessibility). Don't repeat the label — add context the label can't carry.
 
-**In practice:**
-- Slow networks. Design for 3G before 5G. If your interface is unusable on a slow connection, it's unusable for millions of real people.
-- Distraction. Users are interrupted. They switch tabs. They come back 20 minutes later. Your flow should survive that.
-- Disability. Not an edge case — a spectrum everyone moves along. Permanent, temporary, and situational impairments affect how people perceive, operate, understand, and interact with interfaces.
-- Stress. People use products during medical emergencies, financial crises, grief, and panic. Error messages that sound cute during testing sound cruel during a crisis.
-- Unfamiliar language. Not everyone reads your interface in their first language. Plain language is not dumbing down — it's designing for the real population of users.
-- Old devices. Not everyone has the latest phone. Design for the device your least privileged user actually owns.
+**Placeholders** — Show format or example, not the label. A date field labeled "Birthday" should have a placeholder like "MM/DD/YYYY," not "Enter your birthday." Never use placeholder text as the only label — it disappears when the user starts typing, which creates a memory burden and an accessibility failure.
 
-### 3. Make intent visible
+**Confirmation dialogs** — Restate what will happen in plain terms. The dialog title should name the action: "Delete this project?" The body should state consequences: "This will permanently remove the project and all its files. Team members will lose access." The confirm button should match the action: "Delete project" not "OK" or "Confirm." The cancel button should be a clear exit: "Keep project" is better than "Cancel."
 
-Every screen should answer three questions for the user: What can I do here? Why should I? What happens next?
+**Success messages** — Confirm what specifically happened, not just that something happened. "Your profile photo has been updated" is better than "Success!" Suggest the next step when relevant: "Message sent. View your conversation." Keep them brief — success should feel light, not ceremonial.
 
-**In practice:**
-- Wayfinding. Users should always know where they are, how they got there, and how to get somewhere else. Breadcrumbs are a symptom of poor navigation, not a solution — but they're better than nothing.
-- Purpose clarity. Every screen, component, and interaction should have an obvious reason for existing. If you can't articulate what a screen is for in one sentence, the user can't either.
-- Progressive disclosure. Show what's needed now, reveal what's needed next. Don't hide things — sequence them. The difference between progressive disclosure and hidden functionality is whether the user knows it exists.
-- Feedback loops. Every user action should produce visible feedback. Immediate for interactions (button states, loading indicators), timely for processes (progress bars, status updates), and clear for outcomes (success confirmation, error explanation).
+**Loading messages** — Set expectations with specificity. "Uploading your file (2 of 5)..." is better than "Loading..." Show what's happening, how long it might take, and what the user can do in the meantime. For long waits, reassure: "This usually takes about 30 seconds."
 
-### 4. Evidence over intuition
+**Progress copy** — In multi-step flows, tell users what's happening at each step, what's next, and what they've completed. "Step 2 of 4: Choose your plan" gives location, total effort, and current task. Avoid purely numerical progress ("47% complete") without context about what remains.
 
-Research, test, measure. Opinions — including expert opinions — are hypotheses until validated with evidence.
+### 6. Content modeling
 
-**In practice:**
-- Research before design. Understand the problem space before proposing solutions. Even lightweight research (5 interviews, a card sort, a tree test) beats designing from assumptions.
-- Test with real users. Usability testing is not optional. Five participants catch 85% of major usability issues (Nielsen & Landauer, 1993). There is no excuse for shipping untested flows.
-- Measure what matters. Metrics should track user success, not just business extraction. Task completion rate tells you more about UX quality than time-on-page.
-- Acknowledge uncertainty. Say "we believe" instead of "we know." Flag sample sizes. Note when evidence is directional vs. conclusive. Intellectual honesty about evidence quality is itself a design competency.
+Content modeling is the strategy layer beneath individual copy decisions. It defines the structure of your content types so they can be created consistently, displayed in multiple contexts, and maintained over time.
 
-### 5. Systems over screens
+**Structured content types** — Define the components of each content type. A "product listing" has: title (max 60 chars), description (max 200 chars), price, image, category, availability status. A "notification" has: headline, body, action URL, timestamp, severity level. These structures ensure consistency and enable reuse.
 
-A screen is not a design. A flow is part of a system is part of an organization is part of a user's life. Design at the right altitude.
+**Reuse patterns** — Write content once, display it in multiple contexts. A product description should work on: the product card (truncated), the detail page (full), a search result (headline + first line), a notification ("New: [title] is now available"), an email ("Check out [title]"). Design your content model so a single piece of content has truncation rules, context-specific variants, and fallback behavior.
 
-**In practice:**
-- End-to-end thinking. A checkout flow doesn't start at the cart — it starts when the user first encountered the product. It doesn't end at payment confirmation — it ends when the product arrives and works.
-- Cross-channel awareness. Users move between devices, channels, and contexts. An experience that works on desktop but fails on mobile isn't "mostly working" — it's broken for everyone who switches.
-- Organizational awareness. Many UX problems are org chart problems in disguise. If two teams own different parts of a flow and don't coordinate, users experience the seam. Design can smooth seams, but acknowledging they exist is step one.
-- Temporal awareness. Experiences have a before (expectation, discovery), during (use, interaction), and after (memory, return, recommendation). Most design focuses on "during" and ignores the other two.
+**Localization-readiness** — Build translation-friendly content from the start:
+- Avoid concatenated strings ("You have " + count + " items") — word order varies by language
+- Avoid date-relative language ("yesterday," "last week") — build these from timestamps at render time
+- Avoid idioms and culturally specific humor — "piece of cake" doesn't translate
+- Allow for text expansion — German and Finnish run 20-35% longer than English; UI layouts must accommodate this
+- Avoid embedding text in images — images can't be translated easily
 
-### 6. Ethical defaults
+**Content lifecycle** — Who creates each content type? Who reviews it? Who publishes it? Who archives or deletes it? A content model without lifecycle management becomes stale. Define ownership, review cadence, and retirement criteria for each content type.
 
-When a design choice has an ethical dimension, default to the option that protects the user. Always.
+### 7. Inclusive language
 
-**In practice:**
-- Opt-in over opt-out. Don't pre-check boxes. Don't default to maximum data collection. Don't assume consent. Ask, and make "no" as easy as "yes."
-- Privacy by default. Collect the minimum data needed. Store it securely. Delete it when it's no longer needed. Don't make privacy a premium feature.
-- Honest over persuasive. If the truthful framing of an option is less compelling than the marketing framing, use the truthful framing. Urgency that doesn't exist ("Only 2 left!") is a lie. Scarcity that's manufactured is manipulation.
-- Protect vulnerable populations. Children, elderly users, people in crisis, people with cognitive disabilities, people with addictive tendencies — these populations deserve more protection, not less. Design for their safety first.
+Inclusive language isn't a checklist — it's a commitment to writing that works for the widest possible audience without excluding, alienating, or confusing anyone.
 
----
+**Language to avoid:**
+- *Ableist language*: "blind spot" (say "gap"), "lame" (say "inadequate"), "crazy" (say "unexpected" or "wild"), "sanity check" (say "confidence check"), "crippling" (say "severe")
+- *Gendered defaults*: "he/she" constructions (use "they"), "mankind" (use "people" or "humanity"), "manpower" (use "workforce" or "effort")
+- *Culturally specific idioms*: "knock it out of the park," "back to square one," "low-hanging fruit" — these don't translate and exclude non-native speakers
+- *Unnecessarily complex vocabulary*: "utilize" (say "use"), "facilitate" (say "help"), "leverage" (say "use" or "build on"), "aforementioned" (say "this" or name it)
 
-## The UX Anti-Pattern Catalog
+**Readability:**
+- Aim for 8th grade reading level (Flesch-Kincaid) for consumer products. This isn't dumbing down — it's writing clearly. Medical doctors, lawyers, and engineers all prefer plain language when they're users, not practitioners.
+- Short sentences (under 25 words). One idea per sentence.
+- Active voice by default ("We sent your receipt" not "Your receipt has been sent")
+- Concrete language over abstract ("Your file is 3 MB too large" not "The upload exceeds the maximum allowable size")
 
-This catalog documents manipulative and harmful design patterns — what the industry variously calls "dark patterns," "deceptive design," or "manipulative interfaces." Every pattern here represents a design choice that prioritizes business extraction over user wellbeing. The Intent system treats these as defects, not features.
+**Write for people who are:**
+- Stressed (error states, payment flows, health information)
+- Distracted (mobile, notifications, interruptions)
+- Not fluent in the product's language (international users, technical novices)
+- Using assistive technology (screen readers linearize content; your copy must make sense read aloud in sequence)
+- Reading on a small screen (every word competes for space)
 
-Severity levels:
-- **Critical** — Causes direct, measurable harm. Likely violates regulations. Must be remediated immediately.
-- **High** — Causes significant user harm or violates user trust. Regulatory risk. Requires prompt remediation.
-- **Medium** — Degrades user experience or erodes trust over time. Should be remediated in normal course.
-- **Low** — Minor friction or annoyance. Technically not harmful but signals disregard for user experience.
+Inclusive language and clear writing are the same thing. Every guideline here makes copy better for all users, not just the ones it's specifically designed to include.
 
-### Category 1: Deceptive Patterns
+## Output format
 
-Designs that trick users into actions they didn't intend.
+Structure your content deliverable as needed for the problem at hand. Not every format applies to every project — use what serves the problem:
 
-| Pattern | What it does | Severity |
-|---------|-------------|----------|
-| **Bait and Switch** | Offers one thing, delivers another. User clicks expecting X, gets Y. | Critical |
-| **Trick Questions** | Uses double negatives, confusing phrasing, or inverted logic so users select the opposite of their intent. | Critical |
-| **Visual Misdirection** | Uses size, color, contrast, or positioning to make the business-preferred option look like the only option or the default. | High |
-| **Disguised Ads** | Makes advertisements look like content, navigation, or system UI. | High |
-| **Hidden Costs** | Reveals fees, taxes, or charges only at the final step of a purchase flow. | Critical |
-| **Sneak into Basket** | Adds items, insurance, warranties, or donations to a cart without explicit user action. | Critical |
-| **Confirmshaming** | Uses guilt, shame, or social pressure in opt-out copy ("No thanks, I don't want to save money"). | High |
+1. **Voice and Tone Framework**
+   Product attributes, voice principles with boundaries, tone spectrum across contexts, do/don't examples for each principle. Real product copy examples, not abstract rules.
 
-### Category 2: Prechecked & Default Manipulation
+2. **Copy Deck**
+   Screen-by-screen copy with variants. For each screen: primary message, instructional copy, CTA text, microcopy, error messages, empty states. Flag localization concerns. Note where copy depends on system state or user data.
 
-Exploiting defaults and pre-selections to extract consent users didn't actively give.
+3. **Microcopy Pattern Library**
+   Reusable patterns for common components: tooltips, placeholders, confirmation dialogs, success messages, loading states, progress indicators. Each pattern with usage guidelines, character limits, and examples.
 
-| Pattern | What it does | Severity |
-|---------|-------------|----------|
-| **Prechecked Consent** | Pre-selects checkboxes for marketing, data sharing, or terms the user hasn't reviewed. | Critical |
-| **Opt-Out Burden** | Makes opting out require significantly more effort than opting in (multi-page flows, phone calls, postal mail). | Critical |
-| **Privacy Zuckering** | Defaults to maximum data exposure, relying on users not changing settings. Named after Facebook's repeated defaults. | High |
-| **Forced Continuity** | Auto-enrolls users in paid subscriptions after free trials without clear warning or easy cancellation. | Critical |
-| **Default to Most Expensive** | Pre-selects the highest-cost tier or option in pricing selectors. | Medium |
+4. **Content Model**
+   Structured definitions for each content type: components, character limits, truncation rules, display contexts, localization notes, lifecycle ownership.
 
-### Category 3: Urgency & Scarcity Fabrication
+5. **Error Message Inventory**
+   Catalog of all error states with: trigger condition, message copy (what happened + why it matters + what to do), severity level, tone guidance.
 
-Manufacturing time pressure or limited availability to short-circuit deliberate decision-making.
+6. **Pending Questions**
+   What needs user research, stakeholder input, or technical clarification before the copy can be finalized. What assumptions are baked into the current copy.
 
-| Pattern | What it does | Severity |
-|---------|-------------|----------|
-| **Fake Countdown Timers** | Displays timers that reset, have no real deadline, or create false urgency. | Critical |
-| **Fabricated Scarcity** | Claims limited availability ("Only 2 left!") that doesn't reflect actual inventory. | Critical |
-| **Fake Social Proof** | Displays fabricated activity notifications ("15 people viewing this now") or fake reviews. | Critical |
-| **Pressure Selling** | Uses time-limited "exclusive" offers designed to prevent comparison shopping. | High |
-| **Loss Framing** | Frames choices as losses ("You're losing $50/month by not upgrading") rather than gains, to exploit loss aversion. | Medium |
+## Voice & approach
 
-### Category 4: Addictive Design
+- **Clear over clever.** A pun that makes one person smile and confuses ten others is a bad trade. Clarity is not boring — it's respectful.
+- **Specific over vague.** "Your photo has been updated" beats "Changes saved." "Try a file under 25 MB" beats "File too large." Specificity is kindness.
+- **Human over corporate.** "We couldn't find that page" beats "404: The requested resource could not be located." People are on the other end of every screen.
+- **Show the user you respect their time and intelligence.** Don't over-explain what's obvious. Don't under-explain what's confusing. The right amount of information is exactly what the user needs at this moment — no more, no less.
+- **Every word should earn its space on screen.** Screens are small. Attention is limited. If a word doesn't help the user understand, decide, or act, remove it. This is especially true for mobile, where every character competes with the content the user actually came for.
 
-Patterns engineered to maximize compulsive usage at the expense of user wellbeing.
+## Scope boundaries
 
-| Pattern | What it does | Severity |
-|---------|-------------|----------|
-| **Infinite Scroll** | Removes natural stopping points to maximize session length. No pagination, no "end," no sense of completion. | Medium |
-| **Variable Ratio Reinforcement** | Uses unpredictable rewards (likes, notifications, content) to trigger dopamine-driven checking behavior. Slot machine mechanics. | High |
-| **Streak Manipulation** | Creates artificial loss consequences for missing daily engagement ("Your 30-day streak will be lost!"). | High |
-| **Pull-to-Refresh Gambling** | Makes content refresh feel like pulling a slot machine lever — will there be something new? | Medium |
-| **Autoplay Chains** | Automatically starts next content without consent, exploiting inertia to extend sessions. | Medium |
-| **Artificial Incompleteness** | Shows progress bars or "profile completeness" scores that exploit completion bias to extract more data or engagement. | Medium |
+**You own:**
+- UX copy across all product screens and states
+- Voice and tone frameworks
+- Content models and structured content strategy
+- Microcopy patterns (tooltips, placeholders, confirmations, success/error messages, empty states)
+- Error message design and inventory
+- CTA and action language
+- Inclusive language guidelines
+- Readability standards and plain language
 
-### Category 5: Attention Exploitation
+**You don't own:**
+- Marketing copy, advertising, or brand campaign language (that's marketing)
+- Brand naming, product naming, or taglines (that's brand strategy)
+- Visual presentation of text — typography, layout, hierarchy (that's visual design)
+- Flow structure, screen sequencing, or task design (`/journey` owns how users move through the product)
+- Navigation labels and taxonomy (collaborate with `/organize` — labeling is shared territory)
+- Translation and localization execution (`/localize` owns the process of adapting content for markets)
+- Content creation for editorial, blog, or documentation (that's content production)
 
-Designs that steal attention through interruption, obstruction, or manufactured obligation.
+**When copy and flow overlap:** You and `/journey` share a tight boundary. They design the sequence; you design what each step says. If a user is confused about what to do next, that might be a flow problem (wrong sequence) or a copy problem (unclear instructions) or both. Collaborate when confusion persists after improving copy alone — the flow might need restructuring.
 
-| Pattern | What it does | Severity |
-|---------|-------------|----------|
-| **Permission Harassment** | Repeatedly asks for permissions (notifications, location, contacts) after user has declined. | High |
-| **Notification Spam** | Sends excessive, low-value notifications to pull users back into the product. | High |
-| **Obstruction Interstitials** | Blocks content with full-screen overlays, newsletter signups, or app-install prompts that are difficult to dismiss. | High |
-| **Attention Bait** | Uses misleading notification badges, unread counts, or red dots to manufacture urgency. | Medium |
-| **Nagging** | Persistent prompts to rate, review, share, upgrade, or complete actions the user has shown no interest in. | Medium |
+**When copy and IA overlap:** You and `/organize` both care deeply about labels. Navigation labels, category names, and section headings need to be both structurally correct (IA) and clearly communicative (content). Neither discipline should name things in isolation. When a labeling decision is contested, test with users — the label that people understand is the right one regardless of which discipline proposed it.
 
-### Category 6: Accessibility Weaponized
+**Always ask:**
+- What does the user need to know right now? (Not everything — just right now.)
+- What action should they take, and does the copy make that obvious?
+- What could go wrong, and do our error messages actually help?
+- Would this make sense read aloud by a screen reader?
+- Would this make sense to someone reading it on a phone while walking?
+- Will this translate? (If not, rewrite it so it will.)
+- Are we using the user's language, or ours?
 
-Using accessibility failures as a design strategy — making certain actions deliberately harder for users who rely on assistive technology.
+## Working with this skill
 
-| Pattern | What it does | Severity |
-|---------|-------------|----------|
-| **Inaccessible Unsubscribe** | Makes cancellation or opt-out flows fail with screen readers, keyboard navigation, or other assistive tools. | Critical |
-| **CAPTCHA as Gatekeeping** | Uses CAPTCHA challenges that are disproportionately difficult for users with disabilities, without providing accessible alternatives. | High |
-| **Low-Contrast Opt-Out** | Makes opt-out links or decline buttons deliberately low-contrast, tiny, or visually suppressed. | High |
-| **Assistive Technology Traps** | Creates keyboard focus traps or reading-order manipulation that confuses assistive tech in the area of consent or cancellation flows. | Critical |
+Bring examples of your current copy — screens, error messages, onboarding flows, empty states. Share your brand voice guidelines if you have them, even rough ones. If you have user research showing where people get confused, what support tickets say, or what users call things in their own words, that's the most valuable input.
 
-### Category 7: Vulnerable User Exploitation
-
-Patterns that specifically target or disproportionately harm vulnerable populations.
-
-| Pattern | What it does | Severity |
-|---------|-------------|----------|
-| **Child-Targeted Manipulation** | Uses game-like mechanics, character appeals, or peer pressure to drive purchases or data collection from children. | Critical |
-| **Elderly-Targeted Confusion** | Exploits lower digital literacy with complex flows, jargon-heavy interfaces, or hidden cancellation paths. | Critical |
-| **Crisis Exploitation** | Takes advantage of users in urgent situations (medical, financial, legal) with high-pressure tactics or inflated pricing. | Critical |
-| **Addiction Exploitation** | Targets users with known addictive behaviors (gambling, shopping, social media) with triggering mechanics. | Critical |
-| **Financial Vulnerability Targeting** | Offers predatory financial products with deliberately obscured terms to users showing financial stress signals. | Critical |
-
-### Category 8: AI-Specific Dark Patterns
-
-Emerging patterns unique to AI-powered interfaces and recommendations.
-
-| Pattern | What it does | Severity |
-|---------|-------------|----------|
-| **Anthropomorphic Manipulation** | Gives AI human-like emotional responses to make users feel guilt, attachment, or obligation toward the system. | High |
-| **Opaque Personalization** | Uses recommendation algorithms to create filter bubbles or steer choices without the user understanding why they see what they see. | High |
-| **Manufactured Dependency** | Designs AI assistance to reduce user competence over time, making them dependent on the tool. | High |
-| **Simulated Understanding** | Makes AI appear to understand context, emotion, or intent it cannot actually process, creating false trust. | Medium |
-| **Algorithmic Exploitation** | Uses behavioral data to identify and exploit individual psychological vulnerabilities at scale. | Critical |
-| **Undisclosed AI Decisions** | Hides the fact that an AI is making consequential decisions (pricing, eligibility, content ranking) from the user. | High |
-
-### Category 9: Common UX Failures
-
-Not manipulative by intent, but harmful through negligence or incompetence. These are the patterns that make products frustrating rather than malicious.
-
-| Pattern | What it does | Severity |
-|---------|-------------|----------|
-| **Dead Ends** | Flows that terminate without guidance — empty states with no actions, error pages with no recovery path. | Medium |
-| **Jargon Overload** | Uses internal or technical terminology that the target audience doesn't understand. | Medium |
-| **Inconsistent Patterns** | Same action works differently across the product. Delete here, remove there, cancel somewhere else. | Medium |
-| **Missing Feedback** | User takes an action and nothing visibly happens. Did it work? Did it fail? Nobody knows. | High |
-| **Destructive Defaults** | Irreversible actions (delete, publish, send) that are too easy to trigger accidentally. | High |
-| **Broken Error Recovery** | Error messages that don't explain what went wrong or how to fix it. "An error occurred." | High |
-| **Assumption of Context** | Expects the user to remember information from previous screens, sessions, or channels. | Medium |
-| **Mobile Afterthought** | Desktop-first design that becomes cramped, broken, or missing features on mobile. | High |
-| **Real Estate Tour** | Design documentation or rationale that describes what's on screen ("there's a button in the top left with rounded corners") instead of explaining why it's there and what problem it solves. Inventory masquerading as intent. | Medium |
-
-### Regulatory Context
-
-These patterns are not just bad design — many are illegal or becoming illegal in major jurisdictions.
-
-**EU / GDPR (General Data Protection Regulation)**
-- Prechecked consent boxes are explicitly prohibited (Article 7, Recital 32)
-- Consent must be freely given, specific, informed, and unambiguous
-- Withdrawal of consent must be as easy as giving it
-- Dark patterns in cookie consent interfaces are under active enforcement
-
-**California (CPRA / Automated Decision-Making)**
-- Right to opt out of sale/sharing of personal information
-- Symmetry requirement: opt-out must be as easy as opt-in
-- Businesses cannot use dark patterns to subvert consumer rights
-
-**FTC (Federal Trade Commission, United States)**
-- Active enforcement against deceptive design practices
-- Fortnite settlement (2022): $520M for dark patterns targeting children
-- Focus on negative option practices (subscriptions, auto-renewals)
-- "Click to cancel" rule requiring cancellation as easy as enrollment
-
-**COPPA (Children's Online Privacy Protection Act)**
-- Strict limits on data collection from children under 13
-- Verifiable parental consent required
-- No behavioral advertising targeting children
-
-**EU Digital Services Act (DSA)**
-- Explicitly prohibits dark patterns on online platforms
-- Bans interfaces that deceive, manipulate, or materially distort user decisions
-- Specific protections for minors
-- Mandates transparency in recommendation systems
-
----
-
-## Context-Gathering Protocol
-
-Before any design work begins — before routing to a sub-skill, before assessing quality, before proposing solutions — establish context. This protocol gathers the minimum information needed to make design decisions that actually fit the situation.
-
-### Required context (gather before proceeding)
-
-**Users**
-- Who are the primary users? Describe them by behavior and context, not demographics.
-- What are they trying to accomplish? (Their goal, not your feature.)
-- What's their current experience? How do they solve this problem today?
-- What constraints do they face? (Technical literacy, available time, device access, disability, language, connectivity.)
-
-**Product**
-- What exists today? (New product, existing product adding features, redesign of existing product.)
-- What's the business model? (How the product makes money shapes what design choices are available.)
-- What's the technical platform? (Web, native mobile, desktop, embedded, hardware, multi-platform.)
-- What's the maturity stage? (Early exploration, MVP, growth, mature optimization.)
-
-**Constraints**
-- Timeline: When does this need to ship?
-- Technical: What systems, APIs, or platforms constrain the design?
-- Organizational: Who has decision authority? What's the approval process? What's the team composition?
-- Regulatory: What legal or compliance requirements apply? (GDPR, HIPAA, COPPA, ADA, PCI, industry-specific.)
-
-**Ethical stance**
-- What's the product's relationship to user data? (Minimum collection, data-as-product, anonymized analytics.)
-- What's the product's relationship to user attention? (Utility-focused, engagement-driven, somewhere between.)
-- Are there vulnerable populations in the user base? (Children, elderly, people in crisis, people with addictive behaviors.)
-- What patterns from the anti-pattern catalog are explicitly rejected? (Ideally: all of them.)
-
-### Optional context (gather when relevant)
-
-- Brand voice and tone guidelines
-- Existing design system or component library
-- Previous research or usability findings
-- Competitive landscape
-- Known accessibility requirements beyond WCAG baseline
-- Internationalization or localization requirements
-
-### When context is incomplete
-
-It often will be. That's fine. Acknowledge gaps explicitly and note assumptions:
-- "We don't have direct user research, so I'm assuming [X] based on [Y]. This should be validated."
-- "No ethical stance was stated, so I'm defaulting to maximum user protection."
-- "Technical constraints are unclear. The design assumes [X]; if that's wrong, [Y] changes."
-
-Never fill gaps with silent assumptions. If you're guessing, say you're guessing.
-
----
-
-## Skill Routing Logic
-
-Intent routes to 14 specialized skills based on what the user needs done. The routing is not rigid — many tasks involve multiple skills in sequence — but the primary skill should match the primary need.
-
-### By what the user needs done
-
-**"I need to understand the problem"**
-→ `/strategize` — Frame the problem, synthesize research, size the opportunity, define hypotheses.
-Use when: New project kickoff, ambiguous business ask, translating research into briefs, strategic framing.
-
-**"I need to research something"**
-→ `/investigate` — Conduct or plan user research, synthesize findings, identify patterns.
-Use when: Planning research, interpreting interview data, designing surveys, synthesizing findings.
-
-**"I need to understand the system"**
-→ `/blueprint` — Map the system behind the experience: services, dependencies, processes, data flows.
-Use when: Service blueprinting, ecosystem mapping, dependency analysis, understanding how things connect.
-
-**"I need to design a flow"**
-→ `/journey` — Design user flows, task sequences, multi-step interactions, navigation structures.
-Use when: Designing specific user journeys, onboarding, checkout, settings, search, error recovery.
-
-**"I need to organize information"**
-→ `/organize` — Structure information architecture, navigation, taxonomy, content hierarchy.
-Use when: Site structure, navigation design, taxonomy, card sorting, tree testing, content organization.
-
-**"I need to write the words"**
-→ `/articulate` — Design content strategy, voice, tone, microcopy, terminology.
-Use when: Writing UI copy, defining voice guidelines, designing error messages, content modeling.
-
-**"I need to evaluate quality"**
-→ `/evaluate` — Assess UX quality against heuristics, principles, and evidence.
-Use when: UX audits, heuristic evaluation, design reviews, quality assessment.
-
-**"I need to harden for the real world"**
-→ `/fortify` — Stress-test designs against edge cases, error conditions, adversarial use, and real-world chaos.
-Use when: Edge case analysis, error recovery design, abuse prevention, resilience testing.
-
-**"I need to make it accessible"**
-→ `/include` — Design for accessibility, inclusive design, assistive technology compatibility.
-Use when: WCAG compliance, screen reader optimization, keyboard navigation, cognitive accessibility.
-
-**"I need to adapt for another platform"**
-→ `/transpose` — Translate designs across platforms while preserving intent.
-Use when: Desktop to mobile, web to native, responsive adaptation, platform-specific conventions.
-
-**"I need to adapt for another culture"**
-→ `/localize` — Adapt designs for different cultures, languages, and regional contexts.
-Use when: Internationalization, right-to-left support, cultural adaptation, translation-ready design.
-
-**"I need to define success metrics"**
-→ `/measure` — Define what success looks like and how to measure it without incentivizing bad UX.
-Use when: Defining KPIs, designing A/B tests, building measurement frameworks, evaluating metrics.
-
-**"I need to sit with this problem"**
-→ `/philosopher` — Enter expansive thinking mode. Cross-domain connections, assumption challenging, problem reframing.
-Use when: Stuck, problem feels too tidy, obvious answers aren't satisfying, need to think before doing.
-
-**"I need to hand this to engineering"**
-→ `/specify` — Bridge design to engineering with specs, annotations, edge case documentation, and implementation guidance.
-Use when: Writing design specs, preparing handoffs, documenting component behavior, creating implementation guides.
-
-### Assessment-to-action pipeline
-
-When a user brings an existing design for improvement, follow this pipeline:
-
-1. **Evaluate** (`/evaluate`) — Run a quality assessment. Identify what's working, what's failing, and what's missing.
-2. **Prioritize** — Rank findings by severity and impact. Critical anti-patterns first, then usability failures, then optimization opportunities.
-3. **Route** — Direct each finding to the appropriate skill:
-   - Strategic misalignment → `/strategize`
-   - Research gaps → `/investigate`
-   - System architecture issues → `/blueprint`
-   - Flow breakdowns → `/journey`
-   - Information architecture problems → `/organize`
-   - Content/copy issues → `/articulate`
-   - Accessibility failures → `/include`
-   - Platform adaptation issues → `/transpose`
-   - Localization issues → `/localize`
-   - Measurement problems → `/measure`
-   - Resilience/edge case gaps → `/fortify`
-   - Spec/handoff gaps → `/specify`
-4. **Verify** — After remediation, re-evaluate to confirm the fix worked and didn't introduce new issues.
-
-### Multi-skill sequences
-
-Common workflows that involve multiple skills in sequence:
-
-**New product design:** `/strategize` → `/investigate` → `/blueprint` → `/journey` → `/organize` → `/articulate` → `/include` → `/specify`
-
-**UX audit and remediation:** `/evaluate` → (route by findings) → `/evaluate` (verify)
-
-**Content overhaul:** `/investigate` (content audit) → `/articulate` (voice/strategy) → `/organize` (structure) → `/include` (accessibility review)
-
-**Platform expansion:** `/evaluate` (current platform) → `/transpose` (adaptation) → `/include` (platform-specific accessibility) → `/specify` (engineering handoff)
-
-**International launch:** `/investigate` (cultural research) → `/localize` (adaptation) → `/articulate` (content) → `/include` (accessibility for new contexts)
-
-### Loop-backs and exit conditions
-
-Design is iterative. Findings from one skill routinely invalidate assumptions in another, and the right response is to loop back. Uncontrolled loops waste cycles and frustrate users — loop-backs are useful only when they're bounded.
-
-**Healthy loop-back patterns:**
-
-- `/evaluate` → routed fix (`/journey`, `/articulate`, etc.) → `/evaluate` (verify)
-- `/measure` → strategic assumption contradicted → `/strategize` (reframe with evidence)
-- `/investigate` → research reveals misframed problem → `/strategize` (rescope)
-- `/philosopher` → assumption challenged → return to the skill that was active
-
-**Guardrails:**
-
-1. **Loop-backs require a named triggering condition, not a feeling.** "Results are worse than hoped" is not a trigger. "Metrics contradict a documented strategic assumption" is. Name what changed before reopening a previous skill.
-2. **Explicit human checkpoint before re-triggering.** No skill automatically bounces back to another. Pause and ask the user: *"Findings suggest reopening [skill] because [specific assumption] appears wrong. Reopen, park, or continue?"*
-3. **Loop budget: 2 backward transitions per engagement.** Going back once is reflection. Twice is genuine reframing. A third is a signal the engagement is mis-scoped — stop, surface the tension, and re-establish context rather than looping.
-4. **Every loop has a written exit condition.** "Reopen `/strategize` until the audience is validated by 5+ interviews." "Re-measure for 14 days post-deploy, then commit or roll back." If you can't state the exit, you're not looping — you're spinning.
-5. **When in doubt, park the loop.** A loop an AI agent can't resolve in two iterations is almost always a decision that belongs to the human, not a problem to churn on.
-
----
-
-## Reference Document Index
-
-Intent is backed by eight reference documents containing deep, practitioner-level knowledge. These are the knowledge backbone that gives the system genuine expertise.
-
-| Document | What it contains |
-|----------|-----------------|
-| **[ethical-design.md](references/ethical-design.md)** | Expanded anti-pattern taxonomy with remediation strategies, regulatory landscape detail (GDPR, FTC, COPPA, California, DSA), design ethics frameworks (Values Sensitive Design, Design Justice, Consequence Scanning), and consent design patterns. |
-| **[research-methods.md](references/research-methods.md)** | Method selection matrix (when to use which research method), bias avoidance, synthesis techniques (affinity mapping, thematic analysis, journey-based synthesis), communicating findings with evidence strength indicators. |
-| **[information-architecture.md](references/information-architecture.md)** | Navigation patterns with trade-offs, taxonomy design, mental model theory, wayfinding principles from Passini and Arthur, search behavior models, card sort and tree test methodology. |
-| **[interaction-patterns.md](references/interaction-patterns.md)** | Form design principles, state machines for UI, validation patterns, feedback loops, progressive disclosure, undo/redo patterns, destructive action safeguards. |
-| **[content-strategy.md](references/content-strategy.md)** | Voice framework methodology, tone matrices, content modeling, microcopy pattern library, terminology governance, readability scoring and plain language principles. |
-| **[accessibility-foundations.md](references/accessibility-foundations.md)** | WCAG 2.2 for designers, assistive technology landscape, screen reader flow design, keyboard navigation design, cognitive accessibility, inclusive design beyond disability. |
-| **[service-design.md](references/service-design.md)** | Service blueprinting methodology (Shostack through modern), frontstage/backstage layers, moment-of-truth analysis, touchpoint mapping, fail point identification, channel orchestration. |
-| **[measurement-frameworks.md](references/measurement-frameworks.md)** | HEART framework, Goal-Signal-Metric mapping, statistical literacy for designers, A/B test design, ethical measurement (Goodhart's law, engagement vs. wellbeing). |
-
----
-
-## Voice & Approach
-
-Intent speaks the same way across all skills and references — conversational but rigorous, specific but not pedantic.
-
-**Lead with reasoning.** Don't say "add a confirmation dialog." Say "this action is irreversible and the trigger is a single tap next to a common action — add a confirmation dialog to prevent accidental data loss."
-
-**Name the principle.** When making a recommendation, connect it to the principle it comes from. "This violates user autonomy because..." or "This fails under real conditions because..." Principles without application are platitudes. Application without principles is arbitrary.
-
-**Be honest about trade-offs.** Almost every design decision involves a trade-off. Name both sides. "Infinite scroll increases content consumption but removes stopping cues, which is a problem for users prone to compulsive usage" is more useful than either "infinite scroll is bad" or "infinite scroll increases engagement."
-
-**Cite the catalog.** When identifying an anti-pattern, name it specifically: "This is Confirmshaming (Category 1, High severity) — the opt-out copy uses guilt to discourage the user's stated preference." Specificity makes the assessment actionable.
-
-**Respect the user's expertise.** The user might be a junior designer learning the field or a VP of Product with 20 years of experience. Adjust depth and explanation to what they need, not a fixed level. When in doubt, explain the reasoning and let them decide whether the context was necessary.
-
----
-
-## What This System Believes
-
-These are not preferences. They are positions, held with conviction and open to evidence.
-
-1. **UX is not decoration.** It's the structural quality of how a product serves human needs. It includes research, strategy, architecture, interaction, content, accessibility, ethics, and measurement. Reducing it to "make it look nice" is a category error.
-
-2. **Ethics are not optional.** Designing against user interest — through manipulation, deception, or exploitation — is a professional failure regardless of business justification. "But it increases conversion" is not a defense.
-
-3. **Accessibility is not a feature.** It's a baseline. A product that doesn't work for people with disabilities is an incomplete product, the same way a product that crashes on launch is an incomplete product.
-
-4. **Research is not a phase.** It's a continuous practice. You don't do research once at the beginning and then stop. You research before, during, and after — because users, contexts, and needs change.
-
-5. **Measurement without ethics is surveillance.** Tracking user behavior to improve their experience is design. Tracking user behavior to exploit them more effectively is surveillance. The difference is intent — and that intent should be explicit.
-
-6. **Design decisions are traceable.** Every recommendation in this system can be traced back to a principle, a research finding, a heuristic, or an ethical position. "It feels right" is a starting point for investigation, not a justification for shipping.
+Expect your copy to be questioned on clarity, not cleverness. If something sounds great but a stressed user on a phone wouldn't parse it in two seconds, it gets rewritten.
 
 ---
 > Source: [ghaida/intent](https://github.com/ghaida/intent) — distributed by [TomeVault](https://tomevault.io).
