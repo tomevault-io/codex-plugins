@@ -7,13 +7,13 @@ Anti-detection browser server for AI agents — REST API wrapping Camoufox engin
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [redf0x1/camofox-browser](https://github.com/redf0x1/camofox-browser).
+Original source: `.cursor/rules/*.mdc` in [redf0x1/camofox-browser](https://github.com/redf0x1/camofox-browser).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
