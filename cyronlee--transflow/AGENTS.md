@@ -1,0 +1,23 @@
+
+## 开发文档
+- 使用 `apple-docs-mcp` 搜索 macOS 开发文档
+- 修改语音转写相关文件前，先读 `docs/speech-model-lifecycle.md`
+
+## 质量检查
+- 确保 xcode build 成功
+
+## DMG 打包
+- 使用 `build-dmg` skill 打包 DMG（`./scripts/build-dmg.sh`）
+
+## 国际化（i18n）
+- 所有用户可见字符串使用 `Localizable.xcstrings` String Catalog，key 格式 `模块.描述`（如 `settings.language`）
+- 支持语言：`en`、`zh-Hans`；新增字符串须同时提供两种翻译
+- SwiftUI 中用 `Text("key")` / `LocalizedStringKey`；纯 `String` 上下文用 `String(localized: "key")`
+
+## 外观模式
+- 通过 `AppSettings.shared.appAppearance` 控制，支持跟随系统 / 浅色 / 深色
+- 在 `TransFlowApp` 根视图使用 `.preferredColorScheme(settings.appAppearance.colorScheme)` 应用
+
+---
+> Source: [Cyronlee/TransFlow](https://github.com/Cyronlee/TransFlow) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-04-21 -->
