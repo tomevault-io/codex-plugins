@@ -1,0 +1,51 @@
+{
+  "name": "opencode-review-gitea",
+  "owner": "ccsert",
+  "repo": "opencode-review-gitea",
+  "description": "AI-powered PR review for Gitea/Forgejo built on OpenCode. Runs in Gitea Actions, fetches PR diffs, and posts structured reviews. Supports Docker or source install with isolated .opencode-review config.",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "pr-review",
+      "path": ".opencode-review/skills/pr-review",
+      "github_url": "https://github.com/ccsert/opencode-review-gitea/tree/main/.opencode-review/skills/pr-review",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/ccsert/opencode-review-gitea",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-02T15:45:06Z"
+}
