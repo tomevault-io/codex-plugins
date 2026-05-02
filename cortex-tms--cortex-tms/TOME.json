@@ -4,7 +4,7 @@
   "repo": "cortex-tms",
   "description": "The Universal AI-Optimized Project Boilerplate. A Tiered Memory System (TMS) designed to maximize AI agent performance. Includes an interactive CLI tool and a high-signal documentation standard.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/cortex-tms/cortex-tms",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-21T14:19:42Z"
+  "distributed_at": "2026-05-02T22:18:32Z"
 }
