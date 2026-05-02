@@ -2,9 +2,9 @@
   "name": "lyra-tool-discovery",
   "owner": "nirholas",
   "repo": "lyra-tool-discovery",
-  "description": "",
+  "description": "AI powered automation toolkit which acts as an agent that discovers MCP servers for you. Point it at GitHub/npm/configure your own discovery, let GPT or Claude analyze the API or MCP or any tool, get ready-to-ship plugin configs. Zero manual work.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "GEMINI.md",
   "formats": [
     {
       "format": "claude_md",
@@ -38,7 +38,7 @@
     }
   ],
   "skills": [],
-  "claim_url": "https://tomevault.io/claim/nirholas",
+  "source_url": "https://github.com/nirholas/lyra-tool-discovery",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-10T06:39:39Z"
+  "distributed_at": "2026-05-02T16:21:19Z"
 }
