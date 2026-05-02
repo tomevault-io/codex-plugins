@@ -1,0 +1,44 @@
+{
+  "name": "Neo-MoFox",
+  "owner": "MoFox-Studio",
+  "repo": "Neo-MoFox",
+  "description": "\u4e00\u4e2a\u5168\u65b0\u91cd\u6784\u7684 AI \u804a\u5929\u673a\u5668\u4eba\u6846\u67b6\uff0c\u5b83\u7684\u76ee\u6807\u4e0d\u4ec5\u4ec5\u662f\u56de\u7b54\u95ee\u9898\uff0c\u800c\u662f\u521b\u9020\u4e00\u4e2a\u771f\u6b63\u7684\u6570\u5b57\u751f\u547d\u4f53\u3002",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/MoFox-Studio/Neo-MoFox",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-02T15:56:46Z"
+}
