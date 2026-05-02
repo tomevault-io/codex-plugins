@@ -1,6 +1,6 @@
 # abap-mcp-server
 
-> Tome by [marianfoo](https://github.com/marianfoo/abap-mcp-server) — distributed by [TomeVault](https://tomevault.io/claim/marianfoo)
+> Tome by [marianfoo](https://github.com/marianfoo/abap-mcp-server) — distributed by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
@@ -15,10 +15,10 @@ Original source: `.cursor/rules/*.mdc` in [marianfoo/abap-mcp-server](https://gi
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Quality verified by TomeVault's automated analysis pipeline. [View quality report](https://tomevault.io/claim/marianfoo#quality)
+Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/marianfoo/abap-mcp-server](https://github.com/marianfoo/abap-mcp-server)
 
 ---
 
-Is this your repo? [Claim it](https://tomevault.io/claim/marianfoo) to manage distribution and track installs.
+Own this repo? Install the TomeVault Relay to keep every platform's copy in sync on every push: [https://tomevault.io/install](https://tomevault.io/install).
 
 <!-- genome:t-c-q -->
