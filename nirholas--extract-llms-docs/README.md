@@ -1,23 +1,26 @@
 # extract-llms-docs
 
-> Config by [nirholas](https://github.com/nirholas/extract-llms-docs) — distributed by [TomeVault](https://tomevault.io/claim/nirholas)
+> Source: [nirholas/extract-llms-docs](https://github.com/nirholas/extract-llms-docs) — distributed by [TomeVault](https://tomevault.io)
+
+Extract documentation for AI agents from any site with llms.txt support. Features MCP server, REST API, batch processing, and multiple export formats.
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [nirholas/extract-llms-docs](https://github.com/nirholas/extract-llms-docs).
+Original source: `GEMINI.md` in [nirholas/extract-llms-docs](https://github.com/nirholas/extract-llms-docs).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
-- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Browse all formats: [https://tomevault.io/claim/nirholas](https://tomevault.io/claim/nirholas)
+Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/nirholas/extract-llms-docs](https://github.com/nirholas/extract-llms-docs)
 
 ---
 
-Converted and distributed by [TomeVault](https://tomevault.io) — AI instruction files for every platform.
-Is this your repo? [Claim it](https://tomevault.io/claim/nirholas) to manage distribution.
+Explore more instruction files on [TomeVault](https://tomevault.io) — the open index of AI config files for every platform.
+
+<!-- genome:d-e-q -->
