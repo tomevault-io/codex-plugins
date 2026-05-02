@@ -2,7 +2,7 @@
   "name": "flutter-agent-panel",
   "owner": "Poorgramer-Zack",
   "repo": "flutter-agent-panel",
-  "description": "",
+  "description": "A modern, user-friendly terminal emulator designed to enhance your AI pair\u2011coding experience.",
   "type": "config",
   "source_format": "copilot-instructions.md",
   "formats": [
@@ -38,7 +38,7 @@
     }
   ],
   "skills": [],
-  "claim_url": "https://tomevault.io/claim/Poorgramer-Zack",
+  "source_url": "https://github.com/Poorgramer-Zack/flutter-agent-panel",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-15T08:34:52Z"
+  "distributed_at": "2026-05-02T22:13:56Z"
 }
