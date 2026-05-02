@@ -7,12 +7,12 @@ What if AI agents could form teams as fluidly as humans? Spawn specialists in mi
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [pass-agent/loomkin](https://github.com/pass-agent/loomkin).
+Original source: `CLAUDE.md` in [pass-agent/loomkin](https://github.com/pass-agent/loomkin).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
