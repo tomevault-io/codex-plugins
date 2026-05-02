@@ -4,7 +4,7 @@
   "repo": "cloud-computing",
   "description": "",
   "type": "config",
-  "source_format": "GEMINI.md",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/nirholas/cloud-computing",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-02T19:44:45Z"
+  "distributed_at": "2026-05-02T19:54:02Z"
 }
