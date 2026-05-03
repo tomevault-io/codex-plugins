@@ -2,9 +2,9 @@
   "name": "carlos",
   "owner": "carlos-emr",
   "repo": "carlos",
-  "description": "",
+  "description": "Open-source Electronic Medical Records (EMR) for Canadian healthcare \u2014 HL7, FHIR, Java 21, Spring 5. Contributors welcome!",
   "type": "config",
-  "source_format": "GEMINI.md",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -38,7 +38,7 @@
     }
   ],
   "skills": [],
-  "claim_url": "https://tomevault.io/claim/carlos-emr",
+  "source_url": "https://github.com/carlos-emr/carlos",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-17T05:41:02Z"
+  "distributed_at": "2026-05-03T16:08:17Z"
 }
