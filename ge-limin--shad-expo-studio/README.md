@@ -7,13 +7,13 @@ A studio for designing and shipping shadcn-style components in Expo/React Native
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [Ge-limin/shad-expo-studio](https://github.com/Ge-limin/shad-expo-studio).
+Original source: `CLAUDE.md` in [Ge-limin/shad-expo-studio](https://github.com/Ge-limin/shad-expo-studio).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
