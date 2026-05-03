@@ -4,7 +4,7 @@
   "repo": "MESA-Android",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "GEMINI.md",
   "formats": [
     {
       "format": "claude_md",
@@ -38,7 +38,7 @@
     }
   ],
   "skills": [],
-  "claim_url": "https://tomevault.io/claim/jkjamies",
+  "source_url": "https://github.com/jkjamies/MESA-Android",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-10T02:51:31Z"
+  "distributed_at": "2026-05-03T13:09:29Z"
 }
