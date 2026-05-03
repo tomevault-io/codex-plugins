@@ -1,0 +1,44 @@
+{
+  "name": "SNES-SuperDragonsLairArcade",
+  "owner": "astrobleem",
+  "repo": "SNES-SuperDragonsLairArcade",
+  "description": "SuperDragonsLairArcade is an FMV conversion of the original Dragon\u2019s Lair arcade game for the Super Nintendo Entertainment System.  Built in 65816 assembly and powered by MSU-1 streaming, this project brings arcade-quality animated gameplay to real SNES hardware and compatible flash cartridges.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/astrobleem/SNES-SuperDragonsLairArcade",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-03T03:58:51Z"
+}
