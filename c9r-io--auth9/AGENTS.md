@@ -1,0 +1,49 @@
+
+# Auth9 Project Overview
+
+Auth9 is a self-hosted identity and access management service designed to replace Auth0.
+
+## Architecture
+
+| Component | Tech Stack | Purpose |
+|-----------|------------|---------|
+| **auth9-core** | Rust (axum, tonic, sqlx) | Backend API & gRPC services |
+| **auth9-portal** | Remix + TypeScript + Vite | Admin dashboard UI |
+| **Database** | TiDB (MySQL compatible) | Tenant, user, RBAC, credentials, OIDC state |
+| **Cache** | Redis | Session, token caching |
+
+## Core Concepts
+
+- **Built-in OIDC**: auth9-core natively serves OIDC/OAuth 2.1 endpoints (`domains/identity/api/auth/`) and owns the credential / pending-action / verification stores (`identity_engine/`)
+- **Token Exchange**: Identity Token → Tenant Access Token with roles/permissions
+- **Multi-tenant**: Isolated tenants with custom settings and RBAC
+
+## Key Directories
+
+```
+auth9-core/src/
+├── api/          # REST API handlers (axum)
+├── grpc/         # gRPC services (tonic)
+├── domain/       # Domain models
+├── repository/   # Data access layer (sqlx)
+├── service/      # Business logic
+├── identity_engine/ # Identity backend abstraction
+├── jwt/          # JWT signing & validation
+└── cache/        # Redis caching
+
+auth9-portal/app/
+├── routes/       # Remix file-system routes
+├── components/   # UI components
+├── services/     # API client layer
+└── lib/          # Utilities
+```
+
+## Performance Requirements
+
+- Token Exchange latency: < 20ms (use Redis cache)
+- Auth QPS: > 1000 requests/second
+- Availability: 99.9%
+
+---
+> Source: [c9r-io/auth9](https://github.com/c9r-io/auth9) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-04-25 -->
