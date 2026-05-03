@@ -1,183 +1,256 @@
 
-# 前端代码规范
+# 后端代码规范
 
-## Vue 组件规范
+## 伪三层架构详解
 
-1. **组件语法**:
-   - 优先使用 `<script setup>` 语法
-   - 使用 Composition API，避免 Options API
-   - 组件文件使用 PascalCase 命名 (如 `UserProfile.vue`)
-   - 使用 `defineProps`、`defineEmits` 进行类型定义
-   - Props 和 emits 必须添加 TypeScript 类型注解
+### 架构层次
 
-2. **组件示例**:
-   ```vue
-   <script setup lang="ts">
-   import { ref, computed } from 'vue';
-   
-   interface Props {
-     userId: string;
-     name?: string;
-   }
-   
-   interface Emits {
-     (e: 'update', value: string): void;
-     (e: 'delete'): void;
-   }
-   
-   const props = defineProps<Props>();
-   const emit = defineEmits<Emits>();
-   
-   const count = ref(0);
-   const displayName = computed(() => props.name || 'Anonymous');
-   </script>
-   ```
-
-## TypeScript 规范
-
-1. **类型系统**:
-   - 启用严格模式 (`strict: true`)
-   - 避免使用 `any`，优先使用具体类型或泛型
-   - 接口命名使用 PascalCase
-   - 类型文件放在 `packages/types` 或组件同级 `types.ts`
-   - 优先使用 `interface` 而非 `type`（除非需要联合类型）
-
-2. **类型定义示例**:
-   ```typescript
-   // ✅ 推荐
-   interface User {
-     id: string;
-     name: string;
-     email: string;
-     role: 'admin' | 'user';
-   }
-   
-   // 联合类型使用 type
-   type Status = 'pending' | 'success' | 'error';
-   
-   // 泛型使用
-   interface ApiResponse<T> {
-     code: number;
-     msg: string;
-     data: T;
-   }
-   ```
-
-## 样式规范
-
-1. **CSS 优先级**:
-   - 优先使用 Tailwind CSS 工具类
-   - 复杂样式使用 CSS Modules 或 scoped style
-   - 避免内联样式，除非是动态计算的值
-   - 颜色、间距等使用设计 token
-
-2. **样式示例**:
-   ```vue
-   <template>
-     <!-- ✅ Tailwind 工具类 -->
-     <div class="flex items-center gap-4 p-4 bg-white rounded-lg shadow">
-       <button class="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600">
-         提交
-       </button>
-     </div>
-   </template>
-   
-   <style scoped>
-   /* 复杂样式使用 scoped */
-   .custom-component {
-     background: linear-gradient(to right, #667eea 0%, #764ba2 100%);
-   }
-   </style>
-   ```
-
-## 导入顺序
-
-```typescript
-// 1. Vue 核心
-import { ref, computed, onMounted } from 'vue';
-
-// 2. 第三方库
-import { message } from 'ant-design-vue';
-import axios from 'axios';
-
-// 3. workspace 包
-import { useUserStore } from '@vben/stores';
-import { ACCESS_TOKEN_KEY } from '@vben/constants';
-
-// 4. 本地导入
-import { fetchUserData } from './api';
-import UserCard from './components/UserCard.vue';
-
-// 5. 类型导入
-import type { User, UserProfile } from './types';
 ```
+api (controller) → schema (dto) → service → crud (dao) → model
+```
+
+1. **API 层 (api/)**:
+   - 处理 HTTP 请求和响应
+   - 路由定义和参数验证
+   - 权限验证和错误处理
+
+2. **Schema 层 (schema/)**:
+   - Pydantic 数据传输对象
+   - 请求参数验证
+   - 响应数据序列化
+
+3. **Service 层 (service/)**:
+   - 业务逻辑处理
+   - 多个 CRUD 操作的组合
+   - 业务规则验证
+
+4. **CRUD 层 (crud/)**:
+   - 数据库操作封装
+   - 基础 CRUD 方法
+   - 复杂查询构建
+
+5. **Model 层 (model/)**:
+   - SQLAlchemy 数据模型
+   - 表结构定义
+   - 关系映射
 
 ## 命名规范
 
 | 类型 | 规范 | 示例 |
 |------|------|------|
-| 变量、函数 | camelCase | `getUserInfo`, `totalCount` |
-| 常量 | UPPER_SNAKE_CASE | `API_BASE_URL`, `MAX_RETRY` |
-| 组件 | PascalCase | `UserCard`, `DataTable` |
-| 组合式函数 | use 前缀 | `useAuth`, `useRequest` |
-| 类型/接口 | PascalCase | `UserProfile`, `ApiResponse` |
-| 文件名（组件） | PascalCase | `UserProfile.vue` |
-| 文件名（工具） | kebab-case | `user-utils.ts` |
+| 文件、模块 | snake_case | `user_service.py`, `auth_utils.py` |
+| 类 | PascalCase | `UserService`, `TokenManager` |
+| 函数、方法 | snake_case | `get_user_by_id`, `validate_token` |
+| 常量 | UPPER_SNAKE_CASE | `MAX_LOGIN_ATTEMPTS`, `JWT_ALGORITHM` |
+| 私有方法 | `_` 前缀 | `_validate_password`, `_hash_token` |
+| 变量 | snake_case | `user_id`, `total_count` |
+
+## 类型注解规范
+
+1. **函数类型注解**:
+   ```python
+   # ✅ 推荐 - 完整的类型注解
+   async def get_user_by_id(
+       db: AsyncSession,
+       user_id: int,
+       *,
+       include_deleted: bool = False
+   ) -> User | None:
+       """根据 ID 获取用户信息"""
+       pass
+   
+   # 使用 Python 3.10+ 新式类型
+   def get_user_list(
+       page: int = 1,
+       size: int = 10
+   ) -> list[User]:  # ✅ 使用 list[User] 而非 List[User]
+       pass
+   ```
+
+2. **复杂类型定义**:
+   ```python
+   from typing import TypeAlias, Literal
+   
+   # 类型别名
+   UserId: TypeAlias = int
+   UserRole: TypeAlias = Literal['admin', 'user', 'guest']
+   
+   # 泛型类型
+   from typing import TypeVar, Generic
+   
+   T = TypeVar('T')
+   
+   class ApiResponse(Generic[T]):
+       code: int
+       msg: str
+       data: T | None
+   ```
+
+## 异步编程规范
+
+1. **数据库操作**:
+   ```python
+   # ✅ 推荐 - 使用异步
+   async def create_user(db: AsyncSession, user_data: UserCreate) -> User:
+       """创建用户"""
+       async with db.begin():
+           user = User(**user_data.model_dump())
+           db.add(user)
+           await db.flush()
+           await db.refresh(user)
+           return user
+   
+   # ✅ 使用 async with 管理会话
+   async def get_user_with_posts(user_id: int) -> User:
+       async with get_db_session() as db:
+           result = await db.execute(
+               select(User)
+               .options(selectinload(User.posts))
+               .where(User.id == user_id)
+           )
+           return result.scalar_one()
+   ```
+
+2. **I/O 操作**:
+   ```python
+   # ✅ 使用异步库
+   import aiofiles
+   
+   async def read_file(path: str) -> str:
+       async with aiofiles.open(path, 'r') as f:
+           content = await f.read()
+           return content
+   ```
+
+## 错误处理规范
+
+1. **自定义异常**:
+   ```python
+   # 定义异常类
+   class UserNotFoundError(Exception):
+       """用户不存在异常"""
+       pass
+   
+   class InvalidCredentialsError(Exception):
+       """认证失败异常"""
+       pass
+   ```
+
+2. **API 层错误处理**:
+   ```python
+   from fastapi import HTTPException, status
+   
+   @router.get('/users/{user_id}')
+   async def get_user(
+       user_id: int,
+       db: AsyncSession = Depends(get_db)
+   ) -> UserResponse:
+       """获取用户信息"""
+       try:
+           user = await user_service.get_user_by_id(db, user_id)
+           if not user:
+               raise HTTPException(
+                   status_code=status.HTTP_404_NOT_FOUND,
+                   detail='用户不存在'
+               )
+           return user
+       except Exception as e:
+           logger.error(f'获取用户失败: {e}')
+           raise HTTPException(
+               status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+               detail='服务器错误'
+           )
+   ```
+
+## 导入顺序
+
+```python
+# 1. 标准库
+from typing import Annotated, Any
+from datetime import datetime
+import asyncio
+
+# 2. 第三方库
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+from pydantic import BaseModel, Field
+
+# 3. 本地导入 - 通用
+from backend.common.response import success_response
+from backend.common.exception import UserNotFoundError
+from backend.database.db import get_db
+
+# 4. 本地导入 - 应用
+from backend.app.user.model import User
+from backend.app.user.schema import UserCreate, UserUpdate
+from backend.app.user.service import UserService
+from backend.app.user.crud import user_crud
+```
 
 ## 最佳实践
 
-1. **响应式数据**:
-   ```typescript
-   // ✅ 推荐
-   const count = ref(0);
-   const user = reactive({ name: 'John', age: 30 });
+1. **依赖注入**:
+   ```python
+   # ✅ 使用 FastAPI 依赖注入
+   from typing import Annotated
    
-   // ❌ 避免
-   let count = 0; // 非响应式
+   CurrentUser = Annotated[User, Depends(get_current_user)]
+   DatabaseSession = Annotated[AsyncSession, Depends(get_db)]
+   
+   @router.post('/posts')
+   async def create_post(
+       post_data: PostCreate,
+       current_user: CurrentUser,
+       db: DatabaseSession
+   ) -> PostResponse:
+       return await post_service.create(db, post_data, current_user.id)
    ```
 
-2. **计算属性 vs 方法**:
-   ```typescript
-   // ✅ 使用计算属性（有缓存）
-   const fullName = computed(() => `${user.firstName} ${user.lastName}`);
+2. **数据库查询优化**:
+   ```python
+   # ✅ 使用 joinedload 避免 N+1 查询
+   from sqlalchemy.orm import selectinload, joinedload
    
-   // ❌ 避免在模板中使用方法
-   function getFullName() {
-     return `${user.firstName} ${user.lastName}`;
-   }
+   async def get_users_with_posts(db: AsyncSession) -> list[User]:
+       result = await db.execute(
+           select(User)
+           .options(selectinload(User.posts))  # 一对多使用 selectinload
+           .options(joinedload(User.profile))  # 一对一使用 joinedload
+       )
+       return result.scalars().all()
    ```
 
-3. **组件通信**:
-   ```typescript
-   // ✅ Props down, Events up
-   // 父组件
-   const handleUpdate = (value: string) => {
-     // 处理更新
-   };
-   
-   // 子组件
-   emit('update', newValue);
+3. **事务管理**:
+   ```python
+   # ✅ 显式事务控制
+   async def transfer_money(
+       db: AsyncSession,
+       from_user_id: int,
+       to_user_id: int,
+       amount: float
+   ) -> None:
+       async with db.begin():
+           # 所有操作在同一事务中
+           await deduct_balance(db, from_user_id, amount)
+           await add_balance(db, to_user_id, amount)
+           await create_transaction_log(db, from_user_id, to_user_id, amount)
+           # 如果任何操作失败，自动回滚
    ```
 
-4. **异步操作**:
-   ```typescript
-   // ✅ 推荐
-   const loading = ref(false);
-   const error = ref<Error | null>(null);
+4. **日志记录**:
+   ```python
+   from loguru import logger
    
-   async function fetchData() {
-     loading.value = true;
-     error.value = null;
-     try {
-       const data = await api.getData();
-       return data;
-     } catch (e) {
-       error.value = e as Error;
-       message.error('加载失败');
-     } finally {
-       loading.value = false;
-     }
-   }
+   # ✅ 记录关键操作
+   async def delete_user(db: AsyncSession, user_id: int) -> None:
+       logger.info(f'开始删除用户: user_id={user_id}')
+       try:
+           await user_crud.delete(db, user_id)
+           logger.info(f'用户删除成功: user_id={user_id}')
+       except Exception as e:
+           logger.error(f'用户删除失败: user_id={user_id}, error={e}')
+           raise
    ```
 
 ---
