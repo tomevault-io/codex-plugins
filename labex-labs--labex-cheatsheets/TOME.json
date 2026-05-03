@@ -4,7 +4,7 @@
   "repo": "labex-cheatsheets",
   "description": "Cheatsheets for Programming Beginners",
   "type": "config",
-  "source_format": "GEMINI.md",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/labex-labs/labex-cheatsheets",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-02T22:10:46Z"
+  "distributed_at": "2026-05-03T01:04:22Z"
 }
