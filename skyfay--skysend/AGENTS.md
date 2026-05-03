@@ -1,0 +1,25 @@
+# General Guidelines
+- Please write the code carefully, check it to make sure everything is secure and doesn't cause any security issues.
+
+# Language & Commands
+
+- Always use English
+- Use hyphens instead of em dashes
+- Never use semicolons (`;`) to join clauses in prose, changelog entries, or documentation. Use a comma or end the sentence with a period instead.
+
+# Code Style
+
+- Write TypeScript, avoid `any` when possible
+- Use modern Web APIs (e.g. Streams API instead of node-fetch)
+- Prefer `const` over `let`
+- Keep functions short
+
+# Stack & Tools
+
+- Package Manager: Always use `pnpm`
+- Validation: Use `zod` for all data validation (API requests, config, frontend forms)
+- i18n: Implement internationalization (e.g. `i18next`). Automatically detect browser language (e.g., `de-CH` -> `de`, `en-US` -> `en`) and always fallback to English.
+
+---
+> Source: [Skyfay/SkySend](https://github.com/Skyfay/SkySend) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-05-03 -->
