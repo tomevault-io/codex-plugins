@@ -7,13 +7,13 @@ QuantCopilot is an AI-powered trading and research terminal that blends real-tim
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [YashJoshi2109/QuantTrade-AI](https://github.com/YashJoshi2109/QuantTrade-AI).
+Original source: `.cursor/rules/*.mdc` in [YashJoshi2109/QuantTrade-AI](https://github.com/YashJoshi2109/QuantTrade-AI).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
