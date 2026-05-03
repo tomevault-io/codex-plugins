@@ -2,9 +2,9 @@
   "name": "sperax-crypto-mcp",
   "owner": "Sperax",
   "repo": "sperax-crypto-mcp",
-  "description": "",
+  "description": "MCP server and plugin for Sperax Protocol \u2013 USDs, SPA, veSPA & Demeter on Arbitrum and BNB Chain. Listed on Anthropic's official MCP Registry.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "GEMINI.md",
   "formats": [
     {
       "format": "claude_md",
@@ -38,7 +38,7 @@
     }
   ],
   "skills": [],
-  "claim_url": "https://tomevault.io/claim/Sperax",
+  "source_url": "https://github.com/Sperax/sperax-crypto-mcp",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-14T10:04:31Z"
+  "distributed_at": "2026-05-03T19:11:47Z"
 }
