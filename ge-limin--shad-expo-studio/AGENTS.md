@@ -1,4 +1,3 @@
-
 This file provides guidance to coding agent when working with code in this repository.
 
 ## Expectations for the agent
