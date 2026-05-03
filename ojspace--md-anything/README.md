@@ -1,0 +1,26 @@
+# AI instruction files for md-anything
+
+> Sourced from [ojspace/md-anything](https://github.com/ojspace/md-anything) and converted for every major platform by [TomeVault](https://tomevault.io)
+
+Local-first CLI + MCP server: Any file → AI-ready Markdown + JSON
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `copilot-instructions.md` in [ojspace/md-anything](https://github.com/ojspace/md-anything).
+
+## Also available for
+
+- **Claude Code** — `CLAUDE.md`
+- **Codex** — `AGENTS.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+From [ojspace/md-anything](https://github.com/ojspace/md-anything) — a repo with 48+ stars on GitHub.
+
+---
+
+Own this repo? Install the TomeVault Relay to keep every platform's copy in sync on every push: [https://tomevault.io/install](https://tomevault.io/install).
+
+<!-- genome:a-c-s -->
