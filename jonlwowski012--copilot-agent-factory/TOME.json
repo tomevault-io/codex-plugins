@@ -1,0 +1,81 @@
+{
+  "name": "copilot-agent-factory",
+  "owner": "jonlwowski012",
+  "repo": "copilot-agent-factory",
+  "description": "Transform any codebase into an AI-powered development environment by automatically detecting your tech stack, frameworks, and patterns, then generating perfectly tailored GitHub Copilot agents that understand your project's specific needs.",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "code-formatting",
+      "path": "skill-templates/2-development-workflows/code-formatting",
+      "github_url": "https://github.com/jonlwowski012/copilot-agent-factory/tree/main/skill-templates/2-development-workflows/code-formatting",
+      "description": ""
+    },
+    {
+      "name": "debug-test-failures",
+      "path": "skill-templates/1-testing-quality/debug-test-failures",
+      "github_url": "https://github.com/jonlwowski012/copilot-agent-factory/tree/main/skill-templates/1-testing-quality/debug-test-failures",
+      "description": ""
+    },
+    {
+      "name": "git-workflow",
+      "path": "skill-templates/2-development-workflows/git-workflow",
+      "github_url": "https://github.com/jonlwowski012/copilot-agent-factory/tree/main/skill-templates/2-development-workflows/git-workflow",
+      "description": ""
+    },
+    {
+      "name": "local-dev-setup",
+      "path": "skill-templates/2-development-workflows/local-dev-setup",
+      "github_url": "https://github.com/jonlwowski012/copilot-agent-factory/tree/main/skill-templates/2-development-workflows/local-dev-setup",
+      "description": ""
+    },
+    {
+      "name": "pytest-setup",
+      "path": "skill-templates/1-testing-quality/pytest-setup",
+      "github_url": "https://github.com/jonlwowski012/copilot-agent-factory/tree/main/skill-templates/1-testing-quality/pytest-setup",
+      "description": ""
+    },
+    {
+      "name": "run-tests",
+      "path": "skill-templates/1-testing-quality/run-tests",
+      "github_url": "https://github.com/jonlwowski012/copilot-agent-factory/tree/main/skill-templates/1-testing-quality/run-tests",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/jonlwowski012/copilot-agent-factory",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-03T18:38:39Z"
+}
