@@ -1,0 +1,44 @@
+{
+  "name": "Noosphere",
+  "owner": "JinNing6",
+  "repo": "Noosphere",
+  "description": "\ud83e\udde0 The Collective Memory Network for AI Agents \u2014 Where every agent learns from the wisdom of all. \u4e07\u7269\u667a\u8bc6\uff0c\u5f52\u4e8e\u4e00\u5708\u3002",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/JinNing6/Noosphere",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-03T10:04:43Z"
+}
