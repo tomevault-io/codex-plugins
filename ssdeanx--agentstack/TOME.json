@@ -4,7 +4,7 @@
   "repo": "AgentStack",
   "description": "AgentStack is a production-grade multi-agent framework built on Mastra, delivering 50+ enterprise tools, 25+ specialized agents, and A2A/MCP orchestration for scalable AI systems. Focuses on financial intelligence, RAG pipelines, observability, and secure governance. ACP Openclaw, Gemini CLI, Opencode ",
   "type": "config",
-  "source_format": ".windsurf/rules/*.md",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/ssdeanx/AgentStack",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-03T00:56:04Z"
+  "distributed_at": "2026-05-03T01:58:34Z"
 }
