@@ -1,0 +1,24 @@
+# ai-biocode-kata
+
+> Source: [dritoshi/ai-biocode-kata](https://github.com/dritoshi/ai-biocode-kata) — distributed by [TomeVault](https://tomevault.io)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [dritoshi/ai-biocode-kata](https://github.com/dritoshi/ai-biocode-kata).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/dritoshi/ai-biocode-kata](https://github.com/dritoshi/ai-biocode-kata)
+
+---
+
+Explore more instruction files on [TomeVault](https://tomevault.io) — the open index of AI config files for every platform.
+
+<!-- genome:d-e-p -->
