@@ -1,32 +1,72 @@
+# Vibe Reverse Engineering — Copilot Instructions
 
-# Code Comments
+This is a reverse engineering toolkit for PE binaries (`.exe` / `.dll`) combining static analysis (`retools`), dynamic analysis (`livetools` via Frida), and D3D9 frame tracing. Work is organized around knowledge base files (`kb.h`) that accumulate discoveries and feed back into richer decompilation.
 
-## Principle
 
-Each file reads as if it was always designed this way. Comments guide the next developer, not narrate the development journey.
+## Bootstrap
 
-Note: These rules are not exhaustive. Extrapolate from the principles and examples to the specific context you are working in.
+On first use, or if `kb.h` is missing or contains only minimal content, automatically run:
+`python -m retools.bootstrap <binary> --project <ProjectName>`
+before any further static or dynamic analysis. **Bootstrap takes 2-5 minutes** — it scans for RTTI classes, identifies CRT/library functions, and propagates labels. The output goes to `patches/<ProjectName>/kb.h` — verify this file exists and has content after bootstrap returns. All subsequent `decompiler.py` calls must use `--types patches/<ProjectName>/kb.h`. **Bootstrap speeds up all subsequent decompilation**: `--types` pre-analyzes every known function so cross-references resolve to named functions and you avoid the expensive full-binary analysis pass. Tell the user it's running and do other work while it completes.
 
-## Remove
+**In parallel with bootstrap**, run `python retools/pyghidra_backend.py analyze <binary> --project patches/<ProjectName>` to create a reusable Ghidra project. This takes 5-15 minutes but makes all subsequent pyghidra decompilations near-instant. Both bootstrap and pyghidra analyze can run simultaneously.
 
-- **Implementation backstories**: "We do this because the other day X happened"
-- **Obvious narration**: "Create the attribute", "Loop through keys", "Check if valid" -- if the code says it, the comment is noise
-- **Debugging breadcrumbs**: "Without this, subsequent tests may see the modifier key as still held"
-- **Trial-and-error reasoning**: "We tried X but it caused Y so we do Z instead"
+Run `python verify_install.py` from the repo root before first use. If pyghidra/Ghidra shows as WARN, run `python verify_install.py --setup` to auto-download JDK 21 + Ghidra + pyghidra (~600MB one-time download). Common failures: missing `git lfs pull` (LFS pointer stubs instead of real binaries), missing `pip install -r requirements.txt`.
 
-## Keep
+## Delegation Rule
 
-- **Non-obvious design decisions**: stated as *what* and *why this design*, not *what happened to us*
-- **Tricky invariants**: conditions that would be easy to accidentally break
-- **API contracts**: docstrings on public methods with Args, Returns, Raises
+**Never run static analysis tools (`retools`) directly in sequence.** Delegate to the `static-analyzer` agent for all offline analysis. Exceptions — run these inline (all <5s):
 
-## Prefer Instead
+- `sigdb.py identify` / `fingerprint` — single-function ID or compiler detection
+- `context.py assemble` / `postprocess` — context gathering and decompiler annotation (assemble now includes forward constant propagation by default; use `--no-dataflow` on large functions)
+- `dataflow.py --constants` / `--slice` — single-function constant propagation or backward register trace
+- `readmem.py` — single typed read from a PE file
+- `asi_patcher.py build` — build step, not analysis
+- `pyghidra_backend.py status` — project existence check (<1s)
 
-- **Rename** a variable or function to be self-explanatory rather than adding a comment
-- **Docstrings** on classes and public methods (Google style: `Args:`, `Returns:`, `Raises:`)
-- **Type hints** over comments about expected types
-- **Short inline comments** on the *why*, never the *what*
+If you're about to run a second `retools` command in the same turn, stop and delegate everything to a subagent.
+
+Run all tools from the repo root using `python -m <module>` syntax (e.g. `python -m retools.search`).
+
+## Live Tools First
+
+The main agent owns `livetools` — always use them to verify static findings and act on leads from subagents. Use `attach <name_or_pid>` for running processes, or `attach <path> --spawn` to launch + instrument before init code runs. When a subagent returns addresses or candidates, immediately follow up with live tools (trace, breakpoint, mem read/write) rather than spawning more static analysis. Static analysis finds clues; live tools confirm and act on them. Do not wait idle for subagents — use live tools to explore independently while static analysis runs in the background.
+
+## Dual-Backend Decompilation
+
+The decompiler supports two backends with different strengths:
+
+- **pyghidra (preferred)** — better MSVC type propagation, library call resolution, larger function scope detection. Requires a Ghidra project (`pyghidra_backend.py analyze` creates one). Use when `patches/<project>/ghidra/<binary>.gpr` exists.
+- **r2ghidra (fallback)** — better `__thiscall` on small functions, no JVM startup. Always available.
+
+**Auto mode**: `python -m retools.decompiler binary.exe 0x401000 --types patches/proj/kb.h --project patches/proj` tries pyghidra first, falls back to r2ghidra. Use `--project` alongside `--types` for auto selection.
+
+**Dual-backend deep analysis**: For complex exploratory tasks (finding subsystems, mapping call chains), run both backends in parallel on the same functions and merge findings. r2ghidra results go to `findings_r2.md`, pyghidra to `findings.md`. Neither backend finds everything alone -- merging both gives the most complete picture.
+
+## Engineering Standards
+
+Every change should make the codebase better, not just make the problem go away. If a solution needs a paragraph to justify why it's not a hack, it's a hack.
+
+**Remove:** fixes in the wrong layer, tolerance inflation, catch-all exception swallowing, excessive null-guard chains, god methods (200+ lines), leaky abstractions.
+
+**Design for:** single responsibility (if you need "and" to describe it, split it), ownership (the component that creates the problem owns the fix), minimal public surface.
+
+**Commit to the new code:** no legacy fallbacks, no dead code, no multiple paths to the same result, no half-migrations. Version control is the safety net — remove the old code.
+
+## Code Comments
+
+Each file reads as if it was always designed this way. Comments guide the next developer, not narrate the development journey. Remove backstories, obvious narration, and debugging breadcrumbs. Keep non-obvious design decisions, tricky invariants, and API contracts (Google-style docstrings). Prefer renaming over commenting; prefer type hints over comments about expected types.
+
+## References
+
+Detailed guidance lives in scoped instruction files — consult these before acting:
+
+- **Tool catalog** (all retools / livetools / dx9tracer commands and caveats): `.github/instructions/tool-catalog.instructions.md`
+- **Knowledge base format** (kb.h conventions, when to update, struct/function/global notation): `.github/instructions/kb-format.instructions.md`
+- **FFP proxy porting for RTX Remix** (DX9 fixed-function pipeline port workflow): `.github/instructions/ffp-proxy.instructions.md`
+- **Static analyzer agent** (delegation workflow, what to tell it, output file conventions): `.github/agents/static-analyzer.agent.md`
+- **Web researcher agent** (when and how to delegate web research): `.github/agents/web-researcher.agent.md`
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/Ekozmaster) — claim your Tome and manage your conversions.
-<!-- tomevault:4.0:agents_md:2026-04-09 -->
+> Source: [Ekozmaster/Vibe-Reverse-Engineering](https://github.com/Ekozmaster/Vibe-Reverse-Engineering) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-05-03 -->
