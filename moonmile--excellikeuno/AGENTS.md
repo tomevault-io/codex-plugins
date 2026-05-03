@@ -1,0 +1,25 @@
+# Copilot Instructions
+
+- Purpose: wrap LibreOffice Calc UNO API with Excel/VBA-like Python classes so migration from Excel macros is easy; see [README.md](README.md#L1-L3).
+- Architecture intent: every Calc concept is a class built on a shared UNO-wrapper base; see [agents/design_guidelines.md](agents/design_guidelines.md#L1-L52).
+- Base pattern: subclass a cached-interface holder like `UnoObject.iface(name)` to query and memoize UNO interfaces; mirror the example in [agents/design_guidelines.md](agents/design_guidelines.md#L15-L27).
+- Cell wrapper expectations: expose properties `value`, `formula`, and `props` that delegate to `com.sun.star.table.XCell` or `com.sun.star.beans.XPropertySet`; keep setter/getter symmetry shown in [agents/design_guidelines.md](agents/design_guidelines.md#L29-L52).
+- Usage style goal: enable simple flows like creating a sheet handle then `sheet.cell(1, 0).value = 200`; example in [agents/design_guidelines.md](agents/design_guidelines.md#L54-L70).
+- Planned layout: see [agents/folder_structure.md](agents/folder_structure.md#L1-L18); modules are stubbed today (core, calc, connection, typing, utils) and should be populated following that map.
+- Module boundaries to keep: `core` for the base UNO wrapper and shared helpers; `calc` for sheet/range/cell domain objects; `connection` for bootstrap/desktop/document wiring; `typing` for Protocol-based IDE-friendly hints; `utils` for small cross-cutting helpers.
+- Interface naming: prefer constants/enums for UNO interface strings (per design doc) to get IDE completion and reduce typos.
+- Type hints: define `Protocol` classes for UNO interfaces to make wrapped attributes discoverable; avoid raw `Any` when you can map to UNO surfaces.
+- Development environment: tasks expect LibreOffice’s bundled Python; VS Code task [ .vscode/tasks.json](.vscode/tasks.json#L1-L15) runs `$env:PYTHONPATH='H:\LibreOffice-ExcelLike\src'; & 'C:\\Program Files\\LibreOffice\\program\\python' -m pytest tests/test_sample_core.py`—update the PYTHONPATH to this repo before running.
+- UNO reference docs live at [agents/tasks.md](agents/tasks.md#L1-L11); local SDK docs path `C:\Program Files\LibreOffice\sdk\docs\`.
+- Testing: `tests/` is empty; add pytest cases that exercise wrappers against a LibreOffice instance (may need headless mode or a mocked UNO bridge) and wire them to the task above.
+- Coding style: stick to ASCII unless UNO names require otherwise; keep comments brief and only when intent is non-obvious.
+- Japanese docs: Calc operation spec [agents/operation_spec.md](agents/operation_spec.md) and naming rules [agents/naming_rules.md](agents/naming_rules.md) are stubs—populate them instead of inventing ad-hoc rules in code.
+- Preferred contribution order: design the UNO surface in `typing` → implement the base in `core` → add Calc domain wrappers in `calc` → wire connection/bootstrap utilities in `connection` → add user-facing helpers in `utils` → cover with pytest.
+- External deps: rely on LibreOffice UNO runtime; avoid pulling heavy third-party libs unless necessary for UNO interop.
+- Cross-platform note: paths in docs are Windows-centric; if supporting other OSes, gate path handling and document it.
+- When adding examples in docs or tests, mirror the VBA-like style (`sheet.cell(col, row)`) shown in [agents/design_guidelines.md](agents/design_guidelines.md#L54-L70).
+- Keep repository docs in `agents/` as the single source of truth; update them alongside code changes so future agents can follow the same patterns.
+
+---
+> Source: [moonmile/ExcelLikeUno](https://github.com/moonmile/ExcelLikeUno) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-05-03 -->
