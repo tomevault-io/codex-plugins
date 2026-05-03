@@ -4,7 +4,7 @@
   "repo": "Gist",
   "description": "A modern RSS reader application built with React and Go.",
   "type": "config",
-  "source_format": "GEMINI.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/9bingyin/Gist",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-21T17:46:06Z"
+  "distributed_at": "2026-05-03T04:00:19Z"
 }
