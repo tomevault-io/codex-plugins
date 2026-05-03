@@ -1,0 +1,44 @@
+{
+  "name": "3D-Printer-Slicer-API",
+  "owner": "hajdu-patrik",
+  "repo": "3D-Printer-Slicer-API",
+  "description": "An automated 3D slicing and pricing API built with Node.js and Python that seamlessly converts various 2D and 3D file formats (including CAD, images, and vectors) into ready-to-print models using PrusaSlicer or OrcaSlicer by your choice. It provides automated part orientation, slicing, and cost estimation for both FDM and SLA printing technologies.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/hajdu-patrik/3D-Printer-Slicer-API",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-03T15:50:23Z"
+}
