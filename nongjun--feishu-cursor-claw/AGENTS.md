@@ -1,27 +1,67 @@
 
-## 绝对禁止
+# 小助手统一注册规范
 
-- 禁止在代码中硬编码 API Key、密码、Token、密钥
-- 禁止在日志中输出用户密码、身份证号等敏感信息
-- 禁止在前端代码中暴露后端内部地址或管理接口
-- 禁止将 .env 文件提交到 Git 仓库
-- 禁止在生产环境使用调试模式或关闭认证
+## 核心原则
 
-## 安全检查清单
+系统中所有 webhook 推送功能（告警、日报、提醒等）**必须**注册到门户系统的小助手配置中心，由门户统一管理 webhook URL 和开关。
 
-每次提交代码前，确认以下事项：
-- 所有用户输入已做校验（长度、类型、格式）
-- 数据库操作使用参数化查询（ORM 或参数绑定），防止 SQL 注入
-- API 接口有认证和权限校验
-- 文件上传限制了类型和大小
-- 错误信息不暴露系统内部细节（堆栈、路径、SQL）
-- 敏感配置通过环境变量管理
+## 新增小助手的标准流程
 
-## 密钥管理
+### 1. 在模块 main.py 的 MODULE_ASSISTANTS 中添加定义
 
-- 密钥统一存放在 .env 文件或密钥管理系统
-- 发现密钥泄露必须立即轮换
-- 不同环境（开发/测试/生产）使用不同密钥
+```python
+MODULE_ASSISTANTS = [
+    # ... 现有定义 ...
+    {
+        "assistant_code": "your_new_assistant",  # 全局唯一，snake_case
+        "display_name": "你的新功能名称",
+        "description": "一句话描述推送内容和触发方式",
+        "module_code": "your_module",  # archive/quality/moment/contact 等
+        "schedule_config": {
+            "type": "cron",  # cron / interval / realtime
+            "times": ["09:00"],  # cron 类型填写
+            # "interval_minutes": 5,  # interval 类型填写
+            # "description": "事件触发",  # realtime 类型填写
+        },
+    },
+]
+```
+
+模块启动时会通过 `register_assistants(MODULE_ASSISTANTS)` 自动向门户注册。
+
+### 2. 通过 assistant_config_client 获取 webhook 配置
+
+```python
+from app.services.assistant_config_client import get_assistant_config
+
+config = await get_assistant_config("your_new_assistant")
+if not config.enabled or not config.webhook_key:
+    return  # 未启用或未配置则跳过
+
+# config.webhook_key 是完整的 webhook URL
+```
+
+### 3. 使用 build_payload 构建多平台消息
+
+```python
+from shared_backend.utils.webhook_platform import detect_platform, build_payload
+
+payload = build_payload(detect_platform(webhook_url), content, "markdown")
+```
+
+## 禁止事项
+
+- ❌ 不要在代码中硬编码 webhook URL
+- ❌ 不要直接从环境变量读取 webhook（仅作为降级回退）
+- ❌ 不要硬编码企微消息格式（使用 build_payload 适配多平台）
+- ❌ 不要在门户的 ASSISTANT_DEFINITIONS 中手动添加（由各模块自动注册）
+
+## 相关文件
+
+- 注册工具: `公共模块/shared_backend/utils/assistant_registry.py`
+- 平台适配: `公共模块/shared_backend/utils/webhook_platform.py`
+- 配置客户端: 各模块 `app/services/assistant_config_client.py`
+- 门户 API: `门户系统/后端服务/app/api/assistant.py`（/internal/register-batch）
 
 ---
 > Source: [nongjun/feishu-cursor-claw](https://github.com/nongjun/feishu-cursor-claw) — distributed by [TomeVault](https://tomevault.io).
