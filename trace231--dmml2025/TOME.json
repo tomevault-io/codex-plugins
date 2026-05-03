@@ -1,0 +1,44 @@
+{
+  "name": "DMML2025",
+  "owner": "Trace231",
+  "repo": "DMML2025",
+  "description": "\u7528\u4e8e\u590d\u73b0\u5357\u5f00\u5927\u5b66\u7edf\u8ba1\u4e0e\u6570\u636e\u79d1\u5b66\u5b66\u9662\u673a\u5668\u5b66\u4e60\u8bfe\u7a0b\u738b\u98de\u9e23\u5c0f\u7ec4\u7684\u4ee3\u7801\u5b9e\u73b0\uff0c\u4f7f\u7528\u6761\u4ef6\u968f\u673a\u573a\uff08CRF\uff09\u8fdb\u884c\u56fe\u50cf\u5206\u5272\u540e\u5904\u7406.            To reproduce the code implementation by Wang Feiming's group at the School of Statistics and Data Science, Nankai University, employing conditional random fields (CRF) for post-processing of image segmentation.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/Trace231/DMML2025",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-03T01:08:45Z"
+}
