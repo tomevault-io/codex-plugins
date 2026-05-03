@@ -503,6 +503,5 @@ To verify publishing locally (publishes to `~/.m2/repository`):
 | `{module}/gradle.properties` | Per-module coordinates: group, artifactId, version, name, description |
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/jkjamies)
-> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/jkjamies)
-<!-- tomevault:4.0:agents_md:2026-04-07 -->
+> Source: [jkjamies/MESA-Android](https://github.com/jkjamies/MESA-Android) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-05-03 -->
