@@ -1,0 +1,57 @@
+{
+  "name": "mcp-server-excel",
+  "owner": "sbroenne",
+  "repo": "mcp-server-excel",
+  "description": "Excel MCP Server & CLI - 23 tools, 214 operations for AI-powered Excel automation via COM API",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "excel-mcp",
+      "path": "skills/excel-mcp",
+      "github_url": "https://github.com/sbroenne/mcp-server-excel/tree/main/skills/excel-mcp",
+      "description": ""
+    },
+    {
+      "name": "excel-cli",
+      "path": "skills/excel-cli",
+      "github_url": "https://github.com/sbroenne/mcp-server-excel/tree/main/skills/excel-cli",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/sbroenne/mcp-server-excel",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-03T22:44:13Z"
+}
