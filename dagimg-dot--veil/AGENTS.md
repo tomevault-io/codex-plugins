@@ -1,0 +1,37 @@
+
+# Veil (GNOME Shell extension)
+
+## After code changes
+
+- Run `bun run check` (lint + format).
+- Run `bun run check:types` for TypeScript only.
+- Do **not** run build commands; validation is manual in a VM.
+
+## Layout
+
+- Entry: `src/extension.ts`
+- Core: `src/core/` — StateManager, PanelManager, AnimationManager
+- Indicator: `src/components/indicator.ts`
+- Prefs: `src/prefs/` — GeneralPage, ItemsPage, AboutPage
+- Schema: `src/schemas/org.gnome.shell.extensions.veil.gschema.xml`
+
+## Patterns
+
+- GSettings keys: define in the gschema XML; keep keys and prefs UI in sync.
+- Preferences UI: Adwaita (libadwaita) via `.ui` in `src/ui/`.
+- Panel: manipulation via `MainPanel._rightBox` (GNOME Shell internals).
+- Animation: Clutter transitions (slide + fade).
+
+## VM development
+
+- SSH reverse tunnel example: `ssh -f -N -R 2222:localhost:22 user@host`
+- Setup: `bun setup -- -p 2222 jdev@localhost` — generated `~/dev-veil.sh` mounts the host tree.
+
+## Constraints
+
+- No automated tests — exercise changes manually in the VM.
+- `build/` and `dist/` are gitignored; do not treat them as source of truth.
+
+---
+> Source: [dagimg-dot/veil](https://github.com/dagimg-dot/veil) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-04-24 -->
