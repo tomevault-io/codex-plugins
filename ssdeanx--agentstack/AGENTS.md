@@ -1,169 +1,66 @@
 
-# v5: Coding Assistance Rules
+- 🧠 Read `/memory-bank/memory-bank-instructions.md` first.
+- 🗂 Load all `/memory-bank/*.md` before any task.
+- 🚦 Use the Kiro-Lite workflow: PRD → Design → Tasks → Code.
+- 🔒 Follow security & style rules in `copilot-rules.md`.
+- 📝 On "/update memory bank", refresh activeContext.md & progress.md.
+- ✅ Confirm memory bank loaded with `[Memory Bank: Active]` or warn with `[Memory Bank: Missing]`.
+- 🎯 Always use [`#problems`] / `'read/problems'` tool for debugging, to ensure code quality.
+- Never run commands without checking with `#problems` / `'read/problems'` tool first. _This is critical to avoid errors._
+- This is YOUR Internal TOOL. NOT PART OF THE USER PROJECT ITS YOUR OWN TOOL TO HELP YOU BUILD debug.
+- It might `'read/problems'` files from the user project to help you debug issues.
+- 📝 Always update `#progress.md` with your progress.
+- 📝 Always update `#activeContext.md` with your progress.
+- 📝 Always update `#AGENTS.md` with your progress.
+- 📚 Always sync `#AGENTS.md` in dir your working on so we have up to date info.
+- 🔍 For research, use [#web] or [#websearch] tool and to make sure you have no knowledge gaps.
+- 🤖 Check if there is a problem, use [#problem] tool to check code for errors.
+    - This tool will help you identify issues and suggest fixes.
+    - This is especially useful for debugging and improving code quality.
+    - Try run it before writing new code & after completing so you can ensure everything works correctly.
+- 🧪 When editing a page/component (especially `app/**/page.tsx`), use VS Code interaction error checks (`get_errors` / `#problems`) on the edited files before and after changes.
+- ⚙️ Internal error-tool enable flow (required for page edits):
+    - 1) Activate VS Code interaction tools.
+    - 2) Run `get_errors` on the exact files being edited (not project-wide).
+    - 3) Fix reported issues.
+    - 4) Run `get_errors` again on those same files to verify clean state.
+- 🌐 When unsure about framework/API behavior while editing UI pages, use internet research tools first (`#web`, `#websearch`, or `fetch_webpage`) and then apply fixes.
+- 🚫 Do not run project-wide type checks/lint commands by default for page edits. Use targeted `get_errors` checks unless the user explicitly asks for `typecheck`/`lint` runs.
+- 📌 To update your memory bank, use [#update-memory-bank] tool to add new information.
+- 🛠 Mastra mcp tools use [#mastradocs], [#mastraChanges], [#mastraexamples] tool.
+    - These tools provide access to Mastra documentation, recent changes, and code examples.
+    - Use these tools to stay updated with the latest Mastra features and best practices.
+    - `mastradocs` is for general documentation queries.
+    - `mastraChanges` is for recent updates and changes in Mastra.
+    - `mastraexamples` is for code examples and usage patterns.
+    - `mastraBlog` is for blog posts related to Mastra.
+    - `mastra` tools are essential for effective Mastra development.
 
-You are an AI assistant with advanced problem-solving capabilities. This file defines only the behaviors for maximizing productivity and safety in **code-centric tasks**.
-This file serves as the foundation rules for executing coding-related tasks.
+- 🚀 For Next.js projects, follow these special instructions:
 
----
+- **Next.js Initialization**: When starting work on a Next.js project, automatically
+  call the `init` tool from the next-devtools-mcp server FIRST. This establishes
+  proper context and ensures all Next.js queries use official documentation.
+    - This step is crucial for accurate and efficient development within Next.js environments.
+- 🧩 When working with Next.js projects, always utilize the `next-devtools-mcp` server for all Next.js related queries.
+- 🧩 Make sure server is running by running npm run dev.  Then you can use browser tool to actually analyze pages in real time.
+- 🧩 This is helpful to make sure all changes to frontend, actually work as intended.
 
-## 0. Common Assumptions
+= Use `ast-grep` in terminal instead of `grep` for code searches to get structured results and avoid false positives.
 
-- **Target Tasks**: Coding assistance, refactoring, debugging, development-related documentation
-- **Language**: Follow the language of the user's instructions and input (respond in the user's language if not specified otherwise).
-- **Rule Priority**: System > Workspace common rules > This file (v5).
-- **Completion Policy**: Do not stop midway; persist until the user's request is fulfilled. If unable to complete due to constraints, clearly state current progress and remaining tasks.
-- **Instruction Priority and Conflicts**: Follow user instructions based on system and workspace common rules. If instructions conflict or are ambiguous, ask for brief clarification rather than interpreting arbitrarily.
-- **User Specification Priority**: If the user explicitly specifies output format (bullet points, code only, etc.) or length, prioritize that over this file's defaults.
-- **Response Style**:
-    - Avoid excessive preamble; state conclusions and changes first.
-    - Keep explanations to the necessary minimum, especially brief for lightweight tasks.
-    - Limit example code to only necessary parts (avoid huge code blocks).
-    - Share deep reasoning processes or long thought logs only when explicitly requested by the user; normally stay at the conclusion and key rationale level.
+- 🧪 Use subagents with `#runSubagent` tool for modular task execution and better context management, Use it to explore code, and other reasons as they come up also i believe can run it with `#agent`
+- 🧪 When running subagents, always provide them with the necessary context and information to complete their tasks effectively. This includes relevant files, code snippets, and any specific instructions or goals for the subagent.
+- 🧪 After running a subagent, review its output and results to ensure it has completed its task correctly and effectively. If the subagent's output is not satisfactory, consider re-running it with additional context or instructions.
+- 🧪 Use the `#runSubagent` tool to delegate specific tasks to specialized subagents, allowing for more efficient and focused problem-solving.
 
----
+- Make sure you use TSDoc comments for any thing you write in TypeScript. This will help ensure that your code is well-documented and easier for others (or yourself in the future) to understand. TSDoc comments provide a standardized way to describe the purpose, parameters, return values, and other important information about your code. Always include TSDoc comments for functions, classes, and complex logic to improve code readability and maintainability.
+- When writing TSDoc comments, be clear and concise. Describe what the function or class does, its parameters, and its return value. If there are any side effects or important details, include those as well. This practice will greatly enhance the quality of your code and make it easier for others to use and maintain it in the future.
 
-## 1. Task Classification and Reasoning Depth
+- 🧑‍💻 When working on code files, always ensure that you are following the project's coding standards and best practices. This includes adhering to naming conventions, code formatting, and design patterns commonly used in the project. Consistency in coding style helps maintain readability and makes it easier for other developers to understand and contribute to the codebase.
+- 🧑‍💻 Before making any changes to the code, take the time to review the existing codebase and understand the context and dependencies of the code you are modifying. This will help you make informed decisions and avoid introducing bugs or breaking existing functionality.
+- 🧑‍💻 Always fully use proper types.  Do not guess, check package api in node_modules to get all options and features.  Make sure you import and use types instead of making local ones, or local functions.  This will keep the code clean.  Also try to not use any or unknown unless you absolutely have to.
 
-Task classification (🟢/🟡/🔴) and approval conditions follow workspace common rules.
-Here we define only **the differences in reasoning depth and procedures for coding assistance**.
-If the user explicitly specifies a different approach (e.g., design only first), prioritize that instruction.
-
-### 🟢 Lightweight Tasks (e.g., small fixes, simple investigations)
-
-- Examples: Few-line modifications in a single file, simple bug cause identification, configuration value checks, etc.
-- Design consultations, refactoring discussions, and general Q&A without code changes should also be answered concisely as 🟢 tasks by default.
-- **Reasoning Policy**:
-    - Avoid deep brainstorming; find the solution via the shortest path.
-    - Do not present large-scale design discussions or Plans.
-- **Execution Flow**:
-    1. Summarize the task in one line.
-    2. Read only necessary files with `read_file` / `grep_search`, then immediately fix with `edit`.
-    3. Report results in 1-2 sentences (no checklists or detailed templates).
-
-### 🟡 Standard Tasks (e.g., feature additions, small refactors)
-
-- Examples: Changes spanning multiple files, implementing one API endpoint, component creation, etc.
-- **Reasoning Policy**:
-    - Present a concise analysis and "to-do list" before implementing.
-    - Leverage adaptive reasoning while avoiding unnecessarily long thought logs.
-- **Execution Flow**:
-    1. Present a checklist of about 3-7 main subtasks.
-    2. Read related files and make changes incrementally with `edit` / `multi_edit`.
-    3. Check for lint errors if possible (e.g., run lint command in terminal).
-    4. Finally, summarize **what was changed, in which files, and to what extent** in a few sentences.
-
-### 🔴 Critical Tasks (e.g., architecture changes, security, cost impact)
-
-- Examples: Authentication/authorization, DB schema changes, infrastructure configuration changes, production-impacting modifications, etc.
-- **Reasoning Policy**:
-    - First carefully analyze impact scope and risks, present a Plan, and wait for approval.
-    - Be mindful of rollback procedures, security, and cost implications.
-- **Execution Flow**:
-    - Always use `update_plan` and start only after explicit user approval (following common rules).
-
----
-
-## 2. Tool Usage Policy for Coding
-
-### 2.1 Basic Tools
-
-- **`read_file`**: Always read related files before making changes. For large files, be mindful to read only the necessary range.
-- **`edit` / `multi_edit`**: Primary means for code changes.
-    - When the user requests "implement this," **actually apply the edit rather than just proposing** (unless there are blockers).
-    - Keep each edit to a semantically coherent unit of change.
-- **`grep_search` / `code_search`**:
-    - Use `grep_search` for locating strings and symbols.
-    - Use `code_search` for exploring implementation meaning and patterns.
-
-### 2.2 Parallel Execution and Long-Running Processes
-
-- **Parallel Execution**:
-    - Actively execute **read-type** operations like `read_file` / `grep_search` / `code_search` / `search_web` in parallel when there are no dependencies.
-    - Do not execute `edit` or state-changing commands in parallel.
-- **`run_command`**:
-    - Use only when explicitly requested by the user, or when build/test is clearly necessary.
-    - Execute with options that don't require interactive input (e.g., `--yes`).
-    - Use `Blocking: false` for long-running commands.
-
-### 2.3 Web and Browser-Related Tools
-
-- **`search_web`** usage policy:
-    - Proactively search even without user instruction in cases like:
-        - When **latest specifications or pricing of external services** like models, AI services, cloud, etc. are involved
-        - When investigating **version-dependent behavior or breaking changes** of libraries/frameworks
-        - When investigating bugs that seem risky with only local knowledge, such as specific error messages or compatibility issues
-    - Only when a search is performed, briefly share "what was searched" in 1-2 sentences.
-- **`browser_preview`**:
-    - Use when web app behavior verification or E2E-like confirmation is needed.
-    - Do not start local servers on your own unless instructed by the user.
-
-### 2.4 Static Analysis Related
-
-- **Static Analysis**:
-    - For files with meaningful code changes, run lint commands using `run_command` when possible and check for errors. Fix immediately fixable ones.
-
----
-
-## 3. Standard Flow for Coding Tasks
-
-- For all task types, the basic principle is not to stop midway through the flow. If unable to complete due to constraints, clearly state "completed up to here / not yet done from here."
-
-### 3.1 Lightweight Tasks (🟢)
-
-1. Summarize task content in one line.
-2. Check 1-2 relevant files with `read_file` / `grep_search`.
-3. Immediately fix with `edit`.
-4. Minimal verification as needed (e.g., visual check for type errors).
-5. Report results in 1-2 sentences.
-
-### 3.2 Standard Tasks (🟡)
-
-1. Organize purpose, constraints, and expected impact scope in 2-3 sentences.
-2. Present a checklist of about 3-7 items.
-3. Read related files together and implement with `edit` / `multi_edit` in multiple passes.
-4. Check for lint errors and fix immediately fixable ones on the spot.
-5. Finally, briefly summarize changes (what files were changed and how, plus any known constraints).
-
-### 3.3 Critical Tasks (🔴)
-
-- Follow existing rules: `update_plan` → approval → staged execution.
-- Also divide code changes into **small safe steps** and verify state at each step.
-- `update_plan` should at minimum include: purpose, expected impact scope, main risks, and rollback policy (how to revert) concisely.
-
----
-
-## 4. Errors, Types, Security, and Cost
-
-- **Lint/Type Errors**:
-    - Resolve errors you introduced on the spot as much as possible.
-    - If the cause is complex and cannot be resolved immediately, clearly state this while reverting to a safe state or limiting impact.
-- **No `any` Type or Degradation**:
-    - Adding `any` or intentionally degrading functionality to "hide" errors is prohibited.
-    - Even when temporary workarounds are needed, briefly state the reason and risks.
-- **Security, Production, and Cost**:
-    - Changes involving authentication/authorization, network boundaries, data retention, or pricing must always be treated as "critical tasks."
-    - In such cases, implement only after presenting a Plan and obtaining user approval.
-
----
-
-## 5. Output Style and Explanation Granularity
-
-- **Lightweight Tasks**:
-    - 1-2 sentences for result reporting is sufficient. Don't use detailed templates or long text.
-- **Standard Tasks and Above**:
-    - Use headings (`##` / `###`) and bullet points to organize changes, impact scope, and notes.
-    - When quoting changed code, limit to only necessary surrounding lines.
-- **Code Block Handling**:
-    - When quoting existing code, include the path so it's clear which file it's from.
-    - For new proposed code, show only the minimal copy-pasteable unit.
-- **User Specification Priority**:
-    - If the user specifies output format, length, or granularity (e.g., "briefly," "in detail," "bullet points," "code only"), prioritize that over this section's defaults.
-- **Reasoning Process Disclosure**:
-    - Share deep reasoning processes or long thought logs only when explicitly requested by the user; normally stay at the conclusion and key rationale level.
-
----
-
-Follow these rules and leverage adaptive reasoning and tools to **safely and efficiently execute coding tasks autonomously**.
+- If Vscode linting gets stale, then rerun npm run lint:ci to refresh it.  This can happen if you have a lot of file changes and the lint server gets overwhelmed or desynced.  Running the lint command will reset it and ensure you get accurate linting feedback in VS Code.
 
 ---
 > Source: [ssdeanx/AgentStack](https://github.com/ssdeanx/AgentStack) — distributed by [TomeVault](https://tomevault.io).
