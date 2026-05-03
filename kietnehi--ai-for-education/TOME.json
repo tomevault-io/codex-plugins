@@ -1,0 +1,44 @@
+{
+  "name": "AI-FOR-EDUCATION",
+  "owner": "Kietnehi",
+  "repo": "AI-FOR-EDUCATION",
+  "description": "AI Agent Education l\u00e0 n\u1ec1n t\u1ea3ng gi\u00fap gi\u00e1o vi\u00ean v\u00e0 h\u1ecdc sinh \u1ee9ng d\u1ee5ng AI v\u00e0o h\u1ecdc t\u1eadp v\u00e0 r\u00e8n luy\u1ec7n to\u00e0n di\u1ec7n (end-to-end). H\u1ec7 th\u1ed1ng h\u1ed7 tr\u1ee3 c\u00e1 nh\u00e2n h\u00f3a l\u1ed9 tr\u00ecnh h\u1ecdc, t\u1ea1o n\u1ed9i dung v\u00e0 \u0111\u00e1nh gi\u00e1 t\u1ef1 \u0111\u1ed9ng. \u0110\u01b0\u1ee3c x\u00e2y d\u1ef1ng v\u1edbi full-stack, Python v\u00e0 AI hi\u1ec7n \u0111\u1ea1i, n\u1ec1n t\u1ea3ng t\u00edch h\u1ee3p CI/CD, Docker v\u00e0 Cloudflare R2 \u0111\u1ec3 \u0111\u1ea3m b\u1ea3o tri\u1ec3n khai nhanh, \u1ed5n \u0111\u1ecbnh v\u00e0 d\u1ec5 m\u1edf r\u1ed9ng.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/Kietnehi/AI-FOR-EDUCATION",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-03T07:03:00Z"
+}
