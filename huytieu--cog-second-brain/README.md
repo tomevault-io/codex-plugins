@@ -7,14 +7,14 @@ Self-evolving second brain with 17 AI skills, 6 worker agents, and people CRM �
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [huytieu/COG-second-brain](https://github.com/huytieu/COG-second-brain).
+Original source: `.cursor/rules/*.mdc` in [huytieu/COG-second-brain](https://github.com/huytieu/COG-second-brain).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
-- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/huytieu/COG-second-brain](https://github.com/huytieu/COG-second-brain)
