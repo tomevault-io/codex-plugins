@@ -1,0 +1,30 @@
+# Isartor
+
+> Tome by [isartor-ai](https://github.com/isartor-ai/Isartor) — distributed by [TomeVault](https://tomevault.io)
+
+Open-source Prompt Firewall — deflect up to 95% of redundant LLM traffic before it leaves your infrastructure. Documents: https://isartor-ai.github.io/Isartor/index.html
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `copilot-instructions.md` in [isartor-ai/Isartor](https://github.com/isartor-ai/Isartor).
+
+## Also available for
+
+- **Claude Code** — `CLAUDE.md`
+- **Codex** — `AGENTS.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/isartor-ai/Isartor](https://github.com/isartor-ai/Isartor)
+
+---
+
+Install this config instantly:
+```
+npx tomevault install isartor-ai/Isartor
+```
+Source: [github.com/isartor-ai/Isartor](https://github.com/isartor-ai/Isartor).
+
+<!-- genome:t-i-p -->
