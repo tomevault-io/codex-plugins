@@ -7,13 +7,13 @@ Privacy-first semantic code navigation MCP server using RAG. Features deep AST m
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [doITmagic/rag-code-mcp](https://github.com/doITmagic/rag-code-mcp).
+Original source: `copilot-instructions.md` in [doITmagic/rag-code-mcp](https://github.com/doITmagic/rag-code-mcp).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
