@@ -1,0 +1,44 @@
+{
+  "name": "ai-powered-coding",
+  "owner": "ccb-hms",
+  "repo": "ai-powered-coding",
+  "description": "Workshop materials for \u201cAI-Powered Vibe Coding\u201d (CCB, HMS): slides, setup guides, live demo, and hands-on R/Python exercises.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/ccb-hms/ai-powered-coding",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-04T05:04:32Z"
+}
