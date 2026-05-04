@@ -11,6 +11,5 @@
 - If a terminal appears unresponsive, kill it and create a new one rather than retrying in the same terminal
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/nirholas)
-> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/nirholas)
-<!-- tomevault:4.0:agents_md:2026-04-07 -->
+> Source: [nirholas/LooK](https://github.com/nirholas/LooK) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-05-04 -->
