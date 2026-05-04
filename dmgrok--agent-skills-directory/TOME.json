@@ -1,0 +1,44 @@
+{
+  "name": "agent_skills_directory",
+  "owner": "dmgrok",
+  "repo": "agent_skills_directory",
+  "description": "Intelligent skill discovery for AI agents. Find quality-validated skills that match your project with smart recommendations, maintenance tracking, and security scanning.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/dmgrok/agent_skills_directory",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-04T21:07:12Z"
+}
