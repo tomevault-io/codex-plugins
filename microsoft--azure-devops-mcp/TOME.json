@@ -1,0 +1,63 @@
+{
+  "name": "azure",
+  "owner": "microsoft",
+  "repo": "azure-devops-mcp",
+  "description": "The MCP server for Azure DevOps, bringing the power of Azure DevOps directly to your agents.",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "boards-my-work",
+      "path": ".github/skills/boards-my-work",
+      "github_url": "https://github.com/microsoft/azure-devops-mcp/tree/main/.github/skills/boards-my-work",
+      "description": ""
+    },
+    {
+      "name": "boards-work-item-summary",
+      "path": ".github/skills/boards-work-item-summary",
+      "github_url": "https://github.com/microsoft/azure-devops-mcp/tree/main/.github/skills/boards-work-item-summary",
+      "description": ""
+    },
+    {
+      "name": "work-iterations",
+      "path": ".github/skills/work-iterations",
+      "github_url": "https://github.com/microsoft/azure-devops-mcp/tree/main/.github/skills/work-iterations",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/microsoft/azure-devops-mcp",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-04T23:57:24Z"
+}
