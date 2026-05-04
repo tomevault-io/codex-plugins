@@ -1,23 +1,26 @@
 # crypto-market-data
 
-> Config by [nirholas](https://github.com/nirholas/crypto-market-data) — distributed by [TomeVault](https://tomevault.io/claim/nirholas)
+> Tome by [nirholas](https://github.com/nirholas/crypto-market-data) — distributed by [TomeVault](https://tomevault.io)
+
+Live cryptocurrency and DeFi market data. Simple, easy, straight to the point.  Market data from CoinGecko •  Originally built within Lyra Web3 Playground https://github.com/nirholas/lyra-web3-playground - 
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [nirholas/crypto-market-data](https://github.com/nirholas/crypto-market-data).
+Original source: `GEMINI.md` in [nirholas/crypto-market-data](https://github.com/nirholas/crypto-market-data).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
-- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Browse all formats: [https://tomevault.io/claim/nirholas](https://tomevault.io/claim/nirholas)
+From [nirholas/crypto-market-data](https://github.com/nirholas/crypto-market-data) — a repo with 25+ stars on GitHub.
 
 ---
 
-Converted and distributed by [TomeVault](https://tomevault.io) — AI instruction files for every platform.
-Is this your repo? [Claim it](https://tomevault.io/claim/nirholas) to manage distribution.
+Own this repo? Install the TomeVault Relay to keep every platform's copy in sync on every push: [https://tomevault.io/install](https://tomevault.io/install).
+
+<!-- genome:t-c-s -->
