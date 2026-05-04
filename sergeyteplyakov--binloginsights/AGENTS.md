@@ -1,0 +1,42 @@
+# Build Investigation with binlog-insights
+
+This repo uses the `binlog-insights-mcp` MCP server for MSBuild binary log analysis.
+
+## Architecture
+
+The MCP server (`BinlogInsights.Mcp`) is designed to work in **two modes**:
+
+1. **Standalone** — configured directly in `.vscode/mcp.json` or user-level `mcp.json`, without the VS Code extension. This is the primary mode for most users.
+2. **With the extension** — the `vscode-binlog-analyzer` extension auto-configures the MCP server and provides a tree view UI, but the MCP server must work independently of it.
+
+**Any feature or fix must work in standalone mode.** Do not rely on the extension to set `cwd`, pass extra arguments, or configure the server. The server should be self-sufficient when launched with just `"command": "binlog-insights-mcp"` and `"args": []`.
+
+## Setup
+
+1. Install the global tool: `dotnet tool install -g BinlogInsights.Mcp`
+2. The `.vscode/mcp.json` in this repo configures the MCP server automatically.
+
+## Building
+
+Always produce a binary log when building so it is available for investigation:
+
+```
+dotnet build /bl
+```
+
+This writes `msbuild.binlog` in the current directory.
+
+## Available MCP tools
+
+See `.github/instructions/build-investigation.instructions.md` for the full
+workflow — it auto-activates when editing build-related files.
+| `nuget <binlog> [--project <filter>]` | NuGet restore diagnostics |
+| `preprocess <binlog> --project <filter>` | Effective project XML after all imports |
+| `compiler <binlog> [--project <filter>]` | Compiler invocation command line |
+| `search <binlog> --query <text>` | Free-text search across build messages |
+
+Common options: `--limit <n>` (default 50), `--offset <n>` (default 0), `--project <substring>`.
+
+---
+> Source: [SergeyTeplyakov/BinlogInsights](https://github.com/SergeyTeplyakov/BinlogInsights) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-05-04 -->
