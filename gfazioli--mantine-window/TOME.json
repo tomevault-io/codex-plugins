@@ -1,0 +1,44 @@
+{
+  "name": "mantine-window",
+  "owner": "gfazioli",
+  "repo": "mantine-window",
+  "description": "A Mantine 9 draggable, resizable floating window component with persistent state, customizable controls position/order, optional ScrollArea, WindowGroup compound component, and layout presets.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/gfazioli/mantine-window",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-04T02:30:47Z"
+}
