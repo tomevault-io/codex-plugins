@@ -1,0 +1,81 @@
+{
+  "name": "novel",
+  "owner": "wordflowlab",
+  "repo": "novel-writer",
+  "description": "\u53c2\u8003Spec-kit \u5b9e\u73b0\u5c0f\u8bf4\u64b0\u5199\u5de5\u5177",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "fantasy",
+      "path": "templates/skills/genre-knowledge/fantasy",
+      "github_url": "https://github.com/wordflowlab/novel-writer/tree/main/templates/skills/genre-knowledge/fantasy",
+      "description": ""
+    },
+    {
+      "name": "forgotten-elements",
+      "path": "templates/skills/quality-assurance/forgotten-elements",
+      "github_url": "https://github.com/wordflowlab/novel-writer/tree/main/templates/skills/quality-assurance/forgotten-elements",
+      "description": ""
+    },
+    {
+      "name": "getting-started",
+      "path": "templates/skills/quality-assurance/getting-started",
+      "github_url": "https://github.com/wordflowlab/novel-writer/tree/main/templates/skills/quality-assurance/getting-started",
+      "description": ""
+    },
+    {
+      "name": "workflow-guide",
+      "path": "templates/skills/quality-assurance/workflow-guide",
+      "github_url": "https://github.com/wordflowlab/novel-writer/tree/main/templates/skills/quality-assurance/workflow-guide",
+      "description": ""
+    },
+    {
+      "name": "pre-write-checklist",
+      "path": "templates/skills/quality-assurance/pre-write-checklist",
+      "github_url": "https://github.com/wordflowlab/novel-writer/tree/main/templates/skills/quality-assurance/pre-write-checklist",
+      "description": ""
+    },
+    {
+      "name": "romance",
+      "path": "templates/skills/genre-knowledge/romance",
+      "github_url": "https://github.com/wordflowlab/novel-writer/tree/main/templates/skills/genre-knowledge/romance",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/wordflowlab/novel-writer",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-04T07:41:38Z"
+}
