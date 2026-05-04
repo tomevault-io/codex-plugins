@@ -1,0 +1,195 @@
+{
+  "name": "vscode",
+  "owner": "microsoft",
+  "repo": "vscode-copilot-chat",
+  "description": "Copilot Chat extension for VS Code",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "accessibility",
+      "path": ".github/skills/accessibility",
+      "github_url": "https://github.com/microsoft/vscode-copilot-chat/tree/main/.github/skills/accessibility",
+      "description": ""
+    },
+    {
+      "name": "agent-sessions-layout",
+      "path": ".github/skills/agent-sessions-layout",
+      "github_url": "https://github.com/microsoft/vscode-copilot-chat/tree/main/.github/skills/agent-sessions-layout",
+      "description": ""
+    },
+    {
+      "name": "author-contributions",
+      "path": ".github/skills/author-contributions",
+      "github_url": "https://github.com/microsoft/vscode-copilot-chat/tree/main/.github/skills/author-contributions",
+      "description": ""
+    },
+    {
+      "name": "fix-errors",
+      "path": ".github/skills/fix-errors",
+      "github_url": "https://github.com/microsoft/vscode-copilot-chat/tree/main/.github/skills/fix-errors",
+      "description": ""
+    },
+    {
+      "name": "sessions",
+      "path": ".github/skills/sessions",
+      "github_url": "https://github.com/microsoft/vscode-copilot-chat/tree/main/.github/skills/sessions",
+      "description": ""
+    },
+    {
+      "name": "agent-customization",
+      "path": "assets/prompts/skills/agent-customization",
+      "github_url": "https://github.com/microsoft/vscode-copilot-chat/tree/main/assets/prompts/skills/agent-customization",
+      "description": ""
+    },
+    {
+      "name": "form-github-search-query",
+      "path": "src/lm/skills/form-github-search-query",
+      "github_url": "https://github.com/microsoft/vscode-copilot-chat/tree/main/src/lm/skills/form-github-search-query",
+      "description": ""
+    },
+    {
+      "name": "show-github-search-result",
+      "path": "src/lm/skills/show-github-search-result",
+      "github_url": "https://github.com/microsoft/vscode-copilot-chat/tree/main/src/lm/skills/show-github-search-result",
+      "description": ""
+    },
+    {
+      "name": "summarize-github-issue-pr-notification",
+      "path": "src/lm/skills/summarize-github-issue-pr-notification",
+      "github_url": "https://github.com/microsoft/vscode-copilot-chat/tree/main/src/lm/skills/summarize-github-issue-pr-notification",
+      "description": ""
+    },
+    {
+      "name": "cross-platform-paths",
+      "path": ".github/skills/cross-platform-paths",
+      "github_url": "https://github.com/microsoft/vscode-copilot-chat/tree/main/.github/skills/cross-platform-paths",
+      "description": ""
+    },
+    {
+      "name": "debug-failing-test",
+      "path": ".github/skills/debug-failing-test",
+      "github_url": "https://github.com/microsoft/vscode-copilot-chat/tree/main/.github/skills/debug-failing-test",
+      "description": ""
+    },
+    {
+      "name": "generate-snapshot",
+      "path": ".github/skills/generate-snapshot",
+      "github_url": "https://github.com/microsoft/vscode-copilot-chat/tree/main/.github/skills/generate-snapshot",
+      "description": ""
+    },
+    {
+      "name": "python-manager-discovery",
+      "path": ".github/skills/python-manager-discovery",
+      "github_url": "https://github.com/microsoft/vscode-copilot-chat/tree/main/.github/skills/python-manager-discovery",
+      "description": ""
+    },
+    {
+      "name": "run-e2e-tests",
+      "path": ".github/skills/run-e2e-tests",
+      "github_url": "https://github.com/microsoft/vscode-copilot-chat/tree/main/.github/skills/run-e2e-tests",
+      "description": ""
+    },
+    {
+      "name": "run-integration-tests",
+      "path": ".github/skills/run-integration-tests",
+      "github_url": "https://github.com/microsoft/vscode-copilot-chat/tree/main/.github/skills/run-integration-tests",
+      "description": ""
+    },
+    {
+      "name": "run-pre-commit-checks",
+      "path": ".github/skills/run-pre-commit-checks",
+      "github_url": "https://github.com/microsoft/vscode-copilot-chat/tree/main/.github/skills/run-pre-commit-checks",
+      "description": ""
+    },
+    {
+      "name": "run-smoke-tests",
+      "path": ".github/skills/run-smoke-tests",
+      "github_url": "https://github.com/microsoft/vscode-copilot-chat/tree/main/.github/skills/run-smoke-tests",
+      "description": ""
+    },
+    {
+      "name": "settings-precedence",
+      "path": ".github/skills/settings-precedence",
+      "github_url": "https://github.com/microsoft/vscode-copilot-chat/tree/main/.github/skills/settings-precedence",
+      "description": ""
+    },
+    {
+      "name": "accessibility-aria-expert",
+      "path": ".github/skills/accessibility-aria-expert",
+      "github_url": "https://github.com/microsoft/vscode-copilot-chat/tree/main/.github/skills/accessibility-aria-expert",
+      "description": ""
+    },
+    {
+      "name": "react-webview-architecture",
+      "path": ".github/skills/react-webview-architecture",
+      "github_url": "https://github.com/microsoft/vscode-copilot-chat/tree/main/.github/skills/react-webview-architecture",
+      "description": ""
+    },
+    {
+      "name": "skill-creator",
+      "path": ".github/skills/skill-creator",
+      "github_url": "https://github.com/microsoft/vscode-copilot-chat/tree/main/.github/skills/skill-creator",
+      "description": ""
+    },
+    {
+      "name": "webview-trpc-messaging",
+      "path": ".github/skills/webview-trpc-messaging",
+      "github_url": "https://github.com/microsoft/vscode-copilot-chat/tree/main/.github/skills/webview-trpc-messaging",
+      "description": ""
+    },
+    {
+      "name": "writing-release-notes",
+      "path": ".github/skills/writing-release-notes",
+      "github_url": "https://github.com/microsoft/vscode-copilot-chat/tree/main/.github/skills/writing-release-notes",
+      "description": ""
+    },
+    {
+      "name": "project-setup-info-context7",
+      "path": "assets/prompts/skills/project-setup-info-context7",
+      "github_url": "https://github.com/microsoft/vscode-copilot-chat/tree/main/assets/prompts/skills/project-setup-info-context7",
+      "description": ""
+    },
+    {
+      "name": "project-setup-info-local",
+      "path": "assets/prompts/skills/project-setup-info-local",
+      "github_url": "https://github.com/microsoft/vscode-copilot-chat/tree/main/assets/prompts/skills/project-setup-info-local",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/microsoft/vscode-copilot-chat",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-04T20:42:54Z"
+}
