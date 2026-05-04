@@ -7,14 +7,14 @@ A comprehensive Model Context Protocol (MCP) server that enables AI assistants t
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [ChiR24/Unreal_mcp](https://github.com/ChiR24/Unreal_mcp).
+Original source: `copilot-instructions.md` in [ChiR24/Unreal_mcp](https://github.com/ChiR24/Unreal_mcp).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/ChiR24/Unreal_mcp](https://github.com/ChiR24/Unreal_mcp)
