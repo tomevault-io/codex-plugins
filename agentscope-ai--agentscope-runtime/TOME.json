@@ -1,0 +1,99 @@
+{
+  "name": "agentscope",
+  "owner": "agentscope-ai",
+  "repo": "agentscope-runtime",
+  "description": "A production-ready runtime framework for agent apps with secure tool sandboxing, Agent-as-a-Service APIs, scalable deployment, full-stack observability, and broad framework compatibility.",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "analyzing-agentscope-library",
+      "path": "examples/functionality/agent_skill/skill/analyzing-agentscope-library",
+      "github_url": "https://github.com/agentscope-ai/agentscope-runtime/tree/main/examples/functionality/agent_skill/skill/analyzing-agentscope-library",
+      "description": ""
+    },
+    {
+      "name": "calculation-skill",
+      "path": "agentscope-core/src/test/resources/test-skills/calculation-skill",
+      "github_url": "https://github.com/agentscope-ai/agentscope-runtime/tree/main/agentscope-core/src/test/resources/test-skills/calculation-skill",
+      "description": ""
+    },
+    {
+      "name": "skill-creator",
+      "path": "agentscope-examples/quickstart/src/main/resources/skills/skill-creator",
+      "github_url": "https://github.com/agentscope-ai/agentscope-runtime/tree/main/agentscope-examples/quickstart/src/main/resources/skills/skill-creator",
+      "description": ""
+    },
+    {
+      "name": "writing-skill",
+      "path": "agentscope-core/src/test/resources/test-skills/writing-skill",
+      "github_url": "https://github.com/agentscope-ai/agentscope-runtime/tree/main/agentscope-core/src/test/resources/test-skills/writing-skill",
+      "description": ""
+    },
+    {
+      "name": "csv_excel",
+      "path": "alias/src/alias/agent/agents/_built_in_skill/data/csv_excel",
+      "github_url": "https://github.com/agentscope-ai/agentscope-runtime/tree/main/alias/src/alias/agent/agents/_built_in_skill/data/csv_excel",
+      "description": ""
+    },
+    {
+      "name": "relational_database",
+      "path": "alias/src/alias/agent/agents/_built_in_skill/data/relational_database",
+      "github_url": "https://github.com/agentscope-ai/agentscope-runtime/tree/main/alias/src/alias/agent/agents/_built_in_skill/data/relational_database",
+      "description": ""
+    },
+    {
+      "name": "image",
+      "path": "alias/src/alias/agent/agents/_built_in_skill/data/image",
+      "github_url": "https://github.com/agentscope-ai/agentscope-runtime/tree/main/alias/src/alias/agent/agents/_built_in_skill/data/image",
+      "description": ""
+    },
+    {
+      "name": "json",
+      "path": "alias/src/alias/agent/agents/_built_in_skill/data/json",
+      "github_url": "https://github.com/agentscope-ai/agentscope-runtime/tree/main/alias/src/alias/agent/agents/_built_in_skill/data/json",
+      "description": ""
+    },
+    {
+      "name": "text",
+      "path": "alias/src/alias/agent/agents/_built_in_skill/data/text",
+      "github_url": "https://github.com/agentscope-ai/agentscope-runtime/tree/main/alias/src/alias/agent/agents/_built_in_skill/data/text",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/agentscope-ai/agentscope-runtime",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-04T10:40:58Z"
+}
