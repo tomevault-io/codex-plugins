@@ -2,9 +2,9 @@
   "name": "docs",
   "owner": "langchain-ai",
   "repo": "docs",
-  "description": "AI instruction files for docs by langchain-ai",
+  "description": "\ud83e\udd9c\ud83d\udd17 Docs for LangChain projects",
   "type": "tome",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -51,7 +51,7 @@
       "description": ""
     }
   ],
-  "claim_url": "https://tomevault.io/claim/langchain-ai",
+  "source_url": "https://github.com/langchain-ai/docs",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-10T21:30:46Z"
+  "distributed_at": "2026-05-04T23:53:36Z"
 }
