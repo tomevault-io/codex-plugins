@@ -1,0 +1,87 @@
+{
+  "name": "claude-code-settings",
+  "owner": "feiskyer",
+  "repo": "claude-code-settings",
+  "description": "Claude Code settings, commands and agents for vibe coding",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "autonomous-skill",
+      "path": "skills/autonomous-skill",
+      "github_url": "https://github.com/feiskyer/claude-code-settings/tree/main/skills/autonomous-skill",
+      "description": ""
+    },
+    {
+      "name": "codex-skill",
+      "path": "skills/codex-skill",
+      "github_url": "https://github.com/feiskyer/claude-code-settings/tree/main/skills/codex-skill",
+      "description": ""
+    },
+    {
+      "name": "deep-research",
+      "path": "skills/deep-research",
+      "github_url": "https://github.com/feiskyer/claude-code-settings/tree/main/skills/deep-research",
+      "description": ""
+    },
+    {
+      "name": "kiro-skill",
+      "path": "skills/kiro-skill",
+      "github_url": "https://github.com/feiskyer/claude-code-settings/tree/main/skills/kiro-skill",
+      "description": ""
+    },
+    {
+      "name": "nanobanana-skill",
+      "path": "skills/nanobanana-skill",
+      "github_url": "https://github.com/feiskyer/claude-code-settings/tree/main/skills/nanobanana-skill",
+      "description": ""
+    },
+    {
+      "name": "spec-kit-skill",
+      "path": "skills/spec-kit-skill",
+      "github_url": "https://github.com/feiskyer/claude-code-settings/tree/main/skills/spec-kit-skill",
+      "description": ""
+    },
+    {
+      "name": "youtube-transcribe-skill",
+      "path": "skills/youtube-transcribe-skill",
+      "github_url": "https://github.com/feiskyer/claude-code-settings/tree/main/skills/youtube-transcribe-skill",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/feiskyer/claude-code-settings",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-04T13:31:48Z"
+}
