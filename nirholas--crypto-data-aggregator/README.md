@@ -1,23 +1,26 @@
-# crypto-data-aggregator
+# AI instruction files for crypto-data-aggregator
 
-> Config by [nirholas](https://github.com/nirholas/crypto-data-aggregator) — distributed by [TomeVault](https://tomevault.io/claim/nirholas)
+> Sourced from [nirholas/crypto-data-aggregator](https://github.com/nirholas/crypto-data-aggregator) and converted for every major platform by [TomeVault](https://tomevault.io)
+
+Real-time cryptocurrency market data aggregator. Track 10,000+ coins, monitor 200+ DeFi protocols, manage portfolios, set price alerts, and analyze market sentiment, all in one place.
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [nirholas/crypto-data-aggregator](https://github.com/nirholas/crypto-data-aggregator).
+Original source: `GEMINI.md` in [nirholas/crypto-data-aggregator](https://github.com/nirholas/crypto-data-aggregator).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
-- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Browse all formats: [https://tomevault.io/claim/nirholas](https://tomevault.io/claim/nirholas)
+Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/nirholas/crypto-data-aggregator](https://github.com/nirholas/crypto-data-aggregator)
 
 ---
 
-Converted and distributed by [TomeVault](https://tomevault.io) — AI instruction files for every platform.
-Is this your repo? [Claim it](https://tomevault.io/claim/nirholas) to manage distribution.
+Explore more instruction files on [TomeVault](https://tomevault.io) — the open index of AI config files for every platform.
+
+<!-- genome:a-e-q -->
