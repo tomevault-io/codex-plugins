@@ -1,0 +1,17 @@
+# Button Builder – AI Agent Guide
+- What this is: Home Assistant custom integration plus a React/Vite UI to design `custom:button-card` YAML (and a beta bubble-card builder). The panel is served from `custom_components/button_builder/www/` into an HA iframe registered in `custom_components/button_builder/__init__.py` (2s delayed setup).
+- Frontend map: Main entry `src/ButtonCardApp.tsx`, shell `src/App.tsx`, UI pieces under `src/components/`, YAML logic in `src/utils/yamlGenerator.ts`, presets in `src/presets.ts`, services in `src/services/`. Bubble-card has a parallel stack in `src/bubble-card/` (`BubbleCardApp`, `components/Preview.tsx`, `utils/yamlGenerator.ts`).
+- State/data flow: User input in `components/ConfigPanel.tsx` updates `ButtonConfig` state (held in `ButtonCardApp.tsx`) → `utils/yamlGenerator.ts` emits YAML (only non-defaults) → live preview `components/PreviewCard.tsx` and YAML viewer. Bubble-card mirrors this with its own types and generator.
+- Canonical schema: `src/types.ts` defines `ButtonConfig` + `DEFAULT_CONFIG`. When adding a field, update `DEFAULT_CONFIG`, expose controls in `components/ConfigPanel.tsx`, render/preview as needed, emit via `utils/yamlGenerator.ts`, include in presets (`src/presets.ts`) and AI schema (`services/geminiService.ts`). Bubble-card equivalents live in `src/bubble-card/types.ts` and friends.
+- Presets: ~80 presets in `src/presets.ts` (bubble-card has its own). Application uses `isApplyingPresetRef` to avoid React batching glitches; manual edits clear `activePreset` through the `setConfig` wrapper.
+- Persistence/import: Button config persists to `localStorage` key `button-builder-config`; Gemini key lives only in-browser. YAML import path: `utils/yamlImporter.ts` maps button-card options back into `ButtonConfig`.
+- Services: `services/geminiService.ts` uses `@google/genai` with a structured schema returning `ButtonConfig`. `homeAssistantService.ts` and `dashboardService.ts` wrap HA APIs; auth tokens expected in `localStorage.hassTokens`.
+- Styling/assets: Lucide + MDI icons; Tailwind injected via CDN in production (console warning is normal). Core styles `src/index.css`; HTML entry `src/index.html`. Keep ASCII; existing assets in `src/assets/`.
+- Build/dev: `npm run dev` (Vite on :3000), `npm run build` outputs to `custom_components/button_builder/www/`, `npm run preview` to inspect the build. Windows scripts in `scripts/*.ps1` wrap build/deploy steps.
+- Deploy/HA: Served in HA at `/button_builder/panel.html?v={version}`. Keep versions in `package.json` and `custom_components/button_builder/manifest.json` in lockstep for cache busting; HA caches aggressively—rebuild, copy to HA, restart HA, hard-refresh browser.
+- Patterns to preserve: Do not remove props/state without updating all `.tsx` call sites. Keep schema aligned between `DEFAULT_CONFIG` and both YAML generators (button + bubble) to avoid missing YAML. Presets/AI schema must track new fields.
+- Files to know: `src/components/` (UI controls + preview + MagicBuilder), `src/utils/yamlGenerator.ts` and `src/utils/yamlImporter.ts`, `src/services/` (Gemini/HA APIs), `src/presets.ts`, `custom_components/button_builder/__init__.py` (panel registration) and `manifest.json` (versioning), `custom_components/button_builder/www/` (built assets, do not hand-edit).
+
+---
+> Source: [aspenrt78/button-builder](https://github.com/aspenrt78/button-builder) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-05-03 -->
