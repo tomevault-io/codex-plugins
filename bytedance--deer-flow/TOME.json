@@ -1,0 +1,129 @@
+{
+  "name": "deer-flow",
+  "owner": "bytedance",
+  "repo": "deer-flow",
+  "description": "An open-source long-horizon SuperAgent harness that researches, codes, and creates. With the help of sandboxes, memories, tools, skill, subagents and message gateway, it handles different levels of tasks that could take minutes to hours.",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "chart-visualization",
+      "path": "skills/public/chart-visualization",
+      "github_url": "https://github.com/bytedance/deer-flow/tree/main/skills/public/chart-visualization",
+      "description": ""
+    },
+    {
+      "name": "consulting-analysis",
+      "path": "skills/public/consulting-analysis",
+      "github_url": "https://github.com/bytedance/deer-flow/tree/main/skills/public/consulting-analysis",
+      "description": ""
+    },
+    {
+      "name": "data-analysis",
+      "path": "skills/public/data-analysis",
+      "github_url": "https://github.com/bytedance/deer-flow/tree/main/skills/public/data-analysis",
+      "description": ""
+    },
+    {
+      "name": "deep-research",
+      "path": "skills/public/deep-research",
+      "github_url": "https://github.com/bytedance/deer-flow/tree/main/skills/public/deep-research",
+      "description": ""
+    },
+    {
+      "name": "find-skills",
+      "path": "skills/public/find-skills",
+      "github_url": "https://github.com/bytedance/deer-flow/tree/main/skills/public/find-skills",
+      "description": ""
+    },
+    {
+      "name": "frontend-design",
+      "path": "skills/public/frontend-design",
+      "github_url": "https://github.com/bytedance/deer-flow/tree/main/skills/public/frontend-design",
+      "description": ""
+    },
+    {
+      "name": "github-deep-research",
+      "path": "skills/public/github-deep-research",
+      "github_url": "https://github.com/bytedance/deer-flow/tree/main/skills/public/github-deep-research",
+      "description": ""
+    },
+    {
+      "name": "image-generation",
+      "path": "skills/public/image-generation",
+      "github_url": "https://github.com/bytedance/deer-flow/tree/main/skills/public/image-generation",
+      "description": ""
+    },
+    {
+      "name": "podcast-generation",
+      "path": "skills/public/podcast-generation",
+      "github_url": "https://github.com/bytedance/deer-flow/tree/main/skills/public/podcast-generation",
+      "description": ""
+    },
+    {
+      "name": "ppt-generation",
+      "path": "skills/public/ppt-generation",
+      "github_url": "https://github.com/bytedance/deer-flow/tree/main/skills/public/ppt-generation",
+      "description": ""
+    },
+    {
+      "name": "surprise-me",
+      "path": "skills/public/surprise-me",
+      "github_url": "https://github.com/bytedance/deer-flow/tree/main/skills/public/surprise-me",
+      "description": ""
+    },
+    {
+      "name": "vercel-deploy-claimable",
+      "path": "skills/public/vercel-deploy-claimable",
+      "github_url": "https://github.com/bytedance/deer-flow/tree/main/skills/public/vercel-deploy-claimable",
+      "description": ""
+    },
+    {
+      "name": "video-generation",
+      "path": "skills/public/video-generation",
+      "github_url": "https://github.com/bytedance/deer-flow/tree/main/skills/public/video-generation",
+      "description": ""
+    },
+    {
+      "name": "code-documentation",
+      "path": "skills/public/code-documentation",
+      "github_url": "https://github.com/bytedance/deer-flow/tree/main/skills/public/code-documentation",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/bytedance/deer-flow",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-04T23:31:10Z"
+}
