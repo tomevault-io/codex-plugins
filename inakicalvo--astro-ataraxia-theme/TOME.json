@@ -1,0 +1,44 @@
+{
+  "name": "astro-ataraxia-theme",
+  "owner": "inakicalvo",
+  "repo": "astro-ataraxia-theme",
+  "description": "A clean, accessible, and modern blog theme for Astro v6, inspired by the philosophical concept of tranquility and peace of mind.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/inakicalvo/astro-ataraxia-theme",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-04T02:28:46Z"
+}
