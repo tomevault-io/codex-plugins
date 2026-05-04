@@ -7,12 +7,12 @@ Radon is a market-structure reconstruction system that detects institutional pos
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [joemccann/radon](https://github.com/joemccann/radon).
+Original source: `CLAUDE.md` in [joemccann/radon](https://github.com/joemccann/radon).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
