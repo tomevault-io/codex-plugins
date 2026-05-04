@@ -4,7 +4,7 @@
   "repo": "dark-premium-landing-style",
   "description": "A reusable AI skill for building premium, dark-themed, Apple-inspired landing pages",
   "type": "config",
-  "source_format": "GEMINI.md",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/Godzilla675/dark-premium-landing-style",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-04T11:09:40Z"
+  "distributed_at": "2026-05-04T13:55:03Z"
 }
