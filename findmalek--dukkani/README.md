@@ -2,6 +2,8 @@
 
 > Source: [FindMalek/dukkani](https://github.com/FindMalek/dukkani) — distributed by [TomeVault](https://tomevault.io)
 
+Create your online shop in minutes — no code, no stress.
+
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
