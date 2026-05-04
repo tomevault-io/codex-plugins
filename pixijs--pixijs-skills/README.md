@@ -7,12 +7,12 @@ Official AI skills for PixiJS. These skills teach AI coding agents how to correc
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [pixijs/pixijs-skills](https://github.com/pixijs/pixijs-skills).
+Original source: `CLAUDE.md` in [pixijs/pixijs-skills](https://github.com/pixijs/pixijs-skills).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
