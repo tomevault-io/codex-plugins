@@ -1,0 +1,17 @@
+This extension uses a precise development workflow:
+
+  - Any changes in source must be followed by `make clean install` *before* tests are run.
+  - Tests must always be run with `make ort-test-coverage-html` to ensure:
+      - They are executed in the correct environment.
+      - Coverage information is generated in `./coverage.info` and the `./html/` is updated.
+  - When working on code coverage, always refer to `./coverage.info` and not dumb analysis.
+
+This extension uses a precise optimization workflow:
+
+  - During optimization workflows, planning documents should be referenced:
+    - If the current optimization workflow is unclear, ask which document to reference.
+    - Documents must be kept up-to-date at each step of the process.
+
+---
+> Source: [krakjoe/ort](https://github.com/krakjoe/ort) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-05-04 -->
