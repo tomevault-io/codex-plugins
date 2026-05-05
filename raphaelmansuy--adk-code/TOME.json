@@ -1,0 +1,44 @@
+{
+  "name": "adk-code",
+  "owner": "raphaelmansuy",
+  "repo": "adk-code",
+  "description": "adk-code \ud83d\ude80 AI coding assistant for your terminal. Powered by Google's ADK framework with multi-model support (Gemini \ud83d\udd37, OpenAI \ud83d\udfe2, Vertex AI \u2601\ufe0f).  First ADK code agent in Go! \ud83c\udfaf",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/raphaelmansuy/adk-code",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-05T14:59:57Z"
+}
