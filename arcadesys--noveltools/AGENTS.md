@@ -1,35 +1,75 @@
-# NovelTools — Copilot Instructions
 
-This workspace uses **NovelTools**, a VS Code extension for novel writing. The manuscript is organized as individual `.md` scene files in chapter folders, with structure defined in `noveltools.json`.
+# NovelTools Scene Status System
+
+This project uses NovelTools, a VS Code/Cursor extension for novel writing. Scenes are individual `.md` files organized into chapter folders.
+
+## Project File
+
+The manuscript structure is defined in `noveltools.json` at the workspace root.
 
 ## Scene Statuses
 
-Scenes have 6 statuses stored in `noveltools.json` → `sceneStatus` (keyed by relative path with forward slashes):
+Scenes have 6 possible statuses stored in `noveltools.json` under `sceneStatus`. Keys are relative file paths (forward slashes).
 
-- `drafted` (🟡) — first draft written
-- `revision` (🔵) — undergoing revision
-- `review` (🟠) — ready for or under review
-- `done` (🟢) — final, complete
-- `spiked` (🔴) — temporarily removed
-- `cut` (⚫) — permanently removed
+| Status     | Icon | Meaning                                    |
+|------------|------|---------------------------------------------|
+| `drafted`  | 🟡   | First draft written                         |
+| `revision` | 🔵   | Undergoing revision                         |
+| `review`   | 🟠   | Ready for / under review                    |
+| `done`     | 🟢   | Final, complete                             |
+| `spiked`   | 🔴   | Temporarily removed (may return)            |
+| `cut`      | ⚫   | Permanently removed from manuscript         |
 
-To change a scene's status, edit the `sceneStatus` object in `noveltools.json`:
+## How to Read Scene Status
+
+Open `noveltools.json` and look at the `sceneStatus` object:
 
 ```json
-{ "sceneStatus": { "chapter-01/opening.md": "revision" } }
+{
+  "sceneStatus": {
+    "chapter-01/opening.md": "done",
+    "chapter-01/conflict.md": "revision",
+    "chapter-02/intro.md": "drafted"
+  }
+}
 ```
+
+A scene with no entry in `sceneStatus` has no status set (untracked).
+
+## How to Change Scene Status
+
+Edit the `sceneStatus` object in `noveltools.json` directly. Set the value to one of: `drafted`, `revision`, `review`, `done`, `spiked`, `cut`.
+
+```json
+{
+  "sceneStatus": {
+    "chapter-01/opening.md": "review"
+  }
+}
+```
+
+To clear a status, remove the key from `sceneStatus`.
 
 ## Scene Metadata
 
-Per-scene metadata lives in `noveltools.json` → `sceneMetadata`:
+Per-scene metadata (like synopses) is stored under `sceneMetadata`:
 
 ```json
-{ "sceneMetadata": { "chapter-01/opening.md": { "synopsis": "Short description." } } }
+{
+  "sceneMetadata": {
+    "chapter-01/opening.md": {
+      "synopsis": "Elena arrives at the apartment building for the first time."
+    }
+  }
+}
 ```
 
-## Project Schema
+## VS Code Commands
 
-The JSON schema at `schemas/noveltools-project.schema.json` provides validation and autocomplete for `noveltools.json`.
+These commands are also available via the command palette:
+- `NovelTools: Set section status...` — quick-pick with all 6 options
+- Individual status commands: `Set status: Done`, `Set status: Drafted`, `Set status: Revision`, `Set status: Review`, `Set status: Spiked out`, `Set status: Cut`
+- `Clear section status` — removes status from a scene
 
 ---
 > Source: [Arcadesys/NovelTools](https://github.com/Arcadesys/NovelTools) — distributed by [TomeVault](https://tomevault.io).
