@@ -7,12 +7,12 @@ A Beautiful 3D Spark GUI for apple ml-sharp
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [lueluelue12138/sharp-gui](https://github.com/lueluelue12138/sharp-gui).
+Original source: `CLAUDE.md` in [lueluelue12138/sharp-gui](https://github.com/lueluelue12138/sharp-gui).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
