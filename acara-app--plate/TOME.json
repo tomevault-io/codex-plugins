@@ -1,0 +1,57 @@
+{
+  "name": "plate",
+  "owner": "acara-app",
+  "repo": "plate",
+  "description": "Open-source health AI agent platform for self-hosted health questions, personal health data, personalized Nutrition for Metabolic Health, AI meal planning, Telegram chat, and Apple Health sync.",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "laravel-simplifier",
+      "path": ".ai/skills/laravel-simplifier",
+      "github_url": "https://github.com/acara-app/plate/tree/main/.ai/skills/laravel-simplifier",
+      "description": ""
+    },
+    {
+      "name": "livewire-development",
+      "path": ".agents/skills/livewire-development",
+      "github_url": "https://github.com/acara-app/plate/tree/main/.agents/skills/livewire-development",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/acara-app/plate",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-05T02:40:46Z"
+}
