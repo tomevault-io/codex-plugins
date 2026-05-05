@@ -1,5 +1,7 @@
+# Cypilot
 
-Use `.ai/GUIDELINES.md` as the single source of truth for HAI3 development guidelines.
+
+ALWAYS open and follow `{cypilot_path}/.core/skills/cypilot/SKILL.md`
 
 ---
 > Source: [cyberfabric/frontx](https://github.com/cyberfabric/frontx) — distributed by [TomeVault](https://tomevault.io).
