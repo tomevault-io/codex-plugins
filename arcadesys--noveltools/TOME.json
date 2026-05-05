@@ -4,7 +4,7 @@
   "repo": "NovelTools",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": ".cursor/rules/*.mdc",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/Arcadesys/NovelTools",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-29T15:41:45Z"
+  "distributed_at": "2026-05-05T05:38:25Z"
 }
