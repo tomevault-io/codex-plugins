@@ -1,0 +1,44 @@
+{
+  "name": "PaperTools",
+  "owner": "tsrigo",
+  "repo": "PaperTools",
+  "description": "PaperTools \u662f\u4e00\u4e2a\u5b8c\u6574\u7684\u5b66\u672f\u8bba\u6587\u5904\u7406\u6d41\u6c34\u7ebf\uff0c\u63d0\u4f9b\u81ea\u52a8\u5316\u7684\u8bba\u6587\u722c\u53d6\u3001\u667a\u80fd\u7b5b\u9009\u3001\u603b\u7ed3\u751f\u6210\u548c\u7f51\u9875\u751f\u6210\u529f\u80fd\u3002",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/tsrigo/PaperTools",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-05T23:42:22Z"
+}
