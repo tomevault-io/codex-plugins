@@ -224,6 +224,5 @@ This prevents inconsistencies where:
 - Footer text
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/ai-shifu)
-> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/ai-shifu)
-<!-- tomevault:4.0:agents_md:2026-04-08 -->
+> Source: [ai-shifu/markdown-flow](https://github.com/ai-shifu/markdown-flow) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-05-05 -->
