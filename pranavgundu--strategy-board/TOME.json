@@ -4,7 +4,7 @@
   "repo": "Strategy-Board",
   "description": "The Digital Strategy Whiteboard for FRC",
   "type": "config",
-  "source_format": "GEMINI.md",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/pranavgundu/Strategy-Board",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-05T20:45:15Z"
+  "distributed_at": "2026-05-05T21:43:36Z"
 }
