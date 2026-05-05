@@ -1,0 +1,44 @@
+{
+  "name": "XPack-MCP-Marketplace",
+  "owner": "xpack-ai",
+  "repo": "XPack-MCP-Marketplace",
+  "description": "The world\u2019s first open-source MCP monetization platform, to quickly create and sell your own MCP server in just minutes. | XPack \u662f\u5168\u7403\u9996\u4e2a\u5f00\u6e90 MCP \u4ea4\u6613\u5e73\u53f0\uff0c\u5e2e\u52a9\u4f60\u572810\u5206\u949f\u5185\u5feb\u901f\u642d\u5efa\u81ea\u5df1\u7684 MCP \u5546\u5e97\u5e76\u7acb\u523b\u5f00\u59cb\u9500\u552e MCP \u670d\u52a1\u3002",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/xpack-ai/XPack-MCP-Marketplace",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-05T00:03:16Z"
+}
