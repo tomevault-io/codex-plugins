@@ -4,7 +4,7 @@
   "repo": "mockd",
   "description": "High-performance, multi-protocol mock server. HTTP, WebSocket, gRPC, MQTT, SSE, GraphQL, SOAP in one binary.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/getmockd/mockd",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-22T11:52:42Z"
+  "distributed_at": "2026-05-05T06:14:38Z"
 }
