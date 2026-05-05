@@ -4,7 +4,7 @@
   "repo": "heynow",
   "description": "\u00af\\_(\u30c4)_/\u00af ",
   "type": "config",
-  "source_format": ".cursor/rules/*.mdc",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/jackjackbits/heynow",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-05T00:06:45Z"
+  "distributed_at": "2026-05-05T05:30:59Z"
 }
