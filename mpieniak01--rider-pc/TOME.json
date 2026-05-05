@@ -1,0 +1,44 @@
+{
+  "name": "Rider-Pc",
+  "owner": "mpieniak01",
+  "repo": "Rider-Pc",
+  "description": "Rider-PC - FastAPI control server & AI Provider replicating the robot's nervous system. Offloaded heavy ML models (Vision, Voice) to a dedicated unit.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/mpieniak01/Rider-Pc",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-05T15:25:14Z"
+}
