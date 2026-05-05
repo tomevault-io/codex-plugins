@@ -1,0 +1,30 @@
+# external-agents
+
+> Tome by [entireio](https://github.com/entireio/external-agents) — distributed by [TomeVault](https://tomevault.io)
+
+This repository contains standalone external agent binaries that extend the Entire CLI with support for additional AI coding agents.
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `.cursor/rules/*.mdc` in [entireio/external-agents](https://github.com/entireio/external-agents).
+
+## Also available for
+
+- **Claude Code** — `CLAUDE.md`
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/entireio/external-agents](https://github.com/entireio/external-agents)
+
+---
+
+Install this config instantly:
+```
+npx tomevault install entireio/external-agents
+```
+Source: [github.com/entireio/external-agents](https://github.com/entireio/external-agents).
+
+<!-- genome:t-i-q -->
