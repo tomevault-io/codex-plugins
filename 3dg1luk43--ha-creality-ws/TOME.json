@@ -1,0 +1,44 @@
+{
+  "name": "ha_creality_ws",
+  "owner": "3dg1luk43",
+  "repo": "ha_creality_ws",
+  "description": "Creality K1/K2/3V3/Hi WebSocket integration for Home Assistant (local push, MJPEG or webRTC camera, power controls)",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/3dg1luk43/ha_creality_ws",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-05T21:10:18Z"
+}
