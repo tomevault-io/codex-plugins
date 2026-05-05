@@ -1,186 +1,218 @@
 
-# Meta-rules for instruction maintenance
+# GitHub Copilot Instructions
 
-This file governs how to maintain the instruction and rule files themselves.
+This repository contains **HAEO** (Home Assistant Energy Optimizer) - a Python 3.13+ Home Assistant custom component for energy network optimization using linear programming.
 
-## Dual system architecture
+## Project overview
 
-HAEO uses parallel AI instruction systems that share the same source files:
+HAEO optimizes energy usage across battery storage, grid import/export, loads, and generators using linear programming.
+The integration provides real-time optimization based on energy prices, forecasts, and system constraints.
 
-- **GitHub Copilot**: `.github/instructions/*.instructions.md` (source files)
-- **Cursor**: `.cursor/rules/*/RULE.mdc` (symlinks to source files)
+### Core components
 
-Additionally, HAEO uses a reusable prompts system for chat commands:
+The integration follows a layered architecture:
 
-- **GitHub Copilot**: `.github/prompts/*.prompt.md` (source files)
-- **Cursor**: `.cursor/commands/` (symlink to `.github/prompts/`)
+- **Model layer** (`core/model/`): LP formulation with elements, constraints, and cost functions
+- **Elements layer** (`elements/`, `core/schema/`, `core/adapters/`): Element registry, schemas, and adapters
+- **Coordinator** (`coordinator.py`): Orchestrates data loading, optimization, and result extraction
+- **Sensors** (`sensors/`): Expose optimization results to Home Assistant
+- **Config flows** (`flows/`): Subentry-based configuration for hub and elements
 
-### Combined frontmatter
+See [architecture guide](../docs/developer-guide/architecture.md) for detailed component interactions.
 
-All instruction files use combined frontmatter containing both Copilot and Cursor formats:
+### Project structure
 
-```yaml
-applyTo: glob/pattern/**
-description: Rule description
-globs: [glob/pattern/**]
-alwaysApply: false
+```
+custom_components/haeo/     # Home Assistant integration
+├── core/                   # Core infrastructure (no HA dependencies)
+│   ├── model/              # LP model (constraints, variables, optimization)
+│   ├── data/               # Data loading utilities
+│   ├── schema/             # Element schemas, field types, sections, migrations
+│   └── adapters/           # Element adapters (model_elements, outputs)
+├── elements/               # Element registry and availability
+├── flows/                  # Hub, options, and element config flows
+│   └── elements/           # Per-element flow implementations
+├── sensors/                # Sensor implementations
+└── translations/           # i18n strings (en.json)
+tests/scenarios/            # End-to-end scenario tests
+docs/                       # Documentation
 ```
 
-This allows Cursor rules to be symlinks to the Copilot instruction files.
+Tests are colocated with source code in `tests/` subdirectories within each package.
 
-### Current symlink structure
+## Development tools
 
-Each Cursor rule directory contains a `RULE.mdc` symlink pointing to the corresponding Copilot instruction:
+- **Package manager**: uv (use `uv sync` for dependencies, `uv run` to execute tools)
+- **Testing**: pytest (scenarios require `-m scenario` marker and are skipped in CI)
+- **Linting/Formatting**: Ruff (Python), Prettier (JSON), mdformat (Markdown)
+- **Type checking**: Pyright
 
-| Cursor Rule       | Symlink Target                                         |
-| ----------------- | ------------------------------------------------------ |
-| `haeo/RULE.mdc`   | `../../../.github/copilot-instructions.md`             |
-| `python/RULE.mdc` | `../../../.github/instructions/python.instructions.md` |
-| `model/RULE.mdc`  | `../../../.github/instructions/model.instructions.md`  |
-| (etc.)            | (etc.)                                                 |
+## Agent behavioral rules
 
-The prompts system uses individual file symlinks:
+These rules apply to all AI agent interactions with this codebase:
 
-| Cursor File                       | Symlink Target                                |
-| --------------------------------- | --------------------------------------------- |
-| `.cursor/commands/update-docs.md` | `../../.github/prompts/update-docs.prompt.md` |
-| (etc.)                            | (etc.)                                        |
+### Design principles
 
-## Keeping systems in sync
+**Convention over configuration**: Prefer uniform patterns that work the same everywhere over configurable options that require case-by-case logic.
+When code paths diverge based on metadata flags or configuration, ask whether the divergence is necessary.
+Often, a single convention that handles all cases uniformly is simpler and more maintainable.
 
-Since Cursor rules are symlinks, updating a Copilot instruction automatically updates the corresponding Cursor rule.
-No manual synchronization is needed.
+- Derive behavior from existing structure rather than adding metadata flags
+- Make all instances of a pattern work the same way - no special cases
+- Let upstream validation (e.g., config flows) enforce constraints so downstream code can assume valid data
+- Config flows use `vol.Required()` and `vol.Optional()` to enforce required fields at entry time
+- Downstream code (coordinator, adapters) can assume required fields are present because config flow guarantees it
+- For optional values, if they are missing or None, skip them uniformly throughout processing
 
-Similarly, since Cursor prompt files are symlinks, updating a prompt in `.github/prompts/` automatically updates the corresponding file in `.cursor/commands/`.
-However, when adding a new prompt file, you must create the symlink manually.
+**Composition over complexity**: Build features by composing simple, focused components rather than adding conditional logic to existing code.
+Each component should do one thing well without needing to know about the internals of other components.
 
-When adding a new instruction file:
+- Separate concerns: validation happens at config flow boundaries, processing assumes valid input
+- Avoid "check if X then do Y else do Z" patterns - instead, make X and Y go through the same code path
+- When adding a feature, prefer creating new simple components over adding branches to existing ones
+- Runtime code uses the result of schema validation, not the schema itself - the schema's job is done at configuration time
 
-1. Create the file in `.github/instructions/` with combined frontmatter
-2. Create the corresponding directory in `.cursor/rules/`
-3. Create a symlink: `ln -s ../../../.github/instructions/name.instructions.md .cursor/rules/name/RULE.mdc`
+### Clean changes
 
-When adding a new prompt file:
+When making changes, don't leave behind comments describing what was once there.
+Comments should always describe code as it exists without reference to former code.
 
-1. Create the file in `.github/prompts/` with `.prompt.md` extension (for VSCode)
-2. Include optional YAML frontmatter with `description` field
-3. Create a symlink in `.cursor/commands/` with `.md` extension (for Cursor): `ln -s ../../.github/prompts/filename.prompt.md .cursor/commands/filename.md`
-4. Use the prompt in chat by typing `/filename` (without any extension)
+### Commit messages
 
-## Self-maintenance process
+Use plain English commit messages without conventional commit prefixes (`feat:`, `fix:`, `refactor:`, etc.).
+Write a short summary line in imperative mood, followed by a blank line and bullet points if needed.
 
-When the user provides feedback about systemic corrections:
+### API evolution
 
-1. **Identify scope**: Is this Python-specific? Integration-specific? Project-wide?
-2. **Find target files**: Match to the appropriate instruction/rule files
-3. **Check for duplicates**: Ensure this isn't already covered elsewhere
-4. **Add actionable guideline**: Write as a directive
-5. **Update both systems**: Update both Copilot instruction AND Cursor rule
+When making changes, don't leave behind backwards-compatible interfaces for internal APIs.
+There should always be a complete clean changeover.
 
-## Rule content guidelines
+### Error context
 
-### Use semantic line breaks
+The main branch is always clean with no errors or warnings.
+Any errors, warnings, or test failures you encounter are directly related to recent changes in the current branch/PR.
+These issues must be fixed as part of the work - they indicate problems introduced by the changes being made.
 
-All instruction files should follow semantic line break conventions.
-One sentence per line, with optional breaks at clause boundaries for clarity.
+### Property access
 
-### Don't enumerate groups
+Always assume that accessed properties/fields which should exist do exist directly.
+Rely on errors occurring if they do not when they indicate a coding error and not a possibly None value.
+This is especially true in tests where you have added entities and then must access them later.
+Having None checks there reduces readability and makes the test more fragile to passing unexpectedly.
 
-When providing guidance about a category of things, describe the category pattern rather than listing members.
-Enumeration creates brittle rules that become outdated when the codebase changes.
+### Code review guidelines
 
-```markdown
-<!-- ❌ Bad: Enumeration -->
-Each element (Battery, Grid, Load, Solar, Node) must have...
+When reviewing code, rely on linting tools (Ruff and Pyright) to identify issues that they can detect.
+Do not report on issues that these tools already catch, such as:
 
-<!-- ✅ Good: Pattern description -->
-Each element type registered in ELEMENT_TYPES must have...
-```
+- Unused imports
+- Type errors
+- Style violations
+- Formatting issues
+- Other issues detectable by static analysis tools
 
-The test for good grouping: if you can't identify the group without enumerating it, it's not a well-defined group.
+Focus review comments on:
 
-### Actionable content
+- Logic errors and bugs
+- Architectural concerns
+- Performance issues
+- Security vulnerabilities
+- Code clarity and maintainability
+- Missing tests or documentation
 
-Every rule must be something the agent can act on.
-Remove marketing text and feature lists without guidance.
+This avoids false positives and redundant feedback that linting tools already provide.
 
-### Explanatory background
+## Universal code standards
 
-Background context is allowed when it improves decision-making.
-"We use uv" is useful context; "uv is fast" is marketing.
+- **Python**: 3.13+ with modern features (pattern matching, `str | None` syntax, f-strings, dataclasses)
+- **Type hints**: Required on all functions, methods, and variables
+- **Typing philosophy**: Type at boundaries, use TypedDict/TypeGuard for narrowing, prefer types over runtime checks
+- **Formatting**: Ruff (Python), Prettier (JSON), mdformat (Markdown)
+- **Linting**: Ruff
+- **Type checking**: Pyright
+- **Language**: American English for all code, comments, and documentation
+- **Testing**: pytest with coverage enforced by codecov on changed lines
 
-### Concise
+See [typing philosophy](../docs/developer-guide/typing.md) for detailed type patterns.
 
-Keep each rule file focused.
-If a rule file exceeds ~500 lines, consider splitting.
+### Units
 
-### DRY
+Use SI-derived units scaled for numerical stability:
 
-Link to documentation for detailed explanations.
-Rules contain directives; docs contain explanations.
+- Power: kilowatts (kW)
+- Energy: kilowatt-hours (kWh)
+- Time: hours (model layer) / seconds (rest of code)
 
-## What makes a good rule
+The model layer uses hours for time to keep LP solver values in the ideal range.
+The rest of the codebase uses seconds for time (Home Assistant convention).
+See [units guide](../docs/developer-guide/units.md) for rationale.
 
-| ✅ Good Rule                                 | ❌ Bad Rule                                         |
-| -------------------------------------------- | --------------------------------------------------- |
-| "Use `str \| None` not `Optional[str]`"      | "Python has several ways to express optional types" |
-| "Keep try blocks minimal"                    | "Error handling is important"                       |
-| "Use `asyncio.gather()` for multiple awaits" | "Async programming has many benefits"               |
-| "Elements are registered in ELEMENT_TYPES"   | "Battery, Grid, Load, PV, Node are elements"        |
+### Subentry naming conventions
 
-## When to update rules vs documentation
+When working with element subentries:
 
-| Update Rules When...               | Update Docs When...                |
-| ---------------------------------- | ---------------------------------- |
-| Adding a new directive             | Explaining why a pattern exists    |
-| Changing a coding standard         | Providing extended examples        |
-| Adding anti-patterns to avoid      | Documenting architecture decisions |
-| Agent-specific behavioral guidance | Human-readable tutorials           |
+- `subentry.title` MUST match the element's `name` field
+- `subentry.subentry_type` MUST match the element's `element_type` field
+- In `participants` dictionaries, keys represent element names (matching `subentry.title`)
 
-## File format reference
+These invariants are enforced throughout the codebase and must be maintained.
 
-### Copilot instructions
+### Translation and naming conventions
 
-```markdown
+HAEO follows Home Assistant's entity naming conventions for sensor translations.
+See `.github/instructions/translations.instructions.md` for detailed rules.
+
+### Version matching
+
+The version number must be consistent across:
+
+- `pyproject.toml` (`version = "x.y.z"`)
+- `custom_components/haeo/manifest.json` (`"version": "x.y.z"`)
+
+When updating version numbers, update both files together, then run `uv sync` to regenerate `uv.lock`.
+
+Key patterns for sensor display names using sentence case (capital first letter, rest lowercase):
+
+1. **Power sensors**: Action + noun pattern ("Import power", "Charge power")
+2. **Price sensors**: Qualifier + price pattern ("Import price", "Export price")
+3. **Shadow price sensors**: Constraint + "shadow price" suffix ("Max import power shadow price")
+4. **Connection sensors**: Use parameterized translations with `{source}` and `{target}` placeholders
+
+Avoid special characters in translation display names as they are used in entity ID generation.
+
+## Path-specific instructions
+
+This repository uses path-specific instruction files in `.github/instructions/` that apply additional context based on the files being edited.
+
+| Instruction File                                                                    | Applies To                                    | When To Use                                                                                    |
+| ----------------------------------------------------------------------------------- | --------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| [config-flow.instructions.md](.github/instructions/config-flow.instructions.md)     | `**/config_flow.py`, `**/flows/**`            | Developing config flows, element configuration UI, schema generation, validation logic         |
+| [documentation.instructions.md](.github/instructions/documentation.instructions.md) | `docs/**`                                     | Writing or updating user guides, developer documentation, modeling docs, adding examples       |
+| [elements.instructions.md](.github/instructions/elements.instructions.md)           | `custom_components/haeo/elements/**`          | Creating or modifying element adapters, schema/data types, field metadata                      |
+| [integration.instructions.md](.github/instructions/integration.instructions.md)     | `custom_components/haeo/**`                   | Home Assistant integration patterns, coordinator usage, entity development, exception handling |
+| [manifest.instructions.md](.github/instructions/manifest.instructions.md)           | `**/manifest.json`                            | Updating integration metadata, dependencies, version requirements                              |
+| [meta.instructions.md](.github/instructions/meta.instructions.md)                   | `.github/instructions/**`, `.cursor/rules/**` | Maintaining instruction files themselves, updating rules based on feedback                     |
+| [model.instructions.md](.github/instructions/model.instructions.md)                 | `custom_components/haeo/core/model/**`        | Developing LP model elements, constraints, cost functions, optimization logic                  |
+| [python.instructions.md](.github/instructions/python.instructions.md)               | `**/*.py`                                     | All Python code - type hints, async patterns, error handling, code style                       |
+| [scenarios.instructions.md](.github/instructions/scenarios.instructions.md)         | `tests/scenarios/**`                          | Creating or maintaining end-to-end scenario tests with realistic data                          |
+| [tests.instructions.md](.github/instructions/tests.instructions.md)                 | `tests/**`                                    | Writing unit tests, integration tests, test fixtures, coverage requirements                    |
+| [translations.instructions.md](.github/instructions/translations.instructions.md)   | `**/translations/**`                          | Adding or updating user-facing strings, sensor names, error messages                           |
+
+**Note**: The `python.instructions.md` file applies to all Python files and provides universal Python coding standards.
+Other instruction files provide domain-specific guidance that builds upon these universal standards.
+
+## Documentation
+
+- [Documentation guidelines](../docs/developer-guide/documentation-guidelines.md) - Writing and maintaining docs
+- [Units guide](../docs/developer-guide/units.md) - Unit conversion and conventions
+- [Testing guide](../docs/developer-guide/testing.md) - Test patterns and scenarios
+
+## Self-maintenance
+
+When the user provides feedback about systemic corrections (coding patterns, style issues, architectural decisions, or recurring mistakes), update the appropriate instruction file to capture that feedback for future sessions.
+
+See `.github/instructions/meta.instructions.md` for guidance on maintaining both Copilot instructions and Cursor rules in sync.
+
 ---
-applyTo: "glob/pattern/**"
----
-
-# Title
-
-Content...
-```
-
-### Cursor rules
-
-```markdown
----
-description: "Brief description"
-globs: ["glob/pattern/**"]
-alwaysApply: false
----
-
-# Title
-
-Content...
-```
-
-### Reusable prompts
-
-```markdown
----
-description: Brief description of what the prompt does
----
-
-# Prompt Title
-
-Instructions for the AI agent...
-```
-
-Prompt files use `.prompt.md` extension in `.github/prompts/` (for VSCode).
-Individual files are symlinked to `.cursor/commands/` with `.md` extension (for Cursor).
-Each prompt file in `.github/prompts/` should have a corresponding symlink in `.cursor/commands/`.
-
----
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/hass-energy) — claim your Tome and manage your conversions.
-<!-- tomevault:4.0:agents_md:2026-04-10 -->
+> Source: [hass-energy/haeo](https://github.com/hass-energy/haeo) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-05-05 -->
