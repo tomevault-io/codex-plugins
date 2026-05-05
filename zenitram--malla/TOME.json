@@ -4,7 +4,7 @@
   "repo": "malla",
   "description": "Malla is a web analyzer for Meshtastic networks based on MQTT data.",
   "type": "config",
-  "source_format": ".cursor/rules/*.mdc",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/zenitraM/malla",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-04T21:18:30Z"
+  "distributed_at": "2026-05-05T03:05:05Z"
 }
