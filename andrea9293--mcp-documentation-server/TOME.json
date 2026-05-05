@@ -1,0 +1,44 @@
+{
+  "name": "mcp-documentation-server",
+  "owner": "andrea9293",
+  "repo": "mcp-documentation-server",
+  "description": "MCP Documentation Server - Bridge the AI Knowledge Gap.  \u2728 Features: Document management \u2022 Gemini integration \u2022 AI-powered semantic search \u2022 File uploads \u2022 Smart chunking \u2022 Multilingual support \u2022 Zero-setup  \ud83c\udfaf Perfect for: New frameworks \u2022 API docs \u2022 Internal guides ",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/andrea9293/mcp-documentation-server",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-05T02:52:04Z"
+}
