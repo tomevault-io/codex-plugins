@@ -1,0 +1,209 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Project Overview
+
+Swift CLI tool (`mcs`) that configures Claude Code with MCP servers, plugins, skills, hooks, and settings. Pure pack management engine with zero bundled content — all features come from external tech packs. Distributed via Homebrew.
+
+## Commands
+
+```bash
+# Development
+swift build                      # Build the CLI
+swift test                       # Run tests
+swift build -c release --arch arm64 --arch x86_64  # Universal binary
+
+# CLI usage (after install)
+mcs sync [path]                  # Sync project: multi-select packs, compose artifacts (default command)
+mcs sync --pack ios              # Non-interactive: apply specific packs (repeatable)
+mcs sync --all                   # Apply all registered packs without prompts
+mcs sync --dry-run               # Preview what would change
+mcs sync --customize             # Per-pack component selection
+mcs sync --global                # Sync global scope (MCP servers, brew, plugins to ~/.claude/)
+mcs sync --lock                  # Checkout locked versions from mcs.lock.yaml
+mcs sync --update                # Fetch latest versions and update mcs.lock.yaml
+mcs doctor                       # Diagnose installation health
+mcs doctor --fix                 # Diagnose and auto-fix issues
+mcs doctor --pack ios            # Only check a specific pack
+mcs doctor --global              # Check globally-configured packs only
+mcs pack add <source>            # Add a tech pack (git URL, GitHub shorthand, or local path)
+mcs pack add user/repo           # GitHub shorthand → https://github.com/user/repo.git
+mcs pack add /path/to/pack       # Add a local pack (read in-place, no clone)
+mcs pack add <url> --ref <tag>   # Add at a specific tag, branch, or commit (git only)
+mcs pack add <url> --preview     # Preview pack contents without installing
+mcs pack remove <name>           # Remove an external tech pack
+mcs pack remove <name> --force   # Remove without confirmation
+mcs pack list                    # List registered external packs
+mcs pack update [name]           # Update pack(s) to latest version (skips local packs)
+mcs pack validate [source]       # Validate a tech pack (path, identifier, or current directory)
+mcs cleanup                      # Find and delete backup files
+mcs cleanup --force              # Delete backups without confirmation
+mcs export <dir>                 # Export current config as a tech pack
+mcs export <dir> --global        # Export global scope (~/.claude/)
+mcs export <dir> --identifier id # Set pack identifier (prompted if omitted)
+mcs export <dir> --non-interactive  # Include everything without prompts
+mcs export <dir> --dry-run       # Preview what would be exported
+mcs check-updates                # Check for pack and CLI updates
+mcs check-updates --hook         # Run as SessionStart hook (24-hour cooldown, respects config)
+mcs check-updates --json         # Machine-readable JSON output
+mcs config list                  # Show all settings with current values
+mcs config get <key>             # Get a specific setting value
+mcs config set <key> <value>     # Set a configuration value (true/false)
+```
+
+## Architecture
+
+### Swift Package Structure
+- **Package.swift** — swift-tools-version: 6.0, macOS 13+, deps: swift-argument-parser, Yams
+- **Sources/mcs/** — main executable target
+- **Tests/MCSTests/** — test target
+
+### Entry Point
+- `CLI.swift` — `@main` struct, `MCSVersion.current`, subcommand registration (`SyncCommand` is the default subcommand)
+
+### Core (`Sources/mcs/Core/`)
+- `Constants.swift` — centralized string constants (file names, CLI paths, JSON keys, external packs, plugins)
+- `Environment.swift` — paths, arch detection, brew path, claude-home cwd detection (`isInsideClaudeHome(_:)`)
+- `CLIOutput.swift` — ANSI colors, logging, prompts, multi-select, doctor summary
+- `ShellRunner.swift` — Process execution wrapper
+- `Settings.swift` — Codable model for `settings.json` and `settings.local.json`, deep-merge
+- `Backup.swift` — timestamped backups for mixed-ownership files (CLAUDE.local.md), backup discovery and deletion
+- `GitignoreManager.swift` — global gitignore management, core entry list
+- `ClaudeIntegration.swift` — `claude mcp add/remove` (with scope support), `claude plugin install/remove`
+- `ClaudePrerequisite.swift` — Claude Code CLI availability check with optional Homebrew auto-install
+- `Homebrew.swift` — brew detection, package install/uninstall
+- `FileHasher.swift` — SHA-256 file and directory hashing via CryptoKit (used by `PackTrustManager` and `ComponentExecutor`)
+- `FileLock.swift` — POSIX `flock()` process lock and `LockedCommand` protocol for mutually exclusive CLI commands
+- `Lockfile.swift` — `mcs.lock.yaml` model for pinning pack commits
+- `PathContainment.swift` — centralized path-boundary checks and relative-path utilities (symlink-safe containment, traversal prevention)
+- `PluginRef.swift` — parsed `name@repo` plugin references with marketplace resolution
+- `ProjectDetector.swift` — walk-up project root detection (`.git/` or `CLAUDE.local.md`)
+- `SettingsHasher.swift` — deterministic SHA-256 hashing of per-pack settings key-value pairs for drift detection
+- `ProjectState.swift` — per-project `.claude/.mcs-project` JSON state (configured packs, per-pack `PackArtifactRecord` with ownership tracking, version)
+- `ProjectIndex.swift` — cross-project index (`~/.mcs/projects.yaml`) mapping project paths to pack IDs for reference counting
+- `MCSError.swift` — error types for the CLI
+- `MCSConfig.swift` — user preferences (`~/.mcs/config.yaml`): `update-check-packs`, `update-check-cli`, `telemetry`, `generate-lockfile`
+- `UpdateChecker.swift` — pack freshness checks (`git ls-remote`), CLI version checks (`git ls-remote --tags`), cooldown management
+
+### TechPack System (`Sources/mcs/TechPack/`)
+- `TechPack.swift` — protocol for tech packs (components, templates, hooks, doctor checks, project configuration)
+- `Component.swift` — ComponentDefinition with install actions, ComponentType enum, MCPServerConfig (with scope), CopyFileType (with project-scoped directories)
+- `PromptDefinition.swift` — PromptDefinition, PromptType, PromptOption (prompt types used by TechPack protocol)
+- `TechPackRegistry.swift` — registry of available packs (external only), filtering by installed state
+- `DependencyResolver.swift` — topological sort of component dependencies with cycle detection
+
+### External Pack System (`Sources/mcs/ExternalPack/`)
+- `ExternalPackManifest.swift` — YAML `techpack.yaml` schema (Codable models for components, templates, hooks, doctor checks, configure scripts). Supports **shorthand syntax** (`brew:`, `mcp:`, `plugin:`, `hook:`, `command:`, `skill:`, `agent:`, `settingsFile:`, `gitignore:`, `shell:`) that infers `type` + `installAction` from a single key. `shellInteractive: true` alongside `shell:` allocates a PTY for commands needing terminal access (e.g. `sudo`)
+- `ExternalPackAdapter.swift` — bridges `ExternalPackManifest` to the `TechPack` protocol
+- `ExternalPackLoader.swift` — discovers and loads packs from `~/.mcs/packs/` (git) or absolute paths (local)
+- `PackFetcher.swift` — Git clone/pull for pack repositories
+- `PackSourceResolver.swift` — resolves user input into git URL or local path (URL schemes, filesystem, GitHub shorthand)
+- `PackRegistryFile.swift` — YAML registry of installed external packs (`~/.mcs/registry.yaml`)
+- `PackTrustManager.swift` — pack trust verification
+- `PromptExecutor.swift` — executes pack prompts (interactive value resolution during sync)
+- `ScriptRunner.swift` — sandboxed script execution for pack scripts
+- `ExternalDoctorCheck.swift` — factory for converting YAML doctor check definitions to `DoctorCheck` instances
+- `PackHeuristics.swift` — heuristic validation checks for `mcs pack validate` (empty pack, root source copy, missing files, unreferenced files, MCP dependency gaps, python module paths)
+
+### Doctor (`Sources/mcs/Doctor/`)
+- `DoctorRunner.swift` — 5-layer check orchestration with project-aware pack resolution
+- `CoreDoctorChecks.swift` — check structs (CommandCheck, MCPServerCheck, PluginCheck, HookCheck, GitignoreCheck, CommandFileCheck, FileExistsCheck, FileContentCheck, HookSettingsCheck, SettingsKeysCheck, SettingsDriftCheck, PackGitignoreCheck, ProjectIndexCheck)
+- `DerivedDoctorChecks.swift` — `deriveDoctorCheck()` extension on ComponentDefinition
+- `ProjectDoctorChecks.swift` — project-scoped checks (CLAUDE.local.md freshness, state file)
+- `SectionValidator.swift` — validation of CLAUDE.local.md section markers
+
+### Commands (`Sources/mcs/Commands/`)
+- `SyncCommand.swift` — primary command (`mcs sync`), handles both project-scoped and global-scoped sync with `--pack`, `--all`, `--dry-run`, `--customize`, `--global`, `--lock`, `--update` flags. `guardClaudeHomeCwd()` at the top of `perform()` rejects/redirects runs from `~/.claude` or `$HOME` to prevent silent corruption of the global scope
+- `DoctorCommand.swift` — health checks with optional --fix and --pack filter
+- `CleanupCommand.swift` — backup file management with --force flag
+- `PackCommand.swift` — `mcs pack add/remove/list/update/validate` subcommands; uses `PackSourceResolver` for 3-tier input detection (URL schemes → filesystem paths → GitHub shorthand)
+- `ValidatePackCommand.swift` — `mcs pack validate` read-only subcommand; structural validation via `ExternalPackLoader.validate(at:)` + heuristic checks via `PackHeuristics`
+- `ExportCommand.swift` — export wizard: reads live configuration and generates a reusable tech pack directory; supports `--global`, `--identifier`, `--non-interactive`, `--dry-run`
+- `CheckUpdatesCommand.swift` — lightweight update checker for packs (`git ls-remote`) and CLI version (`git ls-remote --tags`); respects config keys and 24-hour cooldown
+- `ConfigCommand.swift` — `mcs config list/get/set` for managing user preferences; `set` immediately syncs the SessionStart hook in `~/.claude/settings.json`
+
+### Export (`Sources/mcs/Export/`)
+- `ConfigurationDiscovery.swift` — reads live config sources (settings, MCP servers, hooks, skills, CLAUDE.md, gitignore), produces `DiscoveredConfiguration` model
+- `ManifestBuilder.swift` — converts selected artifacts into YAML using custom renderer (ordered metadata, section comments, proper quoting)
+- `PackWriter.swift` — writes output directory with symlink resolution for copied files
+
+### Sync (`Sources/mcs/Sync/`)
+- `Configurator.swift` — unified multi-pack convergence engine parameterized by `SyncStrategy` (artifact tracking, settings composition, CLAUDE file writing, gitignore). `unconfigurePack()` handles removal for both `mcs sync` (deselection) and `mcs pack remove` (federated across all affected scopes)
+- `ConfiguratorSupport.swift` — shared utilities for `Configurator` and `SyncStrategy` implementations (executor factory, gitignore setup, dry-run summary, settings composition helpers)
+- `SyncScope.swift` — pure data struct capturing path-level differences between project and global scopes
+- `SyncStrategy.swift` — protocol isolating scope-specific behavior (artifact installation, settings/CLAUDE composition, file removal)
+- `ProjectSyncStrategy.swift` — project-scope strategy (settings.local.json, CLAUDE.local.md, repo name resolution)
+- `GlobalSyncStrategy.swift` — global-scope strategy (settings.json preservation, brew/plugin ownership, MCP scope override to "user")
+- `ComponentExecutor.swift` — dispatches install actions (brew, MCP servers, plugins, gitignore, project-scoped file copy/removal)
+- `CrossPackPromptResolver.swift` — deduplicates shared prompt keys across multiple packs (groups by key, executes once for shared `input`/`select` prompts)
+- `DestinationCollisionResolver.swift` — auto-namespaces `copyPackFile` destinations when multiple packs target the same `(destination, fileType)` pair
+- `PackInstaller.swift` — auto-installs missing pack components
+- `PackUpdater.swift` — shared fetch → validate → trust cycle for updating a single git pack (used by `UpdatePack` and `LockfileOperations`)
+- `ResourceRefCounter.swift` — two-tier reference counting (global artifacts + project index manifests) for safe brew/plugin removal
+- `LockfileOperations.swift` — reads/writes `mcs.lock.yaml`, checks out locked versions, updates lockfile
+- `SyncDeltaSummary.swift` — computes add/remove/keep deltas between previous and selected pack sets and renders the review-changes summary shown before destructive sync operations
+
+### Templates (`Sources/mcs/Templates/`)
+- `TemplateEngine.swift` — `__PLACEHOLDER__` substitution
+- `TemplateComposer.swift` — section markers for composed files (`<!-- mcs:begin/end -->`), section parsing, user content preservation
+
+## Code Style
+
+SwiftFormat and SwiftLint enforce consistent code style. Both are installed via Homebrew.
+
+```bash
+# Format modified files (run before committing)
+swiftformat <file-or-directory>
+
+# Lint — check without modifying (CI runs these with --strict)
+swiftformat --lint .
+swiftlint
+
+# Auto-fix lint issues
+swiftlint --fix
+```
+
+- **SwiftFormat runs first**, then SwiftLint — SwiftFormat owns formatting rules, SwiftLint owns semantic rules
+- Config files: `.swiftformat` and `.swiftlint.yml` at project root
+- CI runs both in strict mode (warnings become errors) with GitHub Actions inline annotations
+- SwiftLint excludes `Tests/` — only Sources and Package.swift are linted
+- **Never use `try?` to silently discard errors** — use `do/catch` and surface the error (via `output.warn()`, logging, or propagation). `try?` hides root causes and makes debugging impossible. The only acceptable use is when the absence of a result is the *entire* semantic meaning (e.g., `FileManager.fileExists` alternative)
+
+## Testing
+
+- Test files mirror source: `FooTests.swift` tests `Foo.swift`
+- Run a single test class: `swift test --filter MCSTests.FooTests`
+- Tests construct all state inline; no external fixtures or shared setup
+- **Important**: `swift test` output does not display in Claude Code's terminal. Redirect to a file and read it: `swift test > .test-output/results.txt 2>&1` then read `.test-output/results.txt`
+- **Integration tests are mandatory for new features** that touch components, settings composition, hook entries, or doctor checks — add cases to `LifecycleIntegrationTests.swift` (sync → doctor lifecycle) or `DoctorRunnerIntegrationTests.swift` (doctor-specific flows)
+- Integration tests use `LifecycleTestBed` for sandbox setup — see existing tests for the pattern
+
+## Git
+
+- **Never amend commits** — always create new commits so the change history stays trackable
+- **Never force-push** — use regular `git push` only
+- **Always run `swiftformat` and `swiftlint` on changed files before committing** — CI will reject PRs that fail lint. Run `swiftformat <changed-files>` then `swiftlint` to catch issues locally
+
+## Key Design Decisions
+
+- **Pure engine, zero bundled content**: `mcs` ships no templates, hooks, settings, or skills — all features come from external packs users add via `mcs pack add`
+- **`mcs sync` is the primary command**: per-project multi-select of registered packs, fully idempotent convergence (add/remove/update), per-project artifact placement. `--global` flag handles global-scope install
+- **Per-project artifacts**: skills, hooks, commands, and `settings.local.json` go to `<project>/.claude/`; only brew packages and plugins are global
+- **MCP scope defaults to `local`**: per-user, per-project isolation via `claude mcp add -s local` (stored in `~/.claude.json` keyed by project path)
+- **Convergent sync**: `ProjectState` records per-pack `PackArtifactRecord` (MCP servers, files, template sections, hook commands, settings keys, settings hash, brew packages, plugins, gitignore entries, file hashes); re-running converges to desired state by diffing previous vs. selected packs. `mcs pack remove` discovers all scopes via `ProjectIndex` and runs the same `unconfigurePack()` convergence for each
+- **External pack protocol**: `TechPack` protocol with `ExternalPackAdapter` bridging YAML manifests (`techpack.yaml`) to the same install/doctor/sync flows
+- **Section markers**: composed files use `<!-- mcs:begin/end -->` HTML comments to separate tool-managed content from user content
+- **Settings composition**: each pack's hook entries compose into `<project>/.claude/settings.local.json` as individual `HookGroup` entries
+- **Backup for mixed-ownership files**: timestamped backup before modifying files with user content (CLAUDE.local.md); tool-managed files are not backed up since they can be regenerated
+- **Component-derived doctor checks**: `ComponentDefinition` is the single source of truth — `deriveDoctorCheck()` auto-generates verification from `installAction`, supplementary checks handle extras
+- **Project awareness**: doctor detects project root (walk-up for `.git/`), resolves packs from `.claude/.mcs-project` before falling back to section marker inference, then to global manifest
+- **Lockfile support (opt-in)**: `mcs.lock.yaml` pins pack commits for reproducible builds. Generation is opt-in — enable with `mcs config set generate-lockfile true` to write on every sync, or pass `--update` to fetch latest and write once. `--lock` checks out pinned commits from an existing lockfile. Tri-state semantics on `generate-lockfile`: `true` writes, `false` is silent (explicit opt-out), `nil` (never configured) surfaces a one-time drift warning if a stale lockfile exists — the upgrade nudge
+- **Local packs**: `mcs pack add /path` registers a pack read in-place — no git clone, no `mcs pack update`, no directory deletion on remove. Uses `isLocal: Bool?` on `PackEntry` (backward-compatible) and `commitSHA: "local"` sentinel. Trust verification is skipped since scripts change during development
+- **GitHub shorthand**: `mcs pack add user/repo` expands to `https://github.com/user/repo.git`. Filesystem paths are checked before shorthand regex to prevent ambiguity with relative paths like `org/pack`
+- **Cross-project reference counting**: `ProjectIndex` (`~/.mcs/projects.yaml`) tracks which projects use which packs; `ResourceRefCounter` checks all scopes before removing shared brew packages or plugins. Conservative by default — if state is unreadable, assume resource is still needed. MCP servers are project-independent (scoped via `-s local`) and skip ref counting
+- **Conditional copyPackFile namespacing**: `copyPackFile` destinations are installed flat by default. When two+ packs define the same `(destination, fileType)`, the `DestinationCollisionResolver` auto-namespaces: subdirectory prefix (`<pack-id>/`) for hooks/commands/agents/generic, or directory name suffix (`-<pack-id>`) for skills (which require flat one-level directories). First pack keeps the clean name; subsequent packs get namespaced. Skill renames emit a warning
+
+---
+> Source: [mcs-cli/mcs](https://github.com/mcs-cli/mcs) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-04-22 -->
