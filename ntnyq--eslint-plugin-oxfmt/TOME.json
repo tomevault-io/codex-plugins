@@ -1,0 +1,44 @@
+{
+  "name": "eslint-plugin-oxfmt",
+  "owner": "ntnyq",
+  "repo": "eslint-plugin-oxfmt",
+  "description": ":package: An ESLint plugin for formatting code with oxfmt - A blazing fast formatter powered by Rust.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/ntnyq/eslint-plugin-oxfmt",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-05T15:49:49Z"
+}
