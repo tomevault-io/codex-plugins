@@ -7,12 +7,12 @@ LEARN HOW TO BUILD UP YOUR REVIT MCP
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [shuotao/REVIT_MCP_study](https://github.com/shuotao/REVIT_MCP_study).
+Original source: `CLAUDE.md` in [shuotao/REVIT_MCP_study](https://github.com/shuotao/REVIT_MCP_study).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
