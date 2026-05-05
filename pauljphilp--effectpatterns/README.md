@@ -7,14 +7,14 @@ A community-driven knowledge base of practical patterns for Effect-TS.
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [PaulJPhilp/EffectPatterns](https://github.com/PaulJPhilp/EffectPatterns).
+Original source: `copilot-instructions.md` in [PaulJPhilp/EffectPatterns](https://github.com/PaulJPhilp/EffectPatterns).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/PaulJPhilp/EffectPatterns](https://github.com/PaulJPhilp/EffectPatterns)
