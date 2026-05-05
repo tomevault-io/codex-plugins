@@ -1,0 +1,44 @@
+{
+  "name": "Minesweeper3D",
+  "owner": "doggy8088",
+  "repo": "Minesweeper3D",
+  "description": "\u4e00\u6b3e\u4f7f\u7528 Three.js \u6253\u9020\u7684 3D \u8996\u89ba\u6548\u679c\u96d9\u4eba\u5c0d\u6230\u8e29\u5730\u96f7\u904a\u6232",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/doggy8088/Minesweeper3D",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-05T03:13:19Z"
+}
