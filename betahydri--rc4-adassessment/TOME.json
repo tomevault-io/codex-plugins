@@ -1,0 +1,44 @@
+{
+  "name": "RC4-ADAssessment",
+  "owner": "BetaHydri",
+  "repo": "RC4-ADAssessment",
+  "description": "PowerShell toolkit for assessing DES/RC4 Kerberos encryption in Active Directory. Detects weak encryption across domain controllers, trusts, and event logs. Built for the January 2026 update and July 2026 RC4 removal deadlines.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/BetaHydri/RC4-ADAssessment",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-05T15:38:28Z"
+}
