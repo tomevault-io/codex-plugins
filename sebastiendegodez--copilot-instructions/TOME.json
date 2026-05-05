@@ -1,0 +1,44 @@
+{
+  "name": "copilot-instructions",
+  "owner": "SebastienDegodez",
+  "repo": "copilot-instructions",
+  "description": "A comprehensive codebase of best practices, coding rules, and workflow automation for AI-assisted development with GitHub Copilot. Includes DDD, Clean Architecture, testing, commit conventions, and more. Reference implementation for modern .NET backend projects.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/SebastienDegodez/copilot-instructions",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-05T03:56:27Z"
+}
