@@ -1,0 +1,44 @@
+{
+  "name": "InkyCloud-F1",
+  "owner": "Rhiz3K",
+  "repo": "InkyCloud-F1",
+  "description": "F1 E-Ink Calendar - Generate BMP images for E-Ink displays",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/Rhiz3K/InkyCloud-F1",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-05T00:18:42Z"
+}
