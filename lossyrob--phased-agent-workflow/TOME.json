@@ -1,0 +1,219 @@
+{
+  "name": "phased-agent-workflow",
+  "owner": "lossyrob",
+  "repo": "phased-agent-workflow",
+  "description": "Context-Driven Development for GitHub Copilot",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "multi-model-review",
+      "path": ".github/skills/multi-model-review",
+      "github_url": "https://github.com/lossyrob/phased-agent-workflow/tree/main/.github/skills/multi-model-review",
+      "description": ""
+    },
+    {
+      "name": "paw-code-research",
+      "path": "skills/paw-code-research",
+      "github_url": "https://github.com/lossyrob/phased-agent-workflow/tree/main/skills/paw-code-research",
+      "description": ""
+    },
+    {
+      "name": "paw-docs-guidance",
+      "path": "skills/paw-docs-guidance",
+      "github_url": "https://github.com/lossyrob/phased-agent-workflow/tree/main/skills/paw-docs-guidance",
+      "description": ""
+    },
+    {
+      "name": "paw-final-review",
+      "path": "skills/paw-final-review",
+      "github_url": "https://github.com/lossyrob/phased-agent-workflow/tree/main/skills/paw-final-review",
+      "description": ""
+    },
+    {
+      "name": "paw-git-operations",
+      "path": "skills/paw-git-operations",
+      "github_url": "https://github.com/lossyrob/phased-agent-workflow/tree/main/skills/paw-git-operations",
+      "description": ""
+    },
+    {
+      "name": "paw-impl-review",
+      "path": "skills/paw-impl-review",
+      "github_url": "https://github.com/lossyrob/phased-agent-workflow/tree/main/skills/paw-impl-review",
+      "description": ""
+    },
+    {
+      "name": "paw-implement",
+      "path": "skills/paw-implement",
+      "github_url": "https://github.com/lossyrob/phased-agent-workflow/tree/main/skills/paw-implement",
+      "description": ""
+    },
+    {
+      "name": "paw-init",
+      "path": "skills/paw-init",
+      "github_url": "https://github.com/lossyrob/phased-agent-workflow/tree/main/skills/paw-init",
+      "description": ""
+    },
+    {
+      "name": "paw-plan-review",
+      "path": "skills/paw-plan-review",
+      "github_url": "https://github.com/lossyrob/phased-agent-workflow/tree/main/skills/paw-plan-review",
+      "description": ""
+    },
+    {
+      "name": "paw-planning",
+      "path": "skills/paw-planning",
+      "github_url": "https://github.com/lossyrob/phased-agent-workflow/tree/main/skills/paw-planning",
+      "description": ""
+    },
+    {
+      "name": "paw-planning-docs-review",
+      "path": "skills/paw-planning-docs-review",
+      "github_url": "https://github.com/lossyrob/phased-agent-workflow/tree/main/skills/paw-planning-docs-review",
+      "description": ""
+    },
+    {
+      "name": "paw-pr",
+      "path": "skills/paw-pr",
+      "github_url": "https://github.com/lossyrob/phased-agent-workflow/tree/main/skills/paw-pr",
+      "description": ""
+    },
+    {
+      "name": "paw-review-baseline",
+      "path": "skills/paw-review-baseline",
+      "github_url": "https://github.com/lossyrob/phased-agent-workflow/tree/main/skills/paw-review-baseline",
+      "description": ""
+    },
+    {
+      "name": "paw-review-critic",
+      "path": "skills/paw-review-critic",
+      "github_url": "https://github.com/lossyrob/phased-agent-workflow/tree/main/skills/paw-review-critic",
+      "description": ""
+    },
+    {
+      "name": "paw-review-gap",
+      "path": "skills/paw-review-gap",
+      "github_url": "https://github.com/lossyrob/phased-agent-workflow/tree/main/skills/paw-review-gap",
+      "description": ""
+    },
+    {
+      "name": "paw-review-github",
+      "path": "skills/paw-review-github",
+      "github_url": "https://github.com/lossyrob/phased-agent-workflow/tree/main/skills/paw-review-github",
+      "description": ""
+    },
+    {
+      "name": "paw-review-response",
+      "path": "skills/paw-review-response",
+      "github_url": "https://github.com/lossyrob/phased-agent-workflow/tree/main/skills/paw-review-response",
+      "description": ""
+    },
+    {
+      "name": "paw-review-workflow",
+      "path": "skills/paw-review-workflow",
+      "github_url": "https://github.com/lossyrob/phased-agent-workflow/tree/main/skills/paw-review-workflow",
+      "description": ""
+    },
+    {
+      "name": "paw-rewind",
+      "path": "skills/paw-rewind",
+      "github_url": "https://github.com/lossyrob/phased-agent-workflow/tree/main/skills/paw-rewind",
+      "description": ""
+    },
+    {
+      "name": "paw-sot",
+      "path": "skills/paw-sot",
+      "github_url": "https://github.com/lossyrob/phased-agent-workflow/tree/main/skills/paw-sot",
+      "description": ""
+    },
+    {
+      "name": "paw-spec",
+      "path": "skills/paw-spec",
+      "github_url": "https://github.com/lossyrob/phased-agent-workflow/tree/main/skills/paw-spec",
+      "description": ""
+    },
+    {
+      "name": "paw-spec-research",
+      "path": "skills/paw-spec-research",
+      "github_url": "https://github.com/lossyrob/phased-agent-workflow/tree/main/skills/paw-spec-research",
+      "description": ""
+    },
+    {
+      "name": "paw-spec-review",
+      "path": "skills/paw-spec-review",
+      "github_url": "https://github.com/lossyrob/phased-agent-workflow/tree/main/skills/paw-spec-review",
+      "description": ""
+    },
+    {
+      "name": "paw-status",
+      "path": "skills/paw-status",
+      "github_url": "https://github.com/lossyrob/phased-agent-workflow/tree/main/skills/paw-status",
+      "description": ""
+    },
+    {
+      "name": "paw-transition",
+      "path": "skills/paw-transition",
+      "github_url": "https://github.com/lossyrob/phased-agent-workflow/tree/main/skills/paw-transition",
+      "description": ""
+    },
+    {
+      "name": "paw-work-shaping",
+      "path": "skills/paw-work-shaping",
+      "github_url": "https://github.com/lossyrob/phased-agent-workflow/tree/main/skills/paw-work-shaping",
+      "description": ""
+    },
+    {
+      "name": "paw-workflow",
+      "path": "skills/paw-workflow",
+      "github_url": "https://github.com/lossyrob/phased-agent-workflow/tree/main/skills/paw-workflow",
+      "description": ""
+    },
+    {
+      "name": "prompt-annotation",
+      "path": ".github/skills/prompt-annotation",
+      "github_url": "https://github.com/lossyrob/phased-agent-workflow/tree/main/.github/skills/prompt-annotation",
+      "description": ""
+    },
+    {
+      "name": "skill-creator",
+      "path": ".github/skills/skill-creator",
+      "github_url": "https://github.com/lossyrob/phased-agent-workflow/tree/main/.github/skills/skill-creator",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/lossyrob/phased-agent-workflow",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-05T17:41:09Z"
+}
