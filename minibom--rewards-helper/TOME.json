@@ -1,0 +1,44 @@
+{
+  "name": "Rewards_Helper",
+  "owner": "minibom",
+  "repo": "Rewards_Helper",
+  "description": "M\u1ed9t ti\u1ec7n \u00edch m\u1edf r\u1ed9ng cho tr\u00ecnh duy\u1ec7t Chrome gi\u00fap t\u1ef1 \u0111\u1ed9ng h\u00f3a vi\u1ec7c t\u00ecm ki\u1ebfm tr\u00ean Bing \u0111\u1ec3 t\u00edch l\u0169y \u0111i\u1ec3m Microsoft Rewards m\u1ed9t c\u00e1ch hi\u1ec7u qu\u1ea3. Ti\u1ec7n \u00edch \u0111\u01b0\u1ee3c x\u00e2y d\u1ef1ng v\u1edbi Manifest V3, \u0111\u1ea3m b\u1ea3o hi\u1ec7u su\u1ea5t cao v\u00e0 tu\u00e2n th\u1ee7 c\u00e1c ti\u00eau chu\u1ea9n b\u1ea3o m\u1eadt m\u1edbi nh\u1ea5t.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/minibom/Rewards_Helper",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-05T18:43:14Z"
+}
