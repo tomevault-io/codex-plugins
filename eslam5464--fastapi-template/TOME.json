@@ -1,0 +1,44 @@
+{
+  "name": "Fastapi-Template",
+  "owner": "eslam5464",
+  "repo": "Fastapi-Template",
+  "description": "\ud83d\ude80 Production-ready FastAPI template with JWT authentication, PostgreSQL integration, async support, clean architecture, and modern development tools.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/eslam5464/Fastapi-Template",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-05T23:58:21Z"
+}
