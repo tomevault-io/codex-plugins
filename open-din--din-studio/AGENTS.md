@@ -1,5 +1,5 @@
 
-Follow @AGENTS.md. For node and catalog work use @project/skills/editor-node-change/SKILL.md and keep `ui/editor/nodeCatalog.ts` aligned with codegen tests.
+Follow @AGENTS.md. Editor nodes → `project/COVERAGE_MANIFEST.json`. Other surfaces → `project/SURFACE_MANIFEST.json`. Use @project/skills/surface-manifest-update/SKILL.md.
 
 ---
 > Source: [open-din/din-studio](https://github.com/open-din/din-studio) — distributed by [TomeVault](https://tomevault.io).
