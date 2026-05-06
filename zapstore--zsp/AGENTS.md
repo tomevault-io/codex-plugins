@@ -1,62 +1,56 @@
 
-# Go Conventions
+# zsp — Architecture
 
-## Style
+## Core Principle
 
-- Standard library style. Run `gofmt`. No third-party linters beyond `go vet`.
-- Use `internal/` for private packages. Public API surface should be minimal.
-- Prefer flat package structure within `internal/` — one package per concern, not deep nesting.
-- Reference existing patterns in the same project before inventing new ones.
+`zsp` is a single-binary CLI. All logic lives in `internal/`. `main.go` dispatches subcommands and handles exit codes — nothing else.
 
-## Error Handling
+## Package Layout
 
-- Wrap errors with `fmt.Errorf("context: %w", err)` — always add context.
-- Return errors; don't panic. Panics are only acceptable for programmer bugs (unreachable code).
-- Use `errors.Is` / `errors.As` for sentinel and typed error checks.
-- Define sentinel errors as package-level `var ErrFoo = errors.New("foo")`.
+```
+main.go                  Entry point, subcommand dispatch (publish, identity, apk)
+internal/
+  source/                APK acquisition — one file per source type
+  apk/                   APK parsing, certificate extraction, icon extraction
+  nostr/                 Signing (nsec, NIP-46, NIP-07), relay publishing, event builders
+  workflow/              Publish flow orchestration (the only place that wires sources → nostr)
+  config/                YAML config loading, validation, wizard
+  ui/                    Prompts, spinners, selection, color output
+  picker/                APK ranking and selection (ML model + heuristics)
+  identity/              X.509 loading, NIP-C1 proof generation and verification
+  cli/                   Flag parsing, signal handling, options structs
+  help/                  Help text rendering
+  blossom/               Blossom CDN client (upload)
+testdata/
+  configs/               Example YAML configs (one per source type)
+  fixtures/              Test fixtures
+```
 
-## Testing
+## Dependency Rules
 
-- Table-driven tests. Name subtests clearly.
-- Test files live next to the code they test (`foo_test.go` beside `foo.go`).
-- Use `testdata/` for fixtures.
-- No test frameworks — standard `testing` package only.
+- `workflow` is the only package that imports across domains (source + nostr + apk + picker)
+- `main.go` imports `workflow`, `config`, `cli`, `ui`, `help`, `identity`, `apk`, `picker`, `source`
+- `nostr`, `source`, `apk`, `picker`, `identity` must not import each other
+- `ui` must not import business logic packages
 
-## Dependencies
+## Adding a New Source
 
-- Prefer the standard library. Add a dependency only when it saves significant complexity.
-- All projects use `github.com/nbd-wtf/go-nostr` for Nostr operations.
-- Pin dependency versions via `go.sum`. Run `go mod tidy` after changes.
+Reference `internal/source/github.go`. Each source implements the `Source` interface:
+- `FetchLatestRelease(ctx) (*Release, error)`
+- `Download(ctx, asset, destDir, progress) (path, error)`
 
-## Concurrency
+Auto-detection from URL is in `source.go`. Add detection logic there after implementing the source.
 
-- Use `context.Context` for cancellation. Pass it as the first parameter.
-- Prefer `sync.WaitGroup` or `errgroup.Group` over bare goroutines.
-- No goroutine leaks — every goroutine must have a clear shutdown path.
-- Use channels for communication, mutexes for state protection. Don't mix.
+## Signing Flow
 
-## Naming
+`internal/nostr/signer.go` — `NewSignerWithOptions(ctx, signWith, opts)` returns a `Signer`.
+`signWith` is the `SIGN_WITH` env var: `nsec1...`, `npub1...`, hex key, `bunker://...`, or `browser`.
 
-- Short, clear names. `src` not `sourceManager`. `cfg` not `configuration`.
-- Interfaces describe behavior: `Signer`, `Publisher`, not `ISignerInterface`.
-- Acronyms are all-caps: `URL`, `HTTP`, `APK`, `ID`.
+## Event Building
 
-## Project Layout
-
-- `main.go` — entry point, minimal logic, delegates to `internal/`.
-- `internal/` — all business logic, one package per domain.
-- `testdata/` — test fixtures, config examples.
-- `Makefile` — build commands where applicable.
-
-## Build
-
-- Use `-ldflags` for version injection at build time.
-- Support `go install module@latest` with embedded build info fallback.
-- CGo is acceptable where needed (e.g. SQLite) but prefer pure Go when possible.
-- `make` (default `build` target) produces a single binary named after the project at the repo root.
-- `make all` cross-compiles for all supported platforms into `dist/` as `<binary>-<os>-<arch>`.
-- Always pass `-trimpath -ldflags '-s -w'` for reproducible, stripped binaries.
+`internal/nostr/events.go` — builds NIP-82 events (32267, 30063, 3063) and NIP-C1 (30509).
+Event structure must match the NIP-82 spec exactly (see `README.md` for links).
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/zapstore) — claim your Tome and manage your conversions.
-<!-- tomevault:4.0:agents_md:2026-04-14 -->
+> Source: [zapstore/zsp](https://github.com/zapstore/zsp) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-05-02 -->
