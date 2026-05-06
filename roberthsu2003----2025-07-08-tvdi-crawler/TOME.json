@@ -1,0 +1,44 @@
+{
+  "name": "__2025_07_08_tvdi_crawler__",
+  "owner": "roberthsu2003",
+  "repo": "__2025_07_08_tvdi_crawler__",
+  "description": "2025_07_08 \u8077\u80fd\u767c\u5c55\u5b78\u9662_\u722c\u87f2\u8996\u7a97",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/roberthsu2003/__2025_07_08_tvdi_crawler__",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-06T23:29:39Z"
+}
