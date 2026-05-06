@@ -4,7 +4,7 @@
   "repo": "Library-First-Engineering",
   "description": "The Enterprise Architecture Protocol for the Agentic Age. ",
   "type": "config",
-  "source_format": ".cursor/rules/*.mdc",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/StChiotis/Library-First-Engineering",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-06T02:51:43Z"
+  "distributed_at": "2026-05-06T05:48:51Z"
 }
