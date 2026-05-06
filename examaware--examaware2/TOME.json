@@ -1,0 +1,44 @@
+{
+  "name": "ExamAware2",
+  "owner": "ExamAware",
+  "repo": "ExamAware2",
+  "description": "ExamAware\uff1a\u4e00\u6b3e\u9002\u7528\u4e8e\u5927\u5c4f\u7684\u8003\u8bd5\u4fe1\u606f\u663e\u793a\u8f6f\u4ef6",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/ExamAware/ExamAware2",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-06T14:09:09Z"
+}
