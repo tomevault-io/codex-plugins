@@ -1,0 +1,44 @@
+{
+  "name": "nonos-micro-kernel",
+  "owner": "NON-OS",
+  "repo": "nonos-micro-kernel",
+  "description": " A Rust-based bare-metal kernel implementing zero-trust execution, cryptographic self-measurement and capability enforced isolation forming the core of the N\u00d8NOS operating system.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/NON-OS/nonos-micro-kernel",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-06T11:26:08Z"
+}
