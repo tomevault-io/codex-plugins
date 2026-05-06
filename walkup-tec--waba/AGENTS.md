@@ -1,7 +1,7 @@
 
 # Docker Compose UCP
 
-Ao editar `docker-compose*.yaml`:
+Ao editar `docker-compose*.yml`:
 
 - Não expor segredos em `environment`/`volumes` no repositório; use `env_file` e/ou `.env` fora do commit.
 - Defina `healthcheck` quando houver dependências (DB, Supabase, serviços externos).
