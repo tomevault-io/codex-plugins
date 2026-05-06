@@ -1,0 +1,44 @@
+{
+  "name": "RustDeskPro-WSS",
+  "owner": "tommyvange",
+  "repo": "RustDeskPro-WSS",
+  "description": "Production-ready Docker Compose setup for RustDesk Server Pro with Caddy reverse proxy. Features automatic HTTPS, WebSocket support, secure file permissions, and automated installation. Includes hardened configuration with CORS controls and proper user isolation for enterprise deployments.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/tommyvange/RustDeskPro-WSS",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-06T14:14:05Z"
+}
