@@ -1,0 +1,95 @@
+
+# Kindling Project Rules
+
+## Architecture
+
+Kindling is a Tauri 2 desktop application with a Svelte 5 frontend. It helps fiction writers bridge the gap between outline and prose.
+
+- **Frontend**: `src/` — Svelte 5 (runes), TypeScript, Tailwind CSS 4, TipTap editor
+- **Backend**: `src-tauri/` — Rust, SQLite (rusqlite), file parsers (Plottr, YWriter, Longform, Markdown)
+- **E2E tests**: `e2e/` — WebdriverIO + tauri-driver (Docker-based on macOS)
+- **Path alias**: `$lib` resolves to `src/lib/`
+
+## Key Commands
+
+### Development
+
+- `npm run tauri dev` — **Use this for development.** Full app (Vite frontend + Tauri Rust backend). The mock layer is disabled; the app requires the real Tauri backend.
+  - **Port 1420**: Stop any other `npm run dev` or Vite process before running. Port 1420 must be free or the beforeDevCommand fails.
+- `npm run dev` — Frontend only (Vite on http://localhost:1420). Invoke will fail without Tauri; use only for CSS/static work.
+
+### Testing
+
+- `npm test` — Frontend unit tests (Vitest)
+- `npm run test:watch` — Frontend tests in watch mode
+- `npm run test:rust` — Rust tests (`cargo test --all-features` in src-tauri/)
+- `npm run test:all` — Both frontend and Rust tests
+- `npm run test:coverage` — Frontend tests with coverage report
+
+### Linting & Formatting
+
+- `npm run lint` — ESLint on `src/`
+- `npm run lint:rust` — Clippy on `src-tauri/`
+- `npm run lint:all` — Both
+- `npm run format:all` — Prettier (frontend) + cargo fmt (Rust)
+- `npm run check:all` — Full CI check (svelte-check + format check + lint + clippy)
+
+### Building
+
+- `npm run tauri build` — Production build
+
+### Tauri Version Alignment
+
+- NPM packages (`@tauri-apps/api`, `@tauri-apps/cli`) must match the Rust crate major/minor (e.g. 2.9.x). Mismatches cause "version mismatched Tauri packages" errors. Pinned to 2.9.1 to match tauri crate 2.9.x.
+
+### Browser E2E (Cursor testing)
+
+- The mock Tauri layer is **disabled**. Use `npm run tauri dev` for full app testing. Browser-only testing (npm run dev + browser tools) will fail on any invoke() call.
+
+## Validation Workflow
+
+After making changes, validate them before considering work complete:
+
+1. **Rust changes** (`src-tauri/`): Run `cd src-tauri && cargo check` for fast compilation check, then `npm run test:rust` for tests, then `npm run lint:rust` for clippy.
+2. **Frontend changes** (`src/`): Run `npm test` for unit tests, then `npm run lint` for ESLint.
+3. **Both stacks**: Run `npm run test:all` followed by `npm run check:all`.
+4. **After formatting edits**: Run `npm run format:all` to normalize style.
+
+## Coding Conventions
+
+### Svelte (Frontend)
+
+- Svelte 5 with runes (`$state`, `$derived`, `$effect`) — do NOT use Svelte 4 stores or reactive declarations (`$:`)
+- **Svelte 5.53 keyed `#each` bug**: Keyed blocks `{#each items as item (item.id)}` trigger `$.validate_each_keys is not a function` at runtime in dev. Use unkeyed `{#each items as item}`. The `svelte/require-each-key` ESLint rule is disabled in eslint.config.js.
+- TypeScript with strict mode — no `any` types without justification
+- Tailwind CSS 4 for styling — use utility classes, avoid custom CSS where possible
+- Components live in `src/lib/components/`
+- Stores live in `src/lib/stores/` and use Svelte 5 rune-based patterns
+- Types live in `src/lib/types/`
+- Utilities live in `src/lib/utils/`
+
+### Rust (Backend)
+
+- Tauri commands live in `src-tauri/src/commands/`
+- Database layer in `src-tauri/src/db/` (SQLite via rusqlite)
+- Data models in `src-tauri/src/models/`
+- File parsers in `src-tauri/src/parsers/`
+- Use `thiserror` for error types
+- All features enabled for tests (`cargo test --all-features`)
+
+### Testing
+
+- Frontend tests use Vitest with jsdom environment
+- Tauri APIs are mocked in `src/test/setup.ts` (invoke, dialog)
+- Test files go alongside source: `*.test.ts` or `*.spec.ts`
+- Rust tests use `#[cfg(test)]` modules within source files
+- Coverage thresholds: statements 95%, branches 65%, functions 98%, lines 95%
+
+### Git
+
+- Conventional commits (enforced via commitlint)
+- Git hooks configured via `.githooks/` directory
+
+---
+> Source: [smith-and-web/kindling](https://github.com/smith-and-web/kindling) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-05-02 -->
