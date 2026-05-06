@@ -7,12 +7,12 @@ Jav 视频管理工具，包含：刮削，下载，播放。
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [ddmoyu/javm](https://github.com/ddmoyu/javm).
+Original source: `CLAUDE.md` in [ddmoyu/javm](https://github.com/ddmoyu/javm).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
