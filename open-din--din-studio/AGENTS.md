@@ -1,5 +1,5 @@
 
-Follow @AGENTS.md. Product context: `project/SUMMARY.md`, `project/USERFLOW.md`, `project/TEST_MATRIX.md`. Portable workflows: @project/skills.
+Follow @AGENTS.md. Use @project/skills/agent-prompt-catalog-sync/SKILL.md when changing prompts, tools, or catalog exposure.
 
 ---
 > Source: [open-din/din-studio](https://github.com/open-din/din-studio) — distributed by [TomeVault](https://tomevault.io).
