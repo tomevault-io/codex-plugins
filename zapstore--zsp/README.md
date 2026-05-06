@@ -2,6 +2,8 @@
 
 > Tome by [zapstore](https://github.com/zapstore/zsp) — distributed by [TomeVault](https://tomevault.io)
 
+Publish apps to relays
+
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
