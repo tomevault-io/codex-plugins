@@ -1,0 +1,44 @@
+{
+  "name": "go-stock-analyzer",
+  "owner": "louis-xie-programmer",
+  "repo": "go-stock-analyzer",
+  "description": "golang \u80a1\u7968\u5206\u6790\u7cfb\u7edf web \u7248",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/louis-xie-programmer/go-stock-analyzer",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-06T07:41:04Z"
+}
