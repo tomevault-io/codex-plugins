@@ -1,0 +1,7 @@
+When you want to run npm test or install or build or lint, use the vscode tasks defined in .vscode/tasks.json. This ensures that the output is captured correctly and can be read by Copilot.
+
+Whenever you run a command in the terminal that isn't a vscode task, pipe the output to a file, output.txt, that you can read from. Make sure to overwrite each time so that it doesn't grow too big. There is a bug in the current version of Copilot that causes it to not read the output of commands correctly. This workaround allows you to read the output from the temporary file instead.
+
+---
+> Source: [Maokus/MVMNT](https://github.com/Maokus/MVMNT) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-05-06 -->
