@@ -1,0 +1,44 @@
+{
+  "name": "LogSentinelAI",
+  "owner": "call518",
+  "repo": "LogSentinelAI",
+  "description": "LLM-powered security log analyzer: detect threats & anomalies with zero regex \u2014 just declare a Pydantic schema. Real-time Telegram alerts, SIEM-ready with Elasticsearch/Kibana. Supports OpenAI, Ollama, vLLM.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/call518/LogSentinelAI",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-06T19:49:53Z"
+}
