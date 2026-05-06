@@ -1,0 +1,44 @@
+{
+  "name": "PaperAgent",
+  "owner": "songhahaha66",
+  "repo": "PaperAgent",
+  "description": "PaperAgent - \u5168\u6d41\u7a0b\u667a\u80fd\u6587\u7ae0\u5199\u4f5c\u4e0e\u4ee3\u7801\u6267\u884c\u7cfb\u7edf",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/songhahaha66/PaperAgent",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-06T17:34:25Z"
+}
