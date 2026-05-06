@@ -1,0 +1,44 @@
+{
+  "name": "MCP-Airflow-API",
+  "owner": "call518",
+  "repo": "MCP-Airflow-API",
+  "description": "\u26a1 Control Apache Airflow with natural language via MCP. Chat with your workflows using Claude, GPT, or any LLM \u2014 no REST API calls needed. Supports Airflow 2.x (43 tools) & 3.0+ (45+ tools).",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/call518/MCP-Airflow-API",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-06T17:10:45Z"
+}
