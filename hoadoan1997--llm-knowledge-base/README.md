@@ -1,0 +1,26 @@
+# AI instruction files for llm-knowledge-base
+
+> Sourced from [hoadoan1997/llm-knowledge-base](https://github.com/hoadoan1997/llm-knowledge-base) and converted for every major platform by [TomeVault](https://tomevault.io)
+
+LLM-powered personal knowledge base — raw articles → compiled wiki → Q&A + outputs. Claude writes, you curate.
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [hoadoan1997/llm-knowledge-base](https://github.com/hoadoan1997/llm-knowledge-base).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/hoadoan1997/llm-knowledge-base](https://github.com/hoadoan1997/llm-knowledge-base)
+
+---
+
+Explore more instruction files on [TomeVault](https://tomevault.io) — the open index of AI config files for every platform.
+
+<!-- genome:a-e-p -->
