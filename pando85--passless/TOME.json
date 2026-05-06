@@ -4,7 +4,7 @@
   "repo": "passless",
   "description": "Virtual FIDO2 device and client FIDO 2 utility",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/pando85/passless",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-22T23:59:21Z"
+  "distributed_at": "2026-05-06T05:46:43Z"
 }
