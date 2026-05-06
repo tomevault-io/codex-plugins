@@ -1,0 +1,44 @@
+{
+  "name": "al-go-mcp-server",
+  "owner": "louagej",
+  "repo": "al-go-mcp-server",
+  "description": "MCP server providing AI assistants with access to Microsoft AL-Go documentation and resources for Business Central development",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/louagej/al-go-mcp-server",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-06T08:00:05Z"
+}
