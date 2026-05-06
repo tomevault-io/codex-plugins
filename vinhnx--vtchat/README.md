@@ -1,23 +1,26 @@
 # vtchat
 
-> Config by [vinhnx](https://github.com/vinhnx/vtchat) — distributed by [TomeVault](https://tomevault.io/claim/vinhnx)
+> Source: [vinhnx/vtchat](https://github.com/vinhnx/vtchat) — distributed by [TomeVault](https://tomevault.io)
+
+VT Chat - A modern, privacy-first AI chat application with security
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [vinhnx/vtchat](https://github.com/vinhnx/vtchat).
+Original source: `copilot-instructions.md` in [vinhnx/vtchat](https://github.com/vinhnx/vtchat).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Browse all formats: [https://tomevault.io/claim/vinhnx](https://tomevault.io/claim/vinhnx)
+Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/vinhnx/vtchat](https://github.com/vinhnx/vtchat)
 
 ---
 
-Converted and distributed by [TomeVault](https://tomevault.io) — AI instruction files for every platform.
-Is this your repo? [Claim it](https://tomevault.io/claim/vinhnx) to manage distribution.
+Own this repo? Install the TomeVault Relay to keep every platform's copy in sync on every push: [https://tomevault.io/install](https://tomevault.io/install).
+
+<!-- genome:d-c-q -->
