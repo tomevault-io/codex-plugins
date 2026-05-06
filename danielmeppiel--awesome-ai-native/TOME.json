@@ -1,0 +1,51 @@
+{
+  "name": "awesome-ai-native",
+  "owner": "danielmeppiel",
+  "repo": "awesome-ai-native",
+  "description": "Learn to master GitHub Copilot with AI Native Development practices",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "prose-architect",
+      "path": ".github/skills/prose-architect",
+      "github_url": "https://github.com/danielmeppiel/awesome-ai-native/tree/main/.github/skills/prose-architect",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/danielmeppiel/awesome-ai-native",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-06T13:35:44Z"
+}
