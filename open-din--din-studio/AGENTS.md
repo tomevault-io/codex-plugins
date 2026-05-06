@@ -1,5 +1,5 @@
 
-Follow @AGENTS.md. Use @project/skills/agent-prompt-catalog-sync/SKILL.md when changing prompts, tools, or catalog exposure.
+Follow @AGENTS.md. For node and catalog work use @project/skills/editor-node-change/SKILL.md and keep `ui/editor/nodeCatalog.ts` aligned with codegen tests.
 
 ---
 > Source: [open-din/din-studio](https://github.com/open-din/din-studio) — distributed by [TomeVault](https://tomevault.io).
