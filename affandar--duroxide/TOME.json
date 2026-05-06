@@ -1,0 +1,63 @@
+{
+  "name": "duroxide",
+  "owner": "affandar",
+  "repo": "duroxide",
+  "description": "Durable execution framework for Rust",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "duroxide-code-coverage",
+      "path": ".github/skills/duroxide-code-coverage",
+      "github_url": "https://github.com/affandar/duroxide/tree/main/.github/skills/duroxide-code-coverage",
+      "description": ""
+    },
+    {
+      "name": "duroxide-orchestrations",
+      "path": ".agents/skills/duroxide-orchestrations",
+      "github_url": "https://github.com/affandar/duroxide/tree/main/.agents/skills/duroxide-orchestrations",
+      "description": ""
+    },
+    {
+      "name": "duroxide-python-orchestrations",
+      "path": ".agents/skills/duroxide-python-orchestrations",
+      "github_url": "https://github.com/affandar/duroxide/tree/main/.agents/skills/duroxide-python-orchestrations",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/affandar/duroxide",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-06T02:33:51Z"
+}
