@@ -1,0 +1,44 @@
+{
+  "name": "vulnreach",
+  "owner": "ihrishikesh0896",
+  "repo": "vulnreach",
+  "description": "VulnReach builds on standard SCA output by adding reachability context - proving through static analysis, taint tracking, and live runtime coverage which of the detected CVEs can actually be reached in your application.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/ihrishikesh0896/vulnreach",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-06T05:38:57Z"
+}
