@@ -1,40 +1,181 @@
-# Project Overview
+# UI Patterns
 
-## Multi-modal AI Studio
+## Design System
 
-A next-generation voice/text/video AI interface designed for analyzing and optimizing conversational AI systems.
+- **NVIDIA Brand**: Use `nvidia-brand.css` for consistent styling
+- **3-Pane Layout**: Left (sessions), Middle (config/video/chat), Right/Bottom (timeline)
+- **Responsive**: Support mobile and desktop
+- **Dark/Light Mode**: Toggle in settings
+- **Accessibility**: Keyboard navigation, screen reader support
 
-## Core Goals
+## Layout Modes
 
-1. **Multi-modal Support**: Voice, text, video inputs and outputs
-2. **Multi-backend**: Riva gRPC, OpenAI REST/Realtime, Azure Speech
-3. **Session Management**: Save/load complete configurations with chat history and timeline data
-4. **Performance Analysis**: Real-time timeline visualization and latency metrics
-5. **Flexible Deployment**: WebUI or headless CLI mode
+### Standard Mode (Config Visible)
 
-## Design Principles
+```
+┌─────────┬──────────────────┬─────────────┐
+│         │ Config Tabs      │             │
+│ Session │ (ASR/LLM/TTS)    │   Chat      │
+│ List    ├──────────────────┤  History    │
+│         │ Video / Controls │             │
+└─────────┴──────────────────┴─────────────┘
+│        Timeline (Bottom)                 │
+└─────────────────────────────────────────┘
+```
 
-- **Reuse proven code** from live-riva-webui where applicable
-- **Extensible architecture** for adding new backends easily
-- **Config-first design** - everything is configurable and exportable
-- **Accessibility** - support text-only, voice-only, or mixed interaction modes
-- **Developer-focused** - designed for analyzing and optimizing voice AI systems
+### Quick Start Mode (Config Hidden)
 
-## Key Differentiators vs Live RIVA WebUI
+```
+┌─────────┬──────────────────────────────┐
+│         │ Video / Controls             │
+│ Session ├──────────────────────────────┤
+│ List    │    Chat History              │
+│         │    (Full width)              │
+└─────────┴──────────────────────────────┘
+│        Timeline (Bottom)                │
+└─────────────────────────────────────────┘
+```
 
-1. **Session persistence**: Save complete configs + timeline data for offline analysis
-2. **Multi-backend**: Not just Riva, but OpenAI and other APIs
-3. **Comparison mode**: Compare multiple sessions side-by-side
-4. **Preset system**: Quick-start with pre-configured setups
-5. **Headless mode**: Run without WebUI for automation/production
-6. **Timeline playback**: Replay recorded sessions (not just live monitoring)
+## Configuration Panel
 
-## Target Users
+### Tab-Based Backend Selection
 
-- **Voice AI Developers**: Optimize latency and accuracy
-- **Researchers**: Analyze turn-taking dynamics and conversation patterns
-- **Product Teams**: Demo and showcase voice AI capabilities
-- **DevOps/MLOps**: Automated testing and monitoring in headless mode
+Each service (ASR, LLM, TTS) has tabs for different backends:
+
+```
+ASR Configuration
+┌────────┬──────────────┬─────────────────┐
+│ Riva   │ OpenAI REST  │ OpenAI Realtime │
+└────────┴──────────────┴─────────────────┘
+```
+
+### Collapsible Sections
+
+- **Main settings**: Always visible (scheme, model, server)
+- **Advanced settings**: Collapsed by default
+- **Warnings**: Show inline when config needs attention
+
+### Validation Feedback
+
+- **✓ Green**: Valid configuration
+- **⚠ Yellow**: Warning (e.g., "requires RIVA restart")
+- **✗ Red**: Error (e.g., "API key required")
+
+## Session List
+
+### Session Card
+
+```
+┌─────────────────────────┐
+│ [✓] Session #47         │  ← Checkbox for comparison
+│ Low Latency Test        │  ← Title
+│                         │
+│ 🎤 Riva  🧠 Llama3      │  ← Backend badges
+│ 🔊 Riva                 │
+│                         │
+│ ⚡ 1.2s TTFA            │  ← Key metric
+│ 💬 15 turns             │
+│ 📅 2026-02-03           │  ← Date
+└─────────────────────────┘
+```
+
+### Actions
+
+- **Click**: Load session
+- **Right-click**: Context menu (export, delete, save as preset)
+- **Checkbox**: Select for comparison
+
+## Device Selection
+
+```
+┌──────────────────────────┐
+│ 📹 Video Source          │
+│ ┌──────────────────────┐ │
+│ │ Browser WebRTC      ▼│ │
+│ └──────────────────────┘ │
+│ 📡 Status: Active        │
+└──────────────────────────┘
+```
+
+### Device Status Indicators
+
+- 🟢 **Active**: Device working
+- 🟡 **Ready**: Device available but not streaming
+- 🔴 **Error**: Device unavailable or failed
+
+### Interaction Mode Display
+
+Show current mode based on device selection:
+
+- 🎤 Voice Input → 🔊 Voice Output
+- 🎤 Voice Input → 📝 Text Output
+- ⌨️ Text Input → 🔊 Voice Output
+- ⌨️ Text Input → 📝 Text Output
+
+## Timeline Visualization
+
+### Layout Options
+
+1. **Bottom (default)**: Horizontal, full width
+2. **Right**: Vertical, bottom-to-top (compact)
+3. **Hidden**: Maximize chat area
+
+### Lanes
+
+- **Audio**: Waveform visualization
+- **Speech**: ASR activity (partial + final)
+- **LLM**: Token generation (prefill + decode)
+- **TTS**: Audio synthesis duration
+
+### Controls
+
+- **Pause/Resume**: Freeze timeline for inspection
+- **Drag**: Scroll through history
+- **Zoom**: Adjust time scale
+
+### Playback Mode (Future)
+
+When viewing recorded session:
+
+- Show timeline from session data
+- Highlight metrics (TTFA markers)
+- Allow scrubbing to specific turns
+- Export timeline as image
+
+## Chat Display
+
+### Message Bubbles
+
+- **User**: Right-aligned, blue
+- **AI**: Left-aligned, green
+- **System**: Center, gray (e.g., "Session started")
+
+### Metadata
+
+- Timestamp
+- Confidence score (for ASR)
+- Token count (for LLM)
+- Audio duration (for TTS)
+
+## Controls Bar
+
+```
+┌────────┐ ┌────────┐ ┌─────────┐
+│ Video  │ │  Mic   │ │ Speaker │
+└────────┘ └────────┘ └─────────┘
+```
+
+Each with:
+- Status indicator (active/ready/error)
+- Volume/level meter
+- Mute/unmute toggle
+
+## Settings Panel
+
+- **UI Settings**: Theme, timeline position, layout
+- **Presets**: Manage saved presets
+- **Export/Import**: Configuration management
+- **About**: Version, credits, license
 
 ---
 > Source: [NVIDIA-AI-IOT/multi_modal_ai_studio](https://github.com/NVIDIA-AI-IOT/multi_modal_ai_studio) — distributed by [TomeVault](https://tomevault.io).
