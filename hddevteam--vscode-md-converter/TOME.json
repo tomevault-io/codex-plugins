@@ -1,0 +1,44 @@
+{
+  "name": "vscode-md-converter",
+  "owner": "hddevteam",
+  "repo": "vscode-md-converter",
+  "description": "\u4e00\u952e\u8f6c\u6362Word\u3001Excel\u3001PDF\u3001PowerPoint\u6587\u6863\u4e3aMarkdown\u683c\u5f0f\u7684VS Code\u6269\u5c55\u3002\u652f\u6301\u6279\u91cf\u5904\u7406\u3001\u667a\u80fd\u6587\u672c\u63d0\u53d6\u3001\u6f14\u8bb2\u8005\u5907\u6ce8\u63d0\u53d6\uff0c\u63d0\u4f9b\u4e2d\u82f1\u6587\u53cc\u8bed\u754c\u9762\u3002OneClick Markdown Converter VS Code Extension with PowerPoint support, batch processing, and bilingual interface.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/hddevteam/vscode-md-converter",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-07T20:46:09Z"
+}
