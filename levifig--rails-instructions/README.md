@@ -2,20 +2,22 @@
 
 > Sourced from [levifig/rails-instructions](https://github.com/levifig/rails-instructions) and converted for every major platform by [TomeVault](https://tomevault.io)
 
+Set of instructions for your favorite AI agent (e.g. Cursor, Copilot, Claude, etc) for a "DHH-driven" Ruby on Rails development philosophy.
+
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [levifig/rails-instructions](https://github.com/levifig/rails-instructions).
+Original source: `copilot-instructions.md` in [levifig/rails-instructions](https://github.com/levifig/rails-instructions).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Quality verified by TomeVault's automated analysis pipeline. [View quality report](https://tomevault.io/claim/levifig#quality)
+Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/levifig/rails-instructions](https://github.com/levifig/rails-instructions)
 
 ---
 
