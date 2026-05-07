@@ -1,0 +1,51 @@
+{
+  "name": "spotify-skill",
+  "owner": "fabioc-aloha",
+  "repo": "spotify-skill",
+  "description": "Spotify Skills for Claude - Production Spotify API integration + complete toolkit for creating Claude Desktop Skills. Includes OAuth 2.0, cover art generation, automated tools, and comprehensive guides.",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "spotify-api",
+      "path": "spotify-api",
+      "github_url": "https://github.com/fabioc-aloha/spotify-skill/tree/main/spotify-api",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/fabioc-aloha/spotify-skill",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-07T07:40:33Z"
+}
