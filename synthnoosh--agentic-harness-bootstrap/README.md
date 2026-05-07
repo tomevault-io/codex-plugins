@@ -7,12 +7,12 @@ Boundaries, structure, and feedback loops — from a single repo scan.
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [synthnoosh/agentic-harness-bootstrap](https://github.com/synthnoosh/agentic-harness-bootstrap).
+Original source: `CLAUDE.md` in [synthnoosh/agentic-harness-bootstrap](https://github.com/synthnoosh/agentic-harness-bootstrap).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
