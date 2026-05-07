@@ -2,9 +2,9 @@
   "name": "gsd-task-manager",
   "owner": "vscarpenter",
   "repo": "gsd-task-manager",
-  "description": "",
+  "description": "Stop juggling, start finishing. GSD Task Manager makes it easy to sort your to-dos into what\u2019s urgent and what\u2019s important, so you can finally get stuff done without burning out. It\u2019s simple, visual, and works entirely offline.",
   "type": "config",
-  "source_format": "CLAUDE.md",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -38,7 +38,7 @@
     }
   ],
   "skills": [],
-  "claim_url": "https://tomevault.io/claim/vscarpenter",
+  "source_url": "https://github.com/vscarpenter/gsd-task-manager",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-10T17:48:38Z"
+  "distributed_at": "2026-05-07T09:43:41Z"
 }
