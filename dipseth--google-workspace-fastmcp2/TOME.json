@@ -4,7 +4,7 @@
   "repo": "google_workspace_fastmcp2",
   "description": "FastMCP2 server for Google Drive uploads with Qdrant-powered semantic search",
   "type": "config",
-  "source_format": ".cursor/rules/*.mdc",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/dipseth/google_workspace_fastmcp2",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-07T22:38:52Z"
+  "distributed_at": "2026-05-07T22:49:15Z"
 }
