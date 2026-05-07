@@ -7,14 +7,14 @@ Empirical Asset Pricing Tools
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [Alexander-M-Dickerson/ai-asset-pricing](https://github.com/Alexander-M-Dickerson/ai-asset-pricing).
+Original source: `CLAUDE.md` in [Alexander-M-Dickerson/ai-asset-pricing](https://github.com/Alexander-M-Dickerson/ai-asset-pricing).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/Alexander-M-Dickerson/ai-asset-pricing](https://github.com/Alexander-M-Dickerson/ai-asset-pricing)
