@@ -1,0 +1,44 @@
+{
+  "name": "fluentui-blazor-community-extensions",
+  "owner": "Community-Toolkit-for-Fluent-UI-Blazor",
+  "repo": "fluentui-blazor-community-extensions",
+  "description": "Community components which built on top of the official Microsoft Fluent UI Blazor components.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/Community-Toolkit-for-Fluent-UI-Blazor/fluentui-blazor-community-extensions",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-07T04:10:35Z"
+}
