@@ -7,13 +7,13 @@ Nostr based video platform
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [flox1an/nostube](https://github.com/flox1an/nostube).
+Original source: `copilot-instructions.md` in [flox1an/nostube](https://github.com/flox1an/nostube).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
