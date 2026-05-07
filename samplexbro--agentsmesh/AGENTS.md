@@ -1,3 +1,4 @@
+
 # Operational Guidelines
 
 ## Session Start
@@ -25,7 +26,7 @@
 ### Verification
 
 - Never mark a task complete without proving it works — run tests, check logs, demonstrate correctness.
-- After every feature/story: use `post-feature-qa` skill (`.github/skills/post-feature-qa/`).
+- After every feature/story: use `post-feature-qa` skill (`.cursor/skills/post-feature-qa/`).
 - Ask yourself: "Would a staff engineer approve this?"
 
 ### Elegance
