@@ -1,202 +1,148 @@
-# CLAUDE.md
+# Copilot Instructions for GSD Task Manager
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This guide enables AI coding agents to work productively in the GSD Task Manager codebase. Follow these project-specific conventions and workflows for best results.
 
-## Project Overview
+## Architecture Overview
 
-GSD Task Manager is a privacy-first Eisenhower matrix task manager built with Next.js 16 App Router. All data is stored locally in IndexedDB via Dexie, with JSON export/import for backups. The app is a PWA that works completely offline.
+### Core Stack
+- **Next.js 16 App Router**: All routes in `app/`. Matrix view: `app/(matrix)/page.tsx`. Dashboard: `app/(dashboard)/dashboard/page.tsx`. PWA install: `app/(pwa)/install/page.tsx`.
+- **Client-side only**: No server rendering. All components use `"use client"`.
+- **Data Layer**: IndexedDB via Dexie v4 (`lib/db.ts`, current schema v13). CRUD in `lib/tasks.ts`. Live queries via `useTasks()` hook (`lib/use-tasks.ts`).
+- **Quadrant System**: Tasks classified by `urgent`/`important` booleans → 4 quadrants. Logic in `lib/quadrants.ts`.
+- **Schema Validation**: Zod schemas in `lib/schema.ts` for all data types.
 
-**Key Features:**
-- **Optional Cloud Sync** — Multi-device sync via self-hosted PocketBase at `https://api.vinny.io` (OAuth with Google/GitHub)
-- **MCP Server Integration** — AI-powered task management through Claude Desktop with natural language queries
-- **Realtime Sync** — PocketBase SSE (Server-Sent Events) for instant cross-device updates
-- **Smart Views** — Pin up to 5 smart views to header (keyboard shortcuts 1-9, 0 to clear)
-- **Command Palette** — Global ⌘K/Ctrl+K shortcut for quick actions and navigation
-- **iOS-style Settings** — Redesigned settings with grouped layout and modular sections
+### Database Schema (v13)
+- **Tables**: `tasks`, `archivedTasks`, `smartViews`, `notificationSettings`, `syncQueue`, `syncMetadata`, `deviceInfo`, `archiveSettings`, `syncHistory`, `appPreferences`
+- **Task Fields**: Core (id, title, description, urgent, important, quadrant, completed, completedAt, dueDate, createdAt, updatedAt) + Advanced (recurrence, tags, subtasks, dependencies, notifyBefore, snoozedUntil, estimatedMinutes, timeSpent, timeEntries)
+- **Indexes**: Performance-critical indexes on `quadrant`, `completed`, `dueDate`, `completedAt`, `createdAt`, `updatedAt`, `*tags`, `*dependencies`, `notificationSent`
+- **Migrations**: Schema changes always require migration in `lib/db.ts`. See `DATABASE_ARCHITECTURE.md` for full ERD.
 
-## Core Commands
+### Key Architectural Decisions
+1. **PocketBase cloud sync**: Optional cloud sync via self-hosted PocketBase server. Tasks stored as plaintext (user owns the server). OAuth authentication with Google/GitHub.
+2. **Last-write-wins conflict resolution**: Conflicts resolved using `client_updated_at` timestamps. BFS algorithm prevents circular dependencies in task graph.
+3. **Modular components**: Large files split into <300 line modules. Example: `lib/sync/` has 20+ focused modules vs monolithic sync engine.
+4. **Pure analytics functions**: All metric calculations in `lib/analytics/` are side-effect-free for testability and composability.
+5. **Transaction-based batch operations**: `lib/bulk-operations.ts` ensures atomicity (all-or-nothing) for multi-task updates.
 
-### Development
-- `bun install` - Install dependencies
-- `bun dev` - Start development server at http://localhost:3000
-- `bun typecheck` - Run TypeScript type checking
+## Component Patterns
 
-### Testing & Quality
-- `bun run test` - Run Vitest tests in CI mode (`bun test` invokes bun's built-in runner, not vitest)
-- `bun run test:watch` - Run Vitest in watch mode
-- `bun run test -- --coverage` - Generate coverage report (target: ≥80%)
-- `bun lint` - Run ESLint
+### UI Components
+- **Primitives** (`components/ui/`): shadcn-style components (button, dialog, input, etc.). No size prop on buttons—use variant: "primary" | "subtle" | "ghost".
+- **Domain Components**: `matrix-board/` (modular orchestration), `matrix-column.tsx`, `task-card.tsx`, `task-form/` (modular form with validation hook).
+- **Dialogs**: All use Radix UI Dialog primitive. Example: `import-dialog.tsx`, `bulk-tag-dialog.tsx`.
+- **Hooks**: Custom hooks like `useTasks()`, `useViewTransition()`, `useSmartViewShortcuts()` encapsulate complex logic.
 
-### Build & Deployment
-- `bun run build` - Build production bundle
-- `bun run export` - Generate static export for S3/CloudFront
-- `./scripts/deploy-cloudfront-function.sh` - Deploy CloudFront Function for SPA routing
+### Smart Views & Command Palette
+- **Smart Views**: Saved filter configurations (`smartViews` table). Pin up to 5 in header with keyboard shortcuts (1-9, 0=clear).
+- **Command Palette**: Global ⌘K/Ctrl+K shortcut (`command-palette.tsx`). Includes quick actions, navigation, and search.
+- **Settings**: Single consolidated dialog (`components/settings/settings-dialog.tsx`) with iOS-style grouped sections (Appearance, Notifications, Cloud Sync, Archive, Data & Storage, About). Opened directly from the header gear icon — no intermediate "quick" panel.
 
-**CloudFront Edge Routing**: Required because S3 doesn't auto-serve `index.html` for directory paths. Run the deploy script after adding new App Router routes.
+### Sync Architecture
+- **Frontend**: `lib/sync/` with modular architecture: `pb-sync-engine.ts` (push/pull), `pb-realtime.ts` (SSE subscriptions), `pb-auth.ts` (OAuth), `pocketbase-client.ts` (SDK singleton), `task-mapper.ts` (field mapping), `sync-coordinator.ts` (orchestrator).
+- **Backend**: Self-hosted PocketBase server at `https://api.vinny.io` (AWS EC2). OAuth with Google/GitHub. API rules enforce per-user data isolation.
+- **Realtime**: PocketBase SSE (Server-Sent Events) for instant cross-device updates with echo filtering via `device_id`.
 
-## Architecture
+### MCP Server Integration
+- **Purpose**: Enable Claude Desktop to access/analyze tasks via natural language.
+- **Location**: `packages/mcp-server/` (standalone npm package, Node.js 18+).
+- **20 Tools**: Read (7), Write (5), Analytics (5), System (3). All write operations support `dryRun` mode.
+- **Config**: `~/Library/Application Support/Claude/claude_desktop_config.json` with `GSD_POCKETBASE_URL`, `GSD_AUTH_TOKEN`.
 
-### Data Layer
-- **IndexedDB via Dexie** (`lib/db.ts`): `tasks`, `smartViews`, `notificationSettings`, `appPreferences` tables (v13)
-- **CRUD Operations** (`lib/tasks.ts`): Task mutations, subtask/dependency management
-- **Bulk Operations** (`lib/bulk-operations.ts`): Batch operations for multi-select
-- **Live Queries** (`lib/use-tasks.ts`): `useTasks()` hook with live updates
-- **Schema Validation** (`lib/schema.ts`): Zod schemas for all data types
-- **Analytics** (`lib/analytics/`): Modular productivity metrics
-- **Notifications** (`lib/notifications/`): Modular notification system
-- **Dependencies** (`lib/dependencies.ts`): Circular dependency detection, blocking/blocked queries
-- **Structured Logging** (`lib/logger.ts`): Environment-aware logger with contexts and secret sanitization
+## Developer Workflows
 
-### Quadrant System
-Tasks are classified by `urgent` and `important` boolean flags:
-- `urgent-important` - Do first (Q1)
-- `not-urgent-important` - Schedule (Q2)
-- `urgent-not-important` - Delegate (Q3)
-- `not-urgent-not-important` - Eliminate (Q4)
+### Essential Commands
+- `bun install` — Install deps (generates `bun.lock`)
+- `bun dev` — Dev server at http://localhost:3000
+- `bun typecheck` — TypeScript type checking (no emit)
+- `bun lint` — ESLint with Next.js config
+- `bun run test` — Vitest CI mode (`bun test` invokes bun's built-in runner, not vitest)
+- `bun run test:watch` — Vitest watch mode
+- `bun run test -- --coverage` — Coverage report (target: ≥80% statements/lines/functions, ≥75% branches)
+- `bun run build` — Production build (includes typecheck)
+- `bun run export` — Static export for S3/CloudFront
 
-Logic in `lib/quadrants.ts` with `resolveQuadrantId()` and `quadrantOrder`.
+### CloudFront Deployment
+- **Why**: S3 doesn't auto-serve `index.html` for directory paths. Need CloudFront Function for SPA routing.
+- **Deploy**: `./scripts/deploy-cloudfront-function.sh` after adding new App Router routes.
+- **Full Deploy**: `bun run deploy` (builds, syncs to S3, invalidates CloudFront)
 
-### Component Structure
-- **App Router** (`app/`): Matrix view, dashboard, archive, sync-history, install pages
-- **UI Components** (`components/ui/`): shadcn-style primitives
-- **Domain Components**:
-  - `matrix-board.tsx`, `matrix-column.tsx`, `task-card.tsx` - Matrix view
-  - `task-form/` - Modular task form with validation
-  - `components/sync/` - Sync button, auth dialog, OAuth buttons
-  - `components/settings/` - iOS-style settings with modular sections
-  - `components/dashboard/` - Analytics charts and metrics
-  - `components/user-guide/` - Modular user guide sections
-  - `bulk-actions-bar.tsx`, `bulk-tag-dialog.tsx` - Batch operations
-  - `command-palette.tsx` - Global command palette (⌘K/Ctrl+K)
-  - `smart-view-pills.tsx`, `smart-view-selector.tsx` - Smart view UI
+### MCP Server Development
+- **Build**: `npm run build` in `packages/mcp-server/`
+- **Test**: `npm test` (unit tests with dry-run validation)
+- **CLI**: `gsd-mcp setup` (interactive config), `gsd-mcp validate` (config validation)
 
-### Key Patterns
-- **Client-side only**: All components use `"use client"` - no server rendering
-- **Live reactivity**: `useTasks()` returns live data via `useLiveQuery`
-- **Validation**: All task operations validate with Zod schemas before persisting
-- **Keyboard shortcuts**: n=new, /=search, ?=help, ⌘K=command palette, 1-9=smart views
-- **Recurring tasks**: Completed recurring tasks auto-create next instance
-- **Enhanced search**: Includes tags and subtasks
+## Coding Conventions
 
-### PWA Configuration
-- `public/manifest.json` - App metadata
-- `public/sw.js` - Service worker for offline caching
-- `components/pwa-register.tsx` - SW registration
+### TypeScript & Naming
+- **Strict mode**: Always. Next.js typed routes enabled.
+- **Naming**: PascalCase for components/types, camelCase for functions/variables, kebab-case for files/folders.
+- **Imports**: Use `@/` alias for all internal imports (configured in `tsconfig.json`).
 
-### Cloud Sync Architecture
-- **Backend**: Self-hosted PocketBase at `https://api.vinny.io` (AWS EC2)
-- **Authentication**: PocketBase built-in OAuth2 with Google and GitHub providers (both fully implemented client-side; GitHub requires server-side provider setup in PocketBase admin)
-- **Sync Protocol**: Last-write-wins (LWW) with `client_updated_at` timestamps
-- **Realtime**: PocketBase SSE subscriptions for instant cross-device updates
-- **Storage**: Tasks stored as plaintext in PocketBase (user owns the server)
+### Styling
+- **Tailwind**: Group classes by layout → spacing → color. Shared utilities in `app/globals.css`.
+- **Dark Mode**: Use `next-themes`. Classes: `dark:bg-gray-900` etc.
 
-**Key Locations**:
-- `lib/sync/pocketbase-client.ts` - PocketBase SDK singleton wrapper
-- `lib/sync/pb-sync-engine.ts` - Push/pull sync engine with LWW resolution
-- `lib/sync/pb-realtime.ts` - SSE subscription manager with echo filtering
-- `lib/sync/pb-auth.ts` - OAuth login/logout via PocketBase SDK
-- `lib/sync/task-mapper.ts` - camelCase ↔ snake_case field mapping
+### Patterns to Follow
+1. **Live reactivity**: Use `useLiveQuery()` from `dexie-react-hooks` for real-time updates.
+2. **Validation**: Always validate with Zod schemas before persisting to IndexedDB.
+3. **Error handling**: Use `try/catch` with structured logging (`lib/logger.ts`). Sanitize secrets in logs.
+4. **Keyboard shortcuts**: Global shortcuts in `lib/shortcuts.ts`. Component-level shortcuts use `useEffect` with event listeners.
+5. **Recurring tasks**: Auto-create next instance on completion via `handleRecurrence()` in `lib/tasks.ts`.
+6. **Circular dependencies**: Always validate with `wouldCreateCircularDependency()` (BFS algorithm in `lib/dependencies.ts`) before adding dependencies.
+7. **Transaction-based bulk ops**: Use `db.transaction('rw', [...tables], async () => { ... })` for atomicity.
 
-**PocketBase Collections**: `tasks` (with API rules: `@request.auth.id != "" && owner = @request.auth.id`), `devices`
+## Coding Standards & Philosophy
 
-### MCP Server Architecture
-- **Purpose**: Enable Claude Desktop to access/analyze tasks via natural language
-- **Location**: `packages/mcp-server/` - Standalone npm package
-- **Runtime**: Node.js 18+ with TypeScript, stdio transport (JSON-RPC 2.0)
+### Core Principles
+- **Favor simplicity over cleverness**: Clear, readable code > complex solutions. Optimize only when needed.
+- **Start minimal and iterate**: Build smallest working solution first, then enhance.
+- **Optimize for the next developer**: Write code easy to maintain and understand.
+- **Descriptive naming**: Clear names that express intent (no abbreviations unless standard).
+- **Small, focused functions**: Each function does one thing well. Max 20-30 lines. Early returns + guard clauses.
+- **Comment "why" not "what"**: Code should be self-documenting. Comments explain reasoning or non-obvious logic.
+- **DRY, but not prematurely**: Extract after seeing repetition 3+ times. Avoid over-abstraction.
+- **YAGNI**: Don't build for hypothetical future needs.
+- **Composition over inheritance**: Build functionality by combining simple pieces.
 
-**20 MCP Tools**:
-- *Read (7)*: list_tasks, get_task, search_tasks, get_sync_status, list_devices, get_task_stats, get_token_status
-- *Write (5)*: create_task, update_task, complete_task, delete_task, bulk_update_tasks (all support dryRun)
-- *Analytics (5)*: get_productivity_metrics, get_quadrant_analysis, get_tag_analytics, get_upcoming_deadlines, get_task_insights
-- *System (3)*: validate_config, get_help, get_cache_stats
+### Quality Checklist
+- Can a new team member understand this code in 5 minutes?
+- Are names self-explanatory?
+- Is the happy path clear and error handling robust?
+- Is there unnecessary complexity or cleverness?
+- Does it solve the actual problem without extra features?
 
-**Key Features**: Retry logic with exponential backoff, TTL cache, dry-run mode, circular dependency validation
+## Testing
 
-**Configuration**: Claude Desktop config at `~/Library/Application Support/Claude/claude_desktop_config.json` with `GSD_POCKETBASE_URL`, `GSD_AUTH_TOKEN`
+### Test Structure
+- **UI tests**: `tests/ui/` with `@testing-library/react` and `@testing-library/jest-dom`
+- **Data tests**: `tests/data/` for persistence logic
+- **Coverage targets**: 80% statements/lines/functions, 75% branches
+- **Key patterns**: Mock IndexedDB with `fake-indexeddb`. Test keyboard shortcuts. Cover offline scenarios.
 
-## Testing Guidelines
-- UI tests in `tests/ui/`, data logic in `tests/data/`
-- Use `@testing-library/react` and `@testing-library/jest-dom`
-- Coverage thresholds: 80% statements, 80% lines, 80% functions, 75% branches
+## Commit & PRs
 
-## Code Style
-- **TypeScript strict mode** with Next.js typed routes
-- **Naming**: PascalCase for components/types, camelCase for functions, kebab-case for files
-- **Tailwind**: Group classes by layout → spacing → color
-- **Imports**: Use `@/` alias for all internal imports
+- **Conventional Commits**: Use `feat:`, `fix:`, `docs:`, `test:`, etc. Reference issues (e.g., `Fixes #123`).
+- **PRs**: Explain motivation, solution, and tests. Include screenshots for UI changes. Link to spec docs (`CLAUDE.md`, `TECHNICAL.md`).
+- **Rebase**: Rebase before review. Wait for green lint/test/build status.
 
-## Development Notes
+## PWA & Privacy
 
-### Schema & Database
-- Task schema changes require updating `lib/schema.ts`, export/import logic, and test fixtures
-- Database migrations in `lib/db.ts` - current version is 13
-- New task fields (recurrence, tags, subtasks, dependencies) are optional with sensible defaults
-- **Import schema** uses `.strip()` (not `.strict()`) to accept legacy exports with extra fields (e.g., `vectorClock` from the old Cloudflare sync system)
-- Export schema still uses `.strict()` to ensure clean outgoing data
+- **Client-side only**: No server rendering or network dependencies (except optional sync).
+- **Manifest & Icons**: Update `public/manifest.json`, icons, and `public/sw.js` together. Test with `bun run export`.
+- **Data**: All user data stays local by default. Export/import via JSON. Sync is opt-in via self-hosted PocketBase.
 
-### Dependencies System
-- Always validate circular dependencies before adding relationships
-- Clean up references when deleting tasks (`removeDependencyReferences()`)
-- Consider blocking/blocked relationships for dependency-aware features
+## References
 
-### Navigation & UI
-- Use `useViewTransition()` hook for client-side navigation with View Transitions API
-- Button component variants: "primary" | "subtle" | "ghost" (no size prop)
-- Smart view shortcuts (1-9, 0) use `useSmartViewShortcuts` with typing detection
-
-### Cloud Sync
-- **PocketBase Admin**: `https://api.vinny.io/_/` for collection management
-- **PocketBase Version**: v0.23+ (uses `_superusers` collection for admin auth, not legacy `/api/admins/`)
-- PocketBase SDK (v0.26.8) auto-stores auth tokens in localStorage and auto-refreshes
-- LWW conflict resolution uses `client_updated_at` field — remote wins if newer
-- SSE subscriptions auto-reconnect; periodic sync runs as safety net
-- Echo filtering skips own-device changes via `device_id` comparison
-- **Rate Limiting**: Push operations are throttled (100ms between requests) to avoid PocketBase 429 errors
-- **Batch Lookups**: `fetchRemoteTaskIndex()` pre-fetches all remote task IDs in one request instead of N individual lookups
-- **PocketBase v0.23+ Gotchas**:
-  - System fields (`created`, `updated`) **cannot** be used in `sort` or `filter` — use custom fields like `client_updated_at` instead
-  - Custom indexes cannot reference system columns (`updated`, `created`)
-  - The `_pb_users_auth_` placeholder doesn't work as a `collectionId` for relation fields — use `text` type for owner FK or look up the real collection ID
-  - Admin auth endpoint is `/api/collections/_superusers/auth-with-password` (not `/api/admins/auth-with-password`)
-- **Collection Setup**: Run `scripts/setup-pocketbase-collections.sh` to create the `tasks` collection with correct schema, indexes, and API rules
-
-### MCP Server
-- Build with `npm run build` in `packages/mcp-server/`
-- Add tools: schemas in `tools/schemas/`, handlers in `tools/handlers/`
-- Uses PocketBase JS SDK to communicate with `GSD_POCKETBASE_URL`
-- Use `fetchWithRetry()` for resilient API calls
-
-### OAuth Authentication
-- PocketBase SDK handles OAuth popup flow automatically (`authWithOAuth2`)
-- Supports Google and GitHub providers (both implemented client-side; Google configured on server, GitHub needs PocketBase admin setup at `https://api.vinny.io/_/` → Settings → Auth providers)
-- Auth state persists in PocketBase's built-in `authStore` (localStorage)
-- **Local dev**: Set `NEXT_PUBLIC_POCKETBASE_URL=https://api.vinny.io` in `.env.local` to test OAuth against production PocketBase (local PocketBase at 127.0.0.1:8090 requires separate OAuth provider setup)
-
-### Pre-commit
-- Run `bun run test`, `bun typecheck`, and `bun lint` before committing
-- Static export mode means no API routes or SSR
-
-## Modular Architecture
-
-The codebase follows coding standards (<350 lines per file, <30 lines per function). Key modular areas:
-
-- **lib/analytics/**: metrics, streaks, tags, trends
-- **lib/notifications/**: display, permissions, settings, badge
-- **lib/sync/**: pocketbase-client, pb-sync-engine, pb-realtime, pb-auth, task-mapper, sync-coordinator, health-monitor, queue, config
-- **components/task-form/**: index, use-task-form hook, validation
-- **components/settings/**: appearance, notification, sync, archive, data-management sections
-- **packages/mcp-server/src/tools/**: handlers/, schemas/, individual tool files
-- **packages/mcp-server/src/write-ops/**: task-operations, bulk-operations with dry-run support
-
-All modules maintain backward compatibility through re-export layers.
-
-## Git Workflow 
-
-For git operations: when asked to commit and push, write a descriptive conventional commit message, bump the version if appropriate, and create a PR unless told otherwise. Standard workflow: commit → push → create PR.
-
-Always leverage @coding-standards.md for coding standards and guidelines.
+- **Product Scope**: `CLAUDE.md` (features, architecture decisions, development notes)
+- **Technical Details**: `TECHNICAL.md` (stack, data layer, component structure, key patterns)
+- **Contribution Standards**: `coding-standards.md` (agentic behavior, solution quality, reflection)
+- **Database**: `DATABASE_ARCHITECTURE.md` (ERD, schema migrations, indexing strategy)
+- **Features**: `GSD_FEATURES_GUIDE.md` (user-facing feature guide)
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/vscarpenter)
-> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/vscarpenter)
-<!-- tomevault:4.0:agents_md:2026-04-08 -->
+
+**Feedback Welcome**: If any section is unclear or missing, please provide feedback to improve these instructions.
+
+---
+> Source: [vscarpenter/gsd-task-manager](https://github.com/vscarpenter/gsd-task-manager) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-05-07 -->
