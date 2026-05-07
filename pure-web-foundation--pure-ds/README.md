@@ -7,13 +7,13 @@ Open-source, config-first, deterministic design system.
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [Pure-Web-Foundation/pure-ds](https://github.com/Pure-Web-Foundation/pure-ds).
+Original source: `copilot-instructions.md` in [Pure-Web-Foundation/pure-ds](https://github.com/Pure-Web-Foundation/pure-ds).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
