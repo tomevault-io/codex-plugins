@@ -4,7 +4,7 @@
   "repo": "pure-ds",
   "description": "Open-source, config-first, deterministic design system. ",
   "type": "config",
-  "source_format": ".cursor/rules/*.mdc",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/Pure-Web-Foundation/pure-ds",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-07T07:43:40Z"
+  "distributed_at": "2026-05-07T08:15:01Z"
 }
