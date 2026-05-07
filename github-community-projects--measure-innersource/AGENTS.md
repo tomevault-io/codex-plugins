@@ -1,0 +1,32 @@
+# Copilot Instructions
+
+This is a GitHub Action that measures InnerSource collaboration in a GitHub organization. It identifies cross-team contributions by analyzing pull requests and their authors against repository ownership, then generates a report as a GitHub issue or Markdown file.
+
+## Code Standards
+
+### Required Before Each Commit
+
+- Run `make lint` before committing any changes to ensure proper code linting and formatting.
+
+### Development Flow
+
+- Lint: `make lint`
+- Test: `make test`
+
+## Repository Structure
+
+- `Makefile`: Contains commands for linting, testing, and other tasks
+- `pyproject.toml`: Python dependencies and project configuration
+- `README.md`: Project documentation and setup instructions
+- `test_*.py`: Python test files matching the naming convention for test discovery
+
+## Key Guidelines
+
+1. Follow Python best practices and idiomatic patterns
+2. Maintain existing code structure and organization
+3. Write unit tests for new functionality.
+4. Document changes to environment variables in the `README.md` file.
+
+---
+> Source: [github-community-projects/measure-innersource](https://github.com/github-community-projects/measure-innersource) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-05-06 -->
