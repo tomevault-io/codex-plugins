@@ -1,0 +1,44 @@
+{
+  "name": "dental-conditions-detection",
+  "owner": "adityanandanx",
+  "repo": "dental-conditions-detection",
+  "description": "An AI-powered platform for detecting dental conditions in X-ray images using computer vision and DICOM processing",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/adityanandanx/dental-conditions-detection",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-07T03:51:59Z"
+}
