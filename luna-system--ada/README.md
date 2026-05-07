@@ -7,13 +7,13 @@ locally hosted neural net chat framework with biomimetic RAG (cc0) (by luna+ada)
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [luna-system/ada](https://github.com/luna-system/ada).
+Original source: `.cursor/rules/*.mdc` in [luna-system/ada](https://github.com/luna-system/ada).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
