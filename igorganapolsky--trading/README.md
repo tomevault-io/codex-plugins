@@ -7,14 +7,14 @@ Paper-first SPY options validation platform with broker-backed scorecards, hard 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [IgorGanapolsky/trading](https://github.com/IgorGanapolsky/trading).
+Original source: `copilot-instructions.md` in [IgorGanapolsky/trading](https://github.com/IgorGanapolsky/trading).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/IgorGanapolsky/trading](https://github.com/IgorGanapolsky/trading)
