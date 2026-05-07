@@ -2,9 +2,9 @@
   "name": "mcp-tailwind-gemini",
   "owner": "Tai-DT",
   "repo": "mcp-tailwind-gemini",
-  "description": "",
+  "description": "MCP Tailwind Gemini - AI-powered CSS generation and framework integration tool",
   "type": "config",
-  "source_format": "GEMINI.md",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -38,7 +38,7 @@
     }
   ],
   "skills": [],
-  "claim_url": "https://tomevault.io/claim/Tai-DT",
+  "source_url": "https://github.com/Tai-DT/mcp-tailwind-gemini",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-11T11:49:49Z"
+  "distributed_at": "2026-05-07T17:05:19Z"
 }
