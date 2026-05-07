@@ -1,0 +1,16 @@
+
+# Agent System Patterns
+
+- All agents extend `BaseAgent` and implement 5 abstract members: `name`, `description`, `system_prompt`, `get_available_tools()`, `execute()`
+- Tools registered in `ToolRegistry` with `ToolDef` (name, description, category, parameters, handler)
+- Agent config via `AgentConfig` dataclass — each agent has independent settings
+- Three thinking styles: `fast` (keyword), `balanced` (LLM+fallback), `deep` (CoT+reflection)
+- Tool calls go through `self.call_tool()` which handles retry automatically
+- Events emitted via `self.emit_event()` for real-time UI updates
+- MasterAgent routes via keyword matching OR LLM classification depending on thinking style
+- Memory: `AgentMemoryManager` singleton — `short_term` (session) + `long_term` (persisted JSON)
+- API endpoints at `/api/v1/ai/agent/` — config, memory, history, execution
+
+---
+> Source: [S0mbraD/3DPrint_MoldGen](https://github.com/S0mbraD/3DPrint_MoldGen) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-05-03 -->
