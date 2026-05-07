@@ -4,7 +4,7 @@
   "repo": "ephera-note",
   "description": "Markdown Paper for today. Less but handy features for plain Markdown lovers.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/devndesigner6/ephera-note",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-23T21:02:16Z"
+  "distributed_at": "2026-05-07T15:35:06Z"
 }
