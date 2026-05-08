@@ -4,7 +4,7 @@
   "repo": "WyckoffTradingAgent",
   "description": "Open-source Wyckoff trading agent and AI stock screener for volume-price analysis, A-share screening, CLI workflows, and MCP tools.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": ".cursor/rules/*.mdc",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/YoungCan-Wang/WyckoffTradingAgent",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-08T02:32:14Z"
+  "distributed_at": "2026-05-08T02:33:02Z"
 }
