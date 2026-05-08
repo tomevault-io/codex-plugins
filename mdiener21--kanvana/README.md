@@ -7,12 +7,12 @@ Kanvana, a local offline personal kanban with swim lanes, relations, sub-tasks, 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [mdiener21/kanvana](https://github.com/mdiener21/kanvana).
+Original source: `CLAUDE.md` in [mdiener21/kanvana](https://github.com/mdiener21/kanvana).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
