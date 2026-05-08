@@ -1,23 +1,15 @@
 
-# 工具函数复用与实现结构
+# C++ 代码格式化
 
-## 工具函数复用
+每次修改 `.cpp`、`.h`、`.hpp`、`.cc`、`.cxx` 文件后，必须使用项目根目录的 `.clang-format` 配置对修改的文件运行格式化：
 
-- 禁止重复编写语义相同的工具函数。
-- 新增工具函数前，先检索项目内是否已有可复用实现。
-- 跨模块复用的函数应放入公共头文件（如 `src/detail/`）。
-- 仅当前文件使用的工具函数应保留为匿名命名空间局部实现。
+```bash
+clang-format -i <modified-files>
+```
 
-## .cpp 文件结构
-
-- 避免在 .cpp 内做非必要前向声明；优先通过合理的函数定义顺序解决依赖。
-- 实现文件应按"工具函数 → 核心流程 → 对外接口"组织。
-
-## 命名空间约定
-
-- 公共 API 使用 `neroued::vectorizer` 命名空间。
-- 内部实现使用 `neroued::vectorizer::detail` 命名空间。
-- 公共头文件位于 `include/neroued/vectorizer/`，内部头文件位于 `src/` 子目录。
+- 仅对本次修改过的文件执行，不要全量格式化
+- 在所有编辑完成后统一执行一次即可，无需每次编辑后都执行
+- 格式化风格基于 LLVM，缩进 4 空格，列宽限制 100
 
 ---
 > Source: [Neroued/neroued_vectorizer](https://github.com/Neroued/neroued_vectorizer) — distributed by [TomeVault](https://tomevault.io).
