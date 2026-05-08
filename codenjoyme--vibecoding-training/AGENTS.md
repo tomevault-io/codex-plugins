@@ -1,7 +1,10 @@
-- Important! Always follow the instructions in `./instructions/main.agent.md` file.
+
+# Core Instructions
+
+- Always follow the instructions in `./instructions/main.agent.md`.
 - Always load the file completely, not partially.
-- It contains links to other files with instructions.
-- You should reload it in **every prompt** to get the latest instructions - because of the dynamic nature of the project.
+- Reload `./instructions/main.agent.md` **on every prompt** to get the latest project-specific guidance.
+- Use any linked instruction files from `main.agent.md` as the single source of truth for how to work in this repository.
 
 ---
 > Source: [codenjoyme/vibecoding-training](https://github.com/codenjoyme/vibecoding-training) — distributed by [TomeVault](https://tomevault.io).
