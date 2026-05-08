@@ -7,12 +7,12 @@ vvcode插件，免费使用 GLM-5，欢迎star，点击下方安装
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [vvcode-top/vv-code](https://github.com/vvcode-top/vv-code).
+Original source: `CLAUDE.md` in [vvcode-top/vv-code](https://github.com/vvcode-top/vv-code).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
