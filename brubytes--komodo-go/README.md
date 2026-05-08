@@ -1,0 +1,30 @@
+# komodo-go
+
+> Source: [Brubytes/komodo-go](https://github.com/Brubytes/komodo-go) — distributed by [TomeVault](https://tomevault.io)
+
+Mobile App for komodo
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [Brubytes/komodo-go](https://github.com/Brubytes/komodo-go).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+From [Brubytes/komodo-go](https://github.com/Brubytes/komodo-go) — a repo with 9+ stars on GitHub.
+
+---
+
+Install this config instantly:
+```
+npx tomevault install Brubytes/komodo-go
+```
+Source: [github.com/Brubytes/komodo-go](https://github.com/Brubytes/komodo-go).
+
+<!-- genome:d-i-s -->
