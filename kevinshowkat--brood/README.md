@@ -7,13 +7,13 @@ Reference-first AI image editing desktop for developers (macOS, Tauri, Rust).
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [kevinshowkat/brood](https://github.com/kevinshowkat/brood).
+Original source: `.cursor/rules/*.mdc` in [kevinshowkat/brood](https://github.com/kevinshowkat/brood).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
