@@ -1,15 +1,15 @@
-# SKILL: INIT AGENT
+# SKILL: INIT PROJECT
 
 ## TRIGGER
-Use this when creating a new qa_agent.md — AI job description with QA culture, principles and anti-patterns.
+Use this when setting up AI-assisted workflow for a new QA project without CLAUDE.md.
 
 ## LOGIC SOURCE
-**EXECUTE the instruction set defined in:** `.claude/skills/init-agent/SKILL.md`
+**EXECUTE the instruction set defined in:** `.claude/skills/init-project/SKILL.md`
 
-@.claude/skills/init-agent/SKILL.md
+@.claude/skills/init-project/SKILL.md
 
 ## KEY CONSTRAINT
-- Do NOT use to edit an existing qa_agent.md — edit it manually.
+- Do NOT use if CLAUDE.md is already configured — edit it manually.
 
 ---
 > Source: [vlad-ryzhkov/AI-QA-workshop-feb19](https://github.com/vlad-ryzhkov/AI-QA-workshop-feb19) — distributed by [TomeVault](https://tomevault.io).
