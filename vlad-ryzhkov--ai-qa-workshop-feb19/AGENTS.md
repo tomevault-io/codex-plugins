@@ -1,15 +1,15 @@
-# SKILL: SCREENSHOT ANALYSIS
+# SKILL: DOC LINT
 
 ## TRIGGER
-Use this when an image is attached or referenced for UI review.
+Use this when auditing documentation quality — size, structure, duplicates, SSOT violations.
 
 ## LOGIC SOURCE
-**EXECUTE the instruction set defined in:** `.claude/skills/screenshot-analyze/SKILL.md`
+**EXECUTE the instruction set defined in:** `.claude/skills/doc-lint/SKILL.md`
 
-@.claude/skills/screenshot-analyze/SKILL.md
+@.claude/skills/doc-lint/SKILL.md
 
-## OUTPUT
-Provide a structured list of UI/UX defects, localization issues, and layout bugs.
+## KEY CONSTRAINT
+- Do NOT use for code review or source code analysis.
 
 ---
 > Source: [vlad-ryzhkov/AI-QA-workshop-feb19](https://github.com/vlad-ryzhkov/AI-QA-workshop-feb19) — distributed by [TomeVault](https://tomevault.io).
