@@ -2,20 +2,22 @@
 
 > Sourced from [themoment-team/datagsm-server](https://github.com/themoment-team/datagsm-server) and converted for every major platform by [TomeVault](https://tomevault.io)
 
+광주소프트웨어마이스터고등학교 OpenAPI & OAuth 플랫폼
+
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [themoment-team/datagsm-server](https://github.com/themoment-team/datagsm-server).
+Original source: `copilot-instructions.md` in [themoment-team/datagsm-server](https://github.com/themoment-team/datagsm-server).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Quality verified by TomeVault's automated analysis pipeline. [View quality report](https://tomevault.io/claim/themoment-team#quality)
+Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/themoment-team/datagsm-server](https://github.com/themoment-team/datagsm-server)
 
 ---
 
@@ -23,6 +25,6 @@ Install this config instantly:
 ```
 npx tomevault install themoment-team/datagsm-server
 ```
-Or browse all formats at [https://tomevault.io/claim/themoment-team](https://tomevault.io/claim/themoment-team).
+Source: [github.com/themoment-team/datagsm-server](https://github.com/themoment-team/datagsm-server).
 
 <!-- genome:a-i-q -->
