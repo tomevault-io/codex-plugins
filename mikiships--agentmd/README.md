@@ -7,13 +7,13 @@ Generate high-quality AI agent context files (CLAUDE.md, AGENTS.md, .cursorrules
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [mikiships/agentmd](https://github.com/mikiships/agentmd).
+Original source: `CLAUDE.md` in [mikiships/agentmd](https://github.com/mikiships/agentmd).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
