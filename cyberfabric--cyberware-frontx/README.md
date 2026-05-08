@@ -1,0 +1,30 @@
+# AI instruction files for cyberware-frontx
+
+> Sourced from [cyberfabric/cyberware-frontx](https://github.com/cyberfabric/cyberware-frontx) and converted for every major platform by [TomeVault](https://tomevault.io)
+
+Cyber Ware FrontX - UI development kit for modern SaaS applications
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `copilot-instructions.md` in [cyberfabric/cyberware-frontx](https://github.com/cyberfabric/cyberware-frontx).
+
+## Also available for
+
+- **Claude Code** — `CLAUDE.md`
+- **Codex** — `AGENTS.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/cyberfabric/cyberware-frontx](https://github.com/cyberfabric/cyberware-frontx)
+
+---
+
+Install this config instantly:
+```
+npx tomevault install cyberfabric/cyberware-frontx
+```
+Source: [github.com/cyberfabric/cyberware-frontx](https://github.com/cyberfabric/cyberware-frontx).
+
+<!-- genome:a-i-p -->
