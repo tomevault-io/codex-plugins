@@ -4,7 +4,7 @@
   "repo": "dioprocess",
   "description": "A modern, lightweight Windows process monitor built with Rust, Dioxus, and Windows API.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/un4ckn0wl3z/dioprocess",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-24T16:47:15Z"
+  "distributed_at": "2026-05-08T15:15:38Z"
 }
