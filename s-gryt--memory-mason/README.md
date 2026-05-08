@@ -7,7 +7,7 @@ Memory Mason automatically captures AI conversations and turns them into structu
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [s-gryt/memory-mason](https://github.com/s-gryt/memory-mason).
+Original source: `.windsurf/rules/*.md` in [s-gryt/memory-mason](https://github.com/s-gryt/memory-mason).
 
 ## Also available for
 
@@ -15,7 +15,7 @@ Original source: `GEMINI.md` in [s-gryt/memory-mason](https://github.com/s-gryt/
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
-- **Windsurf** — `project-config.md`
+- **Gemini CLI** — `GEMINI.md`
 
 Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/s-gryt/memory-mason](https://github.com/s-gryt/memory-mason)
 
