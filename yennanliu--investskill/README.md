@@ -7,13 +7,13 @@ US stock analysis skills for Claude Code
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [yennanliu/InvestSkill](https://github.com/yennanliu/InvestSkill).
+Original source: `.cursor/rules/*.mdc` in [yennanliu/InvestSkill](https://github.com/yennanliu/InvestSkill).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
