@@ -1,15 +1,15 @@
-# SKILL: INIT PROJECT
+# SKILL: INIT SKILL
 
 ## TRIGGER
-Use this when setting up AI-assisted workflow for a new QA project without CLAUDE.md.
+Use this when creating a new skill, standardizing a QA process, or automating routine checks.
 
 ## LOGIC SOURCE
-**EXECUTE the instruction set defined in:** `.claude/skills/init-project/SKILL.md`
+**EXECUTE the instruction set defined in:** `.claude/skills/init-skill/SKILL.md`
 
-@.claude/skills/init-project/SKILL.md
+@.claude/skills/init-skill/SKILL.md
 
 ## KEY CONSTRAINT
-- Do NOT use if CLAUDE.md is already configured — edit it manually.
+- Do NOT use to edit existing skills — edit SKILL.md files directly.
 
 ---
 > Source: [vlad-ryzhkov/AI-QA-workshop-feb19](https://github.com/vlad-ryzhkov/AI-QA-workshop-feb19) — distributed by [TomeVault](https://tomevault.io).
