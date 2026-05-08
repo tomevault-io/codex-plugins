@@ -1,65 +1,96 @@
-# Copilot Code Review Instructions
 
-## Review Priority Levels
+# codingbuddy Agent System
 
-- **🔴 CRITICAL (Block merge)**: Security vulnerabilities, logic errors, breaking changes, data loss risks
-- **🟡 IMPORTANT (Requires discussion)**: Code quality issues, missing tests, performance bottlenecks, architectural deviations
-- **🟢 SUGGESTION (Non-blocking)**: Readability improvements, minor optimizations, best practice refinements
+## Required: Mode Keyword Detection
 
-## Security Review
+When user message starts with `PLAN`, `ACT`, `EVAL`, `AUTO` (or localized variants: 자동, 自動, 自动, AUTOMÁTICO):
 
-- Check for hardcoded secrets, API keys, or credentials
-- Look for SQL injection and XSS vulnerabilities
-- Verify proper input validation and sanitization
-- Check for command injection in shell executions
-- Ensure authentication/authorization is properly implemented
-- Verify dependencies don't have known vulnerabilities
+→ **Immediately** call `parse_mode` MCP tool
 
-## TypeScript Standards
+## File Context → Agent Mapping
 
-- No `any` type usage — use `unknown` or specific types with strict mode
-- Prefer `const` over `let`, never use `var`
-- Use explicit return types for public functions
-- Ensure proper null/undefined handling with strict null checks
-- Prefer pure functions over impure ones (separate files for pure/impure)
+| File Pattern | Recommended Agent | MCP Call |
+|--------------|-------------------|----------|
+| `*.tsx`, `*.ts` | frontend-developer | `get_agent_details("frontend-developer")` |
+| `*.go`, `*.py`, `*.java`, `*.rs` | backend-developer | `get_agent_details("backend-developer")` |
+| `Dockerfile`, `*.yml` | devops-engineer | `get_agent_details("devops-engineer")` |
+| `*.json` (agents/) | agent-architect | `get_agent_details("agent-architect")` |
 
-## Code Quality
+## Specialist Auto-Recommendation
 
-- Functions should follow Single Responsibility Principle (10-20 lines max)
-- No deeply nested code (max 3-4 levels)
-- No magic numbers — use named constants
-- Remove dead code and unused imports
-- DRY: No duplicated logic across files
-- Keep methods small and focused
+| Detected Topic | Recommended Specialist |
+|----------------|------------------------|
+| Security, auth, XSS, CSRF | security-specialist |
+| Accessibility, ARIA, a11y, WCAG | accessibility-specialist |
+| Performance, bundle, optimization | performance-specialist |
+| Testing, TDD, coverage | test-strategy-specialist |
+| Architecture, layers, dependencies | architecture-specialist |
 
-## Testing Standards
+## Pre-Analysis
 
-- Core logic (entities, shared/utils, hooks) MUST have tests (TDD approach)
-- UI components (features, widgets) should have test-after coverage
-- Target 90%+ test coverage
-- No mocking — test real behavior with actual implementations
-- Use Arrange-Act-Assert pattern
-- Test edge cases and error paths
+Before starting specialist analysis, optionally call `analyze_task` MCP tool for:
+- Risk assessment of the current task
+- Recommended specialists (may differ from file-pattern defaults)
+- Contextual checklists
 
-## Architecture
+## Specialist Execution Pattern
 
-- Layer dependency: app → widgets → features → entities → shared
-- No circular dependencies between modules
-- Server Components as default, Client Components only when necessary
-- Pure/impure function separation (different files)
+When `parse_mode` returns `parallelAgentsRecommendation`:
 
-## NestJS Patterns (MCP Server)
+1. Call `prepare_parallel_agents` MCP tool with the recommended specialists
+2. Execute each specialist **sequentially** (one at a time):
+   - Announce: "🔍 Analyzing from [icon] [specialist-name] perspective..."
+   - Apply specialist system prompt to analyze target code
+   - Record findings
+3. Present consolidated findings summary
 
-- Follow NestJS module pattern (Module → Controller/Gateway → Service)
-- Use dependency injection properly
-- Validate DTOs with class-validator decorators
-- Handle errors with proper NestJS exception filters
+See `packages/rules/.ai-rules/adapters/cursor.md` for full details.
 
-## Commit & PR Standards
+## Available Agents
 
-- Conventional commits format (feat:, fix:, refactor:, test:, docs:, chore:)
-- Each PR should be focused on a single concern
-- PR description must explain "why", not just "what"
+| Agent | Description | Expertise |
+|-------|-------------|-----------|
+| Accessibility Specialist | Accessibility expert for Planning, Implementation, and Evaluation modes - unified specialist for WCAG 2.1 AA compliance, ARIA attributes, and keyboard navigation |  |
+| Act Mode Agent | ACT mode agent - specialized for actual implementation execution |  |
+| Agent Architect | Primary Agent for creating, validating, and managing AI agent configurations |  |
+| AI/ML Engineer | AI/ML expert for Planning, Implementation, and Evaluation modes - unified specialist for LLM integration, prompt engineering, RAG architecture, AI safety, and testing non-deterministic systems |  |
+| Architecture Specialist | Architecture expert for Planning, Implementation, and Evaluation modes - unified specialist for layer placement, dependency direction, and type safety |  |
+| Auto Mode Agent | AUTO mode agent - autonomous PLAN → ACT → EVAL cycle until quality targets met |  |
+| Backend Developer | Language-agnostic backend specialist with Clean Architecture, TDD, and security focus. Supports Node.js, Python, Go, Java, and other backend stacks. |  |
+| Code Quality Specialist | Code quality expert for Planning, Implementation, and Evaluation modes - unified specialist for SOLID principles, DRY, complexity analysis, and design patterns |  |
+| Code Reviewer | Senior software engineer specializing in comprehensive code quality evaluation and improvement recommendations |  |
+| Data Engineer | Data specialist focused on database design, schema optimization, migrations, and analytics query optimization. Handles data modeling, ETL patterns, and reporting data structures. |  |
+| Data Scientist | Data science specialist for exploratory data analysis, statistical modeling, ML model development, and data visualization. Handles EDA, feature engineering, model training, and Jupyter notebook development. |  |
+| DevOps Engineer | Docker, Datadog monitoring, and Next.js deployment specialist |  |
+| Documentation Specialist | Documentation expert for Planning, Implementation, and Evaluation modes - unified specialist for documentation planning, code comments, type definitions, and documentation quality assessment |  |
+| Eval Mode Agent | EVAL mode agent - specialized for code quality evaluation and improvement suggestions |  |
+| Event Architecture Specialist | Event-driven architecture specialist for Planning, Implementation, and Evaluation modes - unified specialist for message queues, event sourcing, CQRS, real-time communication, distributed transactions, and event schema management |  |
+| Frontend Developer | Modern React/Next.js specialist with Server Components/Actions, TDD, and accessibility focus |  |
+| i18n Specialist | Internationalization expert for Planning, Implementation, and Evaluation modes - unified specialist for i18n library setup, translation key structure, formatting, and RTL support |  |
+| Integration Specialist | External service integration specialist for Planning, Implementation, and Evaluation modes - unified specialist for API integrations, webhooks, OAuth flows, and failure isolation patterns |  |
+| Migration Specialist | Cross-cutting migration coordinator for legacy system modernization, framework upgrades, database migrations, and API versioning - unified specialist for Strangler Fig, Branch by Abstraction, and zero-downtime migration patterns |  |
+| Mobile Developer | Cross-platform and native mobile specialist supporting React Native, Flutter, iOS (Swift/SwiftUI), and Android (Kotlin/Compose). Focuses on mobile-specific patterns, performance, and platform guidelines. |  |
+| Observability Specialist | Observability expert for Planning, Implementation, and Evaluation modes - unified specialist for vendor-neutral monitoring, distributed tracing, structured logging, SLI/SLO frameworks, and alerting patterns |  |
+| Parallel Orchestrator | Orchestrates parallel execution of multiple GitHub issues using taskMaestro with file-overlap validation, Wave grouping, and AUTO mode workers |  |
+| Performance Specialist | Performance expert for Planning, Implementation, and Evaluation modes - unified specialist for bundle size optimization, rendering optimization, and Core Web Vitals |  |
+| Plan Mode Agent | PLAN mode agent - specialized for work planning and design |  |
+| Plan Reviewer | Reviews implementation plans for quality, completeness, and feasibility before execution |  |
+| Platform Engineer | Cloud-native infrastructure expert for Planning, Implementation, and Evaluation modes - unified specialist for Infrastructure as Code, Kubernetes orchestration, multi-cloud strategy, GitOps workflows, cost optimization, and disaster recovery |  |
+| Security Engineer | Primary Agent for implementing security features, fixing vulnerabilities, and applying security best practices in code |  |
+| Security Specialist | Security expert for Planning, Implementation, and Evaluation modes - unified specialist for authentication, authorization, and security vulnerability prevention |  |
+| SEO Specialist | SEO expert for Planning, Implementation, and Evaluation modes - unified specialist for metadata, structured data, and search engine optimization |  |
+| Software Engineer | General-purpose implementation engineer — any language, any domain, TDD-first |  |
+| Solution Architect | High-level system design and architecture planning specialist |  |
+| Systems Developer | Primary Agent for systems programming, low-level optimization, native code development, and performance-critical implementations |  |
+| Technical Planner | Low-level implementation planning with TDD and bite-sized tasks |  |
+| Test Engineer | Primary Agent for TDD cycle execution, test writing, and coverage improvement across all test types |  |
+| Test Strategy Specialist | Test strategy expert for Planning, Implementation, and Evaluation modes - unified specialist for TDD vs Test-After decisions, test coverage planning, and test quality assessment |  |
+| Tooling Engineer | Project configuration, build tools, and development environment specialist |  |
+| UI/UX Designer | UI/UX design specialist based on universal design principles and UX best practices - focuses on aesthetics, usability, and user experience rather than specific design system implementations |  |
+
+## Reference
+
+Agent definitions: `packages/rules/.ai-rules/agents/README.md`
 
 ---
 > Source: [JeremyDev87/codingbuddy](https://github.com/JeremyDev87/codingbuddy) — distributed by [TomeVault](https://tomevault.io).
