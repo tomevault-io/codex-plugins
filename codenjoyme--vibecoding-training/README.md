@@ -5,13 +5,13 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [codenjoyme/vibecoding-training](https://github.com/codenjoyme/vibecoding-training).
+Original source: `.cursor/rules/*.mdc` in [codenjoyme/vibecoding-training](https://github.com/codenjoyme/vibecoding-training).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
