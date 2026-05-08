@@ -1,0 +1,7 @@
+技术栈:1.ROS2;2.C++17,Python3;3.机器人运动学;4.几何数学
+编码规范:1.遵循Google C++ Style Guide；2.C++的if判断语句需要使用{}花括号包围
+特别注意:1.生成的代码中不包含多余的解释说明文字,测试用例和文档;2.语法准确无错误;3.实现功能时,尽可能先判断异常情况,出现异常情况的时候,及时退出;4.尽可能不要写else语句
+
+---
+> Source: [IIMFINE/lerobot_vr_controller](https://github.com/IIMFINE/lerobot_vr_controller) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-05-08 -->
