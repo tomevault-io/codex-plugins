@@ -2,6 +2,8 @@
 
 > Sourced from [miketromba/shadcn-themer](https://github.com/miketromba/shadcn-themer) and converted for every major platform by [TomeVault](https://tomevault.io)
 
+Shadcn Themer is a web application that lets you to create, customize, and share themes for shadcn/ui
+
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
@@ -15,7 +17,7 @@ Original source: `.cursor/rules/*.mdc` in [miketromba/shadcn-themer](https://git
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Quality verified by TomeVault's automated analysis pipeline. [View quality report](https://tomevault.io/claim/miketromba#quality)
+Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/miketromba/shadcn-themer](https://github.com/miketromba/shadcn-themer)
 
 ---
 
