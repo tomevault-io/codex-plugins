@@ -1,7 +1,5 @@
-# Cypilot
 
-
-ALWAYS open and follow `{cypilot_path}/.core/skills/cypilot/SKILL.md`
+Always use the ./.ai/GUIDELINES.md
 
 ---
 > Source: [cyberfabric/cyberware-frontx](https://github.com/cyberfabric/cyberware-frontx) — distributed by [TomeVault](https://tomevault.io).
