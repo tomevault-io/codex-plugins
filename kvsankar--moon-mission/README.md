@@ -7,14 +7,14 @@ Moon mission orbit animation
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [kvsankar/moon-mission](https://github.com/kvsankar/moon-mission).
+Original source: `CLAUDE.md` in [kvsankar/moon-mission](https://github.com/kvsankar/moon-mission).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/kvsankar/moon-mission](https://github.com/kvsankar/moon-mission)
