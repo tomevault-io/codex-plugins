@@ -4,7 +4,7 @@
   "repo": "indigoengine",
   "description": "Projects by Purple Kingdom Games",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/PurpleKingdomGames/indigoengine",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-25T00:50:05Z"
+  "distributed_at": "2026-05-08T22:40:55Z"
 }
