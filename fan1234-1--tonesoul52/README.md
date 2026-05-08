@@ -7,12 +7,12 @@ AI governance framework — semantic responsibility, self-auditing memory, counc
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [Fan1234-1/tonesoul52](https://github.com/Fan1234-1/tonesoul52).
+Original source: `CLAUDE.md` in [Fan1234-1/tonesoul52](https://github.com/Fan1234-1/tonesoul52).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
