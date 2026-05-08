@@ -1,0 +1,28 @@
+# pixi-reels
+
+> Tome by [schmooky](https://github.com/schmooky/pixi-reels) — distributed by [TomeVault](https://tomevault.io)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [schmooky/pixi-reels](https://github.com/schmooky/pixi-reels).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/schmooky/pixi-reels](https://github.com/schmooky/pixi-reels)
+
+---
+
+Install this config instantly:
+```
+npx tomevault install schmooky/pixi-reels
+```
+Source: [github.com/schmooky/pixi-reels](https://github.com/schmooky/pixi-reels).
+
+<!-- genome:t-i-q -->
