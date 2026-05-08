@@ -2,6 +2,8 @@
 
 > Tome by [golid-ai](https://github.com/golid-ai/golid) — distributed by [TomeVault](https://tomevault.io)
 
+Production-ready Go + SolidJS starter — Auth, 70+ components, SSR, real-time, one-command deployment
+
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
