@@ -4,7 +4,7 @@
   "repo": "gitfolio",
   "description": "Create a polished GitHub portfolio site in under 30 seconds \u2014 just fork, rename to {username}.github.io, and auto-deploy with GitHub Actions.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": ".cursor/rules/*.mdc",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/amide-init/gitfolio",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-04T11:48:01Z"
+  "distributed_at": "2026-05-08T17:04:49Z"
 }
