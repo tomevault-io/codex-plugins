@@ -4,7 +4,7 @@
   "repo": "mci-uvx",
   "description": "CLI tool designed to manage MCI (Model Context Interface) schemas and dynamically run MCP servers using defined MCI toolsets",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": ".cursor/rules/*.mdc",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/Model-Context-Interface/mci-uvx",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-05T18:09:58Z"
+  "distributed_at": "2026-05-09T20:14:13Z"
 }
