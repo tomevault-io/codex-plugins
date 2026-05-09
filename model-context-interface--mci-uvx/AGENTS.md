@@ -1,206 +1,70 @@
-# Copilot Instructions for mci-py
+# Assistant Rules
 
-## Project Context
+**Your fundamental responsibility:** Remember you are a senior engineer and have a
+serious responsibility to be clear, factual, think step by step and be systematic,
+express expert opinion, and make use of the user’s attention wisely.
 
-- **Check `PRD.md`** for overall project context, goals, and requirements
-- **Check `PLAN.md`** for full implementation plan and design decisions
-- **Check `development.md`** for testing and linting commands
-- **Check `installation.md`** for setup and installation instructions
+**Rules must be followed:** It is your responsibility to carefully read these rules as
+well as Python or other language-specific rules included here.
 
-## Code Documentation Standards
+Therefore:
 
-### File-Level Comments
+- Be concise. State answers or responses directly, without extra commentary.
+  Or (if it is clear) directly do what is asked.
 
-Write explanation comments at the start of each file that describe:
+- If instructions are unclear or there are two or more ways to fulfill the request that
+  are substantially different, make a tentative plan (or offer options) and ask for
+  confirmation.
 
-- The purpose of the file
-- What functionality it provides
-- How it fits into the overall project
+- If you can think of a much better approach that the user requests, be sure to mention
+  it. It’s your responsibility to suggest approaches that lead to better, simpler
+  solutions.
 
-Example:
+- Give thoughtful opinions on better/worse approaches, but NEVER say “great idea!”
+  or “good job” or other compliments, encouragement, or non-essential banter.
+  Your job is to give expert opinions and to solve problems, not to motivate the user.
 
-```python
-"""
-mcipy.py - Main entry point for the MCI Python adapter
+- Avoid gratuitous enthusiasm or generalizations.
+  Use thoughtful comparisons like saying which code is “cleaner” but don’t congratulate
+  yourself. Avoid subjective descriptions.
+  For example, don’t say “I’ve meticulously improved the code and it is in great shape!”
+  That is useless generalization.
+  Instead, specifically say what you’ve done, e.g., "I’ve added types, including
+  generics, to all the methods in `Foo` and fixed all linter errors."
 
-This module provides the core functionality for loading and executing
-MCI tool definitions from JSON schema files.
-"""
-```
+# General Coding Guidelines
 
-### Function/Class Documentation
+## Using Comments
 
-Write explanation comments for each function, class, and method that explain:
+- Keep all comments concise and clear and suitable for inclusion in final production.
 
-- What the function/class does
-- Why it exists (not just what it does)
-- Any important implementation details or gotchas
-- Parameters and return values (if not obvious from type hints)
+- DO use comments whenever the intent of a given piece of code is subtle or confusing or
+  avoids a bug or is not obvious from the code itself.
 
-Example:
+- DO NOT repeat in comments what is obvious from the names of functions or variables or
+  types.
 
-```python
-def execute_tool(tool_def: dict, properties: dict) -> dict:
-    """
-    Execute an MCI tool definition with the provided properties.
+- DO NOT include comments that reflect what you did, such as “Added this function” as
+  this is meaningless to anyone reading the code later.
+  (Instead, describe in your message to the user any other contextual information.)
 
-    Handles templating of environment variables and property values,
-    then dispatches to the appropriate executor (HTTP, CLI, or file).
-    Returns a structured result with error handling.
-    """
-    # Implementation
-```
+- DO NOT use fancy or needlessly decorated headings like “===== MIGRATION TOOLS =====”
+  in comments
 
-## Testing Strategy
+- DO NOT number steps in comments.
+  These are hard to maintain if the code changes.
+  NEVER DO THIS: “// Step 3: Fetch the data from the cache”\
+  This is fine: “// Now fetch the data from the cache”
 
-### Coverage Goal
+- DO NOT use emojis or special unicode characters like ① or • or – or — in comments.
 
-**Target: 90%+ test coverage** across all modules
-
-### Test Types
-
-#### 1. Unit Tests
-
-Test every function involved in processing:
-
-- **JSON Schema Validation**: Test schema loading, validation, and error handling
-- **Templating Engine**: Test placeholder replacement for `{{env.VAR}}`, `{{props.name}}`, `{{input.field}}`
-- **Execution Dispatchers**: Test each executor (HTTP, CLI, file) in isolation
-- **Authentication Handlers**: Test API key, OAuth2, basic auth parsing and application
-- **Error Handling**: Test error detection, formatting, and propagation
-- **Utility Functions**: Test all helper functions for parsing, formatting, and validation
-- **Others**
-
-Example unit test structure:
-
-```python
-def test_template_replacement():
-    """Test that environment variables are correctly replaced in templates."""
-    template = "Hello {{env.USER}}"
-    env = {"USER": "TestUser"}
-    result = replace_template(template, env=env)
-    assert result == "Hello TestUser"
-
-def test_template_missing_variable():
-    """Test error handling when template variable is missing."""
-    template = "Hello {{env.MISSING}}"
-    with pytest.raises(TemplateError):
-        replace_template(template, env={})
-```
-
-#### 2. Feature Tests
-
-Test full features end-to-end:
-
-- **Tool Loading**: Load JSON context file and parse all tools
-- **HTTP Execution**: Make real HTTP requests to test endpoints (use mocking where appropriate)
-- **CLI Execution**: Execute command-line tools and capture output
-- **File Reading**: Read and parse files with template replacement
-- **Error Scenarios**: Test network failures, timeouts, invalid inputs
-
-Example feature test:
-
-```python
-def test_execute_http_tool_with_api_key():
-    """Test executing an HTTP tool with API key authentication."""
-    tool_def = {
-        "name": "get_weather",
-        "execution": {
-            "type": "http",
-            "method": "GET",
-            "url": "https://api.example.com/weather",
-            "auth": {
-                "type": "apiKey",
-                "in": "header",
-                "name": "X-API-Key",
-                "value": "{{env.API_KEY}}"
-            }
-        }
-    }
-    env = {"API_KEY": "test-key-123"}
-    result = execute_tool(tool_def, env=env, props={})
-    assert result["success"] is True
-```
-
-#### 3. Manual Tests
-
-Create manual test files for large features that should be run individually via terminal with clear output.
-
-**Location**: `testsManual/`
-
-**Requirements**:
-
-- Each test file should be standalone and executable
-- Provide clear, human-readable output showing what is being tested
-- Include setup instructions in comments at the top of each file
-- Use only the implemented modules directly, not mocks or any other deps
-- Show both success and failure cases
-- Avoid using private properties or methods in feature tests
-
-### Test Organization
-
-Organize tests in the `tests/` directory: Unit tests in `tests/unit/` mimicking `src/` directory structure; place feature tests directly under `tests/` directory.
-
-Example:
-
-```
-tests/
-├── test_schema.py              # Feature tests for JSON schema validation
-├── test_templating.py          # Feature tests for template engine
-└── unit/
-    ├── test_mcipy.py
-    ├── test_init.py
-    └── tools/
-        ├── test_http_executor.py
-        └── test_file_executor.py
-```
-
-## Development Workflow
-
-### Testing Commands
-
-```bash
-# Run all automated tests
-make test
-
-# Run specific test file with output
-uv run pytest -s tests/test_schema.py
-
-# Run tests with coverage report
-make coverage
-
-# Run a manual test
-uv run python testsManual/test_parsing_tools.py
-```
-
-### Linting Commands
-
-```bash
-# Run all linters and formatters
-make lint
-
-# Run individual linters
-uv run ruff check --fix src/
-uv run ruff format src/
-uv run basedpyright --stats src/
-```
-
-### Installation
-
-```bash
-# Install all dependencies
-make install
-
-# Run sync, lint, and test in one command
-make
-```
-
-## Code Style Guidelines
-
-- Use modern Python 3.11+ features and type annotations
-- Keep comments concise and explanatory (focus on WHY, not WHAT)
-- Avoid obvious or redundant comments
-- Use `uv` for all Python operations, not `pip` or `python` directly
+- Use emojis in output if it enhances the clarity and can be done consistently.
+  You may use ✔︎ and ✘ to indicate success and failure, and ∆ and ‼︎ for user-facing
+  warnings and errors, for example, but be sure to do it consistently.
+  DO NOT use emojis gratuitously in comments or output.
+  You may use then ONLY when they have clear meanings (like success or failure).
+  Unless the user says otherwise, avoid emojis and Unicode in comments as clutters the
+  output with little benefit.
 
 ---
 > Source: [Model-Context-Interface/mci-uvx](https://github.com/Model-Context-Interface/mci-uvx) — distributed by [TomeVault](https://tomevault.io).
