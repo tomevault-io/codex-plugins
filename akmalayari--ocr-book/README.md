@@ -1,0 +1,30 @@
+# ocr-book
+
+> Tome by [akmalayari](https://github.com/akmalayari/ocr-book) — distributed by [TomeVault](https://tomevault.io)
+
+Book OCR Pipeline → Markdown (PaddleOCR-VL-1.5 + llama-server)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [akmalayari/ocr-book](https://github.com/akmalayari/ocr-book).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/akmalayari/ocr-book](https://github.com/akmalayari/ocr-book)
+
+---
+
+Install this config instantly:
+```
+npx tomevault install akmalayari/ocr-book
+```
+Source: [github.com/akmalayari/ocr-book](https://github.com/akmalayari/ocr-book).
+
+<!-- genome:t-i-p -->
