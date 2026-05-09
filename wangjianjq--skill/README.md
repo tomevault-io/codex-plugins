@@ -7,13 +7,13 @@ Auto agents
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [wangjianjq/Skill](https://github.com/wangjianjq/Skill).
+Original source: `copilot-instructions.md` in [wangjianjq/Skill](https://github.com/wangjianjq/Skill).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
