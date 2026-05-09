@@ -7,13 +7,13 @@ CLI tool designed to manage MCI (Model Context Interface) schemas and dynamicall
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [Model-Context-Interface/mci-uvx](https://github.com/Model-Context-Interface/mci-uvx).
+Original source: `.cursor/rules/*.mdc` in [Model-Context-Interface/mci-uvx](https://github.com/Model-Context-Interface/mci-uvx).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
