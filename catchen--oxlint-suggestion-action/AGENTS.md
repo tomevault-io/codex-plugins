@@ -1,4 +1,3 @@
-
 # Agent Instructions
 
 These instructions apply to all coding agents in this repository (Cursor, Claude Code, Codex).
