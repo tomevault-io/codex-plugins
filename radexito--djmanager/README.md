@@ -7,12 +7,12 @@ Your music library, built for DJs. Import tracks, analyse BPM and key automatica
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [Radexito/DjManager](https://github.com/Radexito/DjManager).
+Original source: `CLAUDE.md` in [Radexito/DjManager](https://github.com/Radexito/DjManager).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
