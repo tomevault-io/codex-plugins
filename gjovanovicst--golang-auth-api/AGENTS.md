@@ -1,55 +1,119 @@
-# AI Coding Instructions for Auth API
+# API Development Patterns
 
-## 🔍 Project Context & Architecture
+## Route Organization in Main
+Routes are defined in [cmd/api/main.go](mdc:cmd/api/main.go) with clear groupings:
 
-- **Type**: Modular Monolith Go REST API using **Gin** framework.
-- **Data Layer**: **PostgreSQL** with **GORM**, **Redis** for caching/sessions.
-- **Structure**: Clean Architecture-ish.
-  - `cmd/api/main.go`: Entry point, dependency injection wire-up.
-  - `internal/<domain>/`: Encapsulated features (e.g., `user`, `social`, `log`).
-  - `internal/<domain>/handler.go`: HTTP transport handling.
-  - `internal/<domain>/service.go`: Business rules.
-  - `internal/<domain>/repository.go`: Database interactions.
-  - `pkg/`: Shared code (DTOs, simplified models, utils).
+### Public Routes
+- No authentication required
+- Registration, login, password reset
+- Social OAuth callbacks
 
-## 🛠️ Build & Test Workflows
+### Protected Routes  
+- Require JWT authentication via `middleware.AuthMiddleware()`
+- User profile, logout, 2FA management
+- Activity logs
 
-- **Development**: Use `make dev` to run with hot-reload (Air).
-- **Testing**: Run `make test` for unit tests.
-- **Build**: `make build` generates generic binaries.
-- **Database**:
-  - Migrations run automatically on startup (`database.MigrateDatabase()`).
-  - Use `scripts/backup_db.sh` for backups.
+### Admin Routes
+- Protected with auth middleware
+- Future role-based access control
 
-## 📝 Conventions & Patterns
+## Adding New API Endpoints
 
-- **Dependency Injection**: Manual DI in `main.go`. Initialize Repo -> Service -> Handler.
-- **Configuration**: **Viper** + `.env`. Check `cmd/api/main.go` for default key setups.
-- **Validation**: Use `go-playground/validator` struct tags in DTOs.
-- **Documentation**: Update Swagger comments (`// @Summary ...`) when changing handlers. Run `swag init` (often implied or manual) to regenerate docs in `docs/`.
-- **Security**:
-  - Use `internal/middleware` for JWT validation & RBAC.
-  - Don't expose raw GORM errors to API clients; wrap them.
-- **Logging**: Use `internal/log` service for audit trails (critical/important/info).
+### 1. Create DTOs
+Define request/response structures in `pkg/dto/`:
+```go
+type CreateSomethingRequest struct {
+    Name        string `json:"name" validate:"required" example:"Sample Name"`
+    Description string `json:"description,omitempty" example:"Sample description"`
+}
 
-## ⚠️ Important Implementation Details
+type SomethingResponse struct {
+    ID          uint   `json:"id" example:"1"`
+    Name        string `json:"name" example:"Sample Name"`
+    CreatedAt   string `json:"created_at" example:"2023-01-01T00:00:00Z"`
+}
+```
 
-- **Social Auth**: Handlers in `internal/social` manage OAuth flows (Google, Github, FB).
-- **2FA**: `internal/twofa` handles TOTP logic.
-- **Redis**: Essential for token blacklisting and session data; ensure Redis is available.
-- **Database Modals**: GORM models often live in domain packages.
+### 2. Add Handler with Swagger Annotations
+```go
+// CreateSomething creates a new something
+// @Summary Create something
+// @Description Create a new something with the provided data
+// @Tags something
+// @Accept json
+// @Produce json
+// @Param request body dto.CreateSomethingRequest true "Something data"
+// @Success 201 {object} dto.APIResponse{data=dto.SomethingResponse}
+// @Failure 400 {object} dto.APIResponse
+// @Security ApiKeyAuth
+// @Router /something [post]
+func (h *Handler) CreateSomething(c *gin.Context) {
+    // Implementation
+}
+```
 
-## 🚀 Examples
+### 3. Register Route
+Add to appropriate group in [cmd/api/main.go](mdc:cmd/api/main.go):
+```go
+protected.POST("/something", handler.CreateSomething)
+```
 
-- **Adding a new endpoint**:
-  1. Define DTO in `pkg/dto`.
-  2. add function to `Repository` interface & impl in `internal/<domain>/repository.go`.
-  3. Add logic to `Service` in `internal/<domain>/service.go`.
-  4. Register route in `Handler` and `main.go`.
-- **Log Activity**:
-  ```go
-  logQueryService.CreateLog(ctx, "USER_LOGIN", "User logged in", userID, "INFO")
-  ```
+### 4. Regenerate Documentation
+```bash
+make swag-init
+```
+
+## Authentication Patterns
+
+### JWT Middleware
+- Applied to protected routes in [cmd/api/main.go](mdc:cmd/api/main.go)
+- Validates JWT tokens and extracts user information
+- Sets user context for handlers
+
+### 2FA Flow
+- Temporary tokens for 2FA verification
+- Separate verification endpoint
+- Recovery code support
+
+### Social Authentication
+- OAuth2 flow with state verification
+- Provider-specific callbacks
+- User linking/creation logic
+
+## Response Format Standards
+
+### Success Response
+```go
+{
+  "success": true,
+  "data": {...}
+}
+```
+
+### Error Response
+```go
+{
+  "success": false,
+  "error": "descriptive error message"
+}
+```
+
+## Input Validation
+- Use `go-playground/validator` tags in DTOs
+- Validate in handlers before service calls
+- Return appropriate HTTP status codes
+
+## Activity Logging
+- Log security-relevant events
+- Include user ID, IP address, user agent
+- Use structured logging format
+- Examples: login attempts, password changes, 2FA events
+
+## Database Operations
+- Use GORM models from `pkg/models/`
+- Repository pattern for data access
+- Transaction support for multi-step operations
+- Proper error handling and logging
 
 ---
 > Source: [gjovanovicst/golang-auth-api](https://github.com/gjovanovicst/golang-auth-api) — distributed by [TomeVault](https://tomevault.io).
