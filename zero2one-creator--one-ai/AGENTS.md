@@ -47,5 +47,5 @@
 - 始终使用中文回复用户
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/zero2one-creator) — claim your Tome and manage your conversions.
-<!-- tomevault:4.0:agents_md:2026-04-13 -->
+> Source: [zero2one-creator/ONE-AI](https://github.com/zero2one-creator/ONE-AI) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-05-05 -->
