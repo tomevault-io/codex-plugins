@@ -7,12 +7,12 @@ A cognition aware database engine for AI agent memory. Purpose built in Rust wit
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [nambok/mentedb](https://github.com/nambok/mentedb).
+Original source: `CLAUDE.md` in [nambok/mentedb](https://github.com/nambok/mentedb).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
