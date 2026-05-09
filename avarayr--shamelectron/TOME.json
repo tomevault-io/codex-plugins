@@ -4,7 +4,7 @@
   "repo": "shamelectron",
   "description": "\u269b\ufe0f Tracking Electron apps that haven't bumped their electron versions to mitigate a GPU load issue on MacOS 26",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": ".cursor/rules/*.mdc",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/avarayr/shamelectron",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-05T21:03:48Z"
+  "distributed_at": "2026-05-09T22:07:26Z"
 }
