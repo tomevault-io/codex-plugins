@@ -1,0 +1,30 @@
+# arbiter
+
+> Source: [ashita-ai/arbiter](https://github.com/ashita-ai/arbiter) — distributed by [TomeVault](https://tomevault.io)
+
+Arbiter provides simple APIs, complete observability, and provider-agnostic infrastructure for evaluating LLM outputs. Built on PydanticAI with automatic interaction tracking, multiple evaluators, and extensible architecture.
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [ashita-ai/arbiter](https://github.com/ashita-ai/arbiter).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/ashita-ai/arbiter](https://github.com/ashita-ai/arbiter)
+
+---
+
+Install this config instantly:
+```
+npx tomevault install ashita-ai/arbiter
+```
+Source: [github.com/ashita-ai/arbiter](https://github.com/ashita-ai/arbiter).
+
+<!-- genome:d-i-p -->
