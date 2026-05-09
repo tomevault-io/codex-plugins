@@ -1,14 +1,14 @@
-## Maverick Engineering Rules
 
-- Keep the kernel pure: domain, ports, use cases, protocol policy, resilience and orchestration contracts belong in core; HTTP, UDP, persistence wiring, metrics, CLI and deployment concerns do not.
-- Depend on traits, not concrete adapters. Composition of SQLite, network transports or framework-specific objects must happen outside kernel modules.
-- Prefer small, explicit units with one reason to change. If a module is mixing policy and infrastructure, split it before adding more behavior.
-- Preserve offline-first behavior. New flows must keep local processing and degradation paths working when remote dependencies fail.
-- Make failure modes explicit. Return structured errors, avoid hidden panics, and add backpressure, retries or circuit breakers only where they protect a real boundary.
-- Use Rust idioms that improve clarity: strong types, exhaustive matches, ownership-aware APIs, and async boundaries only where needed.
-- Keep public APIs narrow. Expose the minimum surface required by callers and avoid leaking adapter details through core interfaces.
-- Write tests close to the behavior being protected. Prefer focused unit tests for policy and targeted integration tests for adapters and composition.
-- Do not move fast by violating boundaries. If a change needs a shortcut across layers, stop and introduce the missing port or composition seam first.
+# Rust — best practices
+
+- **Tooling**: keep the workspace warning-free; fix new Clippy lints rather than silencing without cause. Use repo settings: [`rust-linter-configuration`](rust-linter-configuration.mdc) (rustfmt, CI flags, `cargo lint` / `cargo fmt-check`).
+- **`Option` / `Result`**: use `?`, `map`, `and_then`, and `if let` idiomatically; avoid `.unwrap()`/`.expect()` outside tests or documented invariants.
+- **Ownership**: prefer borrowing (`&str`, `&[u8]`) in APIs; take `Into<String>` or `Cow` only when ownership is truly required.
+- **Collections**: prefer iterator chains when they improve clarity; avoid indexed loops when iterators express intent better.
+- **`unsafe`**: smallest possible scope, with a `// SAFETY:` comment explaining invariants the compiler cannot check. Never hide `unsafe` behind a safe API without a bulletproof contract.
+- **Async**: respect `Send` bounds across task boundaries; avoid holding non-`Send` guards across `.await`.
+- **Public API**: document `pub` items that are not obvious; breaking changes deserve a clear changelog mindset (types, trait methods, error variants).
+- **Dependencies**: add crates for real leverage; prefer `std` when it stays clear and small.
 
 ---
 > Source: [antonygiomarxdev/maverick](https://github.com/antonygiomarxdev/maverick) — distributed by [TomeVault](https://tomevault.io).
