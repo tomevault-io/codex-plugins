@@ -1,0 +1,44 @@
+{
+  "name": "medsci-agent",
+  "owner": "omar-A-hassan",
+  "repo": "medsci-agent",
+  "description": "Biomedical research agent with 28 MCP tools powered by MedGemma, TxGemma and OpenCode",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/omar-A-hassan/medsci-agent",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-09T10:36:48Z"
+}
