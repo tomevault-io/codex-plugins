@@ -4,7 +4,7 @@
   "repo": "mini-swe-agent",
   "description": "The 100 line AI agent that solves GitHub issues or helps you in your command line. Radically simple, no huge configs, no giant monorepo\u2014but scores >74% on SWE-bench verified!",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": ".cursor/rules/*.mdc",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/SWE-agent/mini-swe-agent",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-05T00:30:24Z"
+  "distributed_at": "2026-05-09T07:04:53Z"
 }
