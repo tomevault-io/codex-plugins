@@ -7,13 +7,13 @@ An MCP server that gives your AI assistant read + write access to Google Ads and
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [kLOsk/adloop](https://github.com/kLOsk/adloop).
+Original source: `CLAUDE.md` in [kLOsk/adloop](https://github.com/kLOsk/adloop).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
