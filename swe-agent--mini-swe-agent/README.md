@@ -7,13 +7,13 @@ The 100 line AI agent that solves GitHub issues or helps you in your command lin
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [SWE-agent/mini-swe-agent](https://github.com/SWE-agent/mini-swe-agent).
+Original source: `.cursor/rules/*.mdc` in [SWE-agent/mini-swe-agent](https://github.com/SWE-agent/mini-swe-agent).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
