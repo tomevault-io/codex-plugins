@@ -1,0 +1,28 @@
+# Metis-agent
+
+> Tome by [l3gi0nXXXX](https://github.com/l3gi0nXXXX/Metis-agent) — distributed by [TomeVault](https://tomevault.io)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [l3gi0nXXXX/Metis-agent](https://github.com/l3gi0nXXXX/Metis-agent).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/l3gi0nXXXX/Metis-agent](https://github.com/l3gi0nXXXX/Metis-agent)
+
+---
+
+Install this config instantly:
+```
+npx tomevault install l3gi0nXXXX/Metis-agent
+```
+Source: [github.com/l3gi0nXXXX/Metis-agent](https://github.com/l3gi0nXXXX/Metis-agent).
+
+<!-- genome:t-i-p -->
