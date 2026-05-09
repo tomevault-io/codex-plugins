@@ -7,13 +7,13 @@ GitNexus: The Zero-Server Code Intelligence Engine -       GitNexus is a client-
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [Bd-Mutant7/GitNexus](https://github.com/Bd-Mutant7/GitNexus).
+Original source: `CLAUDE.md` in [Bd-Mutant7/GitNexus](https://github.com/Bd-Mutant7/GitNexus).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
