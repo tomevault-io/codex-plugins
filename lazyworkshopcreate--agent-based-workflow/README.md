@@ -7,12 +7,12 @@ A ready-to-use repository template for **agent-driven software development** usi
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [LazyWorkshopCreate/agent-based-workflow](https://github.com/LazyWorkshopCreate/agent-based-workflow).
+Original source: `CLAUDE.md` in [LazyWorkshopCreate/agent-based-workflow](https://github.com/LazyWorkshopCreate/agent-based-workflow).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
