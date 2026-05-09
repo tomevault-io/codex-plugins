@@ -1,0 +1,51 @@
+{
+  "name": "windev-helper",
+  "owner": "alvinashcraft",
+  "repo": "windev-helper",
+  "description": "WinDev Helper VS Code extension to create, build, debug, and publish WinUI apps.",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "winapp-cli",
+      "path": ".github/skills/winapp-cli",
+      "github_url": "https://github.com/alvinashcraft/windev-helper/tree/main/.github/skills/winapp-cli",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/alvinashcraft/windev-helper",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-09T18:30:50Z"
+}
