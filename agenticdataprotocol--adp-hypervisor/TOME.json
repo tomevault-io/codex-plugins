@@ -4,7 +4,7 @@
   "repo": "adp-hypervisor",
   "description": "ADP server \u2014 translates ADP intents to backend queries and enforces policies",
   "type": "config",
-  "source_format": "GEMINI.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/agenticdataprotocol/adp-hypervisor",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-26T11:41:13Z"
+  "distributed_at": "2026-05-09T22:09:30Z"
 }
