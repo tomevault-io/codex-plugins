@@ -1,12 +1,20 @@
 ---
-description: Defines the recommended state management strategies for Next.js 15 applications, including server and client contexts.
-globs: app/**/*
+description: Applies general coding principles and best practices for TypeScript and React development across the project.
+globs: **/*.{ts,tsx}
 ---
-- Use `useActionState` instead of deprecated `useFormState`.
-- Leverage enhanced `useFormStatus` with new properties (data, method, action).
-- Implement URL state management with 'nuqs'.
-- Minimize client-side state.
+- Write concise, readable TypeScript code.
+- Use functional and declarative programming patterns.
+- Follow DRY (Don't Repeat Yourself) principle.
+- Implement early returns for better readability.
+- Structure components logically: exports, subcomponents, helpers, types.
+- Use descriptive names with auxiliary verbs (isLoading, hasError).
+- Prefix event handlers with 'handle' (handleClick, handleSubmit).
+- Use TypeScript for all code.
+- Prefer interfaces over types.
+- Avoid enums; use const maps instead.
+- Implement proper type safety and inference.
+- Use `satisfies` operator for type validation.
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/run-llama) — claim your Tome and manage your conversions.
-<!-- tomevault:4.0:agents_md:2026-04-09 -->
+> Source: [run-llama/auto_rfp](https://github.com/run-llama/auto_rfp) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-05-04 -->
