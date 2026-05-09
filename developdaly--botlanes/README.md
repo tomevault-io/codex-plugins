@@ -7,14 +7,14 @@ Drag a card into a column, an agent runs.
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [developdaly/botlanes](https://github.com/developdaly/botlanes).
+Original source: `CLAUDE.md` in [developdaly/botlanes](https://github.com/developdaly/botlanes).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 From [developdaly/botlanes](https://github.com/developdaly/botlanes) — a repo with 9+ stars on GitHub.
