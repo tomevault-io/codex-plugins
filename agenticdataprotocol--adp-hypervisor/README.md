@@ -7,14 +7,14 @@ ADP server — translates ADP intents to backend queries and enforces policies
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [agenticdataprotocol/adp-hypervisor](https://github.com/agenticdataprotocol/adp-hypervisor).
+Original source: `CLAUDE.md` in [agenticdataprotocol/adp-hypervisor](https://github.com/agenticdataprotocol/adp-hypervisor).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/agenticdataprotocol/adp-hypervisor](https://github.com/agenticdataprotocol/adp-hypervisor)
