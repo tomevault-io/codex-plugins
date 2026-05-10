@@ -4,7 +4,7 @@
   "repo": "ghost",
   "description": "The Private Agent OS \u2014 search files, run AI agents, connect to 10,000+ tools via the complete protocol stack (MCP, AG-UI, A2UI, A2A). Zero cloud. Zero telemetry. On-device inference.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/ghostapp-ai/ghost",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-28T19:33:03Z"
+  "distributed_at": "2026-05-10T12:38:04Z"
 }
