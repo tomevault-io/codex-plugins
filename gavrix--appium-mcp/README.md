@@ -2,6 +2,8 @@
 
 > Sourced from [gavrix/appium-mcp](https://github.com/gavrix/appium-mcp) and converted for every major platform by [TomeVault](https://tomevault.io)
 
+MCP server for appium
+
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
