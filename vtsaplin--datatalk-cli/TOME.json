@@ -4,7 +4,7 @@
   "repo": "datatalk-cli",
   "description": "Query CSV, Excel & Parquet files with natural language. Fast, local, DuckDB-powered.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": ".cursor/rules/*.mdc",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/vtsaplin/datatalk-cli",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-06T10:48:51Z"
+  "distributed_at": "2026-05-10T12:37:18Z"
 }
