@@ -7,13 +7,13 @@ A self-hosted cross-platform 3DAIGC software. Working with 3DAIGC algorithms com
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [FishWoWater/Open3DStudio](https://github.com/FishWoWater/Open3DStudio).
+Original source: `.cursor/rules/*.mdc` in [FishWoWater/Open3DStudio](https://github.com/FishWoWater/Open3DStudio).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
