@@ -7,13 +7,13 @@ Set of instructions for your favorite AI agent (e.g. Cursor, Copilot, Claude, et
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [levifig/rails-instructions](https://github.com/levifig/rails-instructions).
+Original source: `.cursor/rules/*.mdc` in [levifig/rails-instructions](https://github.com/levifig/rails-instructions).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
