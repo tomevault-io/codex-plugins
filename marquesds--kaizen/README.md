@@ -7,13 +7,13 @@ Real-time, self-hostable agent observability: retros and experiments to improve 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [marquesds/kaizen](https://github.com/marquesds/kaizen).
+Original source: `CLAUDE.md` in [marquesds/kaizen](https://github.com/marquesds/kaizen).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
