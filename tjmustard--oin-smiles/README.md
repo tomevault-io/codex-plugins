@@ -7,14 +7,14 @@ EtaTMCSMILES will be a standalone, open-source Python library capable of lossles
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [tjmustard/OIN-SMILES](https://github.com/tjmustard/OIN-SMILES).
+Original source: `CLAUDE.md` in [tjmustard/OIN-SMILES](https://github.com/tjmustard/OIN-SMILES).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 From [tjmustard/OIN-SMILES](https://github.com/tjmustard/OIN-SMILES) — a repo with 0+ stars on GitHub.
