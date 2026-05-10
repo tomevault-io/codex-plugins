@@ -4,7 +4,7 @@
   "repo": "Open3DStudio",
   "description": "A self-hosted cross-platform 3DAIGC software. Working with 3DAIGC algorithms completely deployed locally. Supported 3D workflows include MeshGen, Mesh Retopology, UV Unwrapping, TexGen, MeshSeg, AutoRig, Mesh Editing etc.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": ".cursor/rules/*.mdc",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/FishWoWater/Open3DStudio",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-06T22:44:22Z"
+  "distributed_at": "2026-05-10T16:47:35Z"
 }
