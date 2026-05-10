@@ -7,12 +7,12 @@ The Private Agent OS — search files, run AI agents, connect to 10,000+ tools v
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [ghostapp-ai/ghost](https://github.com/ghostapp-ai/ghost).
+Original source: `CLAUDE.md` in [ghostapp-ai/ghost](https://github.com/ghostapp-ai/ghost).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
