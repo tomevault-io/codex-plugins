@@ -1,8 +1,8 @@
 
+# cypilot-pr-status
 
-ALWAYS open and follow `{cypilot_path}/.core/skills/cypilot/SKILL.md`
+ALWAYS open and follow `{cypilot_path}/config/kits/sdlc/workflows/pr-status.md`
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/cyberfabric)
-> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/cyberfabric)
-<!-- tomevault:4.0:agents_md:2026-04-08 -->
+> Source: [cyberfabric/cyberfabric-core](https://github.com/cyberfabric/cyberfabric-core) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-05-06 -->
