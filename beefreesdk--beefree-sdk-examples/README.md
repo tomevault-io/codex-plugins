@@ -7,13 +7,13 @@ Production-ready examples demonstrating advanced features of the Beefree SDK, an
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [BeefreeSDK/beefree-sdk-examples](https://github.com/BeefreeSDK/beefree-sdk-examples).
+Original source: `.cursor/rules/*.mdc` in [BeefreeSDK/beefree-sdk-examples](https://github.com/BeefreeSDK/beefree-sdk-examples).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
