@@ -4,7 +4,7 @@
   "repo": "beefree-sdk-examples",
   "description": "Production-ready examples demonstrating advanced features of the Beefree SDK, an embeddable no-code builder for creating stunning emails, landing pages, and popups.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": ".cursor/rules/*.mdc",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/BeefreeSDK/beefree-sdk-examples",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-06T14:11:37Z"
+  "distributed_at": "2026-05-10T13:31:00Z"
 }
