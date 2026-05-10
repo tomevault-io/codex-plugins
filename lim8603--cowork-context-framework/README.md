@@ -7,14 +7,14 @@ Reusable AI–human collaboration frameworks for project‑level context enginee
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [lim8603/cowork-context-framework](https://github.com/lim8603/cowork-context-framework).
+Original source: `copilot-instructions.md` in [lim8603/cowork-context-framework](https://github.com/lim8603/cowork-context-framework).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/lim8603/cowork-context-framework](https://github.com/lim8603/cowork-context-framework)
