@@ -4,7 +4,7 @@
   "repo": "chairlift",
   "description": "Manage your system",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/frostyard/chairlift",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-27T00:41:21Z"
+  "distributed_at": "2026-05-10T01:04:46Z"
 }
