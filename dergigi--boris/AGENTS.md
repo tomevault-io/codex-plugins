@@ -1,5 +1,5 @@
 
-Keep files below 420 lines.
+Commit all pending changes. Commit using conventional commits. Always commit after each implementation step or change.
 
 ---
 > Source: [dergigi/boris](https://github.com/dergigi/boris) — distributed by [TomeVault](https://tomevault.io).
