@@ -2,9 +2,9 @@
   "name": "guardlink",
   "owner": "Bugb-Technologies",
   "repo": "guardlink",
-  "description": "",
+  "description": "AI-maintained security annotations for code. Continuous threat modeling, enforced in CI.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": ".cursor/rules/*.mdc",
   "formats": [
     {
       "format": "claude_md",
@@ -39,7 +39,6 @@
   ],
   "skills": [],
   "source_url": "https://github.com/Bugb-Technologies/guardlink",
-  "claim_url": "https://tomevault.io/claim/Bugb-Technologies",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-19T02:57:31Z"
+  "distributed_at": "2026-05-11T13:22:40Z"
 }
