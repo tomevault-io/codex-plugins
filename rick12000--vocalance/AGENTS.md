@@ -1,9 +1,7 @@
-- Always comply with DRY and SOLID principles.
-- Use as little code as is necessary to carry out the desired functionality, do not over-engineer or over-validate your code.
-- Write easily testable and maintainable code.
-- Maximize separation of concerns.
-- Consider how your changes will affect the wider codebase, think several dependancies ahead.
-- Ensure code is readable and logically structured.
+- NEVER commit any changes.
+- NEVER revert commits or affect the commit history.
+- NEVER push commits or pull from remote, or interact at all with remote branches.
+- NEVER perform any kind of git action through my terminal.
 
 ---
 > Source: [rick12000/vocalance](https://github.com/rick12000/vocalance) — distributed by [TomeVault](https://tomevault.io).
