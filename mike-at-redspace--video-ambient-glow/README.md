@@ -7,13 +7,13 @@ YouTube-style ambient glow effects for HTML5 video. Zero dependencies, ~5.8KB mi
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [mike-at-redspace/video-ambient-glow](https://github.com/mike-at-redspace/video-ambient-glow).
+Original source: `.cursor/rules/*.mdc` in [mike-at-redspace/video-ambient-glow](https://github.com/mike-at-redspace/video-ambient-glow).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
