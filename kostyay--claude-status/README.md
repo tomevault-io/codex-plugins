@@ -1,0 +1,30 @@
+# claude-status
+
+> Source: [kostyay/claude-status](https://github.com/kostyay/claude-status) — distributed by [TomeVault](https://tomevault.io)
+
+Customizable status line for Claude Code CLI - shows git status, GitHub CI, token usage, and task tracking (Claude tasks, kt, tk, beads)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [kostyay/claude-status](https://github.com/kostyay/claude-status).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/kostyay/claude-status](https://github.com/kostyay/claude-status)
+
+---
+
+Install this config instantly:
+```
+npx tomevault install kostyay/claude-status
+```
+Source: [github.com/kostyay/claude-status](https://github.com/kostyay/claude-status).
+
+<!-- genome:d-i-q -->
