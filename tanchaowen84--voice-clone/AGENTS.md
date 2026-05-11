@@ -1,0 +1,10 @@
+
+- Use the `createClient` function to initialize your OpenAI client.
+- Implement proper error handling and rate limiting for API requests.
+- Utilize streaming responses for better user experience in long-running tasks.
+- Leverage the `ai` package for easy integration with React components.
+- Follow OpenAI's guidelines for responsible AI usage and data privacy
+
+---
+> Source: [tanchaowen84/voice-clone](https://github.com/tanchaowen84/voice-clone) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-05-07 -->
