@@ -4,7 +4,7 @@
   "repo": "clotilde",
   "description": "A power-user companion for Claude Code.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/fgrehm/clotilde",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-02T22:39:22Z"
+  "distributed_at": "2026-05-11T21:35:26Z"
 }
