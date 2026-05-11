@@ -1,6 +1,10 @@
 
-Refer to the guidelines located in this file:
-@.agent-os/standards/code-style/code-quality.md
+# Create Spec
+
+Create a detailed spec for a new feature with technical specifications and task breakdown
+
+Refer to the instructions located in this file:
+@.agent-os/instructions/core/create-spec.md
 
 ---
 > Source: [TheCardGoat/tcg-engines](https://github.com/TheCardGoat/tcg-engines) — distributed by [TomeVault](https://tomevault.io).
