@@ -7,13 +7,13 @@ Complete language support for GROMACS molecular dynamics simulation files includ
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [mcardZH/gromacs-helper-vscode](https://github.com/mcardZH/gromacs-helper-vscode).
+Original source: `.cursor/rules/*.mdc` in [mcardZH/gromacs-helper-vscode](https://github.com/mcardZH/gromacs-helper-vscode).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
