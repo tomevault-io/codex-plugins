@@ -7,14 +7,14 @@ All-in-One Solana + EVM Volume Booster with a built-in Volume Bot and Deployer. 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [nirholas/boosty](https://github.com/nirholas/boosty).
+Original source: `CLAUDE.md` in [nirholas/boosty](https://github.com/nirholas/boosty).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 From [nirholas/boosty](https://github.com/nirholas/boosty) — a repo with 25+ stars on GitHub.
