@@ -4,7 +4,7 @@
   "repo": "vertana",
   "description": "LLM-powered agentic translation library for JavaScript/TypeScript",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/dahlia/vertana",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-02T20:06:10Z"
+  "distributed_at": "2026-05-11T19:34:56Z"
 }
