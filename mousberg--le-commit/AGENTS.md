@@ -1,5 +1,5 @@
 ---
-description: Use a local supabase instance for development. Migrations are in `frontend/supabase/migrations`. Follow best practices found in `docs/context/supabase_prompts/`. Avoid unnecessary endpoints if it can be solved with direct supabase client calls from the frontend (safe with row level security). When working with supabase, use the supabase CLI when appropriate, for example for creating migrations.
+description: Make sure linting and building works before committing. Always offer to delete test files at the end of a session.
 globs:
 alwaysApply: false
 ---
