@@ -7,12 +7,12 @@ A simple, lightweight, Chinese-based personal blog template, highly customizable
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [510208/sh-blog-next](https://github.com/510208/sh-blog-next).
+Original source: `CLAUDE.md` in [510208/sh-blog-next](https://github.com/510208/sh-blog-next).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
