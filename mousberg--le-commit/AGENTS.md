@@ -1,8 +1,4 @@
----
-description: This application uses an event-driven architecture with database triggers and webhooks for asynchronous processing.
-globs:
-alwaysApply: false
----
+
 
 ---
 > Source: [mousberg/le-commit](https://github.com/mousberg/le-commit) — distributed by [TomeVault](https://tomevault.io).
