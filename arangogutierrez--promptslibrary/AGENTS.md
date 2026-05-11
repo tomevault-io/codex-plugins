@@ -1,36 +1,18 @@
-# Core
+# Go
+chain:gofmt→vet→golangci-lint→test
+doc:≤80ch|pkg-comment req for public
+pattern:accept-interface,return-struct|fmt.Errorf("%w",err)|ctx 1st|defer Close()
+naming:Export=Pascal|unexport=camel|acronym-consistent(URL/Url)
+error:never _=f()|wrap+ctx|sentinel sparingly
+concurrency:mutex/chan for shared|goroutine exit strategy|ctx cancel
+test:table-driven|t.Parallel() safe|*_test.go
+k8s:graceful(SIGTERM/INT)|json-log|probes|no-hardcoded-secrets
 
-## Workflow
-Phases: brainstorm → plan → code → verify → PR → review → address → CI → merge
-
-## Commits
-- Always sign: `git commit -s -S` (DCO + GPG) — no exceptions
-- Never use `--no-verify` — hooks are safety rails
-- Never force-push to main/master
-
-## TDD Invariant
-- RED before GREEN — never write implementation without a failing test
-- One phase per turn — never mix test and implementation edits
-- Tests are contracts — never weaken tests to pass implementation
-
-## Verification
-- Evidence before claim — run tests/lints/scans before asserting success
-- File:line references must exist — verify before citing
-
-## Dates & Years
-- Source of truth: "Today's date" from system context — never training data
-- New files: always current year (2026) — never copy from existing files
-- Year ranges: first-year–current (e.g. 2024–2026) only when history applies
-- Applies to: copyright headers, changelogs, commits, docs, test fixtures
-
-## Context Economy
-- Reference over paste — use file paths not inline code
-- Tables over prose — structured data is cheaper
-- Delta-only — show only what changed
-
-## Agent Dispatch
-- Inherit model from parent unless task requires different capability
-- Ask before dispatching to a different model
+## Security Scans (verify phase)
+- `govulncheck ./...` — Go vulnerability check
+- `gosec ./...` — Go security linter
+- `trivy fs .` — filesystem/dependency vulnerability scan
+Run all three before claiming implementation is complete.
 
 ---
 > Source: [ArangoGutierrez/promptsLibrary](https://github.com/ArangoGutierrez/promptsLibrary) — distributed by [TomeVault](https://tomevault.io).
