@@ -7,12 +7,12 @@ A power-user companion for Claude Code.
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [fgrehm/clotilde](https://github.com/fgrehm/clotilde).
+Original source: `CLAUDE.md` in [fgrehm/clotilde](https://github.com/fgrehm/clotilde).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
