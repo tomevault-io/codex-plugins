@@ -4,7 +4,7 @@
   "repo": "JSTorrent",
   "description": "A modern, full-featured BitTorrent client for Desktop, ChromeOS, and Android",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/kzahel/JSTorrent",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-03T04:25:15Z"
+  "distributed_at": "2026-05-11T23:14:34Z"
 }
