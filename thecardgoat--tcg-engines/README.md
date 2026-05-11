@@ -7,13 +7,13 @@ Typescript implementation of TCG rules
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [TheCardGoat/tcg-engines](https://github.com/TheCardGoat/tcg-engines).
+Original source: `.cursor/rules/*.mdc` in [TheCardGoat/tcg-engines](https://github.com/TheCardGoat/tcg-engines).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
