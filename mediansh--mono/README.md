@@ -1,0 +1,26 @@
+# mono
+
+> Source: [mediansh/mono](https://github.com/mediansh/mono) — distributed by [TomeVault](https://tomevault.io)
+
+The feedback engine for modern teams.
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [mediansh/mono](https://github.com/mediansh/mono).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/mediansh/mono](https://github.com/mediansh/mono)
+
+---
+
+Own this repo? Install the TomeVault Relay to keep every platform's copy in sync on every push: [https://tomevault.io/install](https://tomevault.io/install).
+
+<!-- genome:d-c-p -->
