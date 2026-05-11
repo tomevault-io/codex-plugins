@@ -7,13 +7,13 @@ Web dashboard for monitoring Duplicati backups with overdue alerts, notification
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [wsj-br/duplistatus](https://github.com/wsj-br/duplistatus).
+Original source: `.cursor/rules/*.mdc` in [wsj-br/duplistatus](https://github.com/wsj-br/duplistatus).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
