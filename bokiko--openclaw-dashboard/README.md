@@ -1,0 +1,26 @@
+# AI instruction files for openClaw-dashboard
+
+> Sourced from [bokiko/openClaw-dashboard](https://github.com/bokiko/openClaw-dashboard) and converted for every major platform by [TomeVault](https://tomevault.io)
+
+OpenClaw AI Agent Swarm Dashboard
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [bokiko/openClaw-dashboard](https://github.com/bokiko/openClaw-dashboard).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+From [bokiko/openClaw-dashboard](https://github.com/bokiko/openClaw-dashboard) — a repo with 32+ stars on GitHub.
+
+---
+
+Explore more instruction files on [TomeVault](https://tomevault.io) — the open index of AI config files for every platform.
+
+<!-- genome:a-e-s -->
