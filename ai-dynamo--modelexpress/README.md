@@ -7,13 +7,13 @@ Model Express is a Rust-based component meant to be placed next to existing mode
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [ai-dynamo/modelexpress](https://github.com/ai-dynamo/modelexpress).
+Original source: `.cursor/rules/*.mdc` in [ai-dynamo/modelexpress](https://github.com/ai-dynamo/modelexpress).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
