@@ -1,0 +1,30 @@
+# claude-code-zero
+
+> Source: [LeeJuOh/claude-code-zero](https://github.com/LeeJuOh/claude-code-zero) — distributed by [TomeVault](https://tomevault.io)
+
+Complete Claude Code plugin marketplace — agents, skills, hooks, commands, rules, MCPs.
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [LeeJuOh/claude-code-zero](https://github.com/LeeJuOh/claude-code-zero).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/LeeJuOh/claude-code-zero](https://github.com/LeeJuOh/claude-code-zero)
+
+---
+
+Install this config instantly:
+```
+npx tomevault install LeeJuOh/claude-code-zero
+```
+Source: [github.com/LeeJuOh/claude-code-zero](https://github.com/LeeJuOh/claude-code-zero).
+
+<!-- genome:d-i-p -->
