@@ -1,95 +1,74 @@
-# Pinia Stores
+# Project Structure
 
-**Role:** You are a Vue 3 expert specializing in global state management with Pinia.
+**Role:** You are a Vue 3 expert specializing in scalable project architecture and organization.
 
 **Core Rules:**
-- Use Composition API syntax with `defineStore`
-- Return readonly state to prevent direct mutations
-- Keep actions simple and focused
-- Use getters for computed values
-- Handle loading and error states consistently
+- Follow feature-based directory structure
+- Use barrel exports for clean imports
+- Maintain consistent naming conventions
+- Separate concerns (components, composables, stores)
+- Keep related files together
 
-**Chain-of-Thought:** Think step-by-step: 1. Design store interface 2. Define reactive state 3. Create getters/computed 4. Implement actions
+**Chain-of-Thought:** Think step-by-step: 1. Identify feature boundaries 2. Organize by domain 3. Setup clean import paths 4. Maintain consistency
 
-## Basic Store Pattern
+## Recommended Directory Structure
+
+```
+src/
+├── components/          # Reusable UI components
+│   ├── ui/             # Base UI components (Button, Input, etc.)
+│   └── features/       # Feature-specific components
+├── views/              # Page components
+├── composables/        # Reusable composition functions
+├── stores/             # Pinia stores
+├── router/             # Vue Router configuration
+├── services/           # API services and external integrations
+├── types/              # TypeScript type definitions
+├── utils/              # Utility functions
+├── assets/             # Static assets (images, styles)
+└── main.ts             # Application entry point
+```
+
+## Component Organization
+
+```
+components/
+├── ui/
+│   ├── Button.vue
+│   ├── Input.vue
+│   ├── Modal.vue
+│   └── index.ts        # Export barrel
+├── features/
+│   ├── UserProfile/
+│   │   ├── UserProfile.vue
+│   │   ├── UserAvatar.vue
+│   │   └── index.ts
+│   └── ProductCard/
+│       ├── ProductCard.vue
+│       ├── ProductImage.vue
+│       └── index.ts
+```
+
+## Naming Conventions
+
+- **Components**: PascalCase (`UserProfile.vue`)
+- **Views**: PascalCase with View suffix (`HomeView.vue`)
+- **Composables**: camelCase with use prefix (`useUserData.ts`)
+- **Stores**: camelCase with Store suffix (`userStore.ts`)
+- **Types**: PascalCase for interfaces (`User`, `ApiResponse`)
+- **Files**: kebab-case for utilities (`api-client.ts`)
+
+## Import/Export Patterns
 
 ```typescript
-// stores/user.ts
-import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+// components/ui/index.ts - Barrel exports
+export { default as Button } from './Button.vue'
+export { default as Input } from './Input.vue'
+export { default as Modal } from './Modal.vue'
 
-export const useUserStore = defineStore('user', () => {
-  // State
-  const user = ref<User | null>(null)
-  const loading = ref(false)
-  
-  // Getters
-  const isLoggedIn = computed(() => !!user.value)
-  const userName = computed(() => user.value?.name ?? 'Guest')
-  
-  // Actions
-  const login = async (credentials: LoginCredentials) => {
-    loading.value = true
-    try {
-      const response = await authApi.login(credentials)
-      user.value = response.user
-    } finally {
-      loading.value = false
-    }
-  }
-  
-  const logout = () => {
-    user.value = null
-  }
-  
-  return {
-    // State (readonly)
-    user: readonly(user),
-    loading: readonly(loading),
-    
-    // Getters
-    isLoggedIn,
-    userName,
-    
-    // Actions
-    login,
-    logout
-  }
-})
+// In components
+import { Button, Input } from '@/components/ui'
 ```
-
-## Using Stores in Components
-
-```vue
-<script setup lang="ts">
-import { useUserStore } from '@/stores/user'
-
-const userStore = useUserStore()
-
-const handleLogin = async () => {
-  await userStore.login({ email, password })
-}
-</script>
-
-<template>
-  <div>
-    <p v-if="userStore.isLoggedIn">
-      Welcome, {{ userStore.userName }}!
-    </p>
-    <button v-else @click="handleLogin" :disabled="userStore.loading">
-      Login
-    </button>
-  </div>
-</template>
-```
-
-## Store Best Practices
-
-- Use Composition API syntax with `defineStore`
-- Return readonly state to prevent direct mutations
-- Keep actions simple and focused
-- Use getters for computed values
-- Handle loading and error states
 
 ---
 > Source: [aliarghyani/vue-cursor-rules](https://github.com/aliarghyani/vue-cursor-rules) — distributed by [TomeVault](https://tomevault.io).
