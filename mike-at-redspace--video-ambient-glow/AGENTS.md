@@ -1,14 +1,17 @@
-# GitHub Copilot Instructions
 
-Follow `.cursor/rules/*.mdc` conventions. Rules activate via file globs.
-
-**`src/*.ts`** (`.cursor/rules/src-core.mdc`): Strict TS, class API, JSDoc `@public`/`@internal`, export types  
-**`src/lib/**`** (`.cursor/rules/src-lib.mdc`): Functional modules, named exports, type guards  
-**`tests/**`** (`.cursor/rules/tests.mdc`): Vitest, happy-dom, clean DOM in `afterEach`, use `destroy()`, mock with `vi`  
-**`example/**`** (`.cursor/rules/example.mdc`): JS ESM, Vite, TailwindCSS v4, Handlebars, Tweakpane  
-**Config files** (`.cursor/rules/config.mdc`): Rollup ESM+CJS, ESLint, Prettier, Vitest  
-**`wiki/**`** (`.cursor/rules/wiki.mdc`): Markdown, git submodule, publish via `npm run wiki`  
-**`scripts/**`** (`.cursor/rules/scripts.mdc`): Bash with shebang, `set -e`
+- TypeScript: strict mode, ES2022 target, ESNext modules, bundler resolution
+- Rollup: builds both ESM (`index.js`) and CJS (`index.cjs`) from `src/index.ts`
+- ESLint: TypeScript ESLint for `.ts` files, plain JS rules for `example/**/*.js`
+- Vitest: `vitest.config.ts` (TypeScript), happy-dom environment, globals enabled, setup file at `tests/setup.ts`
+- package.json: `type: "module"`, exports field for dual ESM/CJS, files array for publish
+- Scripts follow pattern: `dev` (watch), `build` (production), `test`, `lint`, `format`
+- Use `prepublishOnly` to run build + test before publishing
+- Version scripts: `release:patch|minor|major` - auto-push tags
+- ESLint ignores: `dist/`, `node_modules/`, `example/dist/`, `example/node_modules/`
+- Prettier formats: TypeScript, JavaScript, JSON, Markdown, HTML, CSS, Handlebars
+- @file tsconfig.json
+- @file rollup.config.js
+- @file eslint.config.js
 
 ---
 > Source: [mike-at-redspace/video-ambient-glow](https://github.com/mike-at-redspace/video-ambient-glow) — distributed by [TomeVault](https://tomevault.io).
