@@ -7,12 +7,12 @@ A markdown-based life operating system powered by AI agents. Built on Obsidian, 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [verbumeng/vitoraos](https://github.com/verbumeng/vitoraos).
+Original source: `CLAUDE.md` in [verbumeng/vitoraos](https://github.com/verbumeng/vitoraos).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
