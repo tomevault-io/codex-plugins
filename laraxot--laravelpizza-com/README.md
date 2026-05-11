@@ -5,14 +5,14 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [laraxot/laravelpizza.com](https://github.com/laraxot/laravelpizza.com).
+Original source: `CLAUDE.md` in [laraxot/laravelpizza.com](https://github.com/laraxot/laravelpizza.com).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/laraxot/laravelpizza.com](https://github.com/laraxot/laravelpizza.com)
