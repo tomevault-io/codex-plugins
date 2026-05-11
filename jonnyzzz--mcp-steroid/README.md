@@ -1,0 +1,30 @@
+# mcp-steroid
+
+> Source: [jonnyzzz/mcp-steroid](https://github.com/jonnyzzz/mcp-steroid) — distributed by [TomeVault](https://tomevault.io)
+
+MCP Steroid IntelliJ Plugin project page
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [jonnyzzz/mcp-steroid](https://github.com/jonnyzzz/mcp-steroid).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+From [jonnyzzz/mcp-steroid](https://github.com/jonnyzzz/mcp-steroid) — a repo with 29+ stars on GitHub.
+
+---
+
+Install this config instantly:
+```
+npx tomevault install jonnyzzz/mcp-steroid
+```
+Source: [github.com/jonnyzzz/mcp-steroid](https://github.com/jonnyzzz/mcp-steroid).
+
+<!-- genome:d-i-s -->
