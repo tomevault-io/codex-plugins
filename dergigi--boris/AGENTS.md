@@ -1,9 +1,15 @@
 
-If you can use an applesauce-module for something, use applesauce.
+Read the nostrbook to understand how bookmarks work:
+- https://nostrbook.dev/kinds/10003
+- https://nostrbook.dev/kinds/30003
 
-Documentation: https://hzrd149.github.io/applesauce/typedoc/modules.html
+They are defined in NIP-51:
+- https://github.com/nostr-protocol/nips/blob/master/51.md
 
-When unsure how to use applesauce correctly, look at the examples in the `applesauce/packages/examples` directory.
+Also refer to the applesauce bookmark helpers:
+- https://github.com/hzrd149/applesauce/blob/17c9dbb0f2c263e2ebd01729ea2fa138eca12bd1/packages/core/src/helpers/bookmarks.ts
+
+Make sure to always use applesauce, and use it properly.
 
 ---
 > Source: [dergigi/boris](https://github.com/dergigi/boris) — distributed by [TomeVault](https://tomevault.io).
