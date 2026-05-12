@@ -7,12 +7,12 @@ Access any internal service from your browser. No VPN, no client, one command. S
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [fengyily/shield-cli](https://github.com/fengyily/shield-cli).
+Original source: `CLAUDE.md` in [fengyily/shield-cli](https://github.com/fengyily/shield-cli).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
