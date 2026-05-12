@@ -5,14 +5,14 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [JsonLee12138/agent-team](https://github.com/JsonLee12138/agent-team).
+Original source: `CLAUDE.md` in [JsonLee12138/agent-team](https://github.com/JsonLee12138/agent-team).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/JsonLee12138/agent-team](https://github.com/JsonLee12138/agent-team)
