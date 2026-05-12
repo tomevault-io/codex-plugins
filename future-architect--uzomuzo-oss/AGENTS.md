@@ -1,48 +1,49 @@
-# GitHub Copilot Instructions for Go
+# CLAUDE.md
 
-This project uses split instruction files for maintainability.
-See `.github/instructions/` for detailed rules.
+## Worktree Isolation (MUST READ FIRST)
 
-## Instruction Files
+**ALWAYS call `EnterWorktree` before doing any work that changes files.** This prevents branch conflicts when multiple sessions run in parallel. Give it a descriptive name (e.g., `feat-goreleaser`). Commit before exiting and inform the user of the branch name.
 
-| File | Scope |
-|------|-------|
-| [language-policy](instructions/language-policy.instructions.md) | Source code English / docs English / response language |
-| [ddd-architecture](instructions/ddd-architecture.instructions.md) | DDD layer definitions, search-first, pre-implementation checklist |
-| [coding-standards](instructions/coding-standards.instructions.md) | Clean Code, naming, API design, goimports/golangci-lint |
-| [error-handling](instructions/error-handling.instructions.md) | Error wrapping (`%w`), errors.Is/As, slog integration |
-| [testing-performance](instructions/testing-performance.instructions.md) | Table-driven tests, benchmarks, concurrency |
-| [project-conventions](instructions/project-conventions.instructions.md) | Configuration policy, test data, JSON tooling constraints |
-| [git-workflow](instructions/git-workflow.instructions.md) | Commit messages, PR workflow, TDD |
-| [security](instructions/security.instructions.md) | Prompt injection defense, credentials, Go security |
-| [agent-orchestration](instructions/agent-orchestration.instructions.md) | Available agents, usage rules, parallel execution |
+**Worktree deletion is dangerous — other sessions may depend on it.** NEVER remove a locked or unmerged worktree. See `.claude/rules/git-workflow.md` "Worktree Lifecycle: Lock and Cleanup" for the full safe cleanup protocol (lock check → merge check → dirty check).
 
-## Review Scope
+## Build & Test
 
-When performing code review on pull requests, **do not review or comment on Markdown files (`*.md`)**. Focus code review on Go source files, YAML workflows, and configuration files only.
+```bash
+go build -o uzomuzo ./cmd/uzomuzo   # build
+go test ./...                       # test all
+goimports -w . && golangci-lint run # format & lint
+go run ./cmd/uzomuzo update-spdx   # regenerate SPDX license list
+```
 
-## Quick Reference
+## Configuration
 
-- **Language**: Source code = English only. Docs = English (`README.md`, `docs/*.md`). Respond in the user's language.
-- **DDD Layers**: `Interfaces → Application → Domain ← Infrastructure`. Never violate.
-- **Search First**: Always search for existing implementations before writing new code.
-- **Error Handling**: Always wrap errors with `fmt.Errorf("context: %w", err)`.
-- **Formatting**: All Go code MUST be formatted with `goimports`.
-- **Configuration**: Do NOT add new env vars / CLI flags casually. See project-conventions for checklist.
-- **Security**: No hardcoded secrets. No `exec.Command("sh", "-c", userInput)`.
-- **Testing**: Table-driven tests, `t.Run()` sub-tests, test with `-race` flag.
+Copy `config.template.env` to `.env` (auto-loaded via godotenv). Key vars: `GITHUB_TOKEN`, `LOG_LEVEL`, `LIFECYCLE_ASSESS_TYPE`. See `config.template.env` for defaults.
 
-## Sync Policy
+## Go Version Policy
 
-`.github/` is the **single source of truth** for all shared instructions, agents, and prompts.
+Team uses **Go 1.26.1**. `go.mod` `go 1.25.0` is the dependency minimum — do not downgrade.
 
-- **Instructions**: Edit `.github/instructions/`. Run `make sync-instructions` to regenerate `.claude/rules/`.
-- **Agents**: Edit `.github/agents/`. `.claude/agents/` are thin shims that delegate here.
-- **Prompts**: Edit `.github/prompts/`. `.claude/skills/` are thin shims that delegate here.
+## Architecture (DDD)
 
-See `.claude/rules/instruction-sync.md` for the full mapping and editing protocol.
+`Interfaces → Application → Domain ← Infrastructure`. See `.claude/rules/ddd-architecture.md`.
+
+- **domain/** — Pure business logic. Core: `Analysis`, `ResolvedLicense`, `EOLStatus`, `AssessmentResult`
+- **application/** — Use case orchestration. `AnalysisService` / `FetchService`. Supports `AnalysisEnricher` hook
+- **infrastructure/** — API clients (depsdev, github, eolevaluator), integration, CSV export
+- **interfaces/cli/** — CLI entry points. No concurrent logic
+- **pkg/uzomuzo/** — Public library facade
+
+## Key Concepts
+
+- **PURL Identity**: `OriginalPURL` (caller input) / `EffectivePURL` (resolved) / `CanonicalKey` (dedup key)
+- **Generated**: `internal/domain/licenses/spdx_generated.go` — never edit, use `go run . update-spdx`
+
+## Rules & Docs
+
+- Coding: `.claude/rules/coding-standards.md`, `.claude/rules/copilot-learned-coding.md`, `.claude/rules/project-conventions.md`
+- Language: English only (source + docs). See `.claude/rules/language-policy.md`
+- Docs: `docs/data-flow.md`, `docs/development.md`, `docs/library-usage.md`, `docs/purl-identity-model.md`, `docs/license-resolution.md`
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/future-architect)
-> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/future-architect)
-<!-- tomevault:4.0:agents_md:2026-04-08 -->
+> Source: [future-architect/uzomuzo-oss](https://github.com/future-architect/uzomuzo-oss) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-05-03 -->
