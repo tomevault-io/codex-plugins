@@ -1,0 +1,28 @@
+# claude-skills-fv
+
+> Source: [felvieira/claude-skills-fv](https://github.com/felvieira/claude-skills-fv) — distributed by [TomeVault](https://tomevault.io)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [felvieira/claude-skills-fv](https://github.com/felvieira/claude-skills-fv).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/felvieira/claude-skills-fv](https://github.com/felvieira/claude-skills-fv)
+
+---
+
+Install this config instantly:
+```
+npx tomevault install felvieira/claude-skills-fv
+```
+Source: [github.com/felvieira/claude-skills-fv](https://github.com/felvieira/claude-skills-fv).
+
+<!-- genome:d-i-p -->
