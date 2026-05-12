@@ -1,21 +1,23 @@
-# uzomuzo-oss — distributed by TomeVault
+# uzomuzo-oss
 
-> Originally from [future-architect/uzomuzo-oss](https://github.com/future-architect/uzomuzo-oss). Converted and distributed by [TomeVault](https://tomevault.io)
+> Source: [future-architect/uzomuzo-oss](https://github.com/future-architect/uzomuzo-oss) — distributed by [TomeVault](https://tomevault.io)
+
+Dead code doesn't get patched. Detect abandoned & end-of-life dependencies that SCA tools miss — before they become the next xz-utils.
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [future-architect/uzomuzo-oss](https://github.com/future-architect/uzomuzo-oss).
+Original source: `CLAUDE.md` in [future-architect/uzomuzo-oss](https://github.com/future-architect/uzomuzo-oss).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Quality verified by TomeVault's automated analysis pipeline. [View quality report](https://tomevault.io/claim/future-architect#quality)
+Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/future-architect/uzomuzo-oss](https://github.com/future-architect/uzomuzo-oss)
 
 ---
 
@@ -23,6 +25,6 @@ Install this config instantly:
 ```
 npx tomevault install future-architect/uzomuzo-oss
 ```
-Or browse all formats at [https://tomevault.io/claim/future-architect](https://tomevault.io/claim/future-architect).
+Source: [github.com/future-architect/uzomuzo-oss](https://github.com/future-architect/uzomuzo-oss).
 
 <!-- genome:d-i-q -->
