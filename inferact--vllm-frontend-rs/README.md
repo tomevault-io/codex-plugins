@@ -1,0 +1,26 @@
+# AI instruction files for vllm-frontend-rs
+
+> Sourced from [Inferact/vllm-frontend-rs](https://github.com/Inferact/vllm-frontend-rs) and converted for every major platform by [TomeVault](https://tomevault.io)
+
+Early-stage Rust drop-in alternative frontend for vLLM
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [Inferact/vllm-frontend-rs](https://github.com/Inferact/vllm-frontend-rs).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/Inferact/vllm-frontend-rs](https://github.com/Inferact/vllm-frontend-rs)
+
+---
+
+Own this repo? Install the TomeVault Relay to keep every platform's copy in sync on every push: [https://tomevault.io/install](https://tomevault.io/install).
+
+<!-- genome:a-c-p -->
