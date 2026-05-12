@@ -4,7 +4,7 @@
   "repo": "jarvis-registry",
   "description": "Connect any AI copilot or autonomous agent to your enterprise tools \u2014 through a single, secure MCP/Agent gateway with built-in identity, access control, and full observability.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/ascending-llc/jarvis-registry",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-04T02:52:55Z"
+  "distributed_at": "2026-05-12T22:05:35Z"
 }
