@@ -4,7 +4,7 @@
   "repo": "pgxcli",
   "description": "Postgres CLI with autocompletion and syntax highlighting",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/Balaji01-4D/pgxcli",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-04T02:41:54Z"
+  "distributed_at": "2026-05-12T21:36:28Z"
 }
