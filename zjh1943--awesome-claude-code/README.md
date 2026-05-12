@@ -7,14 +7,14 @@ A repo that collects awsome learning materials/tools for Calude Code developers,
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [zjh1943/awesome-claude-code](https://github.com/zjh1943/awesome-claude-code).
+Original source: `CLAUDE.md` in [zjh1943/awesome-claude-code](https://github.com/zjh1943/awesome-claude-code).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/zjh1943/awesome-claude-code](https://github.com/zjh1943/awesome-claude-code)
