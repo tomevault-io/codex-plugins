@@ -4,7 +4,7 @@
   "repo": "Isartor",
   "description": "Open-source Prompt Firewall \u2014 deflect up to 95% of redundant LLM traffic before it leaves your infrastructure. Documents: https://isartor-ai.github.io/Isartor/index.html",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/isartor-ai/Isartor",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-03T09:55:13Z"
+  "distributed_at": "2026-05-12T06:21:36Z"
 }
