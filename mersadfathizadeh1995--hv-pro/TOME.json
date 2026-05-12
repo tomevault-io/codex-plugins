@@ -1,0 +1,44 @@
+{
+  "name": "HV_Pro",
+  "owner": "mersadfathizadeh1995",
+  "repo": "HV_Pro",
+  "description": "All-in-one HVSR analysis suite: single-station interactive analysis, azimuthal processing, multi-station batch processing, progressive HV Strip, HVSR inversion, and bedrock depth mapping with spatial interpolation and Google Earth export.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/mersadfathizadeh1995/HV_Pro",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-12T20:31:13Z"
+}
