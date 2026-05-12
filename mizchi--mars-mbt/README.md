@@ -1,0 +1,30 @@
+# mars.mbt
+
+> Tome by [mizchi](https://github.com/mizchi/mars.mbt) — distributed by [TomeVault](https://tomevault.io)
+
+Hono-inspired HTTP framework for MoonBit
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [mizchi/mars.mbt](https://github.com/mizchi/mars.mbt).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+From [mizchi/mars.mbt](https://github.com/mizchi/mars.mbt) — a repo with 16+ stars on GitHub.
+
+---
+
+Install this config instantly:
+```
+npx tomevault install mizchi/mars.mbt
+```
+Source: [github.com/mizchi/mars.mbt](https://github.com/mizchi/mars.mbt).
+
+<!-- genome:t-i-s -->
