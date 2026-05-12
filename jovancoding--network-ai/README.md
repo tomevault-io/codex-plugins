@@ -7,12 +7,12 @@ Traffic light for AI Agents and TypeScript/Node multi-agent orchestrator with sh
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [Jovancoding/Network-AI](https://github.com/Jovancoding/Network-AI).
+Original source: `CLAUDE.md` in [Jovancoding/Network-AI](https://github.com/Jovancoding/Network-AI).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
