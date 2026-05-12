@@ -1,0 +1,26 @@
+# AI instruction files for waybar-ai-usage
+
+> Sourced from [NihilDigit/waybar-ai-usage](https://github.com/NihilDigit/waybar-ai-usage) and converted for every major platform by [TomeVault](https://tomevault.io)
+
+Monitor Claude Code and OpenAI Codex CLI usage directly in your Waybar status bar.
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [NihilDigit/waybar-ai-usage](https://github.com/NihilDigit/waybar-ai-usage).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/NihilDigit/waybar-ai-usage](https://github.com/NihilDigit/waybar-ai-usage)
+
+---
+
+Explore more instruction files on [TomeVault](https://tomevault.io) — the open index of AI config files for every platform.
+
+<!-- genome:a-e-p -->
