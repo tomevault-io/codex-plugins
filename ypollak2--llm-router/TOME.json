@@ -4,7 +4,7 @@
   "repo": "llm-router",
   "description": "  Universal LLM router for AI coding tools. Works with Claude Code, Cursor, Codex, Gemini CLI, Copilot and more.        Free-first fallback chain keeps costs 70\u201385% lower.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/ypollak2/llm-router",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-03T07:35:42Z"
+  "distributed_at": "2026-05-12T04:38:10Z"
 }
