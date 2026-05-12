@@ -1,6 +1,4 @@
-Check commit styling guide at @COMMIT.md at / folder to see best styling practice for git commit messages.
-
-Try to be as concise as possible. No need for body unless huge changes
+Read .cursor/rules/bubblelab.mdc to understand bubble lab, ALWAYS Read this before every conversation.
 
 ---
 > Source: [bubblelabai/BubbleLab](https://github.com/bubblelabai/BubbleLab) — distributed by [TomeVault](https://tomevault.io).
