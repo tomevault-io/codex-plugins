@@ -4,7 +4,7 @@
   "repo": "shield-cli",
   "description": "Access any internal service from your browser. No VPN, no client, one command. Shield CLI is a browser-first internal service gateway \u2014 SSH terminals, remote desktops, database admin, web apps \u2014 all accessible through any browser with a single command.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/fengyily/shield-cli",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-03T10:11:31Z"
+  "distributed_at": "2026-05-12T07:05:20Z"
 }
