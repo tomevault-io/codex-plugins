@@ -1,0 +1,26 @@
+# AI instruction files for Portager
+
+> Sourced from [jarodr47/Portager](https://github.com/jarodr47/Portager) and converted for every major platform by [TomeVault](https://tomevault.io)
+
+Portage is a Kubernetes operator that declaratively syncs container images between registries. The name comes from the act of carrying cargo between two bodies of water, which is exactly what this does: carrying container images between two registries.
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [jarodr47/Portager](https://github.com/jarodr47/Portager).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/jarodr47/Portager](https://github.com/jarodr47/Portager)
+
+---
+
+Explore more instruction files on [TomeVault](https://tomevault.io) — the open index of AI config files for every platform.
+
+<!-- genome:a-e-p -->
