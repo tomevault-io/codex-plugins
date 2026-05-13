@@ -1,0 +1,26 @@
+# barrage
+
+> Source: [amutable-systems/barrage](https://github.com/amutable-systems/barrage) — distributed by [TomeVault](https://tomevault.io)
+
+A concurrent async test framework using Python's asyncio
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [amutable-systems/barrage](https://github.com/amutable-systems/barrage).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/amutable-systems/barrage](https://github.com/amutable-systems/barrage)
+
+---
+
+Own this repo? Install the TomeVault Relay to keep every platform's copy in sync on every push: [https://tomevault.io/install](https://tomevault.io/install).
+
+<!-- genome:d-c-q -->
