@@ -4,7 +4,7 @@
   "repo": "bear-notes-mcp",
   "description": "MCP Server for Bear note taking app available as Claude Desktop extension or standalone server for any other AI tool",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/vasylenko/bear-notes-mcp",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-04T11:13:10Z"
+  "distributed_at": "2026-05-13T03:10:54Z"
 }
