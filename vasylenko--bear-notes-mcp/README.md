@@ -7,12 +7,12 @@ MCP Server for Bear note taking app available as Claude Desktop extension or sta
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [vasylenko/bear-notes-mcp](https://github.com/vasylenko/bear-notes-mcp).
+Original source: `CLAUDE.md` in [vasylenko/bear-notes-mcp](https://github.com/vasylenko/bear-notes-mcp).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
