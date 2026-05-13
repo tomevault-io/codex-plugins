@@ -2,6 +2,8 @@
 
 > Sourced from [lazypower/continuity](https://github.com/lazypower/continuity) and converted for every major platform by [TomeVault](https://tomevault.io)
 
+Give claude the memory of a pair-programmer. No serious dependencies, all substance
+
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
