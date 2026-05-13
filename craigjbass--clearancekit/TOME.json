@@ -4,7 +4,7 @@
   "repo": "clearancekit",
   "description": "ClearanceKit intercepts file-system access events on macOS and enforces per-process access policies.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/craigjbass/clearancekit",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-04T08:06:29Z"
+  "distributed_at": "2026-05-13T01:42:36Z"
 }
