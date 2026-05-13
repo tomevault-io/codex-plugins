@@ -7,13 +7,13 @@ Nuwax Agent OS - The world's first universal agent operating system, building yo
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [nuwax-ai/nuwax](https://github.com/nuwax-ai/nuwax).
+Original source: `CLAUDE.md` in [nuwax-ai/nuwax](https://github.com/nuwax-ai/nuwax).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
