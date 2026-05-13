@@ -1,6 +1,5 @@
-# GEMINI.md
 
-Read [AGENT.md](.agent/directives/AGENT.md)
+Read and follow `.agent/rules/quality-gate-failures.md`.
 
 ---
 > Source: [EngraphCode/castr](https://github.com/EngraphCode/castr) — distributed by [TomeVault](https://tomevault.io).
