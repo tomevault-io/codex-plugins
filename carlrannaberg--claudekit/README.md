@@ -7,12 +7,12 @@ A toolkit of custom commands, hooks, and utilities for Claude Code
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [carlrannaberg/claudekit](https://github.com/carlrannaberg/claudekit).
+Original source: `CLAUDE.md` in [carlrannaberg/claudekit](https://github.com/carlrannaberg/claudekit).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
