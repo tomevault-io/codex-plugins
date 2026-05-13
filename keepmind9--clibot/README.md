@@ -7,14 +7,14 @@ ACP-compatible AI CLI bridge to IM platforms. Connect Claude Code, Gemini,   Ope
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [keepmind9/clibot](https://github.com/keepmind9/clibot).
+Original source: `CLAUDE.md` in [keepmind9/clibot](https://github.com/keepmind9/clibot).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/keepmind9/clibot](https://github.com/keepmind9/clibot)
