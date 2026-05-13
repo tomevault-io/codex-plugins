@@ -7,12 +7,12 @@ ClearanceKit intercepts file-system access events on macOS and enforces per-proc
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [craigjbass/clearancekit](https://github.com/craigjbass/clearancekit).
+Original source: `CLAUDE.md` in [craigjbass/clearancekit](https://github.com/craigjbass/clearancekit).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
