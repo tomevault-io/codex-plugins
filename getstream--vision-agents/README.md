@@ -7,13 +7,13 @@ Open Vision Agents by Stream. Build voice and vision agents quickly with any mod
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [GetStream/Vision-Agents](https://github.com/GetStream/Vision-Agents).
+Original source: `CLAUDE.md` in [GetStream/Vision-Agents](https://github.com/GetStream/Vision-Agents).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
