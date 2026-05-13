@@ -7,14 +7,14 @@ A beautiful terminal-based AI chat interface built with Textual and LangChain
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [jaredrummler/consoul](https://github.com/jaredrummler/consoul).
+Original source: `CLAUDE.md` in [jaredrummler/consoul](https://github.com/jaredrummler/consoul).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/jaredrummler/consoul](https://github.com/jaredrummler/consoul)
