@@ -7,13 +7,13 @@ Sayna is a unified Voice Layer for AI Agents with a seemless integration to an e
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [SaynaAI/sayna](https://github.com/SaynaAI/sayna).
+Original source: `CLAUDE.md` in [SaynaAI/sayna](https://github.com/SaynaAI/sayna).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
