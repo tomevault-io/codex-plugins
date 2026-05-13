@@ -1,0 +1,44 @@
+{
+  "name": "Sniff-Recon",
+  "owner": "mfscpayload-690",
+  "repo": "Sniff-Recon",
+  "description": "Simple network packet analyzer that combines traditional packet analysis with AI analysis. Built for security researchers, SOC teams, and network engineers.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/mfscpayload-690/Sniff-Recon",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-13T18:49:59Z"
+}
