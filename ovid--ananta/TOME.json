@@ -4,7 +4,7 @@
   "repo": "ananta",
   "description": "Give your LLM unlimited context!",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/Ovid/ananta",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-04T14:29:39Z"
+  "distributed_at": "2026-05-13T08:41:50Z"
 }
