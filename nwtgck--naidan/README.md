@@ -7,14 +7,14 @@ A privacy-focused web UI for LLMs (OpenAI-compatible APIs and Ollama) designed t
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [nwtgck/naidan](https://github.com/nwtgck/naidan).
+Original source: `CLAUDE.md` in [nwtgck/naidan](https://github.com/nwtgck/naidan).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/nwtgck/naidan](https://github.com/nwtgck/naidan)
