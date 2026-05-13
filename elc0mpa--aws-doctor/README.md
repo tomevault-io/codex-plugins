@@ -7,14 +7,14 @@ Powerful open-source CLI to audit security, costs, and best practices in AWS. �
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [elC0mpa/aws-doctor](https://github.com/elC0mpa/aws-doctor).
+Original source: `CLAUDE.md` in [elC0mpa/aws-doctor](https://github.com/elC0mpa/aws-doctor).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 From [elC0mpa/aws-doctor](https://github.com/elC0mpa/aws-doctor) — a repo with 419+ stars on GitHub.
