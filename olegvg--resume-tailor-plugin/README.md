@@ -1,0 +1,30 @@
+# resume-tailor-plugin
+
+> Source: [olegvg/resume-tailor-plugin](https://github.com/olegvg/resume-tailor-plugin) — distributed by [TomeVault](https://tomevault.io)
+
+Resume Tailor — Claude Code Plugin
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [olegvg/resume-tailor-plugin](https://github.com/olegvg/resume-tailor-plugin).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/olegvg/resume-tailor-plugin](https://github.com/olegvg/resume-tailor-plugin)
+
+---
+
+Install this config instantly:
+```
+npx tomevault install olegvg/resume-tailor-plugin
+```
+Source: [github.com/olegvg/resume-tailor-plugin](https://github.com/olegvg/resume-tailor-plugin).
+
+<!-- genome:d-i-q -->
