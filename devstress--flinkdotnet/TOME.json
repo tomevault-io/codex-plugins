@@ -1,0 +1,44 @@
+{
+  "name": "FlinkDotnet",
+  "owner": "devstress",
+  "repo": "FlinkDotnet",
+  "description": "FlinkDotnet lets you build and run Apache Flink streaming jobs using a fluent C# API. Powered by Microsoft Aspire, it provides one-click distributed orchestration for Kafka, Flink, Temporal, Prometheus, Grafana, and FlinkDotnet itself; making end-to-end distributed stream processing seamless for .NET developers.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/devstress/FlinkDotnet",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-13T18:56:05Z"
+}
