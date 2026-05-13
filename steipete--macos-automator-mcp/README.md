@@ -7,13 +7,13 @@ An MCP server to run AppleScript and JXA (JavaScript for Automation) to macOS.
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [steipete/macos-automator-mcp](https://github.com/steipete/macos-automator-mcp).
+Original source: `CLAUDE.md` in [steipete/macos-automator-mcp](https://github.com/steipete/macos-automator-mcp).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
