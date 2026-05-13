@@ -1,24 +1,26 @@
 # conference-app-2025
 
-> Tome by [DroidKaigi](https://github.com/DroidKaigi/conference-app-2025) — distributed by [TomeVault](https://tomevault.io/claim/DroidKaigi)
+> Tome by [DroidKaigi](https://github.com/DroidKaigi/conference-app-2025) — distributed by [TomeVault](https://tomevault.io)
+
+The Official Conference App for DroidKaigi 2025
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [DroidKaigi/conference-app-2025](https://github.com/DroidKaigi/conference-app-2025).
+Original source: `CLAUDE.md` in [DroidKaigi/conference-app-2025](https://github.com/DroidKaigi/conference-app-2025).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Quality verified by TomeVault's automated analysis pipeline. [View quality report](https://tomevault.io/claim/DroidKaigi#quality)
+Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/DroidKaigi/conference-app-2025](https://github.com/DroidKaigi/conference-app-2025)
 
 ---
 
-Is this your repo? [Claim it](https://tomevault.io/claim/DroidKaigi) to manage distribution and track installs.
+Own this repo? Install the TomeVault Relay to keep every platform's copy in sync on every push: [https://tomevault.io/install](https://tomevault.io/install).
 
 <!-- genome:t-c-q -->
