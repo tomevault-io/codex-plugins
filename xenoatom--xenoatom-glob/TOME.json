@@ -4,7 +4,7 @@
   "repo": "XenoAtom.Glob",
   "description": "A high-performance .NET glob library with gitignore compatibility.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/XenoAtom/XenoAtom.Glob",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-04T05:38:51Z"
+  "distributed_at": "2026-05-13T00:05:04Z"
 }
