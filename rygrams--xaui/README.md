@@ -7,12 +7,12 @@ Modern React Native UI library inspired by Flutter, built with Turborepo. Featur
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [rygrams/xaui](https://github.com/rygrams/xaui).
+Original source: `CLAUDE.md` in [rygrams/xaui](https://github.com/rygrams/xaui).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
