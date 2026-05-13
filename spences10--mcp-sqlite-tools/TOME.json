@@ -1,0 +1,44 @@
+{
+  "name": "mcp-sqlite-tools",
+  "owner": "spences10",
+  "repo": "mcp-sqlite-tools",
+  "description": "A Model Context Protocol (MCP) server that provides comprehensive SQLite database operations for LLMs. This server enables AI assistants to interact with local SQLite databases safely and efficiently, with built-in security features, advanced transaction support, and clear separation between read-only and destructive operations.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/spences10/mcp-sqlite-tools",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-13T18:58:08Z"
+}
