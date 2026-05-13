@@ -2,9 +2,9 @@
   "name": "conference-app-2025",
   "owner": "DroidKaigi",
   "repo": "conference-app-2025",
-  "description": "",
+  "description": "The Official Conference App for DroidKaigi 2025",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -38,7 +38,7 @@
     }
   ],
   "skills": [],
-  "claim_url": "https://tomevault.io/claim/DroidKaigi",
+  "source_url": "https://github.com/DroidKaigi/conference-app-2025",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-11T19:52:52Z"
+  "distributed_at": "2026-05-13T17:08:14Z"
 }
