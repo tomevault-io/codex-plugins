@@ -114,6 +114,5 @@ tsbridge/
 - All checks must pass before merging
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/jtdowney)
-> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/jtdowney)
-<!-- tomevault:4.0:agents_md:2026-04-08 -->
+> Source: [jtdowney/tsbridge](https://github.com/jtdowney/tsbridge) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-05-04 -->
