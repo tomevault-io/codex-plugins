@@ -7,12 +7,12 @@ A command-line client for the Basecamp 4 API
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [needmore/bc4](https://github.com/needmore/bc4).
+Original source: `CLAUDE.md` in [needmore/bc4](https://github.com/needmore/bc4).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
