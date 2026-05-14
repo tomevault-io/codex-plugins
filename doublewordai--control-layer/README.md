@@ -7,12 +7,12 @@ The world’s fastest AI model gateway (450x less overhead than LiteLLM). Unifie
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [doublewordai/control-layer](https://github.com/doublewordai/control-layer).
+Original source: `CLAUDE.md` in [doublewordai/control-layer](https://github.com/doublewordai/control-layer).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
