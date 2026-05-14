@@ -1,0 +1,44 @@
+
+# Intune2snipe
+
+Sync **Microsoft Intune** (MDM) devices → **Snipe-IT** assets via `app.py` (Python 3.11+). Not a web app: CLI + `requests` + MSAL.
+
+## Microsoft Graph & Intune
+
+- **API surface:** [Microsoft Graph](https://learn.microsoft.com/en-us/graph/overview) only — **not** legacy Intune consoles APIs. Intune data comes from **managed devices** (`deviceManagement/managedDevices`).
+- **Auth:** Azure AD app registration, **client credentials** (daemon). MSAL `ConfidentialClientApplication`, scope `https://graph.microsoft.com/.default`. Env: `AZURE_TENANT_ID`, `AZURE_CLIENT_ID`, `AZURE_CLIENT_SECRET`.
+- **Read path:** `GET .../deviceManagement/managedDevices` — **[List managedDevices](https://learn.microsoft.com/en-us/graph/api/intune-devices-manageddevice-list)**; follow **`@odata.nextLink`** for all pages. Optional `$filter` on `operatingSystem` for platform. Token refresh before expiry so pagination does not 401 mid-run.
+- **Groups:** `--groups` / `AZURE_GROUP_IDS` → **[List group members](https://learn.microsoft.com/en-us/graph/api/group-list-members)** with OData cast **`microsoft.graph.device`**, intersect device IDs with managed devices.
+- **Permissions:** Typically `DeviceManagementManagedDevices.Read.All`; groups need `GroupMember.Read.All` or `Group.Read.All`; user flows may need `User.Read.All`. See `docs/configuration.md`.
+- **Docs:** `app.py` module docstring has canonical Graph + Snipe links — use them when changing behavior.
+
+## Snipe-IT
+
+- **Role:** Target **CMDB** — hardware assets, checkout, taxonomy (models/categories/manufacturers/status labels).
+- **Base URL:** `SNIPEIT_URL` **must** end with `/api/v1`. Bearer `SNIPEIT_API_TOKEN`.
+- **Endpoints used (under `/api/v1`):** `/hardware`, `/hardware/byserial`, `/hardware/{id}/checkout`, `/users` (with **`email`** / **`username`** query params for **exact** match — not fuzzy `search`), `/statuslabels`, `/categories`, `/manufacturers`, `/models`.
+- **Status:** `SNIPEIT_DEFAULT_STATUS` must match an **existing** status label name.
+- **Users:** Resolve Snipe user id by **equality** filters on `GET /users` — see [Snipe users API](https://snipe-it.readme.io/reference/users). UPNs from Graph may be normalized (e.g. strip Android Enterprise GUID prefix).
+
+## Ops & CI
+
+Docker, `k8s/`, Helm `charts/intune2snipe`; CI: `pytest` + `helm lint`; `v*` tags → release per `RELEASING.md` + Pages Helm index (`docs/github-pages-helm.md`).
+
+## Rules for edits
+
+- Minimal diffs; match `app.py` structure, logging, types.
+- Never log or commit secrets (Azure secret, Snipe token, real tenant IDs).
+- Validate Graph/Snipe behavior against current docs (`app.py` links, `docs/configuration.md`).
+- Run `python -m pytest tests/ -v`.
+
+## Releases (maintainers)
+
+**Major** / **minor** tags: comprehensive notes — `.github/release-notes-<tag>.md` from **`RELEASING.md`** + **`.github/RELEASE_NOTES_TEMPLATE.md`**. Patch: auto-generated notes OK.
+
+## Human docs
+
+**`docs/README.md`** hub; **`AGENTS.md`** full agent context.
+
+---
+> Source: [brngates98/Intune2snipe](https://github.com/brngates98/Intune2snipe) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-05-13 -->
