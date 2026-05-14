@@ -7,12 +7,12 @@ Substack API client is a modern TypeScript library provides a clean, entity-base
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [jakub-k-slys/substack-api](https://github.com/jakub-k-slys/substack-api).
+Original source: `CLAUDE.md` in [jakub-k-slys/substack-api](https://github.com/jakub-k-slys/substack-api).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
