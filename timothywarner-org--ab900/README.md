@@ -7,12 +7,12 @@ AB-900 exam prep + AI study buddy | O'Reilly Live Learning course materials, dis
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [timothywarner-org/ab900](https://github.com/timothywarner-org/ab900).
+Original source: `CLAUDE.md` in [timothywarner-org/ab900](https://github.com/timothywarner-org/ab900).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
