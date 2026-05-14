@@ -4,7 +4,7 @@
   "repo": "control-layer",
   "description": "The world\u2019s fastest AI model gateway (450x less overhead than LiteLLM). Unified access to LLMs across endpoints (openAI, self-hosted, etc.) behind a single authentication layer - with API key generation, user management, request logging, and more",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/doublewordai/control-layer",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-05T18:29:56Z"
+  "distributed_at": "2026-05-14T03:46:40Z"
 }
