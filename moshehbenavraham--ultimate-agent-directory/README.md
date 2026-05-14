@@ -7,14 +7,14 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [moshehbenavraham/Ultimate-Agent-Directory](https://github.com/moshehbenavraham/Ultimate-Agent-Directory).
+Original source: `CLAUDE.md` in [moshehbenavraham/Ultimate-Agent-Directory](https://github.com/moshehbenavraham/Ultimate-Agent-Directory).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 From [moshehbenavraham/Ultimate-Agent-Directory](https://github.com/moshehbenavraham/Ultimate-Agent-Directory) — a repo with 61+ stars on GitHub.
