@@ -4,7 +4,7 @@
   "repo": "substack-api",
   "description": "Substack API client is a modern TypeScript library provides a clean, entity-based interface to interact with Substack publications, posts, comments, and user profiles.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/jakub-k-slys/substack-api",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-07T02:03:36Z"
+  "distributed_at": "2026-05-14T18:11:56Z"
 }
