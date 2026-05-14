@@ -341,7 +341,11 @@ Guidelines and best practices for building applications with [Beefree SDK](https
     fetch('/api/beefree/auth', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ uid: beeConfig.uid })
+      body: JSON.stringify({
+        client_id: 'your_client_id',
+        client_secret: 'your_client_secret',
+        uid: beeConfig.uid
+      })
     })
     .then(response => {
       if (!response.ok) throw new Error('Auth failed: ' + response.status);
