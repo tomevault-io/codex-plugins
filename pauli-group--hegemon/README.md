@@ -1,0 +1,30 @@
+# Hegemon
+
+> Tome by [Pauli-Group](https://github.com/Pauli-Group/Hegemon) — distributed by [TomeVault](https://tomevault.io)
+
+Quantum resistant and private blockchain
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [Pauli-Group/Hegemon](https://github.com/Pauli-Group/Hegemon).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+From [Pauli-Group/Hegemon](https://github.com/Pauli-Group/Hegemon) — a repo with 13+ stars on GitHub.
+
+---
+
+Install this config instantly:
+```
+npx tomevault install Pauli-Group/Hegemon
+```
+Source: [github.com/Pauli-Group/Hegemon](https://github.com/Pauli-Group/Hegemon).
+
+<!-- genome:t-i-s -->
