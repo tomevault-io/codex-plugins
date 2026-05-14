@@ -1,0 +1,30 @@
+# mac-stats
+
+> Tome by [luizhcastro](https://github.com/luizhcastro/mac-stats) — distributed by [TomeVault](https://tomevault.io)
+
+A native macOS menu bar app for real-time monitoring of system stats.
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [luizhcastro/mac-stats](https://github.com/luizhcastro/mac-stats).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+From [luizhcastro/mac-stats](https://github.com/luizhcastro/mac-stats) — a repo with 8+ stars on GitHub.
+
+---
+
+Install this config instantly:
+```
+npx tomevault install luizhcastro/mac-stats
+```
+Source: [github.com/luizhcastro/mac-stats](https://github.com/luizhcastro/mac-stats).
+
+<!-- genome:t-i-s -->
