@@ -7,12 +7,12 @@ Confluent for JetBrains IDEs
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [confluentinc/intellij](https://github.com/confluentinc/intellij).
+Original source: `CLAUDE.md` in [confluentinc/intellij](https://github.com/confluentinc/intellij).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
