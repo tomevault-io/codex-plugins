@@ -4,7 +4,7 @@
   "repo": "snowshare",
   "description": "A modern, secure file and link sharing platform built with Next.js, Prisma, and NextAuth. Share URLs, code snippets, and files with customizable expiration, privacy, and QR codes.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/TuroYT/snowshare",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-06T00:35:09Z"
+  "distributed_at": "2026-05-14T05:03:05Z"
 }
