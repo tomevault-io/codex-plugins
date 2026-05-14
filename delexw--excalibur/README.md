@@ -1,0 +1,30 @@
+# excalibur
+
+> Tome by [delexw](https://github.com/delexw/excalibur) — distributed by [TomeVault](https://tomevault.io)
+
+Interactive multi-agent team collaboration 
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [delexw/excalibur](https://github.com/delexw/excalibur).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+From [delexw/excalibur](https://github.com/delexw/excalibur) — a repo with 13+ stars on GitHub.
+
+---
+
+Install this config instantly:
+```
+npx tomevault install delexw/excalibur
+```
+Source: [github.com/delexw/excalibur](https://github.com/delexw/excalibur).
+
+<!-- genome:t-i-s -->
