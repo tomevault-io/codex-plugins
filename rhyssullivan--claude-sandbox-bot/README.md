@@ -7,13 +7,13 @@ Demo of Claude Code in Vercel Sandbox in Discord
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [RhysSullivan/claude-sandbox-bot](https://github.com/RhysSullivan/claude-sandbox-bot).
+Original source: `CLAUDE.md` in [RhysSullivan/claude-sandbox-bot](https://github.com/RhysSullivan/claude-sandbox-bot).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
