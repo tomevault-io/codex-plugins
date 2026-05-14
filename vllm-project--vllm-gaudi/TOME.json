@@ -4,7 +4,7 @@
   "repo": "vllm-gaudi",
   "description": "Community maintained hardware plugin for vLLM on Intel Gaudi",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/vllm-project/vllm-gaudi",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-07T01:56:48Z"
+  "distributed_at": "2026-05-14T16:13:57Z"
 }
