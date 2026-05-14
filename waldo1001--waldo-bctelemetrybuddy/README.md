@@ -1,0 +1,28 @@
+# waldo.BCTelemetryBuddy
+
+> Tome by [waldo1001](https://github.com/waldo1001/waldo.BCTelemetryBuddy) — distributed by [TomeVault](https://tomevault.io)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [waldo1001/waldo.BCTelemetryBuddy](https://github.com/waldo1001/waldo.BCTelemetryBuddy).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+From [waldo1001/waldo.BCTelemetryBuddy](https://github.com/waldo1001/waldo.BCTelemetryBuddy) — a repo with 26+ stars on GitHub.
+
+---
+
+Install this config instantly:
+```
+npx tomevault install waldo1001/waldo.BCTelemetryBuddy
+```
+Source: [github.com/waldo1001/waldo.BCTelemetryBuddy](https://github.com/waldo1001/waldo.BCTelemetryBuddy).
+
+<!-- genome:t-i-s -->
