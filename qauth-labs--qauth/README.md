@@ -7,13 +7,13 @@ Post-quantum ready, headless-first identity platform. A developer-friendly alter
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [qauth-labs/qauth](https://github.com/qauth-labs/qauth).
+Original source: `CLAUDE.md` in [qauth-labs/qauth](https://github.com/qauth-labs/qauth).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
