@@ -7,12 +7,12 @@ A modern image browser and search tool that uses AI to generate a "semantic map"
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [lstein/PhotoMapAI](https://github.com/lstein/PhotoMapAI).
+Original source: `CLAUDE.md` in [lstein/PhotoMapAI](https://github.com/lstein/PhotoMapAI).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
