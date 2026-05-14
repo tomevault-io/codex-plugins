@@ -1,0 +1,44 @@
+{
+  "name": "rss-zero",
+  "owner": "CaoMeiYouRen",
+  "repo": "rss-zero",
+  "description": "\u4e00\u4e2a\u57fa\u4e8e RSS \u7684\u4fe1\u606f\u6d41\u63a8\u8350\u5de5\u5177\u3002\u652f\u6301\u4e2a\u6027\u5316\u63a8\u8350\u3001\u591a\u5e73\u53f0\u540c\u6b65\u3001\u81ea\u52a8\u53d1\u73b0\u3001\u81ea\u5b9a\u4e49\u914d\u7f6e\u3001AI \u5927\u6a21\u578b\u7b49\u529f\u80fd\u3002",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/CaoMeiYouRen/rss-zero",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-14T00:41:52Z"
+}
