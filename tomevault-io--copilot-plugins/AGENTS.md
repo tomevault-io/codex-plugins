@@ -1,40 +1,148 @@
-## django-rest-framework-mcp
+## ccguard
 
-> This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+> CCGuard is a Claude Code hook that enforces net-negative lines of code (LOC) changes. When Claude Code attempts to edit or write files, CCGuard:
 
-# CLAUDE.md
+# ccguard
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+## Project Goal
 
-## Project Overview
+CCGuard is a Claude Code hook that enforces net-negative lines of code (LOC) changes. When Claude Code attempts to edit or write files, CCGuard:
 
-This is `django-rest-framework-mcp`, a Python library that enables developers to expose Django REST Framework APIs as MCP (Model Context Protocol) servers.
+1. **Captures**: Intercepts Edit, MultiEdit, and Write operations
+2. **Calculates**: Counts lines added vs removed
+3. **Validates**: Checks if changes would result in net positive LOC
+4. **Blocks**: Prevents operations that increase total LOC
+5. **Guides**: Provides suggestions for reducing code
 
-## In This Directory
+This automated enforcement encourages code simplicity and thoughtful refactoring without manual reminders.
 
-Refer to @CONTRIBUTING.md for the most important information on how to develop new functionality, which you will be doing a lot. **IMPORTANT:** YOU MUST **ALWAYS** be sure to run the formatter, linter, typechecking, and ensure the full test suite passes (Steps 2 and 4 in that doc) after making a code change!! Do not **ever** say you are done with a task without having done this cleanup.
+## Architecture
 
-Refer to `/README.md` for user-facing guide to library.
+The project follows a clean, modular architecture:
 
-The repository includes offline documentation in `/external-docs`:
+```
+src/
+├── cli/                    # CLI entry point
+│   └── ccguard.ts           # Main executable
+├── contracts/              # TypeScript types and Zod schemas
+│   ├── types.ts           # Core interfaces
+│   └── schemas.ts         # Validation schemas
+├── hooks/                  # Claude Code hook processing
+│   ├── processHookData.ts # Main hook processor
+│   └── userPromptHandler.ts # Handle on/off commands
+├── storage/               # Persistence layer
+│   ├── Storage.ts        # Storage interface
+│   ├── FileStorage.ts    # File-based implementation
+│   └── MemoryStorage.ts  # In-memory for testing
+├── validation/            # LOC validation logic
+│   ├── locCounter.ts     # Line counting algorithms
+│   └── validator.ts      # Main validation logic
+└── ccguard/                 # State management
+    └── GuardManager.ts    # Enable/disable and stats
+```
 
-- Django REST Framework API reference
-- MCP protocol specification
+## Key Design Decisions
 
-Full source code of select important dependencies is available in `/source-code-of-dependencies` for deep integration reference. You should never write any code in these files, since this code is not actually running. It's there for you to read and understand:
+### 1. Session-Based Tracking
+- Each Claude session gets its own statistics
+- Cumulative tracking across all operations
+- Resets don't affect other sessions
 
-- `encode-django-rest-framework`: Complete Django REST Framework source code for understanding ViewSet patterns, serializer implementations, request/response handling, etc.
+### 2. Line Counting Strategy
+- Ignores empty lines by default (configurable)
+- Counts actual code content, not whitespace
+- Simple split-by-newline approach
 
-The `/djangorestframework_mcp` directory contains the code for `django-rest-framework-mcp` (the library we're building!).
+### 3. Storage Abstraction
+- Interface-based design for flexibility
+- File storage for persistence
+- Memory storage for testing
 
-The `/tests` directory contains all tests (unit and integration). Tests use pytest with Django configuration in conftest.py.
+### 4. Validation Flow
+- Pre-tool validation only (before changes applied)
+- Immediate feedback on violations
+- Clear, actionable error messages
 
-The `/demo` directory is a standalone Django app that can be used to manually test the MCP Server locally.
+## Development Workflow
 
-The `/internal-docs` directory contains lower-level documentation about the implementation, strategy, or goals of the `django-rest-framework-mcp` project. See @internal-docs/CLAUDE.md for full list of resources.
+### Testing
+```bash
+npm test              # Run all tests
+npm run test:unit     # Unit tests only
+npm run lint          # Check code style
+npm run typecheck     # Type checking
+```
+
+### Building
+```bash
+npm run build         # Compile TypeScript
+npm run dev          # Watch mode
+```
+
+### Key Test Scenarios
+- Net positive changes (should block)
+- Net negative changes (should allow)
+- Cumulative session tracking
+- Edge cases (empty files, whitespace)
+- User commands (on/off/status/reset)
+
+## Implementation Notes
+
+### Hook Data Structure
+Claude provides:
+- `tool_name`: Edit, MultiEdit, or Write
+- `tool_input`: Contains file paths and content
+- `session_id`: Unique session identifier
+- `hook_event_name`: PreToolUse or PostToolUse
+
+### Validation Logic
+1. Parse incoming hook data
+2. Check if ccguard is enabled
+3. Calculate LOC change for operation
+4. Update session statistics
+5. Block if total would be positive
+6. Return structured response
+
+### User Commands
+Handled via UserPromptSubmit events:
+- `ccguard on/off`: Toggle enforcement
+- `ccguard status`: Show statistics
+- `ccguard reset`: Clear session data
+
+## Future Enhancements
+
+### Planned Features
+- Configurable thresholds (e.g., allow up to +10 lines)
+- File-type specific rules
+- Exclude patterns for generated code
+- Weekly/monthly statistics
+- Integration with CI/CD
+
+### Potential Improvements
+- Smart detection of moved code (not counted as add/remove)
+- Consider code complexity, not just LOC
+- Team-wide statistics and leaderboards
+- Export statistics for analysis
+
+## Common Issues
+
+### CCGuard Not Triggering
+- Ensure hook is configured for Edit, MultiEdit, Write
+- Check if ccguard is enabled (`ccguard status`)
+- Verify file type isn't excluded
+
+### Incorrect Counts
+- Empty lines may affect counts
+- Check if file has mixed line endings
+- MultiEdit counts are cumulative
+
+### Performance
+- File storage is fast for normal use
+- Large files may slow counting
+- Session data cleaned periodically
 
 ---
-> Source: [zacharypodbela/django-rest-framework-mcp](https://github.com/zacharypodbela/django-rest-framework-mcp) — distributed by [TomeVault](https://tomevault.io).
+> Source: [pomterre/ccguard](https://github.com/pomterre/ccguard) — distributed by [TomeVault](https://tomevault.io).
 <!-- tomevault:4.0:copilot_instructions:2026-05-06 -->
 
 ---
