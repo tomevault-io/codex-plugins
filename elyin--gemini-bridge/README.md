@@ -1,0 +1,30 @@
+# gemini-bridge
+
+> Source: [eLyiN/gemini-bridge](https://github.com/eLyiN/gemini-bridge) — distributed by [TomeVault](https://tomevault.io)
+
+A lightweight MCP server bridging AI agents to Google's Gemini AI via official CLI
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [eLyiN/gemini-bridge](https://github.com/eLyiN/gemini-bridge).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/eLyiN/gemini-bridge](https://github.com/eLyiN/gemini-bridge)
+
+---
+
+Install this config instantly:
+```
+npx tomevault install eLyiN/gemini-bridge
+```
+Source: [github.com/eLyiN/gemini-bridge](https://github.com/eLyiN/gemini-bridge).
+
+<!-- genome:d-i-p -->
