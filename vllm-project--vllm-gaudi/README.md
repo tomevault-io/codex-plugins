@@ -7,12 +7,12 @@ Community maintained hardware plugin for vLLM on Intel Gaudi
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [vllm-project/vllm-gaudi](https://github.com/vllm-project/vllm-gaudi).
+Original source: `CLAUDE.md` in [vllm-project/vllm-gaudi](https://github.com/vllm-project/vllm-gaudi).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
