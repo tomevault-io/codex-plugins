@@ -4,7 +4,7 @@
   "repo": "PhotoMapAI",
   "description": "A modern image browser and search tool that uses AI to generate a \"semantic map\" of your collection.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/lstein/PhotoMapAI",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-06T03:27:40Z"
+  "distributed_at": "2026-05-14T05:32:00Z"
 }
