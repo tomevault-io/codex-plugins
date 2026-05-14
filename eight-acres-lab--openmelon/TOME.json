@@ -4,7 +4,7 @@
   "repo": "openmelon",
   "description": "A content-creation agent runtime for reproducible multimodal production \u2014 projects, workflows, skills, provenance.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/eight-acres-lab/openmelon",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-05T11:31:10Z"
+  "distributed_at": "2026-05-14T02:19:05Z"
 }
