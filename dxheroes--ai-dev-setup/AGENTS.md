@@ -1,49 +1,71 @@
-# GitHub Copilot Instructions
 
-This document provides high-level instructions for GitHub Copilot to follow when assisting with this API development project.
+# API Development Standards
 
-## Project Overview
+Follow these patterns when building API endpoints:
 
-This project follows API-first design principles, focusing on creating robust, well-documented APIs with consistent patterns. The codebase follows RESTful design principles with comprehensive validation and error handling.
+## Endpoint Structure (in order)
+1. **Route Definition**: RESTful resource-based naming
+2. **Middleware**: Authentication, logging, rate limiting
+3. **Input Validation**: Zod schemas for params, query, body
+4. **Business Logic**: Extract to service functions
+5. **Response Handling**: Standardized format with proper status
+6. **Error Handling**: Proper error catching with informative messages
 
-## Code Style and Standards
+## CRUD Operations
+Implement these standard operations for resources:
+- **POST /resources**: Create with validated input
+- **GET /resources**: List with filtering and pagination
+- **GET /resources/:id**: Retrieve single resource
+- **PUT/PATCH /resources/:id**: Update with validation
+- **DELETE /resources/:id**: Remove with authorization checks
 
-- **Language**: TypeScript with strict typing
-- **API Style**: RESTful API following OpenAPI specifications
-- **Validation**: Zod for runtime validation
-- **Testing**: Jest for unit and integration tests
-- **Documentation**: JSDoc for functions and OpenAPI for endpoints
+## Response Format Standards
+```typescript
+// Success response
+{
+  data: any,          // Response data
+  meta?: {            // Optional metadata
+    page: number,
+    limit: number,
+    total: number,
+    pages: number
+  }
+}
 
-## Development Patterns
+// Error response
+{
+  error: {
+    code: string,     // Error code
+    message: string,  // User-friendly message
+    details?: any     // Additional error details
+  }
+}
+```
 
-When contributing to this project, follow these patterns:
+## Input Validation Requirements
+- Validate ALL inputs using Zod schemas
+- Route parameters: ID format validation
+- Query parameters: Transform strings to numbers/booleans
+- Request body: Complete schema validation with descriptive errors
 
-1. **API Routes**: Use the established route structure with validation, middleware, and error handling
-2. **Error Handling**: Consistent error responses with appropriate status codes
-3. **Authentication**: JWT-based authentication with role-based access control
-4. **Validation**: Input validation using Zod schemas
-5. **Testing**: Write unit tests for business logic and integration tests for endpoints
+## Security Requirements
+- Apply `authMiddleware` to all protected endpoints
+- Use role-based access control where appropriate
+- Validate organization/user ownership for resource access
+- Include CSRF protection for browser clients
 
-## Priorities
+## Documentation Requirements
+- Use OpenAPI annotations for all endpoints
+- Document request/response schemas
+- Provide example requests and responses
+- Document all possible error scenarios and status codes
 
-1. Security best practices
-2. Comprehensive validation
-3. Clear error messages
-4. Performance optimization
-5. Thorough documentation
-
-## File Structure
-
-- `src/routes/` - API route handlers
-- `src/models/` - Data models and database schemas
-- `src/middleware/` - Express/Hono middleware functions
-- `src/validators/` - Request validation schemas
-- `src/utils/` - Shared utility functions
-- `src/services/` - Business logic and external service integration
-- `src/types/` - TypeScript type definitions
-- `tests/` - Unit and integration tests
-
-Follow domain-specific instructions in the `.github/instructions` folder for detailed guidance on particular tasks.
+## Testing Requirements
+For each endpoint, include:
+- Unit tests for business logic functions
+- Integration tests for full request/response cycle
+- Test both happy paths and error scenarios
+- Test authentication and authorization cases
 
 ---
 > Source: [DXHeroes/ai-dev-setup](https://github.com/DXHeroes/ai-dev-setup) — distributed by [TomeVault](https://tomevault.io).
