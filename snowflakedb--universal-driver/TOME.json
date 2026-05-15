@@ -4,7 +4,7 @@
   "repo": "universal-driver",
   "description": "Universal driver",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": ".cursor/rules/*.mdc",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/snowflakedb/universal-driver",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-15T03:33:22Z"
+  "distributed_at": "2026-05-15T07:23:39Z"
 }
