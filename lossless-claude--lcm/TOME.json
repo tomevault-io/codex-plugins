@@ -4,7 +4,7 @@
   "repo": "lcm",
   "description": "Lossless context management for Claude Code",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/lossless-claude/lcm",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-10T06:43:39Z"
+  "distributed_at": "2026-05-15T17:12:06Z"
 }
