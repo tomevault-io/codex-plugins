@@ -7,13 +7,13 @@ A reasoning-first cinematic web design skill. Makes AI think like a film directo
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [akseolabs-seo/cinematic-ui](https://github.com/akseolabs-seo/cinematic-ui).
+Original source: `CLAUDE.md` in [akseolabs-seo/cinematic-ui](https://github.com/akseolabs-seo/cinematic-ui).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
