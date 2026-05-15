@@ -1,0 +1,28 @@
+# PPTmaster
+
+> Tome by [luonghaianh1208](https://github.com/luonghaianh1208/PPTmaster) — distributed by [TomeVault](https://tomevault.io)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [luonghaianh1208/PPTmaster](https://github.com/luonghaianh1208/PPTmaster).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+From [luonghaianh1208/PPTmaster](https://github.com/luonghaianh1208/PPTmaster) — a repo with 8+ stars on GitHub.
+
+---
+
+Install this config instantly:
+```
+npx tomevault install luonghaianh1208/PPTmaster
+```
+Source: [github.com/luonghaianh1208/PPTmaster](https://github.com/luonghaianh1208/PPTmaster).
+
+<!-- genome:t-i-s -->
