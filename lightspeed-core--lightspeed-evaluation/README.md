@@ -1,0 +1,28 @@
+# AI instruction files for lightspeed-evaluation
+
+> Sourced from [lightspeed-core/lightspeed-evaluation](https://github.com/lightspeed-core/lightspeed-evaluation) and converted for every major platform by [TomeVault](https://tomevault.io)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [lightspeed-core/lightspeed-evaluation](https://github.com/lightspeed-core/lightspeed-evaluation).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/lightspeed-core/lightspeed-evaluation](https://github.com/lightspeed-core/lightspeed-evaluation)
+
+---
+
+Install this config instantly:
+```
+npx tomevault install lightspeed-core/lightspeed-evaluation
+```
+Source: [github.com/lightspeed-core/lightspeed-evaluation](https://github.com/lightspeed-core/lightspeed-evaluation).
+
+<!-- genome:a-i-q -->
