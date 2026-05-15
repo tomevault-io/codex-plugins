@@ -7,15 +7,15 @@ A drop in micro-framework for "About" views in your next macOS/iOS/visionOS/tvOS
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.windsurf/rules/*.md` in [lexrus/AppAboutView](https://github.com/lexrus/AppAboutView).
+Original source: `CLAUDE.md` in [lexrus/AppAboutView](https://github.com/lexrus/AppAboutView).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
 
 From [lexrus/AppAboutView](https://github.com/lexrus/AppAboutView) — a repo with 19+ stars on GitHub.
 
