@@ -4,7 +4,7 @@
   "repo": "ai-dev-setup",
   "description": "Starting point for your own AI-enhanced development setup, currently focused on Visual Studio Code with GitHub Copilot.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": ".cursor/rules/*.mdc",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/DXHeroes/ai-dev-setup",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-15T03:35:11Z"
+  "distributed_at": "2026-05-15T07:48:42Z"
 }
