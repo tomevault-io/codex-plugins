@@ -7,12 +7,12 @@ AI-powered plotting gallery. One spec, nine libraries — matplotlib, plotly, se
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [MarkusNeusinger/anyplot](https://github.com/MarkusNeusinger/anyplot).
+Original source: `CLAUDE.md` in [MarkusNeusinger/anyplot](https://github.com/MarkusNeusinger/anyplot).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
