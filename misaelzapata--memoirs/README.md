@@ -7,12 +7,12 @@ Local-first long-term memory engine for AI agents · MCP + HTTP + CLI · SQLite 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [misaelzapata/memoirs](https://github.com/misaelzapata/memoirs).
+Original source: `CLAUDE.md` in [misaelzapata/memoirs](https://github.com/misaelzapata/memoirs).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
