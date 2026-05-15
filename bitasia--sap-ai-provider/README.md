@@ -7,13 +7,13 @@ Vercel AI Provider for running LLMs on SAP BTP using AI Core
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [BITASIA/sap-ai-provider](https://github.com/BITASIA/sap-ai-provider).
+Original source: `copilot-instructions.md` in [BITASIA/sap-ai-provider](https://github.com/BITASIA/sap-ai-provider).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
