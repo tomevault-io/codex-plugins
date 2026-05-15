@@ -1,0 +1,26 @@
+# Project Configuration
+
+## Project Type
+- Static Site Generator: Jekyll
+- Hosting: GitHub Pages
+
+## Build Commands
+- `bundle install`: Install dependencies
+- `bundle exec jekyll serve`: Run development server
+- `bundle exec jekyll build`: Build site for production
+
+## Important Files
+- `_config.yml`: Jekyll configuration
+- `Gemfile`: Ruby dependencies
+- `_site/`: Build output directory (generated)
+- `_posts/`: Blog posts directory
+- `_layouts/`: Template layouts
+- `_includes/`: Reusable components
+
+## GitHub Pages Settings
+- Branch: gh-pages (or main/master, depending on your setup)
+- Build Source: Jekyll 
+
+---
+> Source: [bbbmoney/awsome-chatgpt-prompts](https://github.com/bbbmoney/awsome-chatgpt-prompts) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-05-14 -->
