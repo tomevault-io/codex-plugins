@@ -4,7 +4,7 @@
   "repo": "mpa-first-guidelines",
   "description": "MPA-First Development Mandate | Guiding principles for building performant, resilient Multi-Page Applications. Focus on native web platform strengths, minimal JS, and robust SEO. AI coding tools are biased toward complexity; \ud835\udde7\ud835\uddf5\ud835\uddf6\ud835\ude00 \ud835\uddd6\ud835\uddf5\ud835\uddee\ud835\uddfb\ud835\uddf4\ud835\uddf2\ud835\ude00 \ud835\udde7\ud835\uddf5\ud835\uddee\ud835\ude01.  ",
   "type": "config",
-  "source_format": ".cursor/rules/*.mdc",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/RealistSec/mpa-first-guidelines",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-14T13:36:55Z"
+  "distributed_at": "2026-05-15T01:51:28Z"
 }
