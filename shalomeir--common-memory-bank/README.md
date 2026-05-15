@@ -2,6 +2,8 @@
 
 > Source: [shalomeir/common-memory-bank](https://github.com/shalomeir/common-memory-bank) — distributed by [TomeVault](https://tomevault.io)
 
+A collection of integrated memory bank rules for AI development tools.
+
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
