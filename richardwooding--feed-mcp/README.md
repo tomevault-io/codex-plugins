@@ -1,0 +1,26 @@
+# feed-mcp
+
+> Tome by [richardwooding](https://github.com/richardwooding/feed-mcp) — distributed by [TomeVault](https://tomevault.io)
+
+MCP Server for RSS, Atom, and JSON Feeds
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `copilot-instructions.md` in [richardwooding/feed-mcp](https://github.com/richardwooding/feed-mcp).
+
+## Also available for
+
+- **Claude Code** — `CLAUDE.md`
+- **Codex** — `AGENTS.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+From [richardwooding/feed-mcp](https://github.com/richardwooding/feed-mcp) — a repo with 24+ stars on GitHub.
+
+---
+
+Own this repo? Install the TomeVault Relay to keep every platform's copy in sync on every push: [https://tomevault.io/install](https://tomevault.io/install).
+
+<!-- genome:t-c-s -->
