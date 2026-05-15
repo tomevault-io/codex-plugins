@@ -1,193 +1,239 @@
-# KoalaStore WhatsApp Bot - AI Agent Instructions
+# .cursor/rules/basic-standards.mdc
 
 ## Project Overview
-This is a **WhatsApp Bot for Digital Store Management** built with Node.js ES6 modules, Baileys library, and a sophisticated queue-based architecture. The bot handles customer service automation, product management, group moderation, and order processing for digital stores.
+- **Type**: WhatsApp Bot for Digital Store Management
+- **Tech Stack**: Node.js, ES6 Modules, Baileys WhatsApp Library, Express.js
+- **Target Users**: Digital store owners, customers seeking automated store assistance
+- **Business Domain**: E-commerce automation, customer service, product management
 
-## Core Architecture Understanding
+## Code Style
+- **Language**: JavaScript (ES6+ with modern syntax)
+- **Formatting**: Prettier with 2-space indentation
+- **Linting**: ESLint with recommended rules
+- **Naming**: camelCase for variables/functions, PascalCase for classes/components
+- **File naming**: kebab-case for files, PascalCase for class files
 
-### Message Processing Pipeline
-```
-WhatsApp → MessageHandler → CommandHandler → Services → Response Queue → WhatsApp
-```
+## File Organization
 
-All message processing uses **p-queue** for race condition prevention. Never bypass the queue system without `queueHelpers.safeAdd()` wrapper.
-
-### Command Discovery System
-Commands are **automatically discovered** from filesystem structure via `CommandRegistry.js`:
-- Add new commands: Create `.js` file in appropriate `src/commands/{category}/` folder
-- Metadata: Configure in `src/commands/registry/commandsConfig.js`
-- Categories: `general`, `admin`, `owner`, `store`, `calculator`
-- Hot reload: Use `reloadcommands` command (owner only)
-
-### Context Object Pattern
-Every command receives a rich context object with WhatsApp data, services, and utilities:
-```javascript
-export default async function myCommand(context, args) {
-    const { from, sender, isOwner, isGroupAdmin, messageService, listManager } = context;
-    // Always use context.messageService.reply() instead of direct client calls
-}
-```
-
-## Essential Development Patterns
-
-### Data Management via Managers
-**Never** access JSON files directly. Always use manager classes:
-```javascript
-// ✅ Correct
-const products = await context.listManager.getListDb();
-await context.listManager.saveListDb(updatedProducts);
-
-// ❌ Wrong - bypasses data consistency
-const products = JSON.parse(fs.readFileSync('database/list.json'));
-```
-
-### Command Argument Parsing
-Use pipe-separated arguments for complex data:
-```javascript
-// Command: addlist Product Name|Description here|25000|Electronics
-const { args } = commandHandler.parseMultipleArgs(text, 4);
-const [name, description, price, category] = args;
-```
-
-### Permission-Aware Operations
-Always validate permissions before group operations:
-```javascript
-if (command.adminOnly && !context.isGroupAdmin) {
-    return context.messageService.reply(from, "❌ Admin only command", msg);
-}
-
-// For bot group operations, check bot's admin status
-const isBotAdmin = await context.groupService.isBotGroupAdmin(groupId);
-```
-
-### Queue-First Development
-All async operations must use queue helpers:
-```javascript
-// Message sending
-await queueHelpers.safeAdd(messageQueue,
-    async () => messageService.reply(from, text, msg),
-    async () => messageService.sendTextDirect(from, text) // fallback
-);
-```
-
-### Group Metadata Validation
-All group message sending automatically validates metadata before sending:
-```javascript
-// Automatically handled in MessageService - ensures group metadata exists
-await messageService.sendText(groupId, "Message"); // ✅ Safe for groups
-await messageService.reply(groupId, "Reply", msg); // ✅ Metadata validated
-
-// Pattern used internally:
-// await this.ensureGroupMetadata(jid); // Validates if jid.endsWith('@g.us')
-```
-
-### Group Message Encryption
-Group messages automatically include encryption options for better compatibility:
-```javascript
-// Automatically applied for group messages (jid.endsWith('@g.us'))
-const sendOptions = to.endsWith('@g.us') ? {
-    ephemeralExpiration: 0,
-    messageId: undefined, // Let Baileys generate the message ID
-    ...options
-} : options;
-
-// All MessageService methods handle this automatically
-await messageService.sendText(groupId, "Message"); // ✅ Encryption applied
-await messageService.sendImage(groupId, buffer, "Caption"); // ✅ Encryption applied
-```## Critical Developer Workflows
-
-### Adding New Commands
-1. Create file: `src/commands/{category}/commandname.js`
-2. Add metadata: `src/commands/registry/commandsConfig.js`
-3. Test with: `npm run dev` (auto-discovery active)
-4. Hot reload: Send `reloadcommands` command as owner
-
-### Development Setup
-```bash
-npm run dev              # Development with auto-restart
-npm run pm2:start        # Production deployment
-npm run pm2:logs         # Monitor logs
-npm run clean:win        # Reset WhatsApp session (Windows)
-```
-
-### Debugging Commands
-- `botstat` - System health and queue statistics
-- `commandinfo` - Registry status and command metrics
-- `resetqueue` - Emergency queue reset for stuck operations
-- `reloadcommands` - Hot reload all commands
-
-### PM2 Production Patterns
-- **Non-interactive setup**: `pm2-windows.bat` for Windows deployment
-- **Pairing code mode**: Set `USE_PAIRING_CODE=true` to avoid QR scanning
-- **Memory monitoring**: Auto-restart at 1GB RAM usage
-- **Log rotation**: Configured in `ecosystem.config.js`
-
-## Project-Specific Conventions
-
-### File Organization
+### Core Architecture
 ```
 src/
-├── commands/{category}/     # Auto-discovered commands
-├── handlers/               # MessageHandler, CommandHandler
-├── services/               # Business logic (MessageService, GroupService)
-├── models/                 # Data managers (ListManager, TestiManager)
-├── utils/                  # Queue system, logger, helpers
-└── config/                 # Settings, messages, constants
+├── commands/           # Bot commands organized by category
+│   ├── admin/         # Administrative commands
+│   ├── calculator/    # Mathematical operations
+│   ├── general/       # General purpose commands
+│   ├── owner/         # Owner-only commands
+│   └── store/         # Store management commands
+├── config/            # Configuration files
+├── handlers/          # Message and command handlers
+├── middleware/        # Authentication and validation middleware
+├── models/            # Data managers (ListManager, TestiManager, etc.)
+├── services/          # Business logic services
+├── utils/             # Utility functions and helpers
+└── WhatsAppBot.js     # Main bot class
 ```
 
-### Data Consistency Rules
-- **AFK System**: Group-scoped (user can be AFK in different groups independently)
-- **Welcome Messages**: Stored per-group in `WelcomeManager`
-- **Product Keys**: Case-insensitive matching for customer inquiries
-- **Order States**: Use `set_proses.json` and `set_done.json` for templates
+### Database Structure
+```
+database/              # JSON-based data storage
+├── list-produk.json   # Product listings
+├── list-testi.json    # Customer testimonials
+├── sewa.json          # Rental/subscription data
+├── set_done.json      # Order completion templates
+├── set_proses.json    # Order processing templates
+└── *.json             # Other data files
+```
 
-### Error Handling Patterns
+### Media Assets
+```
+gambar/                # Images and media files
+├── qris.jpg           # Payment QR code
+├── thumbnail.jpg      # Bot thumbnail
+└── *.jpg, *.mp3       # Media assets
+```
+
+## Development Standards
+
+### Command Structure
+- Each command should be a separate file in appropriate category folder
+- Export default function that accepts (context, args) parameters
+- Include proper error handling and validation
+- Use manager classes for data operations instead of direct database access
+
+### Manager Pattern
+- Use specific managers: `ListManager`, `TestiManager`, `SewaManager`, `AfkManager`
+- Avoid direct `DatabaseManager` usage when specific manager exists
+- Implement proper separation of concerns
+
+### Error Handling
+- Wrap async operations in try-catch blocks
+- Log errors with appropriate context
+- Provide user-friendly error messages
+- Handle WhatsApp-specific errors (connection, rate limits)
+
+### Security Practices
+- Validate all user inputs
+- Implement proper authentication for admin/owner commands
+- Sanitize data before database operations
+- Rate limiting for command usage
+
+## Git Practices
+- **Conventional commits**: feat, fix, docs, style, refactor, test, chore
+- **Branch naming**: feature/task-description, bugfix/issue-description, hotfix/critical-issue
+- **PR size**: Maximum 400 lines for maintainability
+- **Commit message format**: `type(scope): description`
+  - Example: `feat(commands): add product search functionality`
+  - Example: `fix(database): resolve duplicate entry issue`
+
+## Testing Standards
+
+### Unit Testing
+- Test all command functions with mock contexts
+- Verify manager operations with mock data
+- Test error scenarios and edge cases
+- Maintain >80% code coverage for critical paths
+
+### Integration Testing
+- Test complete command workflows
+- Verify database operations
+- Test WhatsApp message handling
+- Validate media processing
+
+## Performance Guidelines
+
+### Bot Responsiveness
+- Commands should respond within 3 seconds
+- Use async/await for all I/O operations
+- Implement proper queuing for heavy operations
+- Cache frequently accessed data
+
+### Memory Management
+- Clean up resources after operations
+- Avoid memory leaks in long-running processes
+- Monitor session data growth
+- Implement proper garbage collection
+
+## Security & Privacy
+
+### Data Protection
+- Never log sensitive user data
+- Encrypt stored credentials
+- Implement data retention policies
+- Handle PII according to privacy laws
+
+### Bot Security
+- Validate all incoming messages
+- Implement rate limiting per user
+- Protect against command injection
+- Secure file upload/download operations
+
+## Documentation Standards
+
+### Code Documentation
+- JSDoc comments for all public functions
+- Clear parameter and return type documentation
+- Include usage examples for complex functions
+- Document business logic and edge cases
+
+### README Requirements
+- Installation and setup instructions
+- Configuration guide
+- Command list with examples
+- Troubleshooting section
+
+## Development Workflow
+
+### Local Development
+- Use hot reload for faster development cycles
+- Test commands in isolated environment
+- Validate database operations before deployment
+- Review code for security vulnerabilities
+
+### Code Review Checklist
+- [ ] Follows established patterns and conventions
+- [ ] Includes appropriate error handling
+- [ ] Has adequate test coverage
+- [ ] Documentation is updated
+- [ ] No security vulnerabilities
+- [ ] Performance impact considered
+
+### Deployment
+- Test in staging environment first
+- Verify database migrations if needed
+- Monitor bot performance after deployment
+- Have rollback plan ready
+
+## Common Patterns
+
+### Command Implementation
 ```javascript
-// Command-level error handling
-try {
-    const result = await someOperation();
-    return await context.messageService.reply(from, "✅ Success", msg);
-} catch (error) {
-    logger.error("Operation failed:", error);
-    return await context.messageService.reply(from, "❌ Failed. Try again.", msg);
+export default async function commandName(context, args) {
+    try {
+        const { messageService, manager } = context;
+        
+        // Validation
+        if (!args.length) {
+            return messageService.reply('Usage: command <parameters>');
+        }
+        
+        // Business logic
+        const result = await manager.operation(args);
+        
+        // Response
+        return messageService.reply(result);
+    } catch (error) {
+        console.error('Command error:', error);
+        return messageService.reply('An error occurred');
+    }
 }
 ```
 
-### Media Processing
-- **Image products**: Upload via `MediaService.uploadImage()` then store URL
-- **Size limits**: Keep images under 50KB for WhatsApp compatibility
-- **Sticker creation**: Use `mediaService.createSticker()` for auto-conversion
+### Manager Usage
+```javascript
+// ✅ Correct - Use specific manager
+const products = await listManager.getListDb();
 
-## Integration Points
+// ❌ Incorrect - Avoid generic database manager
+const products = await databaseManager.getList();
+```
 
-### WhatsApp Connection Management
-- **Pairing code**: Preferred for headless deployment (`config.bot.usePairingCode`)
-- **Session persistence**: Uses `sessionn/` folder (never delete in production)
-- **Reconnection logic**: Exponential backoff with circuit breaker pattern
-- **Group metadata validation**: All group messages automatically validate metadata before sending
+## Dependencies Management
 
-### External Dependencies
-- **Baileys 6.7.18**: WhatsApp Web API (breaking changes in newer versions)
-- **p-queue**: Critical for message ordering and rate limiting
-- **PM2**: Production process management (required for stability)
-- **Pino**: Structured logging (JSON format for log aggregation)
+### Core Dependencies
+- Keep Baileys library updated for WhatsApp compatibility
+- Monitor security advisories for all dependencies
+- Use exact versions for critical dependencies
+- Regular dependency audits
 
-### Database Pattern
-JSON file-based storage with manager abstraction layer. Each data type has dedicated manager:
-- `ListManager` - Product listings and store catalog
-- `TestiManager` - Customer testimonials
-- `AfkManager` - Group-scoped AFK status tracking
-- `SewaManager` - Subscription/rental tracking
+### Development Dependencies
+- Use latest stable versions for dev tools
+- Include proper linting and formatting tools
+- Maintain test framework versions
+- Document required Node.js version
 
-## Common Gotchas
+## Monitoring & Logging
 
-1. **Queue Bypass**: Never call `client.sendMessage()` directly - always use `MessageService`
-2. **Path Resolution**: `CommandRegistry` paths are sensitive - update `validCategories` when adding command categories
-3. **Self-Message Loop**: Bot ignores messages from itself (`msg.key.fromMe`)
-4. **Admin Validation**: Check both user admin status AND bot admin status for group operations
-5. **Memory Leaks**: Large media processing can cause restarts - monitor with `botstat`
+### Application Logs
+- Log important bot events (startup, errors, connections)
+- Use structured logging format
+- Implement log rotation
+- Monitor log levels in production
 
-Always test new features with `npm run dev` first, then deploy with PM2 for production stability.
+### Performance Metrics
+- Track command response times
+- Monitor memory usage
+- Watch database operation performance
+- Alert on error rate thresholds
+
+---
+
+## When creating documentation of history
+- Always put it within .specstory as subfolder
+- use descriptive name kebab-case
+- cross-reference with other relevant docs
+- keep root directory profesioan and clean
+- do not always create new document, if find the relevant and put there no need create new
+**Note**: These standards should be reviewed and updated regularly as the project evolves. All team members should follow these guidelines to maintain code quality and consistency. and documentation after process put it on `.specstory/guides/`
 
 ---
 > Source: [pemudakoding/Digital-Store-Assistant](https://github.com/pemudakoding/Digital-Store-Assistant) — distributed by [TomeVault](https://tomevault.io).
