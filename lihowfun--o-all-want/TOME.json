@@ -4,7 +4,7 @@
   "repo": "O-ALL-WANT",
   "description": "A practical framework that integrates proven GitHub patterns for agent memory, skills, and reusable context.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/lihowfun/O-ALL-WANT",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-09T02:37:39Z"
+  "distributed_at": "2026-05-15T12:26:46Z"
 }
