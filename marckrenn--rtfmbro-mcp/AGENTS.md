@@ -1,5 +1,4 @@
-
-# Cursor Instructions for Package Documentation
+# Copilot Instructions for Package Documentation
 ## Package Documentation Policy
 
 * Before using any package, module, or library, ALWAYS consult its documentation — your internal knowledge may be outdated and could cause errors or failures.
