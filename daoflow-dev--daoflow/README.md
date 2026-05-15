@@ -7,14 +7,14 @@ Instead of AWS wrapper, we're building bare metal  / VM wrappers for you. Open s
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [DaoFlow-dev/DaoFlow](https://github.com/DaoFlow-dev/DaoFlow).
+Original source: `CLAUDE.md` in [DaoFlow-dev/DaoFlow](https://github.com/DaoFlow-dev/DaoFlow).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/DaoFlow-dev/DaoFlow](https://github.com/DaoFlow-dev/DaoFlow)
