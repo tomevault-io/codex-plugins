@@ -7,12 +7,12 @@ LLM inference engine built with SYCL + oneDNN
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [Blackwood416/Aila](https://github.com/Blackwood416/Aila).
+Original source: `CLAUDE.md` in [Blackwood416/Aila](https://github.com/Blackwood416/Aila).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
