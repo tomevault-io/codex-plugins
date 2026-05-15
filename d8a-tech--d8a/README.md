@@ -7,12 +7,12 @@ Warehouse-native Analytics compatible with Google Analytics and Matomo tracking 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [d8a-tech/d8a](https://github.com/d8a-tech/d8a).
+Original source: `CLAUDE.md` in [d8a-tech/d8a](https://github.com/d8a-tech/d8a).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
