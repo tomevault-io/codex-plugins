@@ -5,13 +5,13 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [observaianeye/ObservAI](https://github.com/observaianeye/ObservAI).
+Original source: `CLAUDE.md` in [observaianeye/ObservAI](https://github.com/observaianeye/ObservAI).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
