@@ -7,13 +7,13 @@ Typescript implementation of Lorcana Trading Card Game.
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [TheCardGoat/lorcana-simulator](https://github.com/TheCardGoat/lorcana-simulator).
+Original source: `CLAUDE.md` in [TheCardGoat/lorcana-simulator](https://github.com/TheCardGoat/lorcana-simulator).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
