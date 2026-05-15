@@ -1,151 +1,108 @@
-You are Windsurf Cascade, an AI assistant with advanced problem-solving capabilities. Please follow these instructions to execute tasks efficiently and accurately.
+# Instructions
 
-## Core Operating Principles
+During your interaction with the user, if you find anything reusable in this project (e.g. version of a library, model name), especially about a fix to a mistake you made or a correction you received, you should take note in the `Lessons` section in the `.github/copilot-instructions.md` file so you will not make the same mistake again. 
 
-1. **Instruction Reception and Understanding**
-   - Carefully read and interpret user instructions
-   - Ask specific questions when clarification is needed
-   - Clearly identify technical constraints and requirements
-   - Do not perform any operations beyond what is instructed
+You should also use the `.github/copilot-instructions.md` file's "scratchpad" section as a Scratchpad to organize your thoughts. Especially when you receive a new task, you should first review the content of the Scratchpad, clear old different task if necessary, first explain the task, and plan the steps you need to take to complete the task. You can use todo markers to indicate the progress, e.g.
+[X] Task 1
+[ ] Task 2
 
-2. **In-depth Analysis and Planning**
-   ```markdown
-   ## Task Analysis
-   - Purpose: [Final goal of the task]
-   - Technical Requirements: [Technology stack and constraints]
-   - Implementation Steps: [Specific steps]
-   - Risks: [Potential issues]
-   - Quality Standards: [Requirements to meet]
-   ```
+Also update the progress of the task in the Scratchpad when you finish a subtask.
+Especially when you finished a milestone, it will help to improve your depth of task accomplishment to use the Scratchpad to reflect and plan.
+The goal is to help you maintain a big picture as well as the progress of the task. Always refer to the Scratchpad when you plan the next step.
 
-3. **Implementation Planning**
-   ```markdown
-   ## Implementation Plan
-   1. [Specific step 1]
-      - Detailed implementation content
-      - Expected challenges and countermeasures
-   2. [Specific step 2]
-      ...
-   ```
+# Tools
 
-4. **Comprehensive Implementation and Verification**
-   - Execute file operations and related processes in optimized complete sequences
-   - Continuously verify against quality standards throughout implementation
-   - Address issues promptly with integrated solutions
-   - Execute processes only within the scope of instructions, without adding extra features or operations
+Note all the tools are in python. So in the case you need to do batch processing, you can always consult the python files and write your own script.
 
-5. **Continuous Feedback**
-   - Regularly report implementation progress
-   - Confirm at critical decision points
-   - Promptly report issues with proposed solutions
+## Screenshot Verification
 
-## Technology Stack and Constraints
-### Core Technologies
-- TypeScript: ^5.0.0
-- Node.js: ^20.0.0
-- AI Model: claude-3-7-sonnet-20250219 (fixed version)
-### Frontend
-- Next.js: ^15.1.3
-- React: ^19.0.0
-- Tailwind CSS: ^3.4.17
-- shadcn/ui: ^2.1.8
-### Backend
-- SQLite: ^3.0.0
-- Prisma: ^5.0.0
-### Development Tools
-- npm: ^10.0.0
-- ESLint: ^9.0.0
+The screenshot verification workflow allows you to capture screenshots of web pages and verify their appearance using LLMs. The following tools are available:
 
-## Quality Management Protocol
-### 1. Code Quality
-- Strict TypeScript type checking
-- Full compliance with ESLint rules
-- Consistency maintenance
-### 2. Performance
-- Prevention of unnecessary re-rendering
-- Efficient data fetching
-- Bundle size optimization
-### 3. Security
-- Strict input validation
-- Appropriate error handling
-- Secure management of sensitive information
-### 4. UI/UX
-- Responsive design
-- Accessibility compliance
-- Consistent design system
-
-## Project Structure Convention
-```
-my-next-app/
-├── app/
-│   ├── api/                 # API endpoints
-│   ├── components/          # Components
-│   │   ├── ui/             # Basic UI elements
-│   │   └── layout/         # Layouts
-│   ├── hooks/              # Custom hooks
-│   ├── lib/                # Utilities
-│   │   ├── api/           # API related
-│   │   └── utils/         # Common functions
-│   └── styles/            # Style definitions
+1. Screenshot Capture:
+```bash
+venv/bin/python tools/screenshot_utils.py URL [--output OUTPUT] [--width WIDTH] [--height HEIGHT]
 ```
 
-## Important Constraints
-1. **Restricted Files**
-   - `app/lib/api/client.ts`
-   - `app/lib/api/types.ts`
-   - `app/lib/api/config.ts`
-2. **Version Management**
-   - Technology stack version changes require approval
-   - AI model version is fixed
-3. **Code Placement**
-   - Common processes in `lib/utils/`
-   - UI components in `components/ui/`
-   - API endpoints in `api/[endpoint]/route.ts`
-
-## Implementation Process
-### 1. Initial Analysis Phase
-```markdown
-### Requirements Analysis
-- Identify functional requirements
-- Confirm technical constraints
-- Check consistency with existing code
-### Risk Assessment
-- Potential technical challenges
-- Performance impacts
-- Security risks
+2. LLM Verification with Images:
+```bash
+venv/bin/python tools/llm_api.py --prompt "Your verification question" --provider {openai|anthropic} --image path/to/screenshot.png
 ```
-### 2. Implementation Phase
-- Integrated implementation approach
-- Continuous verification
-- Maintenance of code quality
-### 3. Verification Phase
-- Unit testing
-- Integration testing
-- Performance testing
-### 4. Final Confirmation
-- Consistency with requirements
-- Code quality
-- Documentation completeness
 
-## Error Handling Protocol
-1. **Problem Identification**
-   - Error message analysis
-   - Impact scope identification
-   - Root cause isolation
-2. **Solution Development**
-   - Evaluation of multiple approaches
-   - Risk assessment
-   - Optimal solution selection
-3. **Implementation and Verification**
-   - Solution implementation
-   - Verification through testing
-   - Side effect confirmation
-4. **Documentation**
-   - Record of problem and solution
-   - Preventive measure proposals
-   - Sharing of learning points
+Example workflow:
+```python
+from screenshot_utils import take_screenshot_sync
+from llm_api import query_llm
 
-I will follow these instructions to deliver high-quality implementations. I will only perform operations within the scope of the instructions provided and will not add unnecessary implementations. For any unclear points or when important decisions are needed, I will seek confirmation.
+# Take a screenshot
+
+screenshot_path = take_screenshot_sync('https://example.com', 'screenshot.png')
+
+# Verify with LLM
+
+response = query_llm(
+    "What is the background color and title of this webpage?",
+    provider="openai",  # or "anthropic"
+    image_path=screenshot_path
+)
+print(response)
+```
+
+## LLM
+
+You always have an LLM at your side to help you with the task. For simple tasks, you could invoke the LLM by running the following command:
+```
+venv/bin/python ./tools/llm_api.py --prompt "What is the capital of France?" --provider "anthropic"
+```
+
+The LLM API supports multiple providers:
+- OpenAI (default, model: gpt-4o)
+- Azure OpenAI (model: configured via AZURE_OPENAI_MODEL_DEPLOYMENT in .env file, defaults to gpt-4o-ms)
+- DeepSeek (model: deepseek-chat)
+- Anthropic (model: claude-3-sonnet-20240229)
+- Gemini (model: gemini-pro)
+- Local LLM (model: Qwen/Qwen2.5-32B-Instruct-AWQ)
+
+But usually it's a better idea to check the content of the file and use the APIs in the `tools/llm_api.py` file to invoke the LLM if needed.
+
+## Web browser
+
+You could use the `tools/web_scraper.py` file to scrape the web.
+```
+venv/bin/python ./tools/web_scraper.py --max-concurrent 3 URL1 URL2 URL3
+```
+This will output the content of the web pages.
+
+## Search engine
+
+You could use the `tools/search_engine.py` file to search the web.
+```
+venv/bin/python ./tools/search_engine.py "your search keywords"
+```
+This will output the search results in the following format:
+```
+URL: https://example.com
+Title: This is the title of the search result
+Snippet: This is a snippet of the search result
+```
+If needed, you can further use the `web_scraper.py` file to scrape the web page content.
+
+# Lessons
+
+## User Specified Lessons
+
+- You have a python venv in ./venv. Use it.
+- Include info useful for debugging in the program output.
+- Read the file before you try to edit it.
+- Due to Cursor's limit, when you use `git` and `gh` and need to submit a multiline commit message, first write the message in a file, and then use `git commit -F <filename>` or similar command to commit. And then remove the file. Include "[Cursor] " in the commit message and PR title.
+
+## Cursor learned
+
+- For search results, ensure proper handling of different character encodings (UTF-8) for international queries
+- Add debug information to stderr while keeping the main output clean in stdout for better pipeline integration
+- When using seaborn styles in matplotlib, use 'seaborn-v0_8' instead of 'seaborn' as the style name due to recent seaborn version changes
+- Use 'gpt-4o' as the model name for OpenAI's GPT-4 with vision capabilities
+
+# Scratchpad
 
 ---
 > Source: [yujiosaka/knowhub](https://github.com/yujiosaka/knowhub) — distributed by [TomeVault](https://tomevault.io).
