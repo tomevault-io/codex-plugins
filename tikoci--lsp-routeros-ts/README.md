@@ -7,12 +7,12 @@ RouterOS LSP for syntax checking and accurate completions in VSCode, NeoVim, and
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [tikoci/lsp-routeros-ts](https://github.com/tikoci/lsp-routeros-ts).
+Original source: `CLAUDE.md` in [tikoci/lsp-routeros-ts](https://github.com/tikoci/lsp-routeros-ts).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
