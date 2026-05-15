@@ -4,7 +4,7 @@
   "repo": "dogokit-corgi",
   "description": "\ud83d\udc36Dogokit Corgi: React Router v7 Framework, tRPC, Prisma, Better Auth, Tailwind CSS, shadcn/ui",
   "type": "config",
-  "source_format": ".windsurf/rules/*.md",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/dogokit/dogokit-corgi",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-14T22:47:33Z"
+  "distributed_at": "2026-05-15T04:13:20Z"
 }
