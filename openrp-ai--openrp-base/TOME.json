@@ -4,7 +4,7 @@
   "repo": "openrp-base",
   "description": "Open-source Character.ai with context and memory",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": ".cursor/rules/*.mdc",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/openrp-ai/openrp-base",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-15T03:40:30Z"
+  "distributed_at": "2026-05-15T07:57:39Z"
 }
