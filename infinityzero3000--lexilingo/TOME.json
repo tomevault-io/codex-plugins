@@ -4,7 +4,7 @@
   "repo": "LexiLingo",
   "description": "Next-gen AI language tutor utilizing a novel GraphCAG pipeline for zero-hallucination pedagogical feedback",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/InfinityZero3000/LexiLingo",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-08T02:36:59Z"
+  "distributed_at": "2026-05-15T10:57:49Z"
 }
