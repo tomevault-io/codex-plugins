@@ -1,0 +1,44 @@
+{
+  "name": "mcp-client-template",
+  "owner": "andrea9293",
+  "repo": "mcp-client-template",
+  "description": "A template for building MCP (Model Context Protocol) client applications, featuring a Vite + TypeScript frontend and an Express backend. Includes OAuth2.1 authentication and ready-to-use APIs for managing and interacting with MCP servers. Easily extensible for custom workflows and integrations.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/andrea9293/mcp-client-template",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-15T02:45:12Z"
+}
