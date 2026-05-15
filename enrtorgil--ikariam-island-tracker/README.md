@@ -7,12 +7,12 @@ Explore and analyze Ikariam islands across servers with rankings, filters, and d
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [enrtorgil/ikariam-island-tracker](https://github.com/enrtorgil/ikariam-island-tracker).
+Original source: `CLAUDE.md` in [enrtorgil/ikariam-island-tracker](https://github.com/enrtorgil/ikariam-island-tracker).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
