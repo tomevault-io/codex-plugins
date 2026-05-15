@@ -4,7 +4,7 @@
   "repo": "Aila",
   "description": "LLM inference engine built with SYCL + oneDNN",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/Blackwood416/Aila",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-12T04:31:04Z"
+  "distributed_at": "2026-05-15T18:59:50Z"
 }
