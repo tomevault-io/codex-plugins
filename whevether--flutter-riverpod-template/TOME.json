@@ -1,0 +1,44 @@
+{
+  "name": "flutter_riverpod_template",
+  "owner": "whevether",
+  "repo": "flutter_riverpod_template",
+  "description": "flutter riverpod\u6a21\u7248\u3002\u96c6\u6210go_router\u8def\u7531\uff0criverpod\u72b6\u6001\u7ba1\u7406\u3002\u4e0d\u5305\u542b\u4e1a\u52a1\u903b\u8f91\u3002\u53ea\u5c01\u88c5\u4e00\u4e9b\u5e38\u7528\u65b9\u6cd5\u4ee5\u53ca\u9875\u9762\u89c4\u8303\uff0c\u4ee5\u4fbf\u5feb\u901f\u5f00\u53d1",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/whevether/flutter_riverpod_template",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-15T02:21:09Z"
+}
