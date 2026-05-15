@@ -4,7 +4,7 @@
   "repo": "JobSentinel",
   "description": "Self-hosted job search automation: scrape multiple boards, de-dupe, score to your prefs, and alert you\u2014private by default; runs locally for free.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/cboyd0319/JobSentinel",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-08T20:36:04Z"
+  "distributed_at": "2026-05-15T11:49:33Z"
 }
