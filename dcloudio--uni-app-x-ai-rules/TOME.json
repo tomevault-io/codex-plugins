@@ -4,7 +4,7 @@
   "repo": "uni-app-x-ai-rules",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": ".cursor/rules/*.mdc",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/dcloudio/uni-app-x-ai-rules",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-15T04:43:37Z"
+  "distributed_at": "2026-05-15T09:57:08Z"
 }
