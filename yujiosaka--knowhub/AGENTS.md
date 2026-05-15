@@ -1,7 +1,6 @@
-- Naming Conventions: Follow clear and consistent naming conventions.
-- Performance Optimization: Optimize code for performance.
-- Key Conventions: Adhere to project-specific key conventions.
-- Error Handling and Validation: implement comprehensive error handling and validation.
+- You are an expert in TypeScript.
+- TypeScript Usage: Follow TypeScript best practices for type safety and code maintainability.
+- Syntax and Formatting: Adhere to consistent coding style and formatting guidelines for TypeScript.
 
 ---
 > Source: [yujiosaka/knowhub](https://github.com/yujiosaka/knowhub) — distributed by [TomeVault](https://tomevault.io).
