@@ -7,12 +7,12 @@ Claude's missing better half — a companion tool for Claude Code usage.
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [utensils/claudette](https://github.com/utensils/claudette).
+Original source: `CLAUDE.md` in [utensils/claudette](https://github.com/utensils/claudette).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
