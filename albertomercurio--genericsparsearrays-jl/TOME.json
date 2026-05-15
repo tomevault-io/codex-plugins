@@ -4,7 +4,7 @@
   "repo": "GenericSparseArrays.jl",
   "description": "Julia package GeneralSparseArrays.jl",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/albertomercurio/GenericSparseArrays.jl",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-07T10:46:00Z"
+  "distributed_at": "2026-05-15T07:46:43Z"
 }
