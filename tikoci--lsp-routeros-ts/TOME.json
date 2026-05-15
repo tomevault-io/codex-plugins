@@ -4,7 +4,7 @@
   "repo": "lsp-routeros-ts",
   "description": "RouterOS LSP for syntax checking and accurate completions in VSCode, NeoVim, and others.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/tikoci/lsp-routeros-ts",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-08T00:48:41Z"
+  "distributed_at": "2026-05-15T10:55:27Z"
 }
