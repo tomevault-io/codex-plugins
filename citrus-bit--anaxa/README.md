@@ -7,12 +7,12 @@ Anaxa 是一个面向科研工作流的开源智能体系统。它不是单纯�
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [Citrus-bit/Anaxa](https://github.com/Citrus-bit/Anaxa).
+Original source: `CLAUDE.md` in [Citrus-bit/Anaxa](https://github.com/Citrus-bit/Anaxa).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
