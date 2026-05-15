@@ -1,475 +1,194 @@
-# .cursor/rules/02-whatsapp-bot-domain-knowledge.mdc
+# KoalaStore WhatsApp Bot - AI Agent Instructions
 
-## WhatsApp Bot Domain Knowledge
+## Project Overview
+This is a **WhatsApp Bot for Digital Store Management** built with Node.js ES6 modules, Baileys library, and a sophisticated queue-based architecture. The bot handles customer service automation, product management, group moderation, and order processing for digital stores.
 
-This document contains domain-specific knowledge for developing WhatsApp bots for digital store management, covering business logic, technical patterns, and domain expertise.
+## Core Architecture Understanding
 
-## WhatsApp Bot Architecture Patterns
-
-### Message Flow Understanding
+### Message Processing Pipeline
 ```
-Incoming Message → Message Handler → Command Parser → Context Creation → Command Execution → Response Queue → WhatsApp API
+WhatsApp → MessageHandler → CommandHandler → Services → Response Queue → WhatsApp
 ```
 
-### Context Object Structure
-The context object is the core data structure passed to all commands:
+All message processing uses **p-queue** for race condition prevention. Never bypass the queue system without `queueHelpers.safeAdd()` wrapper.
+
+### Command Discovery System
+Commands are **automatically discovered** from filesystem structure via `CommandRegistry.js`:
+- Add new commands: Create `.js` file in appropriate `src/commands/{category}/` folder
+- Metadata: Configure in `src/commands/registry/commandsConfig.js`
+- Categories: `general`, `admin`, `owner`, `store`, `calculator`
+- Hot reload: Use `reloadcommands` command (owner only)
+
+### Context Object Pattern
+Every command receives a rich context object with WhatsApp data, services, and utilities:
 ```javascript
-const context = {
-    // Core WhatsApp data
-    msg,                    // Original Baileys message object
-    from,                   // Chat/Group ID
-    sender,                 // User ID who sent message
-    pushname,               // User's display name
-    body,                   // Message text content
-    
-    // Group metadata (if applicable)
-    isGroup,                // Boolean: is this a group chat
-    groupMetadata,          // Group info (name, participants, etc.)
-    groupMembers,           // Array of group members
-    isGroupAdmin,           // Boolean: is sender group admin
-    isBotGroupAdmin,        // Boolean: is bot group admin
-    
-    // User permissions
-    isOwner,                // Boolean: is sender bot owner
-    
-    // Message analysis
-    isQuotedMsg,            // Boolean: is replying to a message
-    quotedMsg,              // Quoted message object
-    
-    // Services and managers
-    messageService,         // For sending messages
-    groupService,           // For group operations
-    listManager,            // Product management
-    testiManager,           // Testimonial management
-    afkManager,             // AFK status management
-    sewaManager,            // Subscription management
-    // ... other managers
-    
-    // Utility functions
-    reply: async (text) => {} // Quick reply function
-};
-```
-
-### Command Categories & Responsibilities
-
-#### **Admin Commands** (`src/commands/admin/`)
-- **Purpose**: Group moderation and management
-- **Access**: Group admins only
-- **Common patterns**: Member management, message moderation, group settings
-- **Examples**: `kick`, `promote`, `demote`, `hidetag`, `antilink`
-
-#### **Owner Commands** (`src/commands/owner/`)
-- **Purpose**: Bot administration and system management
-- **Access**: Bot owner only
-- **Common patterns**: System monitoring, data management, bot configuration
-- **Examples**: `botstat`, `resetqueue`, `broadcast`, `addproduk`
-
-#### **Store Commands** (`src/commands/store/`)
-- **Purpose**: Digital store operations
-- **Access**: All users (with business logic restrictions)
-- **Common patterns**: Product browsing, payment info, testimonials
-- **Examples**: `list`, `produk`, `payment`, `testi`
-
-#### **General Commands** (`src/commands/general/`)
-- **Purpose**: Universal utility functions
-- **Access**: All users
-- **Common patterns**: Information retrieval, utilities, help
-- **Examples**: `help`, `ping`, `sticker`, `afk`
-
-## Digital Store Business Logic
-
-### Product Management Workflow
-```
-Add Product → Validate Data → Store in Database → Update Catalog → Notify Admins
-```
-
-### Order Processing States
-1. **Inquiry** - Customer asks about product
-2. **Quotation** - Price and details provided
-3. **Processing** - Order being prepared (`set_proses.json`)
-4. **Completion** - Order delivered (`set_done.json`)
-5. **Testimonial** - Customer feedback collection
-
-### Payment Flow Understanding
-```
-Customer Inquiry → Product Selection → Payment Info → Payment Proof → Order Processing → Delivery → Completion
-```
-
-## WhatsApp API Specific Knowledge
-
-### Message Types & Handling
-```javascript
-// Text messages
-msg.message?.conversation
-
-// Media messages with captions
-msg.message?.imageMessage?.caption
-msg.message?.videoMessage?.caption
-
-// Extended text (links, mentions)
-msg.message?.extendedTextMessage?.text
-
-// Button responses
-msg.message?.buttonsResponseMessage?.selectedButtonId
-
-// List responses
-msg.message?.listResponseMessage?.singleSelectReply?.selectedRowId
-```
-
-### Group Operations Best Practices
-```javascript
-// Always check bot admin status before group operations
-const isBotAdmin = await groupService.isBotGroupAdmin(groupId);
-if (!isBotAdmin) {
-    return messageService.reply('Bot harus menjadi admin untuk operasi ini');
-}
-
-// Validate target user permissions
-const isTargetAdmin = await groupService.isGroupAdmin(groupId, targetUserId);
-if (isTargetAdmin && action === 'kick') {
-    return messageService.reply('Tidak bisa kick admin grup');
+export default async function myCommand(context, args) {
+    const { from, sender, isOwner, isGroupAdmin, messageService, listManager } = context;
+    // Always use context.messageService.reply() instead of direct client calls
 }
 ```
 
-### Media Handling Patterns
+## Essential Development Patterns
+
+### Data Management via Managers
+**Never** access JSON files directly. Always use manager classes:
 ```javascript
-// Image processing for products
-if (quotedMsg?.imageMessage) {
-    const imageUrl = await mediaService.uploadImage(quotedMsg);
-    product.image_url = imageUrl;
-    product.isImage = true;
+// ✅ Correct
+const products = await context.listManager.getListDb();
+await context.listManager.saveListDb(updatedProducts);
+
+// ❌ Wrong - bypasses data consistency
+const products = JSON.parse(fs.readFileSync('database/list.json'));
+```
+
+### Command Argument Parsing
+Use pipe-separated arguments for complex data:
+```javascript
+// Command: addlist Product Name|Description here|25000|Electronics
+const { args } = commandHandler.parseMultipleArgs(text, 4);
+const [name, description, price, category] = args;
+```
+
+### Permission-Aware Operations
+Always validate permissions before group operations:
+```javascript
+if (command.adminOnly && !context.isGroupAdmin) {
+    return context.messageService.reply(from, "❌ Admin only command", msg);
 }
 
-// Sticker creation
-const stickerBuffer = await mediaService.createSticker(mediaBuffer);
-await messageService.sendSticker(from, stickerBuffer);
+// For bot group operations, check bot's admin status
+const isBotAdmin = await context.groupService.isBotGroupAdmin(groupId);
 ```
 
-## Customer Service Automation Patterns
-
-### AFK System Domain Logic
-- **Scope**: Group-specific (user can be AFK in one group but not another)
-- **Auto-return**: When AFK user sends message, automatically remove AFK status
-- **Mentions**: Notify when someone mentions/replies to AFK user
-- **Time tracking**: Calculate and display AFK duration
-
-### Welcome/Goodbye Messages
+### Queue-First Development
+All async operations must use queue helpers:
 ```javascript
-// Context-aware messages based on group settings
-const welcomeEnabled = welcomeManager.isEnabled(groupId);
-if (welcomeEnabled && update.action === 'add') {
-    await messageService.sendWelcome(groupId, participantId, groupName);
-}
+// Message sending
+await queueHelpers.safeAdd(messageQueue,
+    async () => messageService.reply(from, text, msg),
+    async () => messageService.sendTextDirect(from, text) // fallback
+);
 ```
 
-### Anti-Link Protection
+### Group Metadata Validation
+All group message sending automatically validates metadata before sending:
 ```javascript
-// Smart link detection with whitelist support
-const containsLink = /https?:\/\//.test(messageBody);
-if (containsLink && !isGroupAdmin) {
-    const isWhitelisted = antilinkManager.isWhitelisted(messageBody);
-    if (!isWhitelisted) {
-        await messageService.deleteMessage(messageId);
-        await messageService.warnUser(sender);
-    }
-}
+// Automatically handled in MessageService - ensures group metadata exists
+await messageService.sendText(groupId, "Message"); // ✅ Safe for groups
+await messageService.reply(groupId, "Reply", msg); // ✅ Metadata validated
+
+// Pattern used internally:
+// await this.ensureGroupMetadata(jid); // Validates if jid.endsWith('@g.us')
 ```
 
-## Data Management Patterns
-
-### JSON Database Best Practices
+### Group Message Encryption
+Group messages automatically include encryption options for better compatibility:
 ```javascript
-// Always use manager classes, never direct file access
-const products = await listManager.getListDb();          // ✅ Correct
-const products = JSON.parse(fs.readFileSync('list.json')); // ❌ Wrong
+// Automatically applied for group messages (jid.endsWith('@g.us'))
+const sendOptions = to.endsWith('@g.us') ? {
+    ephemeralExpiration: 0,
+    messageId: undefined, // Let Baileys generate the message ID
+    ...options
+} : options;
 
-// Transaction-like operations for data consistency
-const updateProduct = async (productId, updates) => {
-    const products = await listManager.getListDb();
-    const index = products.findIndex(p => p.id === productId);
-    if (index !== -1) {
-        products[index] = { ...products[index], ...updates };
-        await listManager.saveListDb(products);
-    }
-};
+// All MessageService methods handle this automatically
+await messageService.sendText(groupId, "Message"); // ✅ Encryption applied
+await messageService.sendImage(groupId, buffer, "Caption"); // ✅ Encryption applied
+```## Critical Developer Workflows
+
+### Adding New Commands
+1. Create file: `src/commands/{category}/commandname.js`
+2. Add metadata: `src/commands/registry/commandsConfig.js`
+3. Test with: `npm run dev` (auto-discovery active)
+4. Hot reload: Send `reloadcommands` command as owner
+
+### Development Setup
+```bash
+npm run dev              # Development with auto-restart
+npm run pm2:start        # Production deployment
+npm run pm2:logs         # Monitor logs
+npm run clean:win        # Reset WhatsApp session (Windows)
 ```
 
-### Product Data Structure
-```javascript
-const product = {
-    id: 'unique-id',
-    key: 'PRODUK1',           // User-friendly product code
-    response: 'Product description with price and details',
-    isImage: false,           // Has associated image
-    image_url: null,          // Image URL if isImage is true
-    isClose: false,           // Product availability status
-    groupId: 'group@g.us'     // Group where product is available
-};
+### Debugging Commands
+- `botstat` - System health and queue statistics
+- `commandinfo` - Registry status and command metrics
+- `resetqueue` - Emergency queue reset for stuck operations
+- `reloadcommands` - Hot reload all commands
+
+### PM2 Production Patterns
+- **Non-interactive setup**: `pm2-windows.bat` for Windows deployment
+- **Pairing code mode**: Set `USE_PAIRING_CODE=true` to avoid QR scanning
+- **Memory monitoring**: Auto-restart at 1GB RAM usage
+- **Log rotation**: Configured in `ecosystem.config.js`
+
+## Project-Specific Conventions
+
+### File Organization
+```
+src/
+├── commands/{category}/     # Auto-discovered commands
+├── handlers/               # MessageHandler, CommandHandler
+├── services/               # Business logic (MessageService, GroupService)
+├── models/                 # Data managers (ListManager, TestiManager)
+├── utils/                  # Queue system, logger, helpers
+└── config/                 # Settings, messages, constants
 ```
 
-### Testimonial Data Structure
+### Data Consistency Rules
+- **AFK System**: Group-scoped (user can be AFK in different groups independently)
+- **Welcome Messages**: Stored per-group in `WelcomeManager`
+- **Product Keys**: Case-insensitive matching for customer inquiries
+- **Order States**: Use `set_proses.json` and `set_done.json` for templates
+
+### Error Handling Patterns
 ```javascript
-const testimonial = {
-    id: 'unique-id',
-    name: 'Customer Name',
-    rating: 5,                // 1-5 stars
-    review: 'Customer feedback text',
-    product: 'Product Name',  // Optional: which product
-    date: '2024-01-01',
-    groupId: 'group@g.us'
-};
-```
-
-## Queue System & Performance
-
-### Message Queue Patterns
-```javascript
-// All operations should use queue to prevent race conditions
-await messageQueue.add(async () => {
-    return await processMessage(context);
-});
-
-// Queue health monitoring
-const queueHealth = queueSystem.getQueueHealth();
-if (queueHealth.message.status === 'critical') {
-    await emergencyQueueReset();
-}
-```
-
-### Rate Limiting Strategies
-```javascript
-// Per-user rate limiting (1 message per second)
-const userId = context.sender;
-const lastProcessed = lastProcessedTime.get(userId) || 0;
-if (Date.now() - lastProcessed < 1000) {
-    return; // Skip processing
-}
-```
-
-## Security & Validation Patterns
-
-### Input Validation
-```javascript
-// Always validate user inputs
-const validateProductInput = (input) => {
-    if (!input || typeof input !== 'string') return false;
-    if (input.length > 1000) return false;
-    if (/<script|javascript:/i.test(input)) return false;
-    return true;
-};
-```
-
-### Permission Checking
-```javascript
-// Layered permission checking
-const hasPermission = (context, requiredLevel) => {
-    const { isOwner, isGroupAdmin, isGroup } = context;
-    
-    switch (requiredLevel) {
-        case 'owner': return isOwner;
-        case 'admin': return isOwner || (isGroup && isGroupAdmin);
-        case 'user': return true;
-        default: return false;
-    }
-};
-```
-
-### Bot Self-Protection
-```javascript
-// Prevent bot from processing its own messages
-const botId = client.user?.id?.split(":")[0] + "@s.whatsapp.net";
-if (context.sender === botId) {
-    logger.debug('Ignoring self-message');
-    return;
-}
-```
-
-## Error Handling & Recovery
-
-### Command Error Patterns
-```javascript
-export default async function commandName(context, args) {
-    try {
-        // Command logic
-    } catch (error) {
-        logger.error(`${commandName} error:`, error);
-        
-        // User-friendly error response
-        await context.messageService.reply(
-            'Terjadi kesalahan saat memproses command. Tim teknis telah diberitahu.'
-        );
-        
-        // Optional: Send detailed error to owner
-        if (error.critical) {
-            await notifyOwner(error);
-        }
-    }
-}
-```
-
-### Recovery Strategies
-```javascript
-// Graceful degradation for external API failures
-const downloadMedia = async (url) => {
-    try {
-        return await externalAPI.download(url);
-    } catch (error) {
-        logger.warn('External API failed, using fallback');
-        return await fallbackDownload(url);
-    }
-};
-```
-
-## Monitoring & Health Checks
-
-### Bot Health Indicators
-- **Queue Status**: All queues processing normally
-- **Memory Usage**: Below critical thresholds
-- **Response Time**: Commands completing within 3 seconds
-- **Error Rate**: <1% command failure rate
-- **Connection Status**: WhatsApp session active
-
-### Performance Metrics
-```javascript
-// Track command execution time
-const startTime = performance.now();
-await executeCommand();
-const executionTime = performance.now() - startTime;
-commandStats.updateMetrics(commandName, executionTime);
-```
-
-## Business Logic Patterns
-
-### Product Catalog Management
-```javascript
-// Smart product search with fuzzy matching
-const searchProducts = (query) => {
-    return products.filter(product => 
-        product.key.toLowerCase().includes(query.toLowerCase()) ||
-        product.response.toLowerCase().includes(query.toLowerCase())
-    );
-};
-```
-
-### Order Status Templates
-```javascript
-// Dynamic template generation
-const generateOrderStatus = (templateType, customerData) => {
-    const templates = {
-        proses: `🔄 *ORDER SEDANG DIPROSES*\n\nHalo {name},\nPesanan Anda sedang diproses..`,
-        done: `✅ *ORDER SELESAI*\n\nHalo {name},\nPesanan Anda sudah selesai!`
-    };
-    
-    return templates[templateType].replace(/\{(\w+)\}/g, (match, key) => 
-        customerData[key] || match
-    );
-};
-```
-
-### Payment Integration Patterns
-```javascript
-// Multi-payment method support
-const getPaymentInfo = () => {
-    return {
-        dana: config.payment.dana,
-        ovo: config.payment.ovo,
-        gopay: config.payment.gopay,
-        qris: './gambar/qris.jpg'
-    };
-};
-```
-
-## Testing Patterns for WhatsApp Bots
-
-### Command Testing
-```javascript
-// Mock context for unit testing
-const mockContext = {
-    messageService: {
-        reply: jest.fn(),
-        sendImage: jest.fn()
-    },
-    from: 'test@g.us',
-    sender: 'user@s.whatsapp.net',
-    isOwner: false,
-    isGroup: true
-};
-
-// Test command execution
-await commandFunction(mockContext, ['arg1', 'arg2']);
-expect(mockContext.messageService.reply).toHaveBeenCalledWith(expectedResponse);
-```
-
-## Common Anti-Patterns to Avoid
-
-### ❌ Direct Database Access
-```javascript
-// Wrong
-const data = JSON.parse(fs.readFileSync('./database/list.json'));
-
-// Correct
-const data = await listManager.getListDb();
-```
-
-### ❌ Blocking Operations
-```javascript
-// Wrong
-const result = syncHeavyOperation();
-
-// Correct
-const result = await asyncHeavyOperation();
-```
-
-### ❌ Missing Error Handling
-```javascript
-// Wrong
-const data = await externalAPI.fetch();
-
-// Correct
+// Command-level error handling
 try {
-    const data = await externalAPI.fetch();
+    const result = await someOperation();
+    return await context.messageService.reply(from, "✅ Success", msg);
 } catch (error) {
-    logger.error('API fetch failed:', error);
-    return fallbackData;
+    logger.error("Operation failed:", error);
+    return await context.messageService.reply(from, "❌ Failed. Try again.", msg);
 }
 ```
 
-### ❌ Ignoring Rate Limits
-```javascript
-// Wrong
-messages.forEach(msg => sendMessage(msg));
+### Media Processing
+- **Image products**: Upload via `MediaService.uploadImage()` then store URL
+- **Size limits**: Keep images under 50KB for WhatsApp compatibility
+- **Sticker creation**: Use `mediaService.createSticker()` for auto-conversion
 
-// Correct
-for (const msg of messages) {
-    await messageQueue.add(() => sendMessage(msg));
-}
-```
+## Integration Points
 
-## Production Deployment Considerations
+### WhatsApp Connection Management
+- **Pairing code**: Preferred for headless deployment (`config.bot.usePairingCode`)
+- **Session persistence**: Uses `sessionn/` folder (never delete in production)
+- **Reconnection logic**: Exponential backoff with circuit breaker pattern
+- **Group metadata validation**: All group messages automatically validate metadata before sending
 
-### Environment Configuration
-- Use environment variables for sensitive data
-- Different configs for development/staging/production
-- Proper logging levels per environment
-- Health check endpoints for monitoring
+### External Dependencies
+- **Baileys 6.7.18**: WhatsApp Web API (breaking changes in newer versions)
+- **p-queue**: Critical for message ordering and rate limiting
+- **PM2**: Production process management (required for stability)
+- **Pino**: Structured logging (JSON format for log aggregation)
 
-### Monitoring Requirements
-- Real-time bot health monitoring
-- Queue performance tracking
-- Error rate alerting
-- Memory usage monitoring
-- Response time tracking
+### Database Pattern
+JSON file-based storage with manager abstraction layer. Each data type has dedicated manager:
+- `ListManager` - Product listings and store catalog
+- `TestiManager` - Customer testimonials
+- `AfkManager` - Group-scoped AFK status tracking
+- `SewaManager` - Subscription/rental tracking
 
-### Backup & Recovery
-- Regular database backups
-- Session backup strategies
-- Disaster recovery procedures
-- Rollback capabilities
+## Common Gotchas
+
+1. **Queue Bypass**: Never call `client.sendMessage()` directly - always use `MessageService`
+2. **Path Resolution**: `CommandRegistry` paths are sensitive - update `validCategories` when adding command categories
+3. **Self-Message Loop**: Bot ignores messages from itself (`msg.key.fromMe`)
+4. **Admin Validation**: Check both user admin status AND bot admin status for group operations
+5. **Memory Leaks**: Large media processing can cause restarts - monitor with `botstat`
+
+Always test new features with `npm run dev` first, then deploy with PM2 for production stability.
 
 ---
-
-**Note**: This domain knowledge should be regularly updated as the WhatsApp Bot ecosystem and business requirements evolve. Always validate against current Baileys API documentation and WhatsApp Business API changes.
-
----
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/pemudakoding) — claim your Tome and manage your conversions.
-<!-- tomevault:4.0:agents_md:2026-04-10 -->
+> Source: [pemudakoding/Digital-Store-Assistant](https://github.com/pemudakoding/Digital-Store-Assistant) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-05-14 -->
