@@ -4,7 +4,7 @@
   "repo": "metacoder",
   "description": "Wrapper for multiple AI coders (goose, claude code, codex)",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/ai4curation/metacoder",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-13T20:42:30Z"
+  "distributed_at": "2026-05-16T01:33:16Z"
 }
