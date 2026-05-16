@@ -1,0 +1,44 @@
+{
+  "name": "crispy_print",
+  "owner": "agatho-daemon",
+  "repo": "crispy_print",
+  "description": "Typst print SVG/PDF using Vue UI on top of Frappe Frameworks \u3010\u77e2\u91cf\u6253\u5370\u3011",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/agatho-daemon/crispy_print",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-16T12:31:52Z"
+}
