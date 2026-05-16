@@ -4,7 +4,7 @@
   "repo": "polleninformation",
   "description": "Integration for homeassistant, creating sensors based on polleninformation.eu",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/krissen/polleninformation",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-16T00:46:41Z"
+  "distributed_at": "2026-05-16T08:19:25Z"
 }
