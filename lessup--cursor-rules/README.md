@@ -7,12 +7,12 @@ Archive-grade Cursor .mdc 规则库 | 26 个高质量规则，静态目录，低
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [LessUp/cursor-rules](https://github.com/LessUp/cursor-rules).
+Original source: `CLAUDE.md` in [LessUp/cursor-rules](https://github.com/LessUp/cursor-rules).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
