@@ -2,9 +2,9 @@
   "name": "jellyrock",
   "owner": "jellyrock",
   "repo": "jellyrock",
-  "description": "",
+  "description": "Jellyfin client for Roku devices with a focus on stability and UX",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -38,7 +38,7 @@
     }
   ],
   "skills": [],
-  "claim_url": "https://tomevault.io/claim/jellyrock",
+  "source_url": "https://github.com/jellyrock/jellyrock",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-10T02:50:43Z"
+  "distributed_at": "2026-05-16T02:40:24Z"
 }
