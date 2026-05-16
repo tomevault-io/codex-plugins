@@ -4,7 +4,7 @@
   "repo": "vscode-docpilot",
   "description": "VSCode extension for PDF viewing, AI-powered document analysis, and productivity tools.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/DTeam-Top/vscode-docpilot",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-15T02:41:41Z"
+  "distributed_at": "2026-05-16T04:45:38Z"
 }
