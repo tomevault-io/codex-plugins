@@ -1,0 +1,44 @@
+{
+  "name": "codegraph",
+  "owner": "anvanster",
+  "repo": "codegraph",
+  "description": "Fast, flexible graph database for code relationships with 16 production-ready language parsers \u2014 Python, Rust, TypeScript, Go, C/C++, Java, Kotlin, C#, PHP, Ruby, Swift, Tcl, Verilog, COBOL, Fortran",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/anvanster/codegraph",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-16T16:31:05Z"
+}
