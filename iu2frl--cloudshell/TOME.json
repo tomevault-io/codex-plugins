@@ -1,0 +1,44 @@
+{
+  "name": "CloudShell",
+  "owner": "iu2frl",
+  "repo": "CloudShell",
+  "description": "A self-hosted, Docker-deployable web SSH/SFTP/FTP gateway - open your remote CLI and files sessions right in the browser, no client software required.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/iu2frl/CloudShell",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-16T02:33:08Z"
+}
