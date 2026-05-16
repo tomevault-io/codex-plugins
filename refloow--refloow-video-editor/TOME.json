@@ -1,0 +1,44 @@
+{
+  "name": "Refloow-Video-Editor",
+  "owner": "Refloow",
+  "repo": "Refloow-Video-Editor",
+  "description": "\u2764\ufe0f Refloow Video Editor is an free open-source desktop video editor, no watermarks, no data collection, dark mode, intuitive interface, cutting and rendering of the videos all in one place",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/Refloow/Refloow-Video-Editor",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-16T20:31:04Z"
+}
