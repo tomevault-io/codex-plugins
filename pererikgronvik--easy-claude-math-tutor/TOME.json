@@ -1,0 +1,44 @@
+{
+  "name": "EASY_Claude_math_tutor",
+  "owner": "PerErikGronvik",
+  "repo": "EASY_Claude_math_tutor",
+  "description": "A structured environment for learning university mathematics (Calculus, Statistics, AI) through interactive Jupyter notebooks with Claude AI assistance. Designed for step-by-step exploration where the AI explains concepts at your pace, creating an effective back-and-forth learning experience.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/PerErikGronvik/EASY_Claude_math_tutor",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-16T08:33:05Z"
+}
