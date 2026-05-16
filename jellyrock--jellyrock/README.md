@@ -1,23 +1,30 @@
-# jellyrock
+# AI instruction files for jellyrock
 
-> Config by [jellyrock](https://github.com/jellyrock/jellyrock) — distributed by [TomeVault](https://tomevault.io/claim/jellyrock)
+> Sourced from [jellyrock/jellyrock](https://github.com/jellyrock/jellyrock) and converted for every major platform by [TomeVault](https://tomevault.io)
+
+Jellyfin client for Roku devices with a focus on stability and UX
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [jellyrock/jellyrock](https://github.com/jellyrock/jellyrock).
+Original source: `CLAUDE.md` in [jellyrock/jellyrock](https://github.com/jellyrock/jellyrock).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Browse all formats: [https://tomevault.io/claim/jellyrock](https://tomevault.io/claim/jellyrock)
+Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/jellyrock/jellyrock](https://github.com/jellyrock/jellyrock)
 
 ---
 
-Converted and distributed by [TomeVault](https://tomevault.io) — AI instruction files for every platform.
-Is this your repo? [Claim it](https://tomevault.io/claim/jellyrock) to manage distribution.
+Install this config instantly:
+```
+npx tomevault install jellyrock/jellyrock
+```
+Source: [github.com/jellyrock/jellyrock](https://github.com/jellyrock/jellyrock).
+
+<!-- genome:a-i-q -->
