@@ -7,12 +7,12 @@ only manage prompts, the future of LLMs is prompt engineering.
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [samzong/prompts](https://github.com/samzong/prompts).
+Original source: `CLAUDE.md` in [samzong/prompts](https://github.com/samzong/prompts).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
