@@ -1,0 +1,28 @@
+# AI instruction files for opencode-kimi-auth
+
+> Sourced from [romancircus/opencode-kimi-auth](https://github.com/romancircus/opencode-kimi-auth) and converted for every major platform by [TomeVault](https://tomevault.io)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [romancircus/opencode-kimi-auth](https://github.com/romancircus/opencode-kimi-auth).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/romancircus/opencode-kimi-auth](https://github.com/romancircus/opencode-kimi-auth)
+
+---
+
+Install this config instantly:
+```
+npx tomevault install romancircus/opencode-kimi-auth
+```
+Source: [github.com/romancircus/opencode-kimi-auth](https://github.com/romancircus/opencode-kimi-auth).
+
+<!-- genome:a-i-q -->
