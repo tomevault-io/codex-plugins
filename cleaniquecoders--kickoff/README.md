@@ -7,12 +7,12 @@ Allow configure new Laravel project with all required packages and setup.
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [cleaniquecoders/kickoff](https://github.com/cleaniquecoders/kickoff).
+Original source: `CLAUDE.md` in [cleaniquecoders/kickoff](https://github.com/cleaniquecoders/kickoff).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
