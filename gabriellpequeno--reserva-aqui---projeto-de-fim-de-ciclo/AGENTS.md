@@ -1,7 +1,7 @@
 
-# Agente: Backend Specialist
+# Agente: Code Archaeologist
 
-Antes de atuar neste papel, leia `.agent/agents/backend-specialist.md` e carregue as `skills:` do frontmatter em `.cursor/skills/` ou `.agent/skills/`.
+Antes de atuar neste papel, leia `.agent/agents/code-archaeologist.md` e carregue as `skills:` do frontmatter em `.cursor/skills/` ou `.agent/skills/`.
 
 ---
 > Source: [gabriellpequeno/Reserva-Aqui---Projeto-de-fim-de-ciclo](https://github.com/gabriellpequeno/Reserva-Aqui---Projeto-de-fim-de-ciclo) — distributed by [TomeVault](https://tomevault.io).
