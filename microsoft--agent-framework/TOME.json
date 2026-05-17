@@ -1,0 +1,93 @@
+{
+  "name": "agent",
+  "owner": "microsoft",
+  "repo": "agent-framework",
+  "description": "A framework for building, orchestrating and deploying AI agents and multi-agent workflows with support for Python and .NET.",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "build-and-test",
+      "path": "dotnet/.github/skills/build-and-test",
+      "github_url": "https://github.com/microsoft/agent-framework/tree/main/dotnet/.github/skills/build-and-test",
+      "description": ""
+    },
+    {
+      "name": "project-structure",
+      "path": "dotnet/.github/skills/project-structure",
+      "github_url": "https://github.com/microsoft/agent-framework/tree/main/dotnet/.github/skills/project-structure",
+      "description": ""
+    },
+    {
+      "name": "python-code-quality",
+      "path": "python/.github/skills/python-code-quality",
+      "github_url": "https://github.com/microsoft/agent-framework/tree/main/python/.github/skills/python-code-quality",
+      "description": ""
+    },
+    {
+      "name": "python-development",
+      "path": "python/.github/skills/python-development",
+      "github_url": "https://github.com/microsoft/agent-framework/tree/main/python/.github/skills/python-development",
+      "description": ""
+    },
+    {
+      "name": "python-package-management",
+      "path": "python/.github/skills/python-package-management",
+      "github_url": "https://github.com/microsoft/agent-framework/tree/main/python/.github/skills/python-package-management",
+      "description": ""
+    },
+    {
+      "name": "python-samples",
+      "path": "python/.github/skills/python-samples",
+      "github_url": "https://github.com/microsoft/agent-framework/tree/main/python/.github/skills/python-samples",
+      "description": ""
+    },
+    {
+      "name": "python-testing",
+      "path": "python/.github/skills/python-testing",
+      "github_url": "https://github.com/microsoft/agent-framework/tree/main/python/.github/skills/python-testing",
+      "description": ""
+    },
+    {
+      "name": "verify-dotnet-samples",
+      "path": "dotnet/.github/skills/verify-dotnet-samples",
+      "github_url": "https://github.com/microsoft/agent-framework/tree/main/dotnet/.github/skills/verify-dotnet-samples",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/microsoft/agent-framework",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-17T15:30:08Z"
+}
