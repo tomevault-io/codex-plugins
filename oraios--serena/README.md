@@ -7,12 +7,12 @@ A powerful MCP toolkit for coding, providing semantic retrieval and editing capa
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [oraios/serena](https://github.com/oraios/serena).
+Original source: `copilot-instructions.md` in [oraios/serena](https://github.com/oraios/serena).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
