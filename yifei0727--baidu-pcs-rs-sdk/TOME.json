@@ -1,0 +1,44 @@
+{
+  "name": "baidu-pcs-rs-sdk",
+  "owner": "Yifei0727",
+  "repo": "baidu-pcs-rs-sdk",
+  "description": "\u767e\u5ea6\u7f51\u76d8\u547d\u4ee4\u884c\u5ba2\u6237\u7aef(rust\u5b9e\u73b0)",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/Yifei0727/baidu-pcs-rs-sdk",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-17T00:31:06Z"
+}
