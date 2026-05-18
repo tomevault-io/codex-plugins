@@ -4,7 +4,7 @@
   "repo": "lightweight-charts-react-components",
   "description": "A React (React.js) library of Lightweight-charts components written in Typescript",
   "type": "config",
-  "source_format": ".cursor/rules/*.mdc",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/ukorvl/lightweight-charts-react-components",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-18T22:19:30Z"
+  "distributed_at": "2026-05-18T22:27:01Z"
 }
