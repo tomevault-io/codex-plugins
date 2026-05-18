@@ -4,7 +4,7 @@
   "repo": "mcp-nixos",
   "description": "MCP-NixOS - Model Context Protocol Server for NixOS resources",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/utensils/mcp-nixos",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-18T07:46:10Z"
+  "distributed_at": "2026-05-18T08:27:33Z"
 }
