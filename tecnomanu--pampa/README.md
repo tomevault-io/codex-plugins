@@ -2,6 +2,8 @@
 
 > Sourced from [tecnomanu/pampa](https://github.com/tecnomanu/pampa) and converted for every major platform by [TomeVault](https://tomevault.io)
 
+Protocol for Augmented Memory of Project Artifacts  (MCP compatible)
+
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
