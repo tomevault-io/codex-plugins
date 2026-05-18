@@ -1,0 +1,26 @@
+# AI instruction files for intervals-mcp-server
+
+> Sourced from [mvilanova/intervals-mcp-server](https://github.com/mvilanova/intervals-mcp-server) and converted for every major platform by [TomeVault](https://tomevault.io)
+
+Model Context Protocol (MCP) server for connecting Claude and ChatGPT with the Intervals.icu API.
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `.cursor/rules/*.mdc` in [mvilanova/intervals-mcp-server](https://github.com/mvilanova/intervals-mcp-server).
+
+## Also available for
+
+- **Claude Code** — `CLAUDE.md`
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/mvilanova/intervals-mcp-server](https://github.com/mvilanova/intervals-mcp-server)
+
+---
+
+Own this repo? Install the TomeVault Relay to keep every platform's copy in sync on every push: [https://tomevault.io/install](https://tomevault.io/install).
+
+<!-- genome:a-c-q -->
