@@ -1,13 +1,7 @@
 
-# Testing Guidelines
-- Use `pytest` with descriptive test function names.
-- Prefer fixtures over global state.
-- For async code, use `pytest-asyncio`.
-- Ensure test coverage for:
-  - Pydantic model validation
-  - Env config via `BaseSettings`
-  - Error cases and edge cases
-- Run tests with `uv run pytest test`.
+# Dependency Management
+- Pin versions in `pyproject.toml` for reproducibility.
+- Run `uv pip check` to validate the dependency tree.
 
 ---
 > Source: [growgraph/ontocast](https://github.com/growgraph/ontocast) — distributed by [TomeVault](https://tomevault.io).
