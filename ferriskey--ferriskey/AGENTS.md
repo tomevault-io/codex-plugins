@@ -1,6 +1,6 @@
-# GEMINI.md - Context & Guidance for FerrisKey
+# CLAUDE.md
 
-This file provides architectural guidelines and development standards for Gemini when working in this repository (optimized for Zed Assistant).
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Overview
 
@@ -325,6 +325,5 @@ GitHub Actions workflows in `.github/workflows/`:
 - Discussions: https://github.com/ferriskey/ferriskey/discussions
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/ferriskey)
-> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/ferriskey)
-<!-- tomevault:4.0:agents_md:2026-04-08 -->
+> Source: [ferriskey/ferriskey](https://github.com/ferriskey/ferriskey) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-05-18 -->
