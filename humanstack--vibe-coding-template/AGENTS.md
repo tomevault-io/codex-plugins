@@ -1,202 +1,239 @@
 
-# FastAPI Endpoint Template
+# Database Migration Standards
 
-Use this template when creating new API endpoints:
+## Migration Workflow
 
-```python
-from fastapi import APIRouter, Depends, HTTPException, status
-from typing import List, Optional
-from pydantic import BaseModel
+Follow this workflow for all database changes:
 
-from app.models.auth import User
-from app.services.supabase.auth import get_current_user
-from app.services.supabase.database import SupabaseDatabaseService
+1. **Create Migration**: `make db-migration-new name=descriptive_name`
+2. **Write SQL**: Add your schema changes to the generated file
+3. **Test Locally**: Review the migration carefully
+4. **Apply to Remote**: `make db-apply` or `make db-push`
+5. **Verify**: `make db-status` to confirm application
 
-router = APIRouter()
+## Migration File Structure
 
-# Request/Response Models
-class CreateItemRequest(BaseModel):
-    name: str
-    description: Optional[str] = None
-    category: str
+Structure your migration files consistently:
 
-class UpdateItemRequest(BaseModel):
-    name: Optional[str] = None
-    description: Optional[str] = None
-    category: Optional[str] = None
+```sql
+-- Migration: 20240327120000_add_user_preferences_table.sql
+-- Description: Add user preferences table with RLS policies
 
-class ItemResponse(BaseModel):
-    id: str
-    name: str
-    description: Optional[str]
-    category: str
-    user_id: str
-    created_at: str
-    updated_at: str
+-- Create the table
+CREATE TABLE public.user_preferences (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  theme VARCHAR(20) DEFAULT 'light' CHECK (theme IN ('light', 'dark')),
+  language VARCHAR(10) DEFAULT 'en',
+  notifications JSONB DEFAULT '{}',
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
 
-# Service initialization
-item_service = SupabaseDatabaseService("items", ItemResponse)
+-- Create indexes for performance
+CREATE INDEX idx_user_preferences_user_id ON public.user_preferences(user_id);
+CREATE INDEX idx_user_preferences_updated_at ON public.user_preferences(updated_at);
 
-@router.get("/items", response_model=List[ItemResponse])
-async def list_items(
-    category: Optional[str] = None,
-    current_user: User = Depends(get_current_user)
-) -> List[ItemResponse]:
-    """List items with optional filtering."""
-    try:
-        filters = {"user_id": current_user.id}
-        if category:
-            filters["category"] = category
+-- Enable Row Level Security
+ALTER TABLE public.user_preferences ENABLE ROW LEVEL SECURITY;
 
-        items = await item_service.list(filters=filters)
-        return items
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to retrieve items: {str(e)}"
-        )
+-- Create RLS policies
+CREATE POLICY "Users can view own preferences"
+  ON public.user_preferences
+  FOR SELECT
+  USING (auth.uid() = user_id);
 
-@router.get("/items/{item_id}", response_model=ItemResponse)
-async def get_item(
-    item_id: str,
-    current_user: User = Depends(get_current_user)
-) -> ItemResponse:
-    """Get a specific item by ID."""
-    try:
-        item = await item_service.get(item_id)
-        if not item:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Item not found"
-            )
+CREATE POLICY "Users can insert own preferences"
+  ON public.user_preferences
+  FOR INSERT
+  WITH CHECK (auth.uid() = user_id);
 
-        # Ensure user owns the item
-        if item.user_id != current_user.id:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="Access denied"
-            )
+CREATE POLICY "Users can update own preferences"
+  ON public.user_preferences
+  FOR UPDATE
+  USING (auth.uid() = user_id)
+  WITH CHECK (auth.uid() = user_id);
 
-        return item
-    except HTTPException:
-        raise
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to retrieve item: {str(e)}"
-        )
+CREATE POLICY "Users can delete own preferences"
+  ON public.user_preferences
+  FOR DELETE
+  USING (auth.uid() = user_id);
 
-@router.post("/items", response_model=ItemResponse, status_code=status.HTTP_201_CREATED)
-async def create_item(
-    request: CreateItemRequest,
-    current_user: User = Depends(get_current_user)
-) -> ItemResponse:
-    """Create a new item."""
-    try:
-        item_data = {
-            **request.dict(),
-            "user_id": current_user.id
-        }
+-- Create updated_at trigger
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = now();
+  RETURN NEW;
+END;
+$$ language 'plpgsql';
 
-        item = await item_service.create(item_data)
-        return item
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to create item: {str(e)}"
-        )
-
-@router.put("/items/{item_id}", response_model=ItemResponse)
-async def update_item(
-    item_id: str,
-    request: UpdateItemRequest,
-    current_user: User = Depends(get_current_user)
-) -> ItemResponse:
-    """Update an existing item."""
-    try:
-        # Check if item exists and user owns it
-        existing_item = await item_service.get(item_id)
-        if not existing_item:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Item not found"
-            )
-
-        if existing_item.user_id != current_user.id:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="Access denied"
-            )
-
-        # Update only provided fields
-        update_data = {k: v for k, v in request.dict().items() if v is not None}
-
-        if not update_data:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="No fields to update"
-            )
-
-        updated_item = await item_service.update(item_id, update_data)
-        return updated_item
-    except HTTPException:
-        raise
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to update item: {str(e)}"
-        )
-
-@router.delete("/items/{item_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_item(
-    item_id: str,
-    current_user: User = Depends(get_current_user)
-):
-    """Delete an item."""
-    try:
-        # Check if item exists and user owns it
-        existing_item = await item_service.get(item_id)
-        if not existing_item:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Item not found"
-            )
-
-        if existing_item.user_id != current_user.id:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="Access denied"
-            )
-
-        success = await item_service.delete(item_id)
-        if not success:
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail="Failed to delete item"
-            )
-
-    except HTTPException:
-        raise
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to delete item: {str(e)}"
-        )
+CREATE TRIGGER update_user_preferences_updated_at
+  BEFORE UPDATE ON public.user_preferences
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
 ```
 
-## Key Template Elements
+## Common Migration Patterns
 
-1. **Proper imports** with all necessary dependencies
-2. **Request/Response models** with Pydantic validation
-3. **Authentication** using the `get_current_user` dependency
-4. **Service layer** usage with `SupabaseDatabaseService`
-5. **Error handling** with appropriate HTTP status codes
-6. **Authorization checks** to ensure users can only access their own data
-7. **Comprehensive CRUD operations** (Create, Read, Update, Delete)
-8. **Input validation** and sanitization
-9. **Consistent response formats**
-10. **Proper HTTP status codes** for different scenarios
+### Adding a New Table
+
+```sql
+-- Create table with standard fields
+CREATE TABLE public.new_table (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  name TEXT NOT NULL,
+  description TEXT,
+  status VARCHAR(20) DEFAULT 'active' CHECK (status IN ('active', 'inactive', 'archived')),
+  metadata JSONB DEFAULT '{}',
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- Add indexes
+CREATE INDEX idx_new_table_user_id ON public.new_table(user_id);
+CREATE INDEX idx_new_table_status ON public.new_table(status);
+CREATE INDEX idx_new_table_created_at ON public.new_table(created_at);
+
+-- Enable RLS
+ALTER TABLE public.new_table ENABLE ROW LEVEL SECURITY;
+
+-- Add policies (adjust as needed)
+CREATE POLICY "Users can manage own records"
+  ON public.new_table
+  USING (auth.uid() = user_id);
+```
+
+### Adding a Column
+
+```sql
+-- Add column with default value
+ALTER TABLE public.existing_table
+ADD COLUMN new_column TEXT DEFAULT 'default_value';
+
+-- Add constraint if needed
+ALTER TABLE public.existing_table
+ADD CONSTRAINT check_new_column
+CHECK (new_column IN ('value1', 'value2', 'value3'));
+
+-- Add index if needed
+CREATE INDEX idx_existing_table_new_column
+ON public.existing_table(new_column);
+```
+
+### Creating Indexes
+
+```sql
+-- Single column index
+CREATE INDEX idx_table_column ON public.table_name(column_name);
+
+-- Composite index
+CREATE INDEX idx_table_multi ON public.table_name(column1, column2);
+
+-- Partial index
+CREATE INDEX idx_table_active ON public.table_name(status)
+WHERE status = 'active';
+
+-- Unique index
+CREATE UNIQUE INDEX idx_table_unique ON public.table_name(unique_column);
+```
+
+### RLS Policy Patterns
+
+```sql
+-- User-owned data
+CREATE POLICY "Users own their data"
+  ON public.user_data
+  USING (auth.uid() = user_id);
+
+-- Public read, user write
+CREATE POLICY "Public read access"
+  ON public.public_data
+  FOR SELECT
+  USING (true);
+
+CREATE POLICY "Users can insert"
+  ON public.public_data
+  FOR INSERT
+  WITH CHECK (auth.uid() = user_id);
+
+-- Role-based access
+CREATE POLICY "Admins full access"
+  ON public.admin_table
+  USING (
+    EXISTS (
+      SELECT 1 FROM public.user_roles
+      WHERE user_id = auth.uid()
+      AND role = 'admin'
+    )
+  );
+```
+
+## Best Practices
+
+### Migration Safety
+
+- **Test First**: Always test migrations on a staging environment
+- **Backup**: Consider taking backups before major changes
+- **Atomic Operations**: Use transactions for complex migrations
+- **Rollback Plan**: Document how to revert changes if needed
+
+### Performance Considerations
+
+- **Add Indexes**: Create indexes for frequently queried columns
+- **Avoid Locks**: Be careful with operations that lock tables
+- **Batch Operations**: For large data changes, process in batches
+
+### Security
+
+- **Enable RLS**: Always enable Row Level Security on new tables
+- **Proper Policies**: Create appropriate RLS policies for your use case
+- **Validate Constraints**: Add CHECK constraints for data validation
+
+## Common Commands
+
+```bash
+# Create new migration
+make db-migration-new name=add_feature_table
+
+# Apply migrations to remote
+make db-apply
+
+# Check migration status
+make db-status
+
+# List applied migrations
+make db-list
+
+# Push all pending migrations
+make db-push
+```
+
+## Troubleshooting
+
+### Migration Fails
+
+1. Check the error message in the terminal
+2. Verify SQL syntax is correct
+3. Ensure referenced tables/columns exist
+4. Check for naming conflicts
+5. Verify RLS policies don't conflict
+
+### Performance Issues
+
+1. Add appropriate indexes
+2. Check query execution plans
+3. Consider partitioning for large tables
+4. Optimize RLS policies
+
+### RLS Policy Issues
+
+1. Test policies with different user contexts
+2. Use `USING` clause for row visibility
+3. Use `WITH CHECK` clause for insert/update validation
+4. Remember that policies are restrictive by default
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/humanstack) — claim your Tome and manage your conversions.
-<!-- tomevault:4.0:agents_md:2026-04-10 -->
+> Source: [humanstack/vibe-coding-template](https://github.com/humanstack/vibe-coding-template) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-05-18 -->
