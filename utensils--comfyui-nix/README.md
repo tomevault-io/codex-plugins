@@ -7,12 +7,12 @@ A slightly opinionated Nix flake for ComfyUI with curated custom nodes. Supports
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [utensils/comfyui-nix](https://github.com/utensils/comfyui-nix).
+Original source: `CLAUDE.md` in [utensils/comfyui-nix](https://github.com/utensils/comfyui-nix).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
