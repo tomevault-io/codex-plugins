@@ -1,0 +1,44 @@
+{
+  "name": "python-for-water-modellers",
+  "owner": "mabesa",
+  "repo": "python-for-water-modellers",
+  "description": "This hands-on tutorial will take you from complete beginner to confidently writing Python scripts for real-world water engineering tasks\u2014analyzing discharge data, calculating hydraulic parameters, and automating repetitive tasks that currently consume hours of your time.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/mabesa/python-for-water-modellers",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-18T20:37:40Z"
+}
