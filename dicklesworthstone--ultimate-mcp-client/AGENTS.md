@@ -1,0 +1,32 @@
+# Package Management with uv
+
+This project uses `uv` instead of `pip` for Python package management. UV is a much faster alternative to pip with improved dependency resolution.
+
+## Key Commands
+
+To update the lockfile with the latest compatible dependencies:
+```bash
+uv lock --upgrade
+```
+
+To install all dependencies including optional extras:
+```bash
+uv sync --all-extras
+```
+
+## Configuration
+
+Dependencies are specified in [pyproject.toml](mdc:pyproject.toml) rather than requirements.txt.
+
+Benefits of this approach:
+- Faster installation times
+- Better dependency resolution
+- Reproducible builds with lockfile
+- Clear separation between development and production dependencies
+- Support for optional feature groups via extras
+
+When adding new dependencies, add them to the appropriate section in pyproject.toml and then run the lock command.
+
+---
+> Source: [Dicklesworthstone/ultimate_mcp_client](https://github.com/Dicklesworthstone/ultimate_mcp_client) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-05-17 -->
