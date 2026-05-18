@@ -2,6 +2,8 @@
 
 > Sourced from [humanstack/vibe-coding-template](https://github.com/humanstack/vibe-coding-template) and converted for every major platform by [TomeVault](https://tomevault.io)
 
+Ultimate vibe coding full stack template with code context - Build better apps faster with less tokens with AI coding agents
+
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
@@ -15,7 +17,7 @@ Original source: `.cursor/rules/*.mdc` in [humanstack/vibe-coding-template](http
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [humanstack/vibe-coding-template](https://github.com/humanstack/vibe-coding-template) — a repo with 0+ stars on GitHub.
+From [humanstack/vibe-coding-template](https://github.com/humanstack/vibe-coding-template) — a repo with 231+ stars on GitHub.
 
 ---
 
