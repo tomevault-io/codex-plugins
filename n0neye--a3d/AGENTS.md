@@ -1,12 +1,4 @@
----
-description: 
-globs: 
----
-## Design Philosophy
-- Strong Type Safety: Custom entity classes with TypeScript over loose metadata
-- Single Responsibility: Each component has a clear, focused purpose
-- Extensibility: Mode system allows adding new interaction paradigms
-- Clean Boundaries: Clear separation between Three.js primitives, UI logics, application logic and external api calls
+A 3D-2-Image/video web app SAAS,  Techstack: Three.js, Nextjs, Image Generation API(replicate), Convex(Backend)
 
 ---
 > Source: [n0neye/A3D](https://github.com/n0neye/A3D) — distributed by [TomeVault](https://tomevault.io).
