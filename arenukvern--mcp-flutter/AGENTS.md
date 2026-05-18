@@ -1,4 +1,4 @@
-Your task is to create a detailed, step-by-step plan. Use sequancial_thinking tool to iterate your thoughts before getting started answering.
+Please create a concise markdown file that outlines key rules and best practices for writing or modifying tests, including data-driven structure, organized groups, clear input/output definitions, and detailed assertions
 
 ---
 > Source: [Arenukvern/mcp_flutter](https://github.com/Arenukvern/mcp_flutter) — distributed by [TomeVault](https://tomevault.io).
