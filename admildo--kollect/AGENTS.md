@@ -1,10 +1,8 @@
+# Gitignore Requirements
 
-# Environment File Requirements
-
-## sample.env Content
-```bash
-DEEPGRAM_API_KEY=%deepgram_api_key%
-```
+## Specifications
+- SHOULD ignore all the usual files and folders including `node_modules`, `.env` and others
+- MUST ignore `.env`
 
 ---
 > Source: [admildo/kollect](https://github.com/admildo/kollect) — distributed by [TomeVault](https://tomevault.io).
