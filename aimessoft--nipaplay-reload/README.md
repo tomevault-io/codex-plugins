@@ -7,13 +7,13 @@ NipaPlay-Reload 是一个现代化的跨平台本地视频播放器，支持 Win
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [AimesSoft/NipaPlay-Reload](https://github.com/AimesSoft/NipaPlay-Reload).
+Original source: `.cursor/rules/*.mdc` in [AimesSoft/NipaPlay-Reload](https://github.com/AimesSoft/NipaPlay-Reload).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
