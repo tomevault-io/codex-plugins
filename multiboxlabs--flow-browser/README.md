@@ -1,0 +1,26 @@
+# flow-browser
+
+> Source: [MultiboxLabs/flow-browser](https://github.com/MultiboxLabs/flow-browser) — distributed by [TomeVault](https://tomevault.io)
+
+A modern, privacy-focused browser with a minimalistic design.
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `.cursor/rules/*.mdc` in [MultiboxLabs/flow-browser](https://github.com/MultiboxLabs/flow-browser).
+
+## Also available for
+
+- **Claude Code** — `CLAUDE.md`
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+From [MultiboxLabs/flow-browser](https://github.com/MultiboxLabs/flow-browser) — a repo with 975+ stars on GitHub.
+
+---
+
+Own this repo? Install the TomeVault Relay to keep every platform's copy in sync on every push: [https://tomevault.io/install](https://tomevault.io/install).
+
+<!-- genome:d-c-s -->
