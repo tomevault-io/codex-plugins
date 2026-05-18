@@ -1,0 +1,26 @@
+# cyrus
+
+> Source: [cyrusagents/cyrus](https://github.com/cyrusagents/cyrus) — distributed by [TomeVault](https://tomevault.io)
+
+The Claude Code background agent for Linear, Slack, Github, GitLab etc. you deploy anywhere. Supports Codex, Cursor and Gemini too.
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `copilot-instructions.md` in [cyrusagents/cyrus](https://github.com/cyrusagents/cyrus).
+
+## Also available for
+
+- **Claude Code** — `CLAUDE.md`
+- **Codex** — `AGENTS.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/cyrusagents/cyrus](https://github.com/cyrusagents/cyrus)
+
+---
+
+Explore more instruction files on [TomeVault](https://tomevault.io) — the open index of AI config files for every platform.
+
+<!-- genome:d-e-q -->
