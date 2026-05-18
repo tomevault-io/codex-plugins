@@ -5,17 +5,17 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [hailo-ai/hailo-apps](https://github.com/hailo-ai/hailo-apps).
+Original source: `copilot-instructions.md` in [hailo-ai/hailo-apps](https://github.com/hailo-ai/hailo-apps).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Quality verified by TomeVault's automated analysis pipeline. [View quality report](https://tomevault.io/claim/hailo-ai#quality)
+Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/hailo-ai/hailo-apps](https://github.com/hailo-ai/hailo-apps)
 
 ---
 
@@ -23,6 +23,6 @@ Install this config instantly:
 ```
 npx tomevault install hailo-ai/hailo-apps
 ```
-Or browse all formats at [https://tomevault.io/claim/hailo-ai](https://tomevault.io/claim/hailo-ai).
+Source: [github.com/hailo-ai/hailo-apps](https://github.com/hailo-ai/hailo-apps).
 
 <!-- genome:a-i-q -->
