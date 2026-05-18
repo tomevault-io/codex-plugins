@@ -1,8 +1,9 @@
-# Gitignore Requirements
+
+# License Requirements
 
 ## Specifications
-- SHOULD ignore all the usual files and folders including `node_modules`, `.env` and others
-- MUST ignore `.env`
+- MUST use an MIT license
+- MUST copyright to Deepgram 2025
 
 ---
 > Source: [admildo/kollect](https://github.com/admildo/kollect) — distributed by [TomeVault](https://tomevault.io).
