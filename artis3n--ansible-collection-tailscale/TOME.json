@@ -1,0 +1,44 @@
+{
+  "name": "ansible-collection-tailscale",
+  "owner": "artis3n",
+  "repo": "ansible-collection-tailscale",
+  "description": "This collection provides a series of roles, plugins, and modules to manage your Tailscale Tailnet and Linux machines.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/artis3n/ansible-collection-tailscale",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-18T10:03:23Z"
+}
