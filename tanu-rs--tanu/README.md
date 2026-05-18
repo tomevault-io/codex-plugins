@@ -1,0 +1,26 @@
+# tanu
+
+> Source: [tanu-rs/tanu](https://github.com/tanu-rs/tanu) — distributed by [TomeVault](https://tomevault.io)
+
+High-performance, async-friendly and ergonomic WebAPI testing framework for Rust
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [tanu-rs/tanu](https://github.com/tanu-rs/tanu).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/tanu-rs/tanu](https://github.com/tanu-rs/tanu)
+
+---
+
+Own this repo? Install the TomeVault Relay to keep every platform's copy in sync on every push: [https://tomevault.io/install](https://tomevault.io/install).
+
+<!-- genome:d-c-p -->
