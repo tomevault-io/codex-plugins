@@ -2,6 +2,8 @@
 
 > Tome by [burugo](https://github.com/burugo/one-mcp) — distributed by [TomeVault](https://tomevault.io)
 
+A centralized reverse-proxy platform for MCP servers — manage, group, and export as Skills from a single endpoint.
+
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
