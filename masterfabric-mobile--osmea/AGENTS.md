@@ -1,0 +1,41 @@
+
+# Colors: Orange tones instead of red (all apps)
+
+Across **all apps** in this workspace, use **orange tones** instead of red for error, warning, and accent colors.
+
+## Why orange?
+
+- Brand consistency: UI uses an orange-heavy palette.
+- This is a workspace-wide convention; apply it in every app.
+
+## Colors to use (OsmeaColors)
+
+For errors, warnings, and accents use the **OsmeaColors** orange palette:
+
+- **OsmeaColors.amberFlame** – error text, warning emphasis (strongest orange)
+- **OsmeaColors.sunsetGlow** – primary orange, buttons and accents
+- **OsmeaColors.goldenHour** – softer accent
+- **OsmeaColors.desertSand** – background or light accent
+
+## Do
+
+- Use **OsmeaColors.amberFlame** or **OsmeaColors.sunsetGlow** for error messages, warning labels, and destructive action emphasis.
+- Prefer the same orange palette in new components.
+
+## Don't
+
+- Do **not** use **OsmeaColors.red** for error messages, warning labels, or destructive accents.
+
+## Example
+
+```dart
+// Don't
+color: OsmeaColors.red,
+
+// Do
+color: OsmeaColors.amberFlame,
+```
+
+---
+> Source: [masterfabric-mobile/osmea](https://github.com/masterfabric-mobile/osmea) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-05-17 -->
