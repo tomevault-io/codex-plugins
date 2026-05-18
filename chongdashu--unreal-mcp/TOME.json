@@ -4,7 +4,7 @@
   "repo": "unreal-mcp",
   "description": "Enable AI assistant clients like Cursor, Windsurf and Claude Desktop to control Unreal Engine through natural language using the Model Context Protocol (MCP).",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": ".cursor/rules/*.mdc",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/chongdashu/unreal-mcp",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-18T00:42:10Z"
+  "distributed_at": "2026-05-18T01:36:47Z"
 }
