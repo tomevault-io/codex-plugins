@@ -4,7 +4,7 @@
   "repo": "mvp-finance",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": ".cursor/rules/*.mdc",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/bijanp24/mvp-finance",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-18T19:35:20Z"
+  "distributed_at": "2026-05-18T19:38:50Z"
 }
