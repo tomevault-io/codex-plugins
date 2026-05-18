@@ -1,0 +1,44 @@
+{
+  "name": "RankHub",
+  "owner": "Project-Fukakai",
+  "repo": "RankHub",
+  "description": "(\u5f00\u53d1\u4e2d) \u97f3\u6e38\u76f8\u5173\u7684\u4fbf\u6c11\u5de5\u5177",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/Project-Fukakai/RankHub",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-18T23:47:27Z"
+}
