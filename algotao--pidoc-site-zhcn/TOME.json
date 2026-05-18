@@ -1,0 +1,44 @@
+{
+  "name": "pidoc-site-zhcn",
+  "owner": "algotao",
+  "repo": "pidoc-site-zhcn",
+  "description": "Raspberry Pi \u6811\u8393\u6d3e\u4e2d\u6587\u7248\u6587\u6863",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/algotao/pidoc-site-zhcn",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-18T12:09:14Z"
+}
