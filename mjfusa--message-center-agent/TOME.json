@@ -1,0 +1,44 @@
+{
+  "name": "Message-Center-Agent",
+  "owner": "mjfusa",
+  "repo": "Message-Center-Agent",
+  "description": "Message Center Agent is a Copilot Declarative Agent that queries Microsoft message center messages and the Microsoft 365 Roadmap with natural language. It leverages the Microsoft Graph API and M365 Roadmap API via OData. Authentication is handled using OAuth2.0 and the Teams Developer Portal.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/mjfusa/Message-Center-Agent",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-19T23:01:40Z"
+}
