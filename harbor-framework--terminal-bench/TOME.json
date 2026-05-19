@@ -4,7 +4,7 @@
   "repo": "terminal-bench",
   "description": "A benchmark for LLMs on complicated tasks in the terminal",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/harbor-framework/terminal-bench",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-18T15:59:33Z"
+  "distributed_at": "2026-05-19T01:03:33Z"
 }
