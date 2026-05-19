@@ -2,6 +2,8 @@
 
 > Sourced from [eastlondoner/vibe-tools](https://github.com/eastlondoner/vibe-tools) and converted for every major platform by [TomeVault](https://tomevault.io)
 
+Give Cursor Agent an AI Team and Advanced Skills
+
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
@@ -15,7 +17,7 @@ Original source: `.cursor/rules/*.mdc` in [eastlondoner/vibe-tools](https://gith
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. [Browse all formats](https://tomevault.io/claim/eastlondoner)
+Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/eastlondoner/vibe-tools](https://github.com/eastlondoner/vibe-tools)
 
 ---
 
@@ -23,6 +25,6 @@ Install this config instantly:
 ```
 npx tomevault install eastlondoner/vibe-tools
 ```
-Or browse all formats at [https://tomevault.io/claim/eastlondoner](https://tomevault.io/claim/eastlondoner).
+Source: [github.com/eastlondoner/vibe-tools](https://github.com/eastlondoner/vibe-tools).
 
 <!-- genome:a-i-p -->
