@@ -1,79 +1,97 @@
 
-# Python Conventions
+# Evaluator Development Guide
 
-## Code Style
+## Architecture
 
-- Follow PEP 8 (enforced by pre-commit hooks)
-- Use type hints for function signatures
-- Use `@classmethod` for evaluator `eval()` methods
-- Prefer `getattr(obj, 'field', default)` over direct attribute access for optional Data fields
-
-## Import Rules
-
-- **Core deps** (numpy, pydantic, requests, etc.): top-level imports OK
-- **Optional deps** (pyarrow, transformers, boto3, sqlalchemy, cv2, fasttext, etc.): **must** use lazy imports inside methods with clear `ImportError` messages:
-
-```python
-# Correct — lazy import with helpful error
-def load_data(self):
-    try:
-        import pyarrow.parquet as pq
-    except ImportError:
-        raise ImportError("pyarrow is required for Parquet support. Install: pip install dingo-python[parquet]")
-
-# Wrong — top-level import of optional dep
-import pyarrow.parquet as pq
+```
+Model (registry)
+├── Rule evaluators  → @Model.rule_register(metric_type, groups)
+│   └── BaseRule.eval(input_data) → EvalDetail
+├── LLM evaluators   → @Model.llm_register(name)
+│   └── BaseOpenAI.eval(input_data) → EvalDetail
+└── Agent evaluators → @Model.llm_register(name)
+    └── BaseAgent.eval(input_data) → EvalDetail
 ```
 
-## Evaluator Patterns
+## Key Files
 
-### Rule Evaluator
+| File | Purpose |
+|------|---------|
+| `dingo/model/model.py` | `Model` class with `rule_register`, `llm_register`, `load_model` |
+| `dingo/model/rule/base.py` | `BaseRule` base class |
+| `dingo/model/llm/base_openai.py` | `BaseOpenAI` base class for LLM evaluators |
+| `dingo/model/llm/agent/base_agent.py` | `BaseAgent` base class for agent evaluators |
+| `dingo/io/input/data.py` | `Data` model (input to evaluators) |
+| `dingo/io/output/eval_detail.py` | `EvalDetail` model (output from evaluators) |
+
+## Registration Groups
+
+Rules belong to groups that determine when they run:
+
+- `default` — runs in default evaluation
+- `pretrain` — pre-training data quality
+- `benchmark` — benchmark evaluation
+- `sft` — supervised fine-tuning data
+- `rag` — RAG system evaluation
+- `hallucination` — hallucination detection
+
+## EvalDetail Contract
+
+Every evaluator must return `EvalDetail` with:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `metric` | str | Evaluator class name (`cls.__name__`) |
+| `status` | bool | `True` = issue found, `False` = no issue |
+| `label` | List[str] | Quality labels (e.g., `['QUALITY_GOOD']` or `['QUALITY_BAD_COMPLETENESS.RuleName']`) |
+| `reason` | List[str] | Human-readable explanation of the finding |
+| `score` | float | Optional numeric score (0.0–1.0) |
+| `extra` | Dict | Optional extra metadata |
+
+## Data Field Access
+
+Since `Data` uses `extra = "allow"`, always access non-standard fields safely:
 
 ```python
-@Model.rule_register('QUALITY_BAD_CATEGORY', ['default', 'pretrain'])
-class RuleMyCheck(BaseRule):
-    _required_fields = [RequiredField.CONTENT]
+# Safe access patterns
+raw_data = getattr(input_data, 'raw_data', {})
+context = getattr(input_data, 'context', None)
+reference = getattr(input_data, 'reference', '')
 
-    @classmethod
-    def eval(cls, input_data: Data) -> EvalDetail:
-        res = EvalDetail(metric=cls.__name__)
-        # evaluation logic
-        if problem_found:
-            res.status = True
-            res.label = [f"{cls.metric_type}.{cls.__name__}"]
-            res.reason = ["Description of the issue"]
-        else:
-            res.label = [QualityLabel.QUALITY_GOOD]
-        return res
+# For RAG evaluators, common field access pattern
+question = input_data.prompt or raw_data.get("question", "")
+answer = input_data.content or raw_data.get("answer", "")
 ```
 
-### LLM Evaluator
+## Multi-Field Evaluation
+
+Evaluators receive data after field mapping. The `fields` config maps source fields to standard Data fields:
+
+```json
+{
+  "fields": {"content": "description", "prompt": "title"},
+  "evals": [{"name": "RuleAbnormalChar"}]
+}
+```
+
+The evaluator sees `input_data.content` = value of source field `description`.
+
+## Tool Registration (for Agents)
 
 ```python
-@Model.llm_register('LLMMyEvaluator')
-class LLMMyEvaluator(BaseOpenAI):
-    prompt = """Your evaluation prompt here..."""
+from dingo.model.llm.agent.tools.tool_registry import tool_register
+from dingo.model.llm.agent.tools.base_tool import BaseTool
 
-    @classmethod
-    def build_messages(cls, input_data: Data) -> List:
-        return [
-            {'role': 'system', 'content': cls.prompt},
-            {'role': 'user', 'content': input_data.content}
-        ]
+@tool_register
+class MyTool(BaseTool):
+    name = "my_tool"
+    description = "What this tool does"
+
+    def execute(self, **kwargs):
+        # tool logic
+        return result
 ```
-
-## Error Handling
-
-- Evaluators should not raise exceptions for bad input data; return `EvalDetail` with appropriate error label instead
-- Use `log.warning()` / `log.error()` from `dingo.utils` for logging
-- External API calls: always handle timeouts and connection errors
-
-## Testing
-
-- Test files: `test/scripts/` mirroring `dingo/` structure
-- Use pytest fixtures and parametrize for multiple test cases
-- Test data in `test/data/`
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/MigoXLab) — claim your Tome and manage your conversions.
-<!-- tomevault:4.0:agents_md:2026-04-09 -->
+> Source: [MigoXLab/dingo](https://github.com/MigoXLab/dingo) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-05-18 -->
