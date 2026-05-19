@@ -7,12 +7,12 @@ AI-friendly project starter pack — multi-agent ready, stack-neutral, with auto
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [wesleysimplicio/llm-project-mapper](https://github.com/wesleysimplicio/llm-project-mapper).
+Original source: `CLAUDE.md` in [wesleysimplicio/llm-project-mapper](https://github.com/wesleysimplicio/llm-project-mapper).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
