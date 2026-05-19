@@ -7,13 +7,13 @@ A Home Assistant integration to accurately and intelligently track occupancy of 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [Hankanman/Area-Occupancy-Detection](https://github.com/Hankanman/Area-Occupancy-Detection).
+Original source: `.cursor/rules/*.mdc` in [Hankanman/Area-Occupancy-Detection](https://github.com/Hankanman/Area-Occupancy-Detection).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
-- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
