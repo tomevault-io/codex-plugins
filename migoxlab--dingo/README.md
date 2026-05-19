@@ -1,6 +1,8 @@
-# dingo — distributed by TomeVault
+# dingo
 
-> Originally from [MigoXLab/dingo](https://github.com/MigoXLab/dingo). Converted and distributed by [TomeVault](https://tomevault.io)
+> Source: [MigoXLab/dingo](https://github.com/MigoXLab/dingo) — distributed by [TomeVault](https://tomevault.io)
+
+Dingo: A Comprehensive AI Data, Model and Application Quality Evaluation Tool
 
 ## Codex Config
 
@@ -15,7 +17,7 @@ Original source: `.cursor/rules/*.mdc` in [MigoXLab/dingo](https://github.com/Mi
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From a repo with 0+ stars on GitHub. [See the full profile](https://tomevault.io/claim/MigoXLab)
+From [MigoXLab/dingo](https://github.com/MigoXLab/dingo) — a repo with 700+ stars on GitHub.
 
 ---
 
