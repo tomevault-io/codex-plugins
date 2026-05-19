@@ -1,5 +1,5 @@
 
-Read any new API keys through "app/src/main/java/me/edgan/redditslide/SecretConstants.java".
+When in doubt, ask questions.
 
 ---
 > Source: [cygnusx-1-org/Slide](https://github.com/cygnusx-1-org/Slide) — distributed by [TomeVault](https://tomevault.io).
