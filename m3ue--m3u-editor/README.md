@@ -7,13 +7,13 @@ A full-featured IPTV editor, including features similar to xteve or threadfin. W
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [m3ue/m3u-editor](https://github.com/m3ue/m3u-editor).
+Original source: `.cursor/rules/*.mdc` in [m3ue/m3u-editor](https://github.com/m3ue/m3u-editor).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
