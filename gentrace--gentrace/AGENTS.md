@@ -1,4 +1,4 @@
-If I ask you to create a SQL query based on the prisma.schema file, make sure that you properly emit PostgreSQL syntax and properly double quote columns
+Run tests with `yarn jest` in the `app` folder
 
 ---
 > Source: [gentrace/gentrace](https://github.com/gentrace/gentrace) — distributed by [TomeVault](https://tomevault.io).
