@@ -1,8 +1,8 @@
 # deadlock-mod-manager
 
-> Tome by [deadlock-mod-manager](https://github.com/deadlock-mod-manager/deadlock-mod-manager) — distributed by [TomeVault](https://tomevault.io/claim/deadlock-mod-manager)
+> Tome by [deadlock-mod-manager](https://github.com/deadlock-mod-manager/deadlock-mod-manager) — distributed by [TomeVault](https://tomevault.io)
 
-AI instruction files for deadlock-mod-manager by deadlock-mod-manager
+A mod manager for the Valve game Deadlock.
 
 ## Codex Config
 
@@ -17,13 +17,10 @@ Original source: `.cursor/rules/*.mdc` in [deadlock-mod-manager/deadlock-mod-man
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Browse all formats: [https://tomevault.io/claim/deadlock-mod-manager](https://tomevault.io/claim/deadlock-mod-manager)
-
-## Bundled Skills (1)
-
-- [opensrc](https://github.com/deadlock-mod-manager/deadlock-mod-manager/tree/main/.cursor/skills/opensrc)
+From [deadlock-mod-manager/deadlock-mod-manager](https://github.com/deadlock-mod-manager/deadlock-mod-manager) — a repo with 335+ stars on GitHub.
 
 ---
 
-Converted and distributed by [TomeVault](https://tomevault.io) — AI instruction files for every platform.
-Is this your repo? [Claim it](https://tomevault.io/claim/deadlock-mod-manager) to manage distribution.
+Own this repo? Install the TomeVault Relay to keep every platform's copy in sync on every push: [https://tomevault.io/install](https://tomevault.io/install).
+
+<!-- genome:t-c-s -->
