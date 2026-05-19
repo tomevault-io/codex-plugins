@@ -2,6 +2,8 @@
 
 > Sourced from [alchemy-run/alchemy](https://github.com/alchemy-run/alchemy) and converted for every major platform by [TomeVault](https://tomevault.io)
 
+Infrastructure as TypeScript
+
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
@@ -15,7 +17,7 @@ Original source: `.cursor/rules/*.mdc` in [alchemy-run/alchemy](https://github.c
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. [Browse all formats](https://tomevault.io/claim/alchemy-run)
+Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/alchemy-run/alchemy](https://github.com/alchemy-run/alchemy)
 
 ---
 
@@ -23,6 +25,6 @@ Install this config instantly:
 ```
 npx tomevault install alchemy-run/alchemy
 ```
-Or browse all formats at [https://tomevault.io/claim/alchemy-run](https://tomevault.io/claim/alchemy-run).
+Source: [github.com/alchemy-run/alchemy](https://github.com/alchemy-run/alchemy).
 
 <!-- genome:a-i-p -->
