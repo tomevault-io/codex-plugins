@@ -1,5 +1,5 @@
 
-NEVER give "Rest of the code remains the same" or anything like it in the an answer. It will lead code getting removed by accident, and hence it will head to bugs.
+Be sure to include new strings for strings.xml in the changes.
 
 ---
 > Source: [cygnusx-1-org/Slide](https://github.com/cygnusx-1-org/Slide) — distributed by [TomeVault](https://tomevault.io).
