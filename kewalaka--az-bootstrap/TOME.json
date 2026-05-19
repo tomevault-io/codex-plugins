@@ -1,0 +1,44 @@
+{
+  "name": "az-bootstrap",
+  "owner": "kewalaka",
+  "repo": "az-bootstrap",
+  "description": "Invoke-AzBootstrap (iazb) helps to set up Azure and GitHub environments for IaC projects.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/kewalaka/az-bootstrap",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-19T18:59:43Z"
+}
