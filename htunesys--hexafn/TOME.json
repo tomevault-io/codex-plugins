@@ -1,0 +1,44 @@
+{
+  "name": "hexaFn",
+  "owner": "hTuneSys",
+  "repo": "hexaFn",
+  "description": "A programmable event-driven function pipeline built on the 6F Lifecycle Flow \u2013 Feed \u2192 Filter \u2192 Format \u2192 Function \u2192 Forward \u2192 Feedback.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/hTuneSys/hexaFn",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-19T16:52:54Z"
+}
