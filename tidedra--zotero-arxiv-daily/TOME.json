@@ -4,7 +4,7 @@
   "repo": "zotero-arxiv-daily",
   "description": "Recommend new arxiv papers of your interest daily according to your Zotero libarary.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/TideDra/zotero-arxiv-daily",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-18T23:42:42Z"
+  "distributed_at": "2026-05-19T08:56:32Z"
 }
