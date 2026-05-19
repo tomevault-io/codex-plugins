@@ -7,12 +7,12 @@ A simple n8n cli to sync workflows from Github to n8n using GitOps
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [edenreich/n8n-cli](https://github.com/edenreich/n8n-cli).
+Original source: `CLAUDE.md` in [edenreich/n8n-cli](https://github.com/edenreich/n8n-cli).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
