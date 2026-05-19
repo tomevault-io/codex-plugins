@@ -1,0 +1,44 @@
+{
+  "name": "SwiftlyTTS",
+  "owner": "techfish-11",
+  "repo": "SwiftlyTTS",
+  "description": "\u9ad8\u901f\u3067\u7121\u99c4\u304c\u7121\u3044\u8aad\u307f\u4e0a\u3052bot",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/techfish-11/SwiftlyTTS",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-19T16:38:54Z"
+}
