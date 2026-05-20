@@ -1,0 +1,44 @@
+{
+  "name": "hyprblue",
+  "owner": "ashebanow",
+  "repo": "hyprblue",
+  "description": "A maximalist custom build of bazzite and bluefin that adds support for hyprland, niri, and many of the apps they use. If you want one that only includes the base set of apps your Window Manager configuration needs, then fork it and edit the build_files/build.sh file's HYPR_DEPS variable to remove the stuff you don't want.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/ashebanow/hyprblue",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-20T22:48:28Z"
+}
