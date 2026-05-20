@@ -7,14 +7,14 @@ A Model Context Protocol repository for Google Photos API
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [savethepolarbears/google-photos-mcp](https://github.com/savethepolarbears/google-photos-mcp).
+Original source: `CLAUDE.md` in [savethepolarbears/google-photos-mcp](https://github.com/savethepolarbears/google-photos-mcp).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 From [savethepolarbears/google-photos-mcp](https://github.com/savethepolarbears/google-photos-mcp) — a repo with 20+ stars on GitHub.
