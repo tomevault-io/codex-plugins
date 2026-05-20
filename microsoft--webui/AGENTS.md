@@ -1,0 +1,292 @@
+# WebUI - Copilot Instructions
+
+You are working on **WebUI**, a high-performance server-side rendering framework written in Rust that operates without JavaScript runtimes. It separates static and dynamic content at build time into a binary protocol that enables fast rendering in any host language.
+
+Read and internalize these instructions at the start of every session. They are non-negotiable.
+
+---
+
+## Context you must load first
+
+Before suggesting or applying **any** change, read these files - they are the ground truth:
+
+1. **`DESIGN.md`** - The living technical specification. Architecture, protocol schema, module contracts, and behavioral rules all live here. Treat every constraint in it as mandatory unless the user explicitly asks to change one.
+2. **`Cargo.toml`** (workspace root) - Workspace members, dependency versions, and release profile.
+3. **`clippy.toml`** - Lint policy (bans `unwrap`/`expect`, caps cognitive complexity at 20, limits function arguments to 5).
+4. **`deny.toml`** - Allowed licenses and advisory ignore-list.
+5. The specific crate(s) under `crates/` that are relevant to the task at hand.
+
+---
+
+## The one rule that gates everything
+
+Before creating **any** commit, run:
+
+```bash
+cargo xtask check
+```
+
+This executes, in order: `license-headers → fmt → clippy → deny → test → build`. Work is **not done** until this passes cleanly. If it fails, fix every reported issue before proceeding. No exceptions.
+
+---
+
+## Performance is the top priority
+
+Every decision - API design, data structure choice, algorithm, error path - must be evaluated through a performance lens first. WebUI's value proposition is speed; nothing else matters if it is slow.
+
+### Hard constraints
+
+| Rule | Rationale |
+|------|-----------|
+| **No recursion** in core algorithms | Use iterative loops with an explicit stack. Recursion blows the call stack on deep templates and defeats branch prediction. |
+| **No regular expressions** in core logic | Deterministic scanners are faster and more predictable. |
+| **Minimal runtime computation** | Move work to build time (the `webui build` CLI step) whenever possible. |
+| **Protobuf binary serialization** via `prost` | Zero-copy decoding; JSON is for `webui inspect` debugging only. |
+| **Buffer consolidation** | Reuse buffers, pre-allocate, avoid unnecessary allocations. |
+
+### Allocation discipline
+
+- `Vec::with_capacity` / `String::with_capacity` when size is known or estimable.
+- `push_str` / `write!` into existing buffers - never `format!` in hot paths.
+- No unnecessary `.clone()` - pass `&str`, `&[T]`, or slices. Use `Cow<'_, str>` when a value is sometimes borrowed, sometimes owned.
+- Prefer explicit state machines and stack-based traversal over recursive AST walking.
+- Never clone large state trees for read-only lookups - use resolver closures or borrowed references.
+- Never clone a `HashMap` to save/restore scope - save/restore only the overwritten key.
+- Never call `.to_string()` on a `Cow` - write it directly to avoid defeating zero-copy.
+- Iterate `split()` directly - never `collect::<Vec<_>>()` when sequential access suffices.
+- For performance patterns (speed and memory), see: `skills/perf/SKILL.md`.
+
+### Measurement
+
+- Identify hot paths first: parsing, expression evaluation, handler rendering, protocol serialization, state lookups.
+- Measure **before** changing anything: `cargo bench -p <crate>` in `--release` mode.
+- After the change, re-measure and report the delta (qualitatively if exact numbers aren't available).
+- The smallest safe change that improves CPU time, allocation count, or cache locality wins. Do not over-engineer.
+
+---
+
+## Rust architecture standards
+
+### Error handling
+- Library crates (`webui-parser`, `webui-handler`, `webui-expressions`, `webui-state`, `webui-protocol`, `webui-ffi`) use **custom error enums** via `thiserror`.
+- Binary crates (`webui-cli`, `xtask`) may use `anyhow`.
+- **No `unwrap()` or `expect()`** in library code - `clippy.toml` enforces this.
+- Errors must be **actionable**: tell the caller what went wrong *and* what they can do about it.
+
+### Public API surface
+- Expose the minimum necessary. Use `pub(crate)` for internal helpers.
+- New public functions, structs, traits, and error variants must be documented with `///` doc-comments.
+- Use `#[must_use]` on functions whose return value should not be silently discarded.
+
+### Code organization
+- One concern per module. When a file approaches ~400 lines, split it.
+- Types are `PascalCase`, functions are `snake_case`, constants are `SCREAMING_SNAKE_CASE`.
+- `cargo fmt --all` is the sole formatting authority - never override or disable it.
+
+### License header
+
+Every source file (`.rs`, `.ts`, `.js`, `.cs`, `.h`, `.proto`) **must** start with:
+
+```
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+```
+
+followed by a blank line before any code. `cargo xtask check` enforces this. Run `cargo xtask license-headers --fix` to add missing headers automatically.
+
+Files excluded from the check: `.html`, `.css`, `.json`, `.yml`, `.xml`, and auto-generated files (e.g. `webui_ffi.h`).
+
+### Dependencies
+- Keep them minimal. Prefer the standard library. Before adding a crate, justify why std doesn't suffice.
+- Every dependency must pass `cargo deny check` (license allowlist + security advisories).
+- Prefer well-maintained crates under MIT or Apache-2.0.
+
+### Safety
+- No `unsafe` without a `// SAFETY:` comment explaining the invariant upheld.
+- Prefer zero-copy borrowing over cloning. Prefer slices over owned collections when lifetime allows.
+- Keep cognitive complexity under 20 per function (enforced by clippy). Refactor, don't suppress.
+
+### Concurrency (when applicable)
+- State explicit `Send + Sync` bounds.
+- Prefer `tokio::sync::mpsc` channels over `Arc<Mutex<_>>`.
+- Use atomics when a mutex is overkill.
+
+---
+
+## Tests are mandatory
+
+Every code change ships with tests. No exceptions.
+
+| Scenario | Requirement |
+|----------|-------------|
+| New public API | At least one unit test per function/method. |
+| Bug fix | A regression test that **fails** without the fix. |
+| Performance change | Benchmark comparison (before/after). |
+| Refactor | Existing tests must continue to pass unchanged. |
+
+- Unit tests live alongside code in `#[cfg(test)]` modules.
+- Integration tests go in each crate's `tests/` directory.
+- Run the **targeted** crate first (`cargo test -p <crate>`), then the full workspace (`cargo test --workspace`).
+- Never remove, weaken, or `#[ignore]` an existing test unless the user explicitly asks.
+
+---
+
+## DESIGN.md is the living specification
+
+`DESIGN.md` is not documentation - it **is** the specification. Code implements what `DESIGN.md` describes.
+
+- **Read it** before any architectural or API change.
+- **Update it** in the same commit whenever you add, remove, or modify a public API, protocol field, fragment type, error variant, or behavioral contract.
+- Keep its Rust code examples conceptually compilable and in sync with real code.
+- If `DESIGN.md` and the code disagree, that is a bug - fix both.
+
+---
+
+## Developer docs (`/docs`) stay current
+
+The `docs/` directory is a VitePress site for external developers consuming WebUI.
+
+- Any change to user-visible behavior, CLI usage, or public API **must** include a corresponding docs update in the same PR.
+- For the full docs synchronization workflow, use the skill: `skills/docs-sync/SKILL.md`.
+
+---
+
+## Skills
+
+- **Pull request** - `skills/pr/SKILL.md`
+- **Code review** - `skills/code-review/SKILL.md` (includes FFI safety and protobuf hygiene)
+- **Quality gate** - `skills/quality-gate/SKILL.md`
+- **Docs synchronization** - `skills/docs-sync/SKILL.md`
+- **Performance (speed + memory)** - `skills/perf/SKILL.md`
+- **WebUI app development** - `skills/webui-dev/SKILL.md`
+- **Testing** - `skills/testing/SKILL.md`
+
+---
+
+## Commands reference
+
+| What | Command |
+|------|---------|
+| **Full gate (run before every commit)** | `cargo xtask check` |
+| Format | `cargo xtask fmt` |
+| Lint | `cargo xtask clippy` |
+| License & advisory audit | `cargo xtask deny` |
+| License headers check | `cargo xtask license-headers` |
+| License headers fix | `cargo xtask license-headers --fix` |
+| Tests (workspace) | `cargo xtask test` |
+| Build (workspace) | `cargo xtask build` |
+| Test a single crate | `cargo test -p webui-parser` (or any crate name) |
+| Benchmark a crate | `cargo bench -p webui-protocol` (or any crate name) |
+| Build in release mode | `cargo build --release` |
+| Docs site | `cd docs && pnpm build` |
+
+---
+
+## FFI boundary (`webui-ffi`)
+
+The FFI crate exposes WebUI to many host languages via a C-compatible ABI and remains a high-sensitivity surface.
+
+- Treat all FFI changes as safety- and compatibility-critical.
+- Use the FFI boundary checklist in: `skills/code-review/SKILL.md` (section 10b).
+
+---
+
+## Protobuf schema evolution
+
+Schema changes cascade through protocol → handler → FFI → CLI and should optimize runtime performance first.
+
+- Use the protocol evolution checklist in: `skills/code-review/SKILL.md` (section 10).
+
+---
+
+## Workspace dependency management
+
+All third-party dependency versions are centralized in the root `Cargo.toml` under `[workspace.dependencies]`.
+
+- **Never** add a dependency version directly in a crate-level `Cargo.toml`. Use `dep = { workspace = true }` instead.
+- Before adding any new dependency, check if the standard library or an existing workspace dependency covers the need.
+- New dependencies must pass `cargo deny check` (license allowlist + advisory audit).
+
+---
+
+## Release profile awareness
+
+The workspace ships with an aggressive release profile (`Cargo.toml`):
+
+```toml
+[profile.release]
+lto = true            # Full link-time optimization
+codegen-units = 1     # Maximum optimization (slower compile)
+panic = "abort"       # No unwinding - smaller binary, but panics terminate immediately
+strip = true          # Strip debug symbols
+```
+
+- **`panic = "abort"` means panics kill the process instantly** - reinforcing why `unwrap`/`expect` are banned in library code.
+- Always validate performance claims in `--release` mode. Debug builds are not representative.
+- Be aware that LTO + single codegen unit makes release builds slow. Use `cargo test` (debug) for iteration, `cargo build --release` for final validation.
+
+---
+
+## Shared test utilities (`webui-test-utils`)
+
+The `webui-test-utils` crate provides common test helpers, builders, and fixtures.
+
+- Before writing new test helpers, check if `webui-test-utils` already has what you need.
+- New shared test utilities belong in `webui-test-utils`, not duplicated across crates.
+- Add it as a `[dev-dependencies]` entry: `webui-test-utils = { path = "../webui-test-utils" }`.
+
+---
+
+## Terminal output styling
+
+All terminal output uses `console::style()` from the `console` crate. This is the **only** approved method for colored/styled CLI output.
+
+- Use `console::style(text).green()` for success indicators (`✔`).
+- Use `console::style(text).red().bold()` for errors (`✘`).
+- Use `console::style(text).cyan().bold()` for headers and highlights (`▸`).
+- Use `console::style(text).yellow()` for warnings and hints.
+- Use `console::style(text).dim()` for secondary/contextual info.
+- Use `console::style(text).bold()` for values (file names, counts, paths).
+- **Do not** create `Style` structs or `Printer` wrappers - use `console::style()` inline.
+- Semantic output helpers live as **free functions** in `webui-cli/src/utils/output.rs` (`header`, `field`, `success`, `finish`, `error`, `hint`).
+
+---
+
+## Developer tooling auto-installation
+
+`cargo xtask check` automatically installs missing Rust ecosystem tools:
+
+- **Rustup components** (`clippy`, `rustfmt`) - via `rustup component add`.
+- **Rustup targets** (`wasm32-unknown-unknown`) - via `rustup target add`.
+- **Cargo tools** (`cargo-deny`, `wasm-pack`) - via `cargo install`.
+
+Use the helpers in `xtask/src/util.rs`:
+- `ensure_rustup_component(name)` - for rustup components.
+- `ensure_rustup_target(name)` - for compilation targets.
+- `ensure_cargo_install(crate_name, binary)` - for cargo-installed tools.
+
+System-level tools (LLVM, wasi-sdk) cannot be auto-installed; show actionable per-platform hints using `console::style()` formatting.
+
+---
+
+## Acceptance checklist
+
+Before finishing any task, confirm **all** of these:
+
+- [ ] `cargo xtask check` passes.
+- [ ] Changes include or update tests.
+- [ ] `DESIGN.md` is updated if any contract changed.
+- [ ] `docs/` is updated if any user-facing behavior changed.
+- [ ] No new recursion or regex in core paths.
+- [ ] No new `unwrap`/`expect` in library code.
+- [ ] No unnecessary allocations introduced; buffers reused where possible.
+- [ ] Every new source file has the license header (`// Copyright (c) Microsoft Corporation.` / `// Licensed under the MIT license.`).
+- [ ] FFI changes include `# Safety` docs and never panic across the boundary.
+- [ ] Proto schema changes prioritize performance and are cascade-tested.
+- [ ] New dependencies use `workspace = true` and pass `cargo deny check`.
+- [ ] Commit is on a feature branch, not `main`.
+- [ ] Commit message is imperative with Copilot co-author trailer.
+
+---
+> Source: [microsoft/webui](https://github.com/microsoft/webui) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-05-20 -->
