@@ -1,8 +1,9 @@
 
-# Nuxt 4
+# Prisma and PostgreSQL
 
-- Use `#app` for app imports. Use `defineNuxtPlugin`, `useRuntimeConfig`, and composables in `composables/`. Server routes live under `server/api/`.
-- Do not use `process.env` in app or server code; use Nuxt runtime config. Prefer `@nuxt/ui` components where they fit.
+- Database is PostgreSQL. Use Prisma Client for all DB access.
+- Schema lives in `prisma/schema.prisma`. Run migrations via `prisma migrate`.
+- Binary targets in schema include `linux-arm64-openssl-3.0.x` and `debian-openssl-3.0.x` for deployment; do not remove them.
 
 ---
 > Source: [Wetzel402/Skylite-UX](https://github.com/Wetzel402/Skylite-UX) — distributed by [TomeVault](https://tomevault.io).
