@@ -1,13 +1,6 @@
-tailwind v4 configuration is in css files
-
-```css
-/* import tailwind v4 */
-@import "tailwindcss"; 
-
-@theme {
-    /* new colors */
-    --color-discord-dark: oklch(0.24 0.02 264.05); /* #36393f */
-}
+wxt framework, browser extension docs
+- https://wxt.dev/knowledge/docs.txt
+- https://wxt.dev/knowledge/api-reference.txt
 
 ---
 > Source: [hzoo/henry.ink](https://github.com/hzoo/henry.ink) — distributed by [TomeVault](https://tomevault.io).
