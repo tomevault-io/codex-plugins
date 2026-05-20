@@ -1,7 +1,7 @@
 
-# Architecture Rules
+# Commit Message Rules
 
-@docs/architecture.md
+@docs/commit-message.md
 
 ---
 > Source: [pubky/pubky-app](https://github.com/pubky/pubky-app) — distributed by [TomeVault](https://tomevault.io).
