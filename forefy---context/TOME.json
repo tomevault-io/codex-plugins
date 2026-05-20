@@ -2,9 +2,9 @@
   "name": ".context",
   "owner": "forefy",
   "repo": ".context",
-  "description": "AI instruction files for .context by forefy",
+  "description": "AI Agent Skills for Smart Contract Auditing to generate triaged, industry grade report findings, code locations, pocs, attacker story flow graphs and more",
   "type": "tome",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -51,7 +51,7 @@
       "description": ""
     }
   ],
-  "claim_url": "https://tomevault.io/claim/forefy",
+  "source_url": "https://github.com/forefy/.context",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-10T03:30:59Z"
+  "distributed_at": "2026-05-20T14:30:22Z"
 }
