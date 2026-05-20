@@ -2,20 +2,22 @@
 
 > Sourced from [bostonaholic/reflect](https://github.com/bostonaholic/reflect) and converted for every major platform by [TomeVault](https://tomevault.io)
 
+An AI tool to generate your brag document
+
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [bostonaholic/reflect](https://github.com/bostonaholic/reflect).
+Original source: `CLAUDE.md` in [bostonaholic/reflect](https://github.com/bostonaholic/reflect).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [bostonaholic/reflect](https://github.com/bostonaholic/reflect) — a repo with 0+ stars on GitHub.
+From [bostonaholic/reflect](https://github.com/bostonaholic/reflect) — a repo with 36+ stars on GitHub.
 
 ---
 
