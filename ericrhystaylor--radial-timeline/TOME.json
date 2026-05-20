@@ -4,7 +4,7 @@
   "repo": "Radial-Timeline",
   "description": "Radial Timeline for Obsidian creative writing projects.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/EricRhysTaylor/Radial-Timeline",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-20T00:49:38Z"
+  "distributed_at": "2026-05-20T12:38:07Z"
 }
