@@ -1,0 +1,44 @@
+{
+  "name": "NcatBot",
+  "owner": "ncatbot",
+  "repo": "NcatBot",
+  "description": "NapCat Python SDK\uff1b\u5feb\u901f\u5f00\u53d1\u4f60\u7684 QQ \u673a\u5668\u4eba",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/ncatbot/NcatBot",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-20T23:34:22Z"
+}
