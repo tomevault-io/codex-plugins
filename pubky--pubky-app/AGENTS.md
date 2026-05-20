@@ -1,7 +1,7 @@
 
-# Data Pattern Rules
+# Environment Variable Rules
 
-@docs/data-patterns.md
+@docs/environment.md
 
 ---
 > Source: [pubky/pubky-app](https://github.com/pubky/pubky-app) — distributed by [TomeVault](https://tomevault.io).
