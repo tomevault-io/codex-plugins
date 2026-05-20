@@ -7,12 +7,12 @@ MCP-Server for Apache Solr
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [mjochum64/mcp-solr-search](https://github.com/mjochum64/mcp-solr-search).
+Original source: `CLAUDE.md` in [mjochum64/mcp-solr-search](https://github.com/mjochum64/mcp-solr-search).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
