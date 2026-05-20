@@ -1,7 +1,7 @@
 
-# Component Testing Rules
+# Component Rules
 
-@docs/component-testing.md
+@docs/components.md
 
 ---
 > Source: [pubky/pubky-app](https://github.com/pubky/pubky-app) — distributed by [TomeVault](https://tomevault.io).
