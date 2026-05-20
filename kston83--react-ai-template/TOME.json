@@ -4,7 +4,7 @@
   "repo": "react-ai-template",
   "description": "AI-Ready React Template: A feature-based React architecture optimized for AI-assisted development with comprehensive patterns, documentation, and testing strategies. Built with React, TypeScript, Vite, and Tailwind CSS.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/kston83/react-ai-template",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-20T04:50:49Z"
+  "distributed_at": "2026-05-20T19:05:37Z"
 }
