@@ -1,7 +1,7 @@
 
-# Environment Variable Rules
+# Error Handling Rules
 
-@docs/environment.md
+@docs/error-handling.md
 
 ---
 > Source: [pubky/pubky-app](https://github.com/pubky/pubky-app) — distributed by [TomeVault](https://tomevault.io).
