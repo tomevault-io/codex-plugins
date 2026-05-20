@@ -1,0 +1,30 @@
+# copilot-cert-prep
+
+> Tome by [timothywarner-org](https://github.com/timothywarner-org/copilot-cert-prep) — distributed by [TomeVault](https://tomevault.io)
+
+GitHub Copilot Certification Exam Preparation
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `copilot-instructions.md` in [timothywarner-org/copilot-cert-prep](https://github.com/timothywarner-org/copilot-cert-prep).
+
+## Also available for
+
+- **Claude Code** — `CLAUDE.md`
+- **Codex** — `AGENTS.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/timothywarner-org/copilot-cert-prep](https://github.com/timothywarner-org/copilot-cert-prep)
+
+---
+
+Install this config instantly:
+```
+npx tomevault install timothywarner-org/copilot-cert-prep
+```
+Source: [github.com/timothywarner-org/copilot-cert-prep](https://github.com/timothywarner-org/copilot-cert-prep).
+
+<!-- genome:t-i-q -->
