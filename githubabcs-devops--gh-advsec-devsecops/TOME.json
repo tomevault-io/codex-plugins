@@ -1,0 +1,44 @@
+{
+  "name": "gh-advsec-devsecops",
+  "owner": "githubabcs-devops",
+  "repo": "gh-advsec-devsecops",
+  "description": "Agentic AI for DevSecOps: Transforming Security with GitHub Advanced Security and GitHub Copilot. GitHub Advanced Security - DevSecOps Guidelines - Unified visibility into DevOps security posture. DevSecOps E2E Demos.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/githubabcs-devops/gh-advsec-devsecops",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-20T08:40:08Z"
+}
