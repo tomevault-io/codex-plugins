@@ -1,4 +1,4 @@
-- `./docs/logseq-plugins.txt` contains the relevant docs for logseq plugin api
+- `./docs/modelcontextprotocol-typescriptsdk-docs.md` mcp TS docs for muilding a model context protocol (mcp) service
 
 ---
 > Source: [joelhooks/logseq-mcp-tools](https://github.com/joelhooks/logseq-mcp-tools) — distributed by [TomeVault](https://tomevault.io).
