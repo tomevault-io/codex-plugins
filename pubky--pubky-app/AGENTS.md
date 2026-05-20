@@ -1,11 +1,7 @@
 
-# Sentry Rules
+# Skeleton Architecture Rules
 
-@docs/sentry.md
-
-- Do not attach raw user data to Sentry events. If an `Err.*` context includes `email`, `phone`, `phoneNumber`, `name`,
-  `firstName`, `lastName`, `displayName`, `username`, `bio`, `file`, `user`, raw Pubky keys, or Pubky URLs, verify
-  `src/libs/observability/sentry.ts` redacts it before merge.
+@docs/skeleton-architecture.md
 
 ---
 > Source: [pubky/pubky-app](https://github.com/pubky/pubky-app) — distributed by [TomeVault](https://tomevault.io).
