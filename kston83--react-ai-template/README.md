@@ -1,0 +1,26 @@
+# react-ai-template
+
+> Tome by [kston83](https://github.com/kston83/react-ai-template) — distributed by [TomeVault](https://tomevault.io)
+
+AI-Ready React Template: A feature-based React architecture optimized for AI-assisted development with comprehensive patterns, documentation, and testing strategies. Built with React, TypeScript, Vite, and Tailwind CSS.
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `copilot-instructions.md` in [kston83/react-ai-template](https://github.com/kston83/react-ai-template).
+
+## Also available for
+
+- **Claude Code** — `CLAUDE.md`
+- **Codex** — `AGENTS.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+From [kston83/react-ai-template](https://github.com/kston83/react-ai-template) — a repo with 23+ stars on GitHub.
+
+---
+
+Own this repo? Install the TomeVault Relay to keep every platform's copy in sync on every push: [https://tomevault.io/install](https://tomevault.io/install).
+
+<!-- genome:t-c-s -->
