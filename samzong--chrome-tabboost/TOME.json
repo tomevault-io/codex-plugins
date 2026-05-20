@@ -1,0 +1,44 @@
+{
+  "name": "chrome-tabboost",
+  "owner": "samzong",
+  "repo": "chrome-tabboost",
+  "description": "TabBoost is a Google Chrome extension that replicates commonly used features from Arc browser to enhance the Chrome user experience.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/samzong/chrome-tabboost",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-20T22:33:51Z"
+}
