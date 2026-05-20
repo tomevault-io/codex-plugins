@@ -1,7 +1,7 @@
 
-# Component Rules
+# Data Pattern Rules
 
-@docs/components.md
+@docs/data-patterns.md
 
 ---
 > Source: [pubky/pubky-app](https://github.com/pubky/pubky-app) — distributed by [TomeVault](https://tomevault.io).
