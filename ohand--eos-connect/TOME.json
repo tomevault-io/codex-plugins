@@ -1,0 +1,44 @@
+{
+  "name": "EOS_connect",
+  "owner": "ohAnd",
+  "repo": "EOS_connect",
+  "description": "EOS Connect is a tool designed to easily collect the needed data for optimize energy usage by interacting with the EOS system or evopt. And will be used as controller for a PV / Battery System and integrates the state of evcc. It displays the results dynamically on a webpage and serve the possibilty to manually override. ",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/ohAnd/EOS_connect",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-20T10:41:53Z"
+}
