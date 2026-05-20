@@ -1,7 +1,7 @@
 
-# Error Handling Rules
+# Local-First Rules
 
-@docs/error-handling.md
+@docs/local-first.md
 
 ---
 > Source: [pubky/pubky-app](https://github.com/pubky/pubky-app) — distributed by [TomeVault](https://tomevault.io).
