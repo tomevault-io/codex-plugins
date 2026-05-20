@@ -1,0 +1,30 @@
+# AI instruction files for 100day_challenge_backend
+
+> Sourced from [lirlia/100day_challenge_backend](https://github.com/lirlia/100day_challenge_backend) and converted for every major platform by [TomeVault](https://tomevault.io)
+
+「100日間チャレンジ」用のバックエンドアプリケーションです。主に個人開発の習慣化やアウトプット強化を目的としています。
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `copilot-instructions.md` in [lirlia/100day_challenge_backend](https://github.com/lirlia/100day_challenge_backend).
+
+## Also available for
+
+- **Claude Code** — `CLAUDE.md`
+- **Codex** — `AGENTS.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/lirlia/100day_challenge_backend](https://github.com/lirlia/100day_challenge_backend)
+
+---
+
+Install this config instantly:
+```
+npx tomevault install lirlia/100day_challenge_backend
+```
+Source: [github.com/lirlia/100day_challenge_backend](https://github.com/lirlia/100day_challenge_backend).
+
+<!-- genome:a-i-p -->
