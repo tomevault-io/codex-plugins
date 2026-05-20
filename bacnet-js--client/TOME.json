@@ -4,7 +4,7 @@
   "repo": "client",
   "description": "A BACnet protocol stack written in pure TypeScript.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/bacnet-js/client",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-19T21:16:36Z"
+  "distributed_at": "2026-05-20T03:17:53Z"
 }
