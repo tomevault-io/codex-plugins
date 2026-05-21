@@ -7,12 +7,12 @@ The flowchart pattern for backend code — self-explainable systems that AI can 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [footprintjs/footPrint](https://github.com/footprintjs/footPrint).
+Original source: `CLAUDE.md` in [footprintjs/footPrint](https://github.com/footprintjs/footPrint).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
