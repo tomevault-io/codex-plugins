@@ -1,7 +1,7 @@
 
-# Convex Guide
+#  Polar Guide
 
-- You can find the Complete Convex documentations at `.cursor/docs/convex-docs`
+- You can find the complete documentation for using polar payments at `.cursor/docs/polar-docs` 
 
 ---
 > Source: [VidAIze/cursor-project-rules](https://github.com/VidAIze/cursor-project-rules) — distributed by [TomeVault](https://tomevault.io).
