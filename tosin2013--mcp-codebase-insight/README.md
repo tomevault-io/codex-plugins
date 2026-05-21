@@ -5,12 +5,12 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [tosin2013/mcp-codebase-insight](https://github.com/tosin2013/mcp-codebase-insight).
+Original source: `CLAUDE.md` in [tosin2013/mcp-codebase-insight](https://github.com/tosin2013/mcp-codebase-insight).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
