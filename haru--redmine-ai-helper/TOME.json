@@ -2,9 +2,9 @@
   "name": "redmine_ai_helper",
   "owner": "haru",
   "repo": "redmine_ai_helper",
-  "description": "",
+  "description": "Add AI Agent to Redmine",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -38,7 +38,7 @@
     }
   ],
   "skills": [],
-  "claim_url": "https://tomevault.io/claim/haru",
+  "source_url": "https://github.com/haru/redmine_ai_helper",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-10T03:39:21Z"
+  "distributed_at": "2026-05-21T06:29:17Z"
 }
