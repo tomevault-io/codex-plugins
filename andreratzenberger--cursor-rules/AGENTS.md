@@ -1,97 +1,232 @@
-# Copilot Agent Rules
 
-This document provides clear and streamlined guidelines to leverage AI coding agents effectively, ensuring disciplined and structured project development without sacrificing flexibility.
+# AI Command System
 
-## MAIN PRINCIPLES
+Rule for defining and handling custom commands for AI-assisted development workflows.
 
-- **Task-driven Development:**
-  - Every code implementation must be directly tied to a clearly defined Task.
-  - Each Task must be associated explicitly with a corresponding Specification.
+<rule>
+name: ai_command_system
+filters:
+  - type: command
+    pattern: "Specs"
+  - type: command
+    pattern: "Code"
+  - type: command
+    pattern: "Task"
+  - type: command
+    pattern: "Learn"
+  - type: command
+    pattern: "Eval"
+  - type: command
+    pattern: "Review"
 
-- **No Untracked Implementations:**
-  - No changes or features should ever be implemented without a corresponding Task and Specification. If such a case arises, immediately prompt the user to clarify or resolve the discrepancy.
+actions:
+  # Specs Commands
+  - type: react
+    conditions:
+      - pattern: "Specs.getHtml"
+    action: |
+      # Generate an HTML representation of all specifications
+      # This will create a dashboard showing all specs with their completion status
+      
+      I'll generate an HTML dashboard of all specifications, showing:
+      - Project specifications overview
+      - Completion percentages
+      - Requirements status for each spec
+      - Categories of specifications
+      - A visual indicator of progress
+      
+      The dashboard will be saved to `.cursor/output/specs_[timestamp].html`
 
-- **Automated Consistency Checks:**
-  - Continuously verify synchronization between code, tasks, and specifications.
-  - Prompt the user proactively if inconsistencies or gaps are detected.
+  - type: react
+    conditions:
+      - pattern: "Specs.getSummary"
+    action: |
+      # Generate a markdown summary of all specifications
+      
+      I'll create a markdown summary showing:
+      - Total specification files
+      - Total requirements
+      - Completion percentage
+      - Breakdown by category
+      - Details on each individual specification
+      
+      The summary will be saved to `.cursor/output/specs_summary_[timestamp].md`
 
-## Workflow
+  - type: react
+    conditions:
+      - pattern: "Specs.verify"
+    action: |
+      # Verify implementations match specifications
+      
+      I'll analyze the codebase to verify that specifications have been implemented:
+      - Trace each requirement to implementation code
+      - Verify marked items actually exist in the codebase
+      - Identify gaps between specs and implementation
+      - Generate a verification report with findings
+      
+      The verification report will be saved to `.cursor/output/spec_verification_[timestamp].md`
 
-**Standard Implementation Flow:**
+  # Code Commands
+  - type: react
+    conditions:
+      - pattern: "Code.analyze"
+    action: |
+      # Analyze code structure and quality
+      
+      I'll perform a comprehensive analysis of the codebase:
+      - File types and lines of code
+      - Directory structure
+      - Code complexity metrics
+      - Potential complex functions (>50 lines)
+      - TODOs and FIXMEs
+      - Potential architectural issues
+      
+      The analysis report will be saved to `.cursor/output/code_analysis_[timestamp].md`
 
-1. **User Request** → Clearly captures user intentions.
-2. **Specification Updates** → Update `.project/specs/` accordingly.
-3. **Task Creation** → Create structured tasks in `.project/tasks/`.
-4. **Implementation** → Begin only after task and spec confirmation.
+  - type: react
+    conditions:
+      - pattern: "Code.refactor:(.*)"
+    action: |
+      # Extract the code file to refactor from the command
+      # Pattern will capture the file path
+      
+      I'll analyze the specified file and provide refactoring recommendations:
+      - Identify long functions that could be broken down
+      - Find duplicated code patterns
+      - Review naming conventions
+      - Suggest code structure improvements
+      - Generate refactored code
+      
+      The refactoring report will be saved to `.cursor/output/refactor_[filename]_[timestamp].md`
 
-## Initialization and Setup
+  # Evaluation Commands
+  - type: react
+    conditions:
+      - pattern: "Eval.project"
+    action: |
+      # Generate a comprehensive project evaluation report
+      
+      I'll evaluate the entire project:
+      - Project overview and statistics
+      - Task completion assessment
+      - Specification coverage
+      - Code quality assessment
+      - Documentation assessment
+      - Recommendations for improvement
+      
+      The evaluation report will be saved to `.cursor/output/project_evaluation_[timestamp].md`
 
-- **Project Management Setup:**
-  - Automatically check if the project is managed with `uv`. If not, prompt the user clearly:
-    > "The repository isn't currently managed with `uv`. Should I initialize it using `uv init --package`?"
+  - type: react
+    conditions:
+      - pattern: "Eval.progress"
+    action: |
+      # Generate a progress report comparing current state to project goals
+      
+      I'll analyze project progress:
+      - Milestone status and completion
+      - Weekly task completion trends
+      - Burndown analysis with completion projections
+      - Risk assessment
+      - Recommendations to maintain momentum
+      
+      The progress report will be saved to `.cursor/output/progress_report_[timestamp].md`
 
-- **Documentation Setup:**
-  - Automatically create `.project/specs/` and `.project/tasks/` directories if absent, along with `SPECS.md` and `TASKS.md` as their indexes.
-  - Avoid creating extraneous placeholder or example files unless explicitly requested.
+  # Review Commands
+  - type: react
+    conditions:
+      - pattern: "Review.code:(.*)"
+    action: |
+      # Generate a code review for the specified file
+      # Pattern will capture the file path
+      
+      I'll perform a detailed code review:
+      - Style and formatting analysis
+      - Code structure evaluation
+      - Security considerations
+      - Performance considerations
+      - Specific recommendations for improvement
+      
+      The code review will be saved to `.cursor/output/codereview_[filename]_[timestamp].md`
 
-- **Commit Automation:**
-  - Automatically commit changes immediately after successful implementation or documentation updates.
-  - Adhere strictly to conventional git commit standards.
-  - Include clear, concise commit messages explaining "what" was changed and "why."
+  - type: react
+    conditions:
+      - pattern: "Review.pr"
+    action: |
+      # Generate a pull request review template
+      
+      I'll create a comprehensive PR review template with sections for:
+      - PR overview (title, author, branch)
+      - Changes summary
+      - Specifications addressed
+      - Code review (structure, quality, testing, security, performance)
+      - Reviewer notes
+      - Recommendations
+      - Follow-up tasks
+      
+      The template will be saved to `.cursor/output/pr_review_template_[timestamp].md`
 
-## Specifications and Task Management
+  # Task Commands
+  - type: react
+    conditions:
+      - pattern: "Task.summary"
+    action: |
+      # Generate a summary of all tasks
+      
+      I'll create a comprehensive task summary:
+      - Task status overview
+      - Recent activity
+      - Active tasks
+      - Open tasks
+      - Completion timeline
+      - Task duration statistics
+      
+      The task summary will be saved to `.cursor/output/task_summary_[timestamp].md`
 
-**Specifications:**
+  - type: suggest
+    message: |
+      ### AI Command System
 
-- Maintain `.project/specs/` with:
-  - An index (`SPECS.md`) clearly linking and summarizing all specifications.
-  - Detailed specs for every task clearly describing intent, requirements, and outcomes, but avoiding unnecessary implementation details.
+      I can execute various special commands to assist your development workflow:
 
-**Tasks:**
+      **Specs Commands**:
+      - `Specs.getHtml` - Generate visual HTML dashboard of specifications
+      - `Specs.getSummary` - Create markdown summary of specifications
+      - `Specs.verify` - Verify implementations match specifications
 
-- Maintain `.project/tasks/` and an index `TASKS.md`:
+      **Code Commands**:
+      - `Code.analyze` - Analyze code structure and quality
+      - `Code.refactor:[file]` - Generate refactoring suggestions for a file
 
-**Task Structure Template:**
-```markdown
-# Task Title
+      **Evaluation Commands**:
+      - `Eval.project` - Generate comprehensive project evaluation
+      - `Eval.progress` - Compare current state to project goals
 
-- **State:** open | in_progress | closed
-- **Created:** YYYY-MM-DD
-- **Spec Reference:** @Spec-Name
-- **Dependencies:** (Optional) @Task-Name(s)
+      **Review Commands**:
+      - `Review.code:[file]` - Generate detailed code review
+      - `Review.pr` - Create a pull request review template
 
-## Overview
-Clear, concise description of the task.
+      **Task Commands**:
+      - `Task.summary` - Generate summary of all tasks
 
-## Implementation Guidelines
-- Provide an outline of intended outcomes.
-- Avoid prescribing technical solutions unless necessary.
-- Allow AI flexibility unless a specific implementation approach is explicitly required.
+      All output will be saved to the `.cursor/output/` directory for reference.
 
-### Directory Structure:
-```
-project-folder/
-├── file.py        # Purpose and overview
-└── module/
-    └── utils.py   # Purpose and overview
-```
+examples:
+  - input: |
+      Specs.getHtml
+    output: "Generating HTML dashboard of specifications..."
 
-### Definition of Done
-- [ ] Implementation complete
-- [ ] All tests passing
-- [ ] Documentation updated
+  - input: |
+      Code.analyze
+    output: "Analyzing code structure and quality..."
 
-### References
-- Relevant links or documents
-```
+  - input: |
+      Eval.project
+    output: "Generating comprehensive project evaluation..."
 
-## Additional Guidelines
-
-- **Suggest Improvements Proactively:**
-  - If you recognize opportunities for simplification, optimization, or alternative solutions beyond given specifications, explicitly suggest them before implementation.
-
-- **Rule Simplicity:**
-  - Avoid unnecessary complexity in rules. Focus clearly on outcomes and workflows rather than exhaustive detail on tooling or tech stacks.
+metadata:
+  priority: high
+  version: 1.0
+</rule>
 
 ---
 > Source: [AndreRatzenberger/cursor-rules](https://github.com/AndreRatzenberger/cursor-rules) — distributed by [TomeVault](https://tomevault.io).
