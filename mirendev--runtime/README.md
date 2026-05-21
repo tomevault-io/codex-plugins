@@ -1,0 +1,26 @@
+# runtime
+
+> Source: [mirendev/runtime](https://github.com/mirendev/runtime) — distributed by [TomeVault](https://tomevault.io)
+
+Runtime by Miren
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [mirendev/runtime](https://github.com/mirendev/runtime).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+From [mirendev/runtime](https://github.com/mirendev/runtime) — a repo with 33+ stars on GitHub.
+
+---
+
+Own this repo? Install the TomeVault Relay to keep every platform's copy in sync on every push: [https://tomevault.io/install](https://tomevault.io/install).
+
+<!-- genome:d-c-s -->
