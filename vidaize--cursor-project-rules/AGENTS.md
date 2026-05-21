@@ -1,7 +1,7 @@
 
-#  Polar Guide
+# Schematic Guide
 
-- You can find the complete documentation for using polar payments at `.cursor/docs/polar-docs` 
+- When creating or adding payments you should refer to the documentations at `.cursor/docs/schematic-docs`
 
 ---
 > Source: [VidAIze/cursor-project-rules](https://github.com/VidAIze/cursor-project-rules) — distributed by [TomeVault](https://tomevault.io).
