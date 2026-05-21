@@ -7,13 +7,13 @@ A copier template for a basic NiceGUI project
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [zauberzeug/nicegui-template](https://github.com/zauberzeug/nicegui-template).
+Original source: `.cursor/rules/*.mdc` in [zauberzeug/nicegui-template](https://github.com/zauberzeug/nicegui-template).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
