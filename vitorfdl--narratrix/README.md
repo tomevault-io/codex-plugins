@@ -1,0 +1,26 @@
+# narratrix
+
+> Source: [vitorfdl/narratrix](https://github.com/vitorfdl/narratrix) — distributed by [TomeVault](https://tomevault.io)
+
+Multi-Platform AI Client focused in Roleplay and Tabletop experience
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `.cursor/rules/*.mdc` in [vitorfdl/narratrix](https://github.com/vitorfdl/narratrix).
+
+## Also available for
+
+- **Claude Code** — `CLAUDE.md`
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+From [vitorfdl/narratrix](https://github.com/vitorfdl/narratrix) — a repo with 83+ stars on GitHub.
+
+---
+
+Own this repo? Install the TomeVault Relay to keep every platform's copy in sync on every push: [https://tomevault.io/install](https://tomevault.io/install).
+
+<!-- genome:d-c-s -->
