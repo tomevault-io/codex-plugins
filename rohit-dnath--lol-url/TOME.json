@@ -1,0 +1,44 @@
+{
+  "name": "LOL-URL",
+  "owner": "Rohit-Dnath",
+  "repo": "LOL-URL",
+  "description": "LOL URL is a link tracking, links manageing and shortening tool built with React.js, Tailwind CSS, Shadcn UI, and Supabase. It lets you shorten links, track clicks, and analyze engagement, making it perfect for developers, marketers, and job seekers to monitor link performance and insights.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/Rohit-Dnath/LOL-URL",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-21T21:36:02Z"
+}
