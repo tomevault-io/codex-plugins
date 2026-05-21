@@ -1,8 +1,7 @@
-# Documentations for AI SDK 
 
-- Find the Documentations for using the AI SDK in `.cursor/docs/ai-sdk-docs`
-- You can find the cookbook for the AI SDK in `.cursor/cookbook`
-- For the AI Providers you can find them at `.cursor/providers` 
+# Clerk Guide
+
+- You can find the complete documentaion for Clerk at `.cursor/docs/clerk-docs`
 
 ---
 > Source: [VidAIze/cursor-project-rules](https://github.com/VidAIze/cursor-project-rules) — distributed by [TomeVault](https://tomevault.io).
