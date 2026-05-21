@@ -7,13 +7,13 @@ An API-compatible Svelte wrapper for Framer Motion’s React API — bring Motio
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [humanspeak/svelte-motion](https://github.com/humanspeak/svelte-motion).
+Original source: `.cursor/rules/*.mdc` in [humanspeak/svelte-motion](https://github.com/humanspeak/svelte-motion).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
-- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
