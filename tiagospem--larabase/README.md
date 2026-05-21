@@ -7,14 +7,14 @@ An opinionated MySQL GUI for Laravel developers - UNDER DEVELOPMENT
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [Tiagospem/larabase](https://github.com/Tiagospem/larabase).
+Original source: `CLAUDE.md` in [Tiagospem/larabase](https://github.com/Tiagospem/larabase).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 From [Tiagospem/larabase](https://github.com/Tiagospem/larabase) — a repo with 13+ stars on GitHub.
