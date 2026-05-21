@@ -1,0 +1,44 @@
+{
+  "name": "Crow-s-Nest-MQTT",
+  "owner": "koepalex",
+  "repo": "Crow-s-Nest-MQTT",
+  "description": "Whether you're a seasoned developer or a newcomer to IoT, Crow\u2019s NestMQTT provides robust tools for subscribing to topics and inspecting payloads in real time.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/koepalex/Crow-s-Nest-MQTT",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-21T14:04:03Z"
+}
