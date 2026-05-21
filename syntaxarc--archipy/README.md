@@ -2,6 +2,8 @@
 
 > Source: [SyntaxArc/ArchiPy](https://github.com/SyntaxArc/ArchiPy) — distributed by [TomeVault](https://tomevault.io)
 
+Architecture + Python – perfect for structured design.
+
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
