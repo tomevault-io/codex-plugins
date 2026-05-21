@@ -1,0 +1,30 @@
+# mcp-local-router
+
+> Source: [kaichen/mcp-local-router](https://github.com/kaichen/mcp-local-router) — distributed by [TomeVault](https://tomevault.io)
+
+An MCP (Model Context Protocol) local router that serves as an aggregation proxy for MCP servers.
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [kaichen/mcp-local-router](https://github.com/kaichen/mcp-local-router).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/kaichen/mcp-local-router](https://github.com/kaichen/mcp-local-router)
+
+---
+
+Install this config instantly:
+```
+npx tomevault install kaichen/mcp-local-router
+```
+Source: [github.com/kaichen/mcp-local-router](https://github.com/kaichen/mcp-local-router).
+
+<!-- genome:d-i-p -->
