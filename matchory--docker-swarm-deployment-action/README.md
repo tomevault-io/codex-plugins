@@ -7,12 +7,12 @@ A GitHub action to deploy a stack to a Docker Swarm Mode cluster.
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [matchory/docker-swarm-deployment-action](https://github.com/matchory/docker-swarm-deployment-action).
+Original source: `CLAUDE.md` in [matchory/docker-swarm-deployment-action](https://github.com/matchory/docker-swarm-deployment-action).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
