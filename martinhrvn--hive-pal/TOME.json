@@ -4,7 +4,7 @@
   "repo": "hive-pal",
   "description": "A comprehensive mobile-first beekeeping management application to track hives, inspections, and colony health.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/martinhrvn/hive-pal",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-20T22:53:19Z"
+  "distributed_at": "2026-05-21T11:32:45Z"
 }
