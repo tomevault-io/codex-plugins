@@ -1,68 +1,82 @@
 
-# Architecture Patterns
+# Adapter Conventions
 
-ArchiPy follows **Clean Architecture** with four strictly separated layers.
+## Required Files per Adapter
 
-## Layer Map
-
-```
-archipy/
-├── models/       # Domain layer — data structures only
-│   ├── entities/   # Domain model objects (SQLAlchemy/Pydantic)
-│   ├── dtos/       # Data Transfer Objects for API input/output
-│   ├── errors/     # Custom exception classes
-│   └── types/      # Enumerations and type definitions
-├── adapters/     # Infrastructure layer — external integrations
-├── helpers/      # Support layer — pure utilities and cross-cutting concerns
-└── configs/      # Configuration layer — environment-based settings
-```
-
-## Layer Rules
-
-### `models/` — Domain Layer
-- Contains **data structures only** — no business logic, no I/O.
-- Entities use SQLAlchemy or Pydantic; DTOs use Pydantic `BaseModel`.
-- Errors must subclass the project's `BaseError`.
-
-### `adapters/` — Infrastructure Layer
-- Follows **Ports & Adapters** pattern.
-- Every adapter directory must have a `ports.py` (abstract interface) and a `mocks.py` (test double).
-- Adapters may import from `models/` and `configs/` — never from `helpers/decorators` at module level (use lazy imports to avoid circular imports).
-
-### `helpers/` — Support Layer
-- Pure utilities: no direct external I/O, no database calls.
-- Sub-packages: `utils/`, `decorators/`, `interceptors/`, `metaclasses/`.
-- Decorators must not know about specific adapter implementations.
-
-### `configs/` — Configuration Layer
-- All config classes must extend `pydantic_settings.BaseSettings`.
-- Configuration loaded from environment variables or `.env` files.
-- No hardcoded secrets; use `.env.example` to document required variables.
-
-## Import Direction (one-way only)
+Every adapter package must contain at minimum:
 
 ```
-configs  ←  models  ←  helpers  ←  adapters
+archipy/adapters/<service>/
+├── __init__.py
+├── ports.py        # Abstract interface (ABC)
+└── adapters.py     # Concrete implementation
 ```
 
-- `adapters` may import from `models`, `configs`, `helpers`.
-- `helpers` may import from `models`, `configs`.
-- `models` may import from `configs` only.
-- **Never** import upward (e.g., `models` importing from `adapters`).
+A `mocks.py` is **optional** — only add it when the adapter is used directly in BDD tests and an in-memory test double is needed (e.g., Redis, Kafka). Do not create mocks for adapters that are tested via real instances or testcontainers.
 
-## Lazy Imports for Optional Dependencies
+## Ports (Abstract Interfaces)
 
-Lazy imports are only permitted in `archipy/helpers/` (e.g., `helpers/utils/`, `helpers/decorators/`, `helpers/interceptors/`). Use them inside functions/methods — never at module level — to avoid `ImportError` when an optional extra is not installed:
+`ports.py` defines the contract using `abc.ABC`. Implementations (and mocks, if they exist) must both satisfy this interface.
 
 ```python
-# ✅ GOOD — lazy import inside a helper utility function
-def encode_jwt(payload: dict) -> str:
-    import jwt  # noqa: PLC0415
-    return jwt.encode(payload, ...)
+# ✅ GOOD
+from abc import ABC, abstractmethod
+
+class CachePort(ABC):
+    @abstractmethod
+    def get(self, key: str) -> str | None: ...
+
+    @abstractmethod
+    def set(self, key: str, value: str, ttl: int | None = None) -> None: ...
 ```
 
-Adapters **must not** use lazy imports to guard optional dependencies; instead, each adapter lives under its own optional extra and is only imported when that extra is installed.
+- `ANN401` (Any) is allowed in ports for `**kwargs` parameters.
+- `ARG002` (unused arguments) is allowed — interface stubs may not use all params.
+
+## Mocks (Test Doubles) — Optional
+
+Add `mocks.py` only when an in-memory test double is genuinely needed for BDD tests. When present, mocks are exempt from:
+- `ARG001`, `ARG002`, `ARG004`, `ARG005` — unused arguments common in mock signatures
+- `ANN401` — Any types for compatibility
+- `PLR0913` — mock constructors may accept many params
+
+For adapters tested via real service instances (e.g., using `testcontainers`), skip `mocks.py` entirely.
+
+## Session Managers
+
+Database adapters use `session_manager_registry.py` for managing SQLAlchemy sessions. These files use lazy imports (`PLC0415`) to break circular import chains — this is intentional and expected.
+
+```python
+# ✅ GOOD — lazy import in session registry
+def get_session_manager() -> SessionManager:
+    from archipy.adapters.postgres.sqlalchemy.adapters import PostgresAdapter  # noqa: PLC0415
+    ...
+```
+
+## Async vs Sync Adapters
+
+- Async variants are declared as separate `optional-dependencies` extras (e.g., `sqlalchemy-async`, `starrocks-async`).
+- Async adapters use `asyncio` and `sqlalchemy[asyncio]`.
+- Sync and async implementations are separate classes — do not mix `async def` into sync adapter classes.
+
+## Exception Handling at Boundaries
+
+Adapters at the infrastructure boundary (Kafka, Redis, ScyllaDB) may use broad `except Exception` (`BLE001`) only at the outermost boundary where converting to domain errors:
+
+```python
+# ✅ GOOD — broad catch only at adapter boundary, then re-raise as domain error
+try:
+    await self._client.produce(topic, message)
+except Exception as e:  # noqa: BLE001
+    raise KafkaProduceError("Failed to produce message") from e
+```
+
+## Optional Dependency Imports
+
+Adapters rely on their optional extra being installed — do **not** use lazy imports to guard third-party dependencies inside adapter classes. If the extra is not installed, the import at module level will fail with a clear `ImportError`, which is the expected behavior.
+
+Lazy imports (`PLC0415`) are only permitted in `session_manager_registry.py` files to break circular import chains, and in `archipy/helpers/` for optional utility dependencies.
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/SyntaxArc) — claim your Tome and manage your conversions.
-<!-- tomevault:4.0:agents_md:2026-04-09 -->
+> Source: [SyntaxArc/ArchiPy](https://github.com/SyntaxArc/ArchiPy) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-05-20 -->
