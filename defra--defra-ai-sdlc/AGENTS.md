@@ -1,91 +1,78 @@
-# Copilot Instructions for Defra AI SDLC Playbook
+# Voice and Tone Rules for Defra AI SDLC Playbook
 
-## Project Overview
+## Context
+This is a playbook for the UK Government Department for Environment, Food & Rural Affairs (Defra) that outlines the best practices for using GenAI tools and techniques in the Software Development Lifecycle (SDLC). This is a playbook for professional use.
 
-This is a **Jekyll-based documentation site** (GitHub Pages) serving as the official Defra AI SDLC Playbook. It provides guidance on using AI tools in software development for UK Government (Defra) teams.
+## Purpose
+- The purpose of this playbook is to provide a lightweight practical guide on how to use GenAI tools and techniques to support professionals with their roles and tasks
+- It explains the techniques achieve the best outcomes with GenAI
+- It does NOT prescribe how professionals should actually do their roles
 
-**Key facts:**
-- Jekyll theme: `jekyll-theme-minimal`
-- Base URL: `/defra-ai-sdlc`
-- Target audience: UK Government digital professionals new to AI in SDLC
+## Audience 
+Experienced Professionals working in Digital Services for the UK Government (GDS), who are new to using GenAI in the SDLC.
 
-## Architecture & Structure
+## Core Principles
+- Write for both technical and non-technical government staff
+- Follow GOV.UK style guide and plain English principles
+- Be practical and outcome-focused
 
-```
-pages/               # Main content organized by topic
-  getting-started/   # Workflow, four pillars, mindset, project setup
-  generating-requirements/  # Product & technical requirements guidance
-  feature-development/      # Development, TDD, testing, refactoring, docs
-  appendix/          # Prompt library, AI rules examples, tools list
-    prompt-library/  # Categorized prompt templates (product, dev, testing)
-    rules-for-ai/    # AI rules and instructions examples for GitHub Copilot, Cursor, etc.
-_layouts/            # Jekyll layouts (default.html is main template)
-_sass/               # SCSS styles (defra-styles.scss has GOV.UK colours)
-assets/css/          # Main stylesheet importing theme + defra-styles
-```
+## Language Guidelines
 
-## Writing Style & Voice (Critical)
+### Use Plain English
+- Define technical terms on first use
+- Use common words: "help" not "assist", "buy" not "purchase"
+- Avoid jargon and buzzwords
+- Keep sentences under 25 words
+- Use British English
 
-Follow `.cursor/rules/playbook-general-rules.mdc`:
+### Be Direct and Active
+- Use active voice: "Configure the API" not "The API should be configured"
+- Address readers as "you"
+- Avoid hedging words like "please", "simply", or "just"
+- Start with verbs for instructions
 
-- **Plain English**: Common words, sentences under 25 words, British English
-- **Active voice**: "Configure the API" not "The API should be configured"
-- **Address readers as "you"**, avoid "please", "simply", "just"
-- **Use real government scenarios** as examples
-- **Terminology**: Use "AI Assistant" (not chatbot), "AI Coding Assistant/AICA" (not AI IDE)
+### Stay Grounded
+- Use real government scenarios as examples
+- Acknowledge departmental constraints honestly
+- Include realistic time estimates where helpful
 
-| Content Type | Tone |
-|-------------|------|
-| Instructions | Direct: "Run the test suite before committing" |
-| Concepts | Educational: "AI models learn from patterns in your data" |
-| Troubleshooting | Supportive: "If you encounter this error, first check..." |
+## Structure
 
-## Local Development
+### Headings
+- Use clear, descriptive headings
+- Consider questions for task-based sections
+- Front-load with key information
 
-```bash
-# First time setup (from repo root)
-./scripts/local-dev/setup.sh
+### Content Flow
+- Lead with what users will achieve
+- Use bullet points for lists and options
+- Write prose for context and explanations
+- End sections with clear next steps
 
-# Start dev server with live reload
-./scripts/local-dev/serve.sh
+## Tone by Content Type
 
-# Build for production
-./scripts/local-dev/build.sh
-```
+| Content Type | Tone | Example |
+|-------------|------|---------|
+| Instructions | Direct and precise | "Run the test suite before committing changes" |
+| Concepts | Clear and educational | "AI models learn from patterns in your data" |
+| Troubleshooting | Supportive and practical | "If you encounter this error, first check..." |
+| Best practices | Firm but encouraging | "Always validate input data to prevent errors" |
 
-Server runs at `http://localhost:4000/defra-ai-sdlc`
+## What to Avoid
+- Formal or long words when short ones work
+- Passive voice (except where it improves clarity)
+- Unnecessary words that don't add meaning
+- Assumptions about reader's technical background
 
-## Content Conventions
+## Quick Check
+Before publishing, ask:
+- Would the Audience understand this?
+- Would the Audience find this useful?
+- Does this follow GOV.UK style guidance?
 
-### Markdown files
-- Use Jekyll front matter when needed
-- External links: add `{:target="_blank"}` suffix and "(opens in new tab)" text
-- Internal links: use relative paths from current file location
-
-### Adding new pages
-1. Create `.md` file in appropriate `pages/` subdirectory
-2. Add navigation link in `README.md` table of contents
-3. Include "Next ->" link at bottom for sequential content
-
-### Prompt templates (`pages/appendix/prompt-library/`)
-Structure prompts with: Context, Role, Tasks, Constraints, Examples, Output Format
-
-### AI rules and instructions examples (`pages/appendix/rules-for-ai/`)
-Show rules and instructions with code fences, explain each file's purpose
-
-## Styling
-
-- GOV.UK colour palette defined in `_sass/defra-styles.scss`
-- Key colours: `--defra-green: #00a33b`, `--govuk-blue: #1d70b8`
-- Supports light/dark theme via `data-theme` attribute
-- Max content width: 1400px with responsive breakpoints
-
-## Key Files to Reference
-
-- `_config.yml` - Site config, version, plugins, excluded directories
-- `.cursor/rules/playbook-general-rules.mdc` - Voice and tone rules
-- `pages/appendix/CONTRIBUTING.md` - Contribution workflow
-- `pages/appendix/prompt-library/prompting-guidance.md` - Prompt writing best practices
+## Terminology
+AI Assistant - a general purpose GenAI chat interface e.g. ChatGPT or Claude. Don't use the terms 'chatbot'
+AI Coding Assistant (AICA) - a GenAI coding assistant. e.g. Cursor, Claude Code, Github Copilot Chat. Don't use the terms 'AI IDE', 'AI Coding Agent'
 
 ---
 > Source: [DEFRA/defra-ai-sdlc](https://github.com/DEFRA/defra-ai-sdlc) — distributed by [TomeVault](https://tomevault.io).
