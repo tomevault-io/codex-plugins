@@ -1,0 +1,93 @@
+# Copilot onboarding notes for omniatc
+
+## Repository overview
+- **Purpose**: omniatc is a Rust-based air-traffic-control simulator with a Bevy + egui client, reusable simulation core, math helpers, and CLI tooling for map assets.
+- **Project type**: Rust workspace (edition 2024, rust-version 1.89) targeting native desktop and WebAssembly.
+- **Primary runtimes**: Rust stable for builds/tests; nightly only for `cargo fmt` because `rustfmt.toml` enables unstable formatting options.
+- **Key dependencies**: Bevy, egui/bevy_egui, and Trunk for the web build.
+
+## Project layout (high-level)
+- `Cargo.toml` (workspace members: `omniatc-client`, `omniatc-core`, `omniatc-maps`, `omniatc-math`, `omniatc-store`).
+- `omniatc-client/` – desktop/WASM client; entry point at `omniatc-client/src/main.rs`.
+- `omniatc-core/` – simulation core; public modules in `omniatc-core/src/lib.rs`.
+- `omniatc-math/` – math + physics + units; entry at `omniatc-math/src/lib.rs` (tests in `tests.rs`).
+- `omniatc-store/` – data model for persistence.
+- `omniatc-maps/` – tools for building and processing map assets, plus builtin game maps (each map in its own module).
+- `assets/` – contains committed runtime assets plus generated outputs; only `assets/maps/` and `assets/schema.json.gz` are generated and gitignored, other `assets/` contents are tracked and required at runtime.
+- `web.html` + `Trunk.toml` – Trunk web build configuration (target `web.html`, public URL `/omniatc`).
+- Config files: `rustfmt.toml`, `typos.toml`, `.editorconfig`, `.gitignore`.
+
+## CI / automation
+- `.github/workflows/ci.yaml` runs:
+  - `cargo +nightly fmt --all -- --check`
+  - `cargo clippy --all --tests -- -D warnings`
+  - `cargo test --all`
+- `.github/workflows/build.yaml` builds web (`trunk build`), assets/schema (`omniatc-maps`), docs (`cargo doc`), and cross-compiled desktop binaries.
+
+## Build + validation (validated commands)
+**Always run these in this order before committing (matches CI):**
+1. `cargo +nightly fmt --all -- --check`
+   - Requires `rustup component add --toolchain nightly rustfmt`.
+   - `cargo fmt --all -- --check` on stable fails with: `format_code_in_doc_comments` is unstable.
+2. `cargo clippy --all --tests -- -D warnings`
+   - First run downloads dependencies; completed successfully.
+3. `cargo test --all`
+   - Completed successfully (took ~3 minutes on first run).
+
+**Map generation:**
+- `cargo run -p omniatc-maps build-assets`
+  - Creates `assets/maps/*.osav` (gitignored).
+
+**Client tests (headless):**
+- System deps (Debian/Ubuntu): `libasound2-dev`, `libx11-dev`, `libxrandr-dev`, `libxinerama-dev`,
+  `libxcursor-dev`, `libxi-dev`, `libxkbcommon-dev`, `libxkbcommon-x11-0`, `libwayland-dev`,
+  `libgl1-mesa-dri`, `mesa-vulkan-drivers`, `xauth`, `xvfb`, `pkg-config`.
+- Generate maps first: `cargo run -p omniatc-maps build-assets`.
+- Run a test locally: `xvfb-run -a cargo run -p omniatc-client-test --bin ${test_name}`.
+  - List of test names: `find tests/client/src/bin/ -name "*.rs" -exec basename {} .rs \;`.
+- Docker: `docker build -t omniatc-client-tests -f tests/Dockerfile .` then `docker run --rm omniatc-client-tests`.
+
+**Desktop client run:**
+- `cargo run -p omniatc-client`
+  - Starts a windowed app; in headless CI a quick validation was done via `timeout 5s cargo run -p omniatc-client` which exits with code 124 after compiling.
+  - Run locally without `timeout` to actually play.
+
+**Web build (Trunk):**
+- Prereqs: `rustup target add wasm32-unknown-unknown` and Trunk `v0.21.5` (downloaded via the workflow `wget | tar xz`).
+- Command: `RUSTFLAGS='--cfg getrandom_backend="wasm_js"' ./trunk build --release=true`
+  - Build was started successfully but took a long time in the sandbox; stop/retry if it exceeds your time budget.
+
+**Docs:**
+- `cargo doc` (used in CI build workflow).
+  - In this environment it took several minutes and was stopped before completion; expect a long run.
+
+## Code-style / contributor conventions
+- Use the `foo.rs` + `foo/submodule.rs` pattern; **do not** use `foo/mod.rs`.
+- Avoid `bevy::prelude::*` and avoid prelude re-exports when direct imports are possible.
+- Place unit tests in `tests.rs` and include with `#[cfg(test)] mod tests;`.
+- For vector norm comparisons, use `distance_cmp` / `magnitude_cmp` instead of exact or squared comparisons.
+- Prefer `Vec::from([..])` for literals; use `Vec::new()` for empty vectors.
+- Use the `QueryExt`/`WorldExt` traits (re-exported as `QueryTryLog`/`WorldTryLog`) and the `try_log!`/`try_log_return!` macros from `omniatc-core/src/try_log.rs` for `World`/`Query` component access when missing components would be a bug. The `None` branch should abort processing for the current entity unless aggregating results.
+- When updating a pull request branch, prefer amending commits if the previous commit is also authored by Copilot and not in the base branch.
+
+## Working with the Quantity type system (`omniatc-math`)
+The `Quantity<T, Base, Dt, Pow>` struct in `omniatc-math/src/units.rs` is the core dimensional type.
+If unsure about available operator overloads, run: `grep 'impl.*(Add|Sub|Mul|Div)' -A1 omniatc-math/src/units.rs`
+
+Key rules:
+- **Never extract raw floats** from Quantity types when typed operations exist. Prefer `Length / Length` (yields `f32`) over `.get()` or `.0` field access.
+- For `Position<f32>` (altitude), use `.amsl()` to get `Length<f32>`, then divide: `position.amsl() / Length::from_nm(1.0)` to get altitude in nm as `f32`.
+- `Quantity<f32,...> / Quantity<f32,...>` (same type) yields `f32` (dimensionless ratio). Use this for magnitude ratios.
+- `Angle / f32` yields `Angle`. `Angle * f32` yields `Angle`. Use these for per-unit-altitude angle computations.
+- All angles use **clockwise compass bearing** convention. Use `Quantity<Vec2,...>::rotate_clockwise(angle)` for 2D vector rotation.
+- Common type aliases: `Length<T>` (nm), `Speed<T>` (nm/s), `Accel<T>` (nm/s²), `Angle` (radians), `Pressure` (Pa).
+- See the doc comments on `Quantity` in `units.rs` for the full type parameter reference table.
+
+## README notes
+- The README’s “Compile from source” steps match the `omniatc-maps` assets build and `cargo run --release -p omniatc-client` for the game.
+
+**Trust these instructions first and only search the repo when they are incomplete or incorrect.**
+
+---
+> Source: [SOF3/omniatc](https://github.com/SOF3/omniatc) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-05-21 -->
