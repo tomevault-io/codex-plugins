@@ -1,0 +1,44 @@
+{
+  "name": "ikea-obegransad-led",
+  "owner": "lucaam",
+  "repo": "ikea-obegransad-led",
+  "description": "HACS Plugin to control IKEA OBEGR\u00c4NSAD Wall Lamp hacked with ph1p/ikea-led-obegraensad and ESP device",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/lucaam/ikea-obegransad-led",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-21T17:32:30Z"
+}
