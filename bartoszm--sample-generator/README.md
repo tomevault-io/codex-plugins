@@ -7,12 +7,12 @@ Generates realistic JSON samples from json schemas or OAS models. Allows for def
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [bartoszm/sample_generator](https://github.com/bartoszm/sample_generator).
+Original source: `CLAUDE.md` in [bartoszm/sample_generator](https://github.com/bartoszm/sample_generator).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
