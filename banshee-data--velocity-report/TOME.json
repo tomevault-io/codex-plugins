@@ -4,7 +4,7 @@
   "repo": "velocity.report",
   "description": "citizen radar for slow streets \ud83d\udedc tracking velocity, not identity",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/banshee-data/velocity.report",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-22T14:46:09Z"
+  "distributed_at": "2026-05-22T15:07:25Z"
 }
