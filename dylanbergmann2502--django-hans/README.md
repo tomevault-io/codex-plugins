@@ -1,0 +1,26 @@
+# AI instruction files for django-hans
+
+> Sourced from [DylanBergmann2502/django-hans](https://github.com/DylanBergmann2502/django-hans) and converted for every major platform by [TomeVault](https://tomevault.io)
+
+Django Boilerplate for REST API/SPA with Vue.js built on top of Django Cookie Cutter. 
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [DylanBergmann2502/django-hans](https://github.com/DylanBergmann2502/django-hans).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/DylanBergmann2502/django-hans](https://github.com/DylanBergmann2502/django-hans)
+
+---
+
+Own this repo? Install the TomeVault Relay to keep every platform's copy in sync on every push: [https://tomevault.io/install](https://tomevault.io/install).
+
+<!-- genome:a-c-p -->
