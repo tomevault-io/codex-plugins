@@ -1,0 +1,30 @@
+# bokushi
+
+> Tome by [niracler](https://github.com/niracler/bokushi) — distributed by [TomeVault](https://tomevault.io)
+
+Personal blog documenting tech & life | 博物志：记录技术与生活的话唠博客
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [niracler/bokushi](https://github.com/niracler/bokushi).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+From [niracler/bokushi](https://github.com/niracler/bokushi) — a repo with 9+ stars on GitHub.
+
+---
+
+Install this config instantly:
+```
+npx tomevault install niracler/bokushi
+```
+Source: [github.com/niracler/bokushi](https://github.com/niracler/bokushi).
+
+<!-- genome:t-i-s -->
