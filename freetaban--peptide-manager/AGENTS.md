@@ -1,347 +1,146 @@
-# GitHub Copilot Instructions - Peptide Management System
+# Cursor Rules - Peptide Management System Refactoring
 
-## 🎯 Mission Critical Rules
+## 🎯 Core Principles
 
-### 1. NEVER Delete Code Without Explicit Verification
-- Before removing ANY code block, verify it's not used elsewhere
-- Use `grep_search` or `list_code_usages` to check references
-- If unsure about code purpose, ask user before deletion
-- **LESSON LEARNED**: Commit 9817859 deleted AlertDialog code causing production break
+1. **ONE TASK AT A TIME**: Focus on a single, atomic task from the TODO list. Never work on multiple tasks simultaneously.
 
-### 2. One Problem = One Commit
-- **NEVER** mix multiple fixes in single commit
-- Each commit should address exactly ONE issue
-- Refactoring must be separate from bug fixes
-- If commit touches >100 lines, stop and split it
+2. **THINK BEFORE CODE**: Before writing ANY code:
+   - Analyze the current state thoroughly
+   - Identify all affected components
+   - Consider edge cases and failure modes
+   - Evaluate alternative approaches
+   - Document the decision rationale
 
-### 3. Test Before Commit - ALWAYS
-```powershell
-# Before EVERY commit:
-python -m pytest tests/ -v
-python scripts/smoke_test_gui.py  # If GUI modified
-```
+3. **NO HALLUCINATIONS**: 
+   - Only use code that exists in the codebase
+   - Verify file paths, function names, and APIs before referencing
+   - If uncertain, search the codebase first
+   - Never assume implementation details
 
-### 4. Read Full Context Before Editing
-- Always read entire function/class before modifications
-- Never edit based on partial context
-- Use `read_file` with sufficient line range
-- Verify surrounding code won't break
+4. **INCREMENTAL CHANGES**:
+   - Make small, testable changes
+   - Ensure each change compiles/runs before proceeding
+   - Maintain backward compatibility during migration
+   - Keep the system functional at all times
 
----
+5. **VALIDATION REQUIRED**:
+   - Check for linter errors after every edit
+   - Verify imports and dependencies
+   - Test affected functionality when possible
+   - Document breaking changes
 
-## 📋 Pre-Modification Checklist
+## 📋 Task Execution Workflow
 
-Before ANY code change:
+### Before Starting a Task:
+1. Read the TODO item carefully
+2. Search codebase for all related code
+3. Identify dependencies and affected modules
+4. Check for existing tests
+5. Review similar implementations (if any)
+6. Propose approach and get confirmation (if major change)
 
-### ✅ Phase 1: Context Gathering
-1. [ ] Read complete function/method being modified
-2. [ ] Check for usages: `list_code_usages` for functions/classes
-3. [ ] Search for string patterns: `grep_search` for related code
-4. [ ] Review related test files in `tests/`
-5. [ ] Check if change affects database schema
+### During Implementation:
+1. Make one logical change at a time
+2. Update related files together (models + repository + tests)
+3. Run linter after each file edit
+4. Update documentation if API changes
+5. Maintain type hints and docstrings
 
-### ✅ Phase 2: Planning
-1. [ ] Identify exact scope of change (single function? single file?)
-2. [ ] Plan commits: split if >1 issue
-3. [ ] Identify tests to run post-change
-4. [ ] Consider backwards compatibility
+### After Completion:
+1. Verify no linter errors
+2. Check that related tests still pass
+3. Update TODO status
+4. Document any new patterns or conventions
 
-### ✅ Phase 3: Implementation
-1. [ ] Make minimal change required
-2. [ ] Preserve all existing code unless explicitly removing
-3. [ ] Keep original formatting/indentation
-4. [ ] Add comments for non-obvious changes
+## 🔍 Code Analysis Requirements
 
-### ✅ Phase 4: Validation
-1. [ ] Run affected tests: `pytest tests/test_<module>.py -v`
-2. [ ] Check syntax: No errors in `get_errors`
-3. [ ] If GUI: run `python scripts/smoke_test_gui.py`
-4. [ ] Visual inspection: does change make sense?
+### When Reading Code:
+- Read the ENTIRE file, not just snippets
+- Understand the context and purpose
+- Identify patterns and conventions
+- Note dependencies and imports
+- Check for error handling
 
----
+### When Searching:
+- Use semantic search for concepts
+- Use grep for exact symbols/names
+- Check multiple files for related code
+- Verify file paths are correct
+- Look for similar patterns elsewhere
 
-## 🚫 Critical Anti-Patterns (NEVER DO)
+### When Proposing Changes:
+- Show current implementation first
+- Explain why change is needed
+- List all affected files
+- Consider migration path
+- Propose backward-compatible solution
 
-### ❌ Incomplete Function Edits
-```python
-# BAD - Missing function closing
-def show_dialog(self):
-    field = ft.TextField(...)
-    # WHERE IS THE REST? AlertDialog? page.update()?
-```
+## 🚫 Anti-Patterns to Avoid
 
-### ❌ Multi-Issue Commits
-```
-BAD: "Fix multi-prep, refactor dashboard, fix floating point"
-     (touching 3 files, 200+ lines)
-```
+1. **Don't assume**: Always verify before referencing
+2. **Don't copy-paste blindly**: Understand what you're copying
+3. **Don't break existing APIs**: Maintain compatibility during migration
+4. **Don't skip validation**: Always check linter and tests
+5. **Don't mix concerns**: Keep database, business logic, and UI separate
+6. **Don't create circular dependencies**: Watch import chains
+7. **Don't ignore error handling**: Consider failure modes
 
-### ❌ Blind Copy-Paste Refactoring
-```python
-# BAD - Copying code without understanding
-# Might miss dependencies, break references
-```
+## 📝 Documentation Standards
 
-### ❌ Editing Without Full Context
-```python
-# BAD - Only reading 20 lines of a 100-line function
-# Risk: accidentally remove critical code
-```
+- Update docstrings when changing function signatures
+- Document breaking changes in CHANGELOG
+- Keep architecture decisions in ARCHITECTURE.md
+- Update README if user-facing behavior changes
+- Comment complex logic, not obvious code
 
----
+## 🔄 Migration Strategy
 
-## 🔍 Project-Specific Rules
+### Database Migrations:
+- Always create Alembic revisions for schema changes
+- Test migrations on dev database first
+- Never modify existing migrations (create new ones)
+- Document data migration steps separately
+- Verify foreign key constraints
 
-### GUI Modifications (`gui.py`)
+### Code Migrations:
+- Keep old code until new code is fully tested
+- Use adapter pattern for backward compatibility
+- Migrate one module at a time
+- Update all call sites before removing old code
+- Write tests for new implementation first
 
-**CRITICAL**: All `show_*_dialog()` functions MUST:
-1. Create `ft.AlertDialog` object
-2. Add to `self.page.overlay.append(dialog)`
-3. Set `dialog.open = True`
-4. Call `self.page.update()`
+## 🧪 Testing Requirements
 
-**Before editing any dialog function:**
-```python
-# Verify complete pattern exists:
-grep_search("def show_add_preparation_dialog", includePattern="gui.py")
-# Read ENTIRE function - not just first 50 lines!
-read_file("gui.py", offset=<start>, limit=150)  # Get full function
-```
+- Write tests for new repository methods
+- Test edge cases (None, empty, invalid input)
+- Test error conditions
+- Verify backward compatibility
+- Run existing tests before and after changes
 
-**After editing:**
-```powershell
-pytest tests/test_gui_dialogs.py::test_add_preparation_dialog_has_alertdialog -v
-```
+## 🎨 UI/UX Refactoring Rules
 
-### Database Modifications
+- Separate presentation from business logic
+- Create reusable components
+- Use service layer for data operations
+- Implement proper error handling and user feedback
+- Maintain consistent patterns across UI
+- Never block UI with synchronous operations
 
-**ALWAYS:**
-1. Create migration script in `migrations/`
-2. Test on development DB first: `data/development/`
-3. Document in migration comment what changed
-4. Provide rollback SQL
-5. Run `scripts/check_admin_columns.py` after schema changes
+## 🔐 Safety Checks
 
-**NEVER:**
-1. Modify production DB directly
-2. Delete columns without migration
-3. Change column types without data conversion plan
+Before any destructive operation:
+- Verify database path (not production unless explicit)
+- Check for active connections
+- Ensure backups exist
+- Confirm user intent for destructive changes
 
-### Backend Logic (`peptide_manager/`)
+## 📊 Progress Tracking
 
-**Floating Point Operations:**
-```python
-# ALWAYS use explicit rounding for volumes/money
-volume = round(calculated_volume, 2)  # 2 decimals for ml
-# SQL: ROUND(volume_ml, 2)
-```
-
-**Multi-Prep Distribution:**
-- Use FIFO by `preparation_date` (not expiry_date)
-- Always check `volume_remaining_ml > 0.01`
-- Consider `wastage_ml` in calculations
-
-### Testing Strategy
-
-**Test Pyramid:**
-1. **Unit Tests** (`tests/test_*.py`): Test individual functions
-2. **Integration Tests** (`scripts/integration_smoke.py`): Test workflows
-3. **Smoke Tests** (`scripts/smoke_test_gui.py`): Test GUI opens/works
-
-**Before Commit:**
-```powershell
-# Minimum
-pytest tests/ -v
-
-# If GUI changed
-python scripts/smoke_test_gui.py
-
-# If backend changed
-pytest tests/test_database.py tests/test_calculator.py -v
-
-# Full suite (before push)
-pytest tests/ -v --cov=peptide_manager --cov-report=term
-```
+- Mark TODO as "in_progress" when starting
+- Mark as "completed" only when fully done and tested
+- Add notes about blockers or decisions made
+- Update related documentation
 
 ---
-
-## 🛠️ Workflow for Bug Fixes
-
-### Step-by-Step Process:
-
-1. **Understand the Bug**
-   ```
-   - Read user report carefully
-   - Reproduce bug if possible
-   - Identify root cause with grep_search/read_file
-   ```
-
-2. **Plan the Fix**
-   ```
-   - Identify exact file(s) and functions to modify
-   - Check if fix requires tests update
-   - Determine if breaking change
-   ```
-
-3. **Implement Minimally**
-   ```python
-   # Change ONLY what's needed
-   # Keep everything else intact
-   # Add TODO if refactoring needed later
-   ```
-
-4. **Validate Thoroughly**
-   ```powershell
-   # Run tests
-   pytest tests/ -v
-   
-   # Check no new errors
-   get_errors
-   
-   # If GUI: smoke test
-   python scripts/smoke_test_gui.py
-   ```
-
-5. **Commit Atomically**
-   ```bash
-   git add <single_file>
-   git commit -m "Fix: specific bug description"
-   # Pre-commit hook validates automatically
-   ```
-
----
-
-## 🎓 Learning from Past Incidents
-
-### Incident: Commit 9817859 (Nov 30, 2025)
-
-**What happened:**
-- During multi-prep fix, `show_add_preparation_dialog()` lost last 13 lines
-- AlertDialog creation code deleted accidentally
-- Bug undetected until production use
-
-**Root causes:**
-1. ❌ Too many changes in one commit (3 files, 176 lines deleted)
-2. ❌ No test coverage for dialog completeness
-3. ❌ Incomplete function read during refactoring
-4. ❌ No smoke test before commit
-
-**Preventions NOW in place:**
-1. ✅ Test: `tests/test_gui_dialogs.py` checks all dialogs complete
-2. ✅ Pre-commit hook validates dialog integrity
-3. ✅ Smoke test script for GUI validation
-4. ✅ This document for future reference
-
-**How to prevent:**
-- Always read ENTIRE function before editing
-- Run `python scripts/smoke_test_gui.py` before commit
-- Split large refactors into multiple commits
-- Let pre-commit hook validate (don't use `--no-verify`)
-
----
-
-## 📞 When to Ask User
-
-**ALWAYS ask before:**
-- Deleting any function/class/method
-- Changing function signatures (breaking change)
-- Modifying database schema
-- Refactoring >100 lines
-- Changing behavior of existing features
-- If uncertain about code purpose
-
-**Questions to ask:**
-- "Should I split this into multiple commits?"
-- "This function seems unused, should I verify before deleting?"
-- "This change affects X, Y, Z - proceed with all or separately?"
-
----
-
-## 🚀 Command Reference
-
-### Essential Commands
-```powershell
-# Test all
-pytest tests/ -v
-
-# Test specific module
-pytest tests/test_gui_dialogs.py -v
-
-# Smoke test GUI
-python scripts/smoke_test_gui.py
-
-# Check for errors
-get_errors
-
-# Search for code usage
-grep_search "function_name" --includePattern "**/*.py"
-
-# Install/reinstall hooks
-python scripts/install_hooks.py
-```
-
-### Git Workflow
-```bash
-# Before starting work
-git status
-git pull
-
-# Atomic commits
-git add <single_file>
-git commit -m "Fix: specific issue"
-# Hook runs automatically
-
-# Emergency bypass (use sparingly)
-git commit --no-verify -m "Emergency fix"
-
-# Check what changed
-git diff
-git diff --staged
-```
-
----
-
-## 📚 Key Files Reference
-
-- `gui.py` - Main Flet GUI (CAREFUL: all dialogs must be complete)
-- `peptide_manager/__init__.py` - Main adapter class
-- `peptide_manager/models/` - Data models and repositories
-- `tests/test_gui_dialogs.py` - Dialog integrity tests
-- `scripts/pre_commit_check.py` - Pre-commit validation
-- `scripts/smoke_test_gui.py` - GUI smoke tests
-- `DEVELOPMENT_GUIDE.md` - Full development workflow
-- `LESSONS_LEARNED.md` - Past incidents and learnings
-
----
-
-## ✅ Success Criteria
-
-A change is ready for commit when:
-
-1. ✅ All tests pass: `pytest tests/ -v`
-2. ✅ No syntax errors: `get_errors` returns clean
-3. ✅ Pre-commit hook passes (or intentionally bypassed with reason)
-4. ✅ Change is minimal and focused
-5. ✅ Commit message is clear and specific
-6. ✅ User approved if breaking change
-7. ✅ Documentation updated if API changed
-
----
-
-## 🎯 Remember
-
-> **"Make the change you intend, and ONLY that change."**
-
-> **"Test before commit, ALWAYS."**
-
-> **"When in doubt, ask the user."**
-
-> **"One problem, one commit, one test run."**
-
----
-
-*Last updated: Dec 3, 2025 after commit 9817859 regression analysis*
-
----
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/Freetaban) — claim your Tome and manage your conversions.
-<!-- tomevault:4.0:agents_md:2026-04-10 -->
+> Source: [Freetaban/peptide-manager](https://github.com/Freetaban/peptide-manager) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-05-22 -->
