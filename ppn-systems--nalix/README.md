@@ -7,12 +7,12 @@ High-performance TCP networking framework for .NET, low-latency messaging.
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [ppn-systems/nalix](https://github.com/ppn-systems/nalix).
+Original source: `CLAUDE.md` in [ppn-systems/nalix](https://github.com/ppn-systems/nalix).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
