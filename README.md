@@ -1,6 +1,8 @@
-# TomeVault Codex Plugins
+# TomeVault Codex plugins
 
-AI instruction files converted to `AGENTS.md` format and packaged as OpenAI Codex agent plugins by [TomeVault](https://tomevault.io).
+Instruction files in `AGENTS.md` format, packaged as OpenAI Codex agent plugins by [TomeVault](https://tomevault.io).
+
+Every plugin here was indexed from a public GitHub repository, scanned for credential leaks, prompt injection, and unsafe shell patterns, and graded before publication. The same files are converted and published in parallel for Claude Code, GitHub Copilot, Cursor, the Gemini CLI, and Windsurf, so behaviour authored for one agent runs on all of them.
 
 ## Install
 
@@ -8,8 +10,8 @@ Browse the per-plugin directories and copy a plugin's `AGENTS.md` into your proj
 
 ## Browse
 
-Search, filter, and discover instruction files across every platform at [tomevault.io](https://tomevault.io).
+Search, filter, and check the scan grade for any file at [tomevault.io](https://tomevault.io).
 
 ---
 
-> Converted and distributed by [TomeVault](https://tomevault.io) - your instructions deserve a bigger audience.
+Indexed, verified, and distributed by TomeVault.
