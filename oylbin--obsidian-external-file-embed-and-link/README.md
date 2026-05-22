@@ -7,13 +7,13 @@ Embed and link local files outside your obsidian vault with relative paths for c
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [oylbin/obsidian-external-file-embed-and-link](https://github.com/oylbin/obsidian-external-file-embed-and-link).
+Original source: `.cursor/rules/*.mdc` in [oylbin/obsidian-external-file-embed-and-link](https://github.com/oylbin/obsidian-external-file-embed-and-link).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
-- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
