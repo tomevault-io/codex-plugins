@@ -5,17 +5,17 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [Freetaban/peptide-manager](https://github.com/Freetaban/peptide-manager).
+Original source: `.cursor/rules/*.mdc` in [Freetaban/peptide-manager](https://github.com/Freetaban/peptide-manager).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Quality verified by TomeVault's automated analysis pipeline. [View quality report](https://tomevault.io/claim/Freetaban#quality)
+Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/Freetaban/peptide-manager](https://github.com/Freetaban/peptide-manager)
 
 ---
 
@@ -23,6 +23,6 @@ Install this config instantly:
 ```
 npx tomevault install Freetaban/peptide-manager
 ```
-Or browse all formats at [https://tomevault.io/claim/Freetaban](https://tomevault.io/claim/Freetaban).
+Source: [github.com/Freetaban/peptide-manager](https://github.com/Freetaban/peptide-manager).
 
 <!-- genome:a-i-q -->
