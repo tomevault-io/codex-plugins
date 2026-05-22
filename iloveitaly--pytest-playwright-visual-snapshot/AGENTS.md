@@ -1,4 +1,3 @@
-
 Coding instructions for all programming languages:
 
 - Never use emojis anywhere unless explicitly requested.
