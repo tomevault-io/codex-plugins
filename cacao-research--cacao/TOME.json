@@ -2,9 +2,9 @@
   "name": "Cacao",
   "owner": "cacao-research",
   "repo": "Cacao",
-  "description": "",
+  "description": "\ud83c\udf6b Cacao is a reactive Python web framework for building real-time apps with a decorator-based API, component state management, JSON UIs, and WebSocket-powered updates. Ideal for dashboards, internal tools, and hybrid apps (web & desktop). ",
   "type": "config",
-  "source_format": "CLAUDE.md",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -39,7 +39,6 @@
   ],
   "skills": [],
   "source_url": "https://github.com/cacao-research/Cacao",
-  "claim_url": "https://tomevault.io/claim/cacao-research",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-17T12:19:19Z"
+  "distributed_at": "2026-05-22T20:49:41Z"
 }
