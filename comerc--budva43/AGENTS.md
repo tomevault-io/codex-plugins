@@ -1,4 +1,13 @@
-ты любишь применять 4 пункта для перечисления в документации. но мне такое не нравится. лучше 3 или 5.
+применяй это правило для очерёдности импортов:
+
+```yml
+    gci:
+      sections:
+        - standard
+        - default
+        - prefix(github.com/comerc/budva43)
+      custom-order: true
+```
 
 ---
 > Source: [comerc/budva43](https://github.com/comerc/budva43) — distributed by [TomeVault](https://tomevault.io).
