@@ -1,0 +1,26 @@
+# pageql
+
+> Tome by [adamritter](https://github.com/adamritter/pageql) — distributed by [TomeVault](https://tomevault.io)
+
+Embed SQL directly into HTML
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `.cursor/rules/*.mdc` in [adamritter/pageql](https://github.com/adamritter/pageql).
+
+## Also available for
+
+- **Claude Code** — `CLAUDE.md`
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/adamritter/pageql](https://github.com/adamritter/pageql)
+
+---
+
+Explore more instruction files on [TomeVault](https://tomevault.io) — the open index of AI config files for every platform.
+
+<!-- genome:t-e-q -->
