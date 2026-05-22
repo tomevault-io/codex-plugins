@@ -1,0 +1,30 @@
+# AI instruction files for homelab
+
+> Sourced from [mortennordbye/homelab](https://github.com/mortennordbye/homelab) and converted for every major platform by [TomeVault](https://tomevault.io)
+
+GitOps-managed homelab using Kubernetes (Talos), ArgoCD, and Terraform for infrastructure as code.
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `copilot-instructions.md` in [mortennordbye/homelab](https://github.com/mortennordbye/homelab).
+
+## Also available for
+
+- **Claude Code** — `CLAUDE.md`
+- **Codex** — `AGENTS.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/mortennordbye/homelab](https://github.com/mortennordbye/homelab)
+
+---
+
+Install this config instantly:
+```
+npx tomevault install mortennordbye/homelab
+```
+Source: [github.com/mortennordbye/homelab](https://github.com/mortennordbye/homelab).
+
+<!-- genome:a-i-p -->
