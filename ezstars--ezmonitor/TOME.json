@@ -1,0 +1,44 @@
+{
+  "name": "EzMonitor",
+  "owner": "EzStars",
+  "repo": "EzMonitor",
+  "description": "\ud83c\udf1f\ud83c\udf1f\ud83c\udf1f\u4e00\u4e2a\u5f00\u6e90\u7684\u5f00\u7bb1\u5373\u7528\u7684\u524d\u7aef\u76d1\u63a7SDK",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/EzStars/EzMonitor",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-22T20:51:43Z"
+}
