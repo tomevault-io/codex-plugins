@@ -7,13 +7,13 @@ Free MCP server for AI-powered JavaScript package management - Works with Claude
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [shacharsol/js-package-manager-mcp](https://github.com/shacharsol/js-package-manager-mcp).
+Original source: `CLAUDE.md` in [shacharsol/js-package-manager-mcp](https://github.com/shacharsol/js-package-manager-mcp).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
