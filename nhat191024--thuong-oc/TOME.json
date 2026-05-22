@@ -1,0 +1,44 @@
+{
+  "name": "Thuong-Oc",
+  "owner": "nhat191024",
+  "repo": "Thuong-Oc",
+  "description": "Th\u01b0\u01a1ng \u1ed0c Management System (TOMS): A full-stack restaurant management web app built with Laravel and Inertia Vue for real-time order and inventory control. ",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/nhat191024/Thuong-Oc",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-22T04:46:23Z"
+}
