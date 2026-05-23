@@ -1,59 +1,50 @@
-# Copilot Instructions
+# Next.js Best Practices
 
-## Project Structure & Architecture
-This is a Next.js app using the `/src/app` directory structure. Key locations:
-- **Main entry**: `src/app/page.tsx` 
-- **Global layout**: `src/app/layout.tsx` for app-wide wrappers
-- **Global styles**: `src/app/globals.css` with Tailwind CSS
-- **Static assets**: `public/` directory, reference as `/file.svg`
-- **Components**: Place UI components under `src/components/`
+## Project Structure
+- Use the App Router directory structure
+- Place components in `app` directory for route-specific components
+- Place shared components in `components` directory
+- Place utilities and helpers in `lib` directory
+- Use lowercase with dashes for directories (e.g., `components/auth-wizard`)
 
-## Critical File Naming Convention
-**ALWAYS use kebab-case** for ALL files and directories (e.g., `server-card.tsx`, `login-form.tsx`, `dashboard-layout.tsx`). Never introduce PascalCase or camelCase filenames. When touching legacy PascalCase files, rename them to kebab-case using PowerShell.
+## Components
+- Use Server Components by default
+- Mark client components explicitly with 'use client'
+- Wrap client components in Suspense with fallback
+- Use dynamic loading for non-critical components
+- Implement proper error boundaries
+- Place static content and interfaces at file end
 
-## ShadCN UI Workflow (Dual Approach)
-This project uses both ShadCN UI MCP server and CLI:
+## Performance
+- Optimize images: Use WebP format, size data, lazy loading
+- Minimize use of 'useEffect' and 'setState'
+- Favor Server Components (RSC) where possible
+- Use dynamic loading for non-critical components
+- Implement proper caching strategies
 
-1. **Plan first**: Use MCP server to get vetted patterns and component demos
-2. **Generate components**: Run consolidated CLI commands to add missing components:
-   ```bash
-   npx shadcn@latest add button card input label badge skeleton tabs accordion dialog alert navigation-menu separator scroll-area avatar dropdown-menu toast
-   ```
-3. **Implement exactly**: Mirror MCP demo structure, variants, and accessibility attributes
-4. **Extend via composition**: Create wrapper components instead of editing generated UI primitives
+## Data Fetching
+- Use Server Components for data fetching when possible
+- Implement proper error handling for data fetching
+- Use appropriate caching strategies
+- Handle loading and error states appropriately
 
-## Git & Development Workflows
+## Routing
+- Use the App Router conventions
+- Implement proper loading and error states for routes
+- Use dynamic routes appropriately
+- Handle parallel routes when needed
 
-### Branching (GitHub Flow)
-- Always start from updated `main`: `git checkout main && git pull --rebase`
-- Create feature branches: `git checkout -b feat/short-description`
-- Use `git pull --rebase` instead of `git pull`
-- Only use `feat:` prefix when merging PRs (not individual commits)
+## Forms and Validation
+- Use Zod for form validation
+- Implement proper server-side validation
+- Handle form errors appropriately
+- Show loading states during form submission
 
-### Conventional Commits
-Format: `<type>[optional scope]: <description>`
-- **feat**: new feature (PR merges only)
-- **fix**: bugfix  
-- **refactor**: code change without bug fix or feature
-- **chore**: dependencies, tooling
-- **style**: formatting, whitespace
-- **docs**: documentation only
-
-### File Operations via PowerShell
-**Deletions**: Use `Remove-Item -Path .\path\to\file.tsx` (never just clear contents)
-**Renames**: Use `Rename-Item -Path .\old-name.tsx -NewName new-name.tsx` (enforces Git rename detection)
-
-## Development Commands
-- **Start dev**: `npm run dev` (auto-reloads on save)
-- **Add new page**: Create `src/app/[route]/page.tsx`
-- **Icons**: Use `lucide-react` for UI elements
-- **Styling**: Tailwind utilities preferred over custom CSS
-
-## Project Rules
-- Use React functional components and hooks
-- Keep all app code under `src/app/`
-- No API routes exist by default (add in `src/app/api/` if needed)
-- Place new routes as `src/app/[route-name]/page.tsx`
+## State Management
+- Minimize client-side state
+- Use React Context sparingly
+- Prefer server state when possible
+- Implement proper loading states 
  
 ## Code Standards
 - Use TypeScript for type safety
