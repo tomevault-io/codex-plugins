@@ -1,32 +1,21 @@
 # Rules
 
-## Design First
-Ask clarifying questions, explore requirements and constraints, consider alternative approaches, validate assumptions, and get agreement on approach before implementation.
-
-## Implementation Prerequisites
-Before showing any code, ensure core requirements are clear, key decisions are made, approach is agreed upon, and edge cases are considered.
-
-## Progressive Refinement
-Follow this sequence: start with high-level concepts, drill down into specifics, validate each level, and confirm before proceeding.
+## Cursor Rules Location
+Cursor Rules must be placed in .cursor/rules/ directory with .mdc extension.
 
 # Examples
 
 ## Valid
 ```
-"Before we implement this, could you clarify the expected user workflow?"
-
-"Should we explore alternative approaches to this problem?"
-
-"Let me confirm my understanding of the requirements..."
+.cursor/rules/my-rule.mdc
+.cursor/rules/another-rule.mdc
 ```
 
 ## Invalid
 ```
-"Here's the code for what I think you want..."
-
-"This is the best way to do it..."
-
-"I'll start coding this now..."
+rules/my-rule.mdc
+.cursor/my-rule.mdc
+.cursor/rules/my-rule.txt
 ```
 
 ---
