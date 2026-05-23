@@ -1,30 +1,31 @@
-# novelweave
+# AI instruction files for novelweave
 
-> Tome by [wordflowlab](https://github.com/wordflowlab/novelweave) — distributed by [TomeVault](https://tomevault.io/claim/wordflowlab)
+> Sourced from [wordflowlab/novelweave](https://github.com/wordflowlab/novelweave) and converted for every major platform by [TomeVault](https://tomevault.io)
 
-AI instruction files for novelweave by wordflowlab
+星尘织梦-小说编辑器
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [wordflowlab/novelweave](https://github.com/wordflowlab/novelweave).
+Original source: `CLAUDE.md` in [wordflowlab/novelweave](https://github.com/wordflowlab/novelweave).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
-
-Browse all formats: [https://tomevault.io/claim/wordflowlab](https://tomevault.io/claim/wordflowlab)
 
 ## Bundled Skills (2)
 
 - [getting-started](https://github.com/wordflowlab/novelweave/tree/main/src/templates/skills/quality-assurance/getting-started)
 - [workflow-guide](https://github.com/wordflowlab/novelweave/tree/main/src/templates/skills/quality-assurance/workflow-guide)
 
+Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/wordflowlab/novelweave](https://github.com/wordflowlab/novelweave)
+
 ---
 
-Converted and distributed by [TomeVault](https://tomevault.io) — AI instruction files for every platform.
-Is this your repo? [Claim it](https://tomevault.io/claim/wordflowlab) to manage distribution.
+Explore more instruction files on [TomeVault](https://tomevault.io) — the open index of AI config files for every platform.
+
+<!-- genome:a-e-q -->
