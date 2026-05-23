@@ -2,6 +2,8 @@
 
 > Tome by [ml-gde](https://github.com/ml-gde/jaxgarden) — distributed by [TomeVault](https://tomevault.io)
 
+A collection of reusable, high-performance, well-documented, thorough-tested layers and models in Jax
+
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
