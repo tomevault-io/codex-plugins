@@ -7,13 +7,13 @@ Fast, accessible, and production-ready Next.js portfolio for developers and desi
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [angelo-manalo/portfolio-082025](https://github.com/angelo-manalo/portfolio-082025).
+Original source: `.cursor/rules/*.mdc` in [angelo-manalo/portfolio-082025](https://github.com/angelo-manalo/portfolio-082025).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
