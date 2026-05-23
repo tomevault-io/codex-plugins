@@ -7,12 +7,12 @@ Fuck-lovart-cc is dedicated to bridging the gap in canvas automation. It empower
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [Paker-kk/Flovart-cc](https://github.com/Paker-kk/Flovart-cc).
+Original source: `copilot-instructions.md` in [Paker-kk/Flovart-cc](https://github.com/Paker-kk/Flovart-cc).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
