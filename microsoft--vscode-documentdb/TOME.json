@@ -1,0 +1,75 @@
+{
+  "name": "vscode-documentdb",
+  "owner": "microsoft",
+  "repo": "vscode-documentdb",
+  "description": "DocumentDB Extension for VS Code",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "accessibility-aria-expert",
+      "path": ".github/skills/accessibility-aria-expert",
+      "github_url": "https://github.com/microsoft/vscode-documentdb/tree/main/.github/skills/accessibility-aria-expert",
+      "description": ""
+    },
+    {
+      "name": "react-webview-architecture",
+      "path": ".github/skills/react-webview-architecture",
+      "github_url": "https://github.com/microsoft/vscode-documentdb/tree/main/.github/skills/react-webview-architecture",
+      "description": ""
+    },
+    {
+      "name": "skill-creator",
+      "path": ".github/skills/skill-creator",
+      "github_url": "https://github.com/microsoft/vscode-documentdb/tree/main/.github/skills/skill-creator",
+      "description": ""
+    },
+    {
+      "name": "webview-trpc-messaging",
+      "path": ".github/skills/webview-trpc-messaging",
+      "github_url": "https://github.com/microsoft/vscode-documentdb/tree/main/.github/skills/webview-trpc-messaging",
+      "description": ""
+    },
+    {
+      "name": "writing-release-notes",
+      "path": ".github/skills/writing-release-notes",
+      "github_url": "https://github.com/microsoft/vscode-documentdb/tree/main/.github/skills/writing-release-notes",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/microsoft/vscode-documentdb",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-23T08:34:08Z"
+}
