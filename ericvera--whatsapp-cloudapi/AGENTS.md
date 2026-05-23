@@ -1,37 +1,7 @@
 # Rules
 
-## Use curly braces for all if statements
-All if statements must use curly braces, even for single-line statements.
-
-# Examples
-
-## Valid
-```typescript
-if (value > 0) {
-  return value
-}
-
-if (isValid) {
-  doSomething()
-}
-
-if (hasError) {
-  handleError()
-} else {
-  sendSuccess()
-}
-```
-
-## Invalid
-```typescript
-if (value > 0) return value
-
-if (isValid)
-  doSomething()
-
-if (hasError) handleError()
-else sendSuccess()
-```
+## Preserve console.log statements
+When modifying existing code, preserve all console.log statements unless explicitly asked to remove them. These logs are important for debugging and should not be removed as part of routine code changes. 
 
 ---
 > Source: [ericvera/whatsapp-cloudapi](https://github.com/ericvera/whatsapp-cloudapi) — distributed by [TomeVault](https://tomevault.io).
