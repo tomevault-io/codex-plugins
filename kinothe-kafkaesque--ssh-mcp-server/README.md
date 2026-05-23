@@ -1,0 +1,30 @@
+# ssh-mcp-server
+
+> Source: [KinoThe-Kafkaesque/ssh-mcp-server](https://github.com/KinoThe-Kafkaesque/ssh-mcp-server) — distributed by [TomeVault](https://tomevault.io)
+
+this is a collection of tools that allows your agent to execute commands on your remote servers
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [KinoThe-Kafkaesque/ssh-mcp-server](https://github.com/KinoThe-Kafkaesque/ssh-mcp-server).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+From [KinoThe-Kafkaesque/ssh-mcp-server](https://github.com/KinoThe-Kafkaesque/ssh-mcp-server) — a repo with 10+ stars on GitHub.
+
+---
+
+Install this config instantly:
+```
+npx tomevault install KinoThe-Kafkaesque/ssh-mcp-server
+```
+Source: [github.com/KinoThe-Kafkaesque/ssh-mcp-server](https://github.com/KinoThe-Kafkaesque/ssh-mcp-server).
+
+<!-- genome:d-i-s -->
