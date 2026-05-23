@@ -1,116 +1,83 @@
-# AI Rules for {{project-name}}
+# Supabase Astro Initialization
 
-{{project-description}}
+This document provides a reproducible guide to create the necessary file structure for integrating Supabase with your Astro project.
 
-## Tech Stack
+## Prerequisites
 
-- Astro 5
-- TypeScript 5
-- React 19
-- Tailwind 4
-- Shadcn/ui
+- Your project should use Astro 5, TypeScript 5, React 19, and Tailwind 4.
+- Install the `@supabase/supabase-js` package.
+- Ensure that `/supabase/config.toml` exists
+- Ensure that a file `/src/db/database.types.ts` exists and contains the correct type definitions for your database.
 
-## Project Structure
+IMPORTANT: Check prerequisites before perfoming actions below. If they're not met, stop and ask a user for the fix.
 
-When introducing changes to the project, always follow the directory structure below:
+## File Structure and Setup
 
-- `./src` - source code
-- `./src/layouts` - Astro layouts
-- `./src/pages` - Astro pages
-- `./src/pages/api` - API endpoints
-- `./src/middleware/index.ts` - Astro middleware
-- `./src/db` - Supabase clients and types
-- `./src/types.ts` - Shared types for backend and frontend (Entities, DTOs)
-- `./src/components` - Client-side components written in Astro (static) and React (dynamic)
-- `./src/components/ui` - Client-side components from Shadcn/ui
-- `./src/lib` - Services and helpers
-- `./src/assets` - static internal assets
-- `./public` - public assets
+### 1. Supabase Client Initialization
 
-When modifying the directory structure, always update this section.
+Create the file `/src/db/supabase.client.ts` with the following content:
 
-## Coding practices
+```ts
+import { createClient } from '@supabase/supabase-js';
 
-### Guidelines for clean code
+import type { Database } from '../db/database.types.ts';
 
-- Use feedback from linters to improve the code when making changes.
-- Prioritize error handling and edge cases.
-- Handle errors and edge cases at the beginning of functions.
-- Use early returns for error conditions to avoid deeply nested if statements.
-- Place the happy path last in the function for improved readability.
-- Avoid unnecessary else statements; use if-return pattern instead.
-- Use guard clauses to handle preconditions and invalid states early.
-- Implement proper error logging and user-friendly error messages.
-- Consider using custom error types or error factories for consistent error handling.
+const supabaseUrl = import.meta.env.SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.SUPABASE_KEY;
 
-## Frontend
+export const supabaseClient = createClient<Database>(supabaseUrl, supabaseAnonKey);
+```
 
-### General Guidelines
+This file initializes the Supabase client using the environment variables `SUPABASE_URL` and `SUPABASE_KEY`.
 
-- Use Astro components (.astro) for static content and layout
-- Implement framework components in React only when interactivity is needed
 
-### Guidelines for Styling
+### 2. Middleware Setup
 
-#### Tailwind
+Create the file `/src/middleware/index.ts` with the following content:
 
-- Use the @layer directive to organize styles into components, utilities, and base layers
-- Use arbitrary values with square brackets (e.g., w-[123px]) for precise one-off designs
-- Implement the Tailwind configuration file for customizing theme, plugins, and variants
-- Leverage the theme() function in CSS for accessing Tailwind theme values
-- Implement dark mode with the dark: variant
-- Use responsive variants (sm:, md:, lg:, etc.) for adaptive designs
-- Leverage state variants (hover:, focus-visible:, active:, etc.) for interactive elements
+```ts
+import { defineMiddleware } from 'astro:middleware';
 
-### Guidelines for Accessibility
+import { supabaseClient } from '../db/supabase.client.ts';
 
-#### ARIA Best Practices
+export const onRequest = defineMiddleware((context, next) => {
+  context.locals.supabase = supabaseClient;
+  return next();
+});
+```
 
-- Use ARIA landmarks to identify regions of the page (main, navigation, search, etc.)
-- Apply appropriate ARIA roles to custom interface elements that lack semantic HTML equivalents
-- Set aria-expanded and aria-controls for expandable content like accordions and dropdowns
-- Use aria-live regions with appropriate politeness settings for dynamic content updates
-- Implement aria-hidden to hide decorative or duplicative content from screen readers
-- Apply aria-label or aria-labelledby for elements without visible text labels
-- Use aria-describedby to associate descriptive text with form inputs or complex elements
-- Implement aria-current for indicating the current item in a set, navigation, or process
-- Avoid redundant ARIA that duplicates the semantics of native HTML elements
+This middleware adds the Supabase client to the Astro context locals, making it available throughout your application.
 
-### Guidelines for Astro
 
-- Leverage View Transitions API for smooth page transitions (use ClientRouter)
-- Use content collections with type safety for blog posts, documentation, etc.
-- Leverage Server Endpoints for API routes
-- Use POST, GET  - uppercase format for endpoint handlers
-- Use `export const prerender = false` for API routes
-- Use zod for input validation in API routes
-- Extract logic into services in `src/lib/services`
-- Implement middleware for request/response modification
-- Use image optimization with the Astro Image integration
-- Implement hybrid rendering with server-side rendering where needed
-- Use Astro.cookies for server-side cookie management
-- Leverage import.meta.env for environment variables
+### 3. TypeScript Environment Definitions
 
-### Guidelines for React
+Create the file `src/env.d.ts` with the following content:
 
-- Use functional components with hooks instead of class components
-- Never use "use client" and other Next.js directives as we use React with Astro
-- Extract logic into custom hooks in `src/components/hooks`
-- Implement React.memo() for expensive components that render often with the same props
-- Utilize React.lazy() and Suspense for code-splitting and performance optimization
-- Use the useCallback hook for event handlers passed to child components to prevent unnecessary re-renders
-- Prefer useMemo for expensive calculations to avoid recomputation on every render
-- Implement useId() for generating unique IDs for accessibility attributes
-- Consider using the new useOptimistic hook for optimistic UI updates in forms
-- Use useTransition for non-urgent state updates to keep the UI responsive
+```ts
+/// <reference types="astro/client" />
 
-### Backend and Database
+import type { SupabaseClient } from '@supabase/supabase-js';
+import type { Database } from './db/database.types.ts';
 
-- Use Supabase for backend services, including authentication and database interactions.
-- Follow Supabase guidelines for security and performance.
-- Use Zod schemas to validate data exchanged with the backend.
-- Use supabase from context.locals in Astro routes instead of importing supabaseClient directly
-- Use SupabaseClient type from `src/db/supabase.client.ts`, not from `@supabase/supabase-js`
+declare global {
+  namespace App {
+    interface Locals {
+      supabase: SupabaseClient<Database>;
+    }
+  }
+}
+
+interface ImportMetaEnv {
+  readonly SUPABASE_URL: string;
+  readonly SUPABASE_KEY: string;
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv;
+}
+```
+
+This file augments the global types to include the Supabase client on the Astro `App.Locals` object, ensuring proper typing throughout your application.
 
 ---
 > Source: [walek20/adversary-story-generator](https://github.com/walek20/adversary-story-generator) — distributed by [TomeVault](https://tomevault.io).
