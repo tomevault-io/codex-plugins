@@ -1,70 +1,25 @@
-# Novelweave Change Marking Guidelines
+<!-- OPENSPEC:START -->
 
-We are a fork of Roo. We regularly merge in the Roo codebase. To enable us to merge more easily, we mark all
-our own changes with `novelweave_change` comments.
+# OpenSpec Instructions
 
-## Basic Usage
+These instructions are for AI assistants working in this project.
 
-### Single Line Changes
+Always open `@/openspec/AGENTS.md` when the request:
 
-For single line changes, add the comment at the end of the line:
+- Mentions planning or proposals (words like proposal, spec, change, plan)
+- Introduces new capabilities, breaking changes, architecture shifts, or big performance/security work
+- Sounds ambiguous and you need the authoritative spec before coding
 
-```typescript
-let i = 2 // novelweave_change
-```
+Use `@/openspec/AGENTS.md` to learn:
 
-### Multi-line Changes
+- How to create and apply change proposals
+- Spec format and conventions
+- Project structure and guidelines
 
-For multiple consecutive lines, wrap them with start/end comments:
+Keep this managed block so 'openspec update' can refresh the instructions.
 
-```typescript
-// novelweave_change start
-let i = 2
-let j = 3
-// novelweave_change end
-```
-
-## Language-Specific Examples
-
-### HTML/JSX/TSX
-
-```html
-{/* novelweave_change start */}
-<CustomNovelWeaveComponent />
-{/* novelweave_change end */}
-```
-
-### CSS/SCSS
-
-```css
-/* novelweave_change */
-.novelweave-specific-class {
-	color: blue;
-}
-
-/* novelweave_change start */
-.another-class {
-	background: red;
-}
-/* novelweave_change end */
-```
-
-## Special Cases
-
-### Novelweave specific file
-
-- if the filename or directory name contains novelweave no marking with comments is required
-- if the file lives inside of the jetbrains/ or cli/ root folder, no marking with comments is required
-
-### New Files
-
-If you're creating a completely new file that doesn't exist in Roo, add this comment at the top:
-
-```
-// novelweave_change - new file
-```
+<!-- OPENSPEC:END -->
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/wordflowlab)
-> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/wordflowlab)
-<!-- tomevault:4.0:agents_md:2026-04-08 -->
+> Source: [wordflowlab/novelweave](https://github.com/wordflowlab/novelweave) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-05-05 -->
