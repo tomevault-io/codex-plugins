@@ -1,0 +1,30 @@
+# ghidra-mcp
+
+> Source: [bethington/ghidra-mcp](https://github.com/bethington/ghidra-mcp) — distributed by [TomeVault](https://tomevault.io)
+
+Ghidra MCP Server — 200+ MCP tools for AI-powered reverse engineering. GUI plugin + headless server, lazy tool loading, convention enforcement, batch operations, Ghidra Server integration, and Docker deployment.
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [bethington/ghidra-mcp](https://github.com/bethington/ghidra-mcp).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+From [bethington/ghidra-mcp](https://github.com/bethington/ghidra-mcp) — a repo with 2050+ stars on GitHub.
+
+---
+
+Install this config instantly:
+```
+npx tomevault install bethington/ghidra-mcp
+```
+Source: [github.com/bethington/ghidra-mcp](https://github.com/bethington/ghidra-mcp).
+
+<!-- genome:d-i-s -->
