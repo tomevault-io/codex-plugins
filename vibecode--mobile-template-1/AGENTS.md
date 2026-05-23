@@ -1,6 +1,10 @@
-- To run the project, run `bun start`
-- If any native dependencies change, that is, there are any changes in in [app.json](mdc:app.json) or [package.json](mdc:package.json), run `bun ios` to create a new native build
+Ask the user for the project name. It must be lowercase, no spaces. Use that in [app.json](mdc:app.json) and [package.json](mdc:package.json). Make up the slug yourself. Ask the user if they have a domain. If they do, use that in [app.json](mdc:app.json) for the bundleIdentifier and package ID. If not, make something up.
+
+Then, based on the info so far, update [README.md](mdc:README.md)
+
+
+Finally, delete this file [first-time-setup.mdc](mdc:.cursor/rules/first-time-setup.mdc) (`.cursor/rules/first-time-setup.mdc`)
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/vibecode) — claim your Tome and manage your conversions.
-<!-- tomevault:4.0:agents_md:2026-04-10 -->
+> Source: [vibecode/mobile-template-1](https://github.com/vibecode/mobile-template-1) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-05-22 -->
