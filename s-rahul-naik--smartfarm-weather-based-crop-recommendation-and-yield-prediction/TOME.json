@@ -1,0 +1,44 @@
+{
+  "name": "SmartFarm-Weather-based-Crop-Recommendation-and-Yield-Prediction",
+  "owner": "S-Rahul-Naik",
+  "repo": "SmartFarm-Weather-based-Crop-Recommendation-and-Yield-Prediction",
+  "description": "SmartFarm is a web application that helps farmers make informed decisions by providing weather-based crop recommendations, yield predictions, and flood risk assessments for their location and selected crop. The system uses real-time weather data and machine learning models to generate actionable insights.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/S-Rahul-Naik/SmartFarm-Weather-based-Crop-Recommendation-and-Yield-Prediction",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-23T16:33:20Z"
+}
