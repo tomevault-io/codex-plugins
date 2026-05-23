@@ -2,9 +2,9 @@
   "name": "novelweave",
   "owner": "wordflowlab",
   "repo": "novelweave",
-  "description": "AI instruction files for novelweave by wordflowlab",
+  "description": "\u661f\u5c18\u7ec7\u68a6-\u5c0f\u8bf4\u7f16\u8f91\u5668",
   "type": "tome",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -51,7 +51,7 @@
       "description": ""
     }
   ],
-  "claim_url": "https://tomevault.io/claim/wordflowlab",
+  "source_url": "https://github.com/wordflowlab/novelweave",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-09T18:32:14Z"
+  "distributed_at": "2026-05-23T08:32:40Z"
 }
