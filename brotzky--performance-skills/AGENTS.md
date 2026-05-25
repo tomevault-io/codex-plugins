@@ -1,3 +1,11 @@
+# performance.dev skills
+
+Agent-loadable instructions distilled from each article on performance.dev. Claude Code reads this file as project-level guidance when it lives at the project root.
+
+Canonical source: https://performance.dev/skills
+Plugin install: `/plugin marketplace add brotzky/performance-skills && /plugin install perf@skills`
+
+---
 
 ## linear-local-first-architecture
 
