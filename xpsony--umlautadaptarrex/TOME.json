@@ -1,0 +1,44 @@
+{
+  "name": "UmlautAdaptarrEX",
+  "owner": "xpsony",
+  "repo": "UmlautAdaptarrEX",
+  "description": "UmlautAdaptarrEX presents itself to the *arrs as an indexer, sits between the *arrs and the real indexers, and corrects both searches and results so that releases with umlauts or German titles are reliably found, downloaded and imported.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/xpsony/UmlautAdaptarrEX",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-25T22:31:23Z"
+}
