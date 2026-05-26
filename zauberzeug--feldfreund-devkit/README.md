@@ -7,13 +7,13 @@ A sturdy development platform for autonomous outdoor robotics made by Zauberzeug
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [zauberzeug/feldfreund_devkit](https://github.com/zauberzeug/feldfreund_devkit).
+Original source: `.cursor/rules/*.mdc` in [zauberzeug/feldfreund_devkit](https://github.com/zauberzeug/feldfreund_devkit).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
