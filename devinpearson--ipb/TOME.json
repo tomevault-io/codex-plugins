@@ -4,7 +4,7 @@
   "repo": "ipb",
   "description": "A simple cli app for deploying and managing programmable card code for investec",
   "type": "config",
-  "source_format": ".cursor/rules/*.mdc",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/devinpearson/ipb",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-27T20:54:27Z"
+  "distributed_at": "2026-05-27T20:56:03Z"
 }
