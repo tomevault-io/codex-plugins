@@ -1,0 +1,44 @@
+{
+  "name": "MSCloudNinjaUserManagementTool",
+  "owner": "OfirGavish",
+  "repo": "MSCloudNinjaUserManagementTool",
+  "description": "MS Cloud Ninja User Management Tool A powerful and user-friendly Windows desktop application designed to streamline the process of offboarding and onboarding users on Microsoft 365 environments. Built with .NET 8.0 and Microsoft Graph API.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/OfirGavish/MSCloudNinjaUserManagementTool",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-27T20:58:15Z"
+}
