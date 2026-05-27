@@ -1,0 +1,44 @@
+{
+  "name": "positron-r-package-manager",
+  "owner": "kv9898",
+  "repo": "positron-r-package-manager",
+  "description": "Manage your R extensions from within Positron \u2014 the RStudio-style package manager for the modern data science IDE.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/kv9898/positron-r-package-manager",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-27T14:51:12Z"
+}
