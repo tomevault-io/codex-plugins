@@ -1,0 +1,765 @@
+# ShopSync AI Coding Agent Instructions
+
+## Project Overview
+
+ShopSync is a Flutter app for collaborative shopping list management with Firebase backend. It supports **three platforms**: phone (`lib/main.dart`) and WearOS (`lib/wear/wear_main.dart`) with **separate build flavors**. The web version does not have a flavor, however it is actively maintained with the rest of the app.
+
+## Architecture & Key Patterns
+
+### Dual-Target Architecture
+
+- **Phone app**: `flutter run --release --flavor phone -d <device>`
+- **WearOS app**: `flutter run --release --flavor wear -d <device> --target lib/wear/wear_main.dart`
+- Flavors defined in `android/app/build.gradle` with dimension "platform"
+- Separate entry points but shared services, models, and Firebase configuration
+
+### Firebase Data Structure
+
+```
+list_groups/ (top-level grouping)
+  └─ {groupId}
+     ├─ name, createdBy, members[], position, isExpanded, listIds[]
+     └─ lists/ (subcollection references by listIds[])
+
+lists/ (shopping lists)
+  └─ {listId}
+     ├─ name, createdBy, members[], color, place, isRecycleBin
+     ├─ items/ (subcollection)
+     │  └─ {itemId}: name, checked, quantity, categoryId, deleted, etc.
+     └─ categories/ (subcollection)
+        └─ {categoryId}: name, iconIdentifier, order
+```
+
+**Critical**: Lists can be grouped but also exist standalone. Use `ListGroupsService` for group operations, direct Firestore queries for list/item CRUD.
+
+### State Management
+
+- **No Provider/ChangeNotifier** for global state (commented out in codebase)
+- Uses `StreamBuilder<QuerySnapshot>` and `StreamBuilder<DocumentSnapshot>` for real-time Firebase sync
+- `FutureBuilder` for one-time async operations (e.g., checking update status)
+- Local state via `setState()` and `StatefulWidget`
+
+### Services Layer Pattern
+
+All services are static utility classes (no singletons/instances):
+
+- `ListGroupsService` - group CRUD, reordering, list-group associations
+- `CategoriesService` - per-list categories with order management
+- `GoogleAuthService` - handles Credential Manager (Android) + web auth flows
+- `SmartSuggestionsService` - on-device ML for item suggestions (trains from user history)
+- `ConnectivityService` - monitors network state, shows offline dialog
+- `HomeWidgetService` - Android home widget updates via `home_widget` package
+
+**Error handling**: All service methods wrap errors with `Sentry.captureException()` including contextual hints.
+
+## Development Workflows
+
+### Building & Running
+
+```bash
+# Phone flavor (default target)
+flutter run --release --flavor phone -d emulator-5554
+
+# WearOS flavor (custom target required)
+flutter run --release --flavor wear -d emulator-5556 --target lib/wear/wear_main.dart
+
+# CI checks (what GitHub Actions runs)
+flutter analyze --no-fatal-infos
+flutter pub get
+```
+
+**Linting**: Uses `flutter_lints` with `use_build_context_synchronously: ignore` (see `analysis_options.yaml`).
+
+### Localization
+
+- ARB files in `lib/l10n/`, generated via `l10n.yaml` config
+- Run `./extract_strings.sh` to auto-generate `app_en.arb` from code (extracts `Text()`, `title:`, `return` strings)
+- Currently translations are not being added inside app. Hardcode strings as normal.
+
+### Release Process
+
+- **Phone**: CD workflow builds `--flavor phone --target=lib/main.dart` → `app-phone-release.aab`
+- **WearOS**: Separate CD workflow for wear builds
+- Version code format: `XXYYYYYYY` where XX=platform (30=phone,40=wear), YYYYYYY=versionCode.
+- Requires `key.properties` (keystore config) and `sentry.properties` (debug symbols upload)
+
+## Code Conventions
+
+### Localization
+
+**CRITICAL**: All user-facing strings in UI elements MUST be localized.
+
+- **Never** use hardcoded strings in UI components (Text, labels, titles, messages, etc.)
+- **Always** use `AppLocalizations.of(context)!` to access localized strings
+- **Always** add new strings to `lib/l10n/app_en.arb` when creating UI elements
+- String keys should be camelCase and descriptive (e.g., `aiFeatures`, `enableSmartSuggestions`)
+- Include context in key names when needed (e.g., `aiFeaturesEnabled` vs `aiFeaturesDisabledMessage`)
+
+**Example**:
+
+```dart
+// ❌ WRONG - Hardcoded string
+Text('AI Features')
+
+// ✅ CORRECT - Localized string
+Text(AppLocalizations.of(context)!.aiFeatures)
+```
+
+**Adding new strings**:
+
+1. Add the string to `lib/l10n/app_en.arb`:
+   ```json
+   "aiFeatures": "AI Features",
+   "enableSmartSuggestions": "Enable Smart Suggestions"
+   ```
+2. Use it in code:
+   ```dart
+   final l10n = AppLocalizations.of(context)!;
+   Text(l10n.aiFeatures)
+   ```
+
+**Note**: Currently, translations are not being added to other locale files. Only `app_en.arb` needs to be updated with English strings.
+
+### File Organization
+
+- `lib/screens/` - full-page UI (e.g., `home.dart`, `list_view.dart`)
+- `lib/widgets/` - reusable components (e.g., `expandable_list_group_widget.dart`)
+- `lib/services/` - business logic & Firebase interactions
+- `lib/wear/screens/` - WearOS-specific UI (circular layouts, rotary support)
+- Naming: `snake_case` for files, `PascalCase` for classes, `camelCase` for variables
+
+### Common Patterns
+
+1. **Loading Indicators**:
+   - **Phone/Web**: Use `CustomLoadingSpinner()` from `/widgets/loading_spinner.dart`
+   - **WearOS**: Use standard `CircularProgressIndicator()`
+
+   ```dart
+   // Phone/Web
+   Center(child: CustomLoadingSpinner())
+
+   // WearOS
+   Center(child: CircularProgressIndicator())
+   ```
+
+2. **StreamBuilder for Firestore**:
+
+   ```dart
+   StreamBuilder<QuerySnapshot>(
+     stream: _firestore.collection('lists').doc(listId).collection('items').snapshots(),
+     builder: (context, snapshot) { /* ... */ }
+   )
+   ```
+
+3. **No-Flash Stream Loading**:
+
+- For list/item/recycle/category screens, cache the last successful `StreamBuilder` snapshot in state.
+- During transient `ConnectionState.waiting` reconnects, render cached data instead of replacing content with a loading spinner.
+- Only show full-screen loading if there is no cached snapshot yet (first load).
+- For non-stream analytics refreshes (`list_insights.dart`), show full-screen spinner only on first load; keep previous content visible during subsequent refreshes.
+
+4. **Sentry error tracking** (include context):
+
+   ```dart
+   await Sentry.captureException(error, stackTrace: stackTrace,
+     hint: Hint.withMap({'action': 'create_list', 'list_name': name}));
+   ```
+
+5. **Firebase timestamps**: Use `FieldValue.serverTimestamp()` for `createdAt`/`updatedAt`
+
+6. **Animations**: Prefer `SingleTickerProviderStateMixin` + `AnimationController` (see `list_view.dart`)
+
+7. **Item Templates Access**:
+
+- "Add From Template" is launched from the Create Item screen.
+- A localized entry appears directly below the Smart Suggestions card.
+- The FAB no longer includes a direct template action.
+- Navigation uses `SavedItemsScreen(listId)` from `lib/screens/lists/list_options.dart`.
+
+8. **Clear Completed Behavior**:
+
+- In both list items view and list options, "Clear Completed" must present category-aware choices:
+  - Clear all completed items
+  - Clear completed items from selected categories only
+- Clearing completed items must move items from `lists/{listId}/items` to `lists/{listId}/recycled_items` with deletion metadata (`deletedAt`, `deletedBy`, `deletedByName`) rather than hard deleting.
+- Keep behavior consistent by reusing the shared dialog (`lib/widgets/lists/clear_completed_dialog.dart`) and data logic (`lib/services/data/completed_items_service.dart`).
+
+9. **Viewer Badge Placement**:
+
+- Do not show a global viewer badge on the home screen based on `hasViewerLists()`.
+- Show the viewer badge only inside a specific list screen when `PermissionsHelper.isViewer(listId)` is true for that list.
+- Render the badge in normal layout flow between list content and navigation UI (not as an overlay) so list content is never hidden behind it.
+
+### Authentication
+
+- Google Sign-In uses **Credential Manager** on Android (v2.0.0 API) for passkey support
+- Android Account Manager screen supports two explicit add flows: `Add account` (email/password via system add-account intent) and `Add Google account` (interactive Google sign-in). Both must register/update ShopSync system accounts after successful auth.
+- When launched from Android device Settings -> Accounts -> Add account -> ShopSync, app startup must route to a dedicated add-account chooser screen (Google vs email/password) instead of home/welcome. After successful add, the flow must close the activity and return to device Settings.
+- Web uses `GoogleSignIn` with client ID from `GoogleAuthService._webClientId`
+- Check `currentUser.providerData` to detect linked providers (Google, email/password)
+
+## Integration Points
+
+### External Services
+
+- **Firebase**: Auth, Firestore, deployed via `firebase.json` (hosting config)
+- **Sentry**: Error tracking with 100% trace/profile sample rate (see `main.dart`)
+- **Google Mobile Ads**: Initialized with `unawaited(MobileAds.instance.initialize())`
+- **TFLite**: Local ML model for smart suggestions (`SmartSuggestionsService`)
+- **Weblate**: Translation management (not in code, contributor workflow)
+- **Atlassian Statuspage**: Outage status via public API (`StatuspageService`)
+
+### Statuspage Outage Integration
+
+- Service: `lib/services/platform/statuspage_service.dart` (static API, Sentry-wrapped)
+- Config: `lib/config/statuspage_config.dart` → set `baseApiUrl` to your Statuspage domain (e.g., `https://yourpage.statuspage.io/api/v2`)
+- Model: `lib/models/status_outage.dart`
+- UI (Phone/Web):
+  - Fullscreen closable dialog: `lib/screens/status/outage_dialog.dart` (shown once per app run when outage is active)
+  - Global top banner: `lib/widgets/status/outage_banner.dart` rendered across all screens via `MaterialApp.builder` overlay; polls every 1 minute
+- UI (WearOS):
+  - Fullscreen closable dialog: `lib/wear/screens/wear_outage_screen.dart`
+  - Header replacement: In `lib/wear/screens/wear_list_groups_screen.dart` the ShopSync logo is replaced with a red exclamation indicator + short status after the dialog is dismissed. Tapping it reopens the fullscreen dialog.
+- Polling: `StatuspageService.startPolling()` is called on app startup (phone and wear). Poll interval is 1 minute to avoid rate limits.
+- Short statuses: `'outage'`, `'fixed'`, `'none'` mapped from unresolved incidents and summary indicator.
+- Error handling: All fetch errors captured via `Sentry.captureException()` with contextual hints.
+
+### Platform-Specific
+
+- **Android Home Widget**: Uses `HomeWidgetService.updateWidget()` to sync data to launcher widget
+- **WearOS**: Rotary scroll support via `rotary_scrollbar` package, ambient mode via `wear_plus`
+- **In-app updates**: `UpdateService.checkForUpdate()` triggers Android Play update flow
+
+#### WearOS Language Selection Flow
+
+- The language selector screen lists options and, on tap, navigates to a separate confirmation screen.
+- WearOS language options should stay in sync with the phone app locale list and use localized self-names from `AppLocalizations` rather than hardcoded English labels.
+- The confirmation screen is minimal and scrollable with extra bottom space; it displays:
+  - Title: "Confirm Language"
+  - Selected language name (lowercase)
+  - "OK" and "Cancel" buttons only.
+- The selector no longer shows a bottom "OK" button; confirmation happens on the next screen to avoid UI clipping issues on round displays.
+
+#### Phone/Web Language Change Flow
+
+- In the main app, changing the language from Settings should navigate to a dedicated restart screen showing "Restarting ShopSync" and then trigger an app restart after a short delay using the `restart_app` package.
+- Selecting "System Default" should clear the saved locale and follow the same restart flow.
+- The current-language subtitle should use autonyms from `LocaleService.getLocaleName()` so users see language names in their own script.
+
+#### Feedback Form Close Flow (Phone/Web)
+
+- Screen: `lib/screens/settings/feedback.dart`
+- Back navigation inside this screen is intentionally disabled (system/app back should do nothing).
+- The embedded feedback page closes the screen by navigating to route path `/close-shopsync` on the forms domain.
+- App behavior for `/close-shopsync`: detect this URL from WebView navigation/history callbacks and return user to ShopSync home using `Navigator.pushNamedAndRemoveUntil('/home', ...)`.
+- Keep this close contract platform-consistent for both mobile and web builds.
+
+## Critical Gotchas
+
+- **Don't use Provider**: Theme state management code is commented out; rebuild MaterialApp manually
+- **WearOS requires explicit target**: Always specify `--target lib/wear/wear_main.dart` for wear builds
+- **List groups vs. lists**: Groups are organizational only; lists are the actual data containers
+- **Offline handling**: `ConnectivityService` shows dialog but app must handle Firestore offline persistence
+- **Smart suggestions cache**: Service trains asynchronously; UI shows cached results immediately
+
+## Testing & Debugging
+
+### Automated Testing Framework
+
+ShopSync has **automated testing with GitHub Actions CI** integrated:
+
+- **Test Types**: Unit tests, Widget tests, Integration tests (framework in place)
+- **Test Framework**: Flutter Test + Mockito
+- **CI/CD**: GitHub Actions runs tests automatically on push and PR
+- **Coverage**: Codecov integration for coverage tracking
+- **Execution**: Parallel test execution enabled (faster CI feedback)
+
+### Running Tests Locally
+
+```bash
+# Run all tests
+flutter test
+
+# Run with coverage report
+flutter test --coverage
+
+# Run specific test file
+flutter test test/unit/models/item_suggestion_test.dart
+
+# Generate coverage summary (after flutter test --coverage)
+lcov --summary coverage/lcov.info
+
+# Use provided helper script
+bash run_tests.sh
+
+# Verify setup
+bash verify_setup.sh
+```
+
+### Test Structure
+
+```
+test/
+├── test_utils.dart                          # Shared test utilities, Firebase mocks
+├── unit/
+│   ├── models/
+│   │   └── item_suggestion_test.dart       # Model serialization/deserialization tests
+│   ├── services/
+│   │   └── services_test.dart              # Service layer tests (expand as needed)
+│   └── utils/                              # Utility function tests
+├── widgets/
+│   ├── basic_widget_test.dart              # Widget rendering & interaction tests
+│   └── screens/                            # Screen-level widget tests
+└── integration/                            # End-to-end flow tests (reserved)
+```
+
+### Writing Unit Tests
+
+When adding new services or models, add tests following this pattern:
+
+```dart
+import 'package:flutter_test/flutter_test.dart';
+import 'package:shopsync/services/my_service.dart';
+
+void main() {
+  group('MyService', () {
+    test('performs action correctly', () {
+      // Arrange: Set up test data
+      final service = MyService();
+
+      // Act: Perform the action
+      final result = service.doSomething();
+
+      // Assert: Verify the result
+      expect(result, expectedValue);
+    });
+
+    test('handles error gracefully', () {
+      // Test error handling
+      expect(
+        () => service.failingMethod(),
+        throwsException,
+      );
+    });
+  });
+}
+```
+
+### Writing Widget Tests
+
+Test UI components and interactions:
+
+```dart
+import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter/material.dart';
+
+void main() {
+  group('MyWidget', () {
+    testWidgets('renders correctly', (WidgetTester tester) async {
+      await tester.pumpWidget(const MaterialApp(home: MyWidget()));
+      expect(find.byType(MyWidget), findsOneWidget);
+    });
+
+    testWidgets('handles user interaction', (WidgetTester tester) async {
+      await tester.pumpWidget(const MaterialApp(home: MyWidget()));
+      await tester.tap(find.byType(ElevatedButton));
+      await tester.pumpAndSettle();
+      expect(find.text('Updated'), findsOneWidget);
+    });
+  });
+}
+```
+
+### Test Dependencies
+
+Added to `pubspec.yaml` dev_dependencies:
+
+- `mockito: ^5.4.4` - Mocking framework
+- `fake_cloud_firestore: ^2.5.0` - Firestore mocking
+- `firebase_auth_mocks: ^0.14.0` - Firebase Auth mocking
+- `coverage: ^7.0.0` - Coverage reporting
+
+### GitHub Actions Workflows (CI/CD & Maintenance)
+
+- `.github/workflows/CI.yml` — Full CI matrix.
+  - Triggers: push to `main`/`master`, PR open/edit/sync.
+  - Jobs: `lint` (flutter analyze), `test` (flutter test --coverage → Codecov), `build-phone` (debug APK, flavor phone), `build-wear` (debug APK, flavor wear), `build-web` (flutter build web --wasm). Heavy caching for pub, Flutter, Gradle; artifacts: coverage and web build.
+
+- `.github/workflows/build-verification.yml` — Parallel build-only verification.
+  - Triggers: push/PR affecting Dart, pubspec, android/ ios/ web/.
+  - Jobs: phone debug APK, wear debug APK, web WASM build. Publishes APKs + web build artifacts. Final summary aggregates all three.
+
+- `.github/workflows/lint.yml` — Fast lint/format gate.
+  - Triggers: push/PR touching Dart or analysis/pubspect files.
+  - Jobs: dart format check, flutter analyze; uses pub cache; fails fast with summary.
+
+- `.github/workflows/CD-Prod-Play-Phone.yml` — Phone release to Play.
+  - Trigger: manual `workflow_dispatch`.
+  - Steps: checkout, Java 17 (cached Gradle), Flutter 3.44.0 (cached), pub cache, Android build cache, decode keystore + key.properties, sentry.properties, `flutter build appbundle --release --flavor phone --target=lib/main.dart`, upload via `r0adkll/upload-google-play` to production.
+
+- `.github/workflows/CD-Prod-Play-WearOS.yml` — WearOS release to Play.
+  - Trigger: manual `workflow_dispatch`.
+  - Steps mirror phone CD but `flutter build appbundle --release --flavor wear --target=lib/wear/wear_main.dart`, uploaded to `wear:production` track.
+
+- `.github/workflows/auto-assign-issue.yml` — Maintenance.
+  - Trigger: issues opened.
+  - Action: auto-assign configured maintainers.
+
+- `.github/workflows/stale.yml` — Maintenance.
+  - Trigger: scheduled.
+  - Action: marks inactive issues/PRs as stale per config.
+
+### Coverage Goals
+
+- **Services Layer**: Target 70%+
+- **Models**: Target 80%+
+- **Utilities**: Target 75%+
+- **Widgets**: Target 60%+ (UI testing is more challenging)
+
+Coverage reports available at Codecov dashboard.
+
+### Testing Best Practices
+
+1. **Test in isolation**: Mock external dependencies (Firebase, networking)
+2. **Use descriptive names**: `test('creates list with correct name', ...)` not `test('works')`
+3. **Follow AAA pattern**: Arrange → Act → Assert
+4. **Keep tests focused**: One behavior per test
+5. **Mock Firebase**: Use `test_utils.dart` helpers for Firebase mocking
+6. **Handle async**: Use `await` and `pumpAndSettle()` for async operations
+7. **Test error cases**: Include tests for error handling and edge cases
+
+### Expanding Test Coverage
+
+Key areas to add tests:
+
+- `ListGroupsService` - group CRUD, reordering, list associations
+- `CategoriesService` - category management per list
+- `SmartSuggestionsService` - ML suggestion logic
+- `GoogleAuthService` - authentication flows
+- `ConnectivityService` - network state handling
+- Screen widgets - home.dart, list_view.dart, create_item.dart
+- Integration tests - full user flows (login → create → collaborate)
+
+### Test Documentation
+
+- **`TESTING.md`**: Complete testing guide with examples
+- **`MANUAL_STEPS.md`**: Manual setup for CI/CD (Codecov, branch protection)
+- **`QUICK_REFERENCE.md`**: Quick reference for manual steps
+- **`IMPLEMENTATION_SUMMARY.md`**: What was implemented and next steps
+
+### Debugging Failed Tests
+
+```bash
+# Verbose output
+flutter test --verbose
+
+# Single test
+flutter test -k "test_name"
+
+# Stop on first failure
+flutter test --fail-fast
+
+# Watch mode (re-run on changes)
+flutter test --watch
+```
+
+If tests pass locally but fail in CI:
+
+1. Check Flutter version matches: `flutter --version` (should be 3.44.0)
+2. Clear cache: `flutter clean && flutter pub get`
+3. Check for timing issues in async tests
+4. Verify test dependencies installed correctly
+
+- Use `kDebugMode` checks for debug prints (see `main.dart` ConnectivityService init)
+- Sentry captures all unhandled errors in production builds
+- Test both flavors separately to catch platform-specific issues
+
+## AI Agent Guidelines
+
+- **DO NOT create README files**: Never create summary documents, README files, or markdown documentation files after completing tasks unless explicitly requested by the user.
+
+- **UPDATE COPILOT INSTRUCTIONS**: For any new feature, architectural pattern, or important convention that deserves documentation, add it to this copilot-instructions.md file. Keep instructions clear, concise, and actionable for future AI agents.
+
+### AI Features & User Preferences
+
+**AI Preference System:**
+
+ShopSync includes on-device AI features (primarily Smart Suggestions) that some users may prefer to disable. The AI preference is stored in Firestore and controlled via:
+
+- **Service**: `lib/services/data/ai_preference_service.dart` (class: `AIPreferenceService`)
+- **Setup Screen**: `lib/screens/settings/ai_preference_setup.dart` (class: `AIPreferenceSetupScreen`)
+  - Mandatory screen shown to new users or existing users without preference set
+  - User must choose to enable or disable AI features (cannot skip)
+  - Navigation: Shown automatically in AuthWrapper if preference not set
+- **Profile Settings**: Users can change preference later in `lib/screens/settings/profile.dart`
+  - Toggle switch in "AI Features" card
+  - Changes take effect immediately
+
+**Firestore Field:**
+
+- Collection: `users/{userId}`
+- Field: `aiEnabled` (boolean) - indicates if user has enabled AI features
+- Field: `aiPreferenceUpdatedAt` (timestamp) - last time preference was changed
+
+**Implementation Flow:**
+
+1. New user signs up → `aiEnabled` field NOT set in user document
+2. User logs in → `AuthWrapper` checks `AIPreferenceService.hasAIPreference()`
+3. If preference not set → Show `AIPreferenceSetupScreen` (mandatory, cannot skip)
+4. User chooses enable/disable → Preference saved to Firestore
+5. User navigates to home screen
+6. Existing users can toggle preference in Profile settings
+
+**AI Features Affected:**
+
+- Smart Suggestions in create item screen (`lib/screens/lists/create_item.dart`)
+- Smart Suggestions in item templates (`lib/screens/lists/list_options.dart`)
+- Both screens check `AIPreferenceService.isAIEnabled()` before loading suggestions
+- If AI disabled, suggestions array is empty and widget not shown
+
+**Important Notes:**
+
+- **Phone/Web Only**: AI preference feature is NOT implemented for WearOS
+- **On-Device ML**: Smart suggestions use `SmartSuggestionsService` with local TFLite model
+- **Privacy-Focused**: When disabled, no shopping pattern analysis occurs
+- **Service Methods**:
+  - `hasAIPreference()` - Check if user has set preference
+  - `getAIPreference()` - Get current preference (null if not set)
+  - `setAIPreference(bool)` - Update preference
+  - `isAIEnabled()` - Quick check, returns false if not set
+
+**Testing Responsibilities:**
+When modifying AI features:
+
+- Ensure AI preference check is respected
+- Test with AI enabled and disabled states
+- Add unit tests for `AIPreferenceService`
+- Verify setup screen cannot be skipped
+
+### Gravatar Profile Pictures
+
+**Overview:**
+
+ShopSync integrates Gravatar for user profile pictures. Gravatar (Globally Recognized Avatar) is a public service that associates avatars with email addresses. Users can enable Gravatar to display their profile picture throughout the app.
+
+**Service:**
+
+- File: `lib/services/data/gravatar_service.dart` (class: `GravatarService`)
+- All static methods (no instances)
+- Key Methods:
+  - `generateGravatarUrl(email)` - Creates Gravatar URL from MD5-hashed email
+  - `gravatarExists(email)` - HTTP HEAD check if Gravatar exists for email
+  - `initializeGravatar(userId, email)` - Auto-detect and store on registration/sign-in (non-blocking)
+  - `refreshGravatar(userId, email)` - Manual re-check for Gravatar existence
+  - `refreshGravatarOnAppOpen()` - Silent auto-refresh when user opens app (non-blocking)
+  - `enableGravatar(userId, email)` - Enable Gravatar display for user
+  - `disableGravatar(userId)` - Disable Gravatar display (privacy control)
+  - `getGravatarUrl(userId)` - Retrieve stored Gravatar URL
+  - `isGravatarEnabled(userId)` - Check if user has enabled Gravatar
+  - `hasGravatarUrl(userId)` - Check if Gravatar URL exists in Firestore
+  - `hasGravatarPreference()` - Check if user has completed initial Gravatar setup
+  - `setGravatarPreference(bool)` - Set user's initial Gravatar preference
+
+**Firestore Schema:**
+
+- Collection: `users/{userId}`
+- Fields:
+  - `gravatarUrl` (string, nullable) - Full Gravatar URL with email hash
+  - `gravatarEnabled` (boolean) - User's privacy preference
+  - `gravatarLastChecked` (timestamp) - Last existence check timestamp
+
+**Widget:**
+
+- File: `lib/widgets/user/user_avatar.dart` (class: `UserAvatar`)
+- Factory Constructors:
+  - `UserAvatar.fromUserId(userId, name, size)` - StreamBuilder mode, real-time Firestore updates
+  - `UserAvatar.fromUserData(name, gravatarUrl, gravatarEnabled, size)` - Static mode from existing data
+  - `UserAvatar(name, size)` - Placeholder mode with initials only
+- Displays Gravatar if enabled, falls back to colored circle with initials and icon overlay
+- Consistent color generation per user name (hash-based)
+- Loading/error states handled gracefully
+
+**UI Integration:**
+
+- **Initial Setup**: `lib/screens/settings/gravatar_preference_setup.dart`
+  - Mandatory screen shown to new users or existing users without Gravatar preference
+  - User must choose to enable or disable Gravatar (cannot skip)
+  - Similar flow to AI preference setup
+  - Navigation: Shown automatically after AI preference setup if not set
+- **Profile Settings**: `lib/screens/settings/profile.dart`
+  - Gravatar settings card with preview, enable/disable toggle, refresh button
+  - Info dialog explaining Gravatar concept with link to gravatar.com
+  - Privacy-focused messaging
+- **Registration**: `lib/screens/auth/register.dart`
+  - Automatic Gravatar initialization after user creation (non-blocking)
+- **Google Sign-In**: `lib/services/auth/google_auth.dart`
+  - Automatic Gravatar initialization for new Google users
+- **App Launch**: `lib/screens/home.dart`
+  - Gravatar auto-refreshes every time user opens the app (non-blocking)
+  - Called in initState: `unawaited(GravatarService.refreshGravatarOnAppOpen())`
+- **Collaborators List**: `lib/screens/lists/list_options.dart`
+  - UserAvatar.fromUserData displays collaborator avatars
+- **Home Drawer**: `lib/screens/home.dart`
+  - UserAvatar.fromUserId displays current user's avatar
+
+**Usage Patterns:**
+
+```dart
+// Real-time streaming from Firestore
+UserAvatar.fromUserId(
+  userId: user.uid,
+  name: user.displayName ?? 'User',
+  size: 40,
+)
+
+// Static from existing data
+UserAvatar.fromUserData(
+  name: collaborator['name'],
+  gravatarUrl: collaborator['gravatarUrl'],
+  gravatarEnabled: collaborator['gravatarEnabled'],
+  size: 40,
+)
+
+// Initialize on registration/sign-in (non-blocking)
+unawaited(GravatarService.initializeGravatar(uid, email));
+
+// Auto-refresh on app open (called in home.dart initState)
+unawaited(GravatarService.refreshGravatarOnAppOpen());
+
+// Manual refresh in settings
+await GravatarService.refreshGravatar(uid, email);
+
+// Set initial preference during setup
+await GravatarService.setGravatarPreference(true); // or false
+
+// Toggle privacy preference
+await GravatarService.enableGravatar(uid, email);
+await GravatarService.disableGravatar(uid);
+```
+
+**Implementation Flow:**
+
+1. New user signs up or signs in with Google
+2. `initializeGravatar()` called automatically (non-blocking)
+3. User completes AI preference setup → redirected to Gravatar preference setup
+4. User chooses enable/disable → `setGravatarPreference(bool)` called
+5. Preference stored in Firestore (`gravatarEnabled` field set)
+6. User navigates to home screen
+7. Every time user opens app → `refreshGravatarOnAppOpen()` updates Gravatar URL
+8. Existing users can toggle preference in Profile settings
+
+**Privacy Design:**
+
+- **Opt-in approach**: Gravatar detection is automatic but user must enable display
+- **User control**: Enable/disable toggle in profile settings
+- **Transparency**: Info dialog explains what Gravatar is and how it works
+- **Non-blocking**: Gravatar checks never block registration or sign-in flows
+- **Graceful fallback**: Always shows initials if Gravatar disabled or unavailable
+
+**Dependencies:**
+
+- `crypto ^3.0.6` - MD5 hashing of email addresses (Gravatar API requirement)
+- `http` package - Existence checks via HTTP HEAD requests
+- Firestore - Storage of URLs and user preferences
+- Sentry - Error logging for all Gravatar operations
+
+**Error Handling:**
+
+- All service methods wrapped in try-catch with Sentry logging
+- HTTP errors (404, network issues) handled gracefully
+- Failed initialization doesn't prevent user registration/sign-in
+- Widget displays fallback initials on any error
+
+**Localization:**
+
+32 strings in `lib/l10n/app_en.arb`:
+- Setup screen: `gravatarProfilePictures`, `gravatarSetupDescription`, `enableGravatarSetup`, `enableGravatarSetupDescription`, `disableGravatarSetup`, `disableGravatarSetupDescription`, `gravatarFeature1-4`, `gravatarDisabledFeature1-3`, `gravatarPreferenceChangeNote`
+- Settings: `gravatarSettings`, `gravatarDescription`, `enableGravatar`, `disableGravatar`, `gravatarEnabled`, `gravatarDisabled`, `gravatarEnabledMessage`, `gravatarDisabledMessage`
+- Actions: `refreshGravatar`, `gravatarRefreshed`, `gravatarNotFound`, `gravatarFound`
+- Info: `whatIsGravatar`, `gravatarExplanation`, `visitGravatar`, `privacyControl`, `gravatarPrivacyDescription`, `learnMore`
+
+**Important Notes:**
+
+- **Phone/Web Only**: Gravatar integration is currently implemented for phone and web platforms
+- **WearOS**: Not yet implemented for WearOS screens
+- **Public Service**: Gravatar doesn't require API keys - uses public API with email hashes
+- **Consistency**: UserAvatar widget ensures uniform appearance across all screens
+- **Future Locations**: Consider adding UserAvatar to any screen displaying user names
+
+**Testing Responsibilities:**
+
+When modifying Gravatar features:
+- Test with Gravatar enabled and disabled states
+- Test with users who have Gravatar vs. those who don't
+- Verify non-blocking initialization doesn't delay sign-up/sign-in
+- Test fallback behavior when network unavailable
+- Add unit tests for `GravatarService` methods
+- Add widget tests for `UserAvatar` loading/error states
+- Verify privacy controls work correctly
+
+### Analytics & Insights Architecture
+
+**Dual-Level Insights System:**
+
+- **User-Level Insights**: Accessible from home drawer, shows aggregate stats across all user's lists
+  - File: `lib/screens/user_insights.dart` (class: `UserInsightsScreen`)
+  - Service: `lib/services/analytics_service.dart` (class: `AnalyticsService`)
+  - Navigation: Home → Drawer → "User Insights"
+
+- **List-Level Insights**: Accessible from individual list navigation, shows per-list statistics
+  - File: `lib/screens/list_insights.dart` (class: `ListInsightsScreen`)
+  - Service: `lib/services/list_analytics_service.dart` (class: `ListAnalyticsService`)
+  - Navigation: List → Insights Tab (between Items and Options tabs)
+  - Tab Order: **Items → Insights → Options**
+
+**Important Field Names for Analytics:**
+
+- Items use `'completed'` field (NOT `'checked'`)
+- Items use `'addedAt'` timestamp (NOT `'createdAt'`)
+- **Items do NOT have a `'completedAt'` field** - use `'addedAt'` as proxy for time-based queries
+- **Items do NOT have a `'deleted'` field** - deleted items are moved to `recycled_items` subcollection, not filtered
+- Lists use `'addedAt'` timestamp (NOT `'createdAt'`)
+- Categories are fetched from `lists/{listId}/categories` subcollection
+- Category names must be resolved from category IDs
+
+**Navigation Tab Order:**
+When creating or modifying list navigation:
+
+- Index 0: Items (bouncy animation)
+- Index 1: Insights (donut spin animation with `Icons.donut_small` → `Icons.donut_large`)
+- Index 2: Options (settings spin animation)
+- List tab content in `list_view.dart` is switched in-place (single screen), and uses a simple fade transition between tabs.
+
+### Testing Responsibilities
+
+When implementing features or fixes:
+
+1. **Write tests alongside code**: Add unit tests for new services, models, and utilities
+2. **Test before merge**: Ensure `flutter test` passes locally
+3. **Follow test patterns**: Use AAA pattern (Arrange → Act → Assert)
+4. **Mock Firebase**: Use `test_utils.dart` for Firebase mocking, don't make real Firestore calls
+5. **Update existing tests**: If modifying existing code, update relevant tests
+6. **Add widget tests**: For new screens/widgets, add corresponding widget tests
+7. **Statuspage tests**: Unit tests for `StatusOutage` model live in `test/unit/services/statuspage_service_test.dart`
+8. **Check coverage**: Run `flutter test --coverage` to verify no major coverage drops
+
+### Test Writing Quick Rules
+
+- Service tests: Mock Firestore, Firebase Auth, external dependencies
+- Widget tests: Test rendering, interactions, state changes
+- Use `expect(condition, matcher)` for assertions
+- Name tests clearly: `test('creates item with correct name and quantity', ...)`
+- One assertion per test when possible
+- Handle async properly: `await`, `pumpAndSettle()`
+
+### When Tests Fail in CI
+
+1. Check locally first: `flutter test`
+2. Look at CI logs in GitHub Actions
+3. Verify Flutter version matches CI (3.44.0)
+4. Check for timing/race conditions in async tests
+5. Ensure mocks are set up correctly in test setup
+
+---
+> Source: [ASDev-Official/shopsync](https://github.com/ASDev-Official/shopsync) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-05-27 -->
