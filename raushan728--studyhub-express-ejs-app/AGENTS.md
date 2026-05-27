@@ -91,5 +91,5 @@ StudyHub is a full-stack web application built with Express.js, EJS, MongoDB, an
 Feel free to suggest updates or clarify any sections!
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/raushan728) — claim your Tome and manage your conversions.
-<!-- tomevault:4.0:agents_md:2026-04-09 -->
+> Source: [raushan728/studyhub-express-ejs-app](https://github.com/raushan728/studyhub-express-ejs-app) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-05-27 -->
