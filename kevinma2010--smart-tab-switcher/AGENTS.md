@@ -1,7 +1,7 @@
-- Use functional components with hooks instead of class components
-- Implement proper state management using Context API or external libraries like Redux
-- Utilize memoization with `useMemo` and `useCallback` for performance optimization
-- Follow the single responsibility principle for components
+- Use utility-first approach for styling components
+- Create custom utility classes for frequently used styles
+- Utilize responsive design utilities for different screen sizes
+- Keep your `tailwind.config.js` organized and maintainable
 
 ---
 > Source: [kevinma2010/smart-tab-switcher](https://github.com/kevinma2010/smart-tab-switcher) — distributed by [TomeVault](https://tomevault.io).
