@@ -2,6 +2,8 @@
 
 > Source: [StackOneHQ/stackone-ai-node](https://github.com/StackOneHQ/stackone-ai-node) — distributed by [TomeVault](https://tomevault.io)
 
+integrations for ai agents
+
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
