@@ -15,7 +15,7 @@ Original source: `copilot-instructions.md` in [tanmay-e-patil/tchat](https://git
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Quality verified by TomeVault's automated analysis pipeline. [View quality report](https://tomevault.io/claim/tanmay-e-patil#quality)
+Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/tanmay-e-patil/tchat](https://github.com/tanmay-e-patil/tchat)
 
 ---
 
@@ -23,6 +23,6 @@ Install this config instantly:
 ```
 npx tomevault install tanmay-e-patil/tchat
 ```
-Or browse all formats at [https://tomevault.io/claim/tanmay-e-patil](https://tomevault.io/claim/tanmay-e-patil).
+Source: [github.com/tanmay-e-patil/tchat](https://github.com/tanmay-e-patil/tchat).
 
 <!-- genome:a-i-q -->
