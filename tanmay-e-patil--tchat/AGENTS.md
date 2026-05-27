@@ -83,5 +83,5 @@ Concise, project-specific guidance for AI coding agents working on this repo. Fo
 Feedback welcome: Clarify real AI backend integration, testing approach, or sidebar extension patterns if needed.
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/tanmay-e-patil) — claim your Tome and manage your conversions.
-<!-- tomevault:4.0:agents_md:2026-04-10 -->
+> Source: [tanmay-e-patil/tchat](https://github.com/tanmay-e-patil/tchat) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-05-27 -->
