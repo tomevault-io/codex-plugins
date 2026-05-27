@@ -76,5 +76,5 @@ src/protocol/
 - 全项目统一拼写 "processer"（非 "processor"），保持一致
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/pangbit) — claim your Tome and manage your conversions.
-<!-- tomevault:4.0:agents_md:2026-04-09 -->
+> Source: [pangbit/spoa](https://github.com/pangbit/spoa) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-05-27 -->
