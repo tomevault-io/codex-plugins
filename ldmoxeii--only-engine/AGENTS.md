@@ -52,6 +52,5 @@ Key auto-configuration classes:
 The auto-configuration enables by default but can be controlled via `only.engine.web.enable=false` property.
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/LDmoxeii)
-> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/LDmoxeii)
-<!-- tomevault:4.0:agents_md:2026-04-09 -->
+> Source: [LDmoxeii/only-engine](https://github.com/LDmoxeii/only-engine) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-05-27 -->
