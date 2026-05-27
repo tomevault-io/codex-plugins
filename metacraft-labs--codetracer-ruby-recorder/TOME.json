@@ -4,7 +4,7 @@
   "repo": "codetracer-ruby-recorder",
   "description": "A prototype of a codetracer recorder for Ruby",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/metacraft-labs/codetracer-ruby-recorder",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-27T18:34:58Z"
+  "distributed_at": "2026-05-27T18:46:01Z"
 }
