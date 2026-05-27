@@ -4,7 +4,7 @@
   "repo": "wisp",
   "description": "\ud83d\udd10 Wisp is a simple and secure platform for sharing encrypted, one-time secrets via protected links that automatically expire.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": ".cursor/rules/*.mdc",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/Thavarshan/wisp",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-27T14:48:31Z"
+  "distributed_at": "2026-05-27T15:30:01Z"
 }
