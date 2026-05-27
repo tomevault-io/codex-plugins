@@ -7,6 +7,5 @@ Ne pas commite que si t'as tsté que ça fonctionne
 Tu n'as jamais besoin de rétablir le contenu de if __name__ == "__main__"
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/phhusson)
-> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/phhusson)
-<!-- tomevault:4.0:agents_md:2026-04-08 -->
+> Source: [phhusson/oqee-mcp](https://github.com/phhusson/oqee-mcp) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-05-27 -->
