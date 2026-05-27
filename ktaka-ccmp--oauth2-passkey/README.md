@@ -7,12 +7,12 @@ Authentication library for Rust web applications with OAuth2/OIDC and WebAuthn/P
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [ktaka-ccmp/oauth2-passkey](https://github.com/ktaka-ccmp/oauth2-passkey).
+Original source: `CLAUDE.md` in [ktaka-ccmp/oauth2-passkey](https://github.com/ktaka-ccmp/oauth2-passkey).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
