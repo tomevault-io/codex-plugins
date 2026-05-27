@@ -7,12 +7,12 @@ Python plugins for InfluxDB 3
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [influxdata/influxdb3_plugins](https://github.com/influxdata/influxdb3_plugins).
+Original source: `CLAUDE.md` in [influxdata/influxdb3_plugins](https://github.com/influxdata/influxdb3_plugins).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
