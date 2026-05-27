@@ -7,13 +7,13 @@ A tutorial on how to build stuff with large language models, made simple
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [ericmjl/building-with-llms-made-simple](https://github.com/ericmjl/building-with-llms-made-simple).
+Original source: `.cursor/rules/*.mdc` in [ericmjl/building-with-llms-made-simple](https://github.com/ericmjl/building-with-llms-made-simple).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
