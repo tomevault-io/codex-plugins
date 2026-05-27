@@ -1,6 +1,6 @@
 # studyhub-express-ejs-app
 
-> Tome by [raushan728](https://github.com/raushan728/studyhub-express-ejs-app) — distributed by [TomeVault](https://tomevault.io/claim/raushan728)
+> Tome by [raushan728](https://github.com/raushan728/studyhub-express-ejs-app) — distributed by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
@@ -15,7 +15,7 @@ Original source: `copilot-instructions.md` in [raushan728/studyhub-express-ejs-a
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From a repo with 0+ stars on GitHub. [See the full profile](https://tomevault.io/claim/raushan728)
+From [raushan728/studyhub-express-ejs-app](https://github.com/raushan728/studyhub-express-ejs-app) — a repo with 0+ stars on GitHub.
 
 ---
 
