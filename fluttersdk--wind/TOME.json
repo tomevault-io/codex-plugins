@@ -4,7 +4,7 @@
   "repo": "wind",
   "description": "Tailwind CSS for Flutter \u2014 classes like flex, p-4, dark:bg-gray-800 compose into widget trees. MCP server + Claude Code skill for AI agents.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/fluttersdk/wind",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-27T20:40:25Z"
+  "distributed_at": "2026-05-27T20:48:54Z"
 }
