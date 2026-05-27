@@ -286,6 +286,5 @@ $pages->assertNoJavascriptErrors()->assertNoConsoleLogs();
 </laravel-boost-guidelines>
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/savicsly)
-> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/savicsly)
-<!-- tomevault:4.0:agents_md:2026-04-08 -->
+> Source: [savicsly/loe-mini-engine-api](https://github.com/savicsly/loe-mini-engine-api) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-05-27 -->
