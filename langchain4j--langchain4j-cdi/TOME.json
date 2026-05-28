@@ -4,7 +4,7 @@
   "repo": "langchain4j-cdi",
   "description": "Integrating langChain4J with CDI to be able to infuse applications with Ai seamlessly",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/langchain4j/langchain4j-cdi",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-28T10:32:51Z"
+  "distributed_at": "2026-05-28T10:46:56Z"
 }
