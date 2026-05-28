@@ -1,0 +1,44 @@
+{
+  "name": "python-webflow-exporter",
+  "owner": "KoblerS",
+  "repo": "python-webflow-exporter",
+  "description": "A command-line tool to recursively scrape and download all assets (HTML, CSS, JS, images, media) from a public .webflow.io website. It also provides the option to automatically remove the Webflow badge from downloaded JavaScript files.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/KoblerS/python-webflow-exporter",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-28T08:31:44Z"
+}
