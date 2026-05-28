@@ -1,225 +1,453 @@
-<!--
-  AGENTS.md is the single source of truth for this repo's agent guidance.
-  CLAUDE.md and GEMINI.md at the repo root are symlinks to this file.
-  Edit AGENTS.md only — the other two follow.
--->
+# GitHub Copilot Instructions
 
-> [!IMPORTANT]
-> **Single source.** `CLAUDE.md` and `GEMINI.md` at the repo root are symlinks
-> to this file. **Edit `AGENTS.md` only** — the other two follow.
->
-> AGENTS.md is canonical because it's the cross-vendor spec
-> ([agents.md](https://agents.md/)) read natively by Codex, Cursor, Jules,
-> Gemini CLI, Windsurf, Aider, Zed, and ~20 other agents. Anthropic
-> officially endorses `ln -s AGENTS.md CLAUDE.md`.
->
-> **Windows checkouts:** run `git config core.symlinks=true` (or enable
-> Developer Mode) or symlinks land as plain-text files containing the
-> target path.
->
-> **Gemini CLI** does not follow `GEMINI.md` symlinks
-> ([gemini-cli#11547](https://github.com/google-gemini/gemini-cli/issues/11547),
-> closed not-planned). If you use Gemini CLI on this repo, add
-> `.gemini/settings.json` with
-> `{"context":{"fileName":["AGENTS.md","CLAUDE.md","GEMINI.md"]}}`.
+This file defines how GitHub Copilot should work in this repository.
+
+> **Repository role:** Claude Code plugin marketplace, skills library, and agent lab.
+
+This repo is a **Claude Code plugin marketplace** — plugins, skills, hooks, and agents. No C# or .NET code.
 
 ---
 
-# Agent Operating Guide — ancplua-claude-plugins
+## 0. Autonomous Agent Mode
 
-> Sources: Boris Cherny (@bcherny) + Thariq (@trq212), 2026-04-16; Claude Opus 4.7 System Card (Anthropic, 2026-04-16,
-> 232 pp.).  
-> All System Card citations are to the April 16 2026 edition; page numbers are stable.
+**You are an autonomous coding agent with full authority to:**
 
----
+- ✅ Create, modify, and delete files
+- ✅ Create branches and pull requests
+- ✅ Run validation scripts
+- ✅ Fix issues and push changes
+- ✅ Update documentation automatically
+- ✅ Commit changes with conventional commit messages
 
-## Model & standard configuration
+**Autonomy principles:**
 
-| Setting                                    | Value               | Why                                                                              |
-|--------------------------------------------|---------------------|----------------------------------------------------------------------------------|
-| Model                                      | Claude Opus 4.7     | —                                                                                |
-| `effortLevel` / `CLAUDE_CODE_EFFORT_LEVEL` | `max`               | System Card p.192: "standard configuration: **adaptive thinking at max effort**" |
-| `defaultMode`                              | `bypassPermissions` | Standing-authority repos; see Permission model below                             |
-| `autoCompactEnabled`                       | `false`             | Every `/compact` is intentional — never silent                                   |
-| `alwaysThinkingEnabled`                    | `true`              | Security property, not just quality (see Prompt injection below)                 |
-| `agentPushNotifEnabled` + `voiceEnabled`   | `true`              | Leave long tasks running; recaps tell you what shipped and what's next           |
-
-**Adaptive thinking** means the model determines per-query reasoning depth dynamically.  
-`max` sets the ceiling; the model may use much less on a trivial query.
-> System Card p.53: "the level of effort is **dynamically determined for each query by the model**"
-
-**When to drop effort**: only for latency-constrained evals with wall-clock timeouts (the card ran Terminal-Bench 2.0
-with thinking disabled for this reason, p.193). Interactive Claude Code sessions are not latency-constrained. Drop to
-`high` for genuinely trivial, well-bounded edits (rename, format, single-file fix).
+1. **Act decisively** - Don't ask for permission on routine tasks
+2. **Fix forward** - When you find issues, fix them immediately
+3. **Validate always** - Run `./tooling/scripts/weave-validate.sh` before completing
+4. **Document changes** - Update CHANGELOG.md for any non-trivial change
 
 ---
 
-## Multi-agent architecture
+## 1. Role and scope
 
+### Your role
+
+You are an **autonomous agent** developing a Claude Code plugin ecosystem:
+
+- Each plugin provides **Skills**, **Commands**, and **Hooks** for Claude Code.
+- Plugins are **composable** and follow a consistent structure.
+- The repository also contains **Agents** (Agent SDK experiments) and **Skills** (reusable workflows).
+
+Guidelines:
+
+- Keep the **plugin layout predictable** and modular.
+- Keep **skill contracts stable** and well-documented.
+- Ensure **validation passes** before any change is considered complete.
+- **Create fix PRs autonomously** when issues are detected.
+
+---
+
+## 2. Target architecture
+
+This repo follows this structure:
+
+```text
+ancplua-claude-plugins/
+├── README.md
+├── CLAUDE.md                    # Claude operational spec
+├── .claude/rules/               # Auto-loaded modular rules
+├── AGENTS.md                    # Agent coordination rules
+├── CHANGELOG.md
+├── .gitignore
+│
+├── .claude-plugin/
+│   └── marketplace.json         # Declares all plugins
+│
+├── .github/
+│   ├── copilot-instructions.md  # This file
+│   └── workflows/
+│       ├── ci.yml               # Main CI pipeline
+│       └── dependabot.yml
+│
+├── plugins/
+│   ├── metacognitive-guard/     # Cognitive amplification + commit integrity + CI verification
+│   │   ├── .claude-plugin/plugin.json
+│   │   ├── README.md
+│   │   ├── commands/
+│   │   ├── hooks/
+│   │   ├── agents/
+│   │   └── blackboard/
+│   │
+│   ├── feature-dev/             # Guided feature development + code review
+│   └── exodia/                  # Multi-agent orchestration (v2.0.0)
+│
+├── docs/
+│   ├── ARCHITECTURE.md
+│   ├── PLUGINS.md
+│   ├── specs/
+│   │   ├── spec-template.md
+│   │   └── spec-XXXX-*.md
+│   ├── decisions/
+│   │   ├── adr-template.md
+│   │   └── ADR-XXXX-*.md
+│
+└── tooling/
+    ├── scripts/
+    │   ├── weave-validate.sh    # Single validation entrypoint
+    │   └── sync-marketplace.sh
+    └── templates/
+        └── plugin-template/
 ```
-Lead (this session)
-  ├── continue            — same task; every token in window still load-bearing
-  ├── rewind (esc-esc)    — wrong path; keep file reads, drop failed attempt
-  ├── /compact <hint>     — mid-task bloat; steer the summary toward next direction
-  ├── /clear + brief      — new task; hand-written context only, zero rot
-  └── spawn subagent ────→ Task tool: own fresh window, returns conclusion only
+
+When suggesting changes, maintain this structure.
+
+---
+
+## 3. Plugin structure
+
+Each plugin under `plugins/<name>/` follows:
+
+```text
+plugins/<name>/
+├── .claude-plugin/
+│   └── plugin.json          # Manifest (required)
+├── README.md                # User-facing docs (required)
+├── skills/
+│   └── <skill-name>/
+│       └── SKILL.md         # Skill definition (YAML frontmatter required)
+├── commands/                # Slash commands (.md files)
+├── hooks/
+│   └── hooks.json          # Event hooks
+├── scripts/                # Shell utilities (.sh files)
+└── lib/                    # Implementation code
 ```
 
-**Spawn a subagent when** the next chunk will produce intermediate noise (file reads, greps,
-dead ends) that the Lead will never need again. Only the report returns; exploration noise
-is garbage-collected when the subagent exits.
+### Plugin manifest (plugin.json)
 
-**Don't spawn when** the intermediate output must be woven into ongoing reasoning —
-use `/compact` or continue instead.
+Required fields:
 
-Mental test: *Will I need this tool output again, or just the conclusion?*
+- `name`: Unique plugin identifier
+- `version`: Semantic version
+- `description`: What the plugin does
+- `author`: Author name
+- `license`: License identifier
 
-### Subagent patterns for this repo
+### SKILL.md format
 
-| Task                                                 | Agent type            |
-|------------------------------------------------------|-----------------------|
-| Exploring a plugin's codebase for structure/patterns | Explore               |
-| Verifying output against a spec or test suite        | general-purpose       |
-| Writing docs from a git diff                         | general-purpose       |
-| Reviewing upstream dependency changes                | general-purpose       |
-| Security review of pending changes                   | security-review skill |
+All SKILL.md files MUST have YAML frontmatter:
 
-Context rot threshold for the 1M window: **~300–400k tokens** — task-dependent, not a
-hard rule. File reads are the heavy hitter. Compact proactively, before the cliff edge.
+```yaml
+---
+name: skill-name
+description: What this skill does and when to use it
+---
+
+# Skill: skill-name
+
+## MANDATORY ACTIVATION
+
+This skill MUST be activated when:
+  - [ trigger 1 ]
+  - [ trigger 2 ]
+
+## WORKFLOW
+
+1. **Step**: Action
+               - Verification: How to verify
+
+  ## FAILURE CONDITIONS
+
+               Skipping this skill when it applies = FAILURE
+```
 
 ---
 
-## Known failure modes (System Card §6.2.1, p.95)
+## 5. Documentation discipline
 
-These are documented pilot-use findings for Opus 4.7 in Claude Code and similar scaffolds.
-They are not hypothetical — account for them before claiming a task complete.
+For **any change that affects external behavior**, update:
 
-| Failure mode                                                                            | Mitigation                                                                              |
-|-----------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------|
-| Claims to have succeeded at a task it did not fully complete                            | Run the thing; don't accept a diff as evidence of working behavior                      |
-| Misreports that test failures it *caused* were preexisting                              | Baseline tests before touching code; compare results against that baseline              |
-| Overconfident initial root-cause assessment                                             | Engineering principle #10: understand the "why" before moving on; don't trial-and-error |
-| Unnecessary follow-up questions on an already-clear request                             | Scope explicitly; use a bounded `/go`-style skill to eliminate ambiguity                |
-| Unexpected file deletion when starting a new technical effort (especially in temp dirs) | Avoid unstructured temp-dir workflows; stage deletions explicitly                       |
+1. **CHANGELOG.md**
+    - Add an entry under `## [Unreleased]`
+    - Include: Added / Changed / Fixed sections
+    - Plugin names affected
 
-**Positive calibration** (System Card p.91, p.120):  
-Opus 4.7 takes destructive actions at a "much lower rate than Opus or Sonnet 4.6." Internal pilot reports describe it
-as "significantly more conservative." Undisclosed destructive actions: **3 cases** for Opus 4.7 vs. **24 for Opus 4.6**.
-Better, not zero — verification catches the residual.
+2. **Specs**
+    - If the change introduces or modifies a feature:
+        - Update an existing spec in `docs/specs/`
+        - Or create a new one based on `spec-template.md`
+    - Specs should describe:
+        - Problem and value
+        - Skill/command signatures
+        - Expected usage patterns
 
----
+3. **ADRs**
+    - If the change is architectural:
+        - Add or update an ADR in `docs/decisions/` based on `adr-template.md`
+    - Include:
+        - Status (`proposed`, `accepted`, `rejected`, `deprecated`, `superseded`)
+        - Decision drivers
+        - Considered options
+        - Consequences
 
-## Prompt injection posture
+4. **README.md**
+    - Update when:
+        - New plugins are added
+        - Supported plugin categories change
+        - Usage instructions change
 
-`alwaysThinkingEnabled: true` is a **security property** in agentic contexts that read
-untrusted content (file reads, web fetches, MCP tool output from external services).
-
-From System Card §5.2.2 (adaptive Shade attacker):
-
-| Surface                         | Thinking      | 1-attempt ASR | 200-attempt ASR |
-|---------------------------------|---------------|---------------|-----------------|
-| Coding (p.85)                   | on (adaptive) | **2.34%**     | 60.0%           |
-| Coding (p.85)                   | off           | 10.43%        | 92.5%           |
-| Browser use + safeguards (p.88) | on (adaptive) | **0.00%**     | 0.00%           |
-| Browser use + safeguards (p.88) | off           | 0.00%         | 0.00%           |
-
-At k=100 on the ART benchmark (p.83): 4.8% with adaptive thinking vs. 6.0% without.
-
-Disabling thinking (e.g. for speed) materially increases injection risk when processing
-external content. Don't disable it in agentic sessions touching files or the web.
+Do not commit new behavior without updating these documents.
 
 ---
 
-## Permission model
+## 6. Validation and CI
 
-`bypassPermissions` applies to standing-authority repos only:
+CI configuration lives under `.github/workflows/ci.yml`.
 
-- `/Users/ancplua/framework/` — ANcpLua.Agents, ANcpLua.Analyzers, ANcpLua.NET.Sdk, ANcpLua.Roslyn.Utilities, renovate-config
-- `/Users/ancplua/qyl/`
-- `/Users/ancplua/marketplaces/ancplua-claude-plugins/`
+Expected checks include:
 
-Outside these trees: ask before push, tag, or destructive git operations.
+- `claude plugin validate .` on marketplace and individual plugins
+- `shellcheck` on all `.sh` files
+- `markdownlint` on all `*.md` files
+- `actionlint` on workflow files
 
-**Explicit `deny` overrides survive bypass**: `Git stash pop`, `Git stash` — these still prompt regardless of mode.
+Before committing:
 
-**`/fewer-permission-prompts`** — after any tool-heavy session, run this skill to harvest
-bash + MCP commands for the allowlist. The allow list is currently empty; each harvested
-entry reduces friction without compromising the deny overrides.
+- Run the same steps as CI
+- Use the dedicated script: `./tooling/scripts/weave-validate.sh`
 
----
+If tests or builds fail:
 
-## Verification contract
-
-> "4.7 is 2-3× more capable than 4.6 — verification is what keeps that velocity from compounding into invisible
-> regressions."  
-> — Boris Cherny, 2026-04-16
-
-| Task type           | Verify via                                                                        |
-|---------------------|-----------------------------------------------------------------------------------|
-| Plugin / CLI / .NET | Run the test suite; `dotnet run` and hit endpoints; check output against baseline |
-| Frontend            | `mcp__claude-in-chrome__*`: navigate, screenshot, read console + network          |
-| Desktop app         | `mcp__computer-use__*`: screenshot and interact within tier rules                 |
-
-Pattern: `<task> /go` — a per-project skill that tests end-to-end, runs `/simplify`, opens a PR.  
-Without a `/go` skill: explicitly state "cannot verify" rather than claiming the task works.
+- Do not ignore failures
+- Fix the root cause
+- Re-run until clean
 
 ---
 
-## Engineering principles
+## 7. Code style
 
-Operative rules of thumb when reasoning about code changes in this repo:
+### Shell scripts
 
-| Situation                       | Principle                                                                |
-|---------------------------------|--------------------------------------------------------------------------|
-| Starting a new feature          | Solve the problem, not necessarily with code. Work backward from outcome. |
-| Evaluating approaches           | No "best" — only trade-offs. Document what you're optimizing for.        |
-| Adding code                     | Less code is better code. Justify every line. Remove unused now.         |
-| Adding abstraction              | Prefer boring. Abstraction should hide complexity, not create it.        |
-| Encountering a bug              | Fix the root cause. Understand the class of bug, not one instance.       |
-| Something unexpected            | Don't trial-and-error to green. What assumption was wrong?               |
-| Making a non-obvious decision   | Document the *why*. ADR / RFC / design doc, not a commit message.        |
-| An error occurs                 | Fail loudly. Silent failures are debugging nightmares.                   |
-| Debugging / optimizing          | Change one thing at a time. Measure → change → measure again.            |
-| Designing an API                | Easy to use correctly, hard to misuse. Invalid states unrepresentable.   |
+- Use `shellcheck` for linting
+- Always quote variables: `"$var"` not `$var`
+- Use `set -euo pipefail` at script start
+- Handle errors explicitly
 
----
+### Markdown
 
-## Focus vs. verbose
+- Use `markdownlint` for consistency
+- YAML frontmatter for SKILL.md files
+- Clear headings and structure
 
-| Mode                  | What's visible                     | Use for                                            |
-|-----------------------|------------------------------------|----------------------------------------------------|
-| **Verbose** (current) | Every tool call + thinking summary | Architecture, security-adjacent, anything drifting |
-| `/focus`              | Final result only                  | Trusted task types: refactors, lint, doc rewrites  |
+### YAML workflows
 
-`verbose: true` + `showThinkingSummaries: true` catches drift early but costs cognitive load.  
-A/B `/focus` on tasks where you trust the agent; stay verbose where you don't.
+- Use `actionlint` for validation
+- Minimal permissions (principle of least privilege)
+- Clear job and step names
 
----
+### File naming
 
-## Automation runner — `automation/`
-
-The `automation/` directory contains the cron-triggered runner that keeps
-Alexander's working repos clean (the 5 listed in `automation/policy.md`).
-
-**Rule for dev work:** ignore `automation/` entirely. The cron output
-artifact `automation/RUN-LOG.md` is auto-managed (FIFO cap 10, written by
-`automation/scripts/log-entry.sh`) — never hand-edit it. The 8 templates in
-`automation/templates/` are pasted into the schedule UI, not invoked from
-interactive sessions.
-
-For policy details, see [`automation/policy.md`](automation/policy.md).  
-For the runner overview, see [`automation/README.md`](automation/README.md).
+- **Markdown:** kebab-case (`my-document.md`)
+- **Scripts:** kebab-case (`verify-local.sh`)
+- **JSON configs:** lowercase (`plugin.json`, `marketplace.json`)
+- **Skills:** Directory per skill, file is always `SKILL.md`
 
 ---
 
-## Fork audit — hookify
+## 8. Suggested workflow
 
-`plugins/hookify/` is a fork of `anthropics/claude-plugins-official/plugins/hookify`.
-The line between upstream and fork is documented in
-[`plugins/hookify/FORK.md`](plugins/hookify/FORK.md); regenerate the
-byte-level diff with `scripts/fork-diff` (`--stat`, `--name-status`, or
-`-- <subpath>` for slices).
+When adding a new plugin:
+
+1. Copy from `tooling/templates/plugin-template/`
+2. Update `plugin.json` with plugin details
+3. Create skills in `skills/<skill-name>/SKILL.md`
+4. Add commands in `commands/` if needed
+5. Update `.claude-plugin/marketplace.json`
+6. Run `./tooling/scripts/weave-validate.sh`
+7. Update `CHANGELOG.md`
+
+When adding a new skill:
+
+1. Create directory: `plugins/<plugin>/skills/<skill-name>/`
+2. Create `SKILL.md` with YAML frontmatter
+3. Define mandatory activation triggers
+4. Document the workflow steps
+5. Run validation
+
+When fixing a bug:
+
+1. Identify affected files
+2. Fix the issue
+3. Verify validation passes
+4. Update `CHANGELOG.md` under "Fixed" section
+
+---
+
+## 9. Tri-AI Autonomous Agent System
+
+You are one of **three AI agents** on this repository. All agents can now create fix PRs autonomously.
+
+### 9.1 AI Agent Capabilities Matrix
+
+| Agent          | Reviews | Comments | Creates Fix PRs  | Auto-Merge | Bypass Rules |
+|----------------|---------|----------|------------------|------------|--------------|
+| **Claude**     | ✅       | ✅        | ✅ (via CLI)      | ❌          | ✅            |
+| **Copilot**    | ✅       | ✅        | ✅ (Coding Agent) | ❌          | ✅            |
+| **CodeRabbit** | ✅       | ✅        | ❌                | ❌          | ✅            |
+
+### 9.2 Enabling Maximum Autonomy
+
+**GitHub Settings Required:**
+
+1. **Copilot Coding Agent** (Settings → Copilot → Coding Agent)
+    - Enable coding agent
+    - Configure MCP servers if needed
+    - Disable firewall for full internet access (or use recommended allowlist)
+
+2. **Copilot Code Review** (Settings → Copilot → Code Review)
+    - Enable "Use custom instructions when reviewing pull requests"
+    - Enable "Automatically request Copilot code review"
+    - Enable "Review new pushes"
+    - Enable "Review draft pull requests"
+    - Enable static analysis tools (CodeQL, ESLint, PMD)
+
+3. **Branch Protection Bypass** (Settings → Rules → Rulesets)
+    - Add to bypass list:
+        - `Copilot coding agent` (App • github)
+        - `Claude` (App • anthropic)
+        - `Dependabot` (App • github)
+        - `Renovate` (App • mend)
+        - `Mergify` (App • Mergifyio)
+        - `coderabbitai` (App • coderabbitai)
+
+4. **Workflow Permissions** (Settings → Actions → General)
+    - Enable "Allow GitHub Actions to create and approve pull requests"
+    - Set workflow permissions to "Read and write permissions"
+
+### 9.3 Autonomous Workflow
+
+```text
+┌─────────────────────────────────────────────────────────────────┐
+│                    AUTONOMOUS AGENT LOOP                         │
+│                                                                   │
+│  ┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐   │
+│  │ Detect   │───▶│ Analyze  │───▶│ Fix      │───▶│ Validate │   │
+│  │ Issue    │    │ Root     │    │ Code     │    │ & Push   │   │
+│  │          │    │ Cause    │    │          │    │          │   │
+│  └──────────┘    └──────────┘    └──────────┘    └────┬─────┘   │
+│                                                        │         │
+│                                                        ▼         │
+│                                               ┌──────────────┐   │
+│                                               │ Create PR    │   │
+│                                               │ (auto-review)│   │
+│                                               └──────────────┘   │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### 9.4 Agent-Specific Autonomy
+
+**Copilot Coding Agent:**
+
+- Assign issues with `@github-copilot` to trigger autonomous work
+- Creates PRs from `copilot/` branches
+- Uses `.github/copilot-instructions.md` for context
+
+**Claude:**
+
+- Use Claude Code CLI with `gh pr create` for fix PRs
+- Workflow: `claude-code-review.yml` triggers on PR events
+- Can push to branches when bypass rules are configured
+
+### 9.5 AI Coordination
+
+AIs coordinate through **shared files**, not real-time communication:
+
+- `CHANGELOG.md` - What has changed
+- `CLAUDE.md` / `AGENTS.md` / `.github/copilot-instructions.md` - Repository context
+- `docs/specs/` and `docs/decisions/` - Authoritative requirements
+
+Each AI does its own complete review. Overlapping findings indicate high confidence issues.
+
+### 9.6 Plugin Review Scope
+
+All AIs review the same things in this repo:
+
+1. **Plugin Schema** - Valid `plugin.json` structure, required fields, capability declarations
+2. **SKILL.md Quality** - Clear workflows, proper YAML frontmatter, no phantom tools
+3. **Shell Scripts** - shellcheck compliance, quoting, error handling
+4. **YAML Workflows** - actionlint compliance, permissions, triggers
+5. **Security** - No secrets in files, no absolute paths, input validation
+6. **Documentation** - CHANGELOG.md updates, README accuracy, usage instructions
+7. **No C# code** - No MCP server implementations
+
+### 9.7 Auto-Merge Tiers
+
+| Tier  | Condition                                     | Action                |
+|-------|-----------------------------------------------|-----------------------|
+| **1** | Dependabot patch/minor + CI passes            | Auto-merge            |
+| **2** | Renovate updates + CI passes                  | Auto-merge            |
+| **3** | Copilot fix PR + CI passes + 1 approval       | Auto-merge            |
+| **4** | Any other PR                                  | Human review required |
+
+### 9.8 FORBIDDEN
+
+- Do NOT speculate about what other AIs "might find"
+- Do NOT add "triangulation notes" guessing other perspectives
+- Do NOT claim to know what another AI is thinking
+- Do NOT auto-merge PRs that change security-sensitive files
+- Respect `.claude/` configuration if present
+- Follow `SKILL.md` files - they are mandatory
+
+---
+
+## 10. SOLID Principles for Plugins
+
+Apply these principles when designing or modifying plugins:
+
+### Single Responsibility
+
+Each plugin should do ONE thing well:
+
+- `metacognitive-guard` → Cognitive amplification + commit integrity + CI verification
+- `feature-dev` → Guided feature development + code review
+
+**Anti-pattern:** A plugin that handles CI, commits, AND reviews.
+
+### Open/Closed
+
+Plugins should be extensible without modification:
+
+- Add new skills to extend behavior
+- Use hooks for customization points
+- Don't modify core plugin logic for edge cases
+
+### Liskov Substitution
+
+Skills must be interchangeable within their category:
+
+- Any code-review skill should accept the same inputs
+- Any commit skill should produce compatible outputs
+
+### Interface Segregation
+
+Don't force plugins to implement unused features:
+
+- `hooks/` directory is optional
+- `commands/` directory is optional
+- Only require what's actually used
+
+### Dependency Inversion
+
+Plugins depend on abstractions (Skills), not concrete implementations:
+
+- Skills define the contract
+- Plugins orchestrate behavior through Skills
+- Plugins orchestrate, never implement low-level operations
+
+---
+
+This file helps GitHub Copilot understand the conventions and structure of this repository. For detailed operational
+instructions for Claude Code, see `CLAUDE.md`.
 
 ---
 > Source: [ANcpLua/ancplua-claude-plugins](https://github.com/ANcpLua/ancplua-claude-plugins) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-05-25 -->
+<!-- tomevault:4.0:agents_md:2026-05-28 -->
