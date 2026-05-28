@@ -55,7 +55,7 @@
       - 代码分割和按需加载
     - 实现适当的错误处理和性能监控。
 
-    在整个过程中，始终参考[Nuxt.js官方文档](https://nuxt.com/docs)，确保使用最新的Nuxt.js开发最佳实践。
+    在整个过程中，始终参考[Nuxt.js官方文档](mdc:https:/nuxt.com/docs)，确保使用最新的Nuxt.js开发最佳实践。
 
 ---
 > Source: [jay6697117/we-drawing-nuxt](https://github.com/jay6697117/we-drawing-nuxt) — distributed by [TomeVault](https://tomevault.io).
