@@ -177,6 +177,5 @@ WealthRulesPopup offers preset configurations:
 - Neighbor positions depend on whether the row is odd or even
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/sztanko)
-> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/sztanko)
-<!-- tomevault:4.0:agents_md:2026-04-08 -->
+> Source: [sztanko/hexalife](https://github.com/sztanko/hexalife) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-05-28 -->
