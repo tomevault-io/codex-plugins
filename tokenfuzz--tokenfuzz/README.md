@@ -7,14 +7,14 @@ TokenFuzz is an open platform for LLM-based vulnerability research
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [tokenfuzz/tokenfuzz](https://github.com/tokenfuzz/tokenfuzz).
+Original source: `CLAUDE.md` in [tokenfuzz/tokenfuzz](https://github.com/tokenfuzz/tokenfuzz).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/tokenfuzz/tokenfuzz](https://github.com/tokenfuzz/tokenfuzz)
