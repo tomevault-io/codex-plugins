@@ -7,13 +7,13 @@ Peng Tan's AI Blog
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [hobbytp/hobbytp.github.io](https://github.com/hobbytp/hobbytp.github.io).
+Original source: `CLAUDE.md` in [hobbytp/hobbytp.github.io](https://github.com/hobbytp/hobbytp.github.io).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
