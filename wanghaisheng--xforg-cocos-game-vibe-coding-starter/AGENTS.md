@@ -488,5 +488,5 @@ SoundManager.setting.defaultMusicName = '';
 ```
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/wanghaisheng) — claim your Tome and manage your conversions.
-<!-- tomevault:4.0:agents_md:2026-04-12 -->
+> Source: [wanghaisheng/xforg-cocos-game-vibe-coding-starter](https://github.com/wanghaisheng/xforg-cocos-game-vibe-coding-starter) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-05-29 -->
