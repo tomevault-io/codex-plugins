@@ -7,13 +7,13 @@ App to get data from govt websites like USCIS and export control classifications
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [arunabhcode/gov-fetch](https://github.com/arunabhcode/gov-fetch).
+Original source: `copilot-instructions.md` in [arunabhcode/gov-fetch](https://github.com/arunabhcode/gov-fetch).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
