@@ -4,7 +4,7 @@
   "repo": "gov-fetch",
   "description": "App to get data from govt websites like USCIS and export control classifications",
   "type": "config",
-  "source_format": ".cursor/rules/*.mdc",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/arunabhcode/gov-fetch",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-29T14:41:20Z"
+  "distributed_at": "2026-05-29T14:43:02Z"
 }
