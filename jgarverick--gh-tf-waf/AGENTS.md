@@ -1,0 +1,18 @@
+Incorporates best practices from:
+- [Anti-Patterns](https://wellarchitected.github.com/library/scenarios/anti-patterns/)
+- [Migrations](https://wellarchitected.github.com/library/scenarios/migrations/)
+- [Monorepos](https://wellarchitected.github.com/library/scenarios/monorepos/)
+- [GitHub Well-Architected Layers](https://wellarchitected.github.com/library/overview/layers/)
+  - [Productivity](https://wellarchitected.github.com/library/productivity/checklist/)
+  - [Collaboration](https://wellarchitected.github.com/library/collaboration/checklist/)
+  - [Application Security](https://wellarchitected.github.com/library/application-security/checklist/)
+  - [Governance](https://wellarchitected.github.com/library/governance/checklist/)
+  - [Architecture](https://wellarchitected.github.com/library/architecture/checklist/)
+- All Terraform modules should have unit and integration tests in the `test/` directory and should use the Terratest framework.
+- All unit tests should contain regular and edge cases.
+- Any Terraform objects that use GitHub Actions or GitHub API GraphQL queries should have a separate template for the GitHub Actions workflow or GraphQL query in the `workflows/` directory.
+- All objects under the `pillars/` directory should be composed of objects that allow for configuration of properties relevant to that pillar only, and should be composed of modules that exist in the `./modules` directory.
+
+---
+> Source: [jgarverick/gh-tf-waf](https://github.com/jgarverick/gh-tf-waf) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-05-29 -->
