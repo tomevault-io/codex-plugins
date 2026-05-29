@@ -1,0 +1,44 @@
+{
+  "name": "pico-ps2-sniffer",
+  "owner": "therealdreg",
+  "repo": "pico-ps2-sniffer",
+  "description": "A simple PS2 sniffer based on Raspberry PI PICO RP2040 (pico-sdk)",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/therealdreg/pico-ps2-sniffer",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-29T22:34:33Z"
+}
