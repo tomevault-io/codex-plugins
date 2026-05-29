@@ -1,0 +1,44 @@
+{
+  "name": "disobey-badge-2025-game-firmware",
+  "owner": "disobeyfi",
+  "repo": "disobey-badge-2025-game-firmware",
+  "description": "Repository for 2025 badge firmware",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/disobeyfi/disobey-badge-2025-game-firmware",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-29T20:42:22Z"
+}
