@@ -1,0 +1,44 @@
+{
+  "name": "IvoryOS",
+  "owner": "ivoryos-ai",
+  "repo": "IvoryOS",
+  "description": "IvoryOS \u2013 Auto-abstraction & runtime for self-driving labs. Turns Python scripts into a visual workflow builder, execution engine, and optimization platform. Designed for scientists and developers.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/ivoryos-ai/IvoryOS",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-29T00:39:40Z"
+}
