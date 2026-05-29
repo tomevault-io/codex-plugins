@@ -4,7 +4,7 @@
   "repo": "enterprise-intelligence-portfolio",
   "description": "\ud83d\ude80 Enterprise-grade Next.js portfolio demonstrating AI-accelerated development with comprehensive testing, CI/CD automation, and self-documenting   architecture. A real-world example of modern SDLC practices.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/ncolesummers/enterprise-intelligence-portfolio",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-29T16:31:39Z"
+  "distributed_at": "2026-05-29T16:35:42Z"
 }
