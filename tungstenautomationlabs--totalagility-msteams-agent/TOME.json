@@ -1,0 +1,44 @@
+{
+  "name": "TotalAgility-MSTeams-Agent",
+  "owner": "TungstenAutomationLabs",
+  "repo": "TotalAgility-MSTeams-Agent",
+  "description": "Provides a lightweight MS Teams / Bot Framework UI to front a TotalAgility Automation Agent, proxying user interactions via Teams to the Agent running in TotalAgility, then displaying the Agent's responses.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/TungstenAutomationLabs/TotalAgility-MSTeams-Agent",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-29T20:34:37Z"
+}
