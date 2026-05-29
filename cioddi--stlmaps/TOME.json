@@ -1,0 +1,44 @@
+{
+  "name": "stlmaps",
+  "owner": "cioddi",
+  "repo": "stlmaps",
+  "description": "Generate 3D terrain and building models in the browser. This tool allows you to select an area on a map and export it as a 3D OBJ file that can be used for 3D printing, visualization, or digital elevation modeling.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/cioddi/stlmaps",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-29T10:34:12Z"
+}
