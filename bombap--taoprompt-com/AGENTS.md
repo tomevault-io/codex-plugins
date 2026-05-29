@@ -1,0 +1,5 @@
+Hãy đọc kỹ [📌 __I. Mô tả tổng quan dự án__.md](mdc:.cursor/rules/📌 __I. Mô tả tổng quan dự án__.md)
+
+---
+> Source: [bombap/taoprompt.com](https://github.com/bombap/taoprompt.com) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-05-29 -->
