@@ -4,7 +4,7 @@
   "repo": "Rubyzen",
   "description": "Rubyzen is a modern linter for Ruby that allows you to write architectural lint rules as unit tests. In the era of AI-generated code, Rubyzen provides your team with deterministic guardrails to keep your codebase clean, maintainable, and consistent as it grows.",
   "type": "config",
-  "source_format": "CLAUDE.md",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/perrystreetsoftware/Rubyzen",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-30T00:31:30Z"
+  "distributed_at": "2026-05-30T00:32:06Z"
 }
