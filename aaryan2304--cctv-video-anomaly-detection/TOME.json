@@ -1,0 +1,44 @@
+{
+  "name": "cctv-video-anomaly-detection",
+  "owner": "Aaryan2304",
+  "repo": "cctv-video-anomaly-detection",
+  "description": "A production-grade, deep-learning-based anomaly detection system for CCTV surveillance footage. This project uses a PyTorch-based Convolutional Autoencoder to achieve high precision in identifying unusual events. The system is deployed as a scalable REST API using FastAPI and Docker, enabling real-time video analysis. It also includes an MLOps.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/Aaryan2304/cctv-video-anomaly-detection",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-05-30T08:31:24Z"
+}
