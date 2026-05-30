@@ -1,147 +1,124 @@
 
-# Documentation Standards
+# Testing Patterns
 
-Documentation philosophy and tooling for Lumenize.
-
-## ⚠️ CRITICAL: Never Add @skip-check Without Asking
-
-**Exceptions:**
-1. **Non-executable examples** - Bash commands, configuration snippets, install commands
-2. **Phase 1 of documentation workflow** - Temporary use during narrative drafting with explicit approval
-
-**Phase 1 Exception:** During narrative-first drafting (Phase 1), `@skip-check` can be used temporarily. However, the transition from Phase 1 → Phase 2 must be explicitly approved by the user, acknowledging that all `@skip-check` annotations will be replaced with `@check-example` annotations pointing to real tests.
-
-**Never:** Use `@skip-check` for final pedagogical code examples without validation tests.
-
-**Why:** `@skip-check` creates risk of docs/code divergence. Every code example showing functionality should be validated.
-
-**Ask First:** If you think @skip-check is needed outside these exceptions, ask the user.
+Testing philosophy, patterns, and conventions for Lumenize.
 
 ## Philosophy
 
-Documentation quality is ensured by custom Docusaurus tooling that guarantees all code examples are tested and working. The website at https://lumenize.com is the single source of truth for user-facing documentation.
+### Test Types Priority
 
-All documentation is hand-written `.mdx` with code examples validated by the `check-examples` plugin. API references are hand-written pages (not auto-generated). See `website/docs/auth/api-reference.mdx` for the pattern.
+1. **Integration testing** is primary for Worker/DO code (dogfood our own testing packages)
+2. **Unit testing** only for algorithmically tricky code and UI components
 
-## Where Documentation Lives
+**Why:** Integration tests validate real behavior, unit tests require extensive mocking for Worker/DO code.
 
-### Website Documentation (`/website/docs/`)
+### Coverage Targets
+
+- ✅ **Branch coverage**: Close to 100%, minimum 80%
+- ✅ **Exception conditions**: Only uncovered exception paths are acceptable
+
+## Test Organization
+
+### For Documentation Examples
 
 **Always:**
-- ✅ All user-facing documentation goes here
-- ✅ Create/update `.mdx` files in `/website/docs/[package-name]/`
-- ✅ Add new files to `/website/sidebars.ts` for navigation
-- ✅ Use proper frontmatter with `title` and `description`
-- ✅ Link between pages with relative links (e.g., `[CORS Support](/docs/utils/cors-support)`)
-- ✅ Large features should be separate files linked from main docs
+- ✅ Create tests in `test/for-docs/` directory
+- ✅ Use `@check-example` annotations in `.mdx` files
+- ✅ Keep tests pedagogical and minimal
+- ✅ Export DOs/classes shown in doc examples
 
 **Never:**
-- ❌ Don't create temporary docs in package directories (`IMPLEMENTATION.md`, `FEATURE_GUIDE.md`, etc.)
-- ❌ Don't include internal communication content (testing details, compatibility matrices, progress updates)
+- ❌ Don't modify existing integration tests for docs
+- ❌ Don't create separate test projects unless genuinely needed
 
-### Package README.md Files
+**Why:** Existing tests serve their purpose. Documentation validation needs separate, minimal, teaching-focused tests.
 
-**Always keep minimal:**
-- ✅ Name, tagline with de✨light✨ful branding
-- ✅ Link to website documentation
-- ✅ Key features (bullet list)
-- ✅ Installation command
+## Testing Patterns
 
-**Standard structure:**
-```markdown
-# @lumenize/package-name
+### Prefer `vi.waitFor` Over `setTimeout`
 
-A de✨light✨ful [one-line description].
-
-For complete documentation, visit **[https://lumenize.com/docs/package-name](https://lumenize.com/docs/package-name)**
-
-## Features
-
-- **Feature 1**: Brief description
-- **Feature 2**: Brief description
-
-## Installation
-
-\`\`\`bash
-npm install @lumenize/package-name
-\`\`\`
+**Always:**
+```typescript
+// ✅ GOOD: Retries until condition met
+await vi.waitFor(async () => {
+  const status = await client.taskStatus;
+  expect(status).toBe('complete');
+}, { timeout: 1000 });
 ```
 
-## Documentation Tooling
+**Never:**
+```typescript
+// ❌ BAD: Fixed delay, might be too short or too long
+await new Promise(resolve => setTimeout(resolve, 500));
+const status = await client.taskStatus;
+expect(status).toBe('complete');
+```
 
-### `check-examples` - Code Example Validation Plugin
+**Why:** 
+- `vi.waitFor` is faster (returns as soon as condition is met)
+- More robust (retries until success or timeout)
+- Fails fast if something is wrong
+- Default 1s timeout is usually sufficient
 
-- Scans hand-written `.mdx` files for code blocks with `@check-example` annotations
-- Each annotation includes a path to a passing test file
-- Fails the build if documentation code doesn't match test code
-- Supports `// ...` wildcards in code blocks to skip boilerplate
+**Exception:** Only use `setTimeout` if `vi.waitFor` truly won't work for your use case.
 
-### Deprecated tooling
+### Put All Expectations Inside `vi.waitFor`
 
-- **`doc-testing`** — Generated `.mdx` from test files with embedded markdown. Do not use for new work. Some older packages still have generated files marked with `generated_by: doc-testing` frontmatter — do not hand-edit those.
-- **TypeDoc** — Auto-generated API reference from JSDoc. Do not use for new work. Replaced by hand-written API reference pages.
+**Always:**
+```typescript
+await vi.waitFor(async () => {
+  const result = await client.getResult();
+  expect(result.status).toBe('complete');
+  expect(result.data).toBeDefined();
+}, { timeout: 2000 });
+```
 
-### Running Validation
+**Why:** Ensures all assertions are retried together until they all pass.
+
+## Test Execution
+
+### Running Tests
 
 ```bash
-# Fast validation (recommended during development)
-cd website && npm run check-examples
-
-# Full website build (slower, full validation)
-cd website && npm run build
+vitest --run
 ```
 
-## Code Example Validation
+### Running Specific Tests
 
-### `@check-example` Annotations
+```bash
+vitest --run <file-pattern>
+```
+
+## API Refactoring Pattern
+
+When refactoring package APIs:
+
+1. ✅ Mark **one test** as `.only` to verify the new pattern works
+2. ✅ Once working, update remaining tests
+3. ❌ Never leave `.only` in committed code
+
+**Why:** Validates new API incrementally without breaking entire test suite.
+
+## Test Principles
+
+### Tests Enable Refactoring
 
 **Always:**
-```typescript
-\`\`\`typescript @check-example('packages/rpc/test/for-docs/basic-usage.test.ts')
-const client = await createRpcClient(stub);
-const result = await client.echo('Hello');
-expect(result).toBe('DO echoed: Hello');
-\`\`\`
-```
-
-**Rules:**
-- ✅ Every code example must be validated against a passing test
-- ✅ Use `// ...` or `/* ... */` to skip boilerplate
-- ✅ Import statements are automatically skipped
+- ✅ Remove functionality rather than maintain tests for deprecated code
+- ✅ Fix tests properly after refactors, don't create aliases
+- ✅ Delete tests for removed features
 
 **Never:**
-```typescript
-\`\`\`typescript @skip-check
-// Only for non-executable examples like bash commands
-npm install @lumenize/package
-\`\`\`
-```
+- ❌ Don't make tests pass at all costs after a refactor
+- ❌ Don't create technical debt to avoid test updates
+- ❌ Don't let tests ossify and prevent necessary changes
 
-## Documentation Workflow
-
-For the complete 4-phase documentation process, use the command:
-- **Command:** `/documentation-workflow`
-
-**Quick reference:**
-1. **Phase 1**: Narrative & Pedagogy First (use `@skip-check` temporarily)
-2. **Phase 2**: Make Examples Real (create `test/for-docs/` tests)
-3. **Phase 3**: Fast Validation Loop (`npm run check-examples`)
-4. **Phase 4**: Full Build & Polish (`npm run build`)
-
-## API Reference Pages
-
-For packages with public APIs, write a hand-written API reference page. Include:
-- **Summary table** at the top with links to detailed sections
-- **Environment variables table** if applicable
-- **Function signatures** with options and defaults
-- **Detailed sections** for each endpoint/function with request/response examples
-
-Keep JSDoc in source code focused: parameter descriptions, return types, brief explanation, and `@see` links to the hand-written docs.
+**Why:** Tests should enable confident refactoring, not prevent it.
 
 ## Reference
 
-- **check-examples tool**: `/tooling/check-examples/`
-- **Docusaurus config**: `/website/docusaurus.config.ts`
+For vitest configuration patterns, see package-level `vitest.config.js` files.
+For test organization examples, see `packages/testing/` and `packages/rpc/test/`.
 
 ---
 > Source: [lumenize/lumenize](https://github.com/lumenize/lumenize) — distributed by [TomeVault](https://tomevault.io).
