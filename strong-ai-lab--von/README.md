@@ -7,14 +7,14 @@ Intelligent Agent System for Scientific Research Support
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [Strong-AI-Lab/Von](https://github.com/Strong-AI-Lab/Von).
+Original source: `copilot-instructions.md` in [Strong-AI-Lab/Von](https://github.com/Strong-AI-Lab/Von).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 From [Strong-AI-Lab/Von](https://github.com/Strong-AI-Lab/Von) — a repo with 8+ stars on GitHub.
