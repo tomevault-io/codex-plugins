@@ -7,13 +7,13 @@ The most accurate document search and store for building AI apps
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [morphik-org/morphik-core](https://github.com/morphik-org/morphik-core).
+Original source: `CLAUDE.md` in [morphik-org/morphik-core](https://github.com/morphik-org/morphik-core).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
