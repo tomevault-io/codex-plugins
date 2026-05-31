@@ -1,12 +1,19 @@
-# Swift Style Guide
+# Build, Test, and Development
 
-- **Indentation**: 2 spaces; ~100‑char line limit.
-- **Naming**: types `PascalCase`; methods/vars `camelCase`; constants `static let`.
-- **Files**: one primary type per file; filename matches type (e.g., `AudioTranscriber.swift`).
-- **UI**: prefer SwiftUI with small, composable views and preview providers.
-- **Formatting/Lint**: if configured, run `swiftformat .` and `swiftlint` before committing.
+- **Open in Xcode**:
+  - `open "HermesWhisper.xcodeproj"` (use `.xcworkspace` if present).
+- **Build (Debug)**:
+  - ```bash
+    xcodebuild -project "HermesWhisper.xcodeproj" -scheme "HermesWhisper" -configuration Debug build
+    ```
+- **Test (macOS)**:
+  - ```bash
+    xcodebuild -project "HermesWhisper.xcodeproj" -scheme "HermesWhisper" -destination 'platform=macOS' test
+    ```
+- **Run locally**:
+  - Use Xcode, or `./Scripts/build-and-run.sh` for a script-built Debug app.
 
-Favor clarity and explicitness. Avoid deep nesting beyond 2–3 levels; use guard clauses; handle errors explicitly.
+Prefer absolute paths in commands within this workspace.
 
 ---
 > Source: [dkapo88/hermeswhisper](https://github.com/dkapo88/hermeswhisper) — distributed by [TomeVault](https://tomevault.io).
