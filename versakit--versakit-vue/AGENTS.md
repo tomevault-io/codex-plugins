@@ -1,107 +1,107 @@
-# 样式开发指南
+# TypeScript类型定义规范
 
-## 样式系统概述
+## 基本原则
 
-Versakit使用Tailwind CSS和tailwind-variants来构建可定制的组件样式系统，支持以下特性:
+- 必须使用TypeScript进行类型标注，**禁止使用`any`类型**
+- 所有组件的Props、Emits及其他类型必须在单独的`type.ts`文件中定义
+- 类型名称应清晰表达其用途和所属组件
 
-- 主题定制
-- 暗黑模式
-- 无障碍访问
-- 样式传递机制
+## 组件Props类型定义
 
-## 样式文件
-
-每个组件必须有一个`index.variants.ts`文件，包含使用`tailwind-variants`定义的样式。
-
-## tailwind-variants使用规范
-
-使用`tv`函数定义样式，结构如下:
+组件Props应使用TypeScript类型定义：
 
 ```ts
-import { tv } from 'tailwind-variants'
+// 不要使用interface，优先使用type
+export type ButtonProps = {
+  variant?: ButtonVariant  // 使用具体的枚举类型
+  size?: ButtonSize        // 使用具体的枚举类型  
+  disabled?: boolean
+  loading?: boolean
+  fullWidth?: boolean
+  rounded?: boolean
+  type?: 'button' | 'submit' | 'reset'  // 使用字面量类型联合
+  unstyled?: boolean
+  pt?: ButtonPT  // 组件样式传递类型
+}
 
-export const componentStyle = tv({
-  base: 'base-styles-here',
-  variants: {
-    // 变体定义
-    variant: {
-      primary: 'primary-variant-styles',
-      secondary: 'secondary-variant-styles',
-      // ...其他变体
-    },
-    size: {
-      sm: 'small-size-styles',
-      md: 'medium-size-styles',
-      lg: 'large-size-styles',
-      // ...其他尺寸
-    },
-    // ...其他变体类型
-  },
-  compoundVariants: [
-    // 组合变体
-    {
-      variant: 'primary',
-      size: 'sm',
-      class: 'combined-styles'
-    },
-    // ...其他组合
-  ],
-  defaultVariants: {
-    // 默认变体
-    variant: 'primary',
-    size: 'md',
-  }
-})
+// 枚举值使用联合类型
+export type ButtonVariant =
+  | 'primary'
+  | 'secondary'
+  | 'outline'
+  | 'ghost'
+  | 'link'
+  | 'danger'
+  | 'success'
+  | 'warning'
+  | 'info'
+  
+export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg'
 ```
 
-## 暗黑模式支持
+## 组件Emits类型定义
 
-所有组件样式必须支持暗黑模式，使用Tailwind CSS的`dark:`前缀:
+Emits需要使用对象方式定义，并包含类型验证函数：
 
 ```ts
-{
-  primary: 'bg-blue-500 text-white dark:bg-blue-700 dark:text-gray-100'
+// Emits定义
+export const ButtonEmits = {
+  click: (evt: MouseEvent) => evt instanceof MouseEvent,
+  // 其他事件...
+}
+
+// Emits类型
+export type ButtonEmits = typeof ButtonEmits
+```
+
+## 组件样式传递（PT）类型
+
+每个组件应定义自己的PT（Pass Through）类型，用于自定义样式传递：
+
+```ts
+export type ButtonPT = {
+  root?: string       // 根元素样式类
+  icon?: string       // 图标样式类
+  loader?: string     // 加载器样式类
+  // 其他元素...
 }
 ```
 
-## 样式传递机制
+## 通用类型和工具类型
 
-每个组件必须支持两种自定义样式的方式:
+公共类型应放在共享包中：
 
-1. **unstyled模式**: 通过`unstyled`属性完全禁用默认样式
-2. **PT样式传递**: 通过`pt`对象传递自定义类名
+```ts
+// @versakit/shared/src/types.ts
+export type Size = 'sm' | 'md' | 'lg' | 'xl'
+export type Variant = 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info'
+export type Status = 'idle' | 'loading' | 'success' | 'error'
 
-在组件中实现:
-
-```vue
-<script setup lang="ts">
-// ...
-const classes = computed(() => {
-  return props.unstyled
-    ? props.pt?.root || ''
-    : componentStyle({
-        variant: props.variant,
-        size: props.size,
-        class: props.pt?.root, // 合并传入的根元素类名
-      })
-})
-
-const childClasses = computed(() => {
-  return props.unstyled
-    ? props.pt?.child || ''
-    : 'child-default-classes'
-})
-</script>
+// 通用工具类型
+export type SFCWithInstall<T> = T & Plugin
 ```
 
-## 无障碍设计原则
+## 类型导出规范
 
-样式实现必须遵循WCAG标准:
+- 类型应该显式导出，避免命名冲突
+- 使用`export type`导出类型
+- 在组件`index.ts`中重新导出所有类型
 
-- 合适的对比度
-- 键盘可访问的焦点状态
-- 适当的文本大小和间距
-- 确保交互元素有足够的点击/触摸区域
+```ts
+// index.ts
+export * from './src/type'
+```
+
+## 类型导入规范
+
+- 使用`import type`语法导入类型，与值导入分开
+- 避免循环依赖
+
+```ts
+// 正确的类型导入方式
+import type { ButtonProps, ButtonEmits } from './type'
+import { ref, computed } from 'vue'
+```
 
 ---
 > Source: [Versakit/Versakit-Vue](https://github.com/Versakit/Versakit-Vue) — distributed by [TomeVault](https://tomevault.io).
