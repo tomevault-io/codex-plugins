@@ -7,13 +7,13 @@ A BlueSky Client. TBD.
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [Dimillian/IcySky](https://github.com/Dimillian/IcySky).
+Original source: `CLAUDE.md` in [Dimillian/IcySky](https://github.com/Dimillian/IcySky).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
