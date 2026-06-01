@@ -1,82 +1,101 @@
-# 技术栈
+# 前端技术栈
 
-- Python + FastAPI + NoneBot2
-- PostgreSQL + Tortoise ORM
-- Docker + Docker Compose
-- uv (Python 包管理器)
-
-# 目录结构
-
-```
-nekro_agent/
-├── api/          # API 相关实现
-├── cli/          # 命令行工具
-├── core/         # 核心功能模块
-├── libs/         # 通用库
-├── matchers/     # NoneBot2 消息匹配器
-├── models/       # 数据模型定义
-├── routers/      # FastAPI 路由
-├── schemas/      # Pydantic 模型
-├── services/     # 业务服务层
-├── systems/      # 系统级功能
-└── tools/        # 工具类
-```
-
-# 核心组件
-
-## 配置系统
-
-位置: [config.py](mdc:nekro_agent/core/config.py)
-
-```python
-from nekro_agent.core.config import config
-
-# 使用配置
-config.DATA_DIR
-```
-
-## 日志系统
-
-位置: [logger.py](mdc:nekro_agent/core/logger.py)
-
-```python
-from nekro_agent.core.logger import get_sub_logger
-
-# 记录日志
-logger = get_sub_logger("subsystem")
-logger.info("操作信息")
-logger.error("错误信息")
-```
+- React + TypeScript + Vite
+- Material-UI + TailwindCSS
+- Zustand + React Query
+- 使用 pnpm 进行包管理
 
 # 规范
 
-- 执行完全严格的类型注解，除非必要不使用 `# type: ignore` 等方式忽略掉类型错误
-- 任何与外部系统交互的数据第一时间转化为 Pydantic 模型，尽可能不使用 `dict[key]` 来获取数据
-- 遵循 RUFF 代码规范
-- 异步优先原则，禁止使用同步阻塞
-- 路由层禁止宽泛 `try/except`，仅捕获特定异常；其他异常交由全局异常处理器
-- 路由层禁止 `logger.exception`，统一由全局异常处理器记录堆栈
-- 业务错误使用 `AppError` 体系（`nekro_agent/schemas/errors.py`），禁止使用旧的 `Ret` 返回结构
-- API 返回使用标准 HTTP 状态码，错误响应由全局处理器统一结构化并支持 i18n（Accept-Language）
-- 认证系统当前仅支持 `admin` 登录，普通用户登录逻辑暂停使用（避免访问历史遗留用户表）
-- 数据库迁移使用 Aerich：新部署执行 `poe db-init`，升级执行 `poe db-migrate`
-- 数据库变更标准流程：修改模型 → `aerich migrate --name <desc>` → 提交 `migrations/models/*.py` → 部署后执行 `poe db-migrate`（或自动迁移）
-- 禁止调用 `generate_schemas()` 与 `nekro_db_reset`，避免破坏已部署数据
-- 应用启动默认自动迁移（`AUTO_DB_MIGRATE=true`），可通过环境变量关闭
+* 前端页面必须尽可能使用 Material-UI 组件与 TailwindCSS 进行原子化样式开发
+* 涉及全局相关的样式/颜色/主题时，统一在 `frontend/src/theme` 中进行配置，不要在每个实现的地方硬编码颜色信息
+* API 调用统一放在 services/api 中
+* 统一通过 `axios` 拦截器处理错误与语言头，不要绕过封装直连请求
+* URL 设计、页面跳转、筛选参数映射遵循 [frontend-url-navigation.mdc](mdc:.cursor/rules/frontend-url-navigation.mdc)
+
+# 主题相关
+
+* 主题系统: 请参考详细的 [前端主题系统开发指南](mdc:.cursor/rules/frontend-theme-guidelines.mdc)
+* 主题控制: [theme.ts](mdc:frontend/src/stores/theme.ts) (深色/浅色)
+* 主题定义: [palette.ts](mdc:frontend/src/theme/palette.ts), [themeConfig.ts](mdc:frontend/src/theme/themeConfig.ts), [variants.ts](mdc:frontend/src/theme/variants.ts), [ThemeProvider.tsx](mdc:frontend/src/theme/ThemeProvider.tsx)
+
+# 通知系统
+
+系统采用统一的通知组件系统，禁止直接使用原生的MUI Snackbar组件。
+
+## 核心组件和文件
+
+* 通知组件: [NekroNotification.tsx](mdc:frontend/src/components/common/NekroNotification.tsx) - 自定义通知组件，包含毛玻璃效果
+* 通知提供者: [NotificationProvider.tsx](mdc:frontend/src/components/common/NotificationProvider.tsx) - 全局通知提供者
+* 通知Hook: [useNotification.ts](mdc:frontend/src/hooks/useNotification.ts) - 提供便捷的通知方法
+
+## 通知系统使用指南
+
+### 基本用法
+
+```tsx
+// 导入通知hook
+import { useNotification } from '../../hooks/useNotification'
+
+// 在组件中使用
+function MyComponent() {
+  // 获取通知实例
+  const notification = useNotification()
+  
+  // 显示不同类型的通知
+  notification.success('操作成功！')
+  notification.error('发生错误')
+  notification.warning('请注意')
+  notification.info('提示信息')
+  
+  // 自定义参数
+  notification.success('自定义配置', {
+    autoHideDuration: 5000, // 自动隐藏时间
+    anchorOrigin: { vertical: 'bottom', horizontal: 'right' } // 位置
+  })
+  
+  // 关闭通知
+  const key = notification.info('可关闭的通知')
+  notification.close(key) // 关闭特定通知
+  notification.closeAll() // 关闭所有通知
+  
+  return (...)
+}
+```
+
+## 设计原则
+
+1. **统一性**: 所有通知必须使用统一的样式和行为
+2. **主题集成**: 通知样式必须随主题变化而变化，具备毛玻璃效果
+3. **可扩展性**: 可根据需要扩展新的通知类型或样式
+4. **简单易用**: 提供简洁的API，降低使用门槛
+
+## 最佳实践
+
+* 为用户操作提供及时反馈，特别是异步操作
+* 错误通知显示时间应比其他类型长，默认为5秒
+* 使用适当的通知类型 - success、error、warning、info
+* 通知文本应简洁明了，不超过一行
+* 对于重要或需要用户交互的信息，考虑使用对话框而非通知
+
+# 流式请求
+
+当你需要开发流式推送服务时，复用已经实现的包含鉴权的流式请求工具 [stream.ts](mdc:frontend/src/services/api/utils/stream.ts) ，应用示例: [logs.py](mdc:nekro_agent/routers/logs.py), [logs.ts](mdc:frontend/src/services/api/logs.ts)
 
 # 全局 SSE 状态推送
 
-当需要向前端实时推送状态变化时，必须使用全局 SSE 广播系统（Snapshot + Delta 模式），禁止自行实现轮询或独立 SSE 端点。
+当需要在页面中消费后端实时状态（如工作区状态、CC 活跃状态等）时，使用 `useSystemEvents()` hook，禁止自行建立独立的 SSE 连接或轮询。
 
 详细开发指南：[sse-system-events.mdc](mdc:.cursor/rules/sse-system-events.mdc)
 
 核心入口：
-* 事件模型与广播器: [system_broadcast.py](mdc:nekro_agent/services/system_broadcast.py)
-* SSE 路由端点: [events.py](mdc:nekro_agent/routers/events.py)
+* SSE 订阅 Hook: [useSystemEvents.ts](mdc:frontend/src/hooks/useSystemEvents.ts)
+* 使用示例: [workspace/index.tsx](mdc:frontend/src/pages/workspace/index.tsx), [workspace/detail.tsx](mdc:frontend/src/pages/workspace/detail.tsx)
 
-# 扩展相关
+# i18n 约定
 
-扩展可以被 AI 调用，用来增强 NekroAgent 的能力，开发文档参考 [Extension_Development.md](mdc:docs/Extension_Development.md)
+* 公共文案使用 `common.*` 命名空间（含分页/通用状态）
+* 新增 key 时需同步 `zh-CN` 与 `en-US`
 
 ---
 > Source: [KroMiose/nekro-agent](https://github.com/KroMiose/nekro-agent) — distributed by [TomeVault](https://tomevault.io).
