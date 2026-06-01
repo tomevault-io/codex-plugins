@@ -1,211 +1,484 @@
 
-# Core Providers Module Rules
+# Types Package Rules & Instructions
 
-## Module Overview
+## Package Overview
 
-The core providers module contains concrete implementations of AI provider integrations (Anthropic, OpenAI, Google, etc.) that implement the provider interfaces defined in the provider package.
+The types package contains shared type definitions, Zod schemas, and interfaces used across the entire Adaline Gateway ecosystem. This package serves as the single source of truth for all data structures.
 
-## Provider Implementation Rules
+## Type Definition Rules
 
-### 1. Provider Structure
+### 1. Schema-First Approach
 
-- **ALWAYS** create a dedicated directory for each provider: `core/providers/{provider-name}/`
-- **ALWAYS** implement the `ProviderV1` interface from `@adaline/provider`
-- **ALWAYS** use the naming pattern: `Provider{ProviderName}` (e.g., `Anthropic`, `OpenAI`)
-- **ALWAYS** export the provider class as the default export
-- **ALWAYS** include proper TypeScript generics for configuration types
+- **ALWAYS** define Zod schemas first, then derive TypeScript types
+- **ALWAYS** export both the schema and the inferred type
+- **ALWAYS** use descriptive schema names ending with descriptive suffixes
+- **NEVER** define types without corresponding schemas
 
-### 2. Provider Class Implementation
+### 2. Naming Conventions
 
-- **ALWAYS** implement `readonly version = "v1" as const`
-- **ALWAYS** implement `readonly name = "{ProviderName}"`
-- **ALWAYS** use static constants for base URLs and endpoints
-- **ALWAYS** implement private model factories for both chat and embedding models
-- **ALWAYS** use proper type constraints for model factories
+- **ALWAYS** use PascalCase for schema names: `ChatResponse`, `MessageContent`
+- **ALWAYS** use PascalCase + `Type` suffix for type names: `ChatResponseType`, `MessageContentType`
+- **ALWAYS** use descriptive names that clearly indicate purpose
+- **ALWAYS** follow the pattern: `{SchemaName}` and `{SchemaName}Type`
 
-### 3. Model Factory Pattern
+## Schema Definition Instructions
 
-- **ALWAYS** create a private `chatModelFactories` record mapping model names to factories
-- **ALWAYS** create a private `embeddingModelFactories` record mapping model names to factories
-- **ALWAYS** each factory should include: model class, options schema, and model schema
-- **ALWAYS** use the pattern:
+### 1. Basic Schema Structure
 
 ```typescript
-private readonly chatModelFactories: Record<string, {
-  model: { new (options: any): ChatModelV1 };
-  modelOptions: z.ZodType<any>;
-  modelSchema: ChatModelSchemaType;
-}> = {
-  [ModelLiteral]: {
-    model: ModelClass,
-    modelOptions: ModelOptionsSchema,
-    modelSchema: ModelSchema,
-  },
+// ✅ CORRECT: Define schema first, then type
+const ChatResponse = z.object({
+  messages: z.array(Message()),
+  usage: ChatUsage.optional(),
+  logProbs: ChatLogProbs.optional(),
+});
+type ChatResponseType = z.infer<typeof ChatResponse>;
+
+// ❌ INCORRECT: Define type without schema
+type ChatResponseType = {
+  messages: MessageType[];
+  usage?: ChatUsageType;
+  logProbs?: ChatLogProbsType;
 };
 ```
 
-## Model Implementation Rules
+### 2. Schema Composition
 
-### 1. Chat Model Implementation
+```typescript
+// ✅ CORRECT: Compose schemas from smaller parts
+const ChatUsage = z.object({
+  promptTokens: z.number().nonnegative(),
+  completionTokens: z.number().nonnegative(),
+  totalTokens: z.number().nonnegative(),
+});
 
-- **ALWAYS** extend or implement the appropriate base chat model class
-- **ALWAYS** implement all required methods from `ChatModelV1`
-- **ALWAYS** provide proper model schemas with capabilities and limits
-- **ALWAYS** implement provider-specific API integration methods
-- **ALWAYS** handle provider-specific response formats and errors
+const ChatResponse = z.object({
+  messages: z.array(Message()),
+  usage: ChatUsage.optional(),
+});
 
-### 2. Embedding Model Implementation
+// ❌ INCORRECT: Duplicate schema definitions
+const ChatResponse = z.object({
+  messages: z.array(Message()),
+  usage: z.object({
+    promptTokens: z.number().nonnegative(),
+    completionTokens: z.number().nonnegative(),
+    totalTokens: z.number().nonnegative(),
+  }).optional(),
+});
+```
 
-- **ALWAYS** extend or implement the appropriate base embedding model class
-- **ALWAYS** implement all required methods from `EmbeddingModelV1`
-- **ALWAYS** provide proper model schemas with capabilities and limits
-- **ALWAYS** implement provider-specific API integration methods
-- **ALWAYS** handle provider-specific response formats and errors
+### 3. Optional vs Required Fields
 
-### 3. Model Schema Definition
+```typescript
+// ✅ CORRECT: Use .optional() for truly optional fields
+const Message = z.object({
+  role: z.enum(['user', 'assistant', 'system']), // Required
+  content: z.array(MessageContent()), // Required
+  name: z.string().optional(), // Optional
+  toolCalls: z.array(ToolCall()).optional(), // Optional
+});
 
-- **ALWAYS** define model literals as constants: `ModelNameLiteral = "model-name"`
-- **ALWAYS** create Zod schemas for model options validation
-- **ALWAYS** create model schemas with proper metadata
-- **ALWAYS** include pricing information when available
-- **ALWAYS** specify supported features and limitations
+// ❌ INCORRECT: Making required fields optional
+const Message = z.object({
+  role: z.enum(['user', 'assistant', 'system']).optional(), // Should be required
+  content: z.array(MessageContent()).optional(), // Should be required
+});
+```
 
-## Configuration Management Rules
+## Type Export Instructions
 
-### 1. Configuration Schemas
+### 1. Export Pattern
 
-- **ALWAYS** create base configuration schemas for each provider
-- **ALWAYS** extend base schemas for model-specific configurations
-- **ALWAYS** use Zod for all configuration validation
-- **ALWAYS** provide sensible defaults for optional parameters
-- **ALWAYS** validate API keys, endpoints, and other critical parameters
+```typescript
+// ✅ CORRECT: Export both schema and type
+export {
+  ChatResponse,
+  ChatUsage,
+  type ChatResponseType,
+  type ChatUsageType,
+};
 
-### 2. Configuration Types
+// ❌ INCORRECT: Export only types
+export type {
+  ChatResponseType,
+  ChatUsageType,
+};
+```
 
-- **ALWAYS** export configuration types for public use
-- **ALWAYS** use descriptive names ending with `OptionsType`
-- **ALWAYS** extend base configuration interfaces when appropriate
-- **ALWAYS** provide configuration builders for complex setups
+### 2. Index File Organization
 
-## API Integration Rules
+```typescript
+// ✅ CORRECT: Re-export from subdirectories
+export * from "./chat";
+export * from "./config";
+export * from "./embedding";
+export * from "./errors";
+export * from "./message";
+export * from "./pricing";
+export * from "./tool";
+export * from "./utils";
 
-### 1. HTTP Client Usage
+// ❌ INCORRECT: Export individual items
+export { ChatResponse, ChatUsage } from "./chat";
+export { ConfigType } from "./config";
+```
 
-- **ALWAYS** use the centralized HTTP client from the gateway
-- **ALWAYS** implement proper error handling for API failures
-- **ALWAYS** handle rate limits and quotas gracefully
-- **ALWAYS** implement retry logic with exponential backoff
-- **ALWAYS** include proper headers and authentication
+## Validation Instructions
 
-### 2. Response Handling
+### 1. Input Validation
 
-- **ALWAYS** validate API responses before processing
-- **ALWAYS** transform provider responses to standard format
-- **ALWAYS** handle different response structures consistently
-- **ALWAYS** preserve all relevant information from provider
-- **ALWAYS** implement proper error handling for malformed responses
+```typescript
+// ✅ CORRECT: Validate input using schemas
+function processChatResponse(data: unknown): ChatResponseType {
+  return ChatResponse.parse(data);
+}
 
-### 3. Streaming Support
+// ❌ INCORRECT: Type assertion without validation
+function processChatResponse(data: unknown): ChatResponseType {
+  return data as ChatResponseType; // Unsafe!
+}
+```
 
-- **ALWAYS** implement streaming for chat models when supported
-- **ALWAYS** handle streaming responses properly
-- **ALWAYS** implement proper cleanup for streaming connections
-- **ALWAYS** handle streaming errors gracefully
+### 2. Safe Parsing
 
-## Error Handling Rules
+```typescript
+// ✅ CORRECT: Use safeParse for error handling
+const result = ChatResponse.safeParse(data);
+if (result.success) {
+  // result.data is ChatResponseType
+  return result.data;
+} else {
+  // result.error contains validation errors
+  throw new ValidationError(result.error.errors);
+}
 
-### 1. Provider-Specific Errors
+// ❌ INCORRECT: Ignoring validation errors
+try {
+  return ChatResponse.parse(data);
+} catch (error) {
+  // Error handling is missing
+  throw error;
+}
+```
 
-- **ALWAYS** extend appropriate error classes for provider-specific errors
-- **ALWAYS** include provider name and context in error messages
-- **ALWAYS** handle API rate limits and quotas gracefully
-- **ALWAYS** provide retry guidance when appropriate
-- **ALWAYS** log errors with full context
+## Schema Design Instructions
 
-### 2. API Error Handling
+### 1. Union Types
 
-- **ALWAYS** catch and handle HTTP errors properly
-- **ALWAYS** parse error responses from providers
-- **ALWAYS** provide meaningful error messages for users
-- **ALWAYS** implement proper fallback mechanisms when possible
+```typescript
+// ✅ CORRECT: Use discriminated unions for different content types
+const MessageContent = z.discriminatedUnion('type', [
+  z.object({
+    type: z.literal('text'),
+    text: z.string(),
+  }),
+  z.object({
+    type: z.literal('image'),
+    imageUrl: z.string().url(),
+    altText: z.string().optional(),
+  }),
+]);
 
-## Testing Rules
+// ❌ INCORRECT: Simple union without discrimination
+const MessageContent = z.union([
+  z.string(),
+  z.object({ imageUrl: z.string() }),
+]);
+```
 
-### 1. Provider Testing
+### 2. Constrained Types
 
-- **ALWAYS** create comprehensive test suites for each provider
-- **ALWAYS** test provider instantiation with valid configurations
-- **ALWAYS** test provider instantiation with invalid configurations
-- **ALWAYS** test model factory methods
-- **ALWAYS** test error handling scenarios
-- **ALWAYS** mock external API calls
+```typescript
+// ✅ CORRECT: Use appropriate constraints
+const TokenCount = z.number().int().nonnegative();
+const ModelName = z.string().min(1).max(100);
+const ApiKey = z.string().regex(/^sk-[a-zA-Z0-9]{32,}$/);
 
-### 2. Model Testing
+// ❌ INCORRECT: Overly permissive types
+const TokenCount = z.number(); // Allows negative numbers
+const ModelName = z.string(); // Allows empty strings
+const ApiKey = z.string(); // Allows any string
+```
 
-- **ALWAYS** test model instantiation with valid options
-- **ALWAYS** test model instantiation with invalid options
-- **ALWAYS** test API integration methods
-- **ALWAYS** test response transformation methods
-- **ALWAYS** test error handling for API failures
-- **ALWAYS** test configuration validation
+### 3. Default Values
 
-### 3. Integration Testing
+```typescript
+// ✅ CORRECT: Provide sensible defaults
+const ChatOptions = z.object({
+  temperature: z.number().min(0).max(2).default(1.0),
+  maxTokens: z.number().int().positive().default(1000),
+  stream: z.boolean().default(false),
+});
 
-- **ALWAYS** test complete request flows
-- **ALWAYS** test error scenarios and edge cases
-- **ALWAYS** test streaming functionality when available
-- **ALWAYS** test caching and retry mechanisms
+// ❌ INCORRECT: No defaults for common options
+const ChatOptions = z.object({
+  temperature: z.number().min(0).max(2),
+  maxTokens: z.number().int().positive(),
+  stream: z.boolean(),
+});
+```
 
-## Performance Considerations
+## Error Handling Instructions
 
-### 1. Resource Management
+### 1. Custom Error Types
 
-- **ALWAYS** implement proper cleanup for resources
-- **ALWAYS** use connection pooling for HTTP clients
-- **ALWAYS** implement request batching when possible
-- **ALWAYS** cache frequently used configurations and responses
+```typescript
+// ✅ CORRECT: Extend base error classes
+export class ValidationError extends GatewayBaseError {
+  constructor(
+    message: string,
+    public readonly validationErrors: z.ZodError['errors']
+  ) {
+    super(message, 'VALIDATION_ERROR');
+  }
+}
 
-### 2. Error Recovery
+// ❌ INCORRECT: Generic error handling
+export class ValidationError extends Error {
+  constructor(message: string) {
+    super(message);
+  }
+}
+```
 
-- **ALWAYS** implement exponential backoff for retries
-- **ALWAYS** implement circuit breakers for failing endpoints
-- **ALWAYS** provide fallback mechanisms when possible
-- **ALWAYS** monitor provider health and performance
+### 2. Error Context
 
-## Security Considerations
+```typescript
+// ✅ CORRECT: Provide meaningful error context
+export class InvalidConfigError extends GatewayBaseError {
+  constructor(
+    message: string,
+    public readonly configPath: string,
+    public readonly configValue: unknown
+  ) {
+    super(`Configuration error at ${configPath}: ${message}`, 'INVALID_CONFIG');
+  }
+}
 
-### 1. API Key Management
+// ❌ INCORRECT: Generic error messages
+export class InvalidConfigError extends GatewayBaseError {
+  constructor(message: string) {
+    super(message, 'INVALID_CONFIG');
+  }
+}
+```
 
-- **ALWAYS** validate API keys before use
-- **ALWAYS** never log API keys or sensitive credentials
-- **ALWAYS** support secure credential storage
-- **ALWAYS** implement proper access controls
+## Testing Instructions
 
-### 2. Input Validation
+### 1. Schema Testing
 
-- **ALWAYS** validate all input parameters
-- **ALWAYS** sanitize user inputs before API calls
-- **ALWAYS** implement rate limiting for user requests
-- **ALWAYS** monitor for suspicious activity patterns
+```typescript
+// ✅ CORRECT: Test schema validation
+describe("ChatResponse schema", () => {
+  it("should validate valid chat response", () => {
+    const validData = {
+      messages: [{ role: "user", content: [{ type: "text", text: "Hello" }] }],
+      usage: { promptTokens: 10, completionTokens: 5, totalTokens: 15 },
+    };
 
-## Documentation Rules
+    const result = ChatResponse.safeParse(validData);
+    expect(result.success).toBe(true);
+  });
 
-### 1. Code Documentation
+  it("should reject invalid chat response", () => {
+    const invalidData = {
+      messages: "not an array", // Invalid type
+    };
 
-- **ALWAYS** include JSDoc comments for public methods
-- **ALWAYS** document configuration options and their effects
-- **ALWAYS** provide usage examples in comments
-- **ALWAYS** document error scenarios and handling
+    const result = ChatResponse.safeParse(invalidData);
+    expect(result.success).toBe(false);
+    expect(result.error?.errors).toHaveLength(1);
+  });
+});
+```
 
-### 2. README Documentation
+### 2. Type Inference Testing
 
-- **ALWAYS** create comprehensive README files for each provider
-- **ALWAYS** include configuration examples
-- **ALWAYS** document supported models and features
-- **ALWAYS** provide troubleshooting guides
-- **ALWAYS** include performance considerations
-  globs: core/providers/\*\*
-  alwaysApply: false
+```typescript
+// ✅ CORRECT: Test type inference
+it("should infer correct types from schema", () => {
+  // This test ensures TypeScript compilation
+  const response: ChatResponseType = {
+    messages: [],
+    usage: {
+      promptTokens: 0,
+      completionTokens: 0,
+      totalTokens: 0,
+    },
+  };
+
+  expect(response.messages).toBeInstanceOf(Array);
+  expect(response.usage?.totalTokens).toBe(0);
+});
+```
+
+## Performance Instructions
+
+### 1. Schema Caching
+
+```typescript
+// ✅ CORRECT: Cache parsed schemas when possible
+const cachedSchemas = new Map<string, z.ZodSchema>();
+
+function getCachedSchema<T>(schema: z.ZodSchema<T>): z.ZodSchema<T> {
+  const key = schema.toString();
+  if (!cachedSchemas.has(key)) {
+    cachedSchemas.set(key, schema);
+  }
+  return cachedSchemas.get(key)!;
+}
+
+// ❌ INCORRECT: Creating new schemas for each validation
+function validateData(data: unknown) {
+  return z
+    .object({
+      /* ... */
+    })
+    .parse(data); // New schema each time
+}
+```
+
+### 2. Lazy Validation
+
+```typescript
+// ✅ CORRECT: Validate only when needed
+class LazyValidator<T> {
+  private schema: z.ZodSchema<T>;
+  private validated: T | null = null;
+
+  constructor(schema: z.ZodSchema<T>) {
+    this.schema = schema;
+  }
+
+  validate(data: unknown): T {
+    if (this.validated === null) {
+      this.validated = this.schema.parse(data);
+    }
+    return this.validated;
+  }
+}
+```
+
+## Migration Instructions
+
+### 1. Schema Evolution
+
+```typescript
+// ✅ CORRECT: Use .transform() for backward compatibility
+const LegacyMessage = z.object({
+  content: z.string(),
+  role: z.string(),
+});
+
+const NewMessage = z.object({
+  content: z.array(MessageContent()),
+  role: z.enum(["user", "assistant", "system"]),
+});
+
+const Message = z.union([
+  NewMessage,
+  LegacyMessage.transform((legacy) => ({
+    content: [{ type: "text" as const, text: legacy.content }],
+    role: legacy.role as "user" | "assistant" | "system",
+  })),
+]);
+```
+
+### 2. Versioning
+
+```typescript
+// ✅ CORRECT: Version schemas for breaking changes
+const MessageV1 = z.object({
+  content: z.string(),
+  role: z.string(),
+});
+
+const MessageV2 = z.object({
+  content: z.array(MessageContent()),
+  role: z.enum(['user', 'assistant', 'system']),
+});
+
+export const Message = MessageV2; // Current version
+export const MessageV1 = MessageV1; // Legacy version
+```
+
+## Documentation Instructions
+
+### 1. Schema Documentation
+
+````typescript
+// ✅ CORRECT: Document schemas with examples
+/**
+ * Chat response containing messages and usage information
+ *
+ * @example
+ * ```typescript
+ * const response: ChatResponseType = {
+ *   messages: [
+ *     { role: 'user', content: [{ type: 'text', text: 'Hello' }] },
+ *     { role: 'assistant', content: [{ type: 'text', text: 'Hi there!' }] }
+ *   ],
+ *   usage: { promptTokens: 5, completionTokens: 3, totalTokens: 8 }
+ * };
+ * ```
+ */
+const ChatResponse = z.object({
+  messages: z.array(Message()),
+  usage: ChatUsage.optional(),
+});
+````
+
+### 2. Type Documentation
+
+```typescript
+// ✅ CORRECT: Document complex types
+/**
+ * Configuration options for chat models
+ *
+ * @property temperature - Controls randomness (0.0 = deterministic, 2.0 = very random)
+ * @property maxTokens - Maximum number of tokens to generate
+ * @property stream - Whether to stream the response
+ */
+export type ChatOptionsType = z.infer<typeof ChatOptions>;
+```
+
+## Integration Instructions
+
+### 1. Provider Integration
+
+```typescript
+// ✅ CORRECT: Use types in provider implementations
+import { ChatResponseType, MessageType } from "@adaline/types";
+
+class AnthropicProvider {
+  async completeChat(messages: MessageType[]): Promise<ChatResponseType> {
+    // Implementation using shared types
+  }
+}
+```
+
+### 2. Gateway Integration
+
+```typescript
+// ✅ CORRECT: Use types in gateway handlers
+import { ChatResponseType } from "@adaline/types";
+
+async function handleCompleteChat(request: CompleteChatRequestType): Promise<ChatResponseType> {
+  // Handler implementation using shared types
+}
+```
+
+## Best Practices Summary
+
+1. **Schema First**: Always define Zod schemas before TypeScript types
+2. **Composition**: Build complex schemas from simple, reusable parts
+3. **Validation**: Use schemas for runtime validation, not just type checking
+4. **Documentation**: Document schemas with examples and usage patterns
+5. **Testing**: Test both schema validation and type inference
+6. **Performance**: Cache schemas and use lazy validation when appropriate
+7. **Migration**: Use transforms and versioning for backward compatibility
+8. **Integration**: Use shared types consistently across the ecosystem
 
 ---
 
