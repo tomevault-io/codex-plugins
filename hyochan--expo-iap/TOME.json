@@ -4,7 +4,7 @@
   "repo": "expo-iap",
   "description": "In App Purchase module in Expo that confirms OpenIAP",
   "type": "config",
-  "source_format": "GEMINI.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/hyochan/expo-iap",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-06-01T19:36:55Z"
+  "distributed_at": "2026-06-01T20:23:09Z"
 }
