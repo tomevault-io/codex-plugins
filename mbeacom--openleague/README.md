@@ -7,12 +7,12 @@ A free platform for managing sports teams, leagues, and clubs. Simplify your sea
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [mbeacom/openleague](https://github.com/mbeacom/openleague).
+Original source: `CLAUDE.md` in [mbeacom/openleague](https://github.com/mbeacom/openleague).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
