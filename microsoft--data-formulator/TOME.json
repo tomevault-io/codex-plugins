@@ -4,7 +4,7 @@
   "repo": "data-formulator",
   "description": "\ud83e\ude84 Create rich visualizations with AI ",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": ".cursor/rules/*.mdc",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/microsoft/data-formulator",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-06-01T23:31:28Z"
+  "distributed_at": "2026-06-01T23:31:57Z"
 }
