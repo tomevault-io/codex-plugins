@@ -4,7 +4,7 @@
   "repo": "0",
   "description": "0\ufe0f\u20e3 Composable UI engine for Vue. Build complex interfaces with reusable state, logic, and primitives\u2014without being locked into components or styles.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/vuetifyjs/0",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-06-01T05:44:50Z"
+  "distributed_at": "2026-06-01T05:59:19Z"
 }
