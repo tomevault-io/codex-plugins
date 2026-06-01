@@ -1,0 +1,44 @@
+{
+  "name": "nfewizard-io",
+  "owner": "nfewizard-org",
+  "repo": "nfewizard-io",
+  "description": "NFeWizard \u00e9 uma biblioteca Node.js que simplifica a intera\u00e7\u00e3o com os servi\u00e7os da SEFAZ, oferecendo uma solu\u00e7\u00e3o robusta para automa\u00e7\u00e3o de processos relacionados \u00e0 Nota Fiscal Eletr\u00f4nica (NF-e).",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/nfewizard-org/nfewizard-io",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-06-01T17:49:28Z"
+}
