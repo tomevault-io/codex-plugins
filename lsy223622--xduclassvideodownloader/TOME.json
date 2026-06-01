@@ -1,0 +1,44 @@
+{
+  "name": "XDUClassVideoDownloader",
+  "owner": "lsy223622",
+  "repo": "XDUClassVideoDownloader",
+  "description": "\u7528\u4e8e\u4e0b\u8f7d\u897f\u5b89\u7535\u5b50\u79d1\u6280\u5927\u5b66\u5f55\u76f4\u64ad\u5e73\u53f0\u8bfe\u7a0b\u89c6\u9891\u7684\u5de5\u5177",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/lsy223622/XDUClassVideoDownloader",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-06-01T23:43:57Z"
+}
