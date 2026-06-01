@@ -1,33 +1,85 @@
 
-# Playwright End-to-End Testing
+## Modern TypeScript Standards
 
-- This project uses `Playwright` for end-to-end testing
-- Tests are stored in subdirectories of `tests/integration/`
-- Directory structure of `tests/integration/` is based on the test phase the tests
-- Tests should use the convenience methods and properties defined in the helper classes
-  - Prefer adding properties to test classes over using locator selectors directly in tests
-  - Test classes are stored in the `tests/integrations` directory
-- Tests should be cross-platform compatible; able to run on Windows, macOS, and linux
-  - e.g. the use of `path.join` and `path.sep` to ensure tests work the same on all platforms
+These rules define how we write modern, strict, and highly readable TypeScript across this repository.
 
-## Test phases (Playwright projects)
+### Language level and project defaults
 
-1. `install`: The install phase resets the entire test environment after each test.
-2. `post-install-setup`: Installs the app with default settings, creating a baseline for each test in the next phase (`post-install`)
-3. `post-install`: Tests post-install features of the desktop app, with each test starting from the state set in `post-install-setup`
+- **TypeScript version**: Use features available in TypeScript 5.x.
+- **Module system**: **ESM only** (`type: module`). Avoid CommonJS (`require`, `module.exports`).
+- **Target**: ESNext runtime APIs and syntax. Prefer top‑level `await` only when it improves clarity.
+- **Strictness**: `strict` and `noImplicitAny` are enabled. Code must compile with zero implicit `any`.
+- **Libraries**: `skipLibCheck` is enabled for speed; do not rely on it to mask type issues in our code.
 
-## Spec files: \*.spec.ts
+### Types, interfaces, and aliases
 
-- Prefer imports from [testExtensions.ts](mdc:tests/integration/testExtensions.ts) over playwright defaults.
+- **Prefer precise types**: Use `unknown` instead of `any`. Narrow with type guards. `any` is allowed only when interfacing with untyped code and must be localized and justified.
+- **Interfaces vs type aliases**:
+  - Use **`interface`** for public object shapes intended for extension/implementation.
+  - Use **`type`** for unions, mapped/conditional types, function types, and when composition is needed.
+- **Discriminated unions**: Model domain variants with a discriminant field (e.g., `kind: 'X' | 'Y'`). Use exhaustive `switch`es.
+- **Constants and enums**: Prefer `as const` objects and string/number literal unions over `enum`.
+- **Immutability**: Prefer `readonly` properties and `ReadonlyArray<T>` where appropriate. Do not mutate function parameters.
+- **Array and record syntax**: Prefer `T[]` over `Array<T>` for readability. Prefer `Record<Key, T>` for simple maps; use `Map`/`Set` when iteration semantics or key types require it.
+- **Narrowing**: Avoid non‑null assertions (`!`). Use optional chaining, nullish coalescing, and explicit guards.
+- **Satisfies**: Use `satisfies` to enforce object literal conformance without widening values.
 
-## Snapshots
+### Functions, modules, and exports
 
-- Update E2E snapshots with `yarn test:e2e:update`
+- **Named exports**: Prefer named exports. Default exports are allowed only when a module clearly has a single primary export.
+- **Type‑only imports**: Use `import type { X } from '…'` for types. Keep value and type imports separated when helpful for clarity and bundling.
+- **Explicit public types**: Exported functions, classes, and public APIs must have explicit parameter and return types. Internal locals can rely on inference.
+- **Arrow functions**: Prefer arrow functions for local functions and callbacks. Use function declarations when hoisting or `this` binding is required.
+- **No side‑effect modules**: Modules should be pure. Avoid executing logic at import time unless necessary (e.g., polyfills).
 
-## Test helper classes: tests/integration/test\*.ts
+### Async code and Promises
 
-- These files contain clean methods and properties for use in spec files
-- Use of these classes is preferred whenever possible, as they make the code easier to read
+- **Prefer async/await** over raw `then`/`catch` chains. Keep linear flow and use `try/catch` for failures.
+- **No floating promises**: Either `await` promises or deliberately mark them with `void` and a comment explaining the fire‑and‑forget behavior.
+- **Return types**: Functions returning async results should return `Promise<T>` (not `Promise<any>`). Use `Promise<void>` only when there is nothing meaningful to return.
+
+### Errors and control flow
+
+- **Throw `Error` (or subclasses)** with actionable messages. Avoid throwing strings.
+- **Type‑safe handling**: Treat caught errors as `unknown` and narrow with `instanceof Error` (or custom guards) before access.
+- **Exhaustiveness**: Use exhaustive `switch` statements over unions and assert on the `never` case (e.g., via an `assertUnreachable` helper).
+
+### Collections and data modeling
+
+- **Prefer domain types**: Centralize reusable domain types in `src/**` where discoverable. Avoid ad‑hoc inline types for shared structures.
+- **Prefer `Map`/`Set`** when key presence and iteration order matter. Use `Record` for simple string/number keyed collections.
+
+### Nullability and optionality
+
+- **Prefer `undefined`** for absence. Avoid `null` unless interoperating with external APIs that require it.
+- **Optional fields**: Use optional properties (`foo?: T`) judiciously; narrow before use.
+
+### Readability and structure
+
+- **Small modules**: Keep files focused and cohesive. Extract helpers when a module exceeds a clear single responsibility.
+- **Naming**: Use descriptive, intention‑revealing names. Avoid abbreviations. Classes/types use `PascalCase`; variables/functions use `camelCase`.
+- **Comments**: Document exported APIs with concise JSDoc. Explain “why”, not “what”. Prefer `@param` and `@return` (omit `@return` for `void`), and use `{@link}` to reference symbols. Avoid stale comments and TODOs—prefer immediate implementation.
+
+### Interop and boundaries
+
+- **Runtime validation at boundaries**: Validate untrusted inputs at process, network, or file boundaries. Keep types honest across IO.
+- **Serialization**: Define stable shapes for data persisted or sent across IPC. Prefer explicit schemas/types.
+
+### Linting alignment (enforced or advisory)
+
+- **Readonly preference**: `@typescript-eslint/prefer-readonly` is enabled—prefer immutable data.
+- **Template expressions**: Be mindful of `restrict-template-expressions` (relaxed in this repo). Convert values to strings explicitly when ambiguous.
+- **Tests**: Test code may relax some strictness to maximize ergonomics (unsafe rules are off under `tests/**/*`). Keep type escapes localized.
+
+### Do and Don’t quick reference
+
+- Do use `unknown` + narrowing instead of `any`.
+- Do use discriminated unions and exhaustive `switch`.
+- Do export named symbols and add explicit public types.
+- Do use `import type` for type‑only imports.
+- Do prefer `readonly`, `as const`, and `satisfies` for safety.
+- Don’t use non‑null assertions or `@ts-ignore`; use `@ts-expect-error` with an explanation when unavoidable.
+- Don’t mutate inputs or shared state; favor pure functions and clear ownership.
 
 ---
 > Source: [Comfy-Org/desktop](https://github.com/Comfy-Org/desktop) — distributed by [TomeVault](https://tomevault.io).
