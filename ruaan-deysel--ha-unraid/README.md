@@ -7,14 +7,14 @@ Monitor and control your Unraid server directly from Home Assistant. Track syste
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [ruaan-deysel/ha-unraid](https://github.com/ruaan-deysel/ha-unraid).
+Original source: `copilot-instructions.md` in [ruaan-deysel/ha-unraid](https://github.com/ruaan-deysel/ha-unraid).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/ruaan-deysel/ha-unraid](https://github.com/ruaan-deysel/ha-unraid)
