@@ -1,0 +1,12 @@
+
+Use the appropriate channels and make your changes in the source files that generate the code. If you need to modify anything that appears in a generated file (such as `.g.dart`), update the original source file instead — never edit generated files directly.  
+
+After making changes, run:
+
+```bash
+dart run build_runner build --delete-conflicting-outputs
+```
+
+---
+> Source: [SunkenInTime/icarus](https://github.com/SunkenInTime/icarus) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-06-02 -->
