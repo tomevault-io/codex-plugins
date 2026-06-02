@@ -2,9 +2,9 @@
   "name": "vircadia-world",
   "owner": "vircadia",
   "repo": "vircadia-world",
-  "description": "",
+  "description": "Vircadia World - fast reactivity layer for games.",
   "type": "config",
-  "source_format": ".cursor/rules/*.mdc",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -38,7 +38,7 @@
     }
   ],
   "skills": [],
-  "claim_url": "https://tomevault.io/claim/vircadia",
+  "source_url": "https://github.com/vircadia/vircadia-world",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-16T10:50:15Z"
+  "distributed_at": "2026-06-02T18:31:45Z"
 }
