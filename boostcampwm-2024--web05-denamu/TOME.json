@@ -4,7 +4,7 @@
   "repo": "web05-Denamu",
   "description": "\uac1c\ubc1c\uc790\ub4e4\uc758 \uc774\uc57c\uae30\uac00 \uc790\ub77c\ub098\ub294 \uacf3, \ub370\ub098\ubb34 \ud83c\udf84",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/boostcampwm-2024/web05-Denamu",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-06-02T19:34:29Z"
+  "distributed_at": "2026-06-02T19:51:50Z"
 }
