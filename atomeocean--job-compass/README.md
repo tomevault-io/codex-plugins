@@ -7,14 +7,14 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [atomeocean/job-compass](https://github.com/atomeocean/job-compass).
+Original source: `CLAUDE.md` in [atomeocean/job-compass](https://github.com/atomeocean/job-compass).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 From [atomeocean/job-compass](https://github.com/atomeocean/job-compass) — a repo with 16+ stars on GitHub.
