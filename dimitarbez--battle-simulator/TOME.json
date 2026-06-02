@@ -1,0 +1,44 @@
+{
+  "name": "battle-simulator",
+  "owner": "dimitarbez",
+  "repo": "battle-simulator",
+  "description": "Welcome to the Battle Simulator, a real-time strategy game where two armies clash on a battlefield. Customize your soldiers, manage resources, and watch the action unfold as your troops battle for victory. This game is built using React, featuring dynamic animations and custom AI behaviors.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/dimitarbez/battle-simulator",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-06-02T22:42:17Z"
+}
