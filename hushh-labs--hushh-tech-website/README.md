@@ -7,13 +7,13 @@ Public Hushh web/app wrapper for product surfaces, API integrations, Supabase wo
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [hushh-labs/hushh_Tech_website](https://github.com/hushh-labs/hushh_Tech_website).
+Original source: `.cursor/rules/*.mdc` in [hushh-labs/hushh_Tech_website](https://github.com/hushh-labs/hushh_Tech_website).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
