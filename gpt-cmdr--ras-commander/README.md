@@ -7,13 +7,13 @@ The RAS-Commander library provides a python API for automating HEC-RAS 6.x and a
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [gpt-cmdr/ras-commander](https://github.com/gpt-cmdr/ras-commander).
+Original source: `CLAUDE.md` in [gpt-cmdr/ras-commander](https://github.com/gpt-cmdr/ras-commander).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
