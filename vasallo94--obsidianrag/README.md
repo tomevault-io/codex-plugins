@@ -7,12 +7,12 @@ Ask questions about your Obsidian notes using local AI. Privacy-first RAG with O
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [Vasallo94/ObsidianRAG](https://github.com/Vasallo94/ObsidianRAG).
+Original source: `CLAUDE.md` in [Vasallo94/ObsidianRAG](https://github.com/Vasallo94/ObsidianRAG).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
