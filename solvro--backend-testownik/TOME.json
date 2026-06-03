@@ -1,0 +1,44 @@
+{
+  "name": "backend-testownik",
+  "owner": "Solvro",
+  "repo": "backend-testownik",
+  "description": "Backend platformy Testownik - aplikacji do tworzenia, rozwi\u0105zywania i udost\u0119pniania quiz\u00f3w dla student\u00f3w. Projekt rozwijany przez KN Solvro (PWr) wspieraj\u0105cy efektywn\u0105 nauk\u0119 i przygotowanie do egzamin\u00f3w.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/Solvro/backend-testownik",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-06-03T12:35:15Z"
+}
