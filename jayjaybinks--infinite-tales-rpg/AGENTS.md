@@ -1,4 +1,3 @@
-
 Modible Project Standards
 
 Version Numbers
@@ -36,7 +35,6 @@ Svelte Components
 Use .svelte extension for Svelte components
 Use TypeScript syntax in <script> tags:
 svelteCopy
-
 <script lang="ts">
   // TypeScript code here
 </script>
@@ -52,9 +50,9 @@ Typing
 Use TypeScript for type definitions
 Create interfaces or types for component props:
 typescriptCopy
-interface MyComponentProps {
-someValue: string;
-optionalValue?: number;
+interface MyComponentProps { 
+  someValue: string; 
+  optionalValue?: number;
 }
 
 Imports
@@ -76,7 +74,6 @@ Utilize Tailwind's utility classes directly in the markup
 For complex components, consider using Tailwind's @apply directive in a scoped <style> block
 Use dynamic classes with template literals when necessary:
 svelteCopy
-
 <div class={`bg-blue-500 p-4 ${isActive ? 'opacity-100' : 'opacity-50'}`}></div>
 
 File Structure
@@ -125,8 +122,8 @@ Maintain up-to-date README files for the project and major components
 Use JSDoc comments for functions and complex logic
 Keep inline comments concise and meaningful
 
-I'm using svelte 5 instead of svelte 4 here is an overview of the changes.
 
+I'm using svelte 5 instead of svelte 4 here is an overview of the changes.
 # .cursorrunes for Svelte 5
 
 ## Overview of Changes
@@ -142,38 +139,38 @@ In Svelte 5, event handlers are treated as standard HTML properties rather than 
 ### Svelte 4 vs. Svelte 5:
 
 **Before (Svelte 4):**
-
 ```html
 <script>
-	let count = 0;
-	$: double = count * 2;
-	$: {
-		if (count > 10) alert('Too high!');
-	}
+  let count = 0;
+  $: double = count * 2;
+  $: {
+    if (count > 10) alert('Too high!');
+  }
 </script>
-<button on:click="{()" ="">count++}> {count} / {double}</button>
+<button on:click={() => count++}> {count} / {double}</button>
 ```
 
 **After (Svelte 5):**
-
 ```html
 <script>
-	import { $state, $effect, $derived } from 'svelte';
-
-	// Define state with runes
-	let count = $state(0);
-
-	// Option 1: Using $derived for computed values
-	let double = $derived(count * 2);
-
-	// Reactive effects using runes
-	$effect(() => {
-		if (count > 10) alert('Too high!');
-	});
+  import { $state, $effect, $derived } from 'svelte';
+  
+  // Define state with runes
+  let count = $state(0);
+  
+  // Option 1: Using $derived for computed values
+  let double = $derived(count * 2);
+  
+  // Reactive effects using runes
+  $effect(() => {
+    if (count > 10) alert('Too high!');
+  });
 </script>
 
 <!-- Standard HTML event attributes instead of Svelte directives -->
-<button onclick="{()" ="">count++}> {count} / {double}</button>
+<button onclick={() => count++}>
+  {count} / {double}
+</button>
 
 <!-- Alternatively, you can compute values inline -->
 <!-- <button onclick={() => count++}>
@@ -183,19 +180,16 @@ In Svelte 5, event handlers are treated as standard HTML properties rather than 
 
 ## Key Differences:
 
-1. **Reactivity is Explicit**:
-
+1. **Reactivity is Explicit**: 
    - Svelte 5 uses `$state()` to explicitly mark reactive variables
-   - `$derived()` replaces `$:` for computed values
+   - `$derived()` replaces `$:` for computed values 
    - `$effect()` replaces `$: {}` blocks for side effects
 
 2. **Event Handling is Standardized**:
-
    - Svelte 4: `on:click={handler}`
    - Svelte 5: `onclick={handler}`
 
-3. **Import Runes**:
-
+3. **Import Runes**: 
    - All runes must be imported from 'svelte': `import { $state, $effect, $derived, $props, $slots } from 'svelte';`
 
 4. **No More Event Modifiers**:
