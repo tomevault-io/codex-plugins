@@ -1,9 +1,8 @@
-Project-specific agent instructions live in `AGENTS.md` at the repository root.
 
-Always read and follow `AGENTS.md` before making changes.
+# Recent Debugging Gotchas
 
-If a change affects ranking logic, Ultimate League ordering, or any other behavior documented there, update `AGENTS.md` in the same change.
+- Session debug logs for this repo may end up in `.cursor/debug-<session>.log` instead of the workspace root. If the expected log file is missing, check there before assuming logging failed.
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/nopara73) — claim your Tome and manage your conversions.
-<!-- tomevault:4.0:agents_md:2026-04-09 -->
+> Source: [nopara73/LongevityWorldCup](https://github.com/nopara73/LongevityWorldCup) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-06-03 -->
