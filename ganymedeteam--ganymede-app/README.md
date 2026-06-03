@@ -5,12 +5,12 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [GanymedeTeam/ganymede-app](https://github.com/GanymedeTeam/ganymede-app).
+Original source: `CLAUDE.md` in [GanymedeTeam/ganymede-app](https://github.com/GanymedeTeam/ganymede-app).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
