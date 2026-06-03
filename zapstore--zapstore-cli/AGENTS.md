@@ -1,61 +1,40 @@
 
-# Go Conventions
+# zapstore-cli — Invariants
 
-## Style
+## Verification
 
-- Standard library style. Run `gofmt`. No third-party linters beyond `go vet`.
-- Use `internal/` for private packages. Public API surface should be minimal.
-- Prefer flat package structure within `internal/` — one package per concern, not deep nesting.
-- Reference existing patterns in the same project before inventing new ones.
+- A binary MUST NEVER be installed unless its SHA-256 hash matches the `x` tag in the signed asset event (3063).
+- Hash verification must happen after download, before any filesystem placement.
+- Signed Nostr events must be signature-verified before their content is trusted.
 
-## Error Handling
+## Version Comparison
 
-- Wrap errors with `fmt.Errorf("context: %w", err)` — always add context.
-- Return errors; don't panic. Panics are only acceptable for programmer bugs (unreachable code).
-- Use `errors.Is` / `errors.As` for sentinel and typed error checks.
-- Define sentinel errors as package-level `var ErrFoo = errors.New("foo")`.
+- Update availability MUST be determined solely by comparing `version_code` integers.
+- Never compare version name strings (semver, etc.) for update logic.
+- If either the installed or available `version_code` is missing, do not consider it an update.
 
-## Testing
+## Filesystem Safety
 
-- Table-driven tests. Name subtests clearly.
-- Test files live next to the code they test (`foo_test.go` beside `foo.go`).
-- Use `testdata/` for fixtures.
-- No test frameworks — standard `testing` package only.
+- Partial downloads must be written to a temp path and moved atomically on success.
+- A failed or interrupted install must never leave a partial binary in the packages directory.
+- Symlinks must point to the correct versioned binary after every install/update.
 
-## Dependencies
+## Output
 
-- Prefer the standard library. Add a dependency only when it saves significant complexity.
-- All projects use `github.com/nbd-wtf/go-nostr` for Nostr operations.
-- Pin dependency versions via `go.sum`. Run `go mod tidy` after changes.
+- Status messages (progress, errors) go to stderr.
+- Data output (`list --json`, `search --json`) goes to stdout.
+- `--quiet` mode suppresses all stderr output except errors.
+- Exit 0 = success. Exit 1 = error.
 
-## Concurrency
+## Context Cancellation
 
-- Use `context.Context` for cancellation. Pass it as the first parameter.
-- Prefer `sync.WaitGroup` or `errgroup.Group` over bare goroutines.
-- No goroutine leaks — every goroutine must have a clear shutdown path.
-- Use channels for communication, mutexes for state protection. Don't mix.
+- Downloads and relay queries must respect `context.Context`.
+- Ctrl+C must cancel in-flight operations cleanly — no partial installs left behind.
 
-## Naming
+## Platform Filtering
 
-- Short, clear names. `src` not `sourceManager`. `cfg` not `configuration`.
-- Interfaces describe behavior: `Signer`, `Publisher`, not `ISignerInterface`.
-- Acronyms are all-caps: `URL`, `HTTP`, `APK`, `ID`.
-
-## Project Layout
-
-- `main.go` — entry point, minimal logic, delegates to `internal/`.
-- `internal/` — all business logic, one package per domain.
-- `testdata/` — test fixtures, config examples.
-- `Makefile` — build commands where applicable.
-
-## Build
-
-- Use `-ldflags` for version injection at build time.
-- Support `go install module@latest` with embedded build info fallback.
-- CGo is acceptable where needed (e.g. SQLite) but prefer pure Go when possible.
-- `make` (default `build` target) produces a single binary named after the project at the repo root.
-- `make all` cross-compiles for all supported platforms into `dist/` as `<binary>-<os>-<arch>`.
-- Always pass `-trimpath -ldflags '-s -w'` for reproducible, stripped binaries.
+- Only assets matching the current OS and architecture must be considered.
+- If no matching asset exists, fail with a clear "no compatible asset" error.
 
 ---
 > Source: [zapstore/zapstore-cli](https://github.com/zapstore/zapstore-cli) — distributed by [TomeVault](https://tomevault.io).
