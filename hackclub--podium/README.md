@@ -7,13 +7,13 @@ Podium is Hack Club's open-source peer-judging platform for hackathons
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [hackclub/podium](https://github.com/hackclub/podium).
+Original source: `CLAUDE.md` in [hackclub/podium](https://github.com/hackclub/podium).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
