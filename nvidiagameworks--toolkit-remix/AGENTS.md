@@ -1,5 +1,5 @@
 
-@.agents/rules/license.md
+@.agents/rules/memory-promotion.md
 
 ---
 > Source: [NVIDIAGameWorks/toolkit-remix](https://github.com/NVIDIAGameWorks/toolkit-remix) — distributed by [TomeVault](https://tomevault.io).
