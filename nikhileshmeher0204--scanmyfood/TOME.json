@@ -1,0 +1,44 @@
+{
+  "name": "ScanMyFood",
+  "owner": "nikhileshmeher0204",
+  "repo": "ScanMyFood",
+  "description": "Food Scan AI revolutionizes nutrition management with its smart features: \ud83d\udcf8 Scan food labels or cooked dishes for instant analysis, \ud83e\udd16 AI-powered insights into nutritional content, \ud83d\udcac Real-time AI chat with scanned food context, \ud83c\udf7d\ufe0f personalized dietary advice, and \ud83d\udcca Daily intake tracking to monitor nutrients and calories effortlessly",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/nikhileshmeher0204/ScanMyFood",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-06-03T18:34:31Z"
+}
