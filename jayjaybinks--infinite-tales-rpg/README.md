@@ -7,13 +7,13 @@ Interactive, choose-your-own-adventure RPG where the story is dynamically genera
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [JayJayBinks/infinite-tales-rpg](https://github.com/JayJayBinks/infinite-tales-rpg).
+Original source: `.cursor/rules/*.mdc` in [JayJayBinks/infinite-tales-rpg](https://github.com/JayJayBinks/infinite-tales-rpg).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
