@@ -1,0 +1,44 @@
+{
+  "name": "ubuntu-server-documentation",
+  "owner": "canonical",
+  "repo": "ubuntu-server-documentation",
+  "description": "Documentation for Ubuntu Server: https://documentation.ubuntu.com/server/",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/canonical/ubuntu-server-documentation",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-06-03T23:31:28Z"
+}
