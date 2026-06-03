@@ -1,0 +1,26 @@
+# AI instruction files for AirStack
+
+> Sourced from [castacks/AirStack](https://github.com/castacks/AirStack) and converted for every major platform by [TomeVault](https://tomevault.io)
+
+Boilerplate for robot autonomy. Designed for multi-robot, real world deployment with TAK.
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [castacks/AirStack](https://github.com/castacks/AirStack).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/castacks/AirStack](https://github.com/castacks/AirStack)
+
+---
+
+Explore more instruction files on [TomeVault](https://tomevault.io) — the open index of AI config files for every platform.
+
+<!-- genome:a-e-p -->
