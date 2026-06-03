@@ -1,5 +1,5 @@
 
-@.agents/rules/engineering-standards.md
+@.agents/rules/license.md
 
 ---
 > Source: [NVIDIAGameWorks/toolkit-remix](https://github.com/NVIDIAGameWorks/toolkit-remix) — distributed by [TomeVault](https://tomevault.io).
