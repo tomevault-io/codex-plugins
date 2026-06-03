@@ -1,6 +1,3 @@
-# Additional Conventions Beyond the Built-in Functions
-
-As this project's AI coding tool, you must follow the additional conventions below, in addition to the built-in functions.
 
 # CLAUDE.md
 
