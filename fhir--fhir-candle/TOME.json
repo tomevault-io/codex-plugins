@@ -4,7 +4,7 @@
   "repo": "fhir-candle",
   "description": "fhir-candle - A FHIR development and test server implemented in C#",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/FHIR/fhir-candle",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-06-03T18:36:48Z"
+  "distributed_at": "2026-06-03T18:46:48Z"
 }
