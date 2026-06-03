@@ -1,5 +1,5 @@
 
-@.agents/rules/code-style.md
+@.agents/rules/commands.md
 
 ---
 > Source: [NVIDIAGameWorks/toolkit-remix](https://github.com/NVIDIAGameWorks/toolkit-remix) — distributed by [TomeVault](https://tomevault.io).
