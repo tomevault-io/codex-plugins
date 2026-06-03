@@ -1,0 +1,44 @@
+{
+  "name": "MAA-for-Millennium-Tour",
+  "owner": "Ostwind23",
+  "repo": "MAA-for-Millennium-Tour",
+  "description": "\u3010\u5343\u5e74\u4e4b\u65c5MAA\u81ea\u52a8\u5316\u3011MAA for Millennium Tour",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/Ostwind23/MAA-for-Millennium-Tour",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-06-03T19:38:56Z"
+}
