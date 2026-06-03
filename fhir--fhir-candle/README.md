@@ -7,12 +7,12 @@ fhir-candle - A FHIR development and test server implemented in C#
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [FHIR/fhir-candle](https://github.com/FHIR/fhir-candle).
+Original source: `CLAUDE.md` in [FHIR/fhir-candle](https://github.com/FHIR/fhir-candle).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
