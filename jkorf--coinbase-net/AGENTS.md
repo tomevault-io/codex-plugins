@@ -1,14 +1,9 @@
-# Copilot Instructions for Coinbase.Net
 
-This repository is **Coinbase.Net**, a strongly typed C#/.NET client library for Coinbase Advanced Trade, selected Coinbase App REST endpoints, and Coinbase Exchange market data/WebSocket APIs. It is part of the CryptoExchange.Net ecosystem.
+# Coinbase.Net Conventions
 
-When generating code that consumes Coinbase.Net, follow these conventions.
+This codebase uses **Coinbase.Net** for Coinbase cryptocurrency exchange access. Do not write raw `HttpClient` calls to Coinbase endpoints.
 
-## Use Coinbase.Net, not raw HTTP
-
-Never generate raw `HttpClient` calls to Coinbase endpoints. Always use `CoinbaseRestClient` or `CoinbaseSocketClient` so signing, timestamps, rate limiting, response parsing, and reconnect behavior stay correct.
-
-## Client setup
+## Client Setup Pattern
 
 ```csharp
 using Coinbase.Net;
@@ -20,39 +15,42 @@ var restClient = new CoinbaseRestClient(options =>
 });
 ```
 
-For public market data only, credentials are optional:
+For public market data only, no credentials are needed: `new CoinbaseRestClient()`.
+
+## Result Pattern
+
+All REST calls return `WebCallResult<T>` and socket calls return `CallResult<T>`. Always check `.Success` before reading `.Data`:
 
 ```csharp
-var publicClient = new CoinbaseRestClient();
+var symbol = await restClient.AdvancedTradeApi.ExchangeData.GetSymbolAsync("ETH-USD");
+if (!symbol.Success) { return; }
+Console.WriteLine(symbol.Data.LastPrice);
 ```
 
-## Result handling
+For order placement, also check `order.Data.Success` after the transport result succeeds.
 
-REST methods return `WebCallResult<T>` and WebSocket subscription methods return `CallResult<UpdateSubscription>`. Always check `.Success` before reading `.Data`.
+## API Surface
 
-Order placement also has an exchange-level success flag:
-
-```csharp
-var order = await restClient.AdvancedTradeApi.Trading.PlaceOrderAsync(...);
-if (!order.Success) { return; }
-if (!order.Data.Success) { return; }
-```
-
-## API structure
-
-- `restClient.AdvancedTradeApi.ExchangeData` for products, candles, trades, order book, best bid/ask, prices, assets
-- `restClient.AdvancedTradeApi.Account` for accounts, portfolios, fees, key info, payment methods, deposits, withdrawals, transfers
-- `restClient.AdvancedTradeApi.Trading` for orders, fills, futures positions, perpetual positions
-- `restClient.AdvancedTradeApi.SharedClient` for CryptoExchange.Net shared REST abstractions
-- `restClient.ExchangeApi.ExchangeData` for Coinbase Exchange currencies and products
-- `socketClient.AdvancedTradeApi` for Advanced Trade ticker, trades, candles, level2, user, futures balance streams
-- `socketClient.ExchangeApi` for Exchange API heartbeat, ticker, status, level2 streams
+- `restClient.AdvancedTradeApi.ExchangeData`
+- `restClient.AdvancedTradeApi.Account`
+- `restClient.AdvancedTradeApi.Trading`
+- `restClient.AdvancedTradeApi.SharedClient`
+- `restClient.ExchangeApi.ExchangeData`
+- `socketClient.AdvancedTradeApi`
+- `socketClient.AdvancedTradeApi.SharedClient`
+- `socketClient.ExchangeApi`
 
 ## Symbols
 
-Use Coinbase product ids such as `ETH-USD`, `BTC-USD`, and `ETH-USDT`. Do not use `ETHUSDT`, `ETH_USDT`, `ETH/USD`, or `tETHUSD`.
+Use Coinbase product ids such as:
 
-## Order placement
+- `ETH-USD`
+- `BTC-USD`
+- `ETH-USDT`
+
+Do not use `ETHUSDT`, `ETH_USDT`, `ETH/USD`, or `tETHUSD`.
+
+## Order Placement
 
 ```csharp
 var order = await restClient.AdvancedTradeApi.Trading.PlaceOrderAsync(
@@ -63,11 +61,9 @@ var order = await restClient.AdvancedTradeApi.Trading.PlaceOrderAsync(
     price: 2000m);
 ```
 
-Let the library generate `clientOrderId` unless the user needs explicit idempotency or external correlation.
+Let the library generate `clientOrderId` unless a specific idempotency key is needed.
 
-## WebSocket pattern
-
-Store the returned `UpdateSubscription` and unsubscribe on shutdown:
+## WebSocket Pattern
 
 ```csharp
 var sub = await socketClient.AdvancedTradeApi.SubscribeToTickerUpdatesAsync(
@@ -78,24 +74,35 @@ if (!sub.Success) { return; }
 await socketClient.UnsubscribeAsync(sub.Data);
 ```
 
-## Cross-exchange
+Use `AdvancedTradeApi.SubscribeToUserUpdatesAsync` for authenticated order and position updates.
 
-For exchange-agnostic code, use `CryptoExchange.Net.SharedApis` through `.SharedClient`, for example `new CoinbaseRestClient().AdvancedTradeApi.SharedClient`.
+## Multi-Exchange Code
 
-## Avoid
+Use CryptoExchange.Net shared clients:
 
-- Raw Coinbase URLs and hand-written signing
-- Nonexistent roots such as `SpotApi`, `UsdFuturesApi`, `CoinFuturesApi`, `GeneralApi`, or `V5Api`
-- HMAC/passphrase credential examples
-- Synchronous `.Result` / `.Wait()`
-- Creating clients per request
-- Reading `.Data` before checking `.Success`
-- Ignoring `CoinbaseOrderResult.Success`
-- Non-Coinbase symbol formats
+```csharp
+var shared = new CoinbaseRestClient().AdvancedTradeApi.SharedClient;
+Console.WriteLine(shared.Exchange);
+```
+
+## Hard Rules
+
+- Never write raw `HttpClient` calls to Coinbase endpoints.
+- Never invent `SpotApi`, `UsdFuturesApi`, `CoinFuturesApi`, `GeneralApi`, or `V5Api` roots.
+- Never use `.Result` or `.Wait()`.
+- Never instantiate clients per request.
+- Never skip checking `WebCallResult.Success` or `CallResult.Success`.
+- Never ignore `CoinbaseOrderResult.Success` on order placement.
+- Never use HMAC/passphrase credentials; use `CoinbaseCredentials(keyName, ecPrivateKey)`.
+- Never use non-Coinbase symbol formats.
+- Always store WebSocket subscriptions and unsubscribe on shutdown.
 
 ## Reference
 
-For detailed patterns and pitfalls see `AGENTS.md`, `llms.txt`, `llms-full.txt`, and `docs/ai-api-map.md` in the repository root. Compilable examples live in `Examples/ai-friendly/`.
+- Skill: `AGENTS.md` in the repository root has fuller examples.
+- LLM context: `llms.txt` and `llms-full.txt` in the repository root.
+- API map: `docs/ai-api-map.md`.
+- Examples: `Examples/ai-friendly/`.
 
 ---
 > Source: [JKorf/Coinbase.Net](https://github.com/JKorf/Coinbase.Net) — distributed by [TomeVault](https://tomevault.io).
