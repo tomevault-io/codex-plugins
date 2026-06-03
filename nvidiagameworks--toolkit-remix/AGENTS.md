@@ -1,5 +1,5 @@
 
-@.agents/rules/completion-gates.md
+@.agents/rules/engineering-standards.md
 
 ---
 > Source: [NVIDIAGameWorks/toolkit-remix](https://github.com/NVIDIAGameWorks/toolkit-remix) — distributed by [TomeVault](https://tomevault.io).
