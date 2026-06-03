@@ -1,0 +1,26 @@
+# rde-urdf
+
+> Tome by [Ranch-Hand-Robotics](https://github.com/Ranch-Hand-Robotics/rde-urdf) — distributed by [TomeVault](https://tomevault.io)
+
+Standalone URDF Editor for VSCode
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `copilot-instructions.md` in [Ranch-Hand-Robotics/rde-urdf](https://github.com/Ranch-Hand-Robotics/rde-urdf).
+
+## Also available for
+
+- **Claude Code** — `CLAUDE.md`
+- **Codex** — `AGENTS.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+From [Ranch-Hand-Robotics/rde-urdf](https://github.com/Ranch-Hand-Robotics/rde-urdf) — a repo with 15+ stars on GitHub.
+
+---
+
+Explore more instruction files on [TomeVault](https://tomevault.io) — the open index of AI config files for every platform.
+
+<!-- genome:t-e-s -->
