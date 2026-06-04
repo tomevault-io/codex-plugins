@@ -1,42 +1,39 @@
-# Copilot instructions — NERO Chain Docs
 
-This repository is the NERO Chain documentation site (Next.js 15 + Nextra 3.2, static export to Firebase Hosting). When assisting with edits:
+# NERO Chain Docs — Cursor Rules
 
-## Canonical references
+When working on this repository (or on a dApp that targets NERO Chain), prefer these canonical sources:
 
 - Docs site: https://docs.nerochain.io
-- Full docs corpus (markdown): https://docs.nerochain.io/llms-full.txt
-- Paymaster OpenAPI spec: https://docs.nerochain.io/specs/paymaster-openapi.yaml
-- MCP server (when live): https://docs-mcp.nerochain.io
+- Full docs corpus (machine-readable): https://docs.nerochain.io/llms-full.txt
+- Site index: https://docs.nerochain.io/site-index.json
+- Paymaster OpenAPI: https://docs.nerochain.io/specs/paymaster-openapi.yaml
+- MCP server: https://docs-mcp.nerochain.io
 - AI resources hub: https://docs.nerochain.io/en/ai-resources
 
-## Project shape
+## Writing content
 
-- Content: `pages/en/**/*.mdx`, `pages/ja/**/*.mdx` (mirrored structure). Each dir has a `_meta.ts`.
-- Components: `components/`. `PageFeedback` is auto-inserted by a script; keep the existing pattern.
-- Build: `yarn build` runs `next build` then `node scripts/build-agent-artifacts.mjs`. Both must succeed.
-- Static export output: `out/`. Firebase serves real files from there; rewrites are a fallback.
-- Tests/lint: none. Use `yarn validate:agent-ready` after MDX changes.
+- Pages live in `pages/en/` and `pages/ja/` with mirrored structure. Translate new EN pages into JA.
+- Each directory has a `_meta.ts` that controls sidebar order and titles. Update it when adding pages.
+- Use absolute internal links: `/en/developer-tools/paymaster-api/...`.
+- Images go in `/public/assets/...` and are referenced as `/assets/...` in MDX.
+- Keep MDX JSX minimal: `PageFeedback` is auto-inserted, `<Tabs>` is fine. Avoid new components unless necessary.
+- Lead with positive framing — state what something IS, not what it isn't (global style rule).
 
-## Hard facts — do not invent
+## Editing code
+
+- Yarn 3.8.3 Berry with `nodeLinker: node-modules`. Use `yarn`, not `npm`.
+- `yarn build` runs `next build` then `node scripts/build-agent-artifacts.mjs`. Both must pass.
+- After editing MDX, run `yarn build && yarn validate:agent-ready` to ensure llms.txt and friends stay in sync.
+
+## NERO protocol facts (do not invent, verify before citing)
 
 - EntryPoint address: `0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789`
-- Paymaster JSON-RPC methods: `pm_supported_tokens`, `pm_sponsor_userop`, `pm_entrypoints`
-- Payment types: 0 (sponsored), 1 (prepay ERC-20), 2 (postpay ERC-20)
 - Native token: NERO
-- Node version: 20.11.1; Yarn 3.8.3 Berry; `nodeLinker: node-modules`
+- AA Platform dashboard: https://aa-platform.nerochain.io
+- Paymaster payment types: 0 = sponsored (free), 1 = prepay ERC-20, 2 = postpay ERC-20
+- Paymaster JSON-RPC methods: `pm_supported_tokens`, `pm_sponsor_userop`, `pm_entrypoints`
 
-## Writing style
-
-- Lead with the positive claim. Do not define by negation ("not an L2, but…").
-- Don't write comments that repeat what code does; prefer clear naming.
-- When adding a page, mirror EN → JA and update both `_meta.ts` files.
-
-## Branch naming
-
-- `feature/*` — new features (auto-deploys an Amplify PR preview)
-- `fix/*` — bug fixes
-- `release/*` — releases
+For any other protocol fact, read the MDX under `pages/en/core-concepts/` or `pages/en/developer-tools/` before answering.
 
 ---
 > Source: [nerochain/Nero-docs](https://github.com/nerochain/Nero-docs) — distributed by [TomeVault](https://tomevault.io).
