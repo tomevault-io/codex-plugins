@@ -1,7 +1,10 @@
 
-# Global Copilot Instructions
+# AI Agent Guidelines
 
-This file is the **thin router** - it tells you what to load and when. It loads every conversation, so it stays small.
+> **Single source of truth for repository workflow guidance.**
+
+> **Map to all AgentX resources.** For workflow details, see [docs/WORKFLOW.md](docs/WORKFLOW.md).
+> For agent role definitions, see individual files in `.github/agents/`.
 
 ---
 
@@ -14,44 +17,163 @@ If a skill, spec, or doc exists in the workspace, read it first; generate second
 
 ---
 
-## Context Loading Rules
+## Quick Reference
 
-**Load context on-demand, not upfront.** Match the task to the right documents:
+### Issue-First Rule
 
-| Task | Load | Skip |
-|------|------|------|
-| Writing/editing code in existing files | [AGENTS.md](../AGENTS.md) + Language instruction (auto via `applyTo`) + relevant skills | Skills not matching task |
-| Creating new files, features, issues | [AGENTS.md](../AGENTS.md) (workflow + classification) | Skills not matching task |
-| Multi-agent coordination, handoffs | [AGENTS.md](../AGENTS.md) + [docs/WORKFLOW.md](../docs/WORKFLOW.md) | Unrelated skills |
-| Answering questions, research | Nothing extra - use tools | AGENTS.md, Skills.md |
-| Debugging | Language instruction + error handling skill | AGENTS.md |
+Every piece of work SHOULD start with an issue. See [docs/WORKFLOW.md](docs/WORKFLOW.md) for full flow.
 
-**Token budget**: Load max **3-4 skills** per task (~20K tokens). Use [Skills.md Quick Reference](../Skills.md) to pick the right ones.
+```bash
+# GitHub Mode
+gh issue create --title "[Story] Add /health" --label "type:story"  # Creates #42
+git commit -m "feat: add health endpoint (#42)"
+
+# Local Mode (issues optional by default)
+git commit -m "feat: add user login"
+```
+
+Toggle enforcement: `.agentx/agentx.ps1 config set enforceIssues true`
+
+### Classification
+
+| Type | Label | Route To |
+|------|-------|----------|
+| Broken? | `type:bug` | Engineer |
+| Research? | `type:spike` | Architect |
+| Docs only? | `type:docs` | Engineer |
+| Pipeline/deploy? | `type:devops` | DevOps Engineer |
+| ML/AI/eval? | `type:data-science` | Data Scientist |
+| Testing/cert? | `type:testing` | Tester |
+| Power BI? | `type:powerbi` | Power BI Analyst |
+| Large/vague? | `type:epic` | Product Manager |
+| Single capability? | `type:feature` | Architect |
+| Otherwise | `type:story` | Engineer |
+
+### Commit Format
+
+```
+type: description (#issue-number)
+```
+
+Types: `feat`, `fix`, `docs`, `test`, `refactor`, `perf`, `chore`
+
+For final delivery in GitHub mode, plain `(#123)` is traceability only. Use `fixes #123`, `closes #123`, or `resolves #123` in the final PR body or delivery commit so GitHub closes the issue automatically.
+
+### Security Checklist
+
+- [PASS] No hardcoded secrets
+- [PASS] SQL parameterization (NEVER concatenate)
+- [PASS] Input validation on all endpoints
+- [PASS] Dependencies scanned
+- Blocked commands: `rm -rf /`, `git reset --hard`, `drop database`
+
+### Local Files First Rule
+
+All agents MUST create deliverable files locally using `editFiles` -- MUST NOT use `mcp_github_create_or_update_file` or `mcp_github_push_files` to push files directly to GitHub. Users must be able to review files locally before committing.
+
+### Quality Loop Hard Rule
+
+> HARD RULE: Every agent MUST run `.agentx/agentx.ps1 loop start -p "<task description>"` as the ABSOLUTE FIRST action before any file edit or tool call. Minimum 5 iterations means at least 5 loop passes before completion is allowed; the loop is NOT done until `.agentx/agentx.ps1 loop complete -s "<summary>"` succeeds. No exceptions. The pre-commit hook blocks review artifacts when no completed loop exists.
+
+### Compound Engineering Hard Rule
+
+> HARD RULE: Every agent MUST resolve Compound Capture before declaring work Done. After delivery and review are complete, classify the capture decision:
+> - **Mandatory**: Work produces reusable workflow, architecture, review, or operator guidance -> create `docs/artifacts/learnings/LEARNING-<issue>.md`
+> - **Optional**: Narrow or low-leverage work -> capture is helpful but not required
+> - **Skip**: Trivial, transient, or duplicated -> record skip rationale in the issue close comment
+>
+> Work is NOT Done until Compound Capture is resolved. The pre-commit hook validates LEARNING file structure when staged. See [docs/WORKFLOW.md](docs/WORKFLOW.md) for the full Compound Capture contract.
+
+### Pipeline Phase Compliance Hard Rule
+
+> HARD RULE: Every agent MUST follow their prescribed pipeline phases IN SEQUENCE. No phase may be skipped. Each phase has a completion gate -- the gate MUST pass before advancing to the next phase. Agents MUST NOT write deliverables before completing research phases, MUST NOT implement before planning, MUST NOT approve before verifying all checks.
+>
+> See the Role Pipeline Reference table (below the Agents table) for each role's phases and key delivery gate. The pre-commit hook validates deliverable structure for key artifacts (PRD, ADR, UX). Use `.agentx/agentx.ps1 workflow <agent>` to print the phase list for any role.
+
+### CLI Quick Reference
+
+```powershell
+.\.agentx\agentx.ps1 loop start -p "Task description"  # FIRST command - start before any work
+.\.agentx\agentx.ps1 loop iterate -s "Progress summary"  # After each verification pass
+.\.agentx\agentx.ps1 loop complete -s "All gates passed"  # LAST command - required before handoff
+.\.agentx\agentx.ps1 ready                    # Show unblocked work
+.\.agentx\agentx.ps1 state -a engineer -s working -i 42
+.\.agentx\agentx.ps1 deps 42                  # Check blockers
+.\.agentx\agentx.ps1 workflow engineer        # Show workflow steps
+.\.agentx\agentx.ps1 loop status                # Check quality loop status
+.\.agentx\agentx.ps1 config show               # View configuration
+```
 
 ---
 
-## When to Read AGENTS.md
+## Agents (21 total)
 
-Read [AGENTS.md](../AGENTS.md) for **any coding or workflow task** - it contains classification, commit format, and security checklist. For workflow details, routing, and handoff rules, see [docs/WORKFLOW.md](../docs/WORKFLOW.md).
+Agent definitions live in `.github/agents/*.agent.md` (13 visible) and `.github/agents/internal/*.agent.md` (8 internal sub-agents). Each file contains the role's constraints, boundaries, deliverables, and self-review checklist.
 
-> **Skip AGENTS.md** for: answering questions, research, and debugging only.
+| Agent | File | Deliverable |
+|-------|------|-------------|
+| Agent X (Hub) | `agent-x.agent.md` | Autonomous orchestration and direct execution across the full workflow |
+| Product Manager | `product-manager.agent.md` | PRD at `docs/artifacts/prd/` |
+| UX Designer | `ux-designer.agent.md` | Wireframes + HTML prototypes at `docs/ux/` |
+| Architect | `architect.agent.md` | ADR + Tech Specs at `docs/artifacts/adr/`, `docs/artifacts/specs/` |
+| Engineer | `engineer.agent.md` | Code + Tests (80% coverage) |
+| Reviewer | `reviewer.agent.md` | Review at `docs/artifacts/reviews/` (code reviews + standalone architecture doc reviews) |
+| Auto-Fix Reviewer | `reviewer-auto.agent.md` | Review + safe auto-fixes |
+| DevOps Engineer | `devops.agent.md` | Pipelines at `.github/workflows/` |
+| Data Scientist | `data-scientist.agent.md` | ML pipelines + evals at `docs/data-science/` |
+| Tester | `tester.agent.md` | Test suites + certification at `docs/testing/` |
+| Power BI Analyst | `powerbi-analyst.agent.md` | Reports at `reports/`, `datasets/` |
+| Consulting Research | `consulting-research.agent.md` | Research briefs at `docs/coaching/` |
+| Agile Coach | `agile-coach.agent.md` | Stories at `docs/coaching/` |
+
+**Internal sub-agents** (spawned by parent agents, not user-invokable):
+GitHub Ops, ADO Ops, AzDO PRD to WIT, Functional Reviewer, Architecture Reviewer, Prompt Engineer, Eval Specialist, Ops Monitor, RAG Specialist.
 
 ---
 
-## Issue-First Rule
+## Role Pipeline Reference
 
-When AGENTS.md applies (see above), follow the issue-first workflow:
-1. Create issue **before** starting work (no retroactive issues)
-2. Update status: `Backlog -> In Progress -> In Review -> Done`
-3. Reference issue in commits: `type: description (#ID)`
+Each role follows a prescribed phase pipeline. All phases are mandatory. No phase may be skipped without an explicit documented reason. The pre-commit hook validates artifact structure for PRD, ADR, and UX deliverables as a mechanical enforcement layer.
 
-> **Note**: In Local Mode, issue enforcement is **optional** by default. Toggle with `agentx config set enforceIssues true`.
+| Role | Pipeline Phases (in order) | Key Delivery Gate |
+|------|---------------------------|-------------------|
+| **Agent X (Hub)** | Classify -> Route -> Execute specialist phases -> Validate handoffs | All specialist phase gates pass before advancing |
+| **Product Manager** | Research (5 phases) -> Classify Intent -> Model Council (prd-scope) -> PRD -> Backlog (Epic, Feature, User Stories) -> Self-Review -> Commit | PRD has all required sections; Backlog items (Epic, Features, User Stories) linked to PRD; Model Council convened or skip rationale recorded |
+| **UX Designer** | Read PRD -> Design Research -> UX Spec -> HTML/CSS Prototypes -> Self-Review -> Commit | WCAG 2.1 AA prototypes exist at `docs/ux/prototypes/` |
+| **Architect** | Research (6 phases) -> ADR (3+ options) -> Model Council (adr-options) -> Tech Spec -> AI Spec Alignment (if `needs:ai`) -> PM Fit Validation -> GenAI Assessment -> Self-Review -> Commit | ADR + Spec exist; ADR Decision matches a council-consensus option (or override rationale documented); AI-bearing specs include Data Scientist implementation-depth alignment; PM requirement-fit validation complete; zero code examples in Spec |
+| **Engineer** | Research -> Brainstorm -> Plan -> Design -> Conditional Design Alignment -> Implement -> Test -> Review | Loop complete + coverage >=80% + score >=70% + required Architect/Data Scientist alignment captured |
+| **Reviewer** | Read Context -> Verify Loop -> Functional Review -> Code Review -> Run Tests -> Model Council (code-review) -> Write Review -> Decision | Review doc complete; approval/rejection explicitly stated; Model Council convened or skip rationale recorded; Findings/Severity/Decision reflect council Synthesis (or override rationale documented) |
+| **Auto-Fix Reviewer** | Read Context -> Verify Loop -> Review Code -> Apply Safe Fixes -> Document -> Self-Review -> Decision | All auto-fixes pass full test suite; review doc complete |
+| **DevOps Engineer** | Read Context -> Design Pipeline -> Implement Workflows -> Validate -> Self-Review -> Commit | Pipelines pass lint + execution; deployment docs updated |
+| **Data Scientist** | Research (6 phases) -> Model Council (ai-design) -> Pipeline Design -> Eval Plan -> Implementation -> Drift Monitoring -> Self-Review -> Commit | Eval baseline + model card exist; Model Council convened or skip rationale recorded |
+| **Tester** | Read Context -> Write Tests -> Execute Suite -> Report Defects -> Certification Report -> Commit | Test pyramid complete; certification report signed off |
+| **Power BI Analyst** | Read Context -> Semantic Model -> DAX Measures -> Power Query -> Report Layout -> Optimize -> Docs -> Self-Review -> Commit | Semantic model validated; DAX measures tested |
+| **Consulting Research** | Understand Request -> Research (7 phases) -> Model Council (research) -> Calibrate Audience -> Create Deliverable | All key claims sourced + triangulated; deliverable complete; Model Council convened or skip rationale recorded |
+| **Agile Coach** | Mode Selection -> Create/Refine/Decompose Story -> Confirm -> Output | INVEST criteria met; ACs in Given/When/Then format |
 
 ---
 
-## Instruction Files (Auto-Loaded)
+## Deep References
 
-These load automatically when editing matching files - no manual action needed:
+| Document | Purpose |
+|----------|---------|
+| [docs/WORKFLOW.md](docs/WORKFLOW.md) | Workflow, routing, handoff, status transitions, architecture |
+| [Skills.md](Skills.md) | 75 production code skills index (load max 3-4 per task) |
+| [docs/GUIDE.md](docs/GUIDE.md) | Quickstart, setup, troubleshooting, local mode |
+| [docs/QUALITY_SCORE.md](docs/QUALITY_SCORE.md) | Graded quality assessment of every component |
+| [docs/GOLDEN_PRINCIPLES.md](docs/GOLDEN_PRINCIPLES.md) | Mechanical rules enforced by linters and agents |
+| [docs/tech-debt-tracker.md](docs/tech-debt-tracker.md) | Known gaps and deferred work |
+| `.github/agents/` | 21 agent definition files |
+| `.github/skills/` | 75 skill files across 10 categories |
+| `.github/instructions/` | 7 instruction files (auto-loaded by file pattern) |
+| `.github/schemas/` | Handoff message JSON Schema + communication protocol |
+| `.github/templates/` | 13 templates (PRD, ADR, Spec, UX, Review, Arch Review, Security Plan, Progress, Roadmap, Exec Plan, Contract, Evidence Summary, Backlog) |
+| `.github/prompts/` | 21 reusable prompt templates |
+| `.agentx/` | CLI utilities (agentx.ps1, agentx.sh, agentic-runner.ps1) |
+| `scripts/modules/` | Shared PowerShell modules |
+| `packs/` | Agent pack bundles |
+
+### Instruction Files (Auto-Loaded)
 
 | Instruction | Triggers on |
 |-------------|-------------|
@@ -60,51 +182,21 @@ These load automatically when editing matching files - no manual action needed:
 | `csharp.instructions.md` | `*.cs`, `*.csx` |
 | `typescript.instructions.md` | `*.ts` (backend/server TypeScript) |
 | `react.instructions.md` | `*.tsx`, `*.jsx`, `components/`, `hooks/` |
-
-For file types not listed above, load the matching **skill** on demand from [Skills.md](../Skills.md):
-`*.tf`/`*.tfvars` -> `infrastructure/terraform`, `*.bicep`/`*.bicepparam` -> `infrastructure/bicep`,
-`*.razor` -> `languages/blazor`, `*.sql` -> `languages/sql-server` + `languages/postgresql`,
-`*.yml`/`*.yaml` -> `operations/yaml-pipelines` + `operations/github-actions-workflows`,
-`Controllers/`/`api/` -> `architecture/api-design`, `**/ux/**` -> `design/ux-ui-design`.
+| `memory.instructions.md` | `**` (all files) |
+| `project-conventions.instructions.md` | `**` (all files) |
 
 ---
-
-## Session State
-
-- `manage_todo_list` - Track tasks within current session
-- `get_changed_files` - Review uncommitted work before commits
-- `get_errors` - Check compilation state after changes
-
----
-
-## Reference
-
-- **Workflows & Agent Roles**: [AGENTS.md](../AGENTS.md) (map) + [docs/WORKFLOW.md](../docs/WORKFLOW.md) (workflow details)
-- **Skills Index**: [Skills.md](../Skills.md) (use Quick Reference to pick skills)
-- **Quality & Debt**: [docs/QUALITY_SCORE.md](../docs/QUALITY_SCORE.md) | [docs/tech-debt-tracker.md](../docs/tech-debt-tracker.md)
-- **Golden Principles**: [docs/GOLDEN_PRINCIPLES.md](../docs/GOLDEN_PRINCIPLES.md)
-- **Frontmatter Validation**: `pwsh scripts/validate-frontmatter.ps1`
 
 ## ASCII-Only Rule
 
-All source code, scripts, configuration files, and documentation in this repository **MUST** use ASCII characters only (U+0000-U+007F). This applies to all `.ps1`, `.sh`, `.py`, `.ts`, `.js`, `.yml`, `.yaml`, `.json`, and `.md` files.
-
-- **MUST NOT** use emoji, Unicode symbols, box-drawing characters, or any non-ASCII characters
-- **MUST** use ASCII equivalents: `[PASS]` not check marks, `[FAIL]` not cross marks, `[WARN]` not warning symbols, `->` not arrows, `+=-|` not box-drawing, `"` not smart quotes
-- **MUST** use plain ASCII dashes (`-`) instead of em-dashes or en-dashes
-- **MUST** use `[1]`, `[2]`, `[3]` instead of circled numbers
-
-This ensures cross-platform compatibility and prevents encoding issues in terminals, CI/CD pipelines, and editors.
-
----
+All source code, scripts, configuration files, and documentation MUST use ASCII characters only (U+0000-U+007F). Use `[PASS]` not checkmarks, `[FAIL]` not cross marks, `->` not arrows, `-` not em-dashes.
 
 ## Directive Language (RFC 2119)
 
-All instruction files use RFC 2119 keywords:
 - **MUST** / **MUST NOT** - Absolute requirement or prohibition
 - **SHOULD** / **SHOULD NOT** - Strong recommendation (exceptions need justification)
-- **MAY** - Truly optional, at developer discretion
+- **MAY** - Truly optional
 
 ---
 > Source: [jnPiyush/AgentX](https://github.com/jnPiyush/AgentX) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-05-03 -->
+<!-- tomevault:4.0:agents_md:2026-06-04 -->
