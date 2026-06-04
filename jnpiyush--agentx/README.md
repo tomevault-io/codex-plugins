@@ -7,15 +7,19 @@ AgentX - Digital Force for Software Delivery
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [jnPiyush/AgentX](https://github.com/jnPiyush/AgentX).
+Original source: `CLAUDE.md` in [jnPiyush/AgentX](https://github.com/jnPiyush/AgentX).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
+
+## Bundled Skills (1)
+
+- [ai-agent-development](https://github.com/jnPiyush/AgentX/tree/main/.github/skills/ai-systems/ai-agent-development)
 
 From [jnPiyush/AgentX](https://github.com/jnPiyush/AgentX) — a repo with 11+ stars on GitHub.
 
