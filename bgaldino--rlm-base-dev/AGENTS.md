@@ -1,31 +1,36 @@
-# Copilot Instructions — Revenue Cloud Base Foundations
 
-This repository uses `AGENTS.md` (at the repo root) as the canonical
-AI agent instructions file. Read it for:
+# Apex Script Rules
 
-- Project overview and technology stack
-- Safety-critical DO NOT rules
-- SFDMU v5 compliance rules
-- Org identity (CCI vs SF CLI aliases)
-- Common workflows and PR review checklist
-- Skill index with detailed guides for every task type
+## DO NOT
 
-## Quick Start
+- Write SOQL inside loops (query once, iterate results)
+- Use single-record DML in loops (`update record;`) — use `update records;`
+- Delete PUR/PUG/RateCardEntry without deactivating first
+- Delete rating data before deleting rates data (FK constraint)
 
-1. Read `AGENTS.md` at the repo root
-2. Find the relevant skill in the Skill Index section
-3. Read that skill's `SKILL.md` for detailed guidance
-4. Use **Skill Sub-Files** (listed in `AGENTS.md`) for focused topics — e.g. Robot setup UI + shadow DOM (`.cursor/skills/robot-testing/setup-ui-shadow-dom.md`), UX assembly vs retrieve (`.cursor/skills/repo-integration/ux-assembly-retrieve.md`)
-5. Before a PR: follow **Pre-merge checklists for AI agents** in `AGENTS.md` (SFDMU, `cumulusci.yml`, merge diffs)
+## Bulk Safety
+- No SOQL inside loops — query once, iterate over results
+- Use `update records;` (bulk DML on list), never `update record;` inside a loop
+- Use `Database.update(records, false)` for partial success where appropriate
 
-## Entry Points
+## Activation Ordering
+- Rating objects (PUR, PUG) require specific platform activation ordering
+- See `activateRatingRecords.apex` for the 7-step pattern
+- Always set `Status = 'Active'` (or equivalent) — don't assume records activate automatically
 
-| File | Purpose |
-|------|---------|
-| `AGENTS.md` | Canonical AI agent instructions |
-| `.cursor/skills/*/SKILL.md` | Detailed per-topic guides (plain markdown) |
-| `.cursor/rules/*.mdc` | Cursor-specific auto-injection rules |
-| `scripts/ai/` | AI utility scripts (ERD query, CCI reference generator) |
+## Deactivation Before Deletion
+- PUR, PUG, RateCardEntry require deactivation before deletion
+- Pattern: query active records → set Status to Draft/Inactive → update → delete
+- See `deleteQbRatingData.apex` for the deactivate-then-delete pattern
+
+## Delete Scripts
+- Delete in child → parent order (reverse of load order)
+- Rates must be deleted before rating data (FK constraints)
+- Use `Database.delete(records)` — `delete records;` also works in anonymous Apex
+
+## Naming Convention
+- Activation: `activate{Feature}Records.apex`
+- Deletion: `delete{Plan}Data.apex` (e.g., `deleteQbRatingData.apex`)
 
 ---
 > Source: [bgaldino/rlm-base-dev](https://github.com/bgaldino/rlm-base-dev) — distributed by [TomeVault](https://tomevault.io).
