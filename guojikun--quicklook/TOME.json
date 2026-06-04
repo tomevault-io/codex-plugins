@@ -1,0 +1,44 @@
+{
+  "name": "quicklook",
+  "owner": "GuoJikun",
+  "repo": "quicklook",
+  "description": "quicklook \u662f\u4f7f\u7528 Tauri v2 \u5f00\u53d1\u7684 Windows \u5e73\u53f0\u7684\u6587\u4ef6\u9884\u89c8\u5de5\u5177",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/GuoJikun/quicklook",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-06-04T10:45:52Z"
+}
