@@ -7,13 +7,13 @@ Modus Web Components built with Stencil
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [trimble-oss/modus-wc-2.0](https://github.com/trimble-oss/modus-wc-2.0).
+Original source: `copilot-instructions.md` in [trimble-oss/modus-wc-2.0](https://github.com/trimble-oss/modus-wc-2.0).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
