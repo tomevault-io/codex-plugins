@@ -1,8 +1,37 @@
 
-# Environment caveats
+# PyOptEx
 
-- **kaleido** (plotly static export): can emit harmless dbus errors in headless/Cloud VM; safe to ignore.
-- **numba** (~0.61): pulls in llvmlite; first import may have a short JIT compilation delay.
+Python library for optimal design of experiments (DoE). Python 3.10–3.12. Hot paths are in Cython (`.pyx`).
+
+- **Fixed structure** (`src/pyoptex/doe/fixed_structure/`): split-plot, strip-plot, splitk-plot, staggered-level designs
+- **Cost-optimal CODEX** (`src/pyoptex/doe/cost_optimal/`): resource/cost-constrained designs
+- **Analysis** (`src/pyoptex/analysis/`): SAMS model selection, estimators, transformers
+
+## Layout
+
+```
+src/pyoptex/     package (doe/, analysis/, utils/, _seed)
+tests/           pytest
+examples/        standalone scripts (not in package)
+docs/            Sphinx
+venv/            virtualenv (Makefile uses venv/bin/)
+```
+
+## Dev setup
+
+```bash
+venv/bin/pip install -e ".[dev]"
+```
+
+Makefile targets use `venv/bin/`; activation optional.
+
+## Commit messages
+
+Imperative, present tense; first line under 72 characters.
+
+---
+
+Verification and rules of engagement: **workflow.mdc**. Build commands: **building.mdc**. Style: **python-style.mdc**. Cython: **cython.mdc**. Caveats: **environment.mdc**.
 
 ---
 > Source: [mborn1/pyoptex](https://github.com/mborn1/pyoptex) — distributed by [TomeVault](https://tomevault.io).
