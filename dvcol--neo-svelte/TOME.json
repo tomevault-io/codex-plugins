@@ -4,7 +4,7 @@
   "repo": "neo-svelte",
   "description": "Neomorphic ui library for svelte 5",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/dvcol/neo-svelte",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-06-04T08:48:43Z"
+  "distributed_at": "2026-06-04T10:40:10Z"
 }
