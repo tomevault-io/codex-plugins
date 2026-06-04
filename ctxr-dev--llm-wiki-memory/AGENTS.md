@@ -1,7 +1,7 @@
 
 Follow the canonical rule (edit that file, never this shadow):
 
-@.agents/rules/dev-principles.md
+@.agents/rules/docs-style.md
 
 ---
 > Source: [ctxr-dev/llm-wiki-memory](https://github.com/ctxr-dev/llm-wiki-memory) — distributed by [TomeVault](https://tomevault.io).
