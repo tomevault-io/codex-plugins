@@ -1,87 +1,73 @@
 
-You are an expert in Prisma ORM, PostgreSQL, database design, and data modeling for TypeScript applications.
+You are an expert in React, Next.js, TypeScript, and modern frontend development with TanStack Query.
 
 Key Principles
 
-- Use Prisma ORM for all database interactions; avoid raw SQL queries.
-- Define schema in `prisma/schema.prisma`; generate client after changes.
-- Use migrations for all schema changes; never modify database directly.
-- Handle BigInt properly for monetary values and timestamps.
-- Use transactions for operations that require atomicity.
-
-Schema Management
-
-- The Prisma schema is located at `prisma/schema.prisma`.
-- The generated client is output to `src/generated/prisma/client`; never edit manually.
-- Run `pnpm run prisma:generate` after schema changes to regenerate client.
-- Run `pnpm run prisma:migrate:dev --name descriptive_name` to create migrations.
-- Use descriptive migration names that explain the change.
+- Write functional components using TypeScript with explicit prop interfaces.
+- Use TanStack Query (React Query) for all server state management.
+- Leverage React context for global client state; avoid prop drilling.
+- Follow component composition patterns; keep components focused and reusable.
+- Use Shadcn UI components from `components/ui/` for consistent styling.
 
 Generated Code
 
-- Never manually edit files in `src/generated/prisma/`; they are auto-generated.
-- Import types from `@/generated/prisma/client` for type safety.
-- Import the Prisma client instance from `@/utils/db`.
+- Never manually edit files in `frontend/src/lib/api/generated/`; these are auto-generated from OpenAPI spec.
+- Run `cd frontend && pnpm run openapi-ts-latest` after backend API changes to regenerate types.
+- Import API types from generated files for type-safe API interactions.
+- Do not use unknown-valued map types in frontend code; prefer explicit JSON/object types and runtime property helpers for narrowing `unknown`.
 
-BigInt Handling
+Component Structure
 
-- Use BigInt type in Prisma schema for monetary amounts, fees, and timestamps.
-- Prisma returns BigInt values as JavaScript BigInt type.
-- Convert BigInt to string for JSON serialization in API responses.
-- Use BigInt literals (e.g., `5000000n`) or `BigInt()` constructor in code.
+- Place components in `components/{feature}/` directories organized by feature.
+- Place reusable UI primitives in `components/ui/` following Shadcn patterns.
+- Keep component files focused; extract sub-components when they grow complex.
+- Define TypeScript interfaces for props at the top of component files.
 
-Query Patterns
+Data Fetching
 
-- Use `findUnique()` for fetching single records by unique identifier.
-- Use `findMany()` for fetching multiple records with filters.
-- Use `create()`, `update()`, and `delete()` for mutations.
-- Use `include` option to fetch related records in a single query.
-- Use `select` option to fetch only needed fields for performance.
+- Use TanStack Query hooks (useQuery, useMutation) for all API calls.
+- Define query keys consistently for proper cache invalidation.
+- Handle loading, error, and success states explicitly in components.
+- Use `queryClient.invalidateQueries()` after mutations to refresh data.
 
-Related Data Loading
+Context Providers
 
-- Use `include` to eagerly load related models in queries.
-- Define complex includes with nested objects for deep relations.
-- Use Prisma's `GetPayload` type helper for typing queries with includes.
-- Avoid N+1 queries by including related data in initial query.
+- Use `AppContext` for application-wide state and settings.
+- Use `DialogContext` for managing dialog/modal state globally.
+- Use `ThemeContext` for theme management.
+- Use `SidebarContext` for sidebar navigation state.
+- Wrap components at appropriate level; avoid unnecessary context nesting.
 
-Transactions
+Styling
 
-- Use `prisma.$transaction()` for operations requiring atomicity.
-- Pass async function to transaction; all operations use transaction client.
-- Transaction automatically rolls back on any error.
-- Use transactions for multi-step operations that must succeed together.
+- Use Tailwind CSS for all styling; avoid inline styles and CSS modules.
+- Follow mobile-first responsive design approach.
+- Use Shadcn UI component variants for consistent styling.
+- Keep custom styles minimal; leverage existing design system.
 
-Soft Deletes
+State Management
 
-- Many models use `deletedAt` field for soft deletes.
-- Filter soft-deleted records with `where: { deletedAt: null }`.
-- Set `deletedAt: new Date()` instead of deleting records.
-- Consider soft-deleted records when querying; exclude them explicitly.
+- Prefer server state (TanStack Query) over client state when possible.
+- Use React useState for local component state.
+- Use React context for shared client state across components.
+- Avoid global state management libraries; the existing patterns are sufficient.
 
-Row Locking
+Performance
 
-- Use `lockAndQueryPayments()` utility for concurrent processing scenarios.
-- Row-level locking prevents race conditions in concurrent operations.
-- Always release locks by completing transactions.
+- Use React.memo for expensive components that receive stable props.
+- Implement proper loading states with skeleton components from `components/skeletons/`.
+- Use dynamic imports for code splitting on non-critical components.
+- Avoid unnecessary re-renders by proper dependency management in hooks.
 
-Common Commands
+Dependencies
 
-- `pnpm run prisma:migrate:dev` - Create and apply migration in development.
-- `pnpm run prisma:migrate` - Apply pending migrations (deploy to production).
-- `pnpm run prisma:generate` - Regenerate Prisma client.
-- `pnpm run prisma:seed` - Seed the database with initial data.
-- `npx prisma studio` - Open Prisma Studio for database browsing (not a script, run directly).
-- `npx prisma migrate reset` - Reset database (destroys all data, run directly).
+- Next.js (React framework)
+- TanStack Query (server state management)
+- Tailwind CSS (styling)
+- Shadcn UI (component library)
+- React Hook Form (form handling when needed)
 
-Performance Considerations
-
-- Add database indexes for frequently queried fields.
-- Use `select` to limit returned fields when full records aren't needed.
-- Use pagination for large result sets.
-- Monitor query performance and optimize slow queries.
-
-Refer to `prisma/schema.prisma` for the complete data model and relationships.
+Refer to existing components in `frontend/src/components/` for implementation patterns.
 
 ---
 > Source: [masumi-network/masumi-payment-service](https://github.com/masumi-network/masumi-payment-service) — distributed by [TomeVault](https://tomevault.io).
