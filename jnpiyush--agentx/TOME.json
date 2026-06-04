@@ -3,8 +3,8 @@
   "owner": "jnPiyush",
   "repo": "AgentX",
   "description": "AgentX - Digital Force for Software Delivery",
-  "type": "config",
-  "source_format": "copilot-instructions.md",
+  "type": "tome",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -37,8 +37,15 @@
       "platform": "Windsurf"
     }
   ],
-  "skills": [],
+  "skills": [
+    {
+      "name": "ai-agent-development",
+      "path": ".github/skills/ai-systems/ai-agent-development",
+      "github_url": "https://github.com/jnPiyush/AgentX/tree/main/.github/skills/ai-systems/ai-agent-development",
+      "description": ""
+    }
+  ],
   "source_url": "https://github.com/jnPiyush/AgentX",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-03T19:10:37Z"
+  "distributed_at": "2026-06-04T08:30:20Z"
 }
