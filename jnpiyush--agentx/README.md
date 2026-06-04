@@ -17,10 +17,6 @@ Original source: `CLAUDE.md` in [jnPiyush/AgentX](https://github.com/jnPiyush/Ag
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-## Bundled Skills (1)
-
-- [ai-agent-development](https://github.com/jnPiyush/AgentX/tree/main/.github/skills/ai-systems/ai-agent-development)
-
 From [jnPiyush/AgentX](https://github.com/jnPiyush/AgentX) — a repo with 11+ stars on GitHub.
 
 ---
