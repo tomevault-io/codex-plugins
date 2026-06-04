@@ -1,0 +1,44 @@
+{
+  "name": "Gibbon-Git-Server",
+  "owner": "Code-iX",
+  "repo": "Gibbon-Git-Server",
+  "description": "Gibbon Git Server is a web application to manage and connect to your git repositories. Go to homepage for release and more info. Forked by Bonobo Git Server.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/Code-iX/Gibbon-Git-Server",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-06-04T14:52:13Z"
+}
