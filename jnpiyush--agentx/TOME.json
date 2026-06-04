@@ -3,7 +3,7 @@
   "owner": "jnPiyush",
   "repo": "AgentX",
   "description": "AgentX - Digital Force for Software Delivery",
-  "type": "tome",
+  "type": "config",
   "source_format": "CLAUDE.md",
   "formats": [
     {
@@ -37,15 +37,8 @@
       "platform": "Windsurf"
     }
   ],
-  "skills": [
-    {
-      "name": "ai-agent-development",
-      "path": ".github/skills/ai-systems/ai-agent-development",
-      "github_url": "https://github.com/jnPiyush/AgentX/tree/main/.github/skills/ai-systems/ai-agent-development",
-      "description": ""
-    }
-  ],
+  "skills": [],
   "source_url": "https://github.com/jnPiyush/AgentX",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-06-04T08:30:20Z"
+  "distributed_at": "2026-06-04T09:09:01Z"
 }
