@@ -1,10 +1,7 @@
 
-# Database Migrations
-
-- Use the next unused numeric prefix (check the migrations directory for the current highest).
-- **Never** reuse or duplicate migration numbers.
-- Provide paired `.up.sql` and `.down.sql` files when rollback is required.
-- After adding migrations, run the repository's migration validation script if one is provided (see the repo-specific developer skill).
+When adding or changing REST endpoints, OpenAPI contracts, auth behaviour, or error
+responses in `qubership-apihub-backend`, apply the `postman-e2e-followup` skill before
+finishing the task.
 
 ---
 > Source: [Netcracker/qubership-apihub-backend](https://github.com/Netcracker/qubership-apihub-backend) — distributed by [TomeVault](https://tomevault.io).
