@@ -1,0 +1,30 @@
+# AI instruction files for dotfiles
+
+> Sourced from [dzervas/dotfiles](https://github.com/dzervas/dotfiles) and converted for every major platform by [TomeVault](https://tomevault.io)
+
+My NixOS setup for my personal dekstop & work laptop
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [dzervas/dotfiles](https://github.com/dzervas/dotfiles).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+From [dzervas/dotfiles](https://github.com/dzervas/dotfiles) — a repo with 11+ stars on GitHub.
+
+---
+
+Install this config instantly:
+```
+npx tomevault install dzervas/dotfiles
+```
+Source: [github.com/dzervas/dotfiles](https://github.com/dzervas/dotfiles).
+
+<!-- genome:a-i-s -->
