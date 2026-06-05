@@ -1,7 +1,7 @@
 
-When implementing or modifying the APIHub Go backend (controllers, services,
-repositories, migrations, Service.go wiring, ErrorCodes, or OpenAPI specs) in
-`qubership-apihub-backend`, apply the `apihub-backend-developer` skill.
+When the user asks for self-review, code review of a diff, or a post-implementation
+check before commit or PR in `qubership-apihub-backend`, apply the
+`apihub-backend-self-review` skill.
 
 ---
 > Source: [Netcracker/qubership-apihub-backend](https://github.com/Netcracker/qubership-apihub-backend) — distributed by [TomeVault](https://tomevault.io).
