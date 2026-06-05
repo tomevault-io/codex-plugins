@@ -1,0 +1,26 @@
+# AI instruction files for zca-desktop
+
+> Sourced from [tuanle96/zca-desktop](https://github.com/tuanle96/zca-desktop) and converted for every major platform by [TomeVault](https://tomevault.io)
+
+Unofficial personal-use Zalo desktop client built with Tauri, Rust, SvelteKit, and an optional encrypted cloud sync backend.
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [tuanle96/zca-desktop](https://github.com/tuanle96/zca-desktop).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/tuanle96/zca-desktop](https://github.com/tuanle96/zca-desktop)
+
+---
+
+Explore more instruction files on [TomeVault](https://tomevault.io) — the open index of AI config files for every platform.
+
+<!-- genome:a-e-p -->
