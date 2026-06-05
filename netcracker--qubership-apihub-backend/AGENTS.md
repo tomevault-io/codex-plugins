@@ -1,7 +1,7 @@
 
-When the user asks for self-review, code review of a diff, or a post-implementation
-check before commit or PR in `qubership-apihub-backend`, apply the
-`apihub-backend-self-review` skill.
+When implementing or modifying backend configuration, env-backed defaults, startup
+wiring, or deployment-facing behaviour in `qubership-apihub-backend`, apply the
+`apihub-deployment-followup` skill before finishing the task.
 
 ---
 > Source: [Netcracker/qubership-apihub-backend](https://github.com/Netcracker/qubership-apihub-backend) — distributed by [TomeVault](https://tomevault.io).
