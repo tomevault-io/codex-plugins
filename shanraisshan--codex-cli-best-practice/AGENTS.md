@@ -71,4 +71,4 @@ When editing best-practice guides or documentation in this repo:
 
 ---
 > Source: [shanraisshan/codex-cli-best-practice](https://github.com/shanraisshan/codex-cli-best-practice) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-04-20 -->
+<!-- tomevault:4.0:agents_md:2026-06-05 -->
