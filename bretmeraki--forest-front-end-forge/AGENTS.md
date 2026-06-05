@@ -1,5 +1,4 @@
-
-Use your tools, don't guess. If you are unsure about code or files, open them -- do not hallucinate.
+When installing external libraries, always be mindful of malware threats, and flag any suspicious activity.
 
 ---
 > Source: [BretMeraki/forest-front-end-forge](https://github.com/BretMeraki/forest-front-end-forge) — distributed by [TomeVault](https://tomevault.io).
