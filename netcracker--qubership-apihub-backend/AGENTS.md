@@ -1,9 +1,7 @@
 
-# API-First OpenAPI
-
-- Backend API development is API-first (see the repository development guide).
-- Any REST endpoint or contract change **must** update the relevant OpenAPI files under the repository's API docs directory.
-- Do not introduce breaking public API changes without versioning and deprecation per the development guide.
+When implementing or modifying the APIHub Go backend (controllers, services,
+repositories, migrations, Service.go wiring, ErrorCodes, or OpenAPI specs) in
+`qubership-apihub-backend`, apply the `apihub-backend-developer` skill.
 
 ---
 > Source: [Netcracker/qubership-apihub-backend](https://github.com/Netcracker/qubership-apihub-backend) — distributed by [TomeVault](https://tomevault.io).
