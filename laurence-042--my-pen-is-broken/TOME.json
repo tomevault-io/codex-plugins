@@ -1,0 +1,44 @@
+{
+  "name": "my-pen-is-broken",
+  "owner": "Laurence-042",
+  "repo": "my-pen-is-broken",
+  "description": "Steam \u597d\u8bc4\u738798%\uff0c\u5168\u7403\u9996\u6b3e\u300c\u5bfb\u627e\u5bf9\u8bdd\u4e2d\u654f\u611f\u8bcd\u300d\u7684\u6e38\u620f\u300a\u30a6\u30fc\u30de\u30f3\u30b3\u30df\u30e5\u30cb\u30b1\u30fc\u30b7\u30e7\u30f3/ \u5973\u6027\u4ea4\u6d41\u300b\u901a\u5173\u540e\u505a\u7684\u5c0f\u73a9\u5177\uff0c\u65e2\u53ef\u4ee5\u76f4\u63a5\u6807\u7ea2\u9875\u9762\u4e0a\u7684\u654f\u611f\u8bcd\uff0c\u4e5f\u53ef\u4ee5\u4eba\u5de5\u5bfb\u627e\u654f\u611f\u8bcd\u5e76\u70b9\u51fb\u4ee5\u6807\u7ea2",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/Laurence-042/my-pen-is-broken",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-06-05T20:41:50Z"
+}
