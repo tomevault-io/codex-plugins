@@ -1,13 +1,11 @@
 
-# Backend Database Migrations
+# Backend API Errors
 
-- Migrations live in `qubership-apihub-service/resources/migrations/`.
-- Use the next unused numeric prefix (current highest is visible in that directory).
-- **Never** reuse or duplicate migration numbers.
-- Provide paired `.up.sql` and `.down.sql` files when rollback is required.
-- After adding migrations, run from repo root:
-  - Linux / WSL / Git Bash: `bash .cursor/skills/apihub-backend-developer/scripts/check_migration_numbers.sh`
-  - Windows PowerShell: `powershell -File .cursor/skills/apihub-backend-developer/scripts/check_migration_numbers.ps1`
+- Error codes and messages returned in HTTP responses must be constants in `exception/ErrorCodes.go`.
+- **Legacy errors:** numeric string codes (`"9"`, `"22"`) with a paired `*Msg`; blank line between pairs.
+- **AI Chat errors:** `APIHUB-AI-*` codes with the same pairing rules.
+- **Variant messages** (same code, different text): declare only `*Msg` next to the parent code block — reuse the parent `Code` at call sites (see `InvalidParameterValue` + `InvalidLimitMsg`, or `AiChatValidationFailed` + `AiChatMessageTooLongMsg`). Do not add orphan `*Msg` constants without documenting which code they belong to.
+- Do not use inline `Message:` strings for client-facing errors in new code.
 
 ---
 > Source: [Netcracker/qubership-apihub-backend](https://github.com/Netcracker/qubership-apihub-backend) — distributed by [TomeVault](https://tomevault.io).
