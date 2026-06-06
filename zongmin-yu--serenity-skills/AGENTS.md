@@ -1,3 +1,4 @@
+
 # Serenity Guidelines
 
 AI infrastructure and semiconductor supply chain analysis, distilled from the public posts of Serenity ([@aleabitoreddit](https://x.com/aleabitoreddit)).
