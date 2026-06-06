@@ -4,7 +4,7 @@
   "repo": "WritersCollab",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/bochoniuks/WritersCollab",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-06-06T02:34:18Z"
+  "distributed_at": "2026-06-06T02:41:17Z"
 }
