@@ -1,0 +1,44 @@
+{
+  "name": "GhostRanger",
+  "owner": "amna0x",
+  "repo": "GhostRanger",
+  "description": " 2ND PLACE WINNER\u2013 GOMAL DEVARENA 2026 (HOSTED BY AWS).- Led the AI & Detection team to build an insider-threat and SOC platform.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/amna0x/GhostRanger",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-06-08T02:32:57Z"
+}
