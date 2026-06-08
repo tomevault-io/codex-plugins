@@ -1,13 +1,9 @@
 
-# PR Workflow
+Prefer unit tests for quick iteration. E2E tests (just e2e-test) may be run when needed; they require env-setup first (just env-setup) for k3s, Kafka, etc.
 
-When pushing or preparing to push, check that CI/CD has passed for the PR using:
+After each task, check code by running just fix, followed by just lint.
 
-```bash
-gh pr checks 494   # or the relevant PR number
-```
-
-Run the equivalent for the correct PR before considering the push complete.
+When fixing an issue, try to write a unit test for the issue first, watch it fail, then fix it, making the change as easy to understand as possible.
 
 ---
 > Source: [goldsky-io/streamling](https://github.com/goldsky-io/streamling) — distributed by [TomeVault](https://tomevault.io).
