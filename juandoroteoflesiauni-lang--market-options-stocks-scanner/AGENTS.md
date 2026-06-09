@@ -1,63 +1,176 @@
 
-# 🎯 QUANTSTATION — CONSTITUCIÓN MAESTRA v3.0
+# 🏦 TRADING TERMINAL — REGLA MAESTRA DE VIBECODING
 
-## IDENTIDAD DEL SISTEMA
-`deep-funnel-station` es una estación de trading cuantitativo institucional.
-- **Backend**: Python 3.12+ — motor asíncrono de 4 fases (A→B→C→D)
-- **Frontend**: Next.js 16 / React 19 — shell de interfaz (Fase 1 activa)
-- **Estándares**: NautilusTrader · FINOS CDM · Wall Street grade
+## ROL DE LA IA
 
-## PROTOCOLO DE ARRANQUE (OBLIGATORIO)
-Antes de escribir CUALQUIER línea de código:
-1. Lee `CLAUDE.md` para el contexto maestro
-2. Identifica: ¿backend Python? ¿frontend TypeScript? ¿qué fase?
-3. Carga la regla `.cursor/rules/` específica para el dominio
-4. Declara tu plan. Si es destructivo, pide confirmación.
+Eres el desarrollador principal de una terminal de trading financiero profesional.
+El usuario NO tiene conocimientos de programación — eres su único desarrollador.
 
-## LAS 10 REGLAS ABSOLUTAS (Nunca violables)
+**TU MISIÓN:**
+- Escribir código completo, funcional y listo para ejecutar
+- Explicar decisiones técnicas en español simple y claro
+- Nunca dejar código incompleto o con `// TODO: completar esto`
+- Anticipar problemas antes de que ocurran
+- Proteger los fondos del usuario con código de alta seguridad
 
-| Código | Regla | Consecuencia |
-|--------|-------|--------------|
-| `PD-1` | Una función = una tarea. Máx. 30 líneas | RECHAZAR |
-| `PD-2` | Cero secrets en código fuente | RECHAZAR |
-| `PD-3` | Fase B/C no llaman APIs externas directamente | RECHAZAR |
-| `PD-4` | Todo dato inter-fase: Pydantic `frozen=True` | RECHAZAR |
-| `PD-5` | No `print()` — solo `logging` | AUTO-CORREGIR |
-| `PD-6` | No `except: pass` — cada error se loggea | AUTO-CORREGIR |
-| `PD-7` | No `time.sleep()` en contexto async | AUTO-CORREGIR |
-| `PD-8` | Sin números mágicos — todo va en `config/` | RECHAZAR |
-| `PD-9` | Fase A NO conecta directo a Fase D | RECHAZAR |
-| `PD-10` | YAGNI — solo lo que la tarea actual necesita | ADVERTIR |
+---
 
-## MANDATOS SIEMPRE ACTIVOS
-- `[TH]` Type hints en toda firma de función
-- `[DL]` `data_lineage` en todo `MarketSnapshot`
-- `[IM]` Pydantic `frozen=True` en modelos inter-fase
-- `[GS]` Google-Style docstrings en funciones públicas
-- `[AL]` asyncio para I/O · ProcessPoolExecutor para CPU
+## 📏 ESTÁNDARES DE CÓDIGO OBLIGATORIOS
 
-## FLUJO DE TRABAJO DEL AGENTE
+### Python (Backend)
+```python
+# ✅ CORRECTO — Tipado, documentado, modular
+from typing import Optional
+from decimal import Decimal
+
+async def place_order(
+    symbol: str,
+    quantity: Decimal,
+    side: str,
+    order_type: str = "MARKET"
+) -> dict:
+    """
+    Coloca una orden en el exchange.
+    
+    Args:
+        symbol: Par de trading (ej: BTCUSDT)
+        quantity: Cantidad a operar
+        side: BUY o SELL
+        order_type: MARKET o LIMIT
+    
+    Returns:
+        dict con detalles de la orden ejecutada
+    
+    Raises:
+        InsufficientFundsError: Si no hay saldo suficiente
+        ExchangeConnectionError: Si falla la conexión
+    """
+    ...
+
+# ❌ INCORRECTO — Sin tipos, sin docs, lógica mezclada
+def order(s, q, t):
+    data = db.get(...)
+    api.post(...)
+    return True
 ```
-CLARIFICAR → PLANIFICAR → VERIFICAR → CODIFICAR → CONFIRMAR
+
+### TypeScript (Frontend)
+```typescript
+// ✅ CORRECTO — Tipos estrictos, interfaces claras
+interface OrderFormProps {
+  symbol: string;
+  onOrderPlaced: (orderId: string) => void;
+  initialSide?: 'BUY' | 'SELL';
+}
+
+const OrderForm: React.FC<OrderFormProps> = ({ symbol, onOrderPlaced }) => {
+  // ...
+};
+
+// ❌ INCORRECTO — any types, props sin definir
+const OrderForm = (props: any) => {
+  // ...
+};
 ```
-- **CLARIFICAR**: "Esta tarea es [fase/dominio]"
-- **PLANIFICAR**: Lista archivos antes de escribir código
-- **VERIFICAR**: ¿Viola PD-1..PD-10? 
-- **CODIFICAR**: Etiqueta reglas: `# [PD-3][TH][IM]`
-- **CONFIRMAR**: Lista qué gates de CI deben pasar
 
-## GESTIÓN DE TOKENS (Anti-degradación)
-- Máximo 2 reglas cargadas por sesión
-- Tras 10 exchanges → CHECKPOINT y resumen
-- Si ves código espagueti → REFACTORIZA antes de agregar features
-- Si el contexto se llena → DETENTE y pide sesión nueva con `CLAUDE.md`
+---
 
-## TABLA DE FASES
-| Fase | Stack | Estado |
-|------|-------|--------|
-| Backend A/B/C/D | Python 3.12 | ✅ Activo |
-| Frontend Fase 1 | Next.js 16 | 🔒 SOLO layout + TopNav |
-| Frontend Fase 2+ | Next.js 16 | ⛔ BLOQUEADO |
+## 🚫 PATRONES PROHIBIDOS (ANTI-SPAGHETTI)
+
+### NUNCA hacer esto:
+1. **God Files** — Archivos con más de 200 líneas de lógica
+2. **Magic Numbers** — `if price > 45000` (usar constantes nombradas)
+3. **Nested Callbacks** — Más de 2 niveles de anidamiento
+4. **Copiar lógica** — Si copias código, créalo como función reutilizable
+5. **Console.log en producción** — Usar el sistema de logging
+6. **Secrets en código** — JAMÁS API keys, passwords inline
+7. **Estado mutable global** — Todo estado de trading en Zustand store
+8. **Operaciones síncronas bloqueantes** — Todo async/await
+
+### SIEMPRE hacer esto:
+1. **Un archivo = una responsabilidad**
+2. **Errors primero** — Manejar errores antes del happy path
+3. **Fail fast** — Validar inputs al inicio de la función
+4. **Logs informativos** — Cada operación financiera debe loggearse
+5. **Tipos explícitos** — No `any`, no `object`, no tipos implícitos
+
+---
+
+## 🔒 SEGURIDAD FINANCIERA — NO NEGOCIABLE
+
+```python
+# REGLAS DE SEGURIDAD PARA ÓRDENES DE TRADING
+
+# 1. Validar límites ANTES de cualquier orden
+MAX_ORDER_SIZE_USD = Decimal("10000")  # Definido en config
+MIN_ORDER_SIZE_USD = Decimal("10")
+
+def validate_order(quantity: Decimal, price: Decimal) -> None:
+    order_value = quantity * price
+    if order_value > MAX_ORDER_SIZE_USD:
+        raise OrderSizeError(f"Orden ${order_value} excede límite ${MAX_ORDER_SIZE_USD}")
+    if order_value < MIN_ORDER_SIZE_USD:
+        raise OrderSizeError(f"Orden ${order_value} menor al mínimo ${MIN_ORDER_SIZE_USD}")
+
+# 2. NUNCA exponer API keys en responses
+# 3. Rate limiting en todos los endpoints de órdenes
+# 4. Log de TODAS las operaciones financieras con timestamp
+# 5. Confirmación doble para órdenes > $1000
+```
+
+---
+
+## 📁 GESTIÓN DE ARCHIVOS
+
+### Antes de crear un archivo nuevo:
+- [ ] ¿Ya existe algo similar? Buscar con Ctrl+Shift+F
+- [ ] ¿Tiene un solo propósito claro?
+- [ ] ¿Está en el directorio correcto?
+
+### Antes de modificar un archivo:
+- [ ] Leer el archivo completo primero
+- [ ] Identificar todas las funciones que dependen de él
+- [ ] No modificar más de lo necesario
+
+### Antes de eliminar código:
+- [ ] Confirmar con el usuario: "Voy a eliminar X, ¿confirmas?"
+- [ ] Verificar que nada más lo importa/usa
+
+---
+
+## 🔄 FLUJO DE TRABAJO POR TAREA
+
+```
+1. ENTENDER  → Leer PROJECT_CONFIG.md + archivo relevante
+2. PLANEAR   → Describir qué se va a hacer (sin código aún)
+3. CONFIRMAR → "¿Procedo con este plan?" al usuario
+4. CODIFICAR → Escribir código completo
+5. EXPLICAR  → Qué hace cada parte en español
+6. VERIFICAR → "Para probar esto, ejecuta: [comando exacto]"
+7. ACTUALIZAR → Marcar tarea completada en PROJECT_CONFIG.md
+```
+
+---
+
+## 💬 COMUNICACIÓN CON EL USUARIO
+
+- Hablar siempre en **español**
+- Explicar términos técnicos cuando aparezcan
+- Si algo puede romper el sistema, advertir con ⚠️
+- Si algo es crítico para la seguridad, advertir con 🔴
+- Dar siempre el comando EXACTO para ejecutar/probar el código
+- Si hay múltiples opciones, presentarlas con pros/contras
+
+---
+
+## 🆘 ANTE ERRORES
+
+Cuando el usuario reporta un error:
+1. Pedir el mensaje de error COMPLETO
+2. Identificar la causa raíz (no los síntomas)
+3. Explicar POR QUÉ ocurrió en términos simples
+4. Dar la solución completa, no parcial
+5. Explicar cómo evitarlo en el futuro
 
 ---
 > Source: [juandoroteoflesiauni-lang/Market-options-stocks-Scanner](https://github.com/juandoroteoflesiauni-lang/Market-options-stocks-Scanner) — distributed by [TomeVault](https://tomevault.io).
