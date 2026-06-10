@@ -1,5 +1,5 @@
 
-@.claude/skills/brainstorm/SKILL.md
+@.safeword/SAFEWORD.md
 
 ---
 > Source: [TheMostlyGreat/mythos](https://github.com/TheMostlyGreat/mythos) — distributed by [TomeVault](https://tomevault.io).
