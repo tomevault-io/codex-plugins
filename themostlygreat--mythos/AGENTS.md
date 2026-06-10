@@ -1,5 +1,5 @@
 
-@.claude/skills/bdd/VERIFY.md
+@.claude/skills/brainstorm/SKILL.md
 
 ---
 > Source: [TheMostlyGreat/mythos](https://github.com/TheMostlyGreat/mythos) — distributed by [TomeVault](https://tomevault.io).
