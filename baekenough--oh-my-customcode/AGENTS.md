@@ -116,7 +116,7 @@ project/
 +-- CLAUDE.md                    # 진입점
 +-- .claude/
 |   +-- agents/                  # 서브에이전트 정의 (49 파일)
-|   +-- skills/                  # 스킬 (116 디렉토리)
+|   +-- skills/                  # 스킬 (117 디렉토리)
 |   +-- rules/                   # 전역 규칙 (R000-R023)
 |   +-- hooks/                   # 훅 스크립트 (보안, 검증, HUD)
 |   +-- contexts/                # 컨텍스트 파일 (ecomode)
@@ -271,4 +271,4 @@ claude mcp add semble -- semble mcp
 
 ---
 > Source: [baekenough/oh-my-customcode](https://github.com/baekenough/oh-my-customcode) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-05-30 -->
+<!-- tomevault:4.0:agents_md:2026-06-10 -->
