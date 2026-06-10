@@ -1,0 +1,44 @@
+{
+  "name": "rckid",
+  "owner": "rc-kid",
+  "repo": "rckid",
+  "description": "RCKid is an open\u2011source handheld console designed for young creators. It\u2019s built to be the first piece of technology that feels truly personal to a child \u2014 not just a screen to consume, but a tool to imagine, build, and share. Comes with fantasy console for easier development and is extendable with cartridges for endless possibilities!",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/rc-kid/rckid",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-06-10T20:36:15Z"
+}
