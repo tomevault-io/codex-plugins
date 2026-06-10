@@ -4,7 +4,7 @@
   "repo": "github-codeowners",
   "description": "github-reviewers",
   "type": "config",
-  "source_format": "CLAUDE.md",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/TombWater/github-codeowners",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-06-10T14:30:52Z"
+  "distributed_at": "2026-06-10T14:31:31Z"
 }
