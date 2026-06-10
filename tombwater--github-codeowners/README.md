@@ -7,12 +7,12 @@ github-reviewers
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [TombWater/github-codeowners](https://github.com/TombWater/github-codeowners).
+Original source: `copilot-instructions.md` in [TombWater/github-codeowners](https://github.com/TombWater/github-codeowners).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
