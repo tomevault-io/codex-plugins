@@ -1,5 +1,5 @@
 
-@.claude/skills/bdd/SPLITTING.md
+@.claude/skills/bdd/TDD.md
 
 ---
 > Source: [TheMostlyGreat/mythos](https://github.com/TheMostlyGreat/mythos) — distributed by [TomeVault](https://tomevault.io).
