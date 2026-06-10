@@ -1,5 +1,5 @@
 
-@.claude/skills/bdd/DISCOVERY.md
+@.claude/skills/bdd/DONE.md
 
 ---
 > Source: [TheMostlyGreat/mythos](https://github.com/TheMostlyGreat/mythos) — distributed by [TomeVault](https://tomevault.io).
