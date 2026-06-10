@@ -1,0 +1,51 @@
+#  Copilot Instructions (Repository-wide)
+
+Overall, prioritize concise code and clear documentation. Prioritize simple and 
+maintainable solutions over complex ones, and inform me if a new feature would add significant complexity.
+
+## Project context
+
+This project comprises an 3d-image processing software library for "tissue cartography", a method that extracts 2D surfaces from 3D image data and maps them to 2D. The purpose of this project is to leverage Blender's capabilities, notably the UV editor for cartography and visualization, for tissue cartography.
+
+It has two components: a standalone python library, and an add-on for the 3D modelling software Blender.
+
+## Coding standards (applies to all Python)
+
+- Use **Python 3.10+**.
+- Prefe **concise** code; avoid boiler-plate, and unccessary helper variables and functions.
+- Use **docstrings** (NumPy style). Include units and parameter domains when relevant.
+- Follow standard **PEP8** style guidelines. Lint with `ruff`.
+
+
+## Virtual environment, packaging & docs (python library)
+
+- This repo contains large files (image test data, meshes). These are tracked using git LFS (see `.gitattributes`).
+- The python library is developped in **Jupyter Notebooks** using **nbdev**. These notebooks live in the `nbdev` folder and are also used to generate the documentation webpage.
+- Use nbdev to export code via the `ndbdev_export` command. Do not edit the code files in `blender_tissue_cartography/` directly. Cells to be exported should be marked with #| export at the top. To generate documentation, use `nbdev_docs` and `nbdev_readme`. Nbdev places docs in the `_docs` folder. To update the documentation webpage, delete the old `docs` folder, run the nbdev commands, then move `_docs` to `docs`.
+- In notebooks, use separate cells for defining functions/classes and for running code. Below a cell that defines a function/class, include a test cell that runs basic tests or examples of usage.
+
+## Blender add-on
+
+- The blender add-on is in the `blender_addon_src` folder. It is written in Python, but follows Blender's coding style and conventions, which are different from the rest of the project. These `.py` files are not generated from notebooks, and can be edited directly.
+
+- The add-on must be packaged into an installable Blender add-on,
+The `blender_addon_src/wheels/` directory contains the python libraries the add-on depends on. To build the package, run the shell command from the `blender_addon_src/` directory:
+```sh
+/Applications/Blender.app/Contents/MacOS/Blender --command extension build --source-dir . --output-dir ./blender_addon_download/ --split-platforms
+```
+To re-download the wheels, run this command [to do]:
+```sh
+```
+
+- To test the add-on interactively, I sym-linked the `blender_addon` folder to `~/Library/Application Support/Blender/4.5/extensions/user_default/tissue_cartography`. To install the add-on in Blender, go to Edit > Preferences > Add-ons > Install. To refresh the add-on, run the `blender_addon/reload_script.py` script.
+
+## Documentation webpage creation
+
+- The documentation webpage is generated from the notebooks in `nbs/` using nbdev's `nbdev_docs` command. To update the webpage, delete the old `docs` folder, run the nbdev commands, then move `_docs` to `docs`. The webpage is hosted on GitHub Pages.
+
+- We created a custom sidebar by setting `custom_quarto_yml = true` in `pyproject.toml`, and adding `nbs/custom_sidebar.yml` to the `metadata-files` list in `nbs/_quarto.yml`. To update the sidebar, edit `nbs/custom_sidebar.yml`. If you add new notebooks, make sure to add them to the sidebar 
+or they won't be visible on the webpage.
+
+---
+> Source: [nikolas-claussen/blender-tissue-cartography](https://github.com/nikolas-claussen/blender-tissue-cartography) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-06-10 -->
