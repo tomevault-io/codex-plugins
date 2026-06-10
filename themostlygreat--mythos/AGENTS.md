@@ -1,5 +1,5 @@
 
-@.claude/skills/bdd/SCENARIOS.md
+@.claude/skills/bdd/SPLITTING.md
 
 ---
 > Source: [TheMostlyGreat/mythos](https://github.com/TheMostlyGreat/mythos) — distributed by [TomeVault](https://tomevault.io).
