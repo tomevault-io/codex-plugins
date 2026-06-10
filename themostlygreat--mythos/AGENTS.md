@@ -1,5 +1,5 @@
 
-@.claude/skills/bdd/DONE.md
+@.claude/skills/bdd/SCENARIOS.md
 
 ---
 > Source: [TheMostlyGreat/mythos](https://github.com/TheMostlyGreat/mythos) — distributed by [TomeVault](https://tomevault.io).
