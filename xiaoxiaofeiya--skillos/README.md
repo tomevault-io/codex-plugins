@@ -1,0 +1,28 @@
+# SkillOS
+
+> Tome by [xiaoxiaofeiya](https://github.com/xiaoxiaofeiya/SkillOS) — distributed by [TomeVault](https://tomevault.io)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [xiaoxiaofeiya/SkillOS](https://github.com/xiaoxiaofeiya/SkillOS).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+From [xiaoxiaofeiya/SkillOS](https://github.com/xiaoxiaofeiya/SkillOS) — a repo with 9+ stars on GitHub.
+
+---
+
+Install this config instantly:
+```
+npx tomevault install xiaoxiaofeiya/SkillOS
+```
+Source: [github.com/xiaoxiaofeiya/SkillOS](https://github.com/xiaoxiaofeiya/SkillOS).
+
+<!-- genome:t-i-s -->
