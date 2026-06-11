@@ -4,7 +4,7 @@
   "repo": "pocketci",
   "description": "local-first CI/CD system",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/jtarchie/pocketci",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-06-11T16:34:30Z"
+  "distributed_at": "2026-06-11T16:39:50Z"
 }
