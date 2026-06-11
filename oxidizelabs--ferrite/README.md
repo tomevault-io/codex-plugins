@@ -2,6 +2,8 @@
 
 > Sourced from [OxidizeLabs/ferrite](https://github.com/OxidizeLabs/ferrite) and converted for every major platform by [TomeVault](https://tomevault.io)
 
+The smallest, clearest, well-documented OLTP engine to demonstrate modern Rust concurrency and recovery design.
+
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
