@@ -7,13 +7,13 @@ CrossFrame Skill Suite：给 AI 用的中文结构诊断与成文技能组，包
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [xi-kari/crossframe-skill](https://github.com/xi-kari/crossframe-skill).
+Original source: `.cursor/rules/*.mdc` in [xi-kari/crossframe-skill](https://github.com/xi-kari/crossframe-skill).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
