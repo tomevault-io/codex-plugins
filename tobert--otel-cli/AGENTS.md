@@ -416,6 +416,5 @@ Apache License 2.0 - Copyright (c) 2025 A. Tobey
 See LICENSE file for full details.
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/tobert)
-> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/tobert)
-<!-- tomevault:4.0:agents_md:2026-04-08 -->
+> Source: [tobert/otel-cli](https://github.com/tobert/otel-cli) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-06-11 -->
