@@ -4,7 +4,7 @@
   "repo": "type_coverage_py",
   "description": "Calculate the type coverage of popular Python libraries",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/lolpack/type_coverage_py",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-06-12T16:35:43Z"
+  "distributed_at": "2026-06-12T16:40:43Z"
 }
