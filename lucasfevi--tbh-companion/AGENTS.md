@@ -1,0 +1,15 @@
+
+# Git push and PRs — confirm first
+
+**Never push or open a PR without explicit user approval** in the current conversation.
+
+- **`git push`** (including `-u origin …`): summarize branch and commits, then ask. Push only after the user confirms.
+- **`gh pr create`** (or equivalent): summarize title, scope, and test plan, then ask. Create the PR only after the user confirms.
+
+Do not treat “work is done” or “branch is ready” as permission to push or open a PR.
+
+Full workflow: `docs/AGENT_WORKFLOW.md` and `AGENTS.md` (Conventions).
+
+---
+> Source: [lucasfevi/tbh-companion](https://github.com/lucasfevi/tbh-companion) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-06-12 -->
