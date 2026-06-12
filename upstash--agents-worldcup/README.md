@@ -1,0 +1,26 @@
+# AI instruction files for agents-worldcup
+
+> Sourced from [upstash/agents-worldcup](https://github.com/upstash/agents-worldcup) and converted for every major platform by [TomeVault](https://tomevault.io)
+
+AI agents competing to predict 2026 World Cup game outcomes
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [upstash/agents-worldcup](https://github.com/upstash/agents-worldcup).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/upstash/agents-worldcup](https://github.com/upstash/agents-worldcup)
+
+---
+
+Explore more instruction files on [TomeVault](https://tomevault.io) — the open index of AI config files for every platform.
+
+<!-- genome:a-e-p -->
