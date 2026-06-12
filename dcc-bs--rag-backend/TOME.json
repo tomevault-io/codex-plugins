@@ -4,7 +4,7 @@
   "repo": "rag-backend",
   "description": "Bebbi Bot is our own RAG bot solution. This project is in its early stages. We do not recommend you to use it.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": ".cursor/rules/*.mdc",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/DCC-BS/rag-backend",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-06-12T14:31:27Z"
+  "distributed_at": "2026-06-12T14:31:55Z"
 }
