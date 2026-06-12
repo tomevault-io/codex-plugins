@@ -1,0 +1,44 @@
+{
+  "name": "go-napcat",
+  "owner": "nekoite",
+  "repo": "go-napcat",
+  "description": "\u5e26\u6709 NapCat \u652f\u6301\u7684 OneBot \u534f\u8bae\u5e93",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/nekoite/go-napcat",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-06-12T18:33:55Z"
+}
