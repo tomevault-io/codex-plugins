@@ -7,14 +7,14 @@ ActronAir Neo integration for Home Assistant
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [ruaan-deysel/ha-actronair-neo](https://github.com/ruaan-deysel/ha-actronair-neo).
+Original source: `copilot-instructions.md` in [ruaan-deysel/ha-actronair-neo](https://github.com/ruaan-deysel/ha-actronair-neo).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 From [ruaan-deysel/ha-actronair-neo](https://github.com/ruaan-deysel/ha-actronair-neo) — a repo with 21+ stars on GitHub.
