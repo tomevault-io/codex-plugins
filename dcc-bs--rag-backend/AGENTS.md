@@ -1,181 +1,77 @@
-You are an expert in Python project development, specializing in building well-structured, maintainable Python applications.
+# Instructions
+Use the following commands to get AI assistance:
 
-Core Expertise:
-- Python Development
-- Project Architecture
-- Testing Strategies
-- Code Quality
-- Package Management
+**Web Search:**
+`cursor-tools web "<your question>"` - Get answers from the web using Perplexity AI (e.g., `cursor-tools web "latest weather in London"`)
+when using web for complex queries suggest writing the output to a file somewhere like local-research/<query summary>.md.
 
-We rely on this tech stack:
-- pytest for unittests
-- uv for dependency management
-- ruff for formatting
-- basedpyright for linting
-- github workflows for ci/cd
-- configuration through omegaconf yaml config files and environment variables
-- structlog for logging
-- docker container for deployment
+**Repository Context:**
+`cursor-tools repo "<your question>"` - Get context-aware answers about this repository using Google Gemini (e.g., `cursor-tools repo "explain authentication flow"`)
 
-Execute python code, tests, ruff or linter:
-- Always use uv
-- To run python files: `uv run script.py`
-- To run tests: `uv run pytest`
-- To run pre-commit: `uv run pre-commit run --all`
+**Documentation Generation:**
+`cursor-tools doc [options]` - Generate comprehensive documentation for this repository (e.g., `cursor-tools doc --output docs.md`)
+when using doc for remote repos suggest writing the output to a file somewhere like local-docs/<repo-name>.md.
 
-Development Guidelines:
+**GitHub Information:**
+`cursor-tools github pr [number]` - Get the last 10 PRs, or a specific PR by number (e.g., `cursor-tools github pr 123`)
+`cursor-tools github issue [number]` - Get the last 10 issues, or a specific issue by number (e.g., `cursor-tools github issue 456`)
 
-1. Project Structure
-ALWAYS:
-- Use proper package layout
-- Implement modular design
-- Follow Python standards
-- Use proper configuration
-- Maintain documentation
+**Browser Automation (Stateless):**
+`cursor-tools browser open <url> [options]` - Open a URL and capture page content, console logs, and network activity (e.g., `cursor-tools browser open "https://example.com" --html`)
+`cursor-tools browser act "<instruction>" --url=<url> [options]` - Execute actions on a webpage using natural language instructions (e.g., `cursor-tools browser act "Click Login" --url=https://example.com`)
+`cursor-tools browser observe "<instruction>" --url=<url> [options]` - Observe interactive elements on a webpage and suggest possible actions (e.g., `cursor-tools browser observe "interactive elements" --url=https://example.com`)
+`cursor-tools browser extract "<instruction>" --url=<url> [options]` - Extract data from a webpage based on natural language instructions (e.g., `cursor-tools browser extract "product names" --url=https://example.com/products`)
 
-NEVER:
-- Mix package boundaries
-- Skip project structure
-- Ignore Python standards
-- Use flat structure
+**Notes on Browser Commands:**
+- All browser commands are stateless: each command starts with a fresh browser instance and closes it when done.
+- When using `--connect-to`, special URL values are supported:
+  - `current`: Use the existing page without reloading
+  - `reload-current`: Use the existing page and refresh it (useful in development)
+- Multi step workflows involving state or combining multiple actions are supported in the `act` command using the pipe (|) separator (e.g., `cursor-tools browser act "Click Login | Type 'user@example.com' into email | Click Submit" --url=https://example.com`)
+- Video recording is available for all browser commands using the `--video=<directory>` option. This will save a video of the entire browser interaction at 1280x720 resolution. The video file will be saved in the specified directory with a timestamp.
+- DO NOT ask browser act to "wait" for anything, the wait command is currently disabled in Stagehand.
 
-2. Code Organization
-ALWAYS:
-- Use proper imports
-- Implement clean architecture
-- If writing object oriented code, follow SOLID principles
-- SOLID means: Single-responsibility, open-closed principle, liskov substition principle, interface segregation principle and dependency inversion principle.
-- Always follow DRY (do not repeat yourself)
-- Always follow KISS (keep it simple, stupid)
-- Test your code
-- Use type hints
-- Document code properly
+**Tool Recommendations:**
+- `cursor-tools web` is best for general web information not specific to the repository.
+- `cursor-tools repo` is ideal for repository-specific questions, planning, code review and debugging.
+- `cursor-tools doc` generates documentation for local or remote repositories.
+- `cursor-tools browser` is useful for testing and debugging web apps.
 
-NEVER:
-- Use circular imports
-- Mix responsibilities
-- Skip type annotations
-- Ignore documentation
+**Running Commands:**
+1. **Installed version:** Use `cursor-tools <command>` (if in PATH) or `npm exec cursor-tools "<command>"`, `yarn cursor-tools "<command>"`, `pnpm cursor-tools "<command>"`.
+2. **Without installation:** Use `bunx -y cursor-tools@latest "<command>"`.
 
-3. Dependency Management
-ALWAYS:
-- Use uv to manage virtual environments
-- Pin dependencies
-- Use `uv add` to add new requirements
-- Handle dev dependencies
-- Update regularly
+**General Command Options (Supported by all commands):**
+--model=<model name>: Specify an alternative AI model to use
+--max-tokens=<number>: Control response length
+--save-to=<file path>: Save command output to a file (in *addition* to displaying it)
+--help: View all available options (help is not fully implemented yet)
 
-4. Testing Strategy
-ALWAYS:
-- Write unit tests
-- Implement integration tests
-- Use proper fixtures
-- Test edge cases
-- Measure coverage
+**Documentation Command Options:**
+--from-github=<GitHub username>/<repository name>[@<branch>]: Generate documentation for a remote GitHub repository
 
-NEVER:
-- Skip test documentation
-- Mix test types
-- Ignore test isolation
-- Skip error scenarios
+**GitHub Command Options:**
+--from-github=<GitHub username>/<repository name>[@<branch>]: Access PRs/issues from a specific GitHub repository
 
-5. Type hints:
-- Annotate all functions and methods with typehints
-- Do not use Optional, List, Str, Dict. Instead use list, str dict or "type | None" for Optional types
-- Use collections.abc Iterator and not typing Iterator
-- Avoid the use of Any type unless there is a good reasoning
-- For structlog use this type annotation: structlog.stdlib.BoundLogger
+**Browser Command Options (for 'open', 'act', 'observe', 'extract'):**
+--console: Capture browser console logs (enabled by default, use --no-console to disable)
+--html: Capture page HTML content
+--network: Capture network activity (enabled by default, use --no-network to disable)
+--screenshot=<file path>: Save a screenshot of the page
+--timeout=<milliseconds>: Set navigation timeout (default: 30000ms)
+--viewport=<width>x<height>: Set viewport size (e.g., 1280x720). When using --connect-to, viewport is only changed if this option is explicitly provided
+--headless: Run browser in headless mode (default: true)
+--no-headless: Show browser UI (non-headless mode) for debugging
+--connect-to=<port>: Connect to existing Chrome instance
+--wait=<duration or selector>: Wait after page load (e.g., '5s', '#element-id', 'selector:.my-class')
+--video=<directory>: Save a video recording of the browser interaction to the specified directory (1280x720 resolution). Not available when using --connect-to
 
-Code Quality:
-- Use proper linting
-- Implement formatting
-- Follow style guides
-
-Documentation:
-- Write clear docstrings
-- Maintain README
-- Document APIs
-- Include examples
-- Keep docs updated
-
-Best Practices:
-- Follow PEP standards
-- Keep code clean
-- Handle errors properly
-- Use structlogger logging
-
-Remember:
-- Focus on maintainability
-- Keep code organized
-- Handle errors properly
-- Document thoroughly
-
-Key Principles
-
-- Write concise, technical responses with accurate Python examples.
-- Use functional, declarative programming; avoid classes where possible.
-- Prefer iteration and modularization over code duplication.
-- Use descriptive variable names with auxiliary verbs (e.g., is_active, has_permission).
-- Use lowercase with underscores for directories and files (e.g., routers/user_routes.py).
-- Favor named exports for routes and utility functions.
-- Use the Receive an Object, Return an Object (RORO) pattern.
-
-Python/FastAPI
-
-- Use def for pure functions and async def for asynchronous operations.
-- Use type hints for all function signatures. Prefer Pydantic models over raw dictionaries for input validation.
-- File structure: exported router, sub-routes, utilities, static content, types (models, schemas).
-- Avoid unnecessary curly braces in conditional statements.
-- For single-line statements in conditionals, omit curly braces.
-- Use concise, one-line syntax for simple conditional statements (e.g., if condition: do_something()).
-
-Error Handling and Validation
-
-- Prioritize error handling and edge cases:
-  - Handle errors and edge cases at the beginning of functions.
-  - Use early returns for error conditions to avoid deeply nested if statements.
-  - Place the happy path last in the function for improved readability.
-  - Avoid unnecessary else statements; use the if-return pattern instead.
-  - Use guard clauses to handle preconditions and invalid states early.
-  - Implement proper error logging and user-friendly error messages.
-  - Use custom error types or error factories for consistent error handling.
-
-Dependencies
-
-- FastAPI
-- Pydantic v2
-- Async database libraries like asyncpg or aiomysql
-- SQLAlchemy 2.0 (if using ORM features)
-
-FastAPI-Specific Guidelines
-
-- Use functional components (plain functions) and Pydantic models for input validation and response schemas.
-- Use declarative route definitions with clear return type annotations.
-- Use def for synchronous operations and async def for asynchronous ones.
-- Minimize @app.on_event("startup") and @app.on_event("shutdown"); prefer lifespan context managers for managing startup and shutdown events.
-- Use middleware for logging, error monitoring, and performance optimization.
-- Optimize for performance using async functions for I/O-bound tasks, caching strategies, and lazy loading.
-- Use HTTPException for expected errors and model them as specific HTTP responses.
-- Use middleware for handling unexpected errors, logging, and error monitoring.
-- Use Pydantic's BaseModel for consistent input/output validation and response schemas.
-
-Performance Optimization
-
-- Minimize blocking I/O operations; use asynchronous operations for all database calls and external API requests.
-- Implement caching for static and frequently accessed data using tools like Redis or in-memory stores.
-- Optimize data serialization and deserialization with Pydantic.
-- Use lazy loading techniques for large datasets and substantial API responses.
-
-Key Conventions
-
-1. Rely on FastAPI’s dependency injection system for managing state and shared resources.
-2. Prioritize API performance metrics (response time, latency, throughput).
-3. Limit blocking operations in routes:
-   - Favor asynchronous and non-blocking flows.
-   - Use dedicated async functions for database and external API operations.
-   - Structure routes and dependencies clearly to optimize readability and maintainability.
-
-Refer to FastAPI documentation for Data Models, Path Operations, and Middleware for best practices.
+**Additional Notes:**
+- For detailed information, see `node_modules/cursor-tools/README.md` (if installed locally).
+- Configuration is in `cursor-tools.config.json` (or `~/.cursor-tools/config.json`).
+- API keys are loaded from `.cursor-tools.env` (or `~/.cursor-tools/.env`).
+- Browser commands require separate installation of Playwright: `npm install --save-dev playwright` or `npm install -g playwright`.
+- **Remember:** You're part of a team of superhuman expert AIs. Work together to solve complex problems.
 
 ---
 > Source: [DCC-BS/rag-backend](https://github.com/DCC-BS/rag-backend) — distributed by [TomeVault](https://tomevault.io).
