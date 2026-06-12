@@ -7,12 +7,12 @@ Calculate the type coverage of popular Python libraries
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [lolpack/type_coverage_py](https://github.com/lolpack/type_coverage_py).
+Original source: `CLAUDE.md` in [lolpack/type_coverage_py](https://github.com/lolpack/type_coverage_py).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
