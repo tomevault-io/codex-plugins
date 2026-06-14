@@ -1,0 +1,17 @@
+
+# Buildable Cursor Rule
+
+When the user asks to generate a local app prototype, use Buildable's workflow from this local repository. Prefer running `buildable plan "<prompt>"` first when a concrete app spec would reduce ambiguity.
+
+1. Classify the prompt with `core/classifier.md`.
+2. Apply `core/ask-vs-build-policy.md`.
+3. Generate an app spec with `core/app-spec-schema.md`.
+4. Load only the relevant files from `knowledge/` and `templates/`.
+5. Build locally with mock/local data by default.
+6. Review against `knowledge/quality-rubrics/`.
+
+Do not add billing, accounts, cloud previews, managed databases, telemetry, hosted deployment, or central template services unless explicitly requested.
+
+---
+> Source: [suntay44/buildable-plugin-skills](https://github.com/suntay44/buildable-plugin-skills) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-06-14 -->
