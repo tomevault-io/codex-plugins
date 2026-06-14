@@ -7,13 +7,13 @@ Agent-first minimal HTML document host. Your agent self-onboards, gets an API ke
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [kernel/just-html](https://github.com/kernel/just-html).
+Original source: `.cursor/rules/*.mdc` in [kernel/just-html](https://github.com/kernel/just-html).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
-- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
