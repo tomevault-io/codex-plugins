@@ -1,8 +1,11 @@
+# Gemini Instructions
 
-Read `AGENTS.md` first. Then apply the shared configs under
-`docs/agent-configs/`. Do not duplicate durable rules in Cursor-specific files.
-For this project, the WordPress/MySQL/SEO overlay is
+Read `AGENTS.md` first. This file is only a tool-specific pointer. Durable
+project rules live under `docs/agent-configs/`, especially
 `docs/agent-configs/ost-wordpress-agent-context.md`.
+
+Reply in Vietnamese for this project while keeping technical identifiers in
+English when useful.
 
 ---
 > Source: [PhanHug93/vibe-website](https://github.com/PhanHug93/vibe-website) — distributed by [TomeVault](https://tomevault.io).
