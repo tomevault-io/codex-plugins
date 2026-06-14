@@ -7,13 +7,13 @@ A persistent memory protocol for AI coding agents that gives projects a shared, 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [hereisSwapnil/memwiki](https://github.com/hereisSwapnil/memwiki).
+Original source: `.cursor/rules/*.mdc` in [hereisSwapnil/memwiki](https://github.com/hereisSwapnil/memwiki).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
