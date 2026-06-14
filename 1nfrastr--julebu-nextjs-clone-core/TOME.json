@@ -1,0 +1,44 @@
+{
+  "name": "julebu-nextjs-clone-core",
+  "owner": "1nFrastr",
+  "repo": "julebu-nextjs-clone-core",
+  "description": "\ud83c\udfaf English typing game | AI scenario generation | Next.js + TypeScript | Audio pronunciation | Vocabulary learning | \ud83c\udfaf \u82f1\u8bed\u6253\u5b57\u6e38\u620f | AI\u573a\u666f\u751f\u6210 | Next.js + TypeScript | \u8bed\u97f3\u53d1\u97f3 | \u8bcd\u6c47\u5b66\u4e60",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/1nFrastr/julebu-nextjs-clone-core",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-06-14T02:33:22Z"
+}
