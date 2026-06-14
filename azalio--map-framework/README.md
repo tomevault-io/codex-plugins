@@ -2,8 +2,6 @@
 
 > Tome by [azalio](https://github.com/azalio/map-framework) — distributed by [TomeVault](https://tomevault.io)
 
-AI instruction skills by azalio
-
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
