@@ -7,12 +7,12 @@ AI-powered video production pipeline for Claude Code — 6 automated phases from
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [nebrass/hve-spielberg](https://github.com/nebrass/hve-spielberg).
+Original source: `CLAUDE.md` in [nebrass/hve-spielberg](https://github.com/nebrass/hve-spielberg).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
