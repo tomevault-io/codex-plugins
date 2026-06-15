@@ -2,12 +2,10 @@
 
 > Sourced from [FavioVazquez/learnship](https://github.com/FavioVazquez/learnship) and converted for every major platform by [TomeVault](https://tomevault.io)
 
-Learn as you build. Build with intent. Ship real products. Agentic engineering done right. 
-
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.windsurf/rules/*.md` in [FavioVazquez/learnship](https://github.com/FavioVazquez/learnship).
+Original source: `` in [FavioVazquez/learnship](https://github.com/FavioVazquez/learnship).
 
 ## Also available for
 
@@ -16,6 +14,7 @@ Original source: `.windsurf/rules/*.md` in [FavioVazquez/learnship](https://gith
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
 
 Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/FavioVazquez/learnship](https://github.com/FavioVazquez/learnship)
 
