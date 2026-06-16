@@ -7,14 +7,14 @@ AI-powered code review agent for GitHub pull requests. Self-hosted GitHub App us
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [bluebear-io/baloo-bear](https://github.com/bluebear-io/baloo-bear).
+Original source: `CLAUDE.md` in [bluebear-io/baloo-bear](https://github.com/bluebear-io/baloo-bear).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/bluebear-io/baloo-bear](https://github.com/bluebear-io/baloo-bear)
