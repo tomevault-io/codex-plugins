@@ -1,4 +1,4 @@
-# Emdash Skills for Windsurf
+# Emdash Skills for GitHub Copilot
 
 Load CONVENTIONS.md for stack defaults. Load _router.md for skill routing.
 14 categories (01-14), 94 reference docs, 18 agents.
