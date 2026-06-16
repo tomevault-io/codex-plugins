@@ -1,0 +1,44 @@
+{
+  "name": "opcua-client",
+  "owner": "php-opcua",
+  "repo": "opcua-client",
+  "description": "A PHP library that talks OPC UA binary protocol over TCP. It handles the full stack \u2014 transport, encoding, secure channels, sessions, crypto \u2014 so you can connect to any OPC UA server straight from PHP, without shelling out to C/C++ libraries.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/php-opcua/opcua-client",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-06-16T18:46:28Z"
+}
