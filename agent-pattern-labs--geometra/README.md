@@ -7,13 +7,13 @@ The Browser for the Singularity! No browser. Just computed geometry going straig
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [Agent-Pattern-Labs/geometra](https://github.com/Agent-Pattern-Labs/geometra).
+Original source: `CLAUDE.md` in [Agent-Pattern-Labs/geometra](https://github.com/Agent-Pattern-Labs/geometra).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
