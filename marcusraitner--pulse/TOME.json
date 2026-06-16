@@ -1,0 +1,44 @@
+{
+  "name": "pulse",
+  "owner": "marcusraitner",
+  "repo": "pulse",
+  "description": "Pulse \u2013 Your Micro Journal: How are you really feeling right now? In the rush of daily life, we often forget to pause. Pulse is your minimalist micro-journaling companion designed to make reflection as effortless as possible. No long entries, no pressure. Just you, a brief thought, and your current level on a scale from -2 to 2.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/marcusraitner/pulse",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-06-16T22:41:53Z"
+}
