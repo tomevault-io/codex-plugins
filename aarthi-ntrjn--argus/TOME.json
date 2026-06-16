@@ -4,7 +4,7 @@
   "repo": "argus",
   "description": "Centrally monitor and remotely control Claude Code and GitHub Copilot sessions",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/aarthi-ntrjn/argus",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-06-16T00:54:55Z"
+  "distributed_at": "2026-06-16T04:48:38Z"
 }
