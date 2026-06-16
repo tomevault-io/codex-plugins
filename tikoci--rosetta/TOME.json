@@ -4,7 +4,7 @@
   "repo": "rosetta",
   "description": "MCP Server with RouterOS docs + commands + products + changelogs, using SQLite-as-RAG, sourced from MikroTik",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/tikoci/rosetta",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-06-16T16:43:52Z"
+  "distributed_at": "2026-06-16T17:19:27Z"
 }
