@@ -1,0 +1,44 @@
+{
+  "name": "ExplorerLens.io",
+  "owner": "RajwanYair",
+  "repo": "ExplorerLens.io",
+  "description": "IThumbnailProvider COM shell extension: GPU-accelerated thumbnails for 200+ formats (HEIC, AVIF, JXL, WebP, RAW, PDF, CBZ, glTF, DDS, EXR). C++20, DirectX 11/12, Vulkan. Windows 10/11 x64.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/RajwanYair/ExplorerLens.io",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-06-16T19:11:12Z"
+}
