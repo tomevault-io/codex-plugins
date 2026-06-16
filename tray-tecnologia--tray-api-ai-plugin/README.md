@@ -7,14 +7,14 @@ Plugin para agentes de IA(Claude Code, Codex, etc) com integração completa às
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [tray-tecnologia/tray-api-ai-plugin](https://github.com/tray-tecnologia/tray-api-ai-plugin).
+Original source: `copilot-instructions.md` in [tray-tecnologia/tray-api-ai-plugin](https://github.com/tray-tecnologia/tray-api-ai-plugin).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/tray-tecnologia/tray-api-ai-plugin](https://github.com/tray-tecnologia/tray-api-ai-plugin)
