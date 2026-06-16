@@ -1,0 +1,44 @@
+{
+  "name": "Polymarket-Trading-Bot",
+  "owner": "emmanuelwestra",
+  "repo": "Polymarket-Trading-Bot",
+  "description": "\ud83e\udd16 The most advanced open-source Polymarket trading bot. 7 automated strategies (arbitrage, convergence, market making, momentum, AI forecast), whale tracker with copy-trade simulator, real-time dashboard, parallel market scanner, paper trading mode. 53K+ lines of TypeScript. Contact @DylanForexia on Telegram for custom bots.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/emmanuelwestra/Polymarket-Trading-Bot",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-06-16T20:36:38Z"
+}
