@@ -7,13 +7,13 @@ WINGS is an open-source, simple golang-based platform for front-end web applicat
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [luisfurquim/wings](https://github.com/luisfurquim/wings).
+Original source: `.cursor/rules/*.mdc` in [luisfurquim/wings](https://github.com/luisfurquim/wings).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
