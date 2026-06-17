@@ -2,9 +2,9 @@
   "name": "mint",
   "owner": "3li7alaki",
   "repo": "mint",
-  "description": "Disciplined agentic development for Claude Code.",
+  "description": "",
   "type": "config",
-  "source_format": "CLAUDE.md",
+  "source_format": "",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/3li7alaki/mint",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-09T21:30:29Z"
+  "distributed_at": "2026-06-17T19:24:41Z"
 }
