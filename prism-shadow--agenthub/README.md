@@ -1,13 +1,13 @@
-# AI instruction files for AgentHub
+# AI instruction files for agenthub
 
-> Sourced from [Prism-Shadow/AgentHub](https://github.com/Prism-Shadow/AgentHub) and converted for every major platform by [TomeVault](https://tomevault.io)
+> Sourced from [Prism-Shadow/agenthub](https://github.com/Prism-Shadow/agenthub) and converted for every major platform by [TomeVault](https://tomevault.io)
 
-AgentHub is the LLM API Hub for the Agent era, built for high-precision autonomous agents. (GPT-5.4/Claude 4.6/Gemini 3.1)
+AgentHub SDK is the unified and transparent multi-LLM SDK for building reliable Agent Apps. (GPT-5.5/Claude 4.8/Gemini 3.5)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [Prism-Shadow/AgentHub](https://github.com/Prism-Shadow/AgentHub).
+Original source: `copilot-instructions.md` in [Prism-Shadow/agenthub](https://github.com/Prism-Shadow/agenthub).
 
 ## Also available for
 
@@ -17,10 +17,14 @@ Original source: `copilot-instructions.md` in [Prism-Shadow/AgentHub](https://gi
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [Prism-Shadow/AgentHub](https://github.com/Prism-Shadow/AgentHub) — a repo with 69+ stars on GitHub.
+Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/Prism-Shadow/agenthub](https://github.com/Prism-Shadow/agenthub)
 
 ---
 
-Explore more instruction files on [TomeVault](https://tomevault.io) — the open index of AI config files for every platform.
+Install this config instantly:
+```
+npx tomevault install Prism-Shadow/agenthub
+```
+Source: [github.com/Prism-Shadow/agenthub](https://github.com/Prism-Shadow/agenthub).
 
-<!-- genome:a-e-s -->
+<!-- genome:a-i-p -->
