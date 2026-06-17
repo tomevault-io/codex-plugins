@@ -4,7 +4,7 @@
   "repo": "ProgramAT-opensource",
   "description": "ProgramAT is a mobile app that enables users to create, run, and iteratively refine bespoke camera-based assistive technologies using natural-language input. It connects to an agentic coding backend and cloud infrastructure to translate user prompts into functional tools that can be immediately tested and adapted in real-world contexts.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/program-at/ProgramAT-opensource",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-06-16T19:13:18Z"
+  "distributed_at": "2026-06-17T04:53:49Z"
 }
