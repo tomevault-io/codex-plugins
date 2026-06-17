@@ -4,7 +4,7 @@
   "repo": "nix-ai",
   "description": "Your AI coding toolkit, declared in Nix \u2014 Claude, Gemini, Copilot, 15+ MCP servers, one flake",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/dryvist/nix-ai",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-06-16T20:44:32Z"
+  "distributed_at": "2026-06-17T07:25:45Z"
 }
