@@ -4,7 +4,7 @@
   "repo": "cloakpdf",
   "description": "A fast, modern, and privacy-focused PDF toolkit that runs entirely in your browser. No uploads, no servers, no tracking \u2014 your files never leave your device.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/cloakyard/cloakpdf",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-06-16T19:06:40Z"
+  "distributed_at": "2026-06-17T04:38:30Z"
 }
