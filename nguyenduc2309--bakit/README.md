@@ -5,14 +5,14 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [NguyenDuc2309/bakit](https://github.com/NguyenDuc2309/bakit).
+Original source: `CLAUDE.md` in [NguyenDuc2309/bakit](https://github.com/NguyenDuc2309/bakit).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 From [NguyenDuc2309/bakit](https://github.com/NguyenDuc2309/bakit) — a repo with 0+ stars on GitHub.
