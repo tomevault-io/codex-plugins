@@ -4,7 +4,7 @@
   "repo": "mcp-dockhand",
   "description": "MCP Server for Dockhand Docker Management - exposes 130+ API endpoints as MCP tools",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/strausmann/mcp-dockhand",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-06-16T19:02:31Z"
+  "distributed_at": "2026-06-17T03:34:37Z"
 }
