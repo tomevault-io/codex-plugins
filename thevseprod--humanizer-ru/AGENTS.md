@@ -1,0 +1,23 @@
+
+# Humanizer
+
+When the user asks you to humanize / de-AI a piece of text:
+
+1. **Detect the language** of the text.
+2. **Load the matching rule set** from this skill folder:
+   - Russian text -> `humanizer.ru.md`
+   - English text -> `humanizer.en.md`
+3. **Apply the rules.** Rewrite the text, removing the AI tells listed in the rule
+   file. Keep the meaning, facts, and numbers. Do not add anything or invent data.
+4. **Two passes.** First rewrite by the rules, then re-read and ask "what here still
+   smells like an AI?" and clean up what's left.
+5. **Voice calibration (optional).** If the user gave samples of their own writing,
+   match that voice.
+6. **Output only the rewritten text** - no preamble, no "here's your humanized version".
+
+The full rule sets are in `humanizer.ru.md` (Russian) and `humanizer.en.md` (English)
+in this folder. They are the single source of truth - follow them exactly.
+
+---
+> Source: [thevseprod/humanizer-ru](https://github.com/thevseprod/humanizer-ru) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-06-16 -->
