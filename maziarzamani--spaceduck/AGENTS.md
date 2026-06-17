@@ -1,83 +1,76 @@
 
-# Git Conventions
+# Mintlify Technical Writing
 
-## Commit Messages
+## Writing principles
 
-Use conventional commits. Format: `type(scope): description`
+- Use second person ("you") for instructions, active voice, present tense
+- Lead with the most important information; basic concepts before advanced
+- Break procedures into numbered steps with prerequisites and expected outcomes
+- Keep sentences concise; define jargon on first use; maintain consistent terminology
+- Use parallel structure in lists and headings
 
-Types:
-- `feat` — new feature or capability
-- `fix` — bug fix
-- `refactor` — code restructuring without behavior change
-- `test` — adding or updating tests
-- `docs` — documentation only
-- `chore` — tooling, deps, CI, config changes
-- `perf` — performance improvement
+## Page structure
 
-Scope is the package name without `@spaceduck/` prefix: `core`, `gateway`, `memory-sqlite`, `provider-gemini`, `channel-web`.
+Every `.mdx` page starts with YAML frontmatter:
 
-Examples:
-- `feat(gateway): add WebSocket support with WsEnvelope protocol`
-- `fix(memory-sqlite): handle foreign key constraint on facts table`
-- `test(core): boost coverage for fact-extractor and error classes`
-- `chore: rename project from moonbot to spaceduck`
+```yaml
+---
+title: "Clear, keyword-rich title"
+description: "Concise description of page purpose and value"
+---
+```
 
-## Author
+Heading hierarchy starts at H2 (`##`). Use descriptive, scannable headings.
 
-Commits in this repo use `hi@spaceduck.ai` as the author email (set via local git config).
+## Component selection
 
-## Commit Practices
+| Need | Component |
+|------|-----------|
+| Sequential instructions | `<Steps>` with `<Step title="...">` |
+| Platform-specific alternatives | `<Tabs>` with `<Tab title="...">` |
+| Same concept in multiple languages | `<CodeGroup>` |
+| Progressive disclosure / FAQ | `<AccordionGroup>` + `<Accordion>` |
+| API endpoint request/response | `<RequestExample>` / `<ResponseExample>` |
+| API parameters | `<ParamField path\|body\|query\|header>` |
+| API response shape | `<ResponseField>` with `<Expandable>` for nesting |
+| Supplementary info | `<Note>`, `<Tip>`, `<Warning>`, `<Info>`, `<Check>` |
+| Navigation cards | `<Card>` / `<CardGroup cols={2}>` |
+| Images | Always wrap in `<Frame>` (optional `caption`) |
+| Inline definitions | `<Tooltip tip="...">` |
 
-- **Typecheck before committing.** Run `bunx tsc --noEmit` and fix all errors before staging.
-- **Run tests before committing.** All tests must pass. Run `bun test --recursive`.
-- **Small, focused commits.** Each commit should do one logical thing.
-- **Never commit secrets.** The `.env` file is gitignored. Only `.env.example` is tracked.
-- **Never commit binaries or build artifacts.** `dist/`, `node_modules/`, `*.db` are gitignored.
-- **Don't skip hooks.** Never use `--no-verify`.
+## Callout usage
 
-## Pre-Push Checklist
+- `<Note>` — helpful context that supports the main content
+- `<Tip>` — best practices, shortcuts, pro tips
+- `<Warning>` — potential issues, breaking changes, destructive actions
+- `<Info>` — neutral background or announcements
+- `<Check>` — success confirmations
 
-Before pushing any branch or creating a PR, **always** run these in order:
+## Code examples
 
-1. `bunx tsc --noEmit` — must exit 0 (no type errors)
-2. `bun test --recursive` — must exit 0 (all tests pass)
+- Always complete and runnable; use realistic data, never real secrets
+- Specify language and filename: `` ```javascript config.js ``
+- Add comments only for non-obvious logic
+- Show error handling and expected output
+- Use `<CodeGroup>` for multi-language variants
 
-Do NOT push code that fails either check. Fix the issues first.
+## API documentation
 
-## Branch Strategy (GitHub Flow)
+- Document all parameters (required and optional) with `<ParamField>`
+- Show success and error responses with `<ResponseExample>`
+- Include auth examples, rate limits, and all HTTP status codes
+- Use `<Expandable>` for nested object properties
 
-- `main` — stable, protected. All PRs target `main`. Never push directly.
-- Feature branches: `feat/<short-description>` (e.g., `feat/web-ui`)
-- Fix branches: `fix/<short-description>`
-- Chore branches: `chore/<short-description>`
-- Keep branches short-lived. Merge via PR.
+## Navigation config
 
-### Starting a task
+Refer to [docs.json schema](https://mintlify.com/docs.json) when building `docs.json` and site navigation.
 
-**Always create a feature branch before making changes.** When the user asks you to implement something:
+## Accessibility
 
-1. `git checkout main && git pull origin main`
-2. `git checkout -b <type>/<short-description>` (e.g., `feat/config-system`, `fix/memory-leak`, `chore/update-deps`)
-3. Do the work, commit incrementally
-4. Push and tell the user to create a PR on GitHub
-
-Never commit directly to `main`. If you find yourself on `main`, create and switch to a branch first.
-
-## When to Commit
-
-Commit after completing a logical unit of work:
-- A milestone (M0, M1, M2, ...) or sub-milestone
-- A new feature, test suite, or bug fix
-- A rename, refactor, or config change
-
-Do NOT commit half-finished work to `main`. Use a feature branch.
-
-## Pull Requests
-
-- Title follows conventional commit format
-- Body has a `## Summary` section with 1-3 bullet points
-- Body has a `## Test plan` section
-- Reference related issues if any
+- Descriptive alt text on all images
+- Specific link text (never "click here")
+- Proper heading hierarchy
+- Sufficient color contrast in examples
 
 ---
 > Source: [maziarzamani/spaceduck](https://github.com/maziarzamani/spaceduck) — distributed by [TomeVault](https://tomevault.io).
