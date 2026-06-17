@@ -4,7 +4,7 @@
   "repo": "device-builder-frontend",
   "description": "Frontend for the ESPHome Device Builder",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/esphome/device-builder-frontend",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-06-16T20:50:32Z"
+  "distributed_at": "2026-06-17T08:58:24Z"
 }
