@@ -7,13 +7,13 @@ Neo-brutalist React UI kit built with Next.js, Tailwind CSS and shadcn-style com
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [dev-snake/brutxui](https://github.com/dev-snake/brutxui).
+Original source: `copilot-instructions.md` in [dev-snake/brutxui](https://github.com/dev-snake/brutxui).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
