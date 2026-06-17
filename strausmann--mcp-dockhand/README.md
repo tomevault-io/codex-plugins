@@ -7,12 +7,12 @@ MCP Server for Dockhand Docker Management - exposes 130+ API endpoints as MCP to
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [strausmann/mcp-dockhand](https://github.com/strausmann/mcp-dockhand).
+Original source: `CLAUDE.md` in [strausmann/mcp-dockhand](https://github.com/strausmann/mcp-dockhand).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
