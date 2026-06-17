@@ -7,12 +7,12 @@ Resources to help enterprises turn into frontier firms through agentic transform
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [microsoft/agent-resources](https://github.com/microsoft/agent-resources).
+Original source: `CLAUDE.md` in [microsoft/agent-resources](https://github.com/microsoft/agent-resources).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
