@@ -1,0 +1,30 @@
+# mixpanel-headless
+
+> Tome by [mixpanel](https://github.com/mixpanel/mixpanel-headless) — distributed by [TomeVault](https://tomevault.io)
+
+Complete programmable interface to Mixpanel analytics. Python library and CLI for discovery, querying, and data extraction. Designed with coding agent use in mind.
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `copilot-instructions.md` in [mixpanel/mixpanel-headless](https://github.com/mixpanel/mixpanel-headless).
+
+## Also available for
+
+- **Claude Code** — `CLAUDE.md`
+- **Codex** — `AGENTS.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/mixpanel/mixpanel-headless](https://github.com/mixpanel/mixpanel-headless)
+
+---
+
+Install this config instantly:
+```
+npx tomevault install mixpanel/mixpanel-headless
+```
+Source: [github.com/mixpanel/mixpanel-headless](https://github.com/mixpanel/mixpanel-headless).
+
+<!-- genome:t-i-p -->
