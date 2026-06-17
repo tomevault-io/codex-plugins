@@ -7,14 +7,14 @@ A CLI + daemon system for LLM-driven Android UI control on emulators and rooted 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [alehkot/android-emu-agent](https://github.com/alehkot/android-emu-agent).
+Original source: `CLAUDE.md` in [alehkot/android-emu-agent](https://github.com/alehkot/android-emu-agent).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/alehkot/android-emu-agent](https://github.com/alehkot/android-emu-agent)
