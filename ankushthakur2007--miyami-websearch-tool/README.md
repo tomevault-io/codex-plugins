@@ -7,12 +7,12 @@ A production-ready FastAPI wrapper for SearXNG that provides LLM-friendly search
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [ankushthakur2007/miyami_websearch_tool](https://github.com/ankushthakur2007/miyami_websearch_tool).
+Original source: `CLAUDE.md` in [ankushthakur2007/miyami_websearch_tool](https://github.com/ankushthakur2007/miyami_websearch_tool).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
