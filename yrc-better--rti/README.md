@@ -1,0 +1,30 @@
+# RTI
+
+> Source: [yrc-better/RTI](https://github.com/yrc-better/RTI) — distributed by [TomeVault](https://tomevault.io)
+
+Conversational literature research workflow for agents
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [yrc-better/RTI](https://github.com/yrc-better/RTI).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/yrc-better/RTI](https://github.com/yrc-better/RTI)
+
+---
+
+Install this config instantly:
+```
+npx tomevault install yrc-better/RTI
+```
+Source: [github.com/yrc-better/RTI](https://github.com/yrc-better/RTI).
+
+<!-- genome:d-i-q -->
