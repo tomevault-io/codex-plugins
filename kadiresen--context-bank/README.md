@@ -7,14 +7,14 @@ The 'git init' for AI context. Bootstrap your project's AI memory and rules in s
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [kadiresen/context-bank](https://github.com/kadiresen/context-bank).
+Original source: `copilot-instructions.md` in [kadiresen/context-bank](https://github.com/kadiresen/context-bank).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/kadiresen/context-bank](https://github.com/kadiresen/context-bank)
