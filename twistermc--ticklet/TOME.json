@@ -4,7 +4,7 @@
   "repo": "Ticklet",
   "description": "Mac app to log what you're doing on your machine by keeping track of window names. Simple & private. ",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/TwisterMc/Ticklet",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-06-17T14:41:36Z"
+  "distributed_at": "2026-06-18T15:29:15Z"
 }
