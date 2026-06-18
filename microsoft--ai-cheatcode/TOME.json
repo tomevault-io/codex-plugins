@@ -4,7 +4,7 @@
   "repo": "ai-cheatcode",
   "description": "The Ch(e)at Code \u2014 Agent Patterns for Copilot Chat (AIWF Team Newsletter Archive)",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/microsoft/ai-cheatcode",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-06-17T13:13:31Z"
+  "distributed_at": "2026-06-18T12:47:02Z"
 }
