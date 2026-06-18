@@ -7,12 +7,12 @@ AI skills and agents that help designers vibe-code their ideas to life. 14 skill
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [sso-ss/vibe-ship-it](https://github.com/sso-ss/vibe-ship-it).
+Original source: `CLAUDE.md` in [sso-ss/vibe-ship-it](https://github.com/sso-ss/vibe-ship-it).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
