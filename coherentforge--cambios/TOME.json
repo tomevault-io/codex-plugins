@@ -4,7 +4,7 @@
   "repo": "CambiOS",
   "description": "Zero-trust, capability-based Rust microkernel targeting formal verification. Tri-arch (x86_64 / AArch64 / RISC-V). Sovereign and generative: no telemetry, user owns keys and data. Early-stage \u2014 see STATUS.md. Inspired by seL4, Hubris, and Redox.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/coherentforge/CambiOS",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-06-17T10:39:57Z"
+  "distributed_at": "2026-06-18T01:22:48Z"
 }
