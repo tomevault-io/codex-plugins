@@ -4,7 +4,7 @@
   "repo": "nomercy-media-server",
   "description": "NoMercy MediaServer, the backend that handles encoding, metadata, and streaming",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/NoMercy-Entertainment/nomercy-media-server",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-06-17T12:47:44Z"
+  "distributed_at": "2026-06-18T09:17:52Z"
 }
