@@ -1,0 +1,44 @@
+{
+  "name": "s3dlio",
+  "owner": "russfellows",
+  "repo": "s3dlio",
+  "description": "Part of the sai3 project that delivers multi-protocol storage access for AI/ML workflows, supporting Pytorch, Tensorflow and Jax.  This project provides a CLI, along with Rust and Python libraries for AI/ML storage workflows.  Supporting S3, File, Azure Blob and GCS using the latest Rust SDKs.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/russfellows/s3dlio",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-06-18T22:31:22Z"
+}
