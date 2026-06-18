@@ -4,7 +4,7 @@
   "repo": "vibe-ship-it",
   "description": "AI skills and agents that help designers vibe-code their ideas to life. 14 skills, 4 agents, 3 platforms. Works with VS Code Copilot, Claude Code, and OpenAI Codex. Includes a DESIGN.md generator that extracts any website's design system.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/sso-ss/vibe-ship-it",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-06-17T10:46:46Z"
+  "distributed_at": "2026-06-18T02:36:23Z"
 }
