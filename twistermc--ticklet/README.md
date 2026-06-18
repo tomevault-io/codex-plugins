@@ -7,12 +7,12 @@ Mac app to log what you're doing on your machine by keeping track of window name
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [TwisterMc/Ticklet](https://github.com/TwisterMc/Ticklet).
+Original source: `CLAUDE.md` in [TwisterMc/Ticklet](https://github.com/TwisterMc/Ticklet).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
