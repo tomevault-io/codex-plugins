@@ -4,7 +4,7 @@
   "repo": "mixpanel-headless",
   "description": "Complete programmable interface to Mixpanel analytics. Python library and CLI for discovery, querying, and data extraction. Designed with coding agent use in mind.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/mixpanel/mixpanel-headless",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-06-17T16:35:21Z"
+  "distributed_at": "2026-06-18T19:24:33Z"
 }
