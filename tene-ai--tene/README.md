@@ -7,12 +7,12 @@ AI-safe secret manager CLI for Claude Code, Cursor, and other AI agents. Local-f
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [tene-ai/tene](https://github.com/tene-ai/tene).
+Original source: `CLAUDE.md` in [tene-ai/tene](https://github.com/tene-ai/tene).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
