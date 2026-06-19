@@ -7,12 +7,12 @@ json2vec turns nested, ragged data into neural representations. It lets users de
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [json2vec/json2vec](https://github.com/json2vec/json2vec).
+Original source: `CLAUDE.md` in [json2vec/json2vec](https://github.com/json2vec/json2vec).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
