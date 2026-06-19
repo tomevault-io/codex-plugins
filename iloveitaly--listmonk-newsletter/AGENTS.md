@@ -1,22 +1,51 @@
-## Fix Tests
 
-Focus on all unit + command tests (`pytest --exclude tests/integration`). Make sure they pass and fix errors. If you run into anything very odd: stop, and let me know. Mutate test code first and let me know if you think you should update application code.
+Coding instructions for all programming languages:
 
-Then, focus on integration tests in tests/integration. If an integration test fails, run it again just to be sure it wasn't a flakey test (integration tests are not deterministic). If it fails because of a visual error, check the 'tmp/test-results/playwright/' directory for a screenshot relating to the failing test that you can inspect.
+- Never use emojis anywhere unless explicitly requested.
+- If no language is specified, assume the latest version of python.
+- If tokens or other secrets are needed, pull them from an environment variable
+- Prefer early returns over nested if statements.
+- Prefer `continue` within a loop vs nested if statements.
+- Prefer smaller functions over larger functions. Break up logic into smaller chunks with well-named functions.
+- Only add comments if the code is not self-explanatory. Do not add obvious code comments.
+- Do not remove existing comments.
+- When I ask you to write code, prioritize simplicity and legibility over covering all edge cases, handling all errors, etc.
+- When a particular need can be met with a mature, reasonably adopted and maintained package, I would prefer to use that package rather than engineering my own solution.
+- Never add error handling to catch an error without being asked to do so. Fail hard and early with assertions and allow exceptions to propagate.
+- When naming variables or functions, use names that describe the effect. For example, instead of `function handleClaimFreeTicket` (a function which opens a dialog box) use `function openClaimFreeTicketDialog`.
+- Do not install missing system packages! Instead, ask me to install them for you.
+- If terminal commands are failing because of missing variables or commands which are unrelated to your current task, stop your work and let me know.
+- Don't worry about fixing lint errors or running lint scripts unless I specifically ask you to.
 
-For additional debugging help, view the development version of the site at `$PYTHON_TEST_SERVER_HOST` using a browser.
+Use line breaks to organize code into logical groups. Instead of:
 
-Do not attempt to perform this task in a sandbox. Service connections require access to host networking.
+```python
+if not client_secret_id:
+    raise HTTPException(status.HTTP_400_BAD_REQUEST)
+session_id = client_secret_id.split("_secret")[0]
+```
 
-If you get stuck or seem to be in a loop, give me a short summary of exactly where you are running into trouble, let me know, and stop working.
+Prefer:
 
-Do not attempt to solve these issues:
+```python
+if not client_secret_id:
+    raise HTTPException(status.HTTP_400_BAD_REQUEST)
 
-* `just`, `direnv`, and `js_build` should always run or exist.
-* Chromium/Chrome/playwright not working properly.
-* Postgres, Redis, or other service connection errors.
+session_id = client_secret_id.split("_secret")[0]
+```
 
-If you run into errors, stop immediately and let me know with a summary of the problem.
+**DO NOT FORGET**: keep your responses short, dense, and without fluff. I am a senior, well-educated software engineer, and do not need long explanations.
+
+### Agent instructions
+
+Pay careful attention to these instructions when running tests, generating database migrations, or otherwise figuring out how to navigate project development scripts.
+
+- Run python tests with `pytest` only. Do not `cat` the output and do not use `-q`. If tests fail because of a configuration or system error, do not attempt to fix and let me know. I will fix it.
+  - Initially run `pytest --ignore=tests/integration` then only run `pytest tests/integration`
+  - When debugging integration tests look at `$PLAYWRIGHT_RESULT_DIRECTORY`. There's a directory for each test failure. In that directory you fill find a `failure.html` containing the rendered DOM of the page on failure and a screenshot of the contents. Use these to debug why it failed.
+- Do not attempt to create or run database migrations. Pause your work and let me know you need a migration run.
+- Use `uv add` to add python packages. No need for `pip compile`, etc.
+- Use `pnpm` and not `pnpm`. Run all `pnpm` commands in the `web/` directory.
 
 ---
 > Source: [iloveitaly/listmonk-newsletter](https://github.com/iloveitaly/listmonk-newsletter) — distributed by [TomeVault](https://tomevault.io).
