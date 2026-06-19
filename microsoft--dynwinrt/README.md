@@ -7,12 +7,12 @@ Use WinRT methods dynamically
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [microsoft/dynwinrt](https://github.com/microsoft/dynwinrt).
+Original source: `CLAUDE.md` in [microsoft/dynwinrt](https://github.com/microsoft/dynwinrt).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
