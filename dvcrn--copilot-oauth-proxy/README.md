@@ -7,14 +7,14 @@ Proxy server to translate /v1/chat/completions request to Copilot API
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [dvcrn/copilot-oauth-proxy](https://github.com/dvcrn/copilot-oauth-proxy).
+Original source: `CLAUDE.md` in [dvcrn/copilot-oauth-proxy](https://github.com/dvcrn/copilot-oauth-proxy).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 From [dvcrn/copilot-oauth-proxy](https://github.com/dvcrn/copilot-oauth-proxy) — a repo with 9+ stars on GitHub.
