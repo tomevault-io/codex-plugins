@@ -2,17 +2,16 @@
 
 > Sourced from [senoldogann/LLM-Context-Manager](https://github.com/senoldogann/LLM-Context-Manager) and converted for every major platform by [TomeVault](https://tomevault.io)
 
-Bridge the gap between your codebase and your AI editor. CCM transforms static source code into a dynamic, queryable Knowledge Graph, enabling AI agents to navigate, understand, and reason about your project with surgical precision
-
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [senoldogann/LLM-Context-Manager](https://github.com/senoldogann/LLM-Context-Manager).
+Original source: `` in [senoldogann/LLM-Context-Manager](https://github.com/senoldogann/LLM-Context-Manager).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
