@@ -7,13 +7,13 @@ Generate a newsletter digest from an rss feed and send it to a listmonk instance
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [iloveitaly/listmonk-newsletter](https://github.com/iloveitaly/listmonk-newsletter).
+Original source: `.cursor/rules/*.mdc` in [iloveitaly/listmonk-newsletter](https://github.com/iloveitaly/listmonk-newsletter).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
