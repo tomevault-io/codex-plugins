@@ -1,0 +1,28 @@
+# AI instruction files for agency-agents-app
+
+> Sourced from [msitarzewski/agency-agents-app](https://github.com/msitarzewski/agency-agents-app) and converted for every major platform by [TomeVault](https://tomevault.io)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [msitarzewski/agency-agents-app](https://github.com/msitarzewski/agency-agents-app).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/msitarzewski/agency-agents-app](https://github.com/msitarzewski/agency-agents-app)
+
+---
+
+Install this config instantly:
+```
+npx tomevault install msitarzewski/agency-agents-app
+```
+Source: [github.com/msitarzewski/agency-agents-app](https://github.com/msitarzewski/agency-agents-app).
+
+<!-- genome:a-i-q -->
