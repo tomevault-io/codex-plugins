@@ -7,12 +7,12 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [ZaxbyHub/opencode-swarm](https://github.com/ZaxbyHub/opencode-swarm).
+Original source: `CLAUDE.md` in [ZaxbyHub/opencode-swarm](https://github.com/ZaxbyHub/opencode-swarm).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
