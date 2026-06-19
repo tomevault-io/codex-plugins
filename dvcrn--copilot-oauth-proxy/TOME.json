@@ -4,7 +4,7 @@
   "repo": "copilot-oauth-proxy",
   "description": "Proxy server to translate /v1/chat/completions request to Copilot API",
   "type": "config",
-  "source_format": "GEMINI.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/dvcrn/copilot-oauth-proxy",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-06-18T02:34:58Z"
+  "distributed_at": "2026-06-19T08:36:11Z"
 }
