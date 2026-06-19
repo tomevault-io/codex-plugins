@@ -1,12 +1,15 @@
-This is a Tauri v2 desktop app with a Rust backend (src-tauri/) and Svelte 5 frontend (src/).
+This is a Tauri v2 + Svelte 5 + Tailwind CSS v4 desktop app.
 
-Architecture: Adapter pattern for 15+ coding agents. Registry in agents/registry.rs, universal parser in parsers/frontmatter.rs, unified Skill model in models/skill.rs.
+Backend (Rust): src-tauri/src/ — models, parsers, agents, commands, detection
+Frontend (Svelte 5): src/ — uses runes ($state, $derived, $effect), NOT legacy Svelte 4 syntax
 
-Build: `pnpm install && pnpm tauri dev`
-Test: `cd src-tauri && cargo test && pnpm check`
+Key architecture: Adapter pattern. agents/registry.rs defines all 15+ supported coding agents with their file paths and formats. parsers/frontmatter.rs is the universal Markdown+YAML parser. Everything normalizes to models/skill.rs.
 
-See AGENTS.md for complete architecture documentation.
+Build: pnpm install && pnpm tauri dev
+Test: cd src-tauri && cargo test
+
+See AGENTS.md for complete architecture docs.
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/OthmanAdi) — claim your Tome and manage your conversions.
-<!-- tomevault:4.0:agents_md:2026-04-10 -->
+> Source: [OthmanAdi/skill-deck](https://github.com/OthmanAdi/skill-deck) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-06-19 -->
