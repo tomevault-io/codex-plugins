@@ -5,17 +5,18 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [FredAntB/Spec-Driven-Development](https://github.com/FredAntB/Spec-Driven-Development).
+Original source: `` in [FredAntB/Spec-Driven-Development](https://github.com/FredAntB/Spec-Driven-Development).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [FredAntB/Spec-Driven-Development](https://github.com/FredAntB/Spec-Driven-Development) — a repo with 12+ stars on GitHub.
+From [FredAntB/Spec-Driven-Development](https://github.com/FredAntB/Spec-Driven-Development) — a repo with 91+ stars on GitHub.
 
 ---
 
