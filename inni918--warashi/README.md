@@ -1,0 +1,26 @@
+# warashi
+
+> Source: [inni918/warashi](https://github.com/inni918/warashi) — distributed by [TomeVault](https://tomevault.io)
+
+Warashi — a free, open-source desktop AI companion with a Live2D avatar, voice chat, long-term memory, and proactive conversation.
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `copilot-instructions.md` in [inni918/warashi](https://github.com/inni918/warashi).
+
+## Also available for
+
+- **Claude Code** — `CLAUDE.md`
+- **Codex** — `AGENTS.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/inni918/warashi](https://github.com/inni918/warashi)
+
+---
+
+Explore more instruction files on [TomeVault](https://tomevault.io) — the open index of AI config files for every platform.
+
+<!-- genome:d-e-p -->
