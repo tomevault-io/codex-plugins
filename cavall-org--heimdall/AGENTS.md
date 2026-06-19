@@ -1,4 +1,3 @@
-
 # Heimdall runtime guardrails
 
 Heimdall is the agentic interface to Ketcher for molecule operations. Three
