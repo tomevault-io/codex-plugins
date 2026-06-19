@@ -5,10 +5,11 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [mule-ai/mule](https://github.com/mule-ai/mule).
+Original source: `` in [mule-ai/mule](https://github.com/mule-ai/mule).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
