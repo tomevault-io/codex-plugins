@@ -2,12 +2,10 @@
 
 > Source: [hletrd/kiwi-paper](https://github.com/hletrd/kiwi-paper) — distributed by [TomeVault](https://tomevault.io)
 
-🥝 딱딱한 논문이나 API 문서를 나무위키 문서로 바꿔줍니다. Claude Code, OpenCode, Codex, Gemini CLI 지원.
-
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [hletrd/kiwi-paper](https://github.com/hletrd/kiwi-paper).
+Original source: `` in [hletrd/kiwi-paper](https://github.com/hletrd/kiwi-paper).
 
 ## Also available for
 
@@ -15,6 +13,7 @@ Original source: `GEMINI.md` in [hletrd/kiwi-paper](https://github.com/hletrd/ki
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/hletrd/kiwi-paper](https://github.com/hletrd/kiwi-paper)
