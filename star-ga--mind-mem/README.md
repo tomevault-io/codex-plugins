@@ -7,13 +7,13 @@ Persistent AI memory for Claude Code, OpenClaw, and any MCP-compatible agent. BM
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [star-ga/mind-mem](https://github.com/star-ga/mind-mem).
+Original source: `.cursor/rules/*.mdc` in [star-ga/mind-mem](https://github.com/star-ga/mind-mem).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
-- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
