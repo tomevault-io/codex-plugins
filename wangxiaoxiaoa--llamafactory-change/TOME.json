@@ -4,7 +4,7 @@
   "repo": "llamafactory_change",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/Wangxiaoxiaoa/llamafactory_change",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-06-21T02:34:36Z"
+  "distributed_at": "2026-06-21T02:36:20Z"
 }
