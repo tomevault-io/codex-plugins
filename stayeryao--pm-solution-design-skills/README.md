@@ -7,14 +7,14 @@ Stayer 定义的 Claude Code Skills 集合
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [StayerYao/PM-Solution-Design-Skills](https://github.com/StayerYao/PM-Solution-Design-Skills).
+Original source: `CLAUDE.md` in [StayerYao/PM-Solution-Design-Skills](https://github.com/StayerYao/PM-Solution-Design-Skills).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/StayerYao/PM-Solution-Design-Skills](https://github.com/StayerYao/PM-Solution-Design-Skills)
