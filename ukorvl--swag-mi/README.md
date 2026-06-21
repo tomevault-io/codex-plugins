@@ -7,12 +7,12 @@ Composable React hooks for production-grade wagmi transaction, chain, event, and
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [ukorvl/swag-mi](https://github.com/ukorvl/swag-mi).
+Original source: `copilot-instructions.md` in [ukorvl/swag-mi](https://github.com/ukorvl/swag-mi).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
