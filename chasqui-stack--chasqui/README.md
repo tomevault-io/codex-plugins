@@ -1,0 +1,30 @@
+# AI instruction files for chasqui
+
+> Sourced from [chasqui-stack/chasqui](https://github.com/chasqui-stack/chasqui) and converted for every major platform by [TomeVault](https://tomevault.io)
+
+Open-source stack for custom AI chat agents — channel-agnostic core (FastAPI + LangGraph + pgvector), WhatsApp + Telegram gateways, React operator panel. Web widget on the roadmap.
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [chasqui-stack/chasqui](https://github.com/chasqui-stack/chasqui).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/chasqui-stack/chasqui](https://github.com/chasqui-stack/chasqui)
+
+---
+
+Install this config instantly:
+```
+npx tomevault install chasqui-stack/chasqui
+```
+Source: [github.com/chasqui-stack/chasqui](https://github.com/chasqui-stack/chasqui).
+
+<!-- genome:a-i-p -->
