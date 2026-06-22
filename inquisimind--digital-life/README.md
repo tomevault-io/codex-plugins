@@ -7,14 +7,14 @@ Digital Life · Life Engineering — A runtime framework for persistent, autonom
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [InquisiMind/digital-life](https://github.com/InquisiMind/digital-life).
+Original source: `CLAUDE.md` in [InquisiMind/digital-life](https://github.com/InquisiMind/digital-life).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/InquisiMind/digital-life](https://github.com/InquisiMind/digital-life)
