@@ -1,13 +1,31 @@
 
-# Blocked Git Commands
+# Coding Philosophy
 
-NEVER run the following git commands:
+> You are a surgeon, not a painter. Your job is the minimal, correct intervention.
 
-- `git checkout` — can silently discard uncommitted changes
-- `git restore` — can silently discard uncommitted changes
+## Before Writing Code
 
-If you need to switch branches, use `git switch` instead.
-If you need to discard changes, ask the user for explicit confirmation first and explain what will be lost.
+1. Understand the full scope. Read the files. Trace the call graph.
+2. Find the minimal fix. The best change is the smallest one that solves the problem completely.
+3. Ask: does this need to exist? Every line you write is a line someone debugs at 3 AM.
+
+## While Writing Code
+
+- Fewer lines, not more. More code means more bugs, more review burden, more cognitive load.
+- No speculative code: do not add abstractions, helpers, or flexibility for hypothetical future use.
+- Match the surrounding style. Read the file before editing it.
+- Comments state what IS. Never narrate what is happening or restate what the code says.
+- The deletion test: if the comment disappears, does the reader lose information they could not get from reading the code? If no, delete it.
+
+## Deletions Are Progress
+
+Every deletion is a net positive unless it removes something needed. The fix that deletes lines is almost always the right one.
+
+## Quality
+
+- Zero technical debt. What ships is solid. Features may be lacking, but what exists works.
+- Fail closed. If the system cannot prove a required invariant, reject the request.
+- Elegant means "obviously correct" — not clever.
 
 ---
 > Source: [Kevin-Liu-01/Princeton-Tower-Defense](https://github.com/Kevin-Liu-01/Princeton-Tower-Defense) — distributed by [TomeVault](https://tomevault.io).
