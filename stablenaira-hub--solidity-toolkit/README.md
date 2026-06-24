@@ -7,14 +7,14 @@ Solidity compiler tooling and smart-contract analysis workspace for Tirixa Web3 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [stablenaira-hub/solidity-toolkit](https://github.com/stablenaira-hub/solidity-toolkit).
+Original source: `CLAUDE.md` in [stablenaira-hub/solidity-toolkit](https://github.com/stablenaira-hub/solidity-toolkit).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/stablenaira-hub/solidity-toolkit](https://github.com/stablenaira-hub/solidity-toolkit)
