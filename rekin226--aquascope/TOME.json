@@ -1,0 +1,44 @@
+{
+  "name": "aquascope",
+  "owner": "Rekin226",
+  "repo": "aquascope",
+  "description": "Open-source Python toolkit for water data, hydrology, and agricultural water management \u2014 15 unified collectors (USGS, FAO, GEMStat, EU WFD\u2026), Bulletin 17C flood frequency, FAO-56 ET\u2080, and an AI methodology recommender.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/Rekin226/aquascope",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-06-24T08:31:23Z"
+}
