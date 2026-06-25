@@ -4,7 +4,7 @@
   "repo": "openspec-template",
   "description": "My openspec-template",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/arananet/openspec-template",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-06-25T14:34:26Z"
+  "distributed_at": "2026-06-25T14:39:12Z"
 }
