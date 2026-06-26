@@ -4,7 +4,7 @@
   "repo": "amqp-contract",
   "description": "Type-safe contracts for AMQP/RabbitMQ messaging with TypeScript",
   "type": "config",
-  "source_format": "CLAUDE.md",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/btravstack/amqp-contract",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-06-26T20:31:33Z"
+  "distributed_at": "2026-06-26T20:36:12Z"
 }
