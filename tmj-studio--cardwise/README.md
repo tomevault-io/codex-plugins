@@ -1,0 +1,26 @@
+# AI instruction files for CardWise
+
+> Sourced from [tmj-studio/CardWise](https://github.com/tmj-studio/CardWise) and converted for every major platform by [TomeVault](https://tomevault.io)
+
+iOS app to maximize credit card rewards with smart recommendations
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [tmj-studio/CardWise](https://github.com/tmj-studio/CardWise).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/tmj-studio/CardWise](https://github.com/tmj-studio/CardWise)
+
+---
+
+Explore more instruction files on [TomeVault](https://tomevault.io) — the open index of AI config files for every platform.
+
+<!-- genome:a-e-p -->
