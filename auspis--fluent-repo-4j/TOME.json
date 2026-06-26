@@ -1,0 +1,51 @@
+{
+  "name": "fluent-repo-4j",
+  "owner": "auspis",
+  "repo": "fluent-repo-4j",
+  "description": "A lightweight Spring Boot library for the Repository Pattern with pure JDBC and the fluent-sql-4j DSL. Write type-safe, declarative database queries without ORM overhead.",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "polyglot-test-agent",
+      "path": ".github/skills/polyglot-test-agent",
+      "github_url": "https://github.com/auspis/fluent-repo-4j/tree/main/.github/skills/polyglot-test-agent",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/auspis/fluent-repo-4j",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-06-26T20:30:26Z"
+}
