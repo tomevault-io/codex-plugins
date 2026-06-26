@@ -7,12 +7,12 @@ DailyScholar 是一套开箱即用的科研工作台，打通从论文抓取、L
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [ShilongHong/DailyScholar](https://github.com/ShilongHong/DailyScholar).
+Original source: `CLAUDE.md` in [ShilongHong/DailyScholar](https://github.com/ShilongHong/DailyScholar).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
