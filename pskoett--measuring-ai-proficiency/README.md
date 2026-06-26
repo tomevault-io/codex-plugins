@@ -7,12 +7,12 @@ Measuring AI Proficiency: Context Engineering as a Leading Indicator
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [pskoett/measuring-ai-proficiency](https://github.com/pskoett/measuring-ai-proficiency).
+Original source: `copilot-instructions.md` in [pskoett/measuring-ai-proficiency](https://github.com/pskoett/measuring-ai-proficiency).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
