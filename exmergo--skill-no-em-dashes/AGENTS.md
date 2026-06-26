@@ -1,6 +1,6 @@
 # Writing style: no em dashes
 
-Follow the writing rules in [`AGENTS.md`](../AGENTS.md) at the repository root.
+Follow the writing rules in `AGENTS.md` at the repository root (`../../AGENTS.md`).
 
 In short: never use an em dash (U+2014) or its stand-ins (a double hyphen, a spaced
 hyphen, a stray en dash, the horizontal bar) as sentence punctuation. Replace them with
