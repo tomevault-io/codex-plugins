@@ -1,82 +1,45 @@
 
 
-# Enforce FIRST
-> **HARD GATE** — **HARD GATE** — Before shipping, ALL enforcement checks must pass: lint, typecheck, tests, coverage gates. Do NOT disable or skip checks to get to green.
+# Evolve Skill
 
+> **HARD GATE** — No skill change ships without benchmark score ≥ pre-change baseline. Learning is measured and versioned — never implicit.
 
-Apply the F.I.R.S.T rubric (Uncle Bob, Clean Code Chapter 9) to evaluate and improve tests.
+## Loop
 
-This skill is typically invoked internally by `develop-tdd` during the test-writing phase. It can also be run standalone on an existing test suite.
+1. **Establish baseline** — Run `run-benchmark <skill> --baseline`. If no definition exists at `specs/benchmarks/<skill>.yaml`, create one following `specs/benchmarks/SCHEMA.md` first. Save report path in `state.yaml`. If `specs/benchmarks/reports/BASELINE-<skill>.yaml` already exists, skip this step.
 
-## Modes
+2. **Identify gap** — Read the baseline report (`specs/benchmarks/reports/BASELINE-<skill>.yaml`). Find scenarios with `result: FAIL` or low `pass_at_k`. This is the measurable gap.
 
-- Default: full F.I.R.S.T audit (all 5 criteria)
-- --quick: Check F (Fast), I (Independent), and S (Self-Validating) only. Used by build-epic step 6 as a mechanical gate after audit-code. Skips R (Repeatable) and T (Timely) which require contextual judgment.
+3. **`plan-work`** — Write a minimal change proposal targeting the failing scenarios. Include verify commands.
 
-## The F.I.R.S.T Rubric
+4. **Edit** via `craft-skill` / direct SKILL.md edit; run `bash scripts/sync-skills.sh`.
 
-### F — Fast
+5. **Re-run benchmark** — `run-benchmark <skill>`. Compare new `pass_at_k` against baseline.
+   - **IMPROVED or STABLE** → advance to step 6.
+   - **REGRESSION** (`new pass_at_k < baseline`) → revert the change and loop back to step 3.
 
-Tests must run quickly. Slow tests don't get run. They don't get trusted.
+6. **Record decision** — Write `specs/adr/NNNN-evolve-<skill>.md` with before/after `pass_at_k` scores. Update `session-state`.
 
-- [ ] No real network calls (use fakes/stubs for external I/O)
-- [ ] No real database (use in-memory or transaction-rollback strategies)
-- [ ] No `sleep` or arbitrary timeouts in test code
-- [ ] The full suite runs in under 30 seconds (target; adjust to project size)
+## Verify
 
-**Fix:** Replace slow I/O with named fake classes. Never inline anonymous stubs.
+→ verify: `grep -c 'run-benchmark\|pass_at_k\|BASELINE-' evolve-skill/SKILL.md | awk '{if($1>=2) print "OK"; else print "FAIL"}'`
 
-### I — Independent
+See [REFERENCE.md](REFERENCE.md) for ADR template.
 
-Tests must not depend on each other. Running in any order must produce the same result.
+---
 
-- [ ] No shared mutable state between tests
-- [ ] Each test sets up its own data and tears it down
-- [ ] No test assumes another test ran first
-- [ ] Tests can be run individually (e.g. `npm test -- mytest.test.ts`) and pass
+# Evolve Skill — ADR snippet
 
-**Fix:** Move setup into `beforeEach`. Use factory functions to build test data.
+```markdown
+## ADR-XXXX: Evolve &lt;skill-name&gt;
 
-### R — Repeatable
+**Status:** Accepted
+**Benchmark:** before X% / after Y%
+**Change:** one-sentence summary
+**Evidence:** path/to/benchmark-report.md
+```
 
-Tests must pass consistently in any environment.
-
-- [ ] No dependency on machine-specific paths, ports, or environment variables (unless explicitly injected)
-- [ ] No dependency on current time without mocking the clock
-- [ ] No flakiness — a test that sometimes fails is worse than no test
-- [ ] Tests pass on CI the same way they pass locally
-
-**Fix:** Inject time, randomness, and environment as parameters. Pin seeds for anything random.
-
-### S — Self-Validating
-
-Tests must report pass or fail automatically. No human inspection required.
-
-- [ ] Tests use assertions (`expect`, `assert`, etc.) — not just `console.log`
-- [ ] Failure messages are descriptive enough to diagnose without reading the test body
-- [ ] No tests that "pass" by default when the feature is broken
-
-**Fix:** Add assertion messages. Use matchers that describe the expected behavior.
-
-### T — Timely
-
-Tests must be written at the right time — before or immediately with the code they test.
-
-- [ ] Tests are written in the same commit as the code (or the commit before, if TDD)
-- [ ] No "I'll add tests later" patterns
-- [ ] Bug fixes include a regression test that would have caught the bug
-
-**Fix:** Run `develop-tdd` — it enforces the timely principle by design.
-
-## Applying the rubric
-
-For each failing criterion:
-1. Identify which tests violate it
-2. Describe the fix
-3. Apply the fix
-4. Re-run the suite to confirm it still passes
-
-Report: "F.I.R.S.T audit complete. X criteria passed, Y fixed."
+Benchmark repo: `/Users/danielvm/Developer/bigpowers-benchmark/`
 
 ---
 > Source: [danielvm-git/bigpowers](https://github.com/danielvm-git/bigpowers) — distributed by [TomeVault](https://tomevault.io).
