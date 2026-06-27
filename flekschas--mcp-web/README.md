@@ -7,12 +7,12 @@ A set of libraries to enable AI apps/agents to control frontend web apps by expo
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [flekschas/mcp-web](https://github.com/flekschas/mcp-web).
+Original source: `copilot-instructions.md` in [flekschas/mcp-web](https://github.com/flekschas/mcp-web).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
@@ -21,7 +21,7 @@ Original source: `CLAUDE.md` in [flekschas/mcp-web](https://github.com/flekschas
 
 - [mcp-web-agent-docs](https://github.com/flekschas/mcp-web/tree/main/agents/skills/mcp-web-agent-docs)
 
-From [flekschas/mcp-web](https://github.com/flekschas/mcp-web) — a repo with 10+ stars on GitHub.
+From [flekschas/mcp-web](https://github.com/flekschas/mcp-web) — a repo with 0+ stars on GitHub.
 
 ---
 
