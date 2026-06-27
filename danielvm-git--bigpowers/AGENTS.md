@@ -1,37 +1,68 @@
 
 
-Respond terse like smart caveman. All technical substance stay. Only fluff die.
+# Trace Requirement
 
-## Persistence
-> **HARD GATE** — **HARD GATE** — Terse mode is for reducing token usage in long sessions. Do NOT use terse mode when clarity is critical (complex design decisions, bug investigations). Enable it only on explicit user request.
+Build a traceability matrix from `specs/release-plan.yaml + epic capsule directories` to implementing code and tests. Surfaces gaps in both directions: stories with no code, and code with no story.
 
+## Pre-flight
 
-ACTIVE EVERY RESPONSE once triggered. No revert after many turns. No filler drift. Still active if unsure. Off only when user says "stop" or "normal mode".
+> **HARD GATE** — `specs/release-plan.yaml + epic capsule directories` must exist. If it doesn't, run `plan-release` first.
 
-## Rules
+→ verify: `[ -f specs/release-plan.yaml + epic capsule directories ] && echo "ready" || echo "BLOCKED: run plan-release first"`
 
-Drop: articles (a/an/the), filler (just/really/basically/actually/simply), pleasantries (sure/certainly/of course/happy to), hedging. Fragments OK. Short synonyms (big not extensive, fix not "implement a solution for"). Abbreviate common terms (DB/auth/config/req/res/fn/impl). Strip conjunctions. Use arrows for causality (X -> Y). One word when one word enough.
+Read `specs/release-plan.yaml + epic capsule directories` fully before proceeding.
 
-Technical terms stay exact. Code blocks unchanged. Errors quoted exact.
+## Process
 
-Pattern: `[thing] [action] [reason]. [next step].`
+### 1. Extract story IDs
 
-Not: "Sure! I'd be happy to help you with that. The issue you're experiencing is likely caused by..."
-Yes: "Bug in auth middleware. Token expiry check use `<` not `<=`. Fix:"
+From release-plan.yaml, collect all story IDs (e.g. `1.1`, `1.2`, `2.1`).
 
-## Auto-Clarity Exception
+→ verify: `grep -o "Story [0-9]\+\.[0-9]\+" specs/release-plan.yaml + epic capsule directories | sort -u`
 
-Drop terse temporarily for: security warnings, irreversible action confirmations, multi-step sequences where fragment order risks misread, user asks to clarify or repeats question. Resume after clear part done.
+### 2. Search for story tags in code
 
-Example — destructive op:
+Look for `// story: X.Y` or `# story: X.Y` comments in source files and tests:
 
-> **Warning:** This will permanently delete all rows in the `users` table and cannot be undone.
->
-> ```sql
-> DROP TABLE users;
-> ```
->
-> Terse resume. Verify backup exist first.
+```
+grep -rn "story: " . --include="*.ts" --include="*.js" --include="*.py" --include="*.sh" | grep -v node_modules
+```
+
+→ verify: `grep -rn "story: " . --include="*.ts" --include="*.sh" | wc -l`
+
+### 3. Build the matrix
+
+For each story ID:
+- **Implemented**: list files that contain `// story: X.Y`
+- **Tested**: list test files that contain `// story: X.Y`
+- **Dark**: story has no tag in any file — flag as unimplemented
+
+For each tagged file with no matching story ID in release-plan.yaml:
+- **Orphan**: code exists but story was removed or never planned — flag for cleanup
+
+### 4. Write specs/TRACEABILITY.md
+
+```
+## Story Coverage
+
+| Story | Title              | Files | Tests | Status    |
+|-------|--------------------|-------|-------|-----------|
+| 1.1   | [title]            | 2     | 1     | Covered   |
+| 1.2   | [title]            | 0     | 0     | Dark      |
+
+## Orphan Code (no story tag)
+- [file]: contains untagged implementation
+
+## Gaps (dark stories)
+- Story 1.2: no implementation found → run plan-work
+
+## Coverage summary
+Stories: [X] covered / [Y] dark / [Z] total
+```
+
+→ verify: `grep -c "Covered\|Dark" specs/TRACEABILITY.md`
+
+Suggest `plan-work` for each dark story found.
 
 ---
 > Source: [danielvm-git/bigpowers](https://github.com/danielvm-git/bigpowers) — distributed by [TomeVault](https://tomevault.io).
