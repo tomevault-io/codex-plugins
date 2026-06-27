@@ -1,0 +1,30 @@
+# KKTerm
+
+> Source: [ryantsai/KKTerm](https://github.com/ryantsai/KKTerm) — distributed by [TomeVault](https://tomevault.io)
+
+Super-tool for vibe coders & system admins — terminals, SSH, SFTP, RDP/VNC, dashboards, install helpers, and a built-in AI assistant.
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [ryantsai/KKTerm](https://github.com/ryantsai/KKTerm).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/ryantsai/KKTerm](https://github.com/ryantsai/KKTerm)
+
+---
+
+Install this config instantly:
+```
+npx tomevault install ryantsai/KKTerm
+```
+Source: [github.com/ryantsai/KKTerm](https://github.com/ryantsai/KKTerm).
+
+<!-- genome:d-i-q -->
