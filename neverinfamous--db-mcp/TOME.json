@@ -1,0 +1,44 @@
+{
+  "name": "db-mcp",
+  "owner": "neverinfamous",
+  "repo": "db-mcp",
+  "description": "Secure Database MCP Server featuring a V8 Isolate Code Mode sandbox that unifies 181+ tools, delivering 70-90% token savings. Built for enterprise with HTTP/SSE transports, OAuth 2.1, dynamic filtering, granular RBAC, audit logging, deterministic error handling, Prometheus metrics, and encryption at rest for maximum observability and safety. ",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/neverinfamous/db-mcp",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-06-27T00:43:10Z"
+}
