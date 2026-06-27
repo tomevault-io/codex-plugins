@@ -1,23 +1,25 @@
 
 
-# Setup Environment
-> **HARD GATE** — **HARD GATE** — Environment setup must be idempotent and reproducible. If setup fails, provide clear error messages and remediation steps. Do NOT assume prior state.
+# Simulate Agents
+> **HARD GATE** — **HARD GATE** — Simulations are hypothetical. Do NOT use sim results to make production decisions without validation on real agents. Sims help discover gaps, not replace testing.
 
 
-Idempotent prep so BUILD phase commands succeed on first run.
+Two roles, **isolated contexts** (no shared state with BUILD agent):
 
-## Checklist
+1. **Mock User** — follows Verification Script; reports UX gaps in plain language.
+2. **Auditor** — checks CONVENTIONS.md, security checklist, test coverage; structured pass/fail.
 
-1. Read `CLAUDE.md` / `CONVENTIONS.md` for required runtimes and commands.
-2. Verify runtime versions (`node -v`, `swift --version`, etc.).
-3. Install dependencies (`npm ci`, `bundle install`, etc.) — prefer lockfile installs.
-4. Copy `.env.example` → `.env` if documented; never commit secrets.
-5. Run smoke: lint + one fast test or `--version` on key tools.
-6. Record versions in `specs/state.yaml` under Environment.
+## Process
+
+1. Read story Verification Script + changed files diff.
+2. Spawn Mock User: step through UAT script; log failures.
+3. Spawn Auditor: run `audit-code` checklist cold.
+4. Write `specs/SIMULATION-<feature>.md` with both reports.
+5. Failed items → `respond-review` or `plan-work` gaps — do not skip human review.
 
 ## Verify
 
-→ verify: commands from CLAUDE.md Test/Lint rows exit 0
+→ verify: `test -f specs/SIMULATION-*.md && grep -c "Mock User\|Auditor" specs/SIMULATION-*.md | awk '{if($1>=2) print "OK"}'`
 
 ---
 > Source: [danielvm-git/bigpowers](https://github.com/danielvm-git/bigpowers) — distributed by [TomeVault](https://tomevault.io).
