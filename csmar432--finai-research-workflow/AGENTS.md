@@ -1,269 +1,345 @@
-# Copilot Instructions for 论文-研报工作流
 
-> This file provides GitHub Copilot with project context and instructions.
-> Place in `.github/copilot-instructions.md` at the repository root.
->
-> **适用工具**: GitHub Copilot · Claude Code · Codex（通用 AI 编码工具均可）
+# MCP工具配置与使用指南
 
-## 项目概述
+## 快速导航
 
-**论文-研报工作流 (FinResearch Agent)** 是经济金融领域的 AI 研究助手，自动化从文献综述到可投稿论文的全流程。
+| 你想要... | 使用这个工具 |
+|---|---|
+| 搜学术论文（全文） | `user-openalex`、`user-arxiv`、`user-context7`、`user-semantic-scholar` |
+| 查A股行情/财务 | `user-tushare`（需Token）或 akshare（免费备选） |
+| 查A股财务（免费） | `user-yfinance`（中概股/港股ADR） |
+| 查宏观指标（GDP/CPI/M2） | `user-financial`（免费akshare+WorldBank） |
+| 查美国国债收益率/经济日历 | `user-eodhd`（需Key）或 `user-fed-data`（免费） |
+| 读研报、看新闻、找分析师 | `user-eastmoney-reports`（免费） |
+| 查外汇/大宗商品/航运 | `user-enhanced-finance`（免费） |
+| SEC年报/10-K/8-K | `user-sec-edgar`（免费） |
+| 美股行情/财务/期权/ETF | `user-yfinance`（免费） |
+| 网络搜索（中英文） | `user-brave-search`（需Key）或 WebSearch |
+| 中国省级/市级统计 | `user-province-stats`、`user-hubei-stats` |
 
-- **语言**: Python 3.10+
-- **数据**: MCP (Model Context Protocol) 服务器，43 个数据源
-- **关键**: 大部分数据源无需 API Key（世界银行、IMF、OECD 等免费数据）
-
----
-
-## 自动启动流程（每次对话必须执行）
-
-```
-用户打开对话
-        ↓
-① 问候 + 能力介绍（固定文案，不跳过）
-        ↓
-② 后台运行 python scripts/health_check.py --json
-        ↓
-  ┌─ API Key 缺失 → 简短提示（不阻塞）
-  ├─ LLM 不可用 → 询问是否继续
-  └─ 系统就绪 → 等待研究方向
-        ↓
-③ 询问研究方向 → 用户描述 → 开始研究
-```
-
-**第一步问候是强制要求**，不要跳过。直接开始工作会显得突兀。
-
-### 诊断交互（三平台统一）
-
-1. 运行诊断脚本，打印四类问题分类报告
-2. 读取 `InteractionResult` 结构
-3. 在**对话中**向用户展示问题，等待回复
-4. 根据用户回复执行操作
-
-**API Key 缺失**：AI 在对话中询问，用户回复后执行配置或继续
-**LLM 不可用**：AI 在对话中展示问题 + 修复步骤，询问是否继续
-
-> Claude Code 和 Codex 不支持 `input()`，必须通过对话交互。
+**核心原则：每个数据需求都有四层fallback，确保任何情况下都能获取数据。**
 
 ---
 
-## 项目结构
+## MCP服务概览（43个目录服务器）
 
-```
-scripts/
-├── health_check.py           # 系统诊断（每次启动时运行）
-├── setup_wizard.py          # 交互式配置向导
-├── agent_pipeline.py        # 主编排器
-├── research_framework/      # 研究执行层（30个模块）
-│   ├── pipeline.py         # 研究执行
-│   ├── modern_did.py       # 现代 DID
-│   ├── regression_engine.py  # OLS/DID/PSM/IV/GMM
-│   ├── fin_charts.py      # matplotlib 图表（≥300 DPI）
-│   └── data_fetcher.py    # MCP 数据获取
-├── core/                   # Agent 编排模块
-├── research_directions/     # 研究方向（12个）
-mcp_servers/               # 43 个 MCP 数据服务器
-knowledge/skills/           # 17 个技能文档（真相源）
-```
+### 学术文献（5个）
 
----
-
-## 关键能力
-
-### 数据获取（MCP）
-
-| 数据类型 | MCP 服务器 | 需要 Key |
-|---------|-----------|---------|
-| A股行情/财务 | `user-tushare` | TUSHARE_TOKEN |
-| 中国宏观 | `user-financial` | 无 |
-| 美联储/FOMC | `user-fed-data` | 无 |
-| 世界银行 | `user-wb-data` | 无 |
-| IMF | `user-imf-data` | 无 |
-| OECD | `user-oecd-data` | 无 |
-| 国债收益率 | `user-eodhd` | EODHD_API_KEY |
-| 研报/新闻 | `user-eastmoney-reports` | 无 |
-| 外汇/大宗 | `user-enhanced-finance` | 无 |
-| NBER Working Papers | `user-nber-wp` | 无 |
-
-> 大部分 MCP **无需 API Key**，直接调用即可。
-
-### 【核心原则】数据优先
-
-**数据验证必须前移到想法生成阶段，不等到数据获取阶段**
-
-```
-传统流程（有缺陷）：
-想法生成 → 新颖性验证 → 实证设计 → 数据获取 ← 到这里才发现无数据！
-
-改进流程（当前）：
-想法生成 → 【想法-数据交叉验证】→ 数据已确认可行 → 继续
-
-脚本：`scripts/idea_data_checker.py` — 想法生成后立即检查数据可行性
-```
-
-**禁止静默模拟数据**：真实数据不可用时，必须停下来让用户选择（补充数据/授权模拟/更换主题）
-
-### 计量方法（49种）
-
-- **DID**: Callaway-SantAnna, Sun-Abraham, Borusyak, Goodman-Bacon, dCdH
-- **合成控制**: Abel, Arkhangelsky
-- **RDD**: 精确/模糊/局部线性
-- **IV/2SLS**: 面板 IV、Jackknife IV
-- **Panel GMM**: Arellano-Bond、Blundell-Bond
-- **其他**: 空间回归、三重差分、面板分位数、交互固定效应、局部投影、Event Study
-
-### 论文写作
-
-- LaTeX 输出（41种期刊模板）
-- JF/JFE/RFS/AER 等英文顶刊
-- 经济研究/金融研究/管理世界/会计研究 等中文顶刊
-- 多轮对抗性 review
-
-### 图表生成
-
-- matplotlib / seaborn / plotly
-- ≥300 DPI，PDF/SVG/PNG
-- 20种专业金融图表预设
-
----
-
-## 可用技能（17个）
-
-技能文档在 `knowledge/skills/`（Claude Code/Copilot 通过读取这些文件工作）：
-
-| 技能 | 功能 |
-|------|------|
-| `fin-full-pipeline` | 端到端研究流水线 |
-| `fin-idea-discovery` | 研究想法发现 + 数据验证 |
-| `fin-lit-review` | 系统性文献综述 |
-| `fin-generate-idea` | 8-12 个排序想法 |
-| `fin-novelty-check` | 新颖性验证（顶刊查重）|
-| `fin-experiment-design` | DID/IV/RD/PSM 完整方案 |
-| `fin-paper-writing` | 论文写作编排 |
-| `fin-paper-draft` | 正文生成（LaTeX）|
-| `fin-paper-plan` | 大纲生成 |
-| `fin-paper-figure` | 图表生成（≥300 DPI）|
-| `fin-paper-convert` | LaTeX 编译 |
-| `fin-review-loop` | 多轮对抗性 review |
-| `fin-submit-check` | 投稿前检查 |
-| `fin-data-acquisition` | MCP 数据 + 回归脚本 |
-| `fin-brief-generator` | 生成 FIN_BRIEF.md |
-| `fin-ref-paper` | BibTeX 参考文献 |
-| `fin-viz-launch` | 自然语言 → 学术图表 |
-
----
-
-## 如何帮助用户
-
-### 开始新研究项目
-
-1. 运行 `python scripts/health_check.py` 诊断系统状态
-2. 理解研究问题
-3. 通过 MCP 工具搜索文献
-4. 设计识别策略
-5. 通过 MCP 服务器获取数据
-6. 运行回归（`scripts/research_framework/`）
-7. 生成 LaTeX 手稿
-
-### 金融分析
-
-1. 用 `user-tushare` 获取 A股数据
-2. 用 `user-wb-data` / `user-imf-data` 获取宏观数据
-3. 用 `scripts/research_framework/fin_charts.py` 生成图表
-
-### 计量分析
-
-1. 导入 `scripts.research_framework.regression_engine`
-2. 用 `modern_did.py` 做现代 DID
-3. 通过 `robustness_runner.py` 做稳健性检验
-
----
-
-## 环境变量
-
-参考 `.env.example`。主要变量：
-
-| 变量 | 必需 | 说明 |
-|------|------|------|
-| `DEEPSEEK_API_KEY` | 推荐 | DeepSeek 直连（中文最优）|
-| `RELAY_API_KEY` | 可选 | B.AI 中转（GPT/Claude）|
-| `TUSHARE_TOKEN` | A股必需 | Tushare Pro Token |
-| `EODHD_API_KEY` | 美宏观可选 | EODHD |
-| `BRAVE_SEARCH_API_KEY` | 搜索可选 | Brave Search |
-
----
-
-## 8 步研究流程
-
-无论使用哪个 AI 工具，工作流一致：
-
-| 步骤 | 入口命令 | 输出 |
+| 服务 | 功能 | API Key |
 |---|---|---|
-| 0. 系统自检 | `python scripts/health_check.py --json` | 状态报告 |
-| 1. 研究想法 | `python scripts/agent_pipeline.py --topic "..."` | `output/fin-ideas/IDEA_REPORT.md` |
-| 1.5 想法-数据 | `python scripts/idea_data_checker.py --idea-file <path>` | 可行性报告 |
-| 2. 文献综述 | `python scripts/literature_download.py --query "..."` | `output/fin-literature/` |
-| 3. 新颖性验证 | `python scripts/agent_pipeline.py --topic "..." --novelty-check` | `output/fin-novelty/NOVELTY_REPORT.md` |
-| 4. 实证设计 | `python scripts/research_framework/pipeline.py --mode design --topic "..."` | `output/fin-refinement/REFINED_DESIGN.md` |
-| 5. 数据获取 | `python scripts/universal_data_fetcher.py fetch --data-type a_stock_financial` | CSV / Parquet |
-| 6. 论文写作 | `python scripts/agent_pipeline.py --topic "..." --venue "经济研究"` | `output/fin-manuscript/` |
-| 7. 对抗性 Review | `python scripts/core/llm_reviewer.py --draft paper.md --no-llm` | `output/fin-review/round_N/` |
+| `user-openalex` | OpenAlex论文元数据（2亿+，免费） | 无需 |
+| `user-arxiv` | ArXiv论文搜索（免费） | 无需 |
+| `user-context7` | 论文全文索引（免费） | 无需 |
+| `user-semantic-scholar` | Semantic Scholar（需Key可选） | 免费层够用 |
+| `user-nber-wp` | NBER工作论文（免费） | 无需 |
 
----
+### A股数据（4个）
 
-## 关键入口脚本速查
+| 服务 | 功能 | API Key | 免费备选 |
+|---|---|---|---|
+| `user-tushare` | A股财务/行情/融资融券 | TUSHARE_TOKEN | akshare / baostock |
+| `user-eastmoney-reports` | 研报/新闻/概念/分析师 | 无需 | — |
+| `user-wind` | Wind数据 | 无Key（需Wind账号） | akshare |
+| `user-csmar` | CSMAR国泰安 | CSMAR_API_KEY（机构） | akshare |
 
-| 脚本 | 用途 | 必填参数 |
+### 美股/全球市场（3个）
+
+| 服务 | 功能 | API Key |
 |---|---|---|
-| `scripts/health_check.py` | 系统自检 | `--json` |
-| `scripts/setup_wizard.py` | 交互式配置向导 | `--guided` |
-| `scripts/register_mcp_servers.py` | 注册 MCP 服务器 | `--profile academic` |
-| `scripts/agent_pipeline.py` | 端到端流水线 / 新颖性检查 | `--topic "..."` |
-| `scripts/idea_data_checker.py` | 想法-数据交叉验证 | `--idea-file <path>` |
-| `scripts/literature_download.py` | 文献综述下载 | `--query "..."` |
-| `scripts/research_framework/pipeline.py` | 研究执行 | `--mode design\|full\|review` |
-| `scripts/universal_data_fetcher.py` | 数据获取 | `fetch --data-type ...` |
-| `scripts/core/llm_reviewer.py` | 对抗性 Review | `--draft <path>` |
+| `user-yfinance` | 美股/港股行情/财务/期权/ETF | 无需 |
+| `user-sec-edgar` | SEC 10-K/10-Q/8-K公告 | 无需 |
+| `user-enhanced-finance` | 外汇/航运指数/白银/期货 | 无需 |
 
----
+### 宏观经济（10个）
 
-## 故障排查
+| 服务 | 功能 | API Key |
+|---|---|---|
+| `user-financial` | 中国宏观（GDP/CPI/M2/EPU，akshare+WorldBank） | 无需 |
+| `user-eodhd` | 国债收益率/经济日历 | EODHD_API_KEY |
+| `user-fed-data` | 美联储/FOMC数据 | 无需 |
+| `user-wb-data` | 世界银行宏观指标 | 无需 |
+| `user-imf-data` | IMF世界经济展望 | 无需 |
+| `user-oecd-data` | OECD经济数据 | 无需 |
+| `user-bea-data` | 美国经济分析局GDP | 无需 |
+| `user-macro-ceic` | CEIC中国宏观 | 无需 |
+| `user-macro-datas` | 宏观数据聚合 | 无需 |
+| `user-macro-stats` | 宏观统计 | 无需 |
 
-### ModuleNotFoundError: No module named 'scripts'
+### 工具类（10个）
 
-项目已添加 `scripts/core/_bootstrap.py` 自动注入 `sys.path`。如果仍报此错误：
+| 服务 | 功能 |
+|---|---|
+| `user-brave-search` | 网络搜索（中英文，需Key） | BRAVE_SEARCH_API_KEY |
+| `user-latex-mcp` | LaTeX排版检查 |
+| `user-pandas-mcp` | 数据处理（pandas） |
+| `user-playwright-mcp` | 浏览器自动化 |
+| `user-e2b-mcp` | 云端代码执行 |
+| `user-filesystem-mcp` | 文件系统操作 |
+| `user-province-stats` | 中国省级统计 |
+| `user-hubei-stats` | 湖北省统计 |
+| `user-wuhan-stats` | 武汉市统计 |
+| `user-cryptocompare` | 加密货币（BTC/ETH等） |
+| `user-newsapi` | 全球财经新闻（需Key） |
+| `user-eastmoney-fund` | 公募基金数据 |
+| `user-eastmoney-bond` | 债券数据 |
+| `user-eastmoney-option` | 期权数据 |
 
-```bash
-# 方案 A：editable install
-pip install -e .
+### 美股数据（user-yfinance）
 
-# 方案 B：手动 PYTHONPATH
-PYTHONPATH=. python scripts/agent_pipeline.py --topic "..."
+```
+server: user-yfinance
+tool: get_yf_quote
+params: { "ticker": "AAPL" }
+
+server: user-yfinance
+tool: get_yf_historical
+params: { "ticker": "MSFT", "start_date": "2024-01-01", "end_date": "2024-12-31" }
+
+server: user-yfinance
+tool: get_yf_financials
+params: { "ticker": "GOOGL" }
+
+server: user-yfinance
+tool: get_yf_etf_holdings
+params: { "ticker": "SPY" }
+
+server: user-yfinance
+tool: get_yf_options
+params: { "ticker": "SPY" }
+```
+**无需API Key**，直接使用 Yahoo Finance。
+
+### SEC EDGAR（user-sec-edgar）
+
+```
+server: user-sec-edgar
+tool: get_sec_cik_by_ticker
+params: { "ticker": "AAPL" }
+
+server: user-sec-edgar
+tool: get_sec_10k
+params: { "cik": "0000320183", "year": 2024 }
+
+server: user-sec-edgar
+tool: get_sec_8k
+params: { "cik": "0000320183", "limit": 10 }
+```
+**无需API Key**，SEC数据完全免费公开。
+
+### OpenAlex（user-openalex）
+
+```
+server: user-openalex
+tool: get_openalex_works
+params: { "query": "carbon trading innovation policy", "per_page": 25 }
+
+server: user-openalex
+tool: get_openalex_authors
+params: { "author_id": "A123456789" }
+```
+**无需API Key**，2亿+学术成果。
+
+### Context7（user-context7）
+
+```
+server: user-context7
+tool: get_context7_by_arxiv
+params: { "arxiv_id": "2301.12345" }
+
+server: user-context7
+tool: get_context7_by_query
+params: { "query": "digital finance fintech", "max_results": 10 }
+
+server: user-context7
+tool: get_context7_by_doi
+params: { "doi": "10.1000/xyz123" }
+```
+**无需API Key**，论文全文获取。
+
+### CryptoCompare（user-cryptocompare）
+
+```
+server: user-cryptocompare
+tool: get_cc_price
+params: { "symbol": "BTC" }
+
+server: user-cryptocompare
+tool: get_cc_historical
+params: { "symbol": "ETH", "start_date": "2024-01-01", "end_date": "2024-12-31" }
+
+server: user-cryptocompare
+tool: get_cc_top_coins
+params: { "limit": 20 }
+```
+**无需API Key**，免费tier足够研究使用。
+
+### NewsAPI（user-newsapi）
+
+```
+server: user-newsapi
+tool: get_news_search
+params: { "query": "Federal Reserve interest rate", "language": "en" }
+
+server: user-newsapi
+tool: get_news_top_headlines
+params: { "category": "business", "country": "us" }
+```
+需要 `NEWSAPI_API_KEY`（免费注册：https://newsapi.org/register）
+
+## 宏观数据（MCP）
+
+### 1. 全球宏观指标（user-financial / World Bank API）
+
+```
+server: user-financial
+tool: get_wb_indicator
+params: { "country_code": "USA", "indicator": "wb_gdp_usd" }
 ```
 
-### 平台检测不到
+覆盖：全球所有国家，指标包括GDP/CPI/人口/贸易/债务。
+**无需API Key**，直接调用 World Bank API。
 
-```bash
-python -c "from scripts.core.ide_platform import PLATFORM; print(PLATFORM)"
+### 2. 中国宏观指标（user-financial / akshare）
+
+```
+server: user-financial
+tool: get_macro_china
+params: { "indicator": "cpi" }
 ```
 
-应输出 `cursor` / `claude_code` / `vscode` / `generic` 之一。
+可用指标：cpi, ppi, gdp, pmi, m2, fdi, retail, lpr, shibor, new_financial_credit
+**无需API Key**，akshare 本地缓存数据。
 
-### MCP 服务器没注册
+### 3. 英国/日本/德国/澳大利亚/加拿大宏观（user-financial）
 
-```bash
-python scripts/register_mcp_servers.py --list
-python scripts/register_mcp_servers.py --profile academic
+```
+server: user-financial
+tool: get_macro_uk
+params: { "indicator": "cpi" }
+
+server: user-financial
+tool: get_macro_japan
+params: { "indicator": "unemployment_rate" }
 ```
 
----
+**无需API Key**。
 
-## 约束
+### 4. 美国国债收益率曲线（user-eodhd）
 
-- **禁止编造数据** — 始终使用 MCP 工具或用户提供的数据文件
-- **引用必须标注来源和日期**
-- 中文顶刊遵循各自的 LaTeX 模板
-- 运行 `pytest tests/` 验证改动
+```
+server: user-eodhd
+tool: get_ust_yield_rates
+params: { "year": 2024 }
+```
+
+### 5. 经济日历（user-eodhd）
+
+```
+server: user-eodhd
+tool: get_economic_events
+params: { "country": "US", "limit": 200 }
+```
+
+## A股数据
+
+### 1. A股行情/财务/资金流（user-tushare）
+
+```
+server: user-tushare
+tool: get_daily_quote
+params: { "ts_code": "000001.SZ", "start_date": "20240101", "end_date": "20241231" }
+
+server: user-tushare
+tool: get_financial_report
+params: { "ts_code": "000001.SZ", "report_type": "income" }
+
+server: user-tushare
+tool: get_margin_data
+params: { "data_type": "hsgt" }
+```
+
+需要 `TUSHARE_TOKEN` 环境变量（https://tushare.pro/register）
+
+## 研报与新闻（user-eastmoney-reports）
+
+```
+server: user-eastmoney-reports
+tool: get_research_report
+params: { "ts_code": "000001.SZ", "max_results": 20 }
+
+server: user-eastmoney-reports
+tool: get_board_concept
+params: { "data_type": "spot" }
+
+server: user-eastmoney-reports
+tool: get_board_industry
+params: { "industry_code": "884856" }
+
+server: user-eastmoney-reports
+tool: get_stock_news
+params: { "ts_code": "000001.SZ", "limit": 20 }
+
+server: user-eastmoney-reports
+tool: get_analyst_rank
+params: { "year": 2024 }
+```
+
+## 外汇/大宗商品/航运（user-enhanced-finance）
+
+```
+server: user-enhanced-finance
+tool: get_forex_spot
+params: {}
+
+server: user-enhanced-finance
+tool: get_forex_hist
+params: { "currency_pair": "USD/CNY", "start_date": "20240101", "end_date": "20241231" }
+
+server: user-enhanced-finance
+tool: get_shipping_index
+params: { "index_name": "bdi" }
+
+server: user-enhanced-finance
+tool: get_commodity_price
+params: { "commodity": "silver" }
+```
+
+## 文献检索
+
+### 1. 网络搜索
+
+```
+server: user-brave-search
+tool: brave_web_search
+params: { "query": "碳排放权交易 绿色创新 DID 双重差分" }
+```
+
+### 2. 学术论文
+
+```
+server: user-arxiv
+tool: semantic_search
+params: { "query": "carbon trading innovation policy effect" }
+```
+
+
+
+## 数据获取优先级
+
+1. **优先使用MCP** → 实时数据，无需手动下载
+2. **外部数据文件** → 放入 `data/` 目录
+3. **模拟数据** → 仅用于演示，需用户确认
+
+## 数据目录结构
+
+```
+论文-研报工作流/
+├── data/ # 外部数据输入目录
+├── papers/ # 论文输出目录
+├── scripts/ # 分析脚本
+│ └── research_framework/ # 通用研究框架
+└── mcp_servers/ # 自定义MCP服务器
+```
 
 ---
 > Source: [csmar432/FinAI-Research-Workflow](https://github.com/csmar432/FinAI-Research-Workflow) — distributed by [TomeVault](https://tomevault.io).
