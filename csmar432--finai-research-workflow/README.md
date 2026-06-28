@@ -7,13 +7,13 @@ End-to-end AI research workflow for economics & finance: idea discovery, lit rev
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [csmar432/FinAI-Research-Workflow](https://github.com/csmar432/FinAI-Research-Workflow).
+Original source: `.cursor/rules/*.mdc` in [csmar432/FinAI-Research-Workflow](https://github.com/csmar432/FinAI-Research-Workflow).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
