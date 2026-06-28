@@ -7,12 +7,12 @@ Mission control for Claude Code: run many sessions in parallel with multi-accoun
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [nubbymong/claude-command-center](https://github.com/nubbymong/claude-command-center).
+Original source: `copilot-instructions.md` in [nubbymong/claude-command-center](https://github.com/nubbymong/claude-command-center).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
