@@ -1,6 +1,7 @@
-# Model Source Routing
 
-Canonical rule: `docs/agent-guidelines/model-source-routing.md`.
+# Network & Proxy Conventions
+
+Canonical rule: `docs/agent-guidelines/network-and-secrets.md`.
 
 Follow that file. Do not add duplicated rule text here; update the canonical
 guideline instead.
