@@ -1,0 +1,28 @@
+# Magic-Resume
+
+> Tome by [LinMoQC](https://github.com/LinMoQC/Magic-Resume) — distributed by [TomeVault](https://tomevault.io)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [LinMoQC/Magic-Resume](https://github.com/LinMoQC/Magic-Resume).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+## Bundled Skills (1)
+
+- [Magic-Resume](https://github.com/LinMoQC/Magic-Resume/tree/main/.claude/skills/commit/SKILL.md)
+
+Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/LinMoQC/Magic-Resume](https://github.com/LinMoQC/Magic-Resume)
+
+---
+
+Own this repo? Install the TomeVault Relay to keep every platform's copy in sync on every push: [https://tomevault.io/install](https://tomevault.io/install).
+
+<!-- genome:t-c-p -->
