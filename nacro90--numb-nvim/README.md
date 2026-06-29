@@ -1,0 +1,28 @@
+# numb.nvim
+
+> Source: [nacro90/numb.nvim](https://github.com/nacro90/numb.nvim) — distributed by [TomeVault](https://tomevault.io)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [nacro90/numb.nvim](https://github.com/nacro90/numb.nvim).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/nacro90/numb.nvim](https://github.com/nacro90/numb.nvim)
+
+---
+
+Install this config instantly:
+```
+npx tomevault install nacro90/numb.nvim
+```
+Source: [github.com/nacro90/numb.nvim](https://github.com/nacro90/numb.nvim).
+
+<!-- genome:d-i-q -->
