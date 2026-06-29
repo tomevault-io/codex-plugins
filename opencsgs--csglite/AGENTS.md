@@ -1,5 +1,5 @@
 
-# llama.cpp Version Lockstep
+# llama.cpp Ubuntu CUDA Mirror
 
 Canonical rule: `docs/agent-guidelines/llama-cpp.md`.
 
