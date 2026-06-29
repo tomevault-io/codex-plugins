@@ -1,11 +1,10 @@
-# Copilot Instructions
 
-Use `AGENTS.md` as the primary project instruction file.
+# API Swagger Sync
 
-Full, tool-neutral rules live in `docs/agent-guidelines/`. Do not create a
-Copilot-only project rule unless the behavior is specific to Copilot. For
-shared rules, update the canonical guideline first and keep this adapter
-minimal.
+Canonical rule: `docs/agent-guidelines/api-swagger-sync.md`.
+
+Follow that file. Do not add duplicated rule text here; update the canonical
+guideline instead.
 
 ---
 > Source: [OpenCSGs/csglite](https://github.com/OpenCSGs/csglite) — distributed by [TomeVault](https://tomevault.io).
