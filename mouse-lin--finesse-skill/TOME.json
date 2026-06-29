@@ -4,7 +4,7 @@
   "repo": "finesse-skill",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": ".cursor/rules/*.mdc",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/mouse-lin/finesse-skill",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-06-29T04:31:25Z"
+  "distributed_at": "2026-06-29T04:31:54Z"
 }
