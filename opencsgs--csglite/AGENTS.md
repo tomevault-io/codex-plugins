@@ -1,7 +1,7 @@
 
-# Multi-Platform Support
+# Python Compatibility
 
-Canonical rule: `docs/agent-guidelines/cross-platform.md`.
+Canonical rule: `docs/agent-guidelines/python.md`.
 
 Follow that file. Do not add duplicated rule text here; update the canonical
 guideline instead.
