@@ -1,7 +1,7 @@
 
-# Network & Proxy Conventions
+# Multi-Platform Support
 
-Canonical rule: `docs/agent-guidelines/network-and-secrets.md`.
+Canonical rule: `docs/agent-guidelines/cross-platform.md`.
 
 Follow that file. Do not add duplicated rule text here; update the canonical
 guideline instead.
