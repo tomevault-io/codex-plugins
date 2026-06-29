@@ -1,7 +1,7 @@
 
-# API Swagger Sync
+# Commit And Release Notes
 
-Canonical rule: `docs/agent-guidelines/api-swagger-sync.md`.
+Canonical rule: `docs/agent-guidelines/release-notes.md`.
 
 Follow that file. Do not add duplicated rule text here; update the canonical
 guideline instead.
