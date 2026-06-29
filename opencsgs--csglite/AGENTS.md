@@ -1,14 +1,10 @@
 
-# Common Agent Guidelines
+# Cross-Platform Compatibility
 
-Use `AGENTS.md` as the project instruction entry point.
+Canonical rule: `docs/agent-guidelines/cross-platform.md`.
 
-Shared rules live in `docs/agent-guidelines/`. When adding or changing a
-persistent project rule, update the canonical guideline first. Keep Cursor rules
-as lightweight adapters for metadata, globs, and pointers only.
-
-Before working in an area covered by `AGENTS.md` or the Rule Index, read the
-relevant guideline file and follow it for the task.
+Follow that file. Do not add duplicated rule text here; update the canonical
+guideline instead.
 
 ---
 > Source: [OpenCSGs/csglite](https://github.com/OpenCSGs/csglite) — distributed by [TomeVault](https://tomevault.io).
