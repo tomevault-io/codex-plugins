@@ -1,0 +1,31 @@
+# go-wind-admin
+
+> Tome by [tx7do](https://github.com/tx7do/go-wind-admin) — distributed by [TomeVault](https://tomevault.io)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [tx7do/go-wind-admin](https://github.com/tx7do/go-wind-admin).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+## Bundled Skills (4)
+
+- [go-wind-admin](https://github.com/tx7do/go-wind-admin/tree/main/backend/.qoder/skills/go-wind-admin-guide/SKILL.md)
+- [go-wind-admin](https://github.com/tx7do/go-wind-admin/tree/main/frontend/admin/vue-vben/.qoder/skills/scaffold-dev-guide/SKILL.md)
+- [go-wind-admin](https://github.com/tx7do/go-wind-admin/tree/main/frontend/admin/vue-element/.qoder/skills/gowind-admin-dev/SKILL.md)
+- [go-wind-admin](https://github.com/tx7do/go-wind-admin/tree/main/frontend/admin/react/.qoder/skills/go-wind-admin-react-guide/SKILL.md)
+
+From [tx7do/go-wind-admin](https://github.com/tx7do/go-wind-admin) — a repo with 517+ stars on GitHub.
+
+---
+
+Explore more instruction files on [TomeVault](https://tomevault.io) — the open index of AI config files for every platform.
+
+<!-- genome:t-e-s -->
