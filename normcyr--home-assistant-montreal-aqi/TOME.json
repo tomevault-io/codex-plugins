@@ -1,0 +1,44 @@
+{
+  "name": "home-assistant-montreal-aqi",
+  "owner": "normcyr",
+  "repo": "home-assistant-montreal-aqi",
+  "description": "Home Assistant custom component to get the air quality index for the city of Montr\u00e9al, Qu\u00e9bec (Canada)",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/normcyr/home-assistant-montreal-aqi",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-06-30T21:28:32Z"
+}
