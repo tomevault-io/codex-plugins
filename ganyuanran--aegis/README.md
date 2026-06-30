@@ -2,17 +2,15 @@
 
 > Sourced from [GanyuanRan/Aegis](https://github.com/GanyuanRan/Aegis) and converted for every major platform by [TomeVault](https://tomevault.io)
 
-让AI编码更严谨、更可控的架构驱动开发方法包，一键安装，提升代码质量！An upgraded Superpowers-based Architecture-Driven Development (ADD) Method Pack for AI coding agents: baseline-first, evidence-driven workflows, TLREF/DIVE/QA discipline, and dual-track governance across hosts.
-
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [GanyuanRan/Aegis](https://github.com/GanyuanRan/Aegis).
+Original source: `copilot-instructions.md` in [GanyuanRan/Aegis](https://github.com/GanyuanRan/Aegis).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
