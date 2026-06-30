@@ -7,13 +7,13 @@ Local AI multi-agent orchestration desktop app (Tauri · LangGraph)
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [fancy1108/Clutch](https://github.com/fancy1108/Clutch).
+Original source: `copilot-instructions.md` in [fancy1108/Clutch](https://github.com/fancy1108/Clutch).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
