@@ -1,40 +1,120 @@
-# CLAUDE.md
+# GitHub Copilot PR Review Rules for Lampo.rs
 
-## Build & Test
+## Commit Message Standards
 
-- `make fmt` — Run linting and formatting (rustfmt + clippy)
-- `make check` — Run all tests
-- `cargo check -p <crate>` — Type-check a single crate
-- `cargo test -p <crate>` — Test a single crate
+When reviewing pull requests, ensure all commits follow these standards:
 
-## Code Style
+### Subject Line Requirements
+- **MUST** complete the sentence: "If applied, this commit will _____"
+- **MUST** be capitalized (first letter uppercase)
+- **MUST NOT** end with a period
+- **MUST** be 50 characters or less
+- **MAY** include an optional category prefix (e.g., `cli:`, `node:`, `tests:`, `docs:`)
 
-- Follow Rust standard formatting (`cargo fmt`). Always run `make fmt` before committing.
-- Use `unwrap` only when: (1) it's provably safe (add `// SAFETY:` comment), (2) panic indicates a bug, or (3) in test code.
-- Use `expect` only for unmet invariants from bad inputs or environment.
-- Imports: group by `std` → external deps → `crate::` locals, separated by blank lines.
-- Logging: always include a `target`, e.g. `log::info!(target: "lampo-chain", "...")`. Most logs should be at debug level.
-- Use `FIXME` comments for unclear optimizations or ugly corner cases.
-- Keep code simple. Don't overdesign. Write for today, not hypothetical futures.
+#### Examples
+✅ Good: `Add support for .gif files`
+✅ Good: `tests: Modernize CLN integration tests`
+❌ Bad: `Adding support for .gif files` (wrong verb form)
+❌ Bad: `add support for .gif files` (not capitalized)
+❌ Bad: `Add support for .gif files.` (has period)
 
-## Git Commits
+### Commit Body Guidelines
+- **SHOULD** be included for complex changes
+- **MUST** be separated from subject by blank line
+- **MUST** wrap text at ~72 characters
+- **MUST** use imperative mood ("Fix bug" not "Fixed bug")
+- **MAY** include bullet points with hanging indent
+- **SHOULD** explain the "why" behind changes, not just "what"
 
-- Commit messages must be imperative, capitalized, no period: "Add support for X" not "Added support for X."
-- Subject line ≤ 50 chars. Wrap body at 72 chars.
-- Each commit must pass all tests, lints, and checks independently.
-- **Never include fixup commits in a PR.** If a commit introduces a problem (e.g. formatting), squash the fix into the original commit. Do not leave separate "fix formatting" or "fix lint" commits in the history.
-- May include a crate prefix: `cli:`, `chain:`, `node:`, `docs:`, `ci:`.
+### Sign-off Requirements
+- **MUST** include DCO sign-off for significant code contributions
+- Use `Signed-off-by: Name <email>` format
+- Can be added with `git commit -s`
 
-## PR Workflow
+## PR Review Checklist
 
-- Keep changesets small, specific, and uncontroversial.
-- Isolate changes in separate commits for review, but each must be self-contained.
-- Rebase on `main` when needed. Do not merge commits.
-- Don't make unrelated changes unless it's an obvious improvement to code you're already touching.
+When reviewing PRs, verify:
 
-## Dependencies
+### Code Quality
+- [ ] Each commit represents a single, focused change
+- [ ] No `fixup!` commits present
+- [ ] All tests pass for each commit
+- [ ] Code follows Rust conventions and project style
 
-- Check with maintainers before adding new dependencies.
+### Commit Messages
+- [ ] Subject line follows format requirements
+- [ ] Complex changes have descriptive commit bodies
+- [ ] Imperative mood used throughout
+- [ ] Category prefixes used consistently when applicable
+
+### Testing
+- [ ] New features include tests
+- [ ] Existing tests updated for breaking changes
+- [ ] Integration tests cover critical paths
+- [ ] No flaky or timing-dependent tests introduced
+
+### Documentation
+- [ ] Public APIs documented with rustdoc
+- [ ] Complex logic includes inline comments
+- [ ] Breaking changes noted in commit message
+- [ ] README updated if user-facing changes
+
+## Automated Feedback Templates
+
+### Poor Commit Message
+```
+The commit message doesn't follow project conventions:
+- Subject should complete: "If applied, this commit will _____"
+- Use imperative mood (e.g., "Add" not "Added" or "Adding")
+- Capitalize first letter
+- Keep under 50 characters
+- No period at the end
+
+Please amend the commit message to follow the guidelines in CONTRIBUTING.md
+```
+
+### Missing Commit Body
+```
+This appears to be a complex change that would benefit from a commit body explaining:
+- Why this change was necessary
+- What approach was taken
+- Any trade-offs or considerations
+
+Please add a descriptive commit body (separated by blank line from subject).
+```
+
+### Missing Tests
+```
+This PR introduces new functionality but lacks corresponding tests.
+Please add tests covering:
+- Happy path scenarios
+- Error conditions
+- Edge cases
+
+Tests should be added in the same commit as the feature when possible.
+```
+
+### Commit Organization
+```
+This PR contains multiple unrelated changes in a single commit.
+Please split into separate commits, each addressing a single concern:
+- One commit per logical change
+- Each commit should compile and pass tests
+- Use `git rebase -i` to reorganize if needed
+```
+
+## Integration with GitHub Actions
+
+These rules should be enforced through:
+1. Commit message linting in CI
+2. Automated PR comments for violations
+3. Required checks before merge
+4. Squash merge policies for external contributors
+
+## References
+- Full guidelines: [CONTRIBUTING.md](https://github.com/vincenzopalazzo/lampo.rs/blob/main/CONTRIBUTING.md)
+- Rust style guide: https://rust-lang.github.io/api-guidelines/
+- Conventional Commits (optional reference): https://www.conventionalcommits.org/
 
 ---
 > Source: [vincenzopalazzo/lampo.rs](https://github.com/vincenzopalazzo/lampo.rs) — distributed by [TomeVault](https://tomevault.io).
