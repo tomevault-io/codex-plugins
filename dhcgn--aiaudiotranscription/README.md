@@ -1,0 +1,26 @@
+# AIAudioTranscription
+
+> Source: [dhcgn/AIAudioTranscription](https://github.com/dhcgn/AIAudioTranscription) — distributed by [TomeVault](https://tomevault.io)
+
+Simple Android app for transcribing voice messages and media files to text using OpenAI's Whisper API. Features encrypted API key storage, local history, and AI-powered text cleanup for improved readability. Perfect for converting audio messages from various messenger apps into readable text.
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `copilot-instructions.md` in [dhcgn/AIAudioTranscription](https://github.com/dhcgn/AIAudioTranscription).
+
+## Also available for
+
+- **Claude Code** — `CLAUDE.md`
+- **Codex** — `AGENTS.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+From [dhcgn/AIAudioTranscription](https://github.com/dhcgn/AIAudioTranscription) — a repo with 8+ stars on GitHub.
+
+---
+
+Own this repo? Install the TomeVault Relay to keep every platform's copy in sync on every push: [https://tomevault.io/install](https://tomevault.io/install).
+
+<!-- genome:d-c-s -->
