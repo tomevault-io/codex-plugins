@@ -1,128 +1,117 @@
-# Claude Code Context - PDF-Writer Development Guide
+# GitHub Copilot Repository Instructions
 
-## Project Overview
-PDF-Writer is a C++ library for creating and manipulating PDF files. This guide contains development patterns, coding standards, and best practices discovered during active development.
+You are reviewing pull requests for the PDF-Writer repository (C++).
+Prioritize correctness, regressions, security, and missing tests over style nits.
 
-## Coding Standards Discovered
-- **C99 Compatible**: No modern C++ features, conservative early 2000s style
-- **Hungarian Notation**: `m` prefix for members, `in` prefix for parameters
-- **Manual Memory Management**: `new[]`/`delete[]`, no smart pointers
-- **Interface Naming**: `I` prefix (e.g., `IByteReader`)
-- **ByteList**: typedef for `std::basic_string<IOBasicTypes::Byte>`
-- **CamelCase**: Classes and methods
+## Review Goals
+- Find real defects and risky behavior changes first.
+- Prefer high-signal findings over many minor comments.
+- Keep feedback actionable and specific.
 
-## Project Structure
+## Severity System (use exactly these labels)
+- 🔴 Critical: security issue, data loss/corruption, crash in common flow, major functional break.
+- 🟠 High: likely bug or regression with significant user impact.
+- 🟡 Medium: correctness risk in edge cases, maintainability issue likely to cause future defects.
+- 🔵 Low: minor issue, readability/consistency concern with low risk.
+- ⚪ Info: optional non-blocking suggestion.
 
-### Key Components
-- **PDFWriter**: Core library for PDF creation and manipulation
-- **PDFWriterTesting**: Comprehensive test suite with 82+ tests
-- **Conditional Features**: Support for optional dependencies (OpenSSL, LibJpeg, LibPng, LibTiff)
-- **Cross-platform**: Works on multiple operating systems and architectures
+## PR Causality Gate (mandatory)
+- For every finding, classify causality as one of:
+	- Introduced-by-PR
+	- Exposed-by-PR (pre-existing defect made newly reachable by this PR in normal flow)
+	- Pre-existing-Unchanged
+- Only Introduced-by-PR findings are blocking by default.
+- Exposed-by-PR findings may be blocking only when the PR makes them newly reachable in normal use.
+- Pre-existing-Unchanged findings are never blocking in this repository workflow unless the user explicitly asks for a broad audit.
+- If causality cannot be demonstrated from changed code and call path, downgrade severity by one level and state uncertainty.
 
-## Build Commands
-```bash
-# Standard build
-cmake ..
-cmake --build . --config Release
+## Baseline Consistency Rule
+- Do not request changes for behavior that is consistent with the base branch unless the PR explicitly claims to fix that behavior.
+- If the same pattern exists in untouched code, treat it as consistency debt and report as optional follow-up (non-blocking) unless asked to include cleanup.
+- Do not escalate severity solely because code is old-style, manual-memory, or non-modern if it matches established repository patterns.
 
-# Build with specific features disabled
-cmake .. -DPDFHUMMUS_NO_OPENSSL=TRUE    # Disable OpenSSL/PDF 2.0 support
-cmake .. -DPDFHUMMUS_NO_PNG=TRUE        # Disable PNG support
-cmake .. -DPDFHUMMUS_NO_DCT=TRUE        # Disable JPEG support
-cmake .. -DPDFHUMMUS_NO_TIFF=TRUE       # Disable TIFF support
+## Decision Rules
+- Request changes: any unresolved 🔴 Critical or 🟠 High finding.
+- Comment: only 🟡 Medium findings, uncertainty requiring clarification, or testing gaps that should be discussed.
+- Approve with follow-ups: only 🔵 Low / ⚪ Info findings and no blocking risk.
+- Approve: no actionable findings.
+- Approval override: if there are no Introduced-by-PR (or newly Exposed-by-PR) 🔴/🟠 findings, do not request changes.
 
-# Run tests
-ctest --test-dir . -C Release
-```
+## Scope Discipline (strict by default)
+- When asked to fix specific findings, change only those requested findings unless the user explicitly asks to include additional issues.
+- If additional issues are discovered while implementing a fix, list them as optional follow-ups instead of silently fixing them.
+- Before expanding scope (for example, medium/low cleanup while fixing critical/high issues), ask for explicit approval.
+- Treat the user's requested scope as the highest-priority constraint for implementation.
 
-## Development Notes & Patterns
+## Output Format (always follow)
+Keep output concise. Omit empty or redundant sections. Every review must begin with a clear Decision verdict.
 
-### Community Solution Patterns (PR #313)
-Based on successful outline/annotation example implementation:
+No-actionable-finding mode (strict):
+- When there are zero actionable findings, use only this exact 3-line structure and stop:
+	1. Decision: Approve
+	2. Severity Summary: No findings.
+	3. No actionable findings.
+- In this mode, do not emit Findings, Testing and Regression Risk, or Final Recommendation sections.
 
-#### Helper Class Approach
-- **OutlineBuilder Pattern**: Create dedicated helper classes for complex PDF operations
-- **Flexible APIs**: Support both simple defaults and advanced customization
-- **Recursive Generation**: Use recursive methods for hierarchical PDF structures
-- **Example**: `OutlineBuilder` class with `CreateOutlineTree()` and `WriteOutlineItems()`
+1. Verdict
+- Decision: Approve | Request changes | Comment | Approve with follow-ups
 
-#### Document Extension Pattern
-- **IDocumentContextExtender**: Use for modifying PDF catalog and document structure
-- **DocumentContextExtenderAdapter**: Extend this base class and override specific methods
-- **OnCatalogWrite()**: Key method for attaching document-level structures like outlines
-- **Integration**: Register extenders via `GetDocumentContext().AddDocumentContextExtender()`
+2. Severity Summary (non-zero counts only)
+- Include only severities with count > 0.
+- If all severities are zero (and strict mode is not used), write: "No findings."
 
-#### API Design Principles Proven Effective
-- **"Make common cases simple"**: Provide convenient defaults for typical usage
-- **Support exceptions**: Allow per-item overrides and edge case handling
-- **Overloaded constructors**: Multiple ways to create objects based on complexity needed
-- **Optional parameters**: Use optional params for advanced features, required for basics
+3. Findings
+- Include only actionable findings (or uncertainties that require clarification).
+- For each finding include:
+	- Severity: <label>
+	- Title: <short title>
+	- Location: <file and line or symbol>
+	- Causality: Introduced-by-PR | Exposed-by-PR | Pre-existing-Unchanged
+	- Evidence: changed symbol/call path/test evidence tying impact to this PR
+	- Problem: <what is wrong>
+	- Risk: <why it matters / impact>
+	- Recommendation: <minimal concrete fix>
 
-#### Implementation Details
-- **UTF-8 Support**: Use `PDFTextString` for international text in outlines
-- **Page References**: Get page IDs via `WritePageAndReturnPageID()` for destinations
-- **Object Management**: Use `ObjectsContext` for creating PDF indirect objects
-- **Resource Cleanup**: Follow do-while-false pattern with proper cleanup
+4. Testing and Regression Risk
+- Include only when there is a concrete gap not already covered in Findings.
+- Do not repeat points already stated in Findings or Verdict.
+- Do not treat "tests were added" as sufficient by itself.
+- Verify coverage per changed behavior in the diff. If a changed behavior has no direct deterministic regression test, call it out explicitly.
+- If a regression test is not feasible, require a short justification tied to reproducibility/fixture limits.
 
-#### Helper Structure Examples
-```cpp
-struct OutlineItem {
-    std::string title;
-    ObjectIDType pageReference;
-    std::vector<OutlineItem> children;  // Support nesting
-    // Optional customization fields
-};
-```
+5. Final Recommendation
+- One clear line only when it adds information beyond Verdict.
+- If identical to Verdict, omit this section.
 
-### Conditional Compilation
-- Tests that require specific dependencies should be wrapped with appropriate `#ifndef` guards
-- Examples: `#ifndef PDFHUMMUS_NO_OPENSSL`, `#ifndef PDFHUMMUS_NO_PNG`
-- Provide fallback implementations that return success (0) when features are disabled
-- Follow patterns established in `JPGImageTest.cpp`, `PDFWithPassword.cpp`, etc.
+## Review Quality Constraints
+- Do not report speculative issues without rationale.
+- Prefer one precise finding over multiple overlapping comments.
+- If there are no actionable findings, explicitly state: "No actionable findings." (strict mode line 3)
+- Keep style-only feedback in 🔵 Low or ⚪ Info unless it impacts correctness or reliability.
+- Findings must be tied to this PR's diff and reachability, not just absolute code quality concerns.
+- In no-actionable-findings cases, keep the full response to exactly 3 lines (per strict template above).
+- Do not include "Reviewed changes" or similar boilerplate sections.
+- Do not restate the same conclusion across multiple sections.
+- Never output "Decision: Request changes" unless Findings contains at least one unresolved 🔴 Critical or 🟠 High item.
+- If Decision is "Request changes", Severity Summary must include 🔴 and/or 🟠 with count > 0.
+- If only 🟡 Medium findings exist, Decision must be "Comment".
+- Before using no-actionable-findings mode, perform a changed-behavior test coverage check:
+	- Map each material behavior change in touched production code to a specific test name/location, or to a documented infeasibility note.
+	- If any material behavior change is unmapped, do not use no-actionable-findings mode; emit a 🟡 Medium testing-gap finding.
 
-## Code Review & Development Guidelines
+## Test Assertion Policy
+- Do not flag exact-value assertions on version-pinned test fixtures as brittle or problematic. This is an intentional and accepted pattern in this repository. Only suggest relaxing assertions if the test is not using a fixed, versioned fixture, or if the assertion is clearly not justified by the repo’s test philosophy.
 
-### Change Management Best Practices
-- **Minimal, surgical changes**: Only modify what's necessary for the feature
-- **Avoid cosmetic changes**: Don't fix formatting/spacing that makes diffs noisier and harder to review
-- **Preserve original locations**: Keep functions in their original positions when possible to minimize review complexity
-- **Explain vs. edit**: Prefer explaining needed changes rather than making direct edits (especially for AI assistance)
+## Testing Gap Classification
+- Use this when tests exist in the PR but do not cover all changed behaviors.
+- Severity default: 🟡 Medium.
+- Causality: Introduced-by-PR when the changed behavior is new in this PR and lacks regression coverage.
+- Recommendation: add a focused deterministic regression test; if infeasible, document why and add the closest guard test.
 
-### Error Handling Patterns
-- **Do-while-false pattern**: Use for functions with multiple cleanup steps and potential early exits
-- **Early returns**: Handle initial validation failures immediately to simplify main logic flow
-- **Single cleanup section**: Consolidate all resource cleanup in one place at function end
-- **Resource management**: Always clean up dynamically allocated memory and external library contexts (e.g., OpenSSL, FreeType)
-
-### Code Structure Best Practices
-- **Factor out duplication**: When you see repeated patterns, especially error-prone ones, create shared helper functions
-- **Specific parameters**: Pass specific objects (like cipher types) rather than boolean flags to eliminate conditionals
-- **Proper conditional compilation**: Ensure `#ifdef`/`#else`/`#endif` blocks are correctly structured and placed
-
-### Separation of Concerns
-- **Domain-specific constants**: Keep specialized constants separate from general-purpose utilities (e.g., AES constants vs IO types)
-- **Use `#define` for constants**: Prefer preprocessor defines over namespace constants for library-wide values
-- **Dedicated header files**: Create focused headers for specific domains rather than adding to general-purpose files
-
-### Existing Codebase Patterns to Follow
-- **Hungarian notation**: `m` prefix for members, `in` prefix for parameters
-- **Conservative C++ style**: Prioritize clarity and reliability over modern language features
-- **Manual memory management**: Use `new[]`/`delete[]` consistently with the existing codebase
-- **Interface naming**: `I` prefix for interfaces (e.g., `IByteReader`)
-
-## Testing Guidelines
-
-### Test Organization
-- Tests are located in `PDFWriterTesting/` directory
-- Each test should be self-contained and return 0 for success, non-zero for failure
-- Use `BuildRelativeOutputPath()` and `BuildRelativeInputPath()` for file paths
-- Test materials should be placed in `PDFWriterTesting/Materials/`
-
-### Running Tests
-- Full test suite: `ctest --test-dir . -C Release`
-- Specific test: `ctest --test-dir . -C Release -R TestName`
-- Verbose output: `ctest --test-dir . -C Release --verbose -R TestName`
-- Output on failure: `ctest --test-dir . -C Release --output-on-failure`
+## Repository Context
+- This codebase uses conservative C++ style and manual memory management.
+- Avoid suggesting large refactors unless required to fix a correctness or safety issue.
+- Focus recommendations on minimal, surgical changes.
 
 ---
 > Source: [galkahana/PDF-Writer](https://github.com/galkahana/PDF-Writer) — distributed by [TomeVault](https://tomevault.io).
