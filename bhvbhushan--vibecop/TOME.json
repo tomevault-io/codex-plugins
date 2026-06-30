@@ -2,9 +2,9 @@
   "name": "vibecop",
   "owner": "bhvbhushan",
   "repo": "vibecop",
-  "description": "AI code quality toolkit \u2014 deterministic linter for the AI coding era. 22 detectors, GitHub Action PR gate, zero LLM required.",
+  "description": "",
   "type": "config",
-  "source_format": "CLAUDE.md",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/bhvbhushan/vibecop",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-06T13:37:33Z"
+  "distributed_at": "2026-06-30T05:18:14Z"
 }
