@@ -2,22 +2,20 @@
 
 > Tome by [bhvbhushan](https://github.com/bhvbhushan/vibecop) — distributed by [TomeVault](https://tomevault.io)
 
-AI code quality toolkit — deterministic linter for the AI coding era. 22 detectors, GitHub Action PR gate, zero LLM required.
-
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [bhvbhushan/vibecop](https://github.com/bhvbhushan/vibecop).
+Original source: `copilot-instructions.md` in [bhvbhushan/vibecop](https://github.com/bhvbhushan/vibecop).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [bhvbhushan/vibecop](https://github.com/bhvbhushan/vibecop) — a repo with 51+ stars on GitHub.
+From [bhvbhushan/vibecop](https://github.com/bhvbhushan/vibecop) — a repo with 53+ stars on GitHub.
 
 ---
 
