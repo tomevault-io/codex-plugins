@@ -7,14 +7,14 @@ PowerShell module that exports Microsoft Intune device compliance to a wide CSV 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [DanStutz/IntuneComplianceReport](https://github.com/DanStutz/IntuneComplianceReport).
+Original source: `copilot-instructions.md` in [DanStutz/IntuneComplianceReport](https://github.com/DanStutz/IntuneComplianceReport).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 From [DanStutz/IntuneComplianceReport](https://github.com/DanStutz/IntuneComplianceReport) — a repo with 8+ stars on GitHub.
