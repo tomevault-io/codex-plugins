@@ -2,8 +2,6 @@
 
 > Source: [lbedner/aegis-stack](https://github.com/lbedner/aegis-stack) — distributed by [TomeVault](https://tomevault.io)
 
-A production-ready FastAPI platform with modular components and a built-in control plane.
-
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
