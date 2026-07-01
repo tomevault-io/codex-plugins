@@ -3,8 +3,8 @@
   "owner": "zevorn",
   "repo": "rt-claw",
   "description": "",
-  "type": "config",
-  "source_format": "GEMINI.md",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -37,8 +37,69 @@
       "platform": "Windsurf"
     }
   ],
-  "skills": [],
+  "skills": [
+    {
+      "name": "rt-claw",
+      "path": ".agents/skills/rt-claw-build/SKILL.md",
+      "github_url": "https://github.com/zevorn/rt-claw/tree/main/.agents/skills/rt-claw-build/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "rt-claw",
+      "path": ".agents/skills/rt-claw-testing/SKILL.md",
+      "github_url": "https://github.com/zevorn/rt-claw/tree/main/.agents/skills/rt-claw-testing/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "rt-claw",
+      "path": ".agents/skills/rt-claw-diagnose/SKILL.md",
+      "github_url": "https://github.com/zevorn/rt-claw/tree/main/.agents/skills/rt-claw-diagnose/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "rt-claw",
+      "path": ".agents/skills/rt-claw-docs-sync/SKILL.md",
+      "github_url": "https://github.com/zevorn/rt-claw/tree/main/.agents/skills/rt-claw-docs-sync/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "rt-claw",
+      "path": ".agents/skills/rt-claw-precommit/SKILL.md",
+      "github_url": "https://github.com/zevorn/rt-claw/tree/main/.agents/skills/rt-claw-precommit/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "rt-claw",
+      "path": ".agents/skills/rt-claw-new-module/SKILL.md",
+      "github_url": "https://github.com/zevorn/rt-claw/tree/main/.agents/skills/rt-claw-new-module/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "rt-claw",
+      "path": ".agents/skills/rt-claw-ci-coverage/SKILL.md",
+      "github_url": "https://github.com/zevorn/rt-claw/tree/main/.agents/skills/rt-claw-ci-coverage/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "rt-claw",
+      "path": ".agents/skills/rt-claw-osal-review/SKILL.md",
+      "github_url": "https://github.com/zevorn/rt-claw/tree/main/.agents/skills/rt-claw-osal-review/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "rt-claw",
+      "path": ".agents/skills/rt-claw-platform-port/SKILL.md",
+      "github_url": "https://github.com/zevorn/rt-claw/tree/main/.agents/skills/rt-claw-platform-port/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "rt-claw",
+      "path": ".agents/skills/rt-claw-code-explorer/SKILL.md",
+      "github_url": "https://github.com/zevorn/rt-claw/tree/main/.agents/skills/rt-claw-code-explorer/SKILL.md",
+      "description": ""
+    }
+  ],
   "source_url": "https://github.com/zevorn/rt-claw",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-06-29T23:06:08Z"
+  "distributed_at": "2026-07-01T06:06:19Z"
 }
