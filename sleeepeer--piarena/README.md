@@ -2,8 +2,6 @@
 
 > Tome by [sleeepeer](https://github.com/sleeepeer/PIArena) — distributed by [TomeVault](https://tomevault.io)
 
-[ACL 2026] PIArena: A Platform for Prompt Injection Evaluation
-
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
