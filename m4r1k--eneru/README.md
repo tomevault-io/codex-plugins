@@ -2,8 +2,6 @@
 
 > Sourced from [m4r1k/Eneru](https://github.com/m4r1k/Eneru) and converted for every major platform by [TomeVault](https://tomevault.io)
 
-⚡ Eneru—Intelligent UPS monitoring daemon for NUT (Network UPS Tools) with configurable multi-system shutdown orchestration, Discord notifications, and enterprise-grade power event handling.
-
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
@@ -17,7 +15,7 @@ Original source: `CLAUDE.md` in [m4r1k/Eneru](https://github.com/m4r1k/Eneru).
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [m4r1k/Eneru](https://github.com/m4r1k/Eneru) — a repo with 68+ stars on GitHub.
+From [m4r1k/Eneru](https://github.com/m4r1k/Eneru) — a repo with 130+ stars on GitHub.
 
 ---
 
