@@ -2,8 +2,6 @@
 
 > Source: [ncosentino/needlr](https://github.com/ncosentino/needlr) — distributed by [TomeVault](https://tomevault.io)
 
-An opinionated framework for scanning assemblies for types and registering them in your dependency injection container.
-
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
