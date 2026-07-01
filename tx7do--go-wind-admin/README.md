@@ -22,7 +22,7 @@ Original source: `CLAUDE.md` in [tx7do/go-wind-admin](https://github.com/tx7do/g
 - [go-wind-admin](https://github.com/tx7do/go-wind-admin/tree/main/frontend/admin/vue-element/.qoder/skills/gowind-admin-dev/SKILL.md)
 - [go-wind-admin](https://github.com/tx7do/go-wind-admin/tree/main/frontend/admin/react/.qoder/skills/go-wind-admin-react-guide/SKILL.md)
 
-From [tx7do/go-wind-admin](https://github.com/tx7do/go-wind-admin) — a repo with 517+ stars on GitHub.
+From [tx7do/go-wind-admin](https://github.com/tx7do/go-wind-admin) — a repo with 0+ stars on GitHub.
 
 ---
 
