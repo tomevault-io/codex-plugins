@@ -2,8 +2,6 @@
 
 > Sourced from [marcuspat/turbo-flow](https://github.com/marcuspat/turbo-flow) and converted for every major platform by [TomeVault](https://tomevault.io)
 
-Advanced Agentic Development Environment Supporting Devpods, Rackspace Spot Instances, Github Codespaces, Google Cloud Shell, and more!  Features 600+ AI subagents, Claude Flow, SPARC methodology, and automatic context loading! Deploy intelligent multi-agent swarms, coordinate autonomous workflows.
-
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
@@ -17,7 +15,7 @@ Original source: `CLAUDE.md` in [marcuspat/turbo-flow](https://github.com/marcus
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [marcuspat/turbo-flow](https://github.com/marcuspat/turbo-flow) — a repo with 162+ stars on GitHub.
+From [marcuspat/turbo-flow](https://github.com/marcuspat/turbo-flow) — a repo with 164+ stars on GitHub.
 
 ---
 
