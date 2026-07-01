@@ -15,7 +15,7 @@ Original source: `CLAUDE.md` in [augustVino/claude-devtools-tauri](https://githu
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [augustVino/claude-devtools-tauri](https://github.com/augustVino/claude-devtools-tauri) — a repo with 86+ stars on GitHub.
+From [augustVino/claude-devtools-tauri](https://github.com/augustVino/claude-devtools-tauri) — a repo with 89+ stars on GitHub.
 
 ---
 
