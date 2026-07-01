@@ -1,5 +1,5 @@
-
-If asked to implement a test, use pytest and put it in the `tests` directory.
+The interpreter for this project is managed by `uv`.
+Use `uv run --env-file .env <command>` to run commands.
 
 ---
 > Source: [codezakh/onelife](https://github.com/codezakh/onelife) — distributed by [TomeVault](https://tomevault.io).
