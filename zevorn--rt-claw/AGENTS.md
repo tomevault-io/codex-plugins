@@ -1,11 +1,10 @@
-# Gemini CLI Instructions
+# GitHub Copilot Instructions
 
 Follow the shared repository instructions in `AGENTS.md` before making
-changes. Keep this file limited to Gemini-specific loading notes.
+changes. Keep this file limited to Copilot-specific loading notes.
 
-Gemini CLI uses `GEMINI.md` as its project context file. Agents that support
-file references should load `AGENTS.md` as the canonical project guide and use
-`.agents/skills/<skill-name>/SKILL.md` for task-specific workflows.
+Use `.agents/skills/<skill-name>/SKILL.md` for task-specific workflows when a
+matching rt-claw skill exists.
 
 ---
 > Source: [zevorn/rt-claw](https://github.com/zevorn/rt-claw) — distributed by [TomeVault](https://tomevault.io).
