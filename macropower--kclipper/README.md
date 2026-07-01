@@ -2,8 +2,6 @@
 
 > Sourced from [MacroPower/kclipper](https://github.com/MacroPower/kclipper) and converted for every major platform by [TomeVault](https://tomevault.io)
 
-KCL + Helm = kclipper
-
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
