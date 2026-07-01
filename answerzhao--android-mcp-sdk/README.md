@@ -2,8 +2,6 @@
 
 > Sourced from [AnswerZhao/android-mcp-sdk](https://github.com/AnswerZhao/android-mcp-sdk) and converted for every major platform by [TomeVault](https://tomevault.io)
 
-An SDK implementing the MCP with Binder for LLM-to-app communication on Android.
-
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
