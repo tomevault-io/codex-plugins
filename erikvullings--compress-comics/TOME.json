@@ -4,7 +4,7 @@
   "repo": "compress_comics",
   "description": "Compresses comic books (CBR or CBZ extension) by using webp and decreasing the target height.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/erikvullings/compress_comics",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-01T22:34:26Z"
+  "distributed_at": "2026-07-02T05:15:37Z"
 }
