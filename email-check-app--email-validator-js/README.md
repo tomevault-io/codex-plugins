@@ -7,12 +7,12 @@ Verify email address checking MX records, and SMTP connection, check for disposa
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [email-check-app/email-validator-js](https://github.com/email-check-app/email-validator-js).
+Original source: `CLAUDE.md` in [email-check-app/email-validator-js](https://github.com/email-check-app/email-validator-js).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
