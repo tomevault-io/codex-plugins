@@ -4,7 +4,7 @@
   "repo": "painlessMesh",
   "description": "clone of painlessMesh 1.5.6",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/Alteriom/painlessMesh",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-01T12:36:52Z"
+  "distributed_at": "2026-07-02T04:48:24Z"
 }
