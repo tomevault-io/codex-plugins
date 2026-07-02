@@ -70,7 +70,7 @@ Original source: `CLAUDE.md` in [fengshao1227/ccg-workflow](https://github.com/f
 - [ccg-workflow](https://github.com/fengshao1227/ccg-workflow/tree/main/templates/skills/domains/frontend-design/claymorphism/SKILL.md)
 - [ccg-workflow](https://github.com/fengshao1227/ccg-workflow/tree/main/templates/skills/domains/frontend-design/glassmorphism/SKILL.md)
 
-From [fengshao1227/ccg-workflow](https://github.com/fengshao1227/ccg-workflow) — a repo with 5648+ stars on GitHub.
+From [fengshao1227/ccg-workflow](https://github.com/fengshao1227/ccg-workflow) — a repo with 0+ stars on GitHub.
 
 ---
 
