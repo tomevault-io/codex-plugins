@@ -7,12 +7,12 @@ A Python Library for loading data from AIM xrk and xrz files
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [m3rlin45/libxrk](https://github.com/m3rlin45/libxrk).
+Original source: `CLAUDE.md` in [m3rlin45/libxrk](https://github.com/m3rlin45/libxrk).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
