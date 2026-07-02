@@ -7,13 +7,13 @@ Team up with AI to get it all done. Level up our life with your personal all-in-
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [alldoneapp/alldoneapp](https://github.com/alldoneapp/alldoneapp).
+Original source: `CLAUDE.md` in [alldoneapp/alldoneapp](https://github.com/alldoneapp/alldoneapp).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
