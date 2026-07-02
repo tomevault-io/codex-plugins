@@ -4,7 +4,7 @@
   "repo": "CyberChef-MCP",
   "description": "[CyberChef-MCP] Model Context Protocol Server for CyberChef ... exposing GCHQ's \"Cyber Swiss Army Knife\" as 463+ executable AI agent tools spanning encryption, encoding, compression, and forensic data analysis",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/doublegate/CyberChef-MCP",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-01T04:33:14Z"
+  "distributed_at": "2026-07-02T02:47:50Z"
 }
