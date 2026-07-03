@@ -1,0 +1,44 @@
+{
+  "name": "Ansede",
+  "owner": "mattybellx",
+  "repo": "Ansede",
+  "description": "Ansede - Fast, Offline, Security for Modern Codebases that detects critical security vulnerabilities and code quality issues in Python, JavaScript, and TypeScript projects with a single command. No dependencies, no cloud, no setup\u2014just download, unzip, and scan any folder instantly.  ",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/mattybellx/Ansede",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-03T04:33:17Z"
+}
