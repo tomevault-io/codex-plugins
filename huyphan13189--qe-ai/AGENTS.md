@@ -1,12 +1,12 @@
 
-# Analyzing Bugs and Logs with AI
+# Auditing Test Quality
 
-Khi cần phân tích log/stacktrace để tìm nguyên nhân lỗi, ĐỌC và LÀM THEO nguyên văn skill đầy đủ tại
-`.claude/skills/analyzing-bugs-and-logs/SKILL.md`.
+Khi cần audit chất lượng test, ĐỌC và LÀM THEO nguyên văn skill đầy đủ tại
+`.claude/skills/auditing-test-quality/SKILL.md`.
 
-Nguyên tắc cốt lõi: AI tóm tắt log và đoán nguyên nhân rất nhanh, rất TỰ TIN — kể cả khi sai. Output
-của AI là GIẢ THUYẾT cần tái hiện để kiểm chứng, không phải kết luận. Làm sạch secret/PII trong log
-trước khi đưa cho AI, và không viết bug report cho đến khi nguyên nhân đã được xác nhận.
+Nguyên tắc cốt lõi: một suite xanh và coverage cao chỉ chứng minh test **CHẠY**, không chứng minh
+test **KIỂM TRA** được gì. Truy tìm cả fake/tautological/false-safety test lẫn khoảng trống rủi ro
+chưa được test — đừng chỉ trông vào con số coverage. Đi theo Process, 7 lenses và red-flag trong skill.
 
 ---
 > Source: [huyphan13189/QE-AI](https://github.com/huyphan13189/QE-AI) — distributed by [TomeVault](https://tomevault.io).
