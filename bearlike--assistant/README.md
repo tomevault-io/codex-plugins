@@ -20,7 +20,7 @@ Original source: `CLAUDE.md` in [bearlike/Assistant](https://github.com/bearlike
 - [Assistant](https://github.com/bearlike/Assistant/tree/main/.claude/skills/mewbo-cli-smoketest/SKILL.md)
 - [Assistant](https://github.com/bearlike/Assistant/tree/main/packages/mewbo_core/src/mewbo_core/builtin_plugins/widget_builder/skills/st-widget-builder/SKILL.md)
 
-From [bearlike/Assistant](https://github.com/bearlike/Assistant) — a repo with 35+ stars on GitHub.
+From [bearlike/Assistant](https://github.com/bearlike/Assistant) — a repo with 0+ stars on GitHub.
 
 ---
 
