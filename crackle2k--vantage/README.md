@@ -1,13 +1,13 @@
 # vantage
 
-> Source: [Crackle2K/vantage](https://github.com/Crackle2K/vantage) — distributed by [TomeVault](https://tomevault.io)
+> Tome by [crackle2k](https://github.com/crackle2k/vantage) — distributed by [TomeVault](https://tomevault.io)
 
 A community-focused discovery tool to help users find, rate, and support local small businesses.
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [Crackle2K/vantage](https://github.com/Crackle2K/vantage).
+Original source: `CLAUDE.md` in [crackle2k/vantage](https://github.com/crackle2k/vantage).
 
 ## Also available for
 
@@ -17,10 +17,10 @@ Original source: `CLAUDE.md` in [Crackle2K/vantage](https://github.com/Crackle2K
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/Crackle2K/vantage](https://github.com/Crackle2K/vantage)
+From [crackle2k/vantage](https://github.com/crackle2k/vantage) — a repo with 18+ stars on GitHub.
 
 ---
 
-Own this repo? Install the TomeVault Relay to keep every platform's copy in sync on every push: [https://tomevault.io/install](https://tomevault.io/install).
+Explore more instruction files on [TomeVault](https://tomevault.io) — the open index of AI config files for every platform.
 
-<!-- genome:d-c-q -->
+<!-- genome:t-e-s -->
