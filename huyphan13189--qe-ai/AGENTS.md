@@ -1,13 +1,13 @@
 
-# Generating Test Cases with AI
+# Generating Test Data with AI
 
-Khi cần sinh/thiết kế test case với AI, ĐỌC và LÀM THEO nguyên văn skill đầy đủ tại
-`.claude/skills/generating-test-cases/SKILL.md`.
+Khi cần sinh test data bằng AI, ĐỌC và LÀM THEO nguyên văn skill đầy đủ tại
+`.claude/skills/generating-test-data/SKILL.md`.
 
-Nguyên tắc cốt lõi: AI sinh danh sách case gọn gàng rất nhanh, nhưng mặc định **lệch happy-path**,
-**bịa hành vi** không có trong spec, và **bỏ sót case biên/âm/lỗi**. Đi theo Process, bảng "coverage
-dimensions" và red-flag trong skill: ground trước khi sinh, ép đủ chiều phủ, cắt case bịa/trùng, và
-kiểm chứng lại với spec/app thật. Đánh giá case theo rủi ro nó phủ, không theo số lượng.
+Nguyên tắc cốt lõi: AI sinh dữ liệu trông thật rất nhanh, nhưng mặc định chỉ ra giá trị đẹp/happy-path,
+dễ sai lệch schema mà không báo, và dễ bị cám dỗ dùng dữ liệu prod thật cho "giống thật". Dữ liệu test
+tốt phải phủ đủ nhóm hợp lệ/biên/bất hợp lệ/unicode/bulk, được kiểm chứng đúng schema trước khi tin, và
+tuyệt đối 100% synthetic, không chứa PII hay dữ liệu khách hàng thật.
 
 ---
 > Source: [huyphan13189/QE-AI](https://github.com/huyphan13189/QE-AI) — distributed by [TomeVault](https://tomevault.io).
