@@ -1,13 +1,12 @@
 
-# Building Test Tools with the Claude API
+# Designing Test Strategy
 
-Khi cần viết công cụ QE tự động gọi Claude API/SDK trong code/script/pipeline, ĐỌC và LÀM THEO nguyên văn skill đầy đủ tại
-`.claude/skills/building-test-tools-with-api/SKILL.md`.
+Khi cần lập chiến lược test hoặc test charter với AI, ĐỌC và LÀM THEO nguyên văn skill đầy đủ tại
+`.claude/skills/designing-test-strategy/SKILL.md`.
 
-Nguyên tắc cốt lõi: gọi LLM trong code cho sức mạnh tự động hóa, nhưng ba thứ giết chết một công cụ thật
-là API key bị lộ, model ID hard-code lỗi thời, và chi phí/độ tin cậy không kiểm soát. Key luôn đọc từ
-biến môi trường, model/tham số tra tài liệu hiện hành thay vì hard-code, và luôn có xử lý lỗi + ước
-lượng token trước khi chạy hàng loạt.
+Nguyên tắc cốt lõi: một chiến lược test tốt là quyết định **ưu tiên theo rủi ro** — test gì trước, bỏ
+qua gì — chứ không phải liệt kê mọi loại test có thể làm. AI rất giỏi liệt kê tràn lan; giá trị nằm ở
+bước cắt, và việc xếp hạng rủi ro là quyết định của con người, AI chỉ hỗ trợ đề xuất.
 
 ---
 > Source: [huyphan13189/QE-AI](https://github.com/huyphan13189/QE-AI) — distributed by [TomeVault](https://tomevault.io).
