@@ -5,17 +5,17 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [rvdbreemen/OTGW-firmware](https://github.com/rvdbreemen/OTGW-firmware).
+Original source: `copilot-instructions.md` in [rvdbreemen/OTGW-firmware](https://github.com/rvdbreemen/OTGW-firmware).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-## Bundled Skills (22)
+## Bundled Skills (29)
 
 - [OTGW-firmware](https://github.com/rvdbreemen/OTGW-firmware/tree/main/.claude/skills/flash/SKILL.md)
 - [OTGW-firmware](https://github.com/rvdbreemen/OTGW-firmware/tree/main/.claude/skills/release/SKILL.md)
@@ -39,6 +39,13 @@ Original source: `CLAUDE.md` in [rvdbreemen/OTGW-firmware](https://github.com/rv
 - [OTGW-firmware](https://github.com/rvdbreemen/OTGW-firmware/tree/main/.github/skills/frontend-design/SKILL.md)
 - [OTGW-firmware](https://github.com/rvdbreemen/OTGW-firmware/tree/main/.github/skills/brand-guidelines/SKILL.md)
 - [OTGW-firmware](https://github.com/rvdbreemen/OTGW-firmware/tree/main/.github/skills/web-artifacts-builder/SKILL.md)
+- [OTGW-firmware](https://github.com/rvdbreemen/OTGW-firmware/tree/main/otgw_design_package/SKILL.md)
+- [OTGW-firmware](https://github.com/rvdbreemen/OTGW-firmware/tree/main/tools/adr-kit/skills/adr/SKILL.md)
+- [OTGW-firmware](https://github.com/rvdbreemen/OTGW-firmware/tree/main/tools/adr-kit/skills/lint/SKILL.md)
+- [OTGW-firmware](https://github.com/rvdbreemen/OTGW-firmware/tree/main/tools/adr-kit/skills/setup/SKILL.md)
+- [OTGW-firmware](https://github.com/rvdbreemen/OTGW-firmware/tree/main/tools/adr-kit/skills/migrate/SKILL.md)
+- [OTGW-firmware](https://github.com/rvdbreemen/OTGW-firmware/tree/main/.claude/skills/implement-next-task/SKILL.md)
+- [OTGW-firmware](https://github.com/rvdbreemen/OTGW-firmware/tree/main/.claude/skills/firmware-design-handoff/SKILL.md)
 
 Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/rvdbreemen/OTGW-firmware](https://github.com/rvdbreemen/OTGW-firmware)
 
