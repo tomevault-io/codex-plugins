@@ -1,0 +1,44 @@
+{
+  "name": "Face-Recognition-Attendance-System",
+  "owner": "rajpratham1",
+  "repo": "Face-Recognition-Attendance-System",
+  "description": "A modern, secure, and intelligent attendance management system built for Invertis University that uses face recognition technology to eliminate proxy attendance and automate attendance tracking for academic institutions.(IIOT-6 Project)",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/rajpratham1/Face-Recognition-Attendance-System",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-04T10:31:23Z"
+}
