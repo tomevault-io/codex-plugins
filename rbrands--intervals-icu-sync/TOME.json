@@ -1,0 +1,44 @@
+{
+  "name": "intervals-icu-sync",
+  "owner": "rbrands",
+  "repo": "intervals-icu-sync",
+  "description": "Connect any GenAI tool to your intervals.icu data \u2014 includes MCP server, Python scripts, system prompts and coaching logic based on Joe Friel.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/rbrands/intervals-icu-sync",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-04T06:36:36Z"
+}
