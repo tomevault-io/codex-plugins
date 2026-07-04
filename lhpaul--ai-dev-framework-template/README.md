@@ -7,14 +7,14 @@ A tool-agnostic AI-assisted development framework template. Structured workflow 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [lhpaul/ai-dev-framework-template](https://github.com/lhpaul/ai-dev-framework-template).
+Original source: `GEMINI.md` in [lhpaul/ai-dev-framework-template](https://github.com/lhpaul/ai-dev-framework-template).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
-- **Gemini CLI** — `GEMINI.md`
+- **Cursor** — `project-config.mdc`
 - **Windsurf** — `project-config.md`
 
 Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/lhpaul/ai-dev-framework-template](https://github.com/lhpaul/ai-dev-framework-template)
