@@ -4,7 +4,7 @@
   "repo": "nixmac",
   "description": "Home manager and nix-darwin that understands plain English",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": ".cursor/rules/*.mdc",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/darkmatter/nixmac",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-04T01:31:23Z"
+  "distributed_at": "2026-07-04T01:31:51Z"
 }
