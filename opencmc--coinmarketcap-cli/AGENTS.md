@@ -80,5 +80,5 @@ coinmarketcap-cli/
 - Keep code `gofmt`-clean and prefer the existing tests over new abstractions unless they are needed.
 
 ---
-> Source: [openCMC/CoinMarketCap-CLI](https://github.com/openCMC/CoinMarketCap-CLI) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-04-24 -->
+> Source: [OpenCMC/CoinMarketCap-CLI](https://github.com/OpenCMC/CoinMarketCap-CLI) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-07-04 -->
