@@ -7,12 +7,12 @@ Python VoIP library of the AI age
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [codingjoe/VoIP](https://github.com/codingjoe/VoIP).
+Original source: `CLAUDE.md` in [codingjoe/VoIP](https://github.com/codingjoe/VoIP).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
