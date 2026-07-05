@@ -7,12 +7,12 @@ Git-native truth docs for AI-assisted codebases, keeping branch-scoped documenta
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [merlinhu1/truthmark](https://github.com/merlinhu1/truthmark).
+Original source: `CLAUDE.md` in [merlinhu1/truthmark](https://github.com/merlinhu1/truthmark).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
