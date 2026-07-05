@@ -7,12 +7,12 @@ Zero-trust orchestration for millions of AI agents
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [vaultys/VaultysClaw](https://github.com/vaultys/VaultysClaw).
+Original source: `CLAUDE.md` in [vaultys/VaultysClaw](https://github.com/vaultys/VaultysClaw).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
