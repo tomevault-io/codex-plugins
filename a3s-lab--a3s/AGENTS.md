@@ -255,5 +255,5 @@ Rules:
 - Ran formatting and relevant checks/tests from the correct workspace or app.
 
 ---
-> Source: [A3S-Lab/a3s](https://github.com/A3S-Lab/a3s) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-06-17 -->
+> Source: [A3S-Lab/A3S](https://github.com/A3S-Lab/A3S) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-07-05 -->
