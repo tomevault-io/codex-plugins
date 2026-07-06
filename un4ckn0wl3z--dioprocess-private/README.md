@@ -7,12 +7,12 @@ DioProcess — Advanced Windows Internals, Evasion, Rootkit, Hypervisor, SMM & B
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [un4ckn0wl3z/dioprocess-private](https://github.com/un4ckn0wl3z/dioprocess-private).
+Original source: `copilot-instructions.md` in [un4ckn0wl3z/dioprocess-private](https://github.com/un4ckn0wl3z/dioprocess-private).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
