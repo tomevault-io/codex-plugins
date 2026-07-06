@@ -4,7 +4,7 @@
   "repo": "dioprocess-private",
   "description": "DioProcess \u2014 Advanced Windows Internals, Evasion, Rootkit, Hypervisor, SMM & Bootkit Research Framework",
   "type": "config",
-  "source_format": "CLAUDE.md",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/un4ckn0wl3z/dioprocess-private",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-06T12:31:01Z"
+  "distributed_at": "2026-07-06T12:31:41Z"
 }
