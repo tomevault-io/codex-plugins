@@ -4,7 +4,7 @@
   "repo": "Hypa",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/Hypabolic/Hypa",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-06T23:31:33Z"
+  "distributed_at": "2026-07-06T23:33:59Z"
 }
