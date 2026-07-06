@@ -1,16 +1,22 @@
 
-# WebGPU Device Loss & Limits
+# Three.js WebGPU Post-Processing (TSL)
 
-## Device loss
+Post-processing uses the `PostProcessing` class from `three/webgpu` with node-based effect composition. Effects chain via TSL nodes rather than EffectComposer passes.
 
-WebGPU devices can be lost (tab backgrounded for too long, driver crash, OS suspend). Listen via `device.lost` and recreate the renderer on recovery. Preserve scene state outside the renderer so it can be re-uploaded after a new `WebGPURenderer` is initialized.
+```javascript
+import { PostProcessing } from 'three/webgpu';
+import { pass, mrt, output, emissive } from 'three/tsl';
+import { bloom } from 'three/addons/tsl/display/BloomNode.js';
 
-## Limits and features
+const postProcessing = new PostProcessing(renderer);
+const scenePass = pass(scene, camera);
+postProcessing.outputNode = scenePass.add(bloom(scenePass.getTextureNode()));
+```
 
-Request non-default limits and optional features via `WebGPURenderer`'s device descriptor options. Always check `adapter.features` and `adapter.limits` before requesting.
+Call `postProcessing.renderAsync()` instead of `renderer.renderAsync()`.
 
-@skills/webgpu-threejs-tsl/docs/device-loss.md
-@skills/webgpu-threejs-tsl/docs/limits-and-features.md
+@skills/webgpu-threejs-tsl/docs/post-processing.md
+@skills/webgpu-threejs-tsl/examples/post-processing.js
 
 ---
 > Source: [hexianWeb/lego-stylized-nature](https://github.com/hexianWeb/lego-stylized-nature) — distributed by [TomeVault](https://tomevault.io).
