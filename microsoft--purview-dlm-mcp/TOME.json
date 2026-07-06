@@ -4,7 +4,7 @@
   "repo": "purview-dlm-mcp",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/microsoft/purview-dlm-mcp",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-06T10:31:44Z"
+  "distributed_at": "2026-07-06T10:34:24Z"
 }
