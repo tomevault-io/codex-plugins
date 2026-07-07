@@ -4,7 +4,7 @@
   "repo": "blog",
   "description": "https://blog.shunyamazaki.com/",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/sYamaz/blog",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-07T16:42:33Z"
+  "distributed_at": "2026-07-07T17:29:37Z"
 }
