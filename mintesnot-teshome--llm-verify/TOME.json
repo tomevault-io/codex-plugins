@@ -1,0 +1,44 @@
+{
+  "name": "llm-verify",
+  "owner": "mintesnot-teshome",
+  "repo": "llm-verify",
+  "description": "Detect fake AI APIs \u2014 Verify if an LLM API is actually serving the model it claims. Catch resellers selling \"Claude\" or \"ChatGPT\" that secretly serve cheaper models. Behavioral fingerprinting with 32 forensic prompts.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/mintesnot-teshome/llm-verify",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-07T12:34:09Z"
+}
