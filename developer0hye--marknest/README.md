@@ -1,0 +1,26 @@
+# marknest
+
+> Tome by [developer0hye](https://github.com/developer0hye/marknest) — distributed by [TomeVault](https://tomevault.io)
+
+Markdown to PDF converter with Mermaid diagrams, LaTeX math, themes, and batch conversion. CLI + WASM.
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [developer0hye/marknest](https://github.com/developer0hye/marknest).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+From [developer0hye/marknest](https://github.com/developer0hye/marknest) — a repo with 9+ stars on GitHub.
+
+---
+
+Own this repo? Install the TomeVault Relay to keep every platform's copy in sync on every push: [https://tomevault.io/install](https://tomevault.io/install).
+
+<!-- genome:t-c-s -->
