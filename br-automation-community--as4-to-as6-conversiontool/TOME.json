@@ -1,0 +1,44 @@
+{
+  "name": "AS4_to_AS6_ConversionTool",
+  "owner": "br-automation-community",
+  "repo": "AS4_to_AS6_ConversionTool",
+  "description": "AS4 to AS6 conversion tool. Replacement AS6 library pack can be downloaded here: https://abb-my.sharepoint.com/:u:/p/mads-ravn_pedersen_dk/IQD6GnOHao4pQYgsskb2J0ozAZQ3WCFLRfN-QG6DeJNaiME?e=Q6BnRd or alternatively here: http://gofile.me/3rwUd/dYJOlPurL",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/br-automation-community/AS4_to_AS6_ConversionTool",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-07T20:34:04Z"
+}
