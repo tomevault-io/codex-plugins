@@ -7,14 +7,14 @@ Redface 2 — Le futur client Android pour Hardware.fr. Spécifications, archite
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [ForumHFR/redface2](https://github.com/ForumHFR/redface2).
+Original source: `GEMINI.md` in [ForumHFR/redface2](https://github.com/ForumHFR/redface2).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
-- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 From [ForumHFR/redface2](https://github.com/ForumHFR/redface2) — a repo with 9+ stars on GitHub.
