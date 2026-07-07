@@ -4,7 +4,7 @@
   "repo": "orqestra",
   "description": "Software Engineering agents orchestration",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/aka-rider/orqestra",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-07T00:35:14Z"
+  "distributed_at": "2026-07-07T01:20:01Z"
 }
