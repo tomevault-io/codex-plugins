@@ -1,0 +1,44 @@
+{
+  "name": "copilot-configs",
+  "owner": "cdcd72",
+  "repo": "copilot-configs",
+  "description": "\u6536\u96c6\u904e\u5f80\u4f7f\u7528\u7684 Copilot \u8a2d\u5b9a\u3002",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/cdcd72/copilot-configs",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-08T11:39:54Z"
+}
