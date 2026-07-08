@@ -7,14 +7,14 @@ chat  app
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [xkeerti11/chatsphere](https://github.com/xkeerti11/chatsphere).
+Original source: `CLAUDE.md` in [xkeerti11/chatsphere](https://github.com/xkeerti11/chatsphere).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 From [xkeerti11/chatsphere](https://github.com/xkeerti11/chatsphere) — a repo with 0+ stars on GitHub.
