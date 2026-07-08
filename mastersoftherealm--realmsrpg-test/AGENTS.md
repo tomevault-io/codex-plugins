@@ -1,38 +1,16 @@
 
-# Codex & Reference Data (Supabase)
+# RealmsRPG Project
 
-Applies to **`codex_*`**, **`core_rules`**, and any bulk edits to official library reference content.
+**Stack:** Next.js (App Router), React, Tailwind, **Supabase** (PostgreSQL, Auth, Storage), **Vercel**. Database: Supabase client + raw SQL; all tables in `public`; no Prisma. **Schema source of truth:** `src/docs/SUPABASE_SCHEMA.md`.
 
-## Read freely; write only after review
+**Key directories:**
+- `src/app/` — Routes: `(main)/` (characters, library, codex, creators), `(auth)/` (login, register)
+- `src/components/` — `ui/` (primitives), `shared/` (reusable), `character-sheet/`, `creator/`, `codex/`
+- `src/hooks/`, `src/stores/`, `src/lib/`, `src/services/`, `src/types/`
 
-| Allowed without prior approval | Requires owner review first |
-|-------------------------------|----------------------------|
-| `SELECT` / audits / counts / previews | `UPDATE`, `INSERT`, `DELETE` on codex tables |
-| Draft SQL in `sql/*.sql` | `execute_sql` / `apply_migration` that mutates codex data |
-| Repo-only seed/CSV edits (not live DB) | Supabase MCP writes that change live reference data |
+**Deploy:** `vercel deploy` or push to connected repo — Vercel only.
 
-## Workflow for bulk or policy changes (tags, categories, merges, migrations)
-
-1. **Audit** — query or export current state; cite counts and examples.
-2. **Propose** — mapping plan, sample before/after rows, SQL file in `sql/` (no trailing `UPDATE` until approved).
-3. **Wait** — owner reviews and approves, corrects mappings, or says "apply".
-4. **Apply** — run approved SQL once; report rows affected and post-migration counts.
-
-Do **not** chain Phase 1 → Phase 2 → live DB in one turn without an explicit apply step from the owner.
-
-## Explicit owner direction
-
-When the owner gives a **specific correction in the current message** (e.g. "use Skill Roll not Skill Check", "apply phase 2"), implement that scope only — still prefer a preview for bulk updates when practical.
-
-## Terminology
-
-Match **`src/docs/GAME_RULES.md`** for game terms in codex fields (e.g. **Skill Roll**, not Skill Check).
-
-## After approved codex data changes
-
-- Keep `sql/` migration files in sync with what was applied.
-- Note in `src/docs/ai/AI_CHANGELOG.md` when reference data meaningfully changes.
-- Re-export or align `scripts/seed-data/` / `codex_csv/` if those remain parity sources (ask if unsure).
+**Before PR:** Run `npm run build`. CI runs build + `scripts/reconcile_tasks.js`.
 
 ---
 > Source: [MastersoftheRealm/RealmsRPG-Test](https://github.com/MastersoftheRealm/RealmsRPG-Test) — distributed by [TomeVault](https://tomevault.io).
