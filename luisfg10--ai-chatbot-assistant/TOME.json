@@ -1,0 +1,44 @@
+{
+  "name": "AI-Chatbot-Assistant",
+  "owner": "luisfg10",
+  "repo": "AI-Chatbot-Assistant",
+  "description": "AI chatbot assistant served on a GUI to solve user queries and tasks without relying on high-level agentic frameworks.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/luisfg10/AI-Chatbot-Assistant",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-08T13:38:51Z"
+}
