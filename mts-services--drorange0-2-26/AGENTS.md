@@ -1,3 +1,4 @@
+
 <laravel-boost-guidelines>
 === foundation rules ===
 
@@ -483,7 +484,7 @@ export default () => (
 - Opacity values are still numeric.
 
 | Deprecated |	Replacement |
-|------------+--------------|
+|---+-----|
 | bg-opacity-* | bg-black/* |
 | text-opacity-* | text-black/* |
 | border-opacity-* | border-black/* |
