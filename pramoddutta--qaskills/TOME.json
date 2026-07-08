@@ -3,7 +3,7 @@
   "owner": "PramodDutta",
   "repo": "qaskills",
   "description": "QA Skills Directory QA Skills is a curated directory of testing-specific skills for AI coding agents (Claude Code, Cursor, Copilot, etc.).",
-  "type": "tome",
+  "type": "config",
   "source_format": "CLAUDE.md",
   "formats": [
     {
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/PramodDutta/qaskills",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-08T06:30:25Z"
+  "distributed_at": "2026-07-08T06:34:04Z"
 }
