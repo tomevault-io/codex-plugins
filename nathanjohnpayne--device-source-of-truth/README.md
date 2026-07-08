@@ -7,13 +7,13 @@ Disney Streaming device catalog for partner inventory, specs, deployments, telem
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [nathanjohnpayne/device-source-of-truth](https://github.com/nathanjohnpayne/device-source-of-truth).
+Original source: `CLAUDE.md` in [nathanjohnpayne/device-source-of-truth](https://github.com/nathanjohnpayne/device-source-of-truth).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
