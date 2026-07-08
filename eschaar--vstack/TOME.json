@@ -1,0 +1,51 @@
+{
+  "name": "vstack",
+  "owner": "eschaar",
+  "repo": "vstack",
+  "description": "vstack is a VS Code\u2013native AI engineering workflow system. It provides structured skills \u2014 executable by GitHub Copilot in Agent Mode \u2014 for planning, reviewing, verifying, and releasing software.",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "terraform",
+      "path": ".github/skills/terraform",
+      "github_url": "https://github.com/eschaar/vstack/tree/main/.github/skills/terraform",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/eschaar/vstack",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-08T06:32:52Z"
+}
