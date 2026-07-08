@@ -4,7 +4,7 @@
   "repo": "libra",
   "description": "Libra is evolving into an AI agent\u2013native version control tools",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/libra-tools/libra",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-08T11:50:40Z"
+  "distributed_at": "2026-07-08T17:44:24Z"
 }
