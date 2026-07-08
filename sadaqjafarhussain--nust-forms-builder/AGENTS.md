@@ -1,35 +1,59 @@
-# Testing Instructions
+# Build & Deployment Best Practices
 
-When generating test files inside the "/app/web" path, follow these rules:
+## Build Process
 
-- You are an experienced senior software engineer
-- Use vitest
-- Ensure 100% code coverage
-- Add as few comments as possible
-- The test file should be located in the same folder as the original file
-- Use the `test` function instead of `it`
-- Follow the same test pattern used for other files in the package where the file is located
-- All imports should be at the top of the file, not inside individual tests
-- For mocking inside "test" blocks use "vi.mocked"
-- If the file is located in the "packages/survey" path, use "@testing-library/preact" instead of "@testing-library/react"
-- Don't mock functions that are already mocked in the "apps/web/vitestSetup.ts" file
-- When using "screen.getByText" check for the tolgee string if it is being used in the file.
-- The types for mocked variables can be found in the "packages/types" path. Be sure that every imported type exists before using it. Don't create types that are not already in the codebase.
-- When mocking data check if the properties added are part of the type of the object being mocked. Only specify known properties, don't use properties that are not part of the type.
-  
-If it's a test for a ".tsx" file, follow these extra instructions:
+### Running Builds
+- Use `pnpm build` from project root for full build
+- Monitor for React hooks warnings and fix them immediately
+- Ensure all TypeScript errors are resolved before deployment
 
-- Add this code inside the "describe" block and before any test:
+### Common Build Issues & Fixes
 
-afterEach(() => {
-    cleanup();
-});
+#### React Hooks Warnings
+- Capture ref values in variables within useEffect cleanup
+- Avoid accessing `.current` directly in cleanup functions
+- Pattern for fixing ref cleanup warnings:
+```typescript
+useEffect(() => {
+  const currentRef = myRef.current;
+  return () => {
+    if (currentRef) {
+      currentRef.cleanup();
+    }
+  };
+}, []);
+```
 
-- The "afterEach" function should only have the "cleanup()" line inside it and should be adde to the "vitest" imports.
-- For click events, import userEvent from "@testing-library/user-event"
-- Mock other components that can make the text more complex and but at the same time mocking it wouldn't make the test flaky. It's ok to leave basic and simple components.
-- You don't need to mock @tolgee/react
-- Use "import "@testing-library/jest-dom/vitest";"
+#### Test Failures During Build
+- Ensure all test mocks include required constants like `SESSION_MAX_AGE`
+- Mock Next.js navigation hooks properly: `useParams`, `useRouter`, `useSearchParams`
+- Remove unused imports and constants from test files
+- Use literal values instead of imported constants when the constant isn't actually needed
+
+### Test Execution
+- Run `pnpm test` to execute all tests
+- Use `pnpm test -- --run filename.test.tsx` for specific test files
+- Fix test failures before merging code
+- Ensure 100% test coverage for new components
+
+### Performance Monitoring
+- Monitor build times and optimize if necessary
+- Watch for memory usage during builds
+- Use proper caching strategies for faster rebuilds
+
+### Deployment Checklist
+1. All tests passing
+2. Build completes without warnings
+3. TypeScript compilation successful
+4. No linter errors
+5. Database migrations applied (if any)
+6. Environment variables configured
+
+### EKS Deployment Considerations
+- Ensure latest code is deployed to all pods
+- Monitor AWS RDS Performance Insights for database issues
+- Verify environment-specific configurations
+- Check pod health and resource usage
 
 ---
 > Source: [SadaqJafarHussain/NUST-Forms-Builder](https://github.com/SadaqJafarHussain/NUST-Forms-Builder) — distributed by [TomeVault](https://tomevault.io).
