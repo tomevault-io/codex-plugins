@@ -1,0 +1,28 @@
+# AI instruction files for say-it
+
+> Sourced from [henjicc/say-it](https://github.com/henjicc/say-it) and converted for every major platform by [TomeVault](https://tomevault.io)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [henjicc/say-it](https://github.com/henjicc/say-it).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+From [henjicc/say-it](https://github.com/henjicc/say-it) — a repo with 10+ stars on GitHub.
+
+---
+
+Install this config instantly:
+```
+npx tomevault install henjicc/say-it
+```
+Source: [github.com/henjicc/say-it](https://github.com/henjicc/say-it).
+
+<!-- genome:a-i-s -->
