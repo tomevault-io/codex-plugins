@@ -7,7 +7,7 @@ a vendor-neutral runtime protocol for autonomous AI coding agents persistent mem
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [jackofall1232/l00prite](https://github.com/jackofall1232/l00prite).
+Original source: `.windsurf/rules/*.md` in [jackofall1232/l00prite](https://github.com/jackofall1232/l00prite).
 
 ## Also available for
 
@@ -15,7 +15,7 @@ Original source: `GEMINI.md` in [jackofall1232/l00prite](https://github.com/jack
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
-- **Windsurf** — `project-config.md`
+- **Gemini CLI** — `GEMINI.md`
 
 Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/jackofall1232/l00prite](https://github.com/jackofall1232/l00prite)
 
