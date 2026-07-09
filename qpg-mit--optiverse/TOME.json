@@ -1,0 +1,44 @@
+{
+  "name": "optiverse",
+  "owner": "QPG-MIT",
+  "repo": "optiverse",
+  "description": "2D sandbox for laying out and simulating optical table setups with real-time ray tracing (PyQt6, OpenGL).",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/QPG-MIT/optiverse",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-09T16:32:14Z"
+}
