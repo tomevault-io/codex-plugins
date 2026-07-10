@@ -7,14 +7,14 @@ Hardened multi-arch OCI images for JVM workloads. JDK 25/26/Valhalla on Chaingua
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [artagon/artagon-containers](https://github.com/artagon/artagon-containers).
+Original source: `GEMINI.md` in [artagon/artagon-containers](https://github.com/artagon/artagon-containers).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
-- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/artagon/artagon-containers](https://github.com/artagon/artagon-containers)
