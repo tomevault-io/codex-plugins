@@ -7,7 +7,7 @@ Your AI talks less, builds less, says more. Like a senior dev who bills by the s
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [JayPokale/RDXmin](https://github.com/JayPokale/RDXmin).
+Original source: `.windsurf/rules/*.md` in [JayPokale/RDXmin](https://github.com/JayPokale/RDXmin).
 
 ## Also available for
 
@@ -15,7 +15,7 @@ Original source: `GEMINI.md` in [JayPokale/RDXmin](https://github.com/JayPokale/
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
-- **Windsurf** — `project-config.md`
+- **Gemini CLI** — `GEMINI.md`
 
 Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/JayPokale/RDXmin](https://github.com/JayPokale/RDXmin)
 
