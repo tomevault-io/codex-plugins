@@ -7,13 +7,13 @@ Your AI talks less, builds less, says more. Like a senior dev who bills by the s
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [JayPokale/RDXmin](https://github.com/JayPokale/RDXmin).
+Original source: `.cursor/rules/*.mdc` in [JayPokale/RDXmin](https://github.com/JayPokale/RDXmin).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
