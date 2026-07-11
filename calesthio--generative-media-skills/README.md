@@ -7,12 +7,12 @@ Research-backed agent skills for premium image, video, audio, voice, and generat
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [calesthio/generative-media-skills](https://github.com/calesthio/generative-media-skills).
+Original source: `copilot-instructions.md` in [calesthio/generative-media-skills](https://github.com/calesthio/generative-media-skills).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
