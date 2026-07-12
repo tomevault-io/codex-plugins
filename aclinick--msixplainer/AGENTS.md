@@ -1,0 +1,76 @@
+# Copilot Instructions — MSIXplainer
+
+## Build & Run
+
+```powershell
+# Build everything
+dotnet build
+
+# Run CLI with built-in sample manifest
+dotnet run --project MSIXplainer.Cli -- --sample
+
+# Run CLI against a real package
+dotnet run --project MSIXplainer.Cli -- path\to\package.msix
+
+# Run WinUI app (requires Developer Mode)
+cd MSIXplainer && .\BuildAndRun.ps1
+
+# Package as .msixbundle (x64 + ARM64)
+.\Package.ps1
+```
+
+```powershell
+# Run all tests (xUnit)
+dotnet test MSIXplainer.Core.Tests
+
+# Run a single test by name
+dotnet test MSIXplainer.Core.Tests --filter "FullyQualifiedName~DetectsFullTrust"
+
+# Run all tests in one class
+dotnet test MSIXplainer.Core.Tests --filter "ClassName~RulesEngineTests"
+```
+
+Test files mirror the service they cover: `RulesEngineTests.cs`, `ManifestParserServiceTests.cs`, `ManifestExplainerServiceTests.cs`, `ExportServiceTests.cs`, `BundleExtractionTests.cs`.
+
+## Architecture
+
+Three-project .NET 10 solution (`MSIXplainer.slnx`):
+
+- **MSIXplainer.Core** — Shared class library with all analysis logic. No UI dependencies. Targets `net10.0`, `Nullable` enabled, supports `AnyCPU;ARM64;x64`.
+- **MSIXplainer.Cli** — Console frontend using Spectre.Console. Hand-rolled arg parsing in `Program.cs`. Supports `--sample`, `--markdown`, `--json`, `--output`, `--severity`, `--quiet`, and glob input.
+- **MSIXplainer** — WinUI 3 desktop app (Windows App SDK 2.0, packaged MSIX). `NavigationView` + property viewer in `MainPage.xaml`.
+
+### Core processing pipeline
+
+All analysis flows through the same Core services in this order:
+
+1. **`ManifestParserService`** — Extracts `AppxManifest.xml` from `.msix`/`.appx` ZIP archives (and `.msixbundle`/`.appxbundle` ZIP-of-ZIP archives) with security guards (DTD prohibited, XML resolver null, 10 MB cap, no code execution).
+2. **`RulesEngine.Analyze(XDocument, RuleSeverityOverrides?)`** — Static `Analyze` method runs 18 deterministic rule methods against manifest XML, returns `List<ManifestFinding>` sorted by severity then category. Each finding has a stable `RuleId`, plus `Category`, `Severity`, `Title`, `Description`, `WhyItMatters`, `Recommendation`, and optional `XmlSnippet`. The optional `RuleSeverityOverrides` parameter is applied post-emission and only changes severity — rule text remains compiled in.
+3. **`ManifestExplainerService`** — Builds section-by-section `ManifestSection` + `ManifestPropertyGroup` structures with plain-English explanations of every XML element.
+4. **`ExportService`** — Generates annotated Markdown reports and structured JSON from findings.
+
+### Adding a new analysis rule
+
+Add a private `Analyze*` method in `RulesEngine.cs` and call it from `Analyze()`. Each rule method receives `(XElement root, List<ManifestFinding> findings)` and appends findings. **Every emitted finding must set a stable `RuleId`** (e.g. `trust.allowElevation`, `virt.filesystemDisabled`) so users can override its severity via `%LOCALAPPDATA%\MSIXplainer\rules.json`. For each new `RuleId`, also add a matching entry to `RuleCatalog.All` in `MSIXplainer.Core/Services/RuleCatalog.cs` — the `EveryRuleEmittedBySample_HasCatalogEntry` test will fail if you forget. Use `FindingSeverity` (Critical/Warning/Review/Info) and `FindingCategory` enum values. If adding a new category, update `FindingCategory` and `ManifestFinding.CategoryLabel` in the Models, and add a section entry in `ManifestExplainerService.BuildSections`.
+
+## Workflow
+
+- **Phased implementation** — Break work into discrete phases. Complete and verify each phase before moving to the next.
+- **Test every change** — All code changes must have corresponding tests. Run tests to confirm they pass before committing.
+- **Commit when green** — Once tests pass, commit to GitHub. Do not leave passing work uncommitted.
+
+## Key Conventions
+
+- **Namespace:** All projects use `RootNamespace` of `MSIXplainer`. Sub-namespaces follow the pattern `MSIXplainer.Models`, `MSIXplainer.Services`, `MSIXplainer.ViewModels`.
+- **All Core services are static classes** — no DI, no interfaces. The CLI and WinUI app call them directly.
+- **Models use `required init` properties** — `ManifestFinding`, `ManifestSection` use C# `required` + `init` pattern.
+- **WinUI app uses CommunityToolkit.Mvvm** — `MainPageViewModel` uses `[ObservableProperty]` source generators with the partial property syntax (`public partial bool IsPackageLoaded { get; set; }`).
+- **Security model** — Packages are always treated as untrusted input. Never execute code from packages. XML parsing must prohibit DTD processing and null out the XML resolver.
+- **Severity levels:** Critical (`🔴`), Warning (`🟡`), Review (`🔵`), Info (`ℹ️`) — used consistently in CLI output, Markdown export, and WinUI display.
+- **CLI exit codes:** 0 = clean, 1 = warnings found, 2 = critical findings found. These support CI/CD gating.
+- **C# style:** Use latest C# language features (primary constructors, collection expressions, `required init`, file-scoped namespaces). Comment only when clarification is needed — no boilerplate doc comments.
+- **No DI / no interfaces in Core** — call static services directly. Don't introduce DI containers or interface abstractions for Core services.
+
+---
+> Source: [aclinick/msixplainer](https://github.com/aclinick/msixplainer) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-07-11 -->
