@@ -7,13 +7,13 @@ A robust framework for building AI agents with multi-provider LLM support
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [BrainDAO/adk-ts](https://github.com/BrainDAO/adk-ts).
+Original source: `.cursor/rules/*.mdc` in [BrainDAO/adk-ts](https://github.com/BrainDAO/adk-ts).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
-- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
