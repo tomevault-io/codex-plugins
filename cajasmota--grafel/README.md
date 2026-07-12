@@ -7,13 +7,13 @@ Multi-repo code knowledge graphs for AI agents. Cross-repo linking, infrastructu
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [cajasmota/grafel](https://github.com/cajasmota/grafel).
+Original source: `copilot-instructions.md` in [cajasmota/grafel](https://github.com/cajasmota/grafel).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
