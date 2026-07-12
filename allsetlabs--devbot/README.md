@@ -1,0 +1,26 @@
+# AI instruction files for devbot
+
+> Sourced from [allsetlabs/devbot](https://github.com/allsetlabs/devbot) and converted for every major platform by [TomeVault](https://tomevault.io)
+
+devbot module
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [allsetlabs/devbot](https://github.com/allsetlabs/devbot).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/allsetlabs/devbot](https://github.com/allsetlabs/devbot)
+
+---
+
+Explore more instruction files on [TomeVault](https://tomevault.io) — the open index of AI config files for every platform.
+
+<!-- genome:a-e-q -->
