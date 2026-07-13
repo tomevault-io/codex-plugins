@@ -1,0 +1,44 @@
+{
+  "name": "cortex-ast",
+  "owner": "cortex-works",
+  "repo": "cortex-ast",
+  "description": "A powerful Model Context Protocol (MCP) server and Omni-AST engine. It empowers AI agents to seamlessly parse complex codebases, execute secure cross-project operations, and dynamically fetch token-optimized rules.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/cortex-works/cortex-ast",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-13T10:32:51Z"
+}
