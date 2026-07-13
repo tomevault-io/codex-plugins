@@ -1,4 +1,4 @@
-# Service Bus Explorer TUI — Claude Instructions
+# Service Bus Explorer TUI — Copilot Instructions
 
 ## Project Overview
 
@@ -43,8 +43,7 @@ src/
     ├── tree.rs          # Entity tree with inline message/DLQ counts
     ├── messages.rs      # Message list + detail view + inline edit rendering
     ├── modals.rs        # Connection, form, confirm, clear-options, peek-count dialogs
-    ├── detail.rs        # Entity properties/runtime info panel + sparkline previews
-    ├── metrics_detail.rs # Full-screen metrics overlay with braille line charts
+    ├── detail.rs        # Entity properties/runtime info panel
     ├── status_bar.rs    # Bottom status bar
     ├── help.rs          # Full keyboard shortcut overlay (`?` key)
     └── sanitize.rs      # Terminal escape injection prevention (CSI/OSC stripping)
@@ -81,9 +80,8 @@ The REST API's `PeekOnly=true` has no cursor (always returns the same first mess
 Forms use `input_fields: Vec<(String, String)>` with index-based field navigation. Body field (index 0, label "Body") supports multiline: Enter inserts `\n`, Up/Down navigate by line, Home/End move to line start/end. Other fields are single-line. Submit is **F2**, **Ctrl+Enter**, or **Alt+Enter**.
 
 ### Keybindings (actual, not README)
-**Tree panel:** `j/k` nav, `h/l` collapse/expand, `g/G` jump, `r/F5` refresh, `s` send, `p` peek (prompts count), `d` peek DLQ, `n` create entity, `x` delete entity, `P` clear options
-**Messages panel:** `j/k` nav, `Enter` view detail, `Esc` close detail, `1/2` switch tabs, `e` inline edit & resend, `R` bulk resend DLQ, `D` bulk delete
-**Metrics:** `m` toggle metrics on/off, `M` cycle time window (1h/6h/24h/7d), `V` open metrics detail overlay (braille line charts for all 5 metrics)
+**Tree panel:** `j/k` nav, `h/l` collapse/expand, `g/G` jump, `r/F5` refresh, `s` send, `p` peek (prompts count), `d` peek DLQ, `n` create entity, `x` delete entity, `P` clear options  
+**Messages panel:** `j/k` nav, `Enter` view detail, `Esc` close detail, `1/2` switch tabs, `e` inline edit & resend, `R` bulk resend DLQ, `D` bulk delete  
 **Note:** `x` deletes entities (not `d`); `d` peeks DLQ from tree
 
 ### Connection Flow
@@ -95,23 +93,6 @@ Forms use `input_fields: Vec<(String, String)>` with index-based field navigatio
 ### Terminal Safety
 `ui/sanitize.rs` strips CSI/OSC escape sequences and control characters from message bodies before rendering. Always use `sanitize_for_terminal()` when displaying untrusted Service Bus message content.
 
-### Azure Monitor Metrics
-Requires Azure AD authentication (not available with SAS keys). The ARM resource ID is resolved once per connection via `ResourceManagerClient::resolve_namespace_resource_id()`.
-
-**Two-tier UI:**
-- **Detail pane preview**: small sparkline charts for Active Messages and Dead-letter, rendered inline below entity properties (`detail.rs`)
-- **Metrics detail overlay** (`V` key): full-screen modal with braille dot line charts (`Chart` + `Marker::Braille` + `GraphType::Line`) for all 5 metrics, with y-axis labels and cur/peak values (`metrics_detail.rs`)
-
-**Five metrics fetched from Azure Monitor** (via `resource_manager.rs:query_entity_metrics()`):
-- `ActiveMessages`, `DeadletteredMessages`, `ScheduledMessages` — gauge metrics (average aggregation)
-- `IncomingMessages`, `OutgoingMessages` — throughput metrics (total aggregation)
-
-Gauge and throughput metrics require different aggregation types, so they are fetched in two parallel requests using `tokio::join!`.
-
-**Time windows** (`MetricsWindow` enum): 1h (PT1M interval), 6h (PT5M), 24h (PT1H), 7d (PT1H). Cycled with `M` key. The overlay also supports `M` to cycle while open.
-
-**App state**: `metrics_available` (ARM ID resolved), `metrics_enabled` (user toggle), `metrics_window`, `metrics_pending` (fetch in progress), `entity_metrics` (cached data). Metrics are re-fetched when the selected entity changes, the window cycles, or metrics are toggled back on.
-
 ## Adding New Operations
 
 1. Add `BgEvent` variant in `app.rs` if the operation is async
@@ -121,47 +102,6 @@ Gauge and throughput metrics require different aggregation types, so they are fe
 5. Handle the `BgEvent` in the `bg_rx.try_recv()` match block
 
 For entity form operations, also add `init_*_form()` and `build_*_from_form()` methods on `App`.
-
-Use the `/add-operation` skill for the full step-by-step procedure.
-
-## Engineering Standards
-
-Optimize for: correctness, maintainability, security, performance, operational reliability, and long-term cost of ownership. Never optimize for speed of writing code if it increases system entropy.
-
-When working on any task:
-1. Identify the actual engineering problem, not just the surface request
-2. Detect missing constraints (scale, concurrency, lifecycle, security)
-3. Reject fragile or short-sighted approaches
-4. Propose production-grade solutions first; simplified alternatives only if explicitly requested
-
-### Rust Standards
-- Use enums and the type system for state modeling — not booleans or string flags
-- Prefer owned types at API boundaries, borrows internally
-- `Result` and `Option` everywhere — no `unwrap()`/`expect()` outside test code
-- Explicit error types (`thiserror`) over stringly-typed errors
-- Avoid unnecessary clones — justify each one
-- No blocking calls in async context
-- Drop-based resource cleanup; `CancellationToken` for graceful shutdown
-- Bounded channels and semaphores for concurrency control
-
-### Architecture
-Enforce: clear boundaries, separation of concerns, testability, failure isolation.
-
-Prevent: god modules, leaky abstractions between client/UI/app layers, unbounded resource usage, UI rendering coupled to business logic, panic-driven error handling, nested tokio runtimes.
-
-### Testing
-Require unit tests for domain logic, integration tests for infrastructure behavior. Tests must validate behavior not implementation details. Reject tests that mock everything, depend on timing, or assert internal calls instead of outcomes.
-
-## Available Skills
-
-- `.claude/skills/add-operation.md` — Add a new async background operation using the sentinel dispatch pattern
-- `.claude/skills/add-keybinding.md` — Add or modify a keyboard shortcut
-- `.claude/skills/add-modal.md` — Add a new modal dialog overlay
-- `.claude/skills/add-ui-panel.md` — Add or modify a UI panel or rendering component
-- `.claude/skills/sb-rest-client.md` — Extend the Azure Service Bus REST API client
-- `.claude/skills/code-review.md` — Structured production-grade code review
-- `.claude/skills/rust-check.md` — Check code against Rust standards for this project
-- `.claude/skills/security-check.md` — Security-focused evaluation of code
 
 ## Common Pitfalls
 
@@ -183,5 +123,5 @@ cargo run                # Debug build + run
 Tests exist only in `client/auth.rs` — connection string parsing and SAS token format validation.
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/CosX) — claim your Tome and manage your conversions.
-<!-- tomevault:4.0:agents_md:2026-04-09 -->
+> Source: [CosX/service-bus-explorer-tui](https://github.com/CosX/service-bus-explorer-tui) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-07-13 -->
