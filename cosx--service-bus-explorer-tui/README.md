@@ -2,15 +2,17 @@
 
 > Tome by [CosX](https://github.com/CosX/service-bus-explorer-tui) — distributed by [TomeVault](https://tomevault.io)
 
+A cross-platform terminal UI for managing Azure Service Bus queues, topics, subscriptions, and messages. Built with Rust and ratatui, using direct REST API calls.
+
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [CosX/service-bus-explorer-tui](https://github.com/CosX/service-bus-explorer-tui).
+Original source: `copilot-instructions.md` in [CosX/service-bus-explorer-tui](https://github.com/CosX/service-bus-explorer-tui).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
