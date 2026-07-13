@@ -2,9 +2,9 @@
   "name": "service-bus-explorer-tui",
   "owner": "CosX",
   "repo": "service-bus-explorer-tui",
-  "description": "",
+  "description": "A cross-platform terminal UI for managing Azure Service Bus queues, topics, subscriptions, and messages. Built with Rust and ratatui, using direct REST API calls.",
   "type": "config",
-  "source_format": "CLAUDE.md",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/CosX/service-bus-explorer-tui",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-20T08:50:38Z"
+  "distributed_at": "2026-07-13T10:36:17Z"
 }
