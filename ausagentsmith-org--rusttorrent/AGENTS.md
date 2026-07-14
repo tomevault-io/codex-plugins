@@ -1,0 +1,13 @@
+# Codex Guidance
+
+This directory already has Claude project guidance.
+
+Before changing files here:
+
+- Read the workspace-level `AGENTS.md` before changing files.
+- Read `CLAUDE.md` in this directory and follow it as local project guidance.
+- Do not edit `CLAUDE.md` unless the user explicitly asks for that.
+
+---
+> Source: [AusAgentSmith-org/rustTorrent](https://github.com/AusAgentSmith-org/rustTorrent) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-07-14 -->
