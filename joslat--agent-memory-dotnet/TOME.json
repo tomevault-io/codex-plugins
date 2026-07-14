@@ -1,0 +1,44 @@
+{
+  "name": "agent-memory-dotnet",
+  "owner": "joslat",
+  "repo": "agent-memory-dotnet",
+  "description": "An independent .NET implementation of a Neo4j-backed memory provider for AI agents. Persistent graph-native memory for Microsoft Agent Framework, with GraphRAG interoperability for Neo4j.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/joslat/agent-memory-dotnet",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-14T14:35:09Z"
+}
