@@ -1,443 +1,408 @@
 
-# Plannode 소프트웨어 아키텍처 표준
+# Plannode 배지 매핑 지침 (가져오기 파이프라인)
 
-이 문서는 **현재 구현된** Plannode의 계층·모듈·데이터 흐름을 한곳에 묶은 **유지보수용 아키텍처 기준**이다.
+**근원:** Cursor 플랜 `가져오기_배지_파이프라인_구현결과_bbe7c690.plan.md`를 규칙용으로 재구성·코드 동기화.  
+**제품 의미의 “학습”:** 머신러닝 학습이 아니라 **규칙 테이블 + 브라우저 누적 저장**이다.
 
-**제품 포지션:** **상용 웹앱 개발계획 협업 서비스** (`plannode-prd.mdc` §1.05). **§5·§10(클라우드·노드 CRUD·동기화)** 는 “부가 옵션”이 아니라 **M5 협업의 구현 핵심**이다 — 에이전트는 동기화·ACL·충돌 경로를 **온전한 상용 수준**으로 설계·수정한다(§1.06).
+---
 
-제품 범위·로드맵은 `plannode-prd.mdc`, 파일럿 동작 세부는 `docs/PILOT_FUNCTIONAL_SPEC.md`, 배포·인프라는 `.cursor/plans/PLANNODE_INTEGRATED_GUIDE.md`가 우선한다.
+## 0. 표준 배지 풀 기반 배지 매핑 — 기술 지침
 
-## 1. 전체 구성 (하이브리드)
+### 0.1 목표 (제품 정렬)
 
-| 층 | 역할 | 주요 위치 |
-|----|------|-----------|
-| **앱 셸** | 라우팅·인증 게이트·프로젝트 하이드레이션 | `src/routes/+layout.svelte` |
-| **메인 UI·동기화 오케스트레이션** | 툴바·뷰 전환·모달·클라우드 플러시·Presence | `src/routes/+page.svelte` |
-| **파일럿 런타임** | 캔버스·노드 DOM·SVG 간선·PRD/명세/AI 패널 갱신 | `src/lib/pilot/plannodePilot.js` (`initPlannode`) |
-| **브리지** | 파일럿 ↔ Svelte 스토어 양방향 동기화 | `src/lib/pilot/pilotBridge.ts` |
-| **클라이언트 상태** | 프로젝트·노드·뷰·모달 | `src/lib/stores/projects.ts`, `authSession.ts`, `workspaceDirty.ts` |
-| **백엔드(클라우드)** | Auth·RLS·워크스페이스 번들·ACL·Realtime | `src/lib/supabase/*`, `docs/supabase/*.sql` |
+- **표준 배지 풀**이 허용하는 토큼만 최종 칩·저장물에 남긴다: `filterBadgeSetToCanonicalPool`가 최종 게이트.
+- 풀 안에서 **동의어·메타 추론·가져오기 누적 규칙**으로 들어갈 수 있는 것은 최대한 매핑한다(외부 임의 문자열 원문 보존은 제품 범위 밖 — PRD·아키텍처와 동일).
 
-**원칙:** 트리 캔버스·줌·간선·미니맵의 **단일 진실은 파일럿**이며, Svelte는 **껍질·동기화·권한·저장소**를 맡는다. 파일럿이 기대하는 **DOM id·이벤트 계약**을 바꿀 때는 `docs/PILOT_FUNCTIONAL_SPEC.md` §9~§10과 대조한다.
+### 0.2 단일 진실·호출 순서 (구현 불변)
 
-## 2. 라우팅·부트 순서
-
-1. **`+layout.svelte`**: `initAuthSession()` → Supabase 미설정 시 안내 스플래시 → 로그인 필요 시 `LoginGate` → 그 외 `<slot />`.
-2. 로그인 후·클라우드 설정 시: `loadProjectsFromLocalStorage()` (프로젝트 목록·현재 프로젝트 복원).
-3. **`+page.svelte`**: `mountPilotBridge()` → 파일럿 초기화 및 `currentProject` 구독으로 캔버스 하이드레이트; 언마운트 시 `destroy()`.
-
-## 3. 파일럿 브리지 계약 (`pilotBridge.ts`)
-
-- `initPlannode({ delegateTabs, delegateProjectModal, seedDemoProjects, onPersist, getStoreNodesForCollabMerge, … })`로 파일럿을 띄운다.
-- **`onPersist`**: 파일럿이 노드를 저장할 때 → `pilotNodesToStore`로 `Node[]`로 매핑 후 `persistNodesFromPilot` → 로컬 스토리지 + (설정 시) 클라우드 dirty 마킹.
-- **`getStoreNodesForCollabMerge`**: 모달 **저장** 직전 스토어( pull 반영분)를 파일럿에 합칠 때 사용 — `pilotBridge.ts`가 `storeNodesToPilot(get(nodes))` 제공. 상세·CRUD별 경로는 §10.10.
-- **`currentProject` 구독**: 프로젝트 변경 시 `hydrateFromStore(project, storeNodesToPilot(nodes))` — **노드 스토어를 먼저 맞춘 뒤** `currentProject`를 세팅하는 순서가 중요하다 (`projects.ts`의 `selectProject` 주석과 동일).
-- **뷰 동기화**: `pilotSetActiveView('tree' | 'prd' | 'spec' | 'ai')` — Svelte의 `activeView` 스토어와 함께 호출해 파일럿 내부 탭 상태와 일치시킨다.
-
-## 4. 클라이언트 상태·영속성
-
-| 스토어 / 키 | 용도 |
-|-------------|------|
-| `projects`, `currentProject`, `nodes` | 프로젝트 메타·플랫 노드 목록 |
-| `activeView`, `showProjectModal` | UI |
-| `localStorage` `plannode_projects_v3`, `plannode_nodes_v3_<projectId>`, `plannode_current_project_v3` | 오프라인 1차 저장 |
-| `workspaceDirty` / `cloudSyncBadge` | 푸시 대기·동기화 UI 배지 |
-
-루트 노드: `makeRootNode` — `id = project.id + '-r'`, `node_type: 'root'`, `num: 'PRD'`.
-
-## 5. Supabase·클라우드 동기화
-
-- **클라이언트**: `src/lib/supabase/client.ts` — URL/anon 미설정 시 placeholder로 모듈 로드 실패 방지; **실제 호출**은 `isSupabaseCloudConfigured()` 등으로 가드.
-- **푸시/머지**: `workspacePush.ts`, `sync.ts`, `cloudBackgroundSync.ts` — 주기·가시성·pagehide 시 플러시.
-- **ACL·공유**: `projectAcl.ts`, `ProjectAclModal.svelte` — 소유자 행·초대·워크스페이스 소스 복구 RPC와 연계. 스키마·RPC는 `docs/supabase/` SQL 파일명을 코드·주석과 맞출 것.
-- **Presence**: `projectPresence.ts` — 현재 프로젝트·ACL 이메일 목록 기반 Realtime. **고장·복원 시 상세는 아래 §5.1 (검색: `PRESENCE_PEER_MERGE` · 「원격선택-null」).**
-
-### 5.1 「원격선택-null」— Presence 피어 메타 배열 병합 (`PRESENCE_PEER_MERGE`)
-
-**공식 검색 태그(grep·Cursor 검색용):** `PRESENCE_PEER_MERGE` · `원격선택-null` · `presenceState` · `메타배열` · `selected_node_id` · `__plannodePresencePeers` · `np-avatar` · `syncPeersFromState`
-
-**목적:** 공유 세션에서 원격 사용자가 선택 중인 노드 id를 `projectPresencePeers` → `window.__plannodePresencePeers` → 파일럿 `.np-avatar`까지 일치시킨다 (PRD M5·협업 방향).
-
-| 구분 | 위치·계약 |
+| 역할 | 코드 정본 |
 |------|-----------|
-| 채널 topic | `plannode:project:<projectId>` — 소유자·공유자 **동일 projectId**여야 같은 방에 있다. |
-| track 페이로드 | `user_id`, `email`, `selected_node_id` — `sendPresenceTrack` (`projectPresence.ts`). |
-| 로컬 선택 → track | 파일럿 `plannode-node-select` → `+page.svelte` 리스너 → `updateMySelectedNode(nodeId)`. |
-| 구독 직후 재동기 | `SUBSCRIBED` 후 `plannode-presence-subscribed` → 파일럿 `maybeEmitNodeSelect`로 `lastEmittedSelIdForPresence` 리셋 후 현재 `selId` 재발행 (구독 전에 나간 선택 이벤트 보정). |
-| 스토어 → 파일럿 | `+page.svelte` 반응형으로 `window.__plannodePresencePeers = $projectPresencePeers` 및 `plannode-presence-update` 디스패치. |
-| 이벤트 구독 | `presence` **`sync`**와 **`join`** 모두에서 `presenceState()`를 읽어 peers 갱신 — `track()`만 바뀐 경우에도 반영되도록. |
+| 런타임 유효 풀(기본 21 + 사용자 확장) | `getEffectiveBadgePool` — `badgePoolConfig.ts` |
+| 원문 토큰 → 트랙·표준 대문자 토큰 | `resolveImportedBadgeToken` — `badgeImportAliases.ts` |
+| 명시 배지 + 메타 힌트 병합 | `getBadgeSetFromNodeInput` → `inferBadgeHintStringsFromMetadata` 병합 순서 **1→4** — `badgePromptInjector.ts`, `badgeMetadataInference.ts` |
+| 저장·가져오기 sanitize | `sanitizeNodeBadgesForTreeV1` / `applySanitizeImportedPlannodeNodeV1` |
+| 협업 배지 송수신·projectId | §6.9 · [`plannode-architecture.mdc`](./plannode-architecture.mdc) §10.10.1 |
+| 노드 카드 표시 | **동일** `getBadgeSetFromNodeInput` 계열 — 단, 파일럿 `render()`는 **표시 전용 게이트**(§6.2)로 `inferHints`를 제한할 수 있음 |
 
-**증상(회귀 시):** 공유자 콘솔에서 `window.__plannodePresencePeers`의 원격 피어 `selected_node_id`가 **항상 `null`**인데, 소유자는 노드를 클릭하고 있다.
+가져오기·아젠다 생성·클라우드 머지 등 **진입점이 달라도** 위 단일 파이프를 깨거나 **둘째 배지 저장소**를 두지 않는다.
 
-**근본 원인(필수 이해):** Supabase Realtime `presenceState()`는 presence **key**(`config.presence.key`, Plannode에서는 `myUserId`)마다 **메타 객체 배열**을 돌려준다. `channel.track({...})`를 짧은 간격으로 여러 번 호출하면 **같은 key 아래에 여러 항목이 쌓일 수 있고**, 그중 **앞쪽 항목의 `selected_node_id`만 null**인 경우가 있다(중간 null track, 캔버스 팬으로 `selId` 해제 등). **배열의 첫 원소만 파싱하면 원격 피어가 영구적으로 null로 보인다.**
+**파일럿 표시 게이트**는 `metadata.badges`·`badges[]`·`sanitize` 결과와 **충돌하지 않게** 동작해야 한다(§6).
 
-**핵심 수정(복원 시 이 로직을 유지):** `subscribeProjectPresence` 내부 `syncPeersFromState`에서, 각 key의 `metas[]`를 **순회하며 하나의 `ProjectPresencePeer`로 병합**한다. 규칙: **`selected_node_id`가 `null`이 아닌 항목이 나오면 그 값으로 덮어쓴다**(배열 전체를 스캔). 이후 필터·`seen`·`projectPresencePeers.set`은 기존과 동일.
+### 0.3 표준 풀 확대·증식 시 동기화 (필수)
 
-**보조 완화(선택·부가):** `updateMySelectedNode(null)`은 캔버스 빈 곳 클릭 등으로 잦을 수 있어 **짧은 debounce 후** null을 track(깜빡임·불필요한 null 브로드캐스트 완화). 과도한 `track` 반복은 메타 스택을 키우므로 **구독 직후 불필요한 재`track` 루프는 넣지 않는다.**
+표준 풀은 **지속적으로 확대할 계획**이므로, 토큰을 추가·변경할 때 아래를 **한 세트**로 갱신한다. 누락 시 가져오기 해석·칩·LLM 프롬프트가 어긋난다.
 
-**현장 진단(콘솔):** 공유자 브라우저에서 `channel` 접근이 어려우면, 일시적으로 `projectPresence.ts`의 `syncPeersFromState` 직후에 `presenceState()`를 로그해 **동일 key에 배열이 여러 개인지·null이 앞에 있는지** 확인한다. 정상 시 `window.__plannodePresencePeers`에 원격 `selected_node_id: "n514"` 형태가 보인다.
+| 단계 | 할 일 |
+|------|--------|
+| 1 | `badgePoolConfig.ts` — 기본 풀 정의·검증·스토리지 키 일관성 |
+| 2 | `badgeImportAliases.ts` — `ALIAS_GROUPS`·신규 토큰으로 들어올 외부 표기 동의어 |
+| 3 | (해당 시) `badgeMetadataInference.ts` — 키워드·extras가 새 도메인 의미를 다루면 정규식·힌트 보강 |
+| 4 | Vitest — `badgeImportAliases.test.ts`, CRAZYSHOT·파이프라인 회귀 샘플 갱신 또는 케이스 추가 |
+| 5 | 아젠다 프롬프트 등 **인라인 풀 문구** — `.cursor/plans/plannode_dev_spec_v1.0.md` §3-1 `BADGE_SPEC`, `agendaPromptAgent.ts` 동기 래퍼 |
+| 6 | UI 칩 라벨·색 — `plannode-ui-identity.mdc`·컴포넌트에서 신규 트랙·토큰 표기 필요 여부 |
 
-- **절대 금지**: `owner_id` / `owner_user_id` 하드코딩, RLS 우회 가정 — `AGENTS.md` 도메인 절대 금지 패턴 준수.
-- **협업 상한 동기화**: 비소유자 ACL 멤버 상한(`MAX_SHARED_COLLABORATORS` = 4, 소유자 포함 총 5계정)은 Presence 피어 슬라이싱(`MAX_CONCURRENT_PRESENCE_OTHERS` = 4)과 **`plannodeCollabLimits.ts`에서 동일 값으로 유지**한다. DB 트리거·클라이언트 UI·Presence 경계가 정합되지 않으면 협업 UX 파손.
+제품 공표가 필요하면 **`plannode-prd.mdc`** M1 F1-3 등과 한 줄 교차한다.
 
-## 6. Svelte ↔ 파일럿 UI 연동 (와이어 싱크)
+### 0.4 지능적 학습 자동화 (향후 고려 — 구현은 TASK·GATE·GP-12)
 
-`+page.svelte`는 파일럿이 붙잡는 **숨은 버튼**(`#BFT`, `#BAR`, `#BMD`, `#BPR`, `#BJN`)을 두고, 툴바 드롭다운에서 `click()`으로 위임한다. 새 출력·뷰포트 액션을 추가할 때는 **파일럿 쪽 핸들러 id와 쌍**을 맞춘다.
+현재 구현층은 **규칙 기반**: 동의어표·키워드·`mergeLearnedBadgeRulesFromImportedNodes`로 **브라우저에 규칙 누적**. 이것만으로도 풀이 커질수록 **별칭·규칙 테이블 유지 비용**이 늘어난다.
 
-클라우드 저장을 파일럿 쪽 출력/편집 후에 태우려면 `window.dispatchEvent(new CustomEvent('plannode-auto-cloud-sync', { detail: { reason } }))` 패턴을 따른다 (`+page.svelte` 리스너와 동일 계약).
+**확대 증식에 맞춘 자동화·지능화 방향(선택·단계적):**
 
-## 7. 데이터 교환 형식
+1. **데이터 기반 동의어 후보:** 가져오기 시 `resolveImportedBadgeToken`에 걸리지 않은 원문(또는 빈도)을 개발·디버그 리포트로 모아, `badgeImportAliases` 보강 후보를 만들 수 있다.
+2. **사용자 규칙 UI:** `setUserBadgeInferenceRules`를 콘솔 없이 편집 — 비개발자 튜닝·GP-12 범위 내에서 TASK 승인 후.
+3. **학습 저장소 정리:** `AI_LEARNED_RULES_MAX`·충돌 시 우선순위를 제품 정책으로 문서화.
+4. **진짜 ML·임베딩 매핑**은 PRD·`plan-output`·GATE에 명시되기 전까지 **도입하지 않는다**(오버엔지니어링 견제). 도입 시에도 **구조 골격은 트리·풀 고정**, 모델은 보조 배지 제안 정도로 한정하는 방향이 PRD F2-4·§10.4와 정합하다.
 
-- **JSON 백업/가져오기**: `plannodeTreeV1.ts` — v1 스키마 파싱·`upsertImportedPlannodeTreeV1`.
-- **타입 단일성**: `Project`, `Node`는 `client.ts`에서 import해 스토어·브리지·UI가 공유한다.
+에이전트는 위 **0.3 동기화 표**를 풀 변경 시 1차 체크리스트로 삼고, **0.4**는 설계 메모로만 참고하고 임의 신규 모듈을 추가하지 않는다.
 
-## 8. 디렉터리 맵 (요약)
+### 0.5 BADGE-ALIGN (2026-05 · DEV 16 · IA 구조 우선)
 
-```
-src/routes/          +layout.svelte, +page.svelte, +error.svelte
-src/lib/components/  LoginGate, ProjectAclModal
-src/lib/stores/      projects, authSession, workspaceDirty
-src/lib/supabase/    client, env, sync, workspacePush, projectAcl, projectPresence, …
-src/lib/pilot/       pilotBridge.ts, plannodePilot.js
-```
+**목표:** 노드 카드 배지는 **화면 형태(UX)·도메인·구현 조건(DEV)·기획 산출(PRJ)** 만 남기고, 범용 **CRUD·배포 공정**·과광 alias는 기본 풀·추론·프롬프트에서 제거·보수화한다.
 
-## 9. 유지보수 시 체크리스트
-
-- 파일럿만 고칠 경우: Svelte 셸의 **id·클래스·이벤트** 의존성 grep.
-- 스토어만 고칠 경우: `pilotBridge`의 `onPersist` / `hydrateFromStore` 경로와 **localStorage 키** 영향.
-- Supabase·RLS·RPC 변경: `docs/supabase/`에 스크립트 추가·버전 관리, `.cursor/plans/PLANNODE_INTEGRATED_GUIDE.md`와 환경 변수 반영.
-- **Presence `selected_node_id`가 공유자에게만 null (「원격선택-null」·`PRESENCE_PEER_MERGE`):** §5.1 — `presenceState()` key별 **메타 배열 병합·non-null 우선** 여부를 먼저 확인한다.
-- **노드 CRUD·클라우드 동기화 파이프:** §10 — 트리거·LWW·한계를 요약한다.
-- **공유 프로젝트 + 상세 모달 편집 중 pull:** §10.10 — `MODAL_EDIT_HYDRATE_DEFER` · `MERGE_STORE_ON_MODAL_SAVE` · `SKELETON_NODE_PUSH`.
-- **공유 프로젝트 배지·칩 양방향 불일치:** §10.10.1 — `BADGE_STRUCTURE_OPS` · `BADGE-SYNC-FIX` · 모달 4단계 송신 · pull skip · LWW 동률.
-- **revision·structure_ops RPC 403/400·이중 동기 축:** §10.11 — `COLLAB_RPC_REVISION` · `STRUCTURE_OPS_PULL` · `COLLAB_FORBIDDEN_CACHE`.
-- UI 토큰·톤앤매너: `plannode-ui-identity.mdc`.
-
-## 10. 노드 CRUD·클라우드 동기화 파이프 (기술 정본)
-
-**에이전트·개발 정본:** 동기화·협업(M5) 흐름·충돌·RPC·모달 보호는 **본 §10만** 본다. ~~`docs/plannode_workspace_sync_overview.md`~~ 는 **2026-06-04 제거**(`.mdc`와 중복·파편화 방지). 하네스 **성능 측정 이력**만 `.cursor/harness/GSD_LOG.md`·`TASK.md`에 남긴다.
-
-| 공유 프로젝트 정책 | 내용 |
-|------------------|------|
-| **노드 트리 편집** | 소유·공유 계정 **동일** — 소유자 `plannode_workspace` 슬라이스를 정본으로 **비실시간 동기**(§10.5·§10.7) |
-| **예외** | ACL 모달·프로젝트 삭제는 **소유자만** |
-| **구현 축** | `mergeNodeListsForCloudByProjectMeta` · `registerRecentlyDeletedNodeIdsForCloudMerge` · 서버 `plannode_merge_nodes_jsonb_lww` |
-
-이 절은 **노드 CRUD와 동기화 파이프라인**만 다룬다. AI·PRD 뷰·ACL 초대 UI·Presence 세부 복구는 §5.1로 분리한다.
-
-### 10.1 범위
-
-| 포함 | 제외(교차 참조) |
-|------|----------------|
-| 파일럿 편집 → `onPersist` → 스토어·localStorage·더티 → 업로드/풀·LWW 병합 | LLM·하네스·IA 산출(`plannode-prd.mdc`) |
-| `gatherWorkspaceBundle`·`plannode_workspace` 행(JSON 번들) | ACL 모달·초대 플로우 상세(§5·`projectAcl.ts`) |
-| 공유 슬라이스가 소유자 행에 붙는 RPC 경로(개념) | Presence 아바타·「원격선택-null」복구 절차(§5.1) |
-
-### 10.2 기술 스택 (본 파이프만)
-
-| 층 | 사용 |
-|----|------|
-| UI 런타임 | Vanilla 파일럿 `plannodePilot.js` — 노드 DOM·편집 |
-| 셸·상태 | SvelteKit, Svelte 스토어 (`projects.ts`, `workspaceDirty.ts`) |
-| 브리지 | `pilotBridge.ts` — `onPersist` / `hydrateFromStore` |
-| 클라이언트 영속 | `localStorage` 키 `plannode_projects_v3`, `plannode_nodes_v3_<projectId>` |
-| 클라우드 | Supabase JS(Auth·PostgREST·RPC), 테이블 `plannode_workspace`(사용자당 번들 JSON) |
-| 동기 오케스트레이션 | `workspacePush.ts`, `cloudBackgroundSync.ts`, `sync.ts` |
-
-### 10.3 로직 구조 (데이터 흐름)
-
-```
-파일럿 노드 변경 → pilotNodesToStore → persistNodesFromPilot (projects.ts)
-  → 노드/프로젝트 localStorage + 필요 시 markCloudWorkspaceDirty
-  → scheduleCloudFlush / flushCloudWorkspaceNow / runBidirectionalCloudSync
-  → sync.ts: mergeRemoteWorkspaceBeforeUpload (업로드 전) → uploadWorkspaceToCloud
-  → pullOwnWorkspaceIfChanged · pullSharedProjectSlicesIfNewer (양방향 시)
-```
-
-단일 진실(트리 편집 중): 파일럿 상태; 영속·클라우드 반영은 스토어·번들 경로가 진실을 따라간다(상위 §1·§3 원칙과 동일).
-
-### 10.4 데이터 모델 요약
-
-| 단위 | 역할 |
+| 항목 | 정책 |
 |------|------|
-| `Project`, `Node` | `src/lib/supabase/client.ts` 타입 — 플랫 노드 목록, `parent_id` 트리 |
-| `WorkspaceBundle` | `{ projects: Project[], nodesByProject: Record<projectId, Node[]> }` — `gatherWorkspaceBundle()`이 스토어+localStorage에서 조립 |
-| `plannode_workspace` (행) | 사용자별 1행 근사: `projects_json`, `nodes_by_project_json`, `updated_at` — 업로드/풀의 교환 단위 |
-| 루트 노드 | `makeRootNode` — `id = project.id + '-r'`, `node_type: 'root'` (§4) |
+| **기본 DEV 풀** | **16종** — `badgePoolConfig.ts` `DEFAULT_DEV_KEYS` 정본 |
+| **기본 풀에서 제거** | `CRUD`, `LOCAL`, `STAGING`, `PROD`, `DEPLOY`, `HOTFIX`, `PR`, `JSON`, `RENDER` |
+| **가져오기 `crud`** | `badgeImportAliases`에서 `CRUD`로 해석 가능하나 **풀에 없음** → `filterBadgeSetToCanonicalPool` 후 **칩·저장물에서 제거** |
+| **추론** | `keywordHints`에 범용 CRUD·배포 토큰 없음 · **§6.2** 설명 없으면 추론 off 유지 |
+| **구조 우선** | `inferBadgeHintStringsFromMetadata` — `treeImportExtras` → **`iaGrid.screenType`·`path`** → `keywordHints` → 사용자·AI 규칙(§4.4) |
+| **LLM** | `agendaPromptAgent.ts` `BADGE_SPEC` — 16 DEV + UX 26 + PRJ 9, 제거 토큰 예시 없음 |
 
-### 10.5 동기화 트리거
+프로젝트 **커스텀 `badge_pool`**에 레거시 `CRUD`가 남아 있으면 해당 프로젝트만 예외 허용(문서·BACKLOG). 기본 풀·외부 AI JSON은 **≈51 토큰** 기준.
 
-| 트리거 | 동작 |
-|--------|------|
-| 노드·프로젝트 변경으로 `markCloudWorkspaceDirty()` | `workspaceIsDirty`·배지 `pending`; Supabase 미설정이면 무동작 |
-| `window` `plannode-auto-cloud-sync` (`+page.svelte`) | 파일럿 출력 등 이후 클라우드 반영 요청과 동일 계약 |
-| `scheduleCloudFlush` / `flushCloudWorkspaceNow` (`workspacePush.ts`) | 디바운스(기본 500ms) 또는 즉시 `uploadWorkspaceToCloud` |
-| `runBidirectionalCloudSync` | 더티면 업로드 → (잔여 더티 재시도) → `pullOwnWorkspaceIfChanged` → `pullSharedProjectSlicesIfNewer` |
-| `startCloudBackgroundSync` (`cloudBackgroundSync.ts`) | 로그인 후 **약 32s 간격** 타이머, **`visibilitychange`·창 focus**, 최초 `start` 호출 |
-| 장시간 무활동 | 마지막 포인터/키 입력 후 **5분 초과** 시 주기 틱 이유 `idle-long` |
+---
 
-### 10.6 충돌·병합 정책
+## 1. 학습·매핑 저장 계층 (상위 학습기록)
 
-- **개인 워크스페이스:** 업로드 직전 `mergeRemoteWorkspaceBeforeUpload` — 서버 `updated_at`이 로컬 캐시(`OWN_WORKSPACE_REMOTE_TS_KEY`)와 다르면 원격 번들을 먼저 **LWW 성격으로** `mergeWorkspaceBundleFromCloudRemote` 후 캐시 갱신.
-- **노드 단위:** **OT/CRDT 미구현** — 비실시간 번들 병합 + 공유 슬라이스는 revision·lock RPC로 완화.
-- **동일 노드 id 동시 수정:** 필드 병합 없음. 서버 merge는 **`p_nodes`로 프로젝트 키 통째 갱신**; 클라이언트는 **`mergeNodeListsForCloud` / `mergeNodeListsForCloudByProjectMeta`** 의 id 단위 **`updated_at` LWW**.
-- **업로드 충돌:** `revision_stale` · `merge_locked` — `uploadWorkspaceToCloud`·`pushProjectSlicesToOwners` 재시도·pull·토스트(§10.3).
+추론 파이프라인은 아래 **브라우저 `localStorage` 키**와 연동된다. 에이전트·구현 시 **동일 키명**을 유지한다.
 
-#### 10.6.1 FAQ (동시 편집·한 줄)
+| 계층 | `localStorage` 키 | 역할 | 누적 |
+|------|-------------------|------|------|
+| **표준 배지 풀** | `plannode.standardBadgePool.v1` | 기본 **DEV 16 · UX 26 · PRJ 9**(합계 ≈51, BADGE-ALIGN 2026-05) 외 커스텀 토큰·트랙 — `getEffectiveBadgePool` | 사용자가 표준 배지 설정에서 저장 시 갱신 |
+| **사용자 추론 규칙** | `plannode.badgeInferenceUserRules.v1` | `UserBadgeInferenceRule[]` — `setUserBadgeInferenceRules` / UI 미구현 시 API·콘솔 | 사용자가 덮어쓰기·초기화 가능 |
+| **AI·외부 트리 누적 학습** | `plannode.badgeInferenceAiLearnedRules.v1` | 가져온 노드의 `metadata.badges`(표준 풀로 해석)로 규칙 생성·병합 — **`name` 전체**, 조건부 **`description` 첫 줄 발췌**, **`metadataHaystack` 한 줄 시그니처** | **누적** — 동일 `(field, contains)`면 `suggestBadges`만 합침; 최대 `AI_LEARNED_RULES_MAX`(400) 초과 시 배열 앞쪽 규칙 드롭 |
 
-| 질문 | 현재 구현 |
-|------|-----------|
-| 같은 노드를 두 명이 동시에 고치면? | **한 벌만 남음** — 마지막 성공 merge의 `p_nodes` 스냅샷 또는 클라이언트 LWW. 필드 합치 없음. |
-| 실시간 공동 편집 UI? | **없음** — revision+lock으로 merge **직렬화**만. |
-| 주요 RPC | `plannode_workspace_merge_project_slice` · `plannode_project_collab_merge_atomic`(우선) · `plannode_merge_nodes_jsonb_lww` — SQL `docs/supabase/` |
-| 클라이언트 병합 함수 | `mergeNodeListsForCloud` · `mergeNodeListsForCloudByProjectMeta` (`projects.ts`) · 공유 pull `mergeSharedProjectSliceFromCloudIfApplicable` (`sync.ts`) |
+**AI 학습기록 갱신 트리거 (코드 정본):**
 
-### 10.7 Realtime 채널 (역할 구분)
+- `src/lib/stores/projects.ts` — `upsertImportedPlannodeTreeV1` 성공 후 **`mergeLearnedBadgeRulesFromImportedNodes(nodeList)`** (원본 가져오기 노드 기준).
+- 프로그램적 로드: `mergeLearnedBadgeRulesFromPlannodeExportUnknown(obj)` — `{ nodes: [...] }` 형태 JSON 객체.
 
-| 경로 | 역할 |
-|------|------|
-| **워크스페이스 번들** | 노드/프로젝트 JSON은 **Postgres 행 읽기·RPC upsert**로 동기 — **Realtime 구독으로 번들 전체를 스트리밍하지 않음**. |
-| **공유 revision 신호** | `plannode_project_collab_meta.revision` `postgres_changes` → **200ms** debounce → **`pullCollabSliceForProject`** (pull-only). Realtime 누락 시 **`COLLAB_FALLBACK_POLL_MS`=6s** (`cloudBackgroundSync.ts`) `get_revision` 폴백. |
-| **Presence** | 채널 `plannode:project:<projectId>` — **선택 노드 등 메타**만; 노드 본문과 분리(§5.1). |
+**해석:** 외부 AI(예: Crazyshot `BADGE_FULL` 등)가 채운 `metadata.badges`는 **동의어 해석 후 표준 토큰만** 규칙에 들어간다. 풀에 없는 문자열은 `resolveImportedBadgeToken`에서 탈락 — **표준 배지 풀 확장** 시 이후 가져오기부터 학습에 반영 가능.
 
-**용어 3줄:** (1) **번들 동기화 있음** — push/pull·LWW·슬라이스 RPC. (2) **OT·CRDT·번들 JSON Realtime 스트리밍 없음** — 동일 노드는 LWW(§10.6). (3) **revision·Presence Realtime 있음** — 신호·메타만; 본문은 pull RPC.
+### 1.1 재검증 — 「매핑율이 낮다」와 실제 동작
 
-### 10.8 시퀀스 다이어그램 (편집 → 클라우드)
+| 확인 항목 | 결과(샘플 파일·코드 기준) |
+|-----------|---------------------------|
+| **CRAZYSHOT `crazyshot_v5_plannode_BADGE_FULL.json`** | 노드 **약 119개** 중 **118개**가 `metadata.badges`에 배지 1개 이상. 파일 내 **고유 토큰 18종**은 모두 기본 풀 표기이거나 `badgeImportAliases` 동의어로 **표준 토큰으로 해석**된다(예: `ANALYSIS`→`API`, `COMPETITIVE`→`USP`). |
+| **`sanitizeNodeBadgesForTreeV1` 후 (실측)** | 명시 배지만 역산한 칩 수보다 **축소되지 않음**(키워드·extras 등으로 칩이 추가될 수 있음). **동의어 접기**(예: `ANALYSIS`→`API`)로 **표시 문자열은 바뀌지만 해당 노드에서 칩이 전부 사라지지는 않음**(별칭 미등록 시만 소실). |
+| **자동 회귀** | Vitest [`src/lib/ai/crazyshotBadgeFullPipeline.test.ts`](src/lib/ai/crazyshotBadgeFullPipeline.test.ts) — 리포 공식 샘플 [`docs/crazyshot_v5_plannode_BADGE_FULL.json`](docs/crazyshot_v5_plannode_BADGE_FULL.json)(CRAZYSHOT 원본과 동일 내용으로 두고 동기화) 기준: 고유 원문 토큰 전원 해석 가능, `metadata.badges` 슬롯이 있는 노드는 sanitize 후 칩 ≥1, sanitize 후 칩 수 ≥ 명시-only coerce 칩 수. |
+| **고도화의 설계 의도** | 파이프라인은 **풀·동의어·키워드·extras·사용자 규칙·AI 학습 규칙**을 포함하지만, **외부 AI 라벨을 원문 그대로 보존하지는 않는다**. 최종은 항상 **현재 표준 배지 풀**(`filterBadgeSetToCanonicalPool`)로 맞춘다. |
 
-```mermaid
-sequenceDiagram
-  participant P as 파일럿
-  participant B as pilotBridge
-  participant S as projects 스토어 + localStorage
-  participant W as workspaceDirty / workspacePush
-  participant Y as sync.ts
-  participant DB as Supabase plannode_workspace
+**「매핑율」이 낮아 보일 때 점검**
 
-  P->>B: 노드 저장 (편집 완료)
-  B->>S: persistNodesFromPilot
-  S->>S: markCloudWorkspaceDirty (클라우드 설정 시)
-  S->>W: scheduleCloudFlush 또는 상위에서 bidirectional
-  W->>Y: uploadWorkspaceToCloud / runBidirectionalCloudSync
-  Y->>Y: mergeRemoteWorkspaceBeforeUpload (필요 시)
-  Y->>DB: upsert 번들 (projects_json · nodes_by_project_json)
-  Y->>S: 성공 시 synced / 실패 시 failed 배지
-```
+1. **의미 보존 vs 칩 개수:** `ANALYSIS`가 `API`로 접히면 **라벨 종류 수는 줄어들지만**, 칩이 사라지는 것과는 구별해야 한다.
+2. **일반 JSON:** 풀·동의어에 없는 문자열만 있으면 해당 슬롯은 비워짐 → **표준 배지 풀 확장** 또는 **동의어 행 추가** 검토.
+3. **outline-only MD 등:** 배지 입력이 없으면 비어 있음이 정상.
+4. **비교 지표 통일:** 원본 파일의 **임의 문자열 토큰 수**와 Plannode **기본 풀(≈60)** 칩 종류 수를 1:1로 기대하면 불일치가 크게 나온다 — 비교는 **resolve 후 표준 토큰** 또는 **노드당 칩 유무** 기준이 타당하다.
 
-### 10.9 알려진 한계
+---
 
-- **동시 편집:** 동일 노드에 대한 실시간 문자 단위 병합 없음; 마지막 번들·슬라이스 규칙에 따른 결과만 보장.
-- **네트워크:** 업로드 실패 시 `cloudSyncBadge` `failed`·재시도는 다음 플러시/양방향 틱에 의존.
-- **오프라인:** 로컬은 먼저 저장되나 클라우드는 설정·세션·네트워크에 종속.
-- **공유 프로젝트:** 소유자 행에 반영되는 RPC·revision 경로가 추가로 필요하며 단순 단일 행 upsert만으로는 동치되지 않음(`sync.ts`의 merge·slice 경로).
-- **네트워크·poll 부하:** **6s** revision 폴백 poll·hash mismatch streak·dirty upload 재시도로 RPC 폭주 가능 — §10.12·`cloudBackgroundSync.ts`.
-- **모달 편집 중 캔버스:** pull은 **스토어에는 즉시**, **파일럿 캔버스는 hydrate 보류** — 모달을 닫거나 저장할 때까지 상대 변경이 **화면에 안 보일 수 있음**(§10.10). 저장 시 스토어 병합으로 상대 노드 **덮어쓰기 누락**은 `mergeStoreNodesIntoPilotBeforePersist`로 완화.
+## 2. 범위와 진입점
 
-### 10.10 공유·소유 프로젝트 캔버스 CRUD + 상세 모달 동기화 (2026-05)
-
-**검색 태그:** `MODAL_EDIT_HYDRATE_DEFER` · `MERGE_STORE_ON_MODAL_SAVE` · `SKELETON_NODE_PUSH` · `NODE_EDIT_SAVE_GUARD` · `PRESERVE_LOCAL_NEW_ON_PULL`
-
-**평가 요지:** 공유 프로젝트 **추가·작성·수정·삭제·이동**은 **파일럿 → persist → 더티 → 슬라이스/번들 업로드 → revision pull → 스토어 병합**. 모달(`showEdit`) 열림 중 **들어오는 hydrate만 보류**, 나가는 persist는 계속. 회귀·시퀀스는 **본 §10.10** · `.cursor/plans/PLANNODE_SHARED_CANVAS_SYNC_EVALUATION.md`.
-
-| CRUD·동작 | 파일럿 트리거 | 로컬·스토어 | 클라우드 반영 | 모달 열림 시 들어오는 pull |
-|-----------|---------------|-------------|---------------|---------------------------|
-| **추가** | `addChild` → `render` | `publishNewNodeSkeletonToCloud` → `flushPersistNow` + `schedulePersist` | `touchProjectUpdatedAt` → `plannode-auto-cloud-sync` | 스토어 갱신 · 캔버스 hydrate **보류** |
-| **작성(모달)** | `showEdit` 저장 | `mergeStoreNodesIntoPilotBeforePersist` 후 `flushPersistNow({ force: true })` | 동일 + `nodeEditSaveGuard` 8s | 보류 · 저장 시 스토어 병합으로 상대 노드 유지 |
-| **수정(캔버스·명세 등)** | `render` 끝 `schedulePersist` / 그리드 `emitAutoCloudSync` | `persistNodesFromPilot` (`isNodesSetFromPilotPersist`로 재hydrate 스킵) | 더티·플러시 | 보류 |
-| **삭제** | `cDel` 확인 | `registerRecentlyDeletedNodeIdsForCloudMerge` + `flushPersistNow` | 더티·슬라이스·서버 `p_prune_missing` | 보류 |
-| **이동** | 드래그 `pointerup` → `syncSiblingOrderAndNumsAfterDrag` + `flushPersistNow` | `mx`/`my`·`parent_id`·`num` persist | 더티·슬라이스 | 보류 |
-
-**이중 진실(모달 중):**
-
-| 층 | pull 시 | 비고 |
-|----|---------|------|
-| **스토어 + localStorage** | `mergeSharedProjectSliceFromCloudIfApplicable` → `upsertImportedPlannodeTreeV1` → `nodes.set` | 즉시 병합 |
-| **파일럿 캔버스** | `hydrateFromStore` → `pendingHydrateFromStore`에 **마지막 1건**만 저장 후 return | `pilotBridge` `nodes` 구독 |
-
-**모달 보호(유지 필수):**
-
-1. **`hydrateFromStore`**: `isNodeEditModalDomOpen()` 이면 전체 hydrate 보류 — 편집 중 필드 덮어쓰기 방지.
-2. **hydrate 실행 시**(모달 닫힘·보류 해소): `mergeProtectedNodeIntoHydrateList` — 편집 id는 모달 입력(`.mbg .ein` 등)을 파일럿에 반영 후 목록에 병합.
-3. **모달 저장 직후**: `mergeStoreNodesIntoPilotBeforePersist(protectId)` — pull로만 스토어에 있던 **다른 id**를 파일럿에 합친 뒤 persist(상대 노드 덮어쓰기 누락 방지).
-4. **저장 후 8초**: `nodeEditSaveGuard` — hydrate 시 해당 id 스냅샷 우선.
-5. **모달 닫기**: 저장 안 함 → `flushPendingNodeEditHydrate`로 pending 1회 반영 · 저장함 → pending 폐기(이미 스토어 병합·persist 완료).
-
-**풀 병합(공유·소유 공통):** `mergeNodeListsForCloudByProjectMeta` — 원격 메타가 더 새로울 때 로컬 전용 id 보존: `node.updated_at > remoteProjectMeta` **또는** `node.updated_at >= localProjectMeta`(동시 추가·스켈레톤). §10.6.
-
-**EPIC E op log (2026-05-26):** Broadcast(`projectStructureOps.ts`) + **`plannode_append_structure_ops`** RPC — 클라이언트 snapshot merge 대신 **op append**가 정본. pull: `pullStructureOpsForProject` · `replayStructureOpsOnNodes`. fallback: `merge_project_slice_deltas`(owner fetch 실패). SQL: `docs/supabase/20260601_plannode_project_structure_ops.sql`.
-
-**회귀 시 먼저 볼 것:** 모달 중 상대 카드 안 보임(보류 정상) · 저장 후 상대 카드 사라짐 → `mergeStoreNodesIntoPilotBeforePersist` · 동시 추가 후 id 삭제 → `mergeNodeListsForCloudByProjectMeta` preserve 규칙 · Presence는 §5.1.
-
-#### 10.10.1 협업 배지 동기화 (BADGE_STRUCTURE_OPS · BADGE-SYNC-FIX)
-
-**검색 태그:** `BADGE_STRUCTURE_OPS` · `BADGE-SYNC-FIX` · `badges` · `update_node` · `sendUpdateNodeStructureOp` · `applyRemoteUpdateNodeFromStructureOp` · `collabPullCanSkipSliceMergeAfterOpsPull` · `preserveBadges` · `mergeNodeListsForCloud`
-
-**PRD:** M5 F5-2 · M1 F1-3 · **배지 풀·sanitize:** [`plannode-badge-mapping.mdc`](./plannode-badge-mapping.mdc) §0·§6 · **플랜 이력:** [`.cursor/plans/배지_동기화_보완_9dcfd225.plan.md`](../plans/배지_동기화_보완_9dcfd225.plan.md)
-
-**문제(과거):** B축 `update_node`가 name/description만 즉시 반영되고 배지는 A축(슬라이스)만 타면 **카드 텍스트와 칩이 어긋남**. `persistNodesFromRemoteStructureOp`가 구 배지 스냅샷을 스토어에 고정 · slice skip · LWW **동률(`>`만 remote 승)** 이 겹치면 공유 프로젝트에서 배지가 양방향 수렴하지 않음.
-
-**이중 축(배지 관점):**
-
-| 축 | 경로 | 배지 | 속도 |
-|----|------|------|------|
-| **B** | `projectStructureOps.ts` Broadcast + `replayStructureOpsOnNodes` | `UpdateNodeOp.node` **선택** `badges` / `metadata` | ~즉시 |
-| **A** | `sync.ts` 슬라이스·번들 merge | 전체 노드 JSON | revision·poll·(조건부) skip |
-
-**정본 UX(2026-06):** 트리 캔버스에서 배지 **편집 진입점 = 모달(`showEdit`)만**. 우클릭 `#CTX`의 3트랙 `bgt` 토글은 **제거됨**(A-only 갭). 재도입 시 **아래 송신 계약** 필수(플랜 REC).
-
-**`UpdateNodeOp` 배지 계약 (하위 호환):**
-
-- JSON에 **`badges` / `metadata` 키가 있을 때만** 패치 — 없으면 수신측 배지 **유지**(이름·좌표만 바꾸는 op).
-- `badges: []` = 배지 전체 제거 의도.
-- 타입·파싱: `projectStructureOps.ts` · replay: `projects.ts` `replayStructureOpsOnNodes` · 테스트: `structureOpsReplay.test.ts`.
-
-**송신(편집 측 — 모달 저장):** `plannodePilot.js`
-
-1. `applyBadgeSetToNode` → **`sanitizeNodeBadgesForTreeV1(..., curP?.id)`** (R1 projectId 풀).
-2. `flushPersistNow({ force: true })`
-3. **`sendUpdateNodeStructureOp(target)`** — `badges` + `metadata` 포함.
-4. **`emitAutoCloudSync('node-edit')`**
-
-드래그·`move_node` 등은 badges **키 생략**. `sendUpdateNodeStructureOp` 호출부를 늘릴 때 위 4단계 **세트**를 따른다(GP-12: 중복 시 파일럿 내부 1함수로만 추출, 신규 `lib/` 금지).
-
-**수신(상대 측 — Broadcast):**
-
-1. `applyRemoteUpdateNodeFromStructureOp` — metadata merge 후 `applyBadgeSetToNode` + `getBadgeSetFromNodeInput(..., { inferHints: false, projectId: curP?.id })`.
-2. `syncRemoteUpdateNodeToEditModal` — 해당 id 모달 열림 시 **`currentModalWorking` 3트랙** + `.bchip` 동기(`textOpsApplyingRemote` 유지).
-3. `syncStoreFromRemoteStructureOp` → `persistNodesFromRemoteStructureOp` (§10.10 모달 defer와 별도 — **나가는** persist는 계속).
-
-**A축 fallback · slice skip (BADGE-SYNC-FIX):** `collabPullCanSkipSliceMergeAfterOpsPull` — `op_log_complete` + ack 정합인데 **revision↑ + ops applied=0** 이면 slice merge **생략하지 않음**(배지·metadata만 slice로 올라온 경우). 테스트: `projectStructureOps.test.ts`. push 쪽 `collabPushCanSkipSliceMergeAfterOpsFlush` — `flushed=0`이면 skip fallthrough.
-
-**LWW 동률(배지):** `mergeNodeListsForCloud` **else** 분기 — `updated_at` **동률**이고 `badges` JSON이 다르면 **remote** 채택(`preserveManualCoordsOnCloudMergeWinner`와 함께). `remoteProjectMetaNewer` 분기는 이미 `>=`.
-
-**절대 금지 · 회귀:**
-
-- 협업 공유 프로젝트에서 배지 변경 UI를 **`schedulePersist`만** 타게 두지 않는다(B축 미연결).
-- structure op/replay에서 badges 키 **없는** op로 수신측 배지를 **지우지 않는다**.
-- 배지용 **둘째 저장소**·파일럿 우회 persist 금지(GP-13 SSoT).
-- `sanitizeNodeBadgesForTreeV1` / `getBadgeSetFromNodeInput`에 **projectId 누락**으로 공유 프로젝트 풀 불일치 재발 금지.
-
-**GATE C (2계정 공유):** 모달 배지 저장 → 상대 칩 수 초 내 · 양방향 · Broadcast payload에 badges/metadata · 이름만 변경 시 배지 값 유지 · build + structureOpsReplay·merge·collabPull skip vitest.
-
-### 10.11 프로젝트 노드 동기화 이중 축·협업 RPC (2026-06-04)
-
-**검색 태그:** `COLLAB_RPC_REVISION` · `STRUCTURE_OPS_PULL` · `COLLAB_FORBIDDEN_CACHE` · `cloud_workspace_source_user_id` · `op_log_complete` · `last_applied_seq`
-
-**목적:** 공유·소유 프로젝트에서 **노드 본문이 어디서 오가는지**를 한 장으로 고정한다. §10.3·§10.10의 **번들·슬라이스** 경로와 **structure_ops 증분** 경로를 분리해 이해하고, 2026-06-04에 해결한 **403/400 콘솔 폭주** 회귀를 막는다.
-
-#### 10.11.1 이중 축 (정본 우선순위)
-
-| 축 | 정본 여부 | 저장소·RPC | 클라이언트 진입 |
-|----|-----------|------------|-----------------|
-| **A — 워크스페이스 번들·공유 슬라이스** | **노드 CRUD·저장·오픈의 1차 정본** | 소유자 `plannode_workspace` (`projects_json`, `nodes_by_project_json`) · `plannode_workspace_merge_project_slice` · revision·lock (`plannode_project_collab_meta`) | `uploadWorkspaceToCloud` · `pullOwnWorkspaceIfChanged` · `pullSharedProjectSlicesIfNewer` · `pushProjectSlicesToOwners` (`sync.ts`) |
-| **B — structure_ops op log** | **증분 보조** (Broadcast·append 후 pull) | `plannode_project_structure_ops` · `plannode_append_structure_ops` · `plannode_fetch_structure_ops_since` | `pullStructureOpsForProject` · `replayStructureOpsOnNodes` (`sync.ts` · `projectStructureOps.ts`) |
-
-**운영 원칙:** A가 실패해도 로컬·번들 LWW로 대부분 복구 가능. B가 403이어도 **노드 저장·공유 슬라이스 동기는 A로 계속**된다. B는 **짧은 지연·중복 op 완화**용 — `op_log_complete = true`이고 `last_applied_seq`가 서버 max_seq와 맞을 때만 완전히 신뢰.
+- **UI:** 프로젝트 모달 `#BJI` — `src/routes/+page.svelte` `handleJsonImportChange`.
+- **형식:** `.json`/`.txt`, `.md`/`.markdown`(펜스 → outline), `.docx`(outline). 배지 의미는 **트리 JSON 파싱 성공 시**에 한함. outline-only MD는 배지 비어 있음이 정상.
+- **다른 진입:** 클라우드 병합 등 동일 `upsertImportedPlannodeTreeV1` 경로(`sync.ts`, `projectAcl.ts` 등) → AI 학습 병합도 동일하게 실행.
 
 ```mermaid
 flowchart LR
-  subgraph pilotLocal["파일럿·로컬"]
-    P["plannodePilot render"]
-    LS["stores + localStorage"]
-    P --> LS
+  subgraph importUI [Modal_BJI]
+    A[handleJsonImportChange]
   end
-  subgraph axisA["축 A — 번들·슬라이스 정본"]
-    UP["uploadWorkspaceToCloud"]
-    SL["merge_project_slice + revision"]
-    PW["plannode_workspace"]
-    LS --> UP --> PW
-    SL --> PW
+  subgraph parse [Parse]
+    B[parsePlannodeTreeV1ImportText / outline]
+    C[parsePlannodeTreeV1Json]
   end
-  subgraph axisB["축 B — structure_ops 보조"]
-    AP["append_structure_ops"]
-    FE["fetch_structure_ops_since"]
-    OPS["plannode_project_structure_ops"]
-    LS --> AP --> OPS
-    FE --> OPS
-    FE -.->|replay| LS
+  subgraph persist [Persist]
+    D[upsertImportedPlannodeTreeV1]
+    L[mergeLearnedBadgeRulesFromImportedNodes]
   end
-  subgraph signal["신호만 Realtime"]
-    RT["collab_meta.revision postgres_changes"]
-    RT -.->|debounce pull| SL
+  subgraph display [Display]
+    F[getBadgeSetFromNodeInput]
+    G[node_card_chips]
   end
+  A --> B --> C
+  C --> D --> L
+  D --> F --> G
 ```
 
-#### 10.11.2 공유 프로젝트 식별·`workspace_user_id`
+- `applySanitizeImportedPlannodeNodeV1`는 파싱 종단·저장 직전 **두 경로**에서 호출; 동일 sanitize라 멱등에 가깝다.
 
-| 필드 | 위치 | 역할 |
-|------|------|------|
-| `cloud_workspace_source_user_id` | `Project` (`client.ts` · 스토어) | **소유자 Supabase `auth.users.id`(UUID)** — 공유 멤버가 슬라이스·ops·revision RPC에 넘기는 `p_workspace_user_id` |
-| `project.id` | 동일 | `p_project_id` (text) |
+---
 
-**클라이언트 가드 (`sync.ts`, 2026-06-04):** `fetchCollabRevision`·일부 push 경로에서 `p_workspace_user_id`가 **유효 UUID가 아니면 RPC 호출 생략** (`UUID_REGEX`). PostgREST는 `uuid` 파라미터에 빈 문자열·잘못된 형식을 넣으면 **함수 진입 전 400**을 반환한다.
+## 3. 파일→파싱→영속 (요약)
 
-**세션 차단:** `_collabForbiddenProjects` · `markCollabProjectForbidden` — 프로젝트별 403/400·forbidden(42501) 확인 후 **해당 `workspaceUserId:projectId` 조합은 세션 동안 revision·ops fetch 생략**(6초 폴링 403 폭주 방지). `isCollabRevisionRpcForbidden` · status 400도 동일 등록.
+| 단계 | 위치 |
+|------|------|
+| 텍스트 로드 | `+page.svelte` |
+| MD | `outlineToPlannodeTreeV1.ts` 등 |
+| JSON | `plannodeTreeV1.ts` `parsePlannodeTreeV1Json` |
+| 영속 | `projects.ts` `upsertImportedPlannodeTreeV1` + 노드 `localStorage` |
+| 스키마 | `src/lib/ai/types.ts` `NodeMetadata` |
 
-#### 10.11.3 DB·RPC 계약 (2026-06-04 배포 기준)
+---
 
-| 객체 | 역할 | ACL·RLS (현행) |
-|------|------|----------------|
-| `plannode_project_acl` | 공유 멤버·이메일·**`user_id`**(백필) | RLS ON · `NO FORCE ROW LEVEL SECURITY`(테이블) — **클라이언트 직접 SELECT**용. revision/ops RPC **내부에서는 더 이상 ACL EXISTS에 의존하지 않음**(2026-06-04). |
-| `plannode_project_collab_meta` | `revision`, `last_applied_seq`, `op_log_complete` | RPC·SECURITY DEFINER 경로 |
-| `plannode_project_structure_ops` | append된 구조 op (`seq`) | 동일 |
+## 4. 메타 ↔ 배지 매핑 파이프라인 (핵심)
 
-| RPC | 인자 | 반환·용도 | 함수 속성 (유지) |
-|-----|------|-----------|------------------|
-| `plannode_project_collab_get_revision` | `p_workspace_user_id uuid`, `p_project_id text` | `bigint` revision | `VOLATILE` · `SECURITY DEFINER` · `set search_path = public, auth` · **로그인(`auth.uid()`)만 검사** — revision은 메타 숫자; 노드 본문 노출 없음 |
-| `plannode_fetch_structure_ops_since` | 위 + `p_since_seq bigint` | ops JSON + meta + snapshot_nodes | 동일 · **로그인만 검사** — 노드 본문·쓰기 권한은 merge·번들·ACL UI 경로가 담당 |
+**단일 소스:** `getBadgeSetFromNodeInput` → `sanitizeNodeBadgesForTreeV1` (`badgePromptInjector.ts`).
 
-**403/400 회귀 시 절대 금지:**
+### 4.1 저장 래퍼
 
-- RPC 본문에 `plannode_acl_caller_has_project_access` / email JWT / `plannode_acl_workspace_is_project_owner` **2-step ACL을 다시 넣지 않음** — `security definer` + `plannode_project_acl` SELECT RLS(email `qual`) 조합에서 **EXISTS가 항상 false** → `forbidden`(42501) 재발.
-- `stable` + 함수 본문 `SET LOCAL search_path` — Postgres **`SET is not allowed in a non-volatile function`** → 400.
-- Dashboard/SQL Editor만 수정하고 **`docs/supabase/` 최종본 미기록** — 재배포 시 구 ACL 버전으로 덮어쓰기.
+- `applySanitizeImportedPlannodeNodeV1` — `sanitizeNodeBadgesForTreeV1`만 호출; `name`/`description`/기능명세 등 비배지 필드는 유지.
 
-**SQL 정본:** `docs/supabase/20260604_final_collab_functions_fix.sql` — Dashboard 최종본(`volatile` · auth `search_path` · 로그인만 검사). 삭제 프로젝트 ops 정리: `docs/supabase/20260604_cleanup_deleted_project_ops.sql`. 선행(미적용 시): `20260604_acl_add_user_id_column.sql`(`user_id` 컬럼·백필).
+### 4.2 배지 풀
 
-#### 10.11.4 `collab_meta`·ops 정합 (현장 점검, 2026-06-04)
+- `badgePoolConfig.ts` — `BADGE_POOL_STORAGE_KEY`, `getEffectiveBadgePool`.
 
-| 상태 | 의미 | 조치 |
-|------|------|------|
-| `op_log_complete = true` · `last_applied_seq = max(seq)` | B축 정상 (예: active `crazyshot-re_v1.46`) | 유지 |
-| ops 많음 · `last_applied_seq` 극소 | B축 미반영 — **A축만 신뢰** | bootstrap RPC 또는 meta 수동 정렬(선택) |
-| 삭제된 `project_id`에 ops/meta 잔존 | 기능 영향 없음 · poll·storage 노이즈 | `cleanup_deleted_project_ops` SQL(선택) |
+### 4.3 명시 배지 정규화
 
-#### 10.11.5 회귀 체크리스트 (GATE C)
+- 3트랙 `metadata.badges` → `coerceImportedBadgeSetFromTracksAndFlat` + `resolveImportedBadgeToken` (`badgeImportAliases.ts`).
+- 평면 레거시 → `migrateLegacyBadgesToSet`.
 
-1. 로그인 후 공유 프로젝트 3개 열기 — Network에 **`plannode_project_collab_get_revision` 403/400 반복 없음**(프로젝트당 최대 1회 forbidden 등록 후 중단).
-2. 노드 추가·모달 저장 — **트리·localStorage·번들** 반영; 상대 계정은 **슬라이스 pull(축 A)** 로 수 초 내 반영(§10.7).
-3. DevTools `[collab] project marked forbidden` — **고아·ACL 없는 projectId**에만 1회; 정상 공유 프로젝트에 남지 않을 것.
-4. Supabase SQL Editor `postgres` 역할에서 `auth.uid()` NULL — **정상**; 앱(PostgREST JWT)과 혼동 금지.
+### 4.4 메타데이터 힌트 추론 (`inferBadgeHintStringsFromMetadata`)
 
-**교차 참조:** EPIC E SQL — `docs/supabase/20260601_plannode_project_structure_ops.sql` · 협업 RPC 최종본 — §10.11.3.
+**병합 순서 (중복 제거 시 먼저 삽입된 토큰 우선 — 코드 정본 `badgeMetadataInference.ts`):**
 
-#### 10.11.4 meta drift · 오픈 pull 불변식 (`COLLAB_META_DRIFT`)
+1. `metadata.treeImportExtras` 플래그
+2. **`metadata.iaGrid`** — `screenType`·`path` 등 화면 archetype (**keywordHints보다 우선**, BADGE-ALIGN)
+3. `keywordHints` — functionalSpec·iaGrid·tech 합성 haystack + `name` + `description` 정규식 (범용 CRUD·배포 키워드 없음)
+4. **사용자 규칙** — `plannode.badgeInferenceUserRules.v1`
+5. **AI 누적 학습 규칙** — `plannode.badgeInferenceAiLearnedRules.v1`
 
-**검색 태그:** `COLLAB_META_DRIFT` · `open-pre-select` · `assessCollabPullByRevisionAndOpsAck` · `collabPullCanSkipSliceMergeAfterOpsPull`
+그 후 `getBadgeSetFromNodeInput`에서 base + inferred를 `mergeBadgeSets`, 저장 시 `filterBadgeSetToCanonicalPool`. 파일럿 카드는 **§6.2**로 `description` 비었을 때 2~5단계 병합을 끈다.
 
-| 불변식 | 규칙 |
-|--------|------|
-| **I1** | `ackSeq > last_applied_seq` 이고 fetch ops가 **0건**이면 lightweight skip **금지** — hash check 또는 slice merge(`viaLightweight: false`) |
-| **I2** | `op_log_complete=true` 이어도 ack drift + ops 미반영이면 slice merge skip **금지** (`collabPullCanSkipSliceMergeAfterOpsPull`) |
-| **I3** | post-pull hash: `ackSeq > lastAppliedSeq` 이면 “동기화됨”으로 조기 return **금지** (`collabSliceOutOfSyncAfterPull`) |
-| **I4** | 멤버 **프로젝트 오픈** — `pullProjectSliceBeforeOpen` → `pullCollabSliceForProject(..., 'open-pre-select', { forceMerge: true })` (주기 pull·revision poll과 **동일 op-first 트리**) |
-| **I5** | ackSeq를 `last_applied_seq`보다 **낮춰 heal 금지** — `replayStructureOpsOnNodes` 비멱등; A축 LWW slice가 정본 복구 |
+**iaGrid 예:** `screenType: "list"` + 짧은 설명 → `LIST`(UX) 우선; 설명만 「CRUD API 설계」여도 **CRUD 칩 없음** · `API` 가능(시나리오 3).
 
-```mermaid
-flowchart TD
-  open[pullProjectSliceBeforeOpen] --> member{member?}
-  member -->|yes| opFirst[pullCollabSliceForProject open-pre-select]
-  member -->|no| ownerSlice[fetchProjectSliceFromCloud]
-  opFirst --> assess[assessCollabPullByRevisionAndOpsAck]
-  assess --> drift{ackSeq gt last_applied and ops empty?}
-  drift -->|yes| sliceOrHash[slice merge or hash check]
-  drift -->|no| lightSkip[lightweight skip OK]
+---
+
+## 5. 사용자 규칙·AI 학습 규칙 스키마
+
+**공통 타입:** `UserBadgeInferenceRule` — `field`: `description` | `name` | `metadataHaystack`, `contains`, `suggestBadges`.
+
+- **사용자:** `{ "rules": [ ... ] }` under `plannode.badgeInferenceUserRules.v1`.
+- **AI 학습:** `{ "v": 1, "updatedAt": ISO8601, "rules": [ ... ] }` under `plannode.badgeInferenceAiLearnedRules.v1`.
+
+AI 학습 규칙은 가져오기 시 노드별로 주로 **`field: "name"`, `contains`: 노드 제목 전체**를 쓴다(너무 짧거나 구분자-only 제목은 스킵). 동일 키면 `suggestBadges`만 합친다.
+
+---
+
+## 6. 파일럿 노드 카드·설정 모달 — 추론 조건 구조 (정본)
+
+이 절은 **`badgePromptInjector.ts` / `badgeMetadataInference.ts`의 코어 파이프**와 **`src/lib/pilot/plannodePilot.js`의 UX 게이트**를 분리해 기록한다. 향후 AI 추론 자동 반영·배지 UI 고도화 시 **이 구조를 변경하면 회귀**한다(진공 노드·기본 제목 `새 노드`·학습 규칙과의 상호작용).
+
+### 6.1 계층 모델 (코어 vs 표시·편집 게이트)
+
+| 층 | 역할 | 정본 위치 |
+|----|------|-----------|
+| **L1 — 명시 배지 + 풀 정규화** | `metadata.badges`(3트랙) 또는 평면 `badges[]` → `BadgeSet` | `getBadgeSetFromNodeInput` (`opts`에 따라 추론 병합 여부) |
+| **L2 — 메타 힌트 추론 병합** | `inferBadgeHintStringsFromMetadata` 순서 1→4(§4.4)·`mergeBadgeSets` | `getBadgeSetFromNodeInput`에서 **기본값** `inferHints` 미지정 시만 활성 |
+| **L3 — 저장 sanitize** | 항상 **추론 비활성**: `{ inferHints: false }` | `sanitizeNodeBadgesForTreeV1` |
+| **L4 — 파일럿 표시 게이트** | 카드 칩: **설명 비었으면 추론 병합 금지** | `plannodePilot.js` `render()` |
+| **L5 — 파일럿 편집 게이트** | 모달 `working`: **항상 명시만** | `plannodePilot.js` `showEdit()` |
+| **L6 — 저장 순간 (진공 입력)** | 제목·설명 **입력란** 모두 빈 문자열이면 클로저 `working` 3트랙 초기화 | `plannodePilot.js` 저장 버튼 콜백 |
+
+**절대 원칙:** 배지의 **영속 단일 경로**는 `sanitizeNodeBadgesForTreeV1` / `applySanitizeImportedPlannodeNodeV1`(가져오기)이다. 파일럿은 **치 레이어에 덮어쓰지 않고**, `getBadgeSetFromNodeInput`의 **`inferHints` 옵션**과 **저장 직전 `working` 초기화**로만 행동을 제한한다.
+
+### 6.2 노드 카드 칩 (`render()`)
+
+**조건식 (정본):**
+
+- `_descEmpty = !String(n.description ?? '').trim()`
+- `inferHints = !_descEmpty`  
+  - 즉 **`description`이 비어 있으면 `inferHints: false`** → L2(키워드·사용자 규칙·AI 학습 규칙) **병합 안 함**. L1 명시 배지(`badges[]` / `metadata.badges`)만 평탄화되어 표시.
+
+**의도·근거:**
+
+- UI에서 제목만 기본값 `'새 노드'`로 둔 상태에서도, **`name`에만 의존하는 학습 규칙**(`plannode.badgeInferenceAiLearnedRules.v1` 등)이 켜지면 명시 1~2개 저장 후에도 카드에 **과다 칩**이 붙는 문제가 발생할 수 있음. **설명이 없을 때는 제목/메타만으로 추론을 섞지 않는다**는 제품 UX 정책.
+- `inferBadgeHintStringsFromMetadata`의 **진공 노드 조기 반환**(`name`·`desc`·구조 hay·treeImportExtras 모두 비었을 때 `[]`)과는 **별개**다. 저장 후 `name === '새 노드'`는 비어 있지 않으므로 진공 조기반환이 깨지지 않아도, L2가 켜지면 학습 규칙이 **`name` 전체 매칭**으로 발동할 수 있다. 이를 카드 단에서 차단하는 것이 §6.2.
+
+**수식 요약:**
+
+```text
+카드 칩 = flattenBadgeSet( getBadgeSetFromNodeInput(n, { inferHints: description에 trim 후 문자가 있음 }) )
 ```
 
-### 10.12 성능·RPC 부하 (요지)
+### 6.3 설정 모달 초기 상태 (`showEdit()`)
 
-- **측정·GATE 이력:** `.cursor/harness/GSD_LOG.md`(NOW-E0·GATE-D 등) — DevTools Network·`__pnDiagStart`/`Stop` 절차. **신규 측정 표는 하네스에만** 추가(별도 `docs/` 동기 문서 재도입 금지).
-- **upload↔slice 충돌 루프:** `markCloudWorkspaceFailed` 후 `workspaceIsDirty` 유지 · `flushCloudPendingRetryBeforePull` · `UPLOAD_CONFLICT_COOLDOWN_MS` · 공유 멤버 structure-only defer(`E8-3`) — 코드·로그 태그 `uploadWorkspaceToCloud conflict`.
-- **structure_ops 409:** `flushStructureOpsPersistForProject` in-flight coalesce · ack 복구(`E9`).
+**조건식 (정본):**
+
+- `working = cloneBadgeSet( getBadgeSetFromNodeInput(n, { inferHints: false }) )`
+
+**의도:**
+
+- 모달에 **“추론으로만 생긴” 배지가 선택된 것처럼 보이지 않게** 한다. 편집기는 **저장된 명시 배지(평면·3트랙 정규화 결과)** 만 반영한다.
+
+### 6.4 저장 버튼 (`showEdit` 내부 콜백)
+
+**입력란 원문 (저장 판정):**
+
+- `nm = document.querySelector('.ein')?.value?.trim() ?? ''`
+- `desc = document.querySelector('.eid')?.value?.trim() ?? ''`
+
+**진공 입력 시 `working` 초기화 (정본):**
+
+- `if (!nm && !desc) { working.dev = []; working.ux = []; working.prj = []; }`
+- 그 다음 `target.name` / `target.description` 대입(미입력 시 기본 제목 `'새 노드'` 등) → **`working` 초기화 판정은 반드시 대입 전·입력란 기준**이어야 한다.
+
+**이후 공통 파이프:**
+
+- `applyBadgeSetToNode(target, working)` → **`sanitizeNodeBadgesForTreeV1({ badges, metadata, name, description }, curP?.id)`** → `target.badges` / `target.metadata` 갱신. 공유 프로젝트는 **projectId 필수**(§6.9 · R1).
+
+### 6.9 협업 배지 동기화 (공유 프로젝트 · BADGE_STRUCTURE_OPS)
+
+**정본:** [`plannode-architecture.mdc`](./plannode-architecture.mdc) **§10.10.1** — 본 절은 **배지 데이터·sanitize 관점**만 요약한다.
+
+| 규칙 | 내용 |
+|------|------|
+| **편집 진입점** | 트리 캔버스 배지 변경 = **모달(`showEdit`)만**. 우클릭 `#CTX` `bgt`는 **제거**(2026-06). 재도입 시 §10.10.1 송신 4단계 필수. |
+| **저장 sanitize** | 모달 저장·structure op 송신 전 **`curP?.id`** 로 `sanitizeNodeBadgesForTreeV1` — `getEffectiveBadgePool(projectId)`와 슬라이스·가져오기(R1) 정합. |
+| **협업 송신** | sanitize 후 `sendUpdateNodeStructureOp`에 **`badges` + `metadata`** (키 있을 때만 수신측 패치). |
+| **협업 수신** | `applyBadgeSetToNode` + `inferHints: false` + `projectId: curP?.id` — flat `badges[]`만 두지 않음. |
+| **A축 fallback** | Broadcast 누락·slice-only 변경 → `BADGE-SYNC-FIX` · `mergeNodeListsForCloud` 동률 badges(§10.10.1). |
+| **금지** | 배지 변경이 **`schedulePersist`만** 타는 UI 추가 · 배지 **둘째 저장소** · projectId 없는 sanitize on collab path. |
+
+**회귀(2계정):** A 모달 배지 저장 → B 카드 칩 수 초 내 · sanitize·Broadcast payload·스토어 badges 일치 · §6.7 시나리오와 **충돌 없음**.
+
+### 6.5 `description`이 생긴 뒤의 추론 (카드)
+
+- `_descEmpty === false` 이면 `inferHints: true`(기본 동작) → §4.4 순서 1→4로 **키워드·사용자·AI 학습** 병합 가능. 제목·설명·구조 메타·가져오기 extras가 풀·규칙과 맞을 때만 칩이 늘어난다.
+
+---
+
+### 6.6 코어 추론과의 관계 (에이전트 체크용)
+
+| 질문 | 답 |
+|------|-----|
+| 진공 노드 조기반환만으로 카드 과다 표시가 막히는가? | **아님.** `name`이 `'새 노드'` 등으로 채워지면 조기반환 조건이 완화된다. 카드는 §6.2로 **설명 없음 → 추론 끔**. |
+| 저장은 추론을 다시 넣는가? | **아니오.** `sanitizeNodeBadgesForTreeV1`는 내부적으로 `{ inferHints: false }`. |
+| 스토어 `persistNodesFromPilot`이 배지를 재추론하는가? | **아니오.** 리스트 그대로 저장; sanitize는 import 루트 등 별 경로. |
+| 향후 “자동 반영 AI”를 어디에 붙이면 안전한가? | **L2 확장** 시에도 §6.2·§6.3·§6.4를 유지하거나, 동일 정책을 `getBadgeSetFromNodeInput` 옵션으로 **코드 한곳에 합치기** — 파일럿과 이중 기준이 되면 안 된다(GP-12). |
+
+### 6.7 회귀 시나리오 (수동·TASK)
+
+1. 새 노드 추가 → 제목·설명 미입력 저장 → 카드 칩 **없음**, 모달 재오픈 시 칩 **미선택**.
+2. 동일 노드에서 DEV 1개만 선택·저장, 설명 비움 유지 → 카드에 **해당 1개만**, **6개 풀 표시 금지**.
+3. 설명에 키워드 입력 후 저장 → 카드에서 **추론 병합 허용**(§6.5).
+4. 가져오기·클라우드 병합 후에도 **칩 = `getBadgeSetFromNodeInput` + 파일럿 게이트**와 모순 없어야 한다.
+5. **(공유)** A 모달 배지 저장 → B 카드 칩 수 초 내(§6.9 · §10.10.1 GATE C).
+
+### 6.8 원인규명 트리북 (저장 ≠ 카드·모달 불일치 시)
+
+**이 절은** `inferBadgeHintStringsFromMetadata`·`sanitize`가 정상인데도 UI만 틀어지는 **계층 혼동**을 줄이기 위한 것이다. 구조 정보는 §6.1~§6.5에 있으나, **현장에서 무엇을 먼저 볼지**를 고정한다.
+
+| 증상 | 먼저 의심할 층 | 확인 방법(개요) |
+|------|----------------|-------------------|
+| 저장 직후 `san.badges`·`target.badges`는 **기대와 일치**인데 카드만 과다/부족 | **L4** 파일럿 `render()` | 동일 노드 `n`에 대해 `description.trim()`이 비었는지. 비었으면 카드는 `inferHints: false` 경로(§6.2) — **학습 규칙·키워드 병합이 카드에 섞이면 안 됨**. 과거 버그: `inferHints: true` + `name === '새 노드'` + `plannode.badgeInferenceAiLearnedRules.v1`로 카드만 6칩. |
+| 모달에 DEV 6개가 **선택**된 것처럼 보임·취소 불가처럼 느껴짐 | **L5** `showEdit()` | `working`은 `getBadgeSetFromNodeInput(n, { inferHints: false })`만 사용(§6.3). 추론 칩이 보이면 **이전 코드·캐시** 또는 **`n.badges` / `metadata.badges`에 실제 명시 값**이 있는지 확인. |
+| 제목·설명 미입력 저장인데 저장물에 배지가 들어감 | **L6** 저장 콜백 | 입력란 `nm`·`desc` **둘 다 빈 문자열**인지. 빈 경우 `working` 3트랙 클리어가 **이름 대입 전**에 실행되는지(§6.4). |
+| 가져오기·sanitize 후는 정상인데 일정 시간 후 배지가 **되살아남** | **클라우드/번들** (`sync.ts` 등) | 로컬 `persistNodesFromPilot`은 재추론 안 함(§6.6표). 원격 머지·슬라이스가 오래된 노드를 덮어쓸 수 있음 — `pullOwnWorkspaceIfChanged`·충돌 재병합 로그와 시각 정렬. |
+| 코드 고쳤는데 브라우저 반응 없음 | **번들/HMR** | `plannodePilot.js` 변경이 Vite 로그에 반영되는지, **하드 리로드** 후 재현. |
+
+**한 번에 비교할 두 값 (디버그용):**
+
+1. **저장 단말:** `sanitizeNodeBadgesForTreeV1(...)` 산출 `badges`(항상 `inferHints: false` 경로, L3).
+2. **카드 단말:** `flattenBadgeSet(getBadgeSetFromNodeInput(n, { inferHints: !_descEmpty }))` — §6.2와 동일해야 정상.  
+   (1)과 (2)가 같아야 하는 것은 **아님** — (2)는 `_descEmpty`에 따라 L2 병합 여부가 달라짐. **같아야 하는 경우:** `description`이 비어 있을 때 (2)는 L1 명시만, (1)과 명시 배지 집합이 **논리적으로 일치**해야 한다.
+
+**학습 규칙 의심 시:** 브라우저 `localStorage` 키 `plannode.badgeInferenceAiLearnedRules.v1`·`plannode.badgeInferenceUserRules.v1`(§1) — `field: "name"` + `contains`가 `'새 노드'` 등과 맞으면 카드에서 L2가 켜질 때만 과다 매칭(§6.2로 차단).
+
+---
+
+## 7. 한계
+
+- 키워드·규칙 기반; 본문 우연 일치 가능.
+- outline-only 가져오기는 배지 입력 부족이 정상.
+- 별도 ML·피드백 학습 UI는 **현재 구현 범위** 밖; 풀 확대·자동화 **방향**은 **§0.3·§0.4** 참조.
+
+---
+
+## 8. 부록 — 외부 AI 샘플링용 스펙
+
+정본은 코드: `badgePoolConfig.ts`, `badgeImportAliases.ts`, `badgeMetadataInference.ts`, `badgePromptInjector.ts`, `types.ts` `NodeMetadata`. **표·정규식을 바꾸면 앱과 불일치**한다.
+
+### 8.1 노드 JSON 배지 위치
+
+- 권장: `metadata.badges`: `{ dev[], ux[], prj[] }`.
+- 레거시: 평면 `badges[]` — 병합 후 동일 해석기 통과.
+
+### 8.2 기본 풀(DEV 16 · UX 26 · PRJ 9 · 합계 ≈51)
+
+정본: `badgePoolConfig.ts` `DEFAULT_DEV_KEYS` / `DEFAULT_UX_KEYS` / `DEFAULT_PRJ_KEYS` (§0.5 BADGE-ALIGN). **트랙 오류·레거시 alias:** `NAVI`→`GNB`, `BUTT`→`CTA`, `FEED`→`TOAST`. **`crud`→CRUD** 해석 후 **기본 풀에 CRUD 없음** → sanitize·칩에서 제거.
+
+| 트랙 | 토큰 |
+|------|------|
+| dev | TDD, API, AUTH, REALTIME, PAYMENT, ZINDEX, FLEX, CSSGRID, MQUERY, PADDING, REM, COMP, STATE, HARDCOD, DYNIX, DUMMY |
+| ux | GNB, LNB, SNB, FNB, HERO, BREAD, CARO, ACCORD, MODAL, POPUP, TOAST, DROP, CTA, TAB, GRID, COL, GUTTER, MARGIN, BREAKPT, WHSPACE, HEAD, LIST, CARD, FORM, DASH, MEDIA |
+| prj | USP, MVP, AI, I18N, MOBILE, WIREF, PROTO, VHIER, AFFORD |
+
+**기본 풀에서 제거된 DEV(가져오기·명시만 있으면 탈락):** CRUD, LOCAL, STAGING, PROD, DEPLOY, HOTFIX, PR, JSON, RENDER.
+
+토큰 형식: `^[A-Z][A-Z0-9]{1,14}$` (풀 설정·프로젝트별 `badge_pool`로 확장 가능, 트랙당 상한 40).
+
+### 8.3 해석 순서
+
+`resolveImportedBadgeToken`: (1) 풀 직접 매칭 (2) 동의어표 `IMPORT_BADGE_ALIAS_TO_CANONICAL`.
+
+### 8.4 동의어 키 정규화
+
+`normalizeBadgeForAliasLookup`: trim, 소문자, 따옴표 제거, 공백/슬래시/하이픈 → `_`, 중복 `_` 축소.
+
+### 8.5 동의어 → 표준 토큰 (요약 — 전체는 `badgeImportAliases.ts` `ALIAS_GROUPS`)
+
+| 표준 | 동의어 예(원문; 정규화 후 매칭) |
+|------|----------------------------------|
+| TDD | tdd, unit_test, … |
+| CRUD | crud — **@deprecated** 기본 풀 밖; resolve 후 canonical이 풀에 없으면 **null** |
+| API | api, rest, graphql, …, **analysis**, analytical, analyze, analyse |
+| AUTH | auth, …, **jwt_token**, jwt, … |
+| REALTIME | realtime, **web_socket**, websocket, ws, … |
+| PAYMENT | payment, stripe, … |
+| … | (HEAD, CARD, LIST, … 동일 파일 참조) |
+| USP | usp, unique_selling, differentiation, **competitive**, competition, competitor, … |
+| AI | ai, llm, gpt, … |
+
+※ **analysis → API**, **competitive 계열 → USP** 등은 외부 AI 라벨과 표준 풀을 맞추기 위한 보강이다.
+
+### 8.6 `treeImportExtras` → 토큰
+
+플랜 원문 §8.7과 동일 — `isTDD`, `hasPayment`, `realtime`, … 참조: `hintsFromTreeImportExtras` in `badgeMetadataInference.ts`.
+
+### 8.7 `keywordHints` 정규식
+
+플랜 원문 §8.8과 동일 — 코드 `keywordHints`와 동기.
+
+### 8.8 명시 + 추론 병합
+
+`mergeBadgeSets(base, inferred)` — base 우선 순서, 트랙 내 중복 토큰 스킵.
+
+---
+
+## 9. 관련 문서·샘플
+
+- `docs/plannode-tree-v1-ai-reference.md` — 파일 계약·§6 코드 근거
+- **`docs/crazyshot_v5_plannode_BADGE_FULL.json`** — CRAZYSHOT v5 실사 스케일·`version`: 2·배지 매핑 풀 예시(리포 내 복사본; 원본은 CRAZYSHOT 워크스페이스 동명 파일과 동기 권장)
+- `docs/plannode-tree-badge-pipeline-sample.json` — 축소 교본(동의어·오트랙·미지원 태그 등 최소 시나리오)
+
+---
+
+## 10. 구현 시 체크리스트
+
+- 가져오기·sanitize·표시가 **`getEffectiveBadgePool`** 단일 풀을 본다.
+- 추론 순서 **1→5**(§4.4, iaGrid 포함)를 바꾸면 TASK·QA·제품 문서와 충돌할 수 있다.
+- AI 학습 저장소를 비우려면 `clearAiLearnedBadgeInferenceRules()` (테스트·디버그용 API).
+- **파일럿:** `render()`에서 `description` 비었을 때 **`inferHints: false`** 유지(§6.2); `showEdit()`에서 **`inferHints: false`** 유지(§6.3); 저장 시 입력란 둘 다 빈 경우 **`working` 3트랙 클리어**(§6.4); **공유 프로젝트** 모달 저장·collab op는 **`sanitizeNodeBadgesForTreeV1(..., curP?.id)`**(§6.9).
+- **자동 AI 추론**을 새로 붙일 때: §6.1~§6.6과 **동일 UX 정책**을 깨지 말 것 — 필요하면 `badgePromptInjector.ts`에 옵션으로 흡수하고 파일럿은 얇게 유지.
+- **저장 OK·UI만 이상** 시 §6.8 원인규명 트리북으로 층(L3 vs L4·클라우드) 분리 후 수정.
 
 ---
 > Source: [pseriesadmin/plannode](https://github.com/pseriesadmin/plannode) — distributed by [TomeVault](https://tomevault.io).
