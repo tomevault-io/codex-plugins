@@ -7,12 +7,12 @@ A library for Near Infrared Sprectroscopy prediction. NIRS ML. Rebuild of the Pi
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [GBeurier/nirs4all](https://github.com/GBeurier/nirs4all).
+Original source: `copilot-instructions.md` in [GBeurier/nirs4all](https://github.com/GBeurier/nirs4all).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
