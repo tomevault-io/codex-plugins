@@ -7,12 +7,12 @@ An experiment in building modern marine charts. Currently alpha and not to be us
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [openwatersio/OpenWaters](https://github.com/openwatersio/OpenWaters).
+Original source: `CLAUDE.md` in [openwatersio/OpenWaters](https://github.com/openwatersio/OpenWaters).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
