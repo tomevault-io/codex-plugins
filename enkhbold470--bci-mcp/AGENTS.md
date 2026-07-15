@@ -1,0 +1,22 @@
+
+# Git commits
+
+**Never add `Co-authored-by` trailers to commit messages.**
+
+This includes and is not limited to:
+
+- `Co-authored-by: Cursor <cursoragent@cursor.com>`
+- `Co-authored-by: Claude ...`
+- Any other AI or agent co-author line
+
+When committing:
+
+1. Write the commit message yourself in a HEREDOC or `-m` flag — do not rely on tooling that auto-appends co-authors.
+2. Before pushing, verify with `git log -1 --format='%B'` that no `Co-authored-by:` line is present.
+3. If one appears, amend the commit and remove it before pushing.
+
+The repository owner does not want AI tools listed as co-authors in git history.
+
+---
+> Source: [enkhbold470/bci-mcp](https://github.com/enkhbold470/bci-mcp) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-07-15 -->
