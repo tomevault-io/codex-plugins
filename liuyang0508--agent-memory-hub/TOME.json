@@ -1,0 +1,44 @@
+{
+  "name": "Agent-Memory-Hub",
+  "owner": "liuyang0508",
+  "repo": "Agent-Memory-Hub",
+  "description": "\u591a\u667a\u80fd\u4f53\u5171\u4eab\u7b2c\u4e8c\u5927\u8111",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/liuyang0508/Agent-Memory-Hub",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-15T12:34:51Z"
+}
