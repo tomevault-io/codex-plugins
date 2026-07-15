@@ -7,12 +7,12 @@ Visualize longform writing projects as an interactive radial timeline that displ
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [EricRhysTaylor/radial-timeline](https://github.com/EricRhysTaylor/radial-timeline).
+Original source: `CLAUDE.md` in [EricRhysTaylor/radial-timeline](https://github.com/EricRhysTaylor/radial-timeline).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
