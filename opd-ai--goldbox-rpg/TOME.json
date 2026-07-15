@@ -1,0 +1,44 @@
+{
+  "name": "goldbox-rpg",
+  "owner": "opd-ai",
+  "repo": "goldbox-rpg",
+  "description": "goldbox-rpg is an open-source RPG engine inspired by the classic Gold Box series of role-playing games. It provides a framework for creating and managing game states, combat systems, and player interactions, primarily using the Go programming language.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/opd-ai/goldbox-rpg",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-15T19:32:28Z"
+}
