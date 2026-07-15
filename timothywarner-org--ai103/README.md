@@ -7,12 +7,12 @@ Exam AI-103: Developing AI Apps and Agents on Azure (Video) Course Repository
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [timothywarner-org/ai103](https://github.com/timothywarner-org/ai103).
+Original source: `CLAUDE.md` in [timothywarner-org/ai103](https://github.com/timothywarner-org/ai103).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
