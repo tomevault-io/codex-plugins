@@ -7,12 +7,12 @@ Open-Source Directory Website NextJs Boilerplate (part of Ever® Works™ Platfo
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [ever-works/directory-web-template](https://github.com/ever-works/directory-web-template).
+Original source: `CLAUDE.md` in [ever-works/directory-web-template](https://github.com/ever-works/directory-web-template).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
