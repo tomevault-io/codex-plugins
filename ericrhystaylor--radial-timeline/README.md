@@ -1,26 +1,26 @@
-# Radial-Timeline
+# radial-timeline
 
-> Source: [EricRhysTaylor/Radial-Timeline](https://github.com/EricRhysTaylor/Radial-Timeline) — distributed by [TomeVault](https://tomevault.io)
+> Tome by [EricRhysTaylor](https://github.com/EricRhysTaylor/radial-timeline) — distributed by [TomeVault](https://tomevault.io)
 
-Radial Timeline for Obsidian creative writing projects.
+Visualize longform writing projects as an interactive radial timeline that displays scenes organized by act, subplot, and narrative or chronological order for a complete view of the project.
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [EricRhysTaylor/Radial-Timeline](https://github.com/EricRhysTaylor/Radial-Timeline).
+Original source: `copilot-instructions.md` in [EricRhysTaylor/radial-timeline](https://github.com/EricRhysTaylor/radial-timeline).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/EricRhysTaylor/Radial-Timeline](https://github.com/EricRhysTaylor/Radial-Timeline)
+From [EricRhysTaylor/radial-timeline](https://github.com/EricRhysTaylor/radial-timeline) — a repo with 48+ stars on GitHub.
 
 ---
 
-Explore more instruction files on [TomeVault](https://tomevault.io) — the open index of AI config files for every platform.
+Own this repo? Install the TomeVault Relay to keep every platform's copy in sync on every push: [https://tomevault.io/install](https://tomevault.io/install).
 
-<!-- genome:d-e-p -->
+<!-- genome:t-c-s -->
