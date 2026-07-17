@@ -1,0 +1,44 @@
+{
+  "name": "my_ufape",
+  "owner": "alexlsilva7",
+  "repo": "my_ufape",
+  "description": "Aplicativo constru\u00eddo com Flutter, projetado para oferecer aos estudantes da Universidade Federal do Agreste de Pernambuco (UFAPE) uma experi\u00eancia m\u00f3vel moderna e eficiente para acessar suas informa\u00e7\u00f5es acad\u00eamicas.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/alexlsilva7/my_ufape",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-17T02:34:27Z"
+}
