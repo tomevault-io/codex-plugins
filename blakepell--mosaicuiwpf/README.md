@@ -7,12 +7,12 @@ Mosaic UI for WPF is a control library that seeks to provide compartmentalized c
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [blakepell/MosaicUIWpf](https://github.com/blakepell/MosaicUIWpf).
+Original source: `copilot-instructions.md` in [blakepell/MosaicUIWpf](https://github.com/blakepell/MosaicUIWpf).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
