@@ -1,0 +1,30 @@
+# AI instruction files for OpenDataset
+
+> Sourced from [davidondrej/OpenDataset](https://github.com/davidondrej/OpenDataset) and converted for every major platform by [TomeVault](https://tomevault.io)
+
+Generate small, high-quality, HuggingFace-ready datasets for any domain, using any model on OpenRouter.
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [davidondrej/OpenDataset](https://github.com/davidondrej/OpenDataset).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/davidondrej/OpenDataset](https://github.com/davidondrej/OpenDataset)
+
+---
+
+Install this config instantly:
+```
+npx tomevault install davidondrej/OpenDataset
+```
+Source: [github.com/davidondrej/OpenDataset](https://github.com/davidondrej/OpenDataset).
+
+<!-- genome:a-i-q -->
