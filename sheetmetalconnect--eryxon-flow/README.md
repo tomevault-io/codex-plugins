@@ -7,13 +7,13 @@ Manufacturing Execution System (MES) for job shops and make-to-order manufacture
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [SheetMetalConnect/eryxon-flow](https://github.com/SheetMetalConnect/eryxon-flow).
+Original source: `.cursor/rules/*.mdc` in [SheetMetalConnect/eryxon-flow](https://github.com/SheetMetalConnect/eryxon-flow).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
