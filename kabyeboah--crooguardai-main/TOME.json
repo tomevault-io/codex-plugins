@@ -4,7 +4,7 @@
   "repo": "CrooGuardAI-MAIN",
   "description": "",
   "type": "config",
-  "source_format": ".cursor/rules/*.mdc",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/kabyeboah/CrooGuardAI-MAIN",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-18T02:33:32Z"
+  "distributed_at": "2026-07-18T02:36:41Z"
 }
