@@ -1,19 +1,12 @@
-# Build, Test, and Development
+# Testing Guidelines
 
-- **Open in Xcode**:
-  - `open "WonderWhisper.xcodeproj"` (use `.xcworkspace` if present).
-- **Build (Debug)**:
-  - ```bash
-    xcodebuild -project "WonderWhisper.xcodeproj" -scheme "WonderWhisper" -configuration Debug build
-    ```
-- **Test (macOS)**:
-  - ```bash
-    xcodebuild -project "WonderWhisper.xcodeproj" -scheme "WonderWhisper" -destination 'platform=macOS' test
-    ```
-- **Run locally**:
-  - Use Xcode, or `./Scripts/build-and-run.sh` for a script-built Debug app.
+- **Framework**: XCTest for unit and UI tests; use async tests where applicable.
+- **Naming**: `test_<UnitUnderTest>_<Behavior>()` (e.g., `test_AudioService_handlesPermissionDenied`).
+- **Scope**: prioritize pure logic and critical flows; add UI tests for key journeys.
+- **Coverage**: aim ≥80% for core modules.
+- **Run**: use the Test command rule or Xcode’s Test action.
 
-Prefer absolute paths in commands within this workspace.
+Place unit tests in ["WonderWhisperTests/"](mdc:WonderWhisperTests/) and UI tests in ["WonderWhisperUITests/"](mdc:WonderWhisperUITests/).
 
 ---
 > Source: [dkapo88/WonderWhisper-macOS](https://github.com/dkapo88/WonderWhisper-macOS) — distributed by [TomeVault](https://tomevault.io).
