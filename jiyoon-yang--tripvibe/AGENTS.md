@@ -1,5 +1,5 @@
 
-커서룰 재검토 요청
+스타일 일관성 재검토 요청
 
 ---
 > Source: [Jiyoon-Yang/tripvibe](https://github.com/Jiyoon-Yang/tripvibe) — distributed by [TomeVault](https://tomevault.io).
