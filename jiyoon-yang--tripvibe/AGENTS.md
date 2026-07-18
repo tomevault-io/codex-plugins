@@ -1,5 +1,5 @@
 
-테스트조건 재검토 요청
+프로젝트 전체테스트 npm run test:e2e 요청
 
 ---
 > Source: [Jiyoon-Yang/tripvibe](https://github.com/Jiyoon-Yang/tripvibe) — distributed by [TomeVault](https://tomevault.io).
