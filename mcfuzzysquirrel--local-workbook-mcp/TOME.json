@@ -1,0 +1,44 @@
+{
+  "name": "local-workbook-mcp",
+  "owner": "McFuzzySquirrel",
+  "repo": "local-workbook-mcp",
+  "description": "Local Model Context Protocol (MCP) server and sample client for working with on-disk Excel workbooks. The server exposes worksheet metadata, table previews, and search capabilities via MCP tools and resources so that AI agents can reason over spreadsheet data",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/McFuzzySquirrel/local-workbook-mcp",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-18T08:34:17Z"
+}
