@@ -1,0 +1,44 @@
+{
+  "name": "live-photo-box",
+  "owner": "LengxiQwQ",
+  "repo": "live-photo-box",
+  "description": "Live Photo Box\uff08\u5b9e\u51b5\u7167\u7247\u5de5\u5177\u7bb1\uff09Focused on resolving cross-device live photo display incompatibility, with conversion, merge & splitting, corruption repair, cover image replacement, and multi-protocol support. | \u4e13\u6ce8\u4e8e\u89e3\u51b3\u5b9e\u51b5\u7167\u7247\u5728\u591a\u8bbe\u5907\u663e\u793a\u95ee\u9898\uff0c\u652f\u6301\u5b9e\u51b5\u7167\u7247\u8f6c\u6362\uff0c\u6279\u91cf\u5408\u6210\u4e0e\u62c6\u89e3\uff0c\u4fee\u590d\u5f02\u5e38\uff0c\u66f4\u6362\u5c01\u9762\u4e3b\u56fe\uff0c\u517c\u5bb9\u591a\u79cd\u534f\u8bae",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/LengxiQwQ/live-photo-box",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-19T02:31:31Z"
+}
