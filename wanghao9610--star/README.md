@@ -7,13 +7,13 @@ STAR: Systematic Toolchain for AI Research (Harness, WIP)
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [wanghao9610/STAR](https://github.com/wanghao9610/STAR).
+Original source: `CLAUDE.md` in [wanghao9610/STAR](https://github.com/wanghao9610/STAR).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
