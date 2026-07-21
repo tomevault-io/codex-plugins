@@ -4,7 +4,7 @@
   "repo": "evenfire",
   "description": "Evenfire is an intelligence layer platform for running LLM agents that take real actions, on your infrastructure",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": ".cursor/rules/*.mdc",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/evenfire-ai/evenfire",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-21T18:49:15Z"
+  "distributed_at": "2026-07-21T18:49:48Z"
 }
