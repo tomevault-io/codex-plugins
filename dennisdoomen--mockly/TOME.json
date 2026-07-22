@@ -4,7 +4,7 @@
   "repo": "mockly",
   "description": "",
   "type": "config",
-  "source_format": "",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/dennisdoomen/mockly",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-06-18T02:41:12Z"
+  "distributed_at": "2026-07-22T21:21:23Z"
 }
