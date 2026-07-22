@@ -7,13 +7,13 @@ My DevOps Day DC 2025 demo
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [JonZeolla/devopsdaysdc25](https://github.com/JonZeolla/devopsdaysdc25).
+Original source: `.cursor/rules/*.mdc` in [JonZeolla/devopsdaysdc25](https://github.com/JonZeolla/devopsdaysdc25).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
