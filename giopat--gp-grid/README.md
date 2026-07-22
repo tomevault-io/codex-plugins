@@ -1,0 +1,28 @@
+# gp-grid
+
+> Tome by [GioPat](https://github.com/GioPat/gp-grid), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [GioPat/gp-grid](https://github.com/GioPat/gp-grid).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+## Bundled Skills (1)
+
+- [gp-grid](https://github.com/GioPat/gp-grid/tree/main/.claude/skills/gp-grid-integration/SKILL.md)
+
+From [GioPat/gp-grid](https://github.com/GioPat/gp-grid) — a repo with 42+ stars on GitHub.
+
+---
+
+Explore more instruction files on [TomeVault](https://tomevault.io), the platform that grades AI instruction files and catches silent drift across every major tool.
+
+<!-- genome:t-e-s -->
