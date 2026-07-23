@@ -1,0 +1,34 @@
+# AI instruction files for Clawith
+
+> Sourced from [dataelement/Clawith](https://github.com/dataelement/Clawith), graded against the public Tome Standard and kept consistent across every major platform by [TomeVault](https://tomevault.io)
+
+OpenClaw for Teams
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [dataelement/Clawith](https://github.com/dataelement/Clawith).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+## Bundled Skills (1)
+
+- [Clawith](https://github.com/dataelement/Clawith/tree/main/backend/agent_template/skills/mcp-installer/SKILL.md)
+
+From [dataelement/Clawith](https://github.com/dataelement/Clawith) — a repo with 4092+ stars on GitHub.
+
+---
+
+Install this config instantly:
+```
+npx tomevault install dataelement/Clawith
+```
+Source: [github.com/dataelement/Clawith](https://github.com/dataelement/Clawith).
+
+<!-- genome:a-i-s -->
