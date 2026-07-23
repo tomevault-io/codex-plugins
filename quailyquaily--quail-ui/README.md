@@ -1,0 +1,29 @@
+# quail-ui
+
+> Source: [quailyquaily/quail-ui](https://github.com/quailyquaily/quail-ui). Graded, signed and kept in sync across platforms by [TomeVault](https://tomevault.io)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [quailyquaily/quail-ui](https://github.com/quailyquaily/quail-ui).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+## Bundled Skills (2)
+
+- [quaily_ui_skill](https://github.com/quailyquaily/quail-ui/tree/main/quaily_ui_skill)
+- [quail-ui](https://github.com/quailyquaily/quail-ui/tree/main/quaily_ui_skill/SKILL.md)
+
+From [quailyquaily/quail-ui](https://github.com/quailyquaily/quail-ui) — a repo with 49+ stars on GitHub.
+
+---
+
+Explore more instruction files on [TomeVault](https://tomevault.io), the platform that grades AI instruction files and catches silent drift across every major tool.
+
+<!-- genome:d-e-s -->
