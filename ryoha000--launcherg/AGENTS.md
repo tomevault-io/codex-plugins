@@ -1,23 +1,19 @@
-# Router/Tab アーキテクチャ ルール（Svelte + svelte5-router）
+## プロジェクト概要
 
-- 単一ソース: ルート定義は `ROUTE_REGISTRY`（[src/router/const.ts](mdc:src/router/const.ts)）で一元管理。型は `Descriptor`（[src/router/registry.ts](mdc:src/router/registry.ts)）。`kind` は string とし、`Tab.type` は `kind` と一致させる。
+Launchergは、Tauriベースのデスクトップアプリケーションで、ゲームの管理と起動を行うランチャーです。
 
-- pathTemplate 規約: 宣言は `/:param(regex)` 形式で記述（例: `/works/:id(\\d+)`）。ルータ登録時のみ `buildRoutes`（[src/router/registry.ts](mdc:src/router/registry.ts)）が `(?<param>regex)` に変換して渡す。named group を直書きしない。
+## 通信プロトコル
 
-- 抽出/生成ヘルパ: 解析/生成は `schema.ts`（[src/store/tabs/schema.ts](mdc:src/store/tabs/schema.ts)）を必ず利用。
-  - `pathParamExtractor(name)` / `queryParamExtractor(name, editor?)`
-  - `queryParamExtractor` は extractor 側で `decodeURIComponent` 済み。editor は表示用の加工のみを行う（decode を重ねない）。
-  - ルートからタブ動作判定は `getTabActionFromLocation`、URL 生成は `buildPath` を使用。
+- 拡張機能 <-> native-messaging-host の通信する内容は ProtoBuf で定義されたものを使い、tauri 内の frontend(TypeScript) <-> backend(Rust) はJSONでやり取りする。
 
+## CLIで実行するコマンド
 
-- UI の責務: `src/components/Tab` は `ROUTE_REGISTRY` と `buildPath` を経由して遷移し、`tab.type` のハードコード分岐を持たない。
+CLIで完結するコマンドのみを実行すること
+アプリケーションの起動（`npm run dev`、`npm run tauri dev`など）は実行しないこと
 
-- ルート追加の指針:
-  - `ROUTE_REGISTRY` に `kind`/`pathTemplate`/`component`/`icon` を追加。
-  - keyed ルートのタイトルが必要なら `queryParamExtractor(name, editor)` を指定して表示名を生成。
-
- 
+### データベース
+- SQLiteを使用、マイグレーションは`src-tauri/migrations/`に配置
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/ryoha000) — claim your Tome and manage your conversions.
-<!-- tomevault:4.0:agents_md:2026-04-09 -->
+> Source: [ryoha000/launcherg](https://github.com/ryoha000/launcherg) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-07-23 -->
