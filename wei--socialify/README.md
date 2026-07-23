@@ -1,0 +1,32 @@
+# socialify
+
+> Tome by [wei](https://github.com/wei/socialify), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [wei/socialify](https://github.com/wei/socialify).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+## Bundled Skills (5)
+
+- [add-icon](https://github.com/wei/socialify/tree/main/.github/skills/add-icon)
+- [frontend-design](https://github.com/wei/socialify/tree/main/.github/skills/frontend-design)
+- [socialify](https://github.com/wei/socialify/tree/main/.github/skills/add-icon/SKILL.md)
+- [socialify](https://github.com/wei/socialify/tree/main/.github/skills/frontend-design/SKILL.md)
+- [socialify](https://github.com/wei/socialify/tree/main/.github/skills/upgrade-simple-icons/SKILL.md)
+
+From [wei/socialify](https://github.com/wei/socialify) — a repo with 2213+ stars on GitHub.
+
+---
+
+Explore more instruction files on [TomeVault](https://tomevault.io), the platform that grades AI instruction files and catches silent drift across every major tool.
+
+<!-- genome:t-e-s -->
