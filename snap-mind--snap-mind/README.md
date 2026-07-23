@@ -1,23 +1,27 @@
 # snap-mind
 
-> Source: [Snap-Mind/snap-mind](https://github.com/Snap-Mind/snap-mind) — distributed by [TomeVault](https://tomevault.io)
+> Source: [Snap-Mind/snap-mind](https://github.com/Snap-Mind/snap-mind). Graded, signed and kept in sync across platforms by [TomeVault](https://tomevault.io)
 
 A cross-platform desktop AI assistant that lets you translate, rewrite, summarize, and brainstorm with just a hotkey.
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [Snap-Mind/snap-mind](https://github.com/Snap-Mind/snap-mind).
+Original source: `CLAUDE.md` in [Snap-Mind/snap-mind](https://github.com/Snap-Mind/snap-mind).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [Snap-Mind/snap-mind](https://github.com/Snap-Mind/snap-mind) — a repo with 41+ stars on GitHub.
+## Bundled Skills (1)
+
+- [snap-mind](https://github.com/Snap-Mind/snap-mind/tree/main/.cursor/skills/icon-usage/SKILL.md)
+
+From [Snap-Mind/snap-mind](https://github.com/Snap-Mind/snap-mind) — a repo with 43+ stars on GitHub.
 
 ---
 
