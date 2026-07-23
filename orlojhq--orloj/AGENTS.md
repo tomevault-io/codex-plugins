@@ -1,24 +1,22 @@
+# Orloj Claude Instructions
 
-# OpenAPI and API surface
+These instructions are for Claude Code and Claude-based agents working in this repository. Also read [.agents/rules.md](.agents/rules.md) before making changes.
 
-When you change any of the following, update **[openapi/](openapi/)** so paths and schemas stay accurate, then run the same check as CI:
+## Critical Repository Rules
 
-`npx --yes @redocly/cli@1.28.5 lint openapi/openapi.yaml`
+- CRD-backed resource schema changes require `make generate-crds` and committed updates under `config/crd/bases/`.
+- Helm embeds CRDs in `charts/orloj/templates/operator-crds.yaml`; keep that copy in sync when CRD fields change.
+- API-visible resource, route, request, or response changes require OpenAPI updates under `openapi/` and `npx --yes @redocly/cli@1.28.5 lint openapi/openapi.yaml`.
+- User/operator-visible changes require a `CHANGELOG.md` entry under `## [Unreleased]`, unless an existing entry already covers the change.
+- Run relevant Go tests, and prefer `go test ./... -count=1 -timeout 120s` before handing off broad changes.
 
-**Usually requires OpenAPI updates**
+## Implementation Notes
 
-- **`api/`** — new or changed routes, status codes, query params, or JSON bodies on the control-plane API.
-- **Resource JSON** shipped over the API — Go types in **`resources/`** (and related handlers) when they change serialized shape fields users or `orlojctl apply` send/receive.
-- **`orlojctl`** — new subcommands or flags that call **new or changed** HTTP endpoints or bodies (extend the spec to match what the server actually does).
-
-**Often does not require OpenAPI updates**
-
-- **Offline-only CLI** (e.g. manifest parse/validate with no new HTTP contract).
-- Internal refactors with identical wire format.
-- Docs-only changes outside the spec.
-
-When unsure, compare **`api/server.go`** route registration and handler payloads to **`openapi/openapi.yaml`** (and split schemas under **`openapi/schemas/`**). Regenerate the bundled root doc when your workflow uses **`openapi/build_openapi.py`**.
+- Follow existing Orloj package conventions.
+- Keep changes scoped to the task.
+- Commit generated outputs with their source changes.
+- When unsure whether a schema or generated artifact is affected, inspect the diff after running the generator or linter instead of guessing.
 
 ---
 > Source: [OrlojHQ/orloj](https://github.com/OrlojHQ/orloj) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-04-22 -->
+<!-- tomevault:4.0:agents_md:2026-07-23 -->
