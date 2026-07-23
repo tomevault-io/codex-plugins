@@ -3,8 +3,8 @@
   "owner": "tc-mb",
   "repo": "llama.cpp-omni",
   "description": "Omni inference in C/C++",
-  "type": "config",
-  "source_format": "copilot-instructions.md",
+  "type": "tome",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -37,8 +37,15 @@
       "platform": "Windsurf"
     }
   ],
-  "skills": [],
+  "skills": [
+    {
+      "name": "llama.cpp-omni",
+      "path": "tools/ui/src/lib/components/app/SKILL.md",
+      "github_url": "https://github.com/tc-mb/llama.cpp-omni/tree/main/tools/ui/src/lib/components/app/SKILL.md",
+      "description": ""
+    }
+  ],
   "source_url": "https://github.com/tc-mb/llama.cpp-omni",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-22T11:50:09Z"
+  "distributed_at": "2026-07-23T08:03:19Z"
 }
