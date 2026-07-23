@@ -1,0 +1,51 @@
+{
+  "name": "design.md",
+  "owner": "sunil-dsb",
+  "repo": "design.md",
+  "description": "Generate DESIGN.md, Tailwind themes, tokens, and prompts from any website.",
+  "type": "tome",
+  "source_format": "CLAUDE.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "design.md",
+      "path": "SKILL.md",
+      "github_url": "https://github.com/sunil-dsb/design.md/tree/main/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/sunil-dsb/design.md",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-23T23:40:53Z"
+}
