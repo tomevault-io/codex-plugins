@@ -1,23 +1,27 @@
 # AI instruction files for cesium-mcp
 
-> Sourced from [gaopengbin/cesium-mcp](https://github.com/gaopengbin/cesium-mcp) and converted for every major platform by [TomeVault](https://tomevault.io)
+> Sourced from [gaopengbin/cesium-mcp](https://github.com/gaopengbin/cesium-mcp), graded against the public Tome Standard and kept consistent across every major platform by [TomeVault](https://tomevault.io)
 
 AI-powered CesiumJS 3D globe control  49 tools for camera, entities, layers, animation & spatial analysis via Model Context Protocol (MCP). Natural language to 3D GIS.
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [gaopengbin/cesium-mcp](https://github.com/gaopengbin/cesium-mcp).
+Original source: `CLAUDE.md` in [gaopengbin/cesium-mcp](https://github.com/gaopengbin/cesium-mcp).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [gaopengbin/cesium-mcp](https://github.com/gaopengbin/cesium-mcp) — a repo with 85+ stars on GitHub.
+## Bundled Skills (1)
+
+- [cesium-mcp](https://github.com/gaopengbin/cesium-mcp/tree/main/skills/cesium-quickstart/skill.md)
+
+From [gaopengbin/cesium-mcp](https://github.com/gaopengbin/cesium-mcp) — a repo with 121+ stars on GitHub.
 
 ---
 
