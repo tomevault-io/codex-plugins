@@ -1,30 +1,56 @@
-# Testing Patterns for FastWorkflow
+# CLAUDE.md
 
-- Don't use Mock fixtures. All our tests are integration tests
-- Do not remove pytest tests without explicit user approval
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## MCP Integration Testing
+## Project Overview
 
-### Test Structure
-- **./tests** - Folder with all the tests
-- **[tests/conftest.py](mdc:tests/conftest.py)** - Pytest configuration and shared fixtures
-- **[tests/README.md](mdc:tests/README.md)** - Testing documentation and usage guide
+`fastWorkflow` is a Python framework for building NLP-driven workflows and AI agents with deterministic or LLM-powered business logic. It enables "AI-enabling" existing Python applications by wrapping their classes and methods with an intent-detection and parameter-extraction pipeline built on DSPy, scikit-learn, and Pydantic.
 
-### Testing Best Practices
+## Testing Philosophy
 
-#### Integration Testing Philosophy
-```python
-# ✅ DO: Use real test workflows
-workflow_path = os.path.join("tests", "example_workflow") 
-workflow_path = os.path.join("tests", "hello_world_workflow") 
+(from `.cursor/rules/testing_rules.mdc`):
+- Don't use Mock fixtures — all tests are integration tests against real components
+- Use the real test workflows in `tests/example_workflow/` and `tests/hello_world_workflow/`
+- Do NOT remove pytest tests without explicit user approval
 
-# ✅ DO: Test end-to-end functionality
-result = mcp_server.call_tool("get_user_details", {"user_id": "sara_doe_496"})
+## fastworkflow CLI
 
-# ❌ DON'T: Mock FastWorkflow components
-# ❌ DON'T: Use fake data when real data is available
+Run `fastworkflow --help` for the full command list (`examples`, `train`, `run`, `build`, `refine`, `run_fastapi_mcp`). Non-obvious behavior:
+- `run` defaults to agent mode; `--assistant` runs deterministic mode.
+- Prefix a command with `/` at the interactive prompt to force deterministic (non-agentic) execution.
+
+## Architecture: Three Phases
+
 ```
+Build-Time → Train-Time → Run-Time
+```
+
+**Build-time** (`fastworkflow/build/`): AST-introspects your Python application and generates `_commands/*.py` files plus `context_inheritance_model.json`.
+
+**Train-time** (`fastworkflow/train/`): Generates synthetic utterances (via LLM + HuggingFace `datasets`) and trains intent-detection models (DistilBERT/BERT via scikit-learn). Outputs go to `___command_info/` inside the workflow directory.
+
+**Run-time**: A three-stage pipeline for every user turn:
+1. **Intent Detection** – sklearn classifier identifies the target command
+2. **Parameter Extraction** – DSPy + Pydantic validates and extracts inputs
+3. **Command Execution** – runs your business logic and generates a response
+
+**Topology B** (current): `WorkflowExecutionContext` is synchronous and transport-free. FastAPI embeds it per-request by calling `process_message` directly. `ask_user` suspends trajectory via `CommandCancelledError` and resumes on next message. `ChatSession` adds optional queues for the CLI `keep_alive` loop.
+
+## Environment Variables
+
+Two env files per workflow (see `fastworkflow/examples/fastworkflow.env` for a template):
+
+- `fastworkflow.env` — model strings (`LLM_AGENT`, `LLM_PARAM_EXTRACTION`, etc.), logging, intent model IDs
+- `fastworkflow.passwords.env` — API keys (`LITELLM_API_KEY_AGENT`, etc.)
+
+Key models (all default to `mistral/mistral-small-latest`): `LLM_SYNDATA_GEN`, `LLM_PARAM_EXTRACTION`, `LLM_RESPONSE_GEN`, `LLM_PLANNER`, `LLM_AGENT`, `LLM_CONVERSATION_STORE`.
+
+LiteLLM Proxy: prefix model names with `litellm_proxy/` and set `LITELLM_PROXY_API_BASE`.
+
+## Issue Tracking
+
+Use **`bd` (beads)** for all task tracking — not markdown TODOs. See `AGENTS.md` for full `bd` command reference.
 
 ---
 > Source: [radiantlogicinc/fastworkflow](https://github.com/radiantlogicinc/fastworkflow) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-06-02 -->
+<!-- tomevault:4.0:agents_md:2026-07-23 -->
