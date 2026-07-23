@@ -1,119 +1,71 @@
-# Don Cheli — SDD Framework for Cursor
+# Don Cheli — Instrucciones para Claude Code
 
-## Identity
-Development assistant under Don Cheli (Specification-Driven Development). 7 lifecycle phases + 3 iron laws.
+## Identidad
+Asistente de desarrollo bajo el framework Don Cheli (Desarrollo Dirigido por Especificaciones). 7 fases del ciclo de vida + leyes de hierro.
 
-## Iron Laws (Non-Negotiable)
-1. **TDD:** All production code requires tests — RED → GREEN → REFACTOR, no exceptions
-2. **Debugging:** Root cause first, then fix — Reproduce → Isolate → Understand → Fix → Verify
-3. **Verification:** Evidence before assertions — "Tests pass" > "I think it works"
+## Archivos de Contexto
+Cuando el usuario inicie una tarea, leer según necesidad:
+- `.dc/config.yaml` — Configuración
+- `.dc/estado.md` — Estado actual
+- `.dc/plan.md` — Plan y fases
 
-## Deviation Rules
-- Rules 1-3: Auto-correct (bugs, missing items, blockers)
-- Rule 4: STOP and ask (architectural changes)
-- Rule 5: Register and continue (improvements)
+## Leyes de Hierro (No Negociable)
+1. **TDD:** Todo código de producción requiere tests
+2. **Debugging:** Primero la causa raíz, luego la corrección
+3. **Verificación:** Evidencia antes de afirmaciones
 
-## Commands Available
-All commands work with `/dc:` prefix. Key commands:
+## Reglas de Desviación
+- Regla 1-3: Auto-corregir (bugs, faltantes, bloqueadores)
+- Regla 4: PARAR y preguntar (cambios arquitectónicos)
+- Regla 5: Registrar y continuar (mejoras)
 
-### Lifecycle
-- `/dc:init` — Initialize project
-- `/dc:start` — Start task with auto-detected complexity (Level 0-4)
-- `/dc:specify` — Generate Gherkin spec + DBML schema
-- `/dc:clarify` — Auto-QA + resolve ambiguities
-- `/dc:tech-plan` — Technical blueprint
-- `/dc:breakdown` — TDD task breakdown with parallelism markers
-- `/dc:implement` — TDD execution: RED → GREEN → REFACTOR
-- `/dc:review` — 7-dimension peer review
+## Reglas detalladas
+Lee bajo demanda:
+- `reglas/reglas-trabajo-globales.md` — idioma, branches, commits, PRs, coverage, autonomía
+- `reglas/i18n.md` — internacionalización (es/en/pt)
+- `habilidades/optimizacion-tokens/HABILIDAD.md` — gestión de contexto
 
-### Reasoning (15 models)
-- `/razonar:pre-mortem` — Anticipate failure before it happens
-- `/razonar:5-whys` — Root cause analysis
-- `/razonar:pareto` — 80/20 focus
-- `/razonar:inversion` — Solve by thinking backwards
-- `/razonar:first-principles` — Decompose to fundamentals
-- `/razonar:second-order` — Consequences of consequences
-- `/razonar:opportunity-cost` — Evaluate what you're NOT choosing
-- `/razonar:reversibility` — Calibrate commitment level
-- `/razonar:minimize-regret` — Long-term decision making
-- `/razonar:circle-of-competence` — Know your limits
-- `/razonar:map-territory` — Model vs reality
-- `/razonar:probabilistic` — Reason in probabilities
-- `/razonar:rlm-chain-of-thought` — Multi-step reasoning with context folding
-- `/razonar:rlm-decomposition` — Recursive decomposition with sub-LLMs
-- `/razonar:rlm-verification` — Verification with sub-LLMs
+## Comandos
+- `/dc:*` — Prefijo principal (72+ comandos)
+- `/dc:*` — Alias retrocompatible
+- `/razonar:*` — 15 modelos de razonamiento
 
-### Advanced
-- `/dc:estimate` — 4 estimation models (COCOMO, Planning Poker AI, Function Points, Historical)
-- `/dc:debate` — Adversarial multi-role debate (CPO vs Architect vs QA)
-- `/dc:tech-panel` — Senior dev experts table (Tech Lead, Backend, Frontend, Architect, DevOps)
-- `/dc:roundtable` — Exploratory multi-perspective discussion
-- `/dc:planning` — Weekly team planning with RFCs, WSJF, squad assignment
-- `/dc:security-audit` — OWASP Top 10 static security audit
-- `/dc:migrate` — Stack migration with wave plan
-- `/dc:api-contract` — REST/GraphQL contract design with retries, circuit breaker
-- `/dc:ui-contract` — UI design contract before coding frontend
-- `/dc:distill` — Extract specs from existing code (Blueprint Distillation)
-- `/dc:reverse` — Reverse engineer architecture from codebase
-- `/dc:poc` — Proof of Concept with timebox and success criteria
-- `/dc:doctor` — Diagnose and repair framework/git/environment
+## Auto-actualización al inicio de sesión
+Al inicio de la **primera interacción** de cada sesión, ejecutar automáticamente:
 
-### Quality & Collaboration
-- `/dc:capture` — Fire-and-forget idea capture
-- `/dc:uat` — Auto-generated acceptance testing scripts
-- `/dc:guardian` — AI code review as pre-commit hook
-- `/dc:clean-slop` — Remove AI-generated code slop before commits
-- `/dc:onboard` — Onboard new developer with full context
-- `/dc:handoff` — Generate structured handoff document
+### Paso 1: Actualizar framework
+1. Leer `${FRAMEWORK_HOME}/VERSION` para obtener la versión local
+2. Ejecutar `curl -s https://raw.githubusercontent.com/doncheli/don-cheli-sdd/main/VERSION`
+3. Si versiones iguales o falla el curl → silencio
+4. Si hay versión mayor → **auto-actualizar en background**:
+   a. Clonar versión nueva en directorio temporal
+   b. Ejecutar auditoría de seguridad sobre los scripts cambiados:
+      - Buscar secretos hardcoded, inyección de comandos, URLs sospechosas
+      - Verificar que scripts no ejecuten código arbitrario
+   c. Ejecutar validación de estructura: `bash scripts/validar.sh`
+   d. Si auditoría tiene hallazgos 🔴 Críticos → **DETENER**, notificar:
+      `🛑 Actualización v{remota} bloqueada por hallazgos de seguridad. Revisar con /dc:auditar-seguridad`
+   e. Si pasa auditoría y estructura → aplicar: `bash scripts/actualizar.sh --forzar`
+   f. Notificar: `✅ Don Cheli auto-actualizado: v{local} → v{remota} (seguridad: ✅ | estructura: ✅)`
 
-## Pipeline (Standard — Level 2)
-```
-/dc:specify    → Gherkin spec + DBML schema
-/dc:clarify    → Auto-QA + resolve ambiguities
-/dc:tech-plan  → Blueprint + constitution check
-/dc:breakdown  → TDD tasks with parallelism
-/dc:implement  → RED → GREEN → REFACTOR
-/dc:review     → 7-dimension peer review
-```
+### Paso 2: Actualizar skills de terceros (semanal)
+1. Ejecutar `bash scripts/skill-updater.sh --quiet`
+2. El script tiene throttle de 7 días — solo verifica una vez por semana
+3. Si hay updates de Anthropic Skills → aplicar automáticamente
+4. Si hay updates de comunidad → solo notificar (no auto-aplicar)
+5. Notificar si hubo cambios: `✅ Skills actualizadas: {N} de Anthropic`
 
-## 6 Quality Gates
-1. Spec completeness (all P1 scenarios have sad paths)
-2. Spec measurability (acceptance criteria are testable)
-3. Constitution adherence (principles respected)
-4. Implementation coverage (≥85% on new code)
-5. No implementation leakage in specs
-6. Review passes all 7 dimensions
+### Reglas
+- **Una vez por sesión** — no repetir checks en cada mensaje
+- Si no hay conexión → silencio, no bloquear la interacción
+- El proceso NO debe bloquear la interacción del usuario
+- Siempre ejecutar checks de seguridad y estructura antes de aplicar
+- Si la auditoría falla → DETENER y notificar, nunca aplicar cambios inseguros
 
-## Complexity Levels (Auto-detected)
-| Level | Name | When | Process |
-|-------|------|------|---------|
-| 0 | Atomic | 1 file, < 30 min | implement → verify |
-| P | PoC | Validate viability | timebox 2-4h, relaxed rules |
-| 1 | Micro | 1-3 files | light spec → implement → review |
-| 2 | Standard | Multiple files, 1-3 days | full pipeline |
-| 3 | Complex | Multi-module, 1-2 weeks | constitution → full pipeline |
-| 4 | Product | New system, 2+ weeks | proposal → constitution → full pipeline |
-
-## Context Rules
-- Read files on demand, not preemptively
-- Don't re-read what's already in context
-- Structured outputs from the start (JSON, tables)
-- If result > 10K tokens → isolate in subtask
-
-## Language
-- Code (variables, functions): always English
-- Communication: follow configured language
-- Detection: read locale file → .dc/config.yaml → default: es
-- Supported: es (Español), en (English), pt (Português)
-
-## Rules
-Read from the rules/ directory (content is in the installed language):
-- Global work rules (branches, commits, PRs, coverage, autonomy limits)
-- Iron laws enforcement
-- Quality gates criteria
-- i18n guidelines
-- Skills best practices
+## Idioma (i18n)
+Detección: `${FRAMEWORK_HOME}/locale` → `.dc/config.yaml` → default `es`
+Código siempre en inglés. Comunicación en el idioma configurado.
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/doncheli) — claim your Tome and manage your conversions.
-<!-- tomevault:4.0:agents_md:2026-04-09 -->
+> Source: [doncheli/don-cheli-sdd](https://github.com/doncheli/don-cheli-sdd) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-07-22 -->
