@@ -4,7 +4,7 @@
   "repo": "ai-website-cloner-template",
   "description": "",
   "type": "config",
-  "source_format": ".cursor/rules/*.mdc",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/fuxiao176-bot/ai-website-cloner-template",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-23T06:51:10Z"
+  "distributed_at": "2026-07-23T06:52:52Z"
 }
