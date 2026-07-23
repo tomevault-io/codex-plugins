@@ -1,72 +1,80 @@
-## SnapMind — Quick guide for AI coding agents
+# CLAUDE.md
 
-Goal: give a new AI agent enough concrete, actionable knowledge to be immediately productive in this repository.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-High level architecture (what to read first)
+## What this is
 
-- Electron main process (native/OS integration): `main.ts` — single-instance lock, global hotkeys, window creation, helper binary invocation.
-- Electron services (business logic & platform glue): `electron/AutoUpdateService.ts`, `electron/SettingsService.ts`, `electron/LogService.ts`, `electron/SystemPermissionService.ts`, `electron/TextSelectionService.ts`.
-- Preload bridge: `preload.ts` — the explicit list of renderer↔main IPC APIs the UI consumes (use this to find what renderer expects).
-- Renderer (UI): `src/` (React app). Entry: `src/main.tsx`, top-level `src/App.tsx`, pages under `src/pages/` (`ChatPopup`, `Settings`).
-- Native helper binaries: `helper/SelectedText.swift` (macOS) and `helper/SelectedTextWin/` (Windows). These are invoked by `main.ts` when running hotkeys.
+SnapMind is a cross-platform (macOS/Windows) Electron desktop app that lets users invoke LLMs on selected text via global hotkeys. Renderer is React 19 + Vite + HeroUI + Tailwind v4; main process is TypeScript ESM; native helpers in Swift (mac) and .NET (Windows) read the OS-level text selection. Node `>=24 <25`.
 
-Important developer workflows and commands
+## Commands
 
-- Start dev (recommended):
-  - `npm install` then `npm run dev:electron` — this concurrently builds main/preload, runs Vite dev server and then launches Electron (read `package.json` scripts for exact pipeline).
-- Build helper (macOS): `npm run build:helper` or `./build-macos-helper.sh` (script compiles `helper/SelectedText.swift` for arm64/x64).
-- Build production (macOS): `npm run build:prod` which runs `./build.sh` -> uses `electron-builder` and outputs artifacts under `build/` (see `build/` and `dist-electron/`).
-- Windows helper: `npm run build:win-helper` (dotnet build in `helper/SelectedTextWin`).
-- Release helper scripts: `scripts/release.sh` (tag version, bump package.json, create annotated git tag).
+```bash
+npm install
+npm run build:helper        # mac: compiles helper/SelectedText.swift → helper/selectedtext
+npm run build:win-helper    # Windows equivalent (dotnet build in helper/SelectedTextWin)
+npm run dev:electron        # concurrently: vite main build (watch) + tsc preload (watch) + vite renderer + electron .
+npm run build               # build:main + build:preload + build:render (artifacts under dist-electron/ and dist/)
+npm run build:prod          # macOS production build via ./build.sh (electron-builder)
+npm run build:win-prod      # Windows production build via build.cmd
+npm run lint                # eslint .
+npm run format              # prettier --write
+npm test                    # vitest (watch). Use `npm run test:run` for one-shot, `test:coverage` for coverage.
+npx vitest run path/to/file.test.ts          # run a single test file
+npx vitest run -t "test name substring"      # run by test name
+```
 
-Key patterns & conventions (project-specific)
+Helper binaries must be built before `dev:electron` can exercise the hotkey path end-to-end. Vitest uses `jsdom` and the `@/` alias maps to `src/` (see `vitest.config.ts`).
 
-- ESM + TypeScript: project uses native ESM (package.json `type: "module"`) and multiple tsconfig targets (`tsconfig.main.json`, `tsconfig.preload.json`). Keep imports using file extensions when editing built files in `dist-electron`.
-- Settings are file-backed in the app userData directory: `electron/SettingsService.ts` ensures defaults by copying `settings.default.json` and `hotkeys.default.json` into userData. When changing config shapes, update defaults in `settings.default.json` too.
-- Secrets/API keys: stored via `SafeStorageService` and processed by `SettingsService.processApiKeys`. The code expects provider API keys to be encrypted when persisted. Use `SafeStorageService.encrypt`/`decrypt` helpers when testing.
-- Immutable updates for nested settings/hotkeys: `SettingsService.updateObjectByPath` returns a new object (no mutation). UI uses `ipcRenderer.invoke('settings:update-path', { path, value })` and similar for hotkeys.
+## Three TypeScript build targets
 
-Data & control flow examples (most common change paths)
+The project has three distinct TS configs because main, preload, and renderer have different module systems and globals. When changing tsconfigs or imports, pick the right one:
 
-- Hotkey flow (select text -> hotkey -> AI):
-  1. Global hotkey triggers in `main.ts` (registered by `registerHotkeys()`).
-  2. For non-zero hotkey IDs `main.ts` runs the helper binary (`helper/selectedtext` on mac), parses JSON stdout, then calls `textSelectionService.handleTextSelection(result.selectedText, prompt, 'hotkey')`.
-  3. `TextSelectionService` orchestrates showing the chat popup window and sending the selected text to renderer UI.
-     Tip: see `main.ts:executeHotkey(...)` for exact arguments and helper path resolution.
+- `tsconfig.main.json` → bundled by `vite.config.main.ts` into `dist-electron/main.js`. Source: `main.ts` + `electron/*.ts`.
+- `tsconfig.preload.json` → compiled by `tsc` into `dist-electron/preload.js`. Source: `preload.ts` only — this is the IPC contract.
+- `tsconfig.json` → renderer (`src/`), bundled by Vite (`vite.config.ts`) into `dist/`.
 
-- IPC surface (use `preload.ts` as authoritative list)
-  - sync/invoke handlers renderer expects: `hotkeys:get`, `hotkeys:update`, `hotkeys:update-path`, `settings:get`, `settings:update`, `settings:update-path`, `logs:get-path`, `logs:open-file`, `permission:check`, `system:open-accessibility`, `update:check`, `update:install`, `app:get-version`, etc.
-  - Example renderer call: `window.electronAPI.getHotkeys()` → calls `ipcRenderer.invoke('hotkeys:get')`.
+The project is native ESM (`"type": "module"`). Keep file extensions on relative imports in main/preload code.
 
-Logging and debugging
+## Architecture: hotkey → AI → UI
 
-- Centralized logging: `electron/LogService.ts` (wraps `electron-log`). Main logs are `main.log*` files (path from `LogService.getCurrentLogFile()`). In development console logging is enabled (`app.isPackaged` gating).
-- Debugging main process: use `npm run dev:electron` and open DevTools (main windows created with `devTools: isDev()`). For packaged behavior, inspect `dist-electron/main.js` and `build/` outputs.
+The control flow that touches the most code:
 
-Auto-update and packaging notes
+1. `main.ts:registerHotkeys()` registers global shortcuts from `hotkeys.json`.
+2. On trigger, `main.ts:executeHotkey()` spawns the platform helper binary (`helper/selectedtext` on mac, `SelectedTextWin.exe` on Windows), parses its JSON stdout for the user's current selection.
+3. `electron/TextSelectionService.ts` opens the chat popup window and forwards the text + the hotkey's prompt to the renderer via IPC.
+4. Renderer (`src/pages/ChatPopup/`) receives `chat-popup:init-message`, calls a provider through `src/services/AIService.ts` → `ProviderFactory`, streams the response back into the UI.
 
-- `electron/AutoUpdateService.ts` wires `electron-updater`. In development the updater reads `dev-app-update.yml` (the service sets `updateConfigPath` when `!app.isPackaged`).
-- Packaging config: `electron-builder.json` and `electron-builder-win.json` + `build.sh`/`build.cmd`. Output artifacts land in `build/` (mac: `.dmg` in `build/` seen in repo).
+When changing this path, `preload.ts` is the source of truth for the renderer↔main contract (`hotkeys:*`, `settings:*`, `chat-popup:*`, `update:*`, `permission:*`, `theme:*`, etc.). Update `preload.ts` and grep `window.electronAPI.<method>` in `src/` for callers.
 
-Where to make common changes
+## Architecture: provider plugin system
 
-- UI changes: `src/pages/*`, `src/components/*`, and `src/contexts/ServiceProvider.jsx` (wires services to React). Use Vite dev server to iterate.
-- Main/native work: `main.ts` and `electron/*.ts`. Use small, well-tested edits to preload API (`preload.ts`) to avoid breaking the renderer contract.
-- Helpers/native integration: `helper/SelectedText.swift` (mac), `helper/SelectedTextWin` (windows) — tests and local runs should use `npm run build:helper` then `npm run dev:electron`.
+All LLM providers go through `src/services/providers/`. The pattern is **compose, don't subclass**:
 
-Quick checklist for an AI making edits
+- `core/` — protocol primitives (`sseStreamParser`, `ndjsonStreamParser`, `urlResolvers`).
+- `adapters/<name>RequestBuilder.ts` — builds the HTTP request (URL, headers, body) for one provider.
+- `parsers/<name>ResponseParser.ts` — parses streaming chunks + model list responses.
+- `ProviderFactory.ts` — `adapterMap` merges a `RequestBuilder` + `ResponseParser` into a `ProviderAdapter`; `UnifiedProvider` wraps it as a `Provider`.
 
-1. If you change renderer↔main IPC, update `preload.ts` and search for usages in `src/`.
-2. If you change settings schema, update `settings.default.json` and `SettingsService.processApiKeys` behavior if fields holding secrets are added.
-3. If you touch hotkeys, run `npm run build:helper` and `npm run dev:electron` to validate end-to-end (helper → main → UI).
-4. Use `LogService` scoped loggers for main-side debugging: `logService.scope('myFeature').info(...)`.
+To add a provider: add a builder + parser, then a single entry in `adapterMap`. OpenAI-compatible providers (DeepSeek, Qwen) reuse `createOpenAIRequestBuilder` / `createOpenAIResponseParser` factories with custom URL derivation and model filters — see how DeepSeek/Qwen are wired in `ProviderFactory.ts`.
 
-Files worth opening first when onboarding
+## Settings and secrets
 
-- `main.ts`, `preload.ts`, `electron/SettingsService.ts`, `electron/TextSelectionService.ts`, `electron/AutoUpdateService.ts`, `src/pages/ChatPopup/ChatPopup.jsx`, `helper/SelectedText.swift`, `package.json`, `build.sh`.
+- `electron/SettingsService.ts` is file-backed in Electron's `userData` directory. On first launch it copies `settings.default.json` and `hotkeys.default.json` into userData. When you add a settings field, update `settings.default.json` so existing installs get the new default on next load.
+- `SettingsService.updateObjectByPath` is **immutable** — it returns a new object. Renderer should use `electronAPI.updateSetting(path, value)` (→ `settings:update-path`) rather than fetching, mutating, and writing back the whole blob.
+- API keys are encrypted at rest via `electron/SafeStorageService.ts` and processed by `SettingsService.processApiKeys`. If you add a new secret field, extend that handler so it gets encrypted on save and decrypted on read.
 
-If any of these notes are unclear or you'd like examples added (small code snippets showing how to add an IPC handler, or an end-to-end test plan for hotkeys), tell me which area to expand and I'll iterate.
+## Conventions worth knowing
+
+- **Icons must go through `src/components/Icon.tsx`.** Never import from `react-icons/*` directly in feature/page components. To add an icon: add the import, extend the `IconType` union (alphabetical), add the `case` in `renderIcon`. AI provider logos use `@lobehub/icons-static-svg`. See `.cursor/skills/icon-usage/SKILL.md`.
+- Centralized logging through `electron/LogService.ts` (wraps `electron-log`). Use scoped loggers in main: `logService.scope('myFeature').info(...)`. In renderer, use `src/services/LoggerService.ts`.
+- Conventional Branch naming is enforced (see README badge): `feature/...`, `fix/...`, `chore/...`, etc.
+- Auto-update: `electron/AutoUpdateService.ts` uses `electron-updater`. In dev (`!app.isPackaged`) it reads `dev-app-update.yml`.
+
+## Platform notes
+
+- **macOS**: app needs Accessibility permission (to read the selection) and Keychain access (for `safeStorage`-encrypted API keys). `electron/SystemPermissionService.ts` exposes the check + `system:open-accessibility` IPC.
+- **Windows**: the app must be run as Administrator for global hotkeys + the helper to work reliably (`is-elevated` is used to detect this).
 
 ---
 > Source: [Snap-Mind/snap-mind](https://github.com/Snap-Mind/snap-mind) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-05-05 -->
+<!-- tomevault:4.0:agents_md:2026-07-23 -->
