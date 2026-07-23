@@ -1,0 +1,416 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Project Overview
+
+This is the documentation website for "空荧酒馆" (Kongying Tavern), an open-source Genshin Impact map application. The site is built with VitePress and supports multiple languages (Chinese, English, Japanese).
+
+## Development Commands
+
+Essential commands for development:
+
+```bash
+# Setup (requires Node.js v18.0.0+)
+corepack enable
+pnpm i
+
+# Development
+pnpm run dev              # Start dev server
+pnpm run build            # Build for production
+pnpm run serve            # Preview production build
+
+# Data and Content
+pnpm run build-data       # Refresh all data (blog + member lists)
+pnpm run build-member     # Refresh member list data only
+pnpm run build-emoji      # Build emoji data
+
+# Code Quality
+pnpm run lint             # Run ESLint + Chinese text linting
+pnpm run lint:eslint-fix  # Auto-fix ESLint issues
+pnpm run lint:zh-fix      # Auto-fix Chinese text issues
+pnpm run typecheck        # TypeScript type checking
+
+# Testing and Quality
+pnpm run changelog        # Generate conventional changelog
+pnpm run commit           # Interactive conventional commits
+
+# Specialized builds
+pnpm run build-mpa        # Build as Multi-Page Application
+```
+
+## Import Path Configuration
+
+The project uses the following TypeScript path mapping configuration:
+
+```json
+{
+  "@/*": ["./.vitepress/theme/*"],
+  "#theme/*": ["./.vitepress/theme/*"],
+  "~/*": ["./src/*"],
+  "vite": ["./node_modules/vite"]
+}
+```
+
+**Important Import Rules:**
+
+- Use `@/` for theme-related imports (components, stores, utils in `.vitepress/theme/`)
+- Use `~/` for source content imports (components, services, types in `src/`)
+- Common mistakes to avoid:
+  - ❌ `import { useUserAuthStore } from '@/.vitepress/theme/stores/useUserAuth'`
+  - ✅ `import { useUserAuthStore } from '@/stores/useUserAuth'`
+  - ❌ `import { BlogDraft } from 'src/services/blogDraftDB'`
+  - ✅ `import { BlogDraft } from '~/services/blogDraftDB'`
+
+## Architecture
+
+### Core Structure
+
+- **`.vitepress/`** - VitePress configuration and theme customization
+  - `config.ts` - Main VitePress configuration
+  - `theme/` - Custom theme components and styles
+  - `locales/` - Internationalization configurations
+- **`src/`** - Content source files
+  - `zh/`, `en/`, `ja/` - Localized content directories
+  - `components/` - Vue components (forum, team, release pages)
+  - `public/` - Static assets (images, fonts, emojis)
+  - `_data/` - JSON data files
+
+### Key Features
+
+- **Multi-language support** with locale-specific routing
+- **Forum system** with Vue components for community interaction
+- **Custom emoji system** with categorized emoji collections
+- **Team and staff pages** with member data management
+- **VitePress-based documentation** with custom markdown extensions
+
+### Development Notes
+
+- Uses **pnpm** as package manager with workspace configuration
+- **UnoCSS** for utility-first styling
+- **TypeScript** throughout the codebase
+- **Vue 3** for interactive components
+- Custom markdown plugins for enhanced content formatting
+- Font optimization with Fontaine
+- Chinese text linting with `zhlint`
+
+### Content Management
+
+- Blog posts and member data are refreshed via build scripts
+- Emoji data is processed from `/src/public/emojis/` directory structure
+- Static assets organized by language in `/src/public/imgs/`
+- Translation management with Lunaria integration
+
+### Modern Forum Architecture (2024 Refactoring)
+
+The forum system underwent a major architectural refactoring from factory pattern to composition-based architecture:
+
+#### New Store Architecture
+
+- **Page-specific stores**: Each page has isolated state (`useForumHomeStore`, `useForumUserStore`)
+- **Core functional stores**: Modular stores by domain (`useForumSearchState`, `useForumViewState`, `useForumRouteState`)
+- **Composition over inheritance**: Replaced complex factory patterns with composables
+- **Performance optimization**: Intelligent caching, batch updates, debounced operations
+
+#### Service Layer
+
+- **`ForumBusinessLogic`** - Unified business logic service
+- **`SimpleEventManager`** - Event-driven state synchronization
+- **`SimpleCrossPageSync`** - Cross-page and cross-tab state sync via localStorage
+
+#### Key Patterns
+
+- Event-driven updates with deduplication (1000ms global, 500ms store-level)
+- Three synchronized data arrays per store: `data`, `userSubmittedTopic`, `pinnedTopicsData`
+- Hidden vs closed topic state management with different removal behaviors
+- Performance monitoring with `useForumPerformanceMonitor`
+
+## Authentication & Authorization Architecture
+
+The project implements a comprehensive authentication system with the following components:
+
+### Core Authentication Files
+
+- **`.vitepress/theme/stores/useUserAuth.ts`** - Main Pinia store for authentication state management
+- **`.vitepress/theme/hooks/useLogin.ts`** - Login flow management and OAuth integration
+- **`.vitepress/theme/utils/auth-helpers.ts`** - Unified authentication utility functions
+- **`.vitepress/theme/utils/auth-logger.ts`** - Centralized logging system for auth operations
+- **`.vitepress/theme/utils/auth-errors.ts`** - Standardized error handling for auth operations
+
+### Authentication Flow
+
+1. **OAuth Integration**: Gitee OAuth for primary authentication
+2. **SSO Support**: interknot.site single sign-on integration
+3. **Token Management**: Automatic token refresh with background timers
+4. **State Persistence**: LocalStorage-based authentication state persistence
+
+### Key Features
+
+- **Automatic Token Refresh**: Background refresh 1 second before expiration
+- **SSO Token Management**: Separate handling for multiple SSO platforms
+- **Error Recovery**: Intelligent retry logic with exponential backoff
+- **Debug Logging**: Comprehensive logging system with color-coded groups
+- **Vue Reactivity**: Proper integration with Vue 3 reactive system
+
+### Authentication Patterns
+
+- Use `authGuards.requireLogin()` for login-protected operations
+- Use `withAuth.execute()` for authenticated API calls
+- Use `useAuthHelper()` for accessing authentication utilities
+- Use `log.info(LogGroup.*, message)` for consistent logging
+
+## Forum Event System Architecture
+
+The forum implements a comprehensive event-driven architecture for real-time state synchronization across pages and browser tabs.
+
+### Core Event System Files
+
+- **`src/components/forum/events/ForumEventBus.ts`** - Central event bus using mitt library with typed event definitions
+- **`src/composables/useGlobalForumEvents.ts`** - Global cross-page synchronization using localStorage and storage events
+- **`src/composables/useForumEvents.ts`** - Local event listener setup and management
+- **`src/stores/forum/useForumHomeStore.ts`** - Main forum store with event-driven state updates
+
+### Event Flow Architecture
+
+#### 1. **Local Operations**
+
+```
+User Action → API Call → Success → Event Emission → Local Store Update → UI Update
+```
+
+#### 2. **Cross-Page Synchronization**
+
+```
+Page A: Event Emission → localStorage Write → Storage Event
+Page B: Storage Event → Event Re-emission → Store Update → UI Update
+```
+
+#### 3. **Cross-Tab Synchronization**
+
+```
+Tab 1: Topic Operation → localStorage Update
+Tab 2: Storage Event Listener → Synthetic Event → Store Update
+```
+
+### Event Types and Operations
+
+#### Topic Events
+
+- **`topic:created`** - New topic submission
+- **`topic:deleted`** - Topic deletion
+- **`topic:pinned`** - Pin/unpin operations
+- **`topic:hidden`** - Hide/unhide operations (state: 'progressing'/'open')
+- **`topic:closed`** - Close/reopen operations (state: 'closed'/'open')
+- **`topic:type-changed`** - Topic type modifications
+- **`topic:tags-updated`** - Tag modifications
+- **`topic:comment-toggled`** - Comment area enable/disable
+- **`topic:updated`** - General topic updates
+
+#### Comment Events
+
+- **`comment:created`** - New comment submission
+- **`comment:deleted`** - Comment deletion
+- **`comment:updated`** - Comment modifications
+
+### State Management Strategy
+
+#### Multi-Store Architecture
+
+Each page maintains independent stores to prevent state pollution:
+
+- **Home Page**: `useForumHomeStore` with `useForumData`
+- **User Page**: `useForumUserStore` with `useForumData`
+- **Topic Page**: Topic-specific state management
+
+#### Data Synchronization Points
+
+All stores maintain three data arrays that must stay synchronized:
+
+- **`data`** - Main topic list from API
+- **`userSubmittedTopic`** - User's recently submitted topics
+- **`pinnedTopicsData`** - Pinned topics list
+
+### Event Deduplication System
+
+#### Global Events (1000ms window)
+
+```typescript
+const recentEvents = new Set<string>();
+function isRecentEvent(key: string): boolean {
+  if (recentEvents.has(key)) return true;
+  recentEvents.add(key);
+  setTimeout(() => recentEvents.delete(key), 1000);
+  return false;
+}
+```
+
+#### Store Events (500ms window)
+
+```typescript
+const recentStoreEvents = new Set<string>();
+function isRecentStoreEvent(eventType: string, topicId: string): boolean {
+  const key = `${eventType}-${topicId}`;
+  if (recentStoreEvents.has(key)) return true;
+  recentStoreEvents.add(key);
+  setTimeout(() => recentStoreEvents.delete(key), 500);
+  return false;
+}
+```
+
+### Cross-Page Communication
+
+#### localStorage Event Keys
+
+- `forum:topic:deleted` - Topic deletion events
+- `forum:topic:closed` - Topic close/open events
+- `forum:topic:hidden` - Topic hide/unhide events
+- `forum:topic:pinned` - Pin state changes
+- `forum:topic:tags-updated` - Tag modifications
+- `forum:topic:type-changed` - Type changes
+- `forum:topic:comment-toggled` - Comment area toggles
+- `forum:topic:updated` - General updates
+
+#### Pending Events Processing
+
+On page mount, checks localStorage for pending cross-page events:
+
+```typescript
+function checkPendingEvents() {
+  eventKeys.forEach((key) => {
+    const storedValue = localStorage.getItem(key);
+    if (storedValue) {
+      handleStorageChanges({
+        key,
+        newValue: storedValue,
+        storageArea: localStorage,
+      });
+      localStorage.removeItem(key);
+    }
+  });
+}
+```
+
+### Topic State Management
+
+#### Hidden vs Closed Logic
+
+- **Hidden Topics**:
+  - Removed from active lists (userSubmittedTopic)
+  - Kept in main data with state='progressing'
+  - Available in "已结反馈" filter
+  - pinnedTopicsData state updated but not removed
+
+- **Closed Topics**:
+  - Completely removed from all lists
+  - Not available in any filter
+  - Removed from pinnedTopicsData
+
+#### Pin State Management
+
+- **Pin**: Add to pinnedTopicsData.unshift()
+- **Unpin**: Remove from pinnedTopicsData
+- All other operations sync pinnedTopicsData state
+
+### Event System Patterns
+
+#### Event Emission Pattern
+
+```typescript
+// In composables (e.g., useTopicManger.ts)
+if (result) {
+  targetTopic.state = newState;
+  forumEvents.topicClosed(targetTopic.id, isClosed);
+}
+```
+
+#### Event Listening Pattern
+
+```typescript
+// In stores (e.g., useForumHomeStore.ts)
+onTopicClosed: ({ topicId, closed }) => {
+  if (isRecentStoreEvent("closed", topicId)) return;
+  if (closed) {
+    removeTopic(topicId); // Removes from all lists including pinnedTopicsData
+  } else {
+    updateTopicVisibility(topicId, { closed });
+  }
+};
+```
+
+#### Global Event Registration Pattern
+
+```typescript
+// In useGlobalForumEvents.ts (singleton pattern)
+let globalEventListenersSetup = false;
+export function useGlobalForumEvents() {
+  if (globalEventListenersSetup) {
+    return { setupGlobalListeners: () => {}, cleanup: cleanupFunction };
+  }
+  // ... setup global listeners
+}
+```
+
+### Usage Guidelines
+
+#### For New Topic Operations
+
+1. Add event type to `ForumEventMap` interface
+2. Add helper function to `forumEvents` object
+3. Emit event after successful API call in operation composable
+4. Add global listener in `useGlobalForumEvents.ts` for localStorage sync
+5. Add store listener in relevant stores for local state update
+6. Add to `pendingEvents` check list for cross-page sync
+
+#### For Store Updates
+
+Always update all three data sources:
+
+```typescript
+function updateTopicState(id: string, updates: any) {
+  // Update main data
+  const topic = data.value?.find((t) => t.id === id);
+  if (topic) Object.assign(topic, updates);
+
+  // Update user submitted topics
+  const userTopic = userSubmittedTopic.value.find((t) => t.id === id);
+  if (userTopic) Object.assign(userTopic, updates);
+
+  // Update pinned topics data
+  const pinnedTopic = pinnedTopicsData.value?.find((t) => t.id === id);
+  if (pinnedTopic) Object.assign(pinnedTopic, updates);
+}
+```
+
+## Development Workflow
+
+### Pre-commit Requirements
+
+- Always run `pnpm run lint` before committing changes to ensure code quality and proper Chinese text formatting
+- Run `pnpm run typecheck` to catch TypeScript errors
+- Use `pnpm run commit` for conventional commit messages
+
+### Testing and Quality Assurance
+
+- **E2E Testing**: Lighthouse CI runs automatically on deployments for performance monitoring
+- **Code Quality**: ESLint with Antfu config + UnoCSS linting
+- **Chinese Text**: `zhlint` for proper Chinese typography and formatting
+- **Git Hooks**: Husky pre-commit hooks ensure lint-staged runs ESLint fixes
+
+### File Organization Principles
+
+- Keep TypeScript files under 200 lines (250 for static languages)
+- Maximum 8 files per directory level (create subdirectories if exceeded)
+- Avoid code smells: rigidity, redundancy, circular dependencies, fragility, obscurity
+- Follow composition over inheritance patterns
+
+### Architectural Guidelines
+
+- Use event-driven patterns for forum state updates
+- Implement proper error boundaries and loading states
+- Follow the established service layer patterns
+- Maintain separation of concerns between UI, business logic, and data layers
+- Use TypeScript strictly (avoid `any` unless absolutely necessary)
+
+---
+> Source: [kongying-tavern/docs](https://github.com/kongying-tavern/docs) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-07-22 -->
