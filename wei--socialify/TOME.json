@@ -1,0 +1,75 @@
+{
+  "name": "socialify",
+  "owner": "wei",
+  "repo": "socialify",
+  "description": "",
+  "type": "tome",
+  "source_format": "CLAUDE.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "add-icon",
+      "path": ".github/skills/add-icon",
+      "github_url": "https://github.com/wei/socialify/tree/main/.github/skills/add-icon",
+      "description": ""
+    },
+    {
+      "name": "frontend-design",
+      "path": ".github/skills/frontend-design",
+      "github_url": "https://github.com/wei/socialify/tree/main/.github/skills/frontend-design",
+      "description": ""
+    },
+    {
+      "name": "socialify",
+      "path": ".github/skills/add-icon/SKILL.md",
+      "github_url": "https://github.com/wei/socialify/tree/main/.github/skills/add-icon/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "socialify",
+      "path": ".github/skills/frontend-design/SKILL.md",
+      "github_url": "https://github.com/wei/socialify/tree/main/.github/skills/frontend-design/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "socialify",
+      "path": ".github/skills/upgrade-simple-icons/SKILL.md",
+      "github_url": "https://github.com/wei/socialify/tree/main/.github/skills/upgrade-simple-icons/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/wei/socialify",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-23T23:35:37Z"
+}
