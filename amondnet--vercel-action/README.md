@@ -1,0 +1,32 @@
+# vercel-action
+
+> Source: [amondnet/vercel-action](https://github.com/amondnet/vercel-action). Graded, signed and kept in sync across platforms by [TomeVault](https://tomevault.io)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [amondnet/vercel-action](https://github.com/amondnet/vercel-action).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+## Bundled Skills (1)
+
+- [vercel-action](https://github.com/amondnet/vercel-action/tree/main/skills/use-vercel-action/SKILL.md)
+
+From [amondnet/vercel-action](https://github.com/amondnet/vercel-action) — a repo with 761+ stars on GitHub.
+
+---
+
+Install this config instantly:
+```
+npx tomevault install amondnet/vercel-action
+```
+Source: [github.com/amondnet/vercel-action](https://github.com/amondnet/vercel-action).
+
+<!-- genome:d-i-s -->
