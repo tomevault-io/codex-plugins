@@ -1,0 +1,99 @@
+{
+  "name": "gc-da11yn.github.io",
+  "owner": "gc-da11yn",
+  "repo": "gc-da11yn.github.io",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "gc-da11yn.github.io",
+      "path": ".github/skills/web-scanning/SKILL.md",
+      "github_url": "https://github.com/gc-da11yn/gc-da11yn.github.io/tree/main/.github/skills/web-scanning/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "gc-da11yn.github.io",
+      "path": ".github/skills/github-scanning/SKILL.md",
+      "github_url": "https://github.com/gc-da11yn/gc-da11yn.github.io/tree/main/.github/skills/github-scanning/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "gc-da11yn.github.io",
+      "path": ".github/skills/document-scanning/SKILL.md",
+      "github_url": "https://github.com/gc-da11yn/gc-da11yn.github.io/tree/main/.github/skills/document-scanning/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "gc-da11yn.github.io",
+      "path": ".github/skills/report-generation/SKILL.md",
+      "github_url": "https://github.com/gc-da11yn/gc-da11yn.github.io/tree/main/.github/skills/report-generation/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "gc-da11yn.github.io",
+      "path": ".github/skills/accessibility-rules/SKILL.md",
+      "github_url": "https://github.com/gc-da11yn/gc-da11yn.github.io/tree/main/.github/skills/accessibility-rules/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "gc-da11yn.github.io",
+      "path": ".github/skills/web-severity-scoring/SKILL.md",
+      "github_url": "https://github.com/gc-da11yn/gc-da11yn.github.io/tree/main/.github/skills/web-severity-scoring/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "gc-da11yn.github.io",
+      "path": ".github/skills/framework-accessibility/SKILL.md",
+      "github_url": "https://github.com/gc-da11yn/gc-da11yn.github.io/tree/main/.github/skills/framework-accessibility/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "gc-da11yn.github.io",
+      "path": ".github/skills/github-analytics-scoring/SKILL.md",
+      "github_url": "https://github.com/gc-da11yn/gc-da11yn.github.io/tree/main/.github/skills/github-analytics-scoring/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "gc-da11yn.github.io",
+      "path": ".github/skills/github-workflow-standards/SKILL.md",
+      "github_url": "https://github.com/gc-da11yn/gc-da11yn.github.io/tree/main/.github/skills/github-workflow-standards/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/gc-da11yn/gc-da11yn.github.io",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-24T13:37:47Z"
+}
