@@ -1,0 +1,387 @@
+{
+  "name": "opencastle",
+  "owner": "monkilabs",
+  "repo": "opencastle",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "accessibility-standards",
+      "path": "src/orchestrator/skills/accessibility-standards",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/skills/accessibility-standards",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/plugins/nx/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/plugins/nx/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/plugins/jira/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/plugins/jira/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/plugins/expo/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/plugins/expo/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/plugins/astro/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/plugins/astro/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/plugins/teams/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/plugins/teams/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/plugins/slack/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/plugins/slack/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/plugins/figma/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/plugins/figma/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/plugins/vitest/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/plugins/vitest/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/plugins/convex/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/plugins/convex/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/plugins/trello/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/plugins/trello/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/plugins/vercel/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/plugins/vercel/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/plugins/stripe/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/plugins/stripe/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/plugins/notion/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/plugins/notion/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/plugins/sentry/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/plugins/sentry/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/plugins/nextjs/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/plugins/nextjs/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/plugins/prisma/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/plugins/prisma/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/plugins/strapi/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/plugins/strapi/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/plugins/sanity/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/plugins/sanity/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/plugins/netlify/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/plugins/netlify/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/plugins/cypress/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/plugins/cypress/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/plugins/coolify/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/plugins/coolify/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/plugins/drizzle/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/plugins/drizzle/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/plugins/supabase/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/plugins/supabase/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/plugins/turborepo/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/plugins/turborepo/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/skills/fast-review/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/skills/fast-review/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/plugins/playwright/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/plugins/playwright/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/skills/context-map/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/skills/context-map/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/plugins/cloudflare/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/plugins/cloudflare/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/skills/agent-hooks/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/skills/agent-hooks/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/plugins/contentful/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/plugins/contentful/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/skills/agent-memory/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/skills/agent-memory/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/skills/seo-patterns/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/skills/seo-patterns/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/skills/git-workflow/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/skills/git-workflow/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/skills/api-patterns/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/skills/api-patterns/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/skills/memory-merger/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/skills/memory-merger/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/skills/decomposition/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/skills/decomposition/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/skills/code-commenting/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/skills/code-commenting/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/skills/frontend-design/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/skills/frontend-design/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/plugins/chrome-devtools/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/plugins/chrome-devtools/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/skills/validation-gates/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/skills/validation-gates/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/skills/testing-workflow/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/skills/testing-workflow/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/skills/self-improvement/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/skills/self-improvement/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/skills/data-engineering/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/skills/data-engineering/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/skills/react-development/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/skills/react-development/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/skills/security-hardening/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/skills/security-hardening/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/skills/team-lead-reference/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/skills/team-lead-reference/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/skills/project-consistency/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/skills/project-consistency/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/skills/session-checkpoints/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/skills/session-checkpoints/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/skills/panel-majority-vote/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/skills/panel-majority-vote/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/skills/backbone-scaffolding/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/skills/backbone-scaffolding/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/skills/observability-logging/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/skills/observability-logging/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/skills/accessibility-standards/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/skills/accessibility-standards/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/skills/orchestration-protocols/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/skills/orchestration-protocols/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/skills/documentation-standards/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/skills/documentation-standards/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/skills/performance-optimization/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/skills/performance-optimization/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "opencastle",
+      "path": "src/orchestrator/skills/deployment-infrastructure/SKILL.md",
+      "github_url": "https://github.com/monkilabs/opencastle/tree/main/src/orchestrator/skills/deployment-infrastructure/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/monkilabs/opencastle",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-24T13:35:50Z"
+}
