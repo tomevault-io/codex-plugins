@@ -4,7 +4,7 @@
   "repo": "gea",
   "description": "A batteries-included, reactive JavaScript UI framework. No virtual DOM. Compile-time JSX transforms. Proxy-based stores. Surgical DOM patching.",
   "type": "tome",
-  "source_format": ".cursor/rules/*.mdc",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -43,9 +43,39 @@
       "path": ".cursor/skills/js-framework-benchmark-report",
       "github_url": "https://github.com/dashersw/gea/tree/main/.cursor/skills/js-framework-benchmark-report",
       "description": ""
+    },
+    {
+      "name": "gea",
+      "path": ".cursor/skills/gea-framework/SKILL.md",
+      "github_url": "https://github.com/dashersw/gea/tree/main/.cursor/skills/gea-framework/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "gea",
+      "path": ".cursor/skills/gea-ui-components/SKILL.md",
+      "github_url": "https://github.com/dashersw/gea/tree/main/.cursor/skills/gea-ui-components/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "gea",
+      "path": ".cursor/skills/react-to-gea-migration/SKILL.md",
+      "github_url": "https://github.com/dashersw/gea/tree/main/.cursor/skills/react-to-gea-migration/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "gea",
+      "path": ".cursor/skills/playground-browser-bundles/SKILL.md",
+      "github_url": "https://github.com/dashersw/gea/tree/main/.cursor/skills/playground-browser-bundles/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "gea",
+      "path": ".cursor/skills/js-framework-benchmark-report/SKILL.md",
+      "github_url": "https://github.com/dashersw/gea/tree/main/.cursor/skills/js-framework-benchmark-report/SKILL.md",
+      "description": ""
     }
   ],
   "source_url": "https://github.com/dashersw/gea",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-19T23:33:08Z"
+  "distributed_at": "2026-07-24T15:36:59Z"
 }
