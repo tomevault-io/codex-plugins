@@ -1,74 +1,220 @@
-# OpenAttributeGraph Guide
+# OpenAttributeGraph Copilot Instructions
 
-OpenAttributeGraph is the Swift package implementation of AttributeGraph-compatible primitives used by OpenSwiftUI. For Darwin compatibility, its Swift-facing implementation is mirrored into `DarwinPrivateFrameworks/AG`, where the private-framework package owns Swift interface generation and xcframework updates.
+This file contains coding guidelines and conventions for AI assistants working on the OpenAttributeGraph project.
 
-## Everyday Workflow
+## Quick Reference
 
-1. Make the code change.
-2. Format changed Swift files:
+### Key Principles
+- Use `swift-testing` framework with `#expect` macro (not XCTest)
+- Follow OpenAttributeGraph C++ and Swift interop patterns
+- Trim trailing whitespaces automatically
+- Use 4-space indentation consistently
 
-   ```sh
-   Scripts/format-swift.sh
-   ```
+## Testing Guidelines
 
-3. Build and test locally:
+### Testing Framework
 
-   ```sh
-   swift build
-   swift test
-   ```
+- Use the `swift-testing` framework with the `#expect` macro for all test assertions
+- Import testing framework with: `import Testing`
+- Do NOT use XCTest framework unless specifically required for compatibility
 
-4. Commit with a descriptive message.
+### Test Structure
 
-## DarwinPrivateFrameworks Sync
+```swift
+import Testing
 
-Run this when changes affect the AttributeGraph Swift API, shim behavior, or Swift files that must be reflected in `DarwinPrivateFrameworks`.
+struct OpenAttributeGraphTests {
+    @Test
+    func functionality() {
+        let value = SomeType()
+        
+        #expect(value.property == expectedValue)
+        #expect(value.method() == expectedResult)
+    }
 
-`DarwinPrivateFrameworks` should exist next to this checkout at `../DarwinPrivateFrameworks`. See `../DarwinPrivateFrameworks/CLAUDE.md` and `../DarwinPrivateFrameworks/AG/README.md` for the framework-side build and update details.
-
-Sync only the Swift implementation files:
-
-- Source: `Sources/OpenAttributeGraph/**/*.swift`
-- Destination: `../DarwinPrivateFrameworks/AG/DeviceSwiftShims/**/*.swift`
-
-Preserve the relative file layout when syncing. Do not use `.ag_template` as the handoff artifact; `Scripts/gen_ag_template.sh` is legacy for this workflow. Swift interface generation is handled inside DarwinPrivateFrameworks by its AG update scripts.
-
-After syncing the Swift files, update DarwinPrivateFrameworks from that repo:
-
-```sh
-cd ../DarwinPrivateFrameworks
-swift package update-xcframeworks --allow-writing-to-package-directory
+    @Test
+    func errorConditions() {
+        #expect(throws: SomeError.self) {
+            try riskyOperation()
+        }
+    }
+}
 ```
 
-Then verify this package against the local DarwinPrivateFrameworks checkout:
+### Test Conventions
 
-```sh
-cd ../OpenAttributeGraph
-OPENATTRIBUTEGRAPH_USE_LOCAL_DEPS=1 OPENATTRIBUTEGRAPH_COMPATIBILITY_TEST=1 swift build
+- **Do NOT write any comments in test case body** - keep test code clean and self-explanatory
+- Use descriptive test function names that clearly indicate what is being tested
+- Group related tests using `// MARK: -` sections
+- Use `#expect` for all assertions instead of XCTest assertions
+- Prefer multiple focused tests over one large test
+- Do not add test prefix to test function names (e.g., `testFunctionality` should be `functionality`)
+- Use `@Test` attribute for test functions
+
+## Code Organization
+
+### File Structure
+- Use `// MARK: -` to separate different topics and sections within files
+- Organize code logically with clear separation of concerns
+- Place imports at the top, followed by type definitions, then implementations
+
+### Example MARK Usage
+```swift
+// MARK: - A
+
+...
+
+// MARK: - B
+
+...
+
+// MARK: - C
+
+...
 ```
 
-Create and merge the DarwinPrivateFrameworks PR before updating this package's resolved dependency:
+## Swift Coding Style
 
-```sh
-swift package update DarwinPrivateFrameworks
-git add Package.resolved
-git commit -m "Update DarwinPrivateFrameworks dependency"
+### Access Control Hierarchy
+
+1. `public` - External API surface
+2. `internal` - Module-internal APIs (default and should be omitted if not needed)
+3. `private` - Implementation details
+
+### Naming Conventions
+
+- Follow Swift API Design Guidelines
+- Use descriptive names that clearly indicate purpose
+- Prefer full words over abbreviations
+- Use camelCase for variables, functions, and properties
+- Use PascalCase for types, protocols, and cases
+
+### Code Formatting Rules
+
+- **Automatically trim trailing whitespaces including whitespace-only lines**
+- Use consistent indentation (4 spaces, not tabs)
+- Place opening braces on the same line as the declaration
+- Use proper spacing around operators and after commas
+- Align code vertically when it improves readability
+- Maximum line length: 120 characters (soft limit)
+
+## C++ Coding Style
+
+### OpenAttributeGraphCxx Guidelines
+
+- Follow existing OpenAttributeGraph C++ patterns and conventions
+- Use `OAG_INLINE` and `OAG_CONSTEXPR` macros for inline and constexpr functions
+- Use `OAG_NOEXCEPT` for exception specifications
+- Maintain compatibility with existing OpenAttributeGraph APIs
+- Use proper header guards with project-specific naming
+
+### Memory Management
+
+- Use RAII principles for resource management
+- Prefer smart pointers and custom deleters for automatic cleanup
+- Use `ptr<T>` template for OpenAttributeGraph-specific pointer management
+- Implement proper validation and assertion mechanisms
+
+### Template Usage
+
+```cpp
+template <typename T>
+class ptr {
+    // Implementation following OpenAttributeGraph patterns
+};
 ```
 
-## Key Commands
+## Architecture Patterns
 
-- `Scripts/format-swift.sh` - Format changed Swift files.
-- `swift build` - Build the normal OpenAttributeGraph implementation.
-- `swift test` - Run the normal local test suite.
-- `OPENATTRIBUTEGRAPH_USE_LOCAL_DEPS=1 OPENATTRIBUTEGRAPH_COMPATIBILITY_TEST=1 swift build` - Build against sibling `../DarwinPrivateFrameworks`.
-- `swift package update DarwinPrivateFrameworks` - Refresh the resolved DarwinPrivateFrameworks dependency after its PR lands.
+### OpenAttributeGraph Compatibility
+- Maintain API compatibility with existing OpenAttributeGraph functionality
+- Use similar naming conventions and parameter patterns
+- Implement protocols and extensions that mirror OpenAttributeGraph's design
 
-## Notes
+### Module Organization
+- Keep related functionality in appropriate modules
+- Use clear module boundaries between OpenAttributeGraphCxx and Swift layers
+- Avoid circular dependencies between modules
 
-- Keep OpenAttributeGraph implementation changes and DarwinPrivateFrameworks sync changes in separate PRs when both repos need updates.
-- Do not manually edit generated Swift interface files in this repo; DarwinPrivateFrameworks owns that generation.
-- Prefer environment variables over temporary `Package.swift` edits for local dependency testing.
+### C++/Swift Interop
+- Use proper bridging headers for C++ integration
+- Ensure memory safety across language boundaries
+- Handle exceptions and errors appropriately at boundaries
+
+## Documentation
+
+### Code Comments
+- Write clear, concise comments for complex logic
+- Use documentation comments (`///`) for APIs documentation
+- Avoid obvious comments that don't add value
+- Keep comments up-to-date with code changes
+
+### API Documentation
+```swift
+/// A brief description of what this function does.
+/// 
+/// - Parameter value: Description of the parameter
+/// - Returns: Description of the return value
+/// - Throws: Description of potential errors
+func someFunction(value: String) throws -> Int {
+    // Implementation
+}
+```
+
+## Performance Considerations
+
+- Optimize memory allocation patterns using OpenAttributeGraph's table/page system
+- Use lazy initialization for expensive computations
+- Consider memory management and avoid retain cycles
+- Optimize for common use cases while maintaining flexibility
+- Profile memory usage patterns in graph operations
+
+## Dependencies and Imports
+
+### Swift Files
+- Minimize external dependencies
+- Use conditional compilation for platform-specific code
+- Import only what is needed
+- Organize imports alphabetically within groups
+
+### C++ Files
+- Use proper header inclusion guards
+- Include OpenAttributeGraph base headers first
+- Follow dependency order in include statements
+- Use forward declarations when possible
+
+## Platform Compatibility
+
+- Support multiple Apple platforms (iOS, macOS, watchOS, tvOS, visionOS)
+- Use availability annotations when using platform-specific APIs
+- Test on supported platform versions
+- Use feature detection rather than version checking when possible
+- Handle platform differences in C++ code using preprocessor directives
+
+## Memory and Data Management
+
+### OpenAttributeGraph Patterns
+- Use `data::table` for memory region management
+- Implement proper page allocation and deallocation
+- Use `ptr<T>` for type-safe offset-based pointers
+- Follow OpenAttributeGraph's zone-based memory organization
+
+### Validation and Assertions
+- Use `assert_valid` methods for pointer validation
+- Implement proper precondition checking
+- Use OpenAttributeGraph's assertion macros consistently
+- Handle edge cases gracefully
+
+---
+
+## Troubleshooting
+
+### Common Issues
+- **Build errors**: Check C++/Swift bridging and header paths
+- **Test failures**: Ensure using `#expect` not XCTest assertions
+- **Memory issues**: Verify proper pointer validation and table usage
+- **Interop problems**: Check Swift/C++ type compatibility
 
 ---
 > Source: [OpenSwiftUIProject/OpenAttributeGraph](https://github.com/OpenSwiftUIProject/OpenAttributeGraph) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-22 -->
+<!-- tomevault:4.0:agents_md:2026-07-24 -->
