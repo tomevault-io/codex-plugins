@@ -1,0 +1,57 @@
+{
+  "name": "fast-check",
+  "owner": "dubzzz",
+  "repo": "fast-check",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "javascript-testing-expert",
+      "path": "skills/javascript-testing-expert",
+      "github_url": "https://github.com/dubzzz/fast-check/tree/main/skills/javascript-testing-expert",
+      "description": ""
+    },
+    {
+      "name": "fast-check",
+      "path": ".claude/skills/pr-authoring/SKILL.md",
+      "github_url": "https://github.com/dubzzz/fast-check/tree/main/.claude/skills/pr-authoring/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/dubzzz/fast-check",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-24T11:34:18Z"
+}
