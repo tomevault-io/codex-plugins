@@ -4,7 +4,7 @@
   "repo": "microsoft-365-agents-toolkit-samples",
   "description": "",
   "type": "tome",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -47,5 +47,5 @@
   ],
   "source_url": "https://github.com/OfficeDev/microsoft-365-agents-toolkit-samples",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-24T12:10:44Z"
+  "distributed_at": "2026-07-24T20:37:00Z"
 }
