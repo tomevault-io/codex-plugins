@@ -1,0 +1,501 @@
+{
+  "name": "cia",
+  "owner": "Hack23",
+  "repo": "cia",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "ci-cd-security",
+      "path": ".github/skills/ci-cd-security",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/ci-cd-security",
+      "description": ""
+    },
+    {
+      "name": "typescript-strict-patterns",
+      "path": ".github/skills/typescript-strict-patterns",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/typescript-strict-patterns",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/e2e-testing/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/e2e-testing/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/cis-controls/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/cis-controls/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/ai-governance/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/ai-governance/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/ci-cd-security/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/ci-cd-security/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/threat-modeling/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/threat-modeling/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/gdpr-compliance/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/gdpr-compliance/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/data-protection/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/data-protection/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/api-integration/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/api-integration/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/input-validation/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/input-validation/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/nist-csf-mapping/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/nist-csf-mapping/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/change-management/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/change-management/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/open-source-policy/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/open-source-policy/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/secure-code-review/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/secure-code-review/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/seo-best-practices/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/seo-best-practices/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/iso-27001-controls/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/iso-27001-controls/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/security-by-design/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/security-by-design/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/behavioral-analysis/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/behavioral-analysis/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/ui-ux-design-system/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/ui-ux-design-system/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/osint-methodologies/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/osint-methodologies/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/code-quality-checks/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/code-quality-checks/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/integration-testing/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/integration-testing/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/cia-data-integration/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/cia-data-integration/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/compliance-checklist/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/compliance-checklist/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/classification-policy/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/classification-policy/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/access-control-policy/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/access-control-policy/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/crypto-best-practices/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/crypto-best-practices/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/issue-triage-workflow/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/issue-triage-workflow/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/compliance-frameworks/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/compliance-frameworks/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/playwright-ui-testing/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/playwright-ui-testing/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/unit-testing-patterns/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/unit-testing-patterns/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/business-model-canvas/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/business-model-canvas/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/postgresql-operations/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/postgresql-operations/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/backup-recovery-policy/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/backup-recovery-policy/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/legislative-monitoring/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/legislative-monitoring/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/hack23-isms-compliance/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/hack23-isms-compliance/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/security-documentation/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/security-documentation/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/mcp-server-development/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/mcp-server-development/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/maven-build-management/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/maven-build-management/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/european-parliament-api/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/european-parliament-api/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/contribution-guidelines/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/contribution-guidelines/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/documentation-standards/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/documentation-standards/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/vaadin-component-design/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/vaadin-component-design/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/swedish-political-system/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/swedish-political-system/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/vulnerability-management/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/vulnerability-management/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/performance-optimization/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/performance-optimization/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/product-quality-analysis/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/product-quality-analysis/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/github-actions-workflows/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/github-actions-workflows/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/mcp-gateway-configuration/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/mcp-gateway-configuration/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/aws-security-architecture/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/aws-security-architecture/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/aws-cloudwatch-monitoring/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/aws-cloudwatch-monitoring/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/data-pipeline-engineering/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/data-pipeline-engineering/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/secure-development-policy/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/secure-development-policy/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/spring-framework-patterns/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/spring-framework-patterns/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/political-science-analysis/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/political-science-analysis/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/risk-assessment-frameworks/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/risk-assessment-frameworks/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/typescript-strict-patterns/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/typescript-strict-patterns/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/jpa-hibernate-optimization/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/jpa-hibernate-optimization/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/risk-assessment-methodology/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/risk-assessment-methodology/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/accessibility-wcag-patterns/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/accessibility-wcag-patterns/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/product-management-patterns/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/product-management-patterns/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/advanced-data-visualization/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/advanced-data-visualization/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/testing-strategy-enforcement/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/testing-strategy-enforcement/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/secure-development-lifecycle/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/secure-development-lifecycle/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/information-security-strategy/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/information-security-strategy/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/data-science-for-intelligence/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/data-science-for-intelligence/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/data-visualization-principles/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/data-visualization-principles/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/c4-architecture-documentation/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/c4-architecture-documentation/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/compliance-framework-alignment/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/compliance-framework-alignment/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/strategic-communication-analysis/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/strategic-communication-analysis/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/intelligence-analysis-techniques/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/intelligence-analysis-techniques/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/security-architecture-validation/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/security-architecture-validation/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/hack23-information-security-policy/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/hack23-information-security-policy/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/hack23-future-architecture-standards/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/hack23-future-architecture-standards/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "cia",
+      "path": ".github/skills/classification-framework-enforcement/SKILL.md",
+      "github_url": "https://github.com/Hack23/cia/tree/main/.github/skills/classification-framework-enforcement/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/Hack23/cia",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-24T15:33:39Z"
+}
