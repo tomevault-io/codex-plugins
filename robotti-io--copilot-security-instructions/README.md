@@ -1,8 +1,6 @@
 # copilot-security-instructions
 
-> Source: [Robotti-io/copilot-security-instructions](https://github.com/Robotti-io/copilot-security-instructions) — distributed by [TomeVault](https://tomevault.io)
-
-✨ A customizable copilot-instructions.md ruleset & prompts to guide GitHub Copilot toward secure coding defaults in Java, Node.js, C# and Python. Blocks risky patterns, teaches safe habits.
+> Source: [Robotti-io/copilot-security-instructions](https://github.com/Robotti-io/copilot-security-instructions). Graded, signed and kept in sync across platforms by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
