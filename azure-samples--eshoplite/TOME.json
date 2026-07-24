@@ -2,7 +2,7 @@
   "name": "eShopLite",
   "owner": "Azure-Samples",
   "repo": "eShopLite",
-  "description": "eShopLite is a set of reference .NET applications implementing an eCommerce site with features like Semantic Search, MCP, Reasoning models and more.",
+  "description": "",
   "type": "config",
   "source_format": "copilot-instructions.md",
   "formats": [
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/Azure-Samples/eShopLite",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-18T01:09:58Z"
+  "distributed_at": "2026-07-24T10:01:28Z"
 }
