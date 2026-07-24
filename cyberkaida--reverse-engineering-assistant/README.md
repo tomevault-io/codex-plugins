@@ -1,0 +1,33 @@
+# reverse-engineering-assistant
+
+> Tome by [cyberkaida](https://github.com/cyberkaida/reverse-engineering-assistant), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [cyberkaida/reverse-engineering-assistant](https://github.com/cyberkaida/reverse-engineering-assistant).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+## Bundled Skills (6)
+
+- [reverse-engineering-assistant](https://github.com/cyberkaida/reverse-engineering-assistant/tree/main/ReVa/skills/ctf-rev/SKILL.md)
+- [reverse-engineering-assistant](https://github.com/cyberkaida/reverse-engineering-assistant/tree/main/ReVa/skills/ctf-pwn/SKILL.md)
+- [reverse-engineering-assistant](https://github.com/cyberkaida/reverse-engineering-assistant/tree/main/ReVa/skills/ctf-crypto/SKILL.md)
+- [reverse-engineering-assistant](https://github.com/cyberkaida/reverse-engineering-assistant/tree/main/ReVa/skills/deep-analysis/SKILL.md)
+- [reverse-engineering-assistant](https://github.com/cyberkaida/reverse-engineering-assistant/tree/main/ReVa/skills/binary-triage/SKILL.md)
+- [reverse-engineering-assistant](https://github.com/cyberkaida/reverse-engineering-assistant/tree/main/ReVa/skills/pyghidra-scripting/SKILL.md)
+
+Graded against the Tome Standard, TomeVault's public ruleset for whether AI instructions load, read clearly and stay safe. Source: [github.com/cyberkaida/reverse-engineering-assistant](https://github.com/cyberkaida/reverse-engineering-assistant)
+
+---
+
+Explore more instruction files on [TomeVault](https://tomevault.io), the platform that grades AI instruction files and catches silent drift across every major tool.
+
+<!-- genome:t-e-q -->
