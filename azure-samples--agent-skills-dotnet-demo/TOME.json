@@ -1,0 +1,237 @@
+{
+  "name": "agent-skills-dotnet-demo",
+  "owner": "Azure-Samples",
+  "repo": "agent-skills-dotnet-demo",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "agent-skills-dotnet-demo",
+      "path": ".squad/templates/skill.md",
+      "github_url": "https://github.com/Azure-Samples/agent-skills-dotnet-demo/tree/main/.squad/templates/skill.md",
+      "description": ""
+    },
+    {
+      "name": "agent-skills-dotnet-demo",
+      "path": "skills/data-analyzer/SKILL.md",
+      "github_url": "https://github.com/Azure-Samples/agent-skills-dotnet-demo/tree/main/skills/data-analyzer/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "agent-skills-dotnet-demo",
+      "path": "skills/meeting-notes/SKILL.md",
+      "github_url": "https://github.com/Azure-Samples/agent-skills-dotnet-demo/tree/main/skills/meeting-notes/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "agent-skills-dotnet-demo",
+      "path": "skills/code-reviewer/SKILL.md",
+      "github_url": "https://github.com/Azure-Samples/agent-skills-dotnet-demo/tree/main/skills/code-reviewer/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "agent-skills-dotnet-demo",
+      "path": ".squad/templates/skills/nap/SKILL.md",
+      "github_url": "https://github.com/Azure-Samples/agent-skills-dotnet-demo/tree/main/.squad/templates/skills/nap/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "agent-skills-dotnet-demo",
+      "path": ".squad/templates/skills/reskill/SKILL.md",
+      "github_url": "https://github.com/Azure-Samples/agent-skills-dotnet-demo/tree/main/.squad/templates/skills/reskill/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "agent-skills-dotnet-demo",
+      "path": ".squad/templates/skills/humanizer/SKILL.md",
+      "github_url": "https://github.com/Azure-Samples/agent-skills-dotnet-demo/tree/main/.squad/templates/skills/humanizer/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "agent-skills-dotnet-demo",
+      "path": ".squad/templates/skills/init-mode/SKILL.md",
+      "github_url": "https://github.com/Azure-Samples/agent-skills-dotnet-demo/tree/main/.squad/templates/skills/init-mode/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "agent-skills-dotnet-demo",
+      "path": ".squad/templates/skills/cli-wiring/SKILL.md",
+      "github_url": "https://github.com/Azure-Samples/agent-skills-dotnet-demo/tree/main/.squad/templates/skills/cli-wiring/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "agent-skills-dotnet-demo",
+      "path": ".squad/templates/skills/cross-squad/SKILL.md",
+      "github_url": "https://github.com/Azure-Samples/agent-skills-dotnet-demo/tree/main/.squad/templates/skills/cross-squad/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "agent-skills-dotnet-demo",
+      "path": ".squad/templates/skills/git-workflow/SKILL.md",
+      "github_url": "https://github.com/Azure-Samples/agent-skills-dotnet-demo/tree/main/.squad/templates/skills/git-workflow/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "agent-skills-dotnet-demo",
+      "path": ".squad/templates/skills/economy-mode/SKILL.md",
+      "github_url": "https://github.com/Azure-Samples/agent-skills-dotnet-demo/tree/main/.squad/templates/skills/economy-mode/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "agent-skills-dotnet-demo",
+      "path": ".squad/templates/skills/agent-conduct/SKILL.md",
+      "github_url": "https://github.com/Azure-Samples/agent-skills-dotnet-demo/tree/main/.squad/templates/skills/agent-conduct/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "agent-skills-dotnet-demo",
+      "path": ".squad/templates/skills/external-comms/SKILL.md",
+      "github_url": "https://github.com/Azure-Samples/agent-skills-dotnet-demo/tree/main/.squad/templates/skills/external-comms/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "agent-skills-dotnet-demo",
+      "path": ".squad/templates/skills/personal-squad/SKILL.md",
+      "github_url": "https://github.com/Azure-Samples/agent-skills-dotnet-demo/tree/main/.squad/templates/skills/personal-squad/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "agent-skills-dotnet-demo",
+      "path": ".squad/templates/skills/docs-standards/SKILL.md",
+      "github_url": "https://github.com/Azure-Samples/agent-skills-dotnet-demo/tree/main/.squad/templates/skills/docs-standards/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "agent-skills-dotnet-demo",
+      "path": ".squad/templates/skills/release-process/SKILL.md",
+      "github_url": "https://github.com/Azure-Samples/agent-skills-dotnet-demo/tree/main/.squad/templates/skills/release-process/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "agent-skills-dotnet-demo",
+      "path": ".squad/templates/skills/model-selection/SKILL.md",
+      "github_url": "https://github.com/Azure-Samples/agent-skills-dotnet-demo/tree/main/.squad/templates/skills/model-selection/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "agent-skills-dotnet-demo",
+      "path": ".squad/templates/skills/history-hygiene/SKILL.md",
+      "github_url": "https://github.com/Azure-Samples/agent-skills-dotnet-demo/tree/main/.squad/templates/skills/history-hygiene/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "agent-skills-dotnet-demo",
+      "path": ".squad/templates/skills/test-discipline/SKILL.md",
+      "github_url": "https://github.com/Azure-Samples/agent-skills-dotnet-demo/tree/main/.squad/templates/skills/test-discipline/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "agent-skills-dotnet-demo",
+      "path": ".squad/templates/skills/distributed-mesh/SKILL.md",
+      "github_url": "https://github.com/Azure-Samples/agent-skills-dotnet-demo/tree/main/.squad/templates/skills/distributed-mesh/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "agent-skills-dotnet-demo",
+      "path": ".squad/templates/skills/session-recovery/SKILL.md",
+      "github_url": "https://github.com/Azure-Samples/agent-skills-dotnet-demo/tree/main/.squad/templates/skills/session-recovery/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "agent-skills-dotnet-demo",
+      "path": ".squad/templates/skills/gh-auth-isolation/SKILL.md",
+      "github_url": "https://github.com/Azure-Samples/agent-skills-dotnet-demo/tree/main/.squad/templates/skills/gh-auth-isolation/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "agent-skills-dotnet-demo",
+      "path": ".squad/templates/skills/squad-conventions/SKILL.md",
+      "github_url": "https://github.com/Azure-Samples/agent-skills-dotnet-demo/tree/main/.squad/templates/skills/squad-conventions/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "agent-skills-dotnet-demo",
+      "path": ".squad/templates/skills/reviewer-protocol/SKILL.md",
+      "github_url": "https://github.com/Azure-Samples/agent-skills-dotnet-demo/tree/main/.squad/templates/skills/reviewer-protocol/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "agent-skills-dotnet-demo",
+      "path": ".squad/templates/skills/project-conventions/SKILL.md",
+      "github_url": "https://github.com/Azure-Samples/agent-skills-dotnet-demo/tree/main/.squad/templates/skills/project-conventions/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "agent-skills-dotnet-demo",
+      "path": ".squad/templates/skills/ci-validation-gates/SKILL.md",
+      "github_url": "https://github.com/Azure-Samples/agent-skills-dotnet-demo/tree/main/.squad/templates/skills/ci-validation-gates/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "agent-skills-dotnet-demo",
+      "path": ".squad/templates/skills/agent-collaboration/SKILL.md",
+      "github_url": "https://github.com/Azure-Samples/agent-skills-dotnet-demo/tree/main/.squad/templates/skills/agent-collaboration/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "agent-skills-dotnet-demo",
+      "path": ".squad/templates/skills/github-multi-account/SKILL.md",
+      "github_url": "https://github.com/Azure-Samples/agent-skills-dotnet-demo/tree/main/.squad/templates/skills/github-multi-account/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "agent-skills-dotnet-demo",
+      "path": ".squad/templates/skills/client-compatibility/SKILL.md",
+      "github_url": "https://github.com/Azure-Samples/agent-skills-dotnet-demo/tree/main/.squad/templates/skills/client-compatibility/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "agent-skills-dotnet-demo",
+      "path": ".squad/templates/skills/windows-compatibility/SKILL.md",
+      "github_url": "https://github.com/Azure-Samples/agent-skills-dotnet-demo/tree/main/.squad/templates/skills/windows-compatibility/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "agent-skills-dotnet-demo",
+      "path": ".squad/templates/skills/architectural-proposals/SKILL.md",
+      "github_url": "https://github.com/Azure-Samples/agent-skills-dotnet-demo/tree/main/.squad/templates/skills/architectural-proposals/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/Azure-Samples/agent-skills-dotnet-demo",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-24T13:52:08Z"
+}
