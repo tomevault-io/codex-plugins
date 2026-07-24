@@ -1,0 +1,29 @@
+# quartznet
+
+> Tome by [quartznet](https://github.com/quartznet/quartznet), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `copilot-instructions.md` in [quartznet/quartznet](https://github.com/quartznet/quartznet).
+
+## Also available for
+
+- **Claude Code** — `CLAUDE.md`
+- **Codex** — `AGENTS.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+## Bundled Skills (2)
+
+- [quartznet](https://github.com/quartznet/quartznet/tree/main/.squad/skills/squad-conventions/SKILL.md)
+- [quartznet](https://github.com/quartznet/quartznet/tree/main/.squad/skills/quartz-unit-test-lock-recovery/SKILL.md)
+
+From [quartznet/quartznet](https://github.com/quartznet/quartznet) — a repo with 7062+ stars on GitHub.
+
+---
+
+Explore more instruction files on [TomeVault](https://tomevault.io), the platform that grades AI instruction files and catches silent drift across every major tool.
+
+<!-- genome:t-e-s -->
