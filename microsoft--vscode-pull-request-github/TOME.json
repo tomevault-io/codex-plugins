@@ -1,0 +1,105 @@
+{
+  "name": "vscode-pull-request-github",
+  "owner": "microsoft",
+  "repo": "vscode-pull-request-github",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "form-github-search-query",
+      "path": "src/lm/skills/form-github-search-query",
+      "github_url": "https://github.com/microsoft/vscode-pull-request-github/tree/main/src/lm/skills/form-github-search-query",
+      "description": ""
+    },
+    {
+      "name": "show-github-search-result",
+      "path": "src/lm/skills/show-github-search-result",
+      "github_url": "https://github.com/microsoft/vscode-pull-request-github/tree/main/src/lm/skills/show-github-search-result",
+      "description": ""
+    },
+    {
+      "name": "summarize-github-issue-pr-notification",
+      "path": "src/lm/skills/summarize-github-issue-pr-notification",
+      "github_url": "https://github.com/microsoft/vscode-pull-request-github/tree/main/src/lm/skills/summarize-github-issue-pr-notification",
+      "description": ""
+    },
+    {
+      "name": "vscode-pull-request-github",
+      "path": "src/lm/skills/suggest-fix-issue/SKILL.md",
+      "github_url": "https://github.com/microsoft/vscode-pull-request-github/tree/main/src/lm/skills/suggest-fix-issue/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "vscode-pull-request-github",
+      "path": "src/lm/skills/create-pull-request/SKILL.md",
+      "github_url": "https://github.com/microsoft/vscode-pull-request-github/tree/main/src/lm/skills/create-pull-request/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "vscode-pull-request-github",
+      "path": "src/lm/skills/address-pr-comments/SKILL.md",
+      "github_url": "https://github.com/microsoft/vscode-pull-request-github/tree/main/src/lm/skills/address-pr-comments/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "vscode-pull-request-github",
+      "path": "src/lm/skills/form-github-search-query/SKILL.md",
+      "github_url": "https://github.com/microsoft/vscode-pull-request-github/tree/main/src/lm/skills/form-github-search-query/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "vscode-pull-request-github",
+      "path": "src/lm/skills/show-github-search-result/SKILL.md",
+      "github_url": "https://github.com/microsoft/vscode-pull-request-github/tree/main/src/lm/skills/show-github-search-result/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "vscode-pull-request-github",
+      "path": "src/lm/skills/summarize-github-issue-pr-notification/SKILL.md",
+      "github_url": "https://github.com/microsoft/vscode-pull-request-github/tree/main/src/lm/skills/summarize-github-issue-pr-notification/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "vscode-pull-request-github",
+      "path": ".github/skills/write-changelog/SKILL.md",
+      "github_url": "https://github.com/microsoft/vscode-pull-request-github/tree/main/.github/skills/write-changelog/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/microsoft/vscode-pull-request-github",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-24T13:32:52Z"
+}
