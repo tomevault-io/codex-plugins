@@ -1,119 +1,125 @@
+# TT-Metal / TT-Metalium — Copilot PR Review Instructions
 
-# Fixing a Sweep Module for Exact Model Trace Match
+> Path-specific review criteria live in `.github/instructions/`.
+> This file covers cross-cutting concerns that apply to every PR.
 
-## Core Principle
+## Codebase Snapshot
 
-`config_hash` is `sha256(json.dumps({"operation", "arguments", "hardware", "mesh"}))` (see `generic_ops_tracer.py` lines 448–507). The `arguments` dict includes every kwarg passed to the op AND per-tensor `tensor_placement`. The sweep must call the op with **exactly the same kwargs** as the model — no extra, no missing, no altered values.
+| Path | What lives there |
+|------|-----------------|
+| `tt_metal/` | Core runtime, device APIs, dispatch, allocators, firmware |
+| `tt_metal/hw/` | Firmware, SOC descriptors, hardware includes |
+| `tt_metal/hw/ckernels/` | Compute kernels (math, unpack, pack) |
+| `tt_metal/tt-llk/` | Low-level kernel library (SFPU ops, per-architecture) |
+| `ttnn/` | High-level op layer, Python/C++ integration (nanobind) |
+| `tt-train/` | Training library built on ttnn |
+| `models/` | Model implementations and demos |
+| `tools/` | Profiler, debugger, scaleout tooling |
+| `.github/` | CI/CD workflows and infra |
 
-## Workflow
+## Review Language
 
-1. Run validation per `validate-sweep-trace.mdc` to get the mismatch report.
-2. For each DIFF field, identify which category below applies.
-3. Apply the fix in the sweep module's `run()` function.
-4. Re-run the sweep, re-validate. Repeat until 100% exact match.
+Respond in **English**. Be terse. Use code blocks for every actionable diff.
 
-## Common Mismatch Categories
+## Review Priorities
 
-### 1. Extra kwargs (sweep passes a kwarg the model didn't)
+### 🔴 CRITICAL (Block merge)
+- **Correctness**: logic errors, data corruption risks, race conditions
+- **ABI Breakage**: struct layout change, symbol deleted from a public header in `tt_metal/api/` or `ttnn/api/ttnn/`
+- **Kernel Safety**: missing bounds check on L1 tile addressing; broken synchronization barrier order
+- **Security**: hardcoded credentials, secrets, or tokens anywhere in the diff
 
-**Symptom**: Sweep trace has `"memory_config": null` or `"subdevice_id": ...` but model trace has no such key.
+### 🟡 IMPORTANT (Requires discussion)
+- **Missing test coverage** for new public API or changed behavior
+- **New dependency** added without infra team awareness
+- **API contract change** without versioning or deprecation path
 
-**Fix**: Only include optional kwargs in the op call when they are non-None. Build `op_kwargs` incrementally:
+### 🟢 SUGGESTION (Non-blocking)
+- **Naming and readability**: names that don't match surrounding conventions
+- **Simplification**: complex logic that could be expressed more clearly
 
-```python
-op_kwargs = {"dim": dim, "num_links": num_links}  # always-present args
-if output_memory_config is not None:
-    op_kwargs["memory_config"] = output_memory_config
-if subdevice_id is not None:
-    op_kwargs["subdevice_id"] = worker_sub_device_id
-# ... same for chunks_per_sync, num_workers_per_link, use_broadcast, etc.
-result = ttnn.some_op(input_tensor, **op_kwargs)
+## Code Quality Principles
+
+### Names must reflect actual behavior
+A function named `write_to_all_chips()` that only writes to one chip is misleading and reviewable as a defect. Names are documentation — if the implementation scope narrows or widens, the name must track it. Flag any mismatch between what a symbol promises and what it delivers.
+
+### Flag duplication — suggest commonization
+When the same logic appears in more than one place, it will inevitably drift. Flag duplicated code blocks and suggest extracting a shared helper. Constants that appear in both a header and a builder file should live in one canonical location.
+
+### Magic numbers require a derivation
+Bare numeric literals in code are invisible assumptions. Every hardcoded offset, size, or threshold should either be derived from a named constant or accompanied by a comment explaining where the value comes from and under what conditions it might change.
+
+### Complex conditions belong in named variables
+When an `if` condition involves multiple conjuncts or non-obvious logic, hoist it into a descriptively named `bool`. The variable name serves as the comment the reader would otherwise have to reconstruct mentally.
+
+```cpp
+// Difficult to parse at review time
+if (conn_type == FabricConnectionType::Transient && channel_idx == 0 && !is_mux_target) { ... }
+
+// Clear intent
+const bool is_transient_direct_to_router = conn_type == FabricConnectionType::Transient
+                                        && channel_idx == 0
+                                        && !is_mux_target;
+if (is_transient_direct_to_router) { ... }
 ```
 
-### 2. Missing kwargs (model passed a kwarg the sweep doesn't)
+## Comment Format
 
-**Symptom**: Model trace has `"mesh_device": {...}` but sweep trace does not.
+Use this format for every finding:
 
-**Fix**: Add the kwarg to the op call. For `mesh_device`, pass `mesh_device=device` (the MeshDevice object). For other kwargs, thread them through from the `run()` signature (they arrive from `MasterConfigLoader`).
+````
+**[🔴/🟡/🟢] Category: Short title**
 
-### 3. Argument value normalization (sweep alters a value)
+What the issue is and where (file:line).
 
-**Symptom**: Model has `"dim": -1`, sweep has `"dim": 3`.
+**Why it matters:** one sentence on impact.
 
-**Fix**: Preserve the original value for the op call. If you need the resolved value internally (e.g., for tensor shaping), use a separate variable:
-
-```python
-effective_dim = dim if dim >= 0 else len(input_shape) + dim  # internal only
-# ... use effective_dim for shape math ...
-result = ttnn.some_op(input_tensor, dim=dim)  # pass original dim to op
+**Suggested fix:**
+```cpp
+// minimal diff
 ```
+````
 
-### 4. tensor_placement mismatch (sweep distributes tensors differently)
+## PR Title Clarity
 
-**Symptom**: Model has `tensor_placement.placement = "['PlacementShard(2)', 'PlacementShard(1)']"`, sweep has `"['PlacementReplicate', 'PlacementShard(1)']"`.
+The PR title becomes the release-note entry for this change, so it must read clearly to someone outside the team. Using the title **and** the description, assess whether the title is clear, accurate, and externally meaningful. When it is not, suggest one improved title.
 
-**Fix**: Parse the model's actual placement and use it for `ShardTensor2dMesh`. The input tensor (per-device shape from the trace) is the post-shard shape. Build a global tensor that, when sharded with the model's placement, yields the correct per-device shape:
+Flag and rewrite when the title:
+- has spelling or grammar errors;
+- references something a reader can't resolve (a bare ticket/PR number, "fix the thing from yesterday");
+- uses internal-only codenames or raw symbol names that mean nothing externally, with no plain-language hint;
+- is vague about what changed ("update code", "fixes", "address comments").
 
-```python
-import re
+Rules for the suggested title:
+- Keep it concise and imperative; preserve the original technical meaning — do not invent scope the diff doesn't support.
+- **Preserve any functional prefix such as `[skip ci]` exactly** — it controls CI and must not be dropped.
+- Prefer plain external wording; keep a meaningful component name when it aids clarity.
 
-def _parse_shard_dims_from_placement(tensor_placement):
-    if not tensor_placement:
-        return None
-    placement = tensor_placement.get("placement", "")
-    if isinstance(placement, list):
-        placement = " ".join(str(p) for p in placement)
-    dims = []
-    for m in re.finditer(r"PlacementShard\((-?\d+)\)|PlacementReplicate", placement):
-        dims.append(int(m.group(1)) if m.group(1) is not None else None)
-    return tuple(dims) if len(dims) == 2 else None
+Use the standard finding format, with the proposed title on a `Suggested title:` line:
 
-shard_dims = _parse_shard_dims_from_placement(input_a_tensor_placement)
+````
+**[🟢] Suggestion: Title clarity**
 
-# Build global shape: per-device shape scaled by devices on each sharded axis
-global_shape = list(per_device_shape)
-for axis_idx, sd in enumerate(shard_dims):
-    if sd is not None:
-        esd = sd if sd >= 0 else len(per_device_shape) + sd
-        global_shape[esd] *= mesh_shape[axis_idx]
+Why it matters: this title is the release-note line; <reason>.
 
-torch_global = torch.rand(global_shape).bfloat16()
-tt_input = ttnn.from_torch(
-    torch_global, ...,
-    mesh_mapper=ShardTensor2dMesh(device, dims=shard_dims, mesh_shape=mesh_shape),
-)
-```
+Suggested title: `<rewritten title>`
+````
 
-For ops that gather/reduce along a dim (e.g., all_gather), the golden reference for device 0 is the global tensor sliced on non-gathered axes:
+## Testing Expectations
 
-```python
-ref_slices = [slice(None)] * len(global_shape)
-for axis_idx, sd in enumerate(shard_dims):
-    if sd is not None and axis_idx != cluster_axis:
-        esd = sd if sd >= 0 else len(per_device_shape) + sd
-        ref_slices[esd] = slice(0, per_device_shape[esd])
-torch_reference = torch_global[tuple(ref_slices)]
-```
+- New public API → unit test in the nearest `tests/` target
+- Changed behavior in a hot path → micro-benchmark or reference to existing perf harness
+- Bug fix → regression test that would have caught the original bug
 
-For non-gathering ops (add, reshape, etc.) where every device runs independently, the golden reference is simply the per-device input — use `mesh_tensor_to_torch` to read device 0's output and compare with the torch reference computed from device 0's input slice.
+## Security & Reliability
 
-### 5. run() signature missing model-traced params
+- **No secrets**: flag any hardcoded token, key, password, or internal IP with a port
+- **Kernel/firmware**: bounds checks on all NOC address calculations; mailbox and semaphore release ordering must be preserved exactly
 
-**Symptom**: `MasterConfigLoader` provides kwargs like `use_broadcast`, `subdevice_id`, etc. but they hit `**kwargs` and are silently ignored.
+## Docs-Only PRs
 
-**Fix**: Add explicit parameters to `run()` for every kwarg the model trace may include. Check the model trace JSON's `arguments` keys for the op. Any key that isn't a positional tensor arg (`arg0`, `arg1`, ...) should be a named parameter or handled via `**kwargs`.
-
-## Reference: all_gather_async_model_traced.py
-
-The canonical example of a fully fixed sweep module is `all_gather_async_model_traced.py`. Key patterns applied there:
-
-- `effective_dim` for internal math, original `dim` passed to op
-- `_parse_shard_dims_from_placement()` to derive 2D shard dims from model trace
-- Global tensor built for ALL sharded axes, golden reference sliced for device 0
-- `op_kwargs` built incrementally: only non-None optional kwargs included
-- `mesh_device=device` passed explicitly for model-traced runs
-- `barrier_semaphore`, `persistent_output_buffer`, `subdevice_id`, `chunks_per_sync`, `num_workers_per_link`, `num_buffers_per_channel`, `use_broadcast` all conditional
+Title must be prefixed with `[skip ci]` to avoid running unnecessary CI checks.
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/tenstorrent) — claim your Tome and manage your conversions.
-<!-- tomevault:4.0:agents_md:2026-04-09 -->
+> Source: [tenstorrent/tt-metal](https://github.com/tenstorrent/tt-metal) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-07-24 -->
