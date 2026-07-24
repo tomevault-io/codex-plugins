@@ -1,323 +1,158 @@
-# CLAUDE.md
+# Splat DI Source Generator: Dependency Injection Code Generation
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Always reference these instructions first and fallback to search or bash commands only when you encounter unexpected information that does not match the info here.
 
-## Build & Test Commands
+## Working Effectively
 
-This project uses **Microsoft Testing Platform (MTP)** with the **TUnit** testing framework. Test commands differ significantly from traditional VSTest.
-
-See: https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-test?tabs=dotnet-test-with-mtp
-
-### Prerequisites
-
-```powershell
-# Check .NET installation (.NET 8.0, 9.0, and 10.0 required)
-dotnet --info
-
-# Restore NuGet packages
-cd src
-dotnet restore Splat.DI.SourceGenerator.slnx
-```
-
-**Note:** This project uses the modern `.slnx` (XML-based solution file) format instead of the legacy `.sln` format. The `.slnx` format provides better performance, cleaner diffs, and improved tooling support in Visual Studio 2022 17.10+.
-
-### Build Commands
-
-**CRITICAL:** The working folder must be `./src` folder. These commands won't function properly without the correct working folder.
-
-```powershell
-# Build the solution
-dotnet build Splat.DI.SourceGenerator.slnx -c Release
-
-# Build with warnings as errors (includes StyleCop violations)
-dotnet build Splat.DI.SourceGenerator.slnx -c Release -warnaserror
-
-# Clean the solution
-dotnet clean Splat.DI.SourceGenerator.slnx
-```
-
-### Test Commands (Microsoft Testing Platform)
-
-**CRITICAL:** This repository uses MTP configured in `testconfig.json`. All TUnit-specific arguments must be passed after `--`:
-
-The working folder must be `./src` folder. These commands won't function properly without the correct working folder.
-
-**IMPORTANT:**
-- Do NOT use `--no-build` flag when running tests. Always build before testing to ensure all code changes (including test changes) are compiled. Using `--no-build` can cause tests to run against stale binaries and produce misleading results.
-- Use `--output Detailed` to see Console.WriteLine output from tests. This must be placed BEFORE any `--` separator:
-  ```powershell
-  dotnet test --output Detailed -- --treenode-filter "..."
+### Prerequisites and Environment Setup
+- **CRITICAL**: Requires .NET 9.0 SDK (not .NET 8.0). Install with:
+  ```bash
+  curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --version latest --channel 9.0
+  export PATH="$HOME/.dotnet:$PATH"
   ```
-
-```powershell
-# Run all tests in the solution
-dotnet test --solution Splat.DI.SourceGenerator.slnx -c Release
-
-# Run all tests in a specific project
-dotnet test --project Splat.DependencyInjection.Analyzer.Tests/Splat.DependencyInjection.Analyzer.Tests.csproj -c Release
-dotnet test --project Splat.DependencyInjection.SourceGenerator.Tests/Splat.DependencyInjection.SourceGenerator.Tests.csproj -c Release
-
-# Run a single test method using treenode-filter
-# Syntax: /{AssemblyName}/{Namespace}/{ClassName}/{TestMethodName}
-dotnet test --project Splat.DependencyInjection.Analyzer.Tests/Splat.DependencyInjection.Analyzer.Tests.csproj -- --treenode-filter "/*/*/*/MyTestMethod"
-
-# Run all tests in a specific class
-dotnet test --project Splat.DependencyInjection.Analyzer.Tests/Splat.DependencyInjection.Analyzer.Tests.csproj -- --treenode-filter "/*/*/MyClassName/*"
-
-# Run tests in a specific namespace
-dotnet test --project Splat.DependencyInjection.SourceGenerator.Tests/Splat.DependencyInjection.SourceGenerator.Tests.csproj -- --treenode-filter "/*/MyNamespace/*/*"
-
-# Filter by test property (e.g., Category)
-dotnet test --solution Splat.DI.SourceGenerator.slnx -- --treenode-filter "/*/*/*/*[Category=Integration]"
-
-# Run tests with code coverage (Microsoft Code Coverage)
-dotnet test --solution Splat.DI.SourceGenerator.slnx -- --coverage --coverage-output-format cobertura
-
-# Run tests with detailed output
-dotnet test --solution Splat.DI.SourceGenerator.slnx -- --output Detailed
-
-# List all available tests without running them
-dotnet test --project Splat.DependencyInjection.Analyzer.Tests/Splat.DependencyInjection.Analyzer.Tests.csproj -- --list-tests
-
-# Fail fast (stop on first failure)
-dotnet test --solution Splat.DI.SourceGenerator.slnx -- --fail-fast
-
-# Control parallel test execution
-dotnet test --solution Splat.DI.SourceGenerator.slnx -- --maximum-parallel-tests 4
-
-# Generate TRX report
-dotnet test --solution Splat.DI.SourceGenerator.slnx -- --report-trx
-
-# Disable logo for cleaner output
-dotnet test --project Splat.DependencyInjection.Analyzer.Tests/Splat.DependencyInjection.Analyzer.Tests.csproj -- --disable-logo
-
-# Combine options: coverage + TRX report + detailed output
-dotnet test --solution Splat.DI.SourceGenerator.slnx -- --coverage --coverage-output-format cobertura --report-trx --output Detailed
-```
-
-**Alternative: Using `dotnet run` for single project**
-```powershell
-# Run tests using dotnet run (easier for passing flags)
-dotnet run --project Splat.DependencyInjection.Analyzer.Tests/Splat.DependencyInjection.Analyzer.Tests.csproj -c Release -- --treenode-filter "/*/*/*/MyTest"
-
-# Disable logo for cleaner output
-dotnet run --project Splat.DependencyInjection.SourceGenerator.Tests/Splat.DependencyInjection.SourceGenerator.Tests.csproj -- --disable-logo --treenode-filter "/*/*/*/Test1"
-```
-
-### TUnit Treenode-Filter Syntax
-
-The `--treenode-filter` follows the pattern: `/{AssemblyName}/{Namespace}/{ClassName}/{TestMethodName}`
-
-**Examples:**
-- Single test: `--treenode-filter "/*/*/*/MyTestMethod"`
-- All tests in class: `--treenode-filter "/*/*/MyClassName/*"`
-- All tests in namespace: `--treenode-filter "/*/MyNamespace/*/*"`
-- Filter by property: `--treenode-filter "/*/*/*/*[Category=Integration]"`
-- Multiple wildcards: `--treenode-filter "/*/*/MyTests*/*"`
-
-**Note:** Use single asterisks (`*`) to match segments. Double asterisks (`/**`) are not supported in treenode-filter.
-
-### Key TUnit Command-Line Flags
-
-- `--treenode-filter` - Filter tests by path pattern or properties (syntax: `/{Assembly}/{Namespace}/{Class}/{Method}`)
-- `--list-tests` - Display available tests without running
-- `--fail-fast` - Stop after first failure
-- `--maximum-parallel-tests` - Limit concurrent execution (default: processor count)
-- `--coverage` - Enable Microsoft Code Coverage
-- `--coverage-output-format` - Set coverage format (cobertura, xml, coverage)
-- `--report-trx` - Generate TRX format reports
-- `--output` - Control verbosity (Normal or Detailed)
-- `--no-progress` - Suppress progress reporting
-- `--disable-logo` - Remove TUnit logo display
-- `--diagnostic` - Enable diagnostic logging (Trace level)
-- `--timeout` - Set global test timeout
-- `--reflection` - Enable reflection mode instead of source generation
-
-See https://tunit.dev/docs/reference/command-line-flags for complete TUnit flag reference.
-
-### Key Configuration Files
-
-- `src/Splat.DI.SourceGenerator.slnx` - Modern XML-based solution file (Visual Studio 2022 17.10+)
-- `src/testconfig.json` - Configures test execution (`"parallel": false`) and code coverage (Cobertura format)
-- `src/Directory.Build.props` - Enables `TestingPlatformDotnetTestSupport` for test projects
-- `.github/COPILOT_INSTRUCTIONS.md` - Comprehensive development guidelines
-
-## Architecture Overview
-
-### Core Project Structure
-
-Splat.DI.SourceGenerator is a high-performance C# source generator that produces compile-time dependency injection registrations for Splat. It eliminates runtime reflection, provides full native AOT support, and includes intelligent analyzers with automatic code fixes.
-
-**Generator Project (`Splat.DependencyInjection.SourceGenerator/`)**
-- `Generator.cs` - IIncrementalGenerator entry point with CreateSyntaxProvider pipeline
-- `Models/` - Value-equatable POCO records (no ISymbol/SyntaxNode references)
-  - `RegistrationInfo.cs` - Base record for all registration types
-  - `TransientRegistrationInfo.cs`, `LazySingletonRegistrationInfo.cs`, `ConstantRegistrationInfo.cs`
-  - `ConstructorParameter.cs`, `PropertyInjection.cs`
-  - `EquatableArray.cs` - Value-equatable array wrapper for pipeline caching
-- `CodeGeneration/CodeGenerator.cs` - String-based code generation (not SyntaxFactory)
-- `Constants.cs` - Attribute definitions with `[Embedded]` attribute
-- `DiagnosticWarnings.cs` - Shared diagnostic descriptors
-
-**Analyzer Project (`Splat.DependencyInjection.Analyzer/`)**
-- `Analyzers/ConstructorAnalyzer.cs` - Detects multiple constructors without `[DependencyInjectionConstructor]` (SPLATDI001, SPLATDI003, SPLATDI004)
-- `Analyzers/PropertyAnalyzer.cs` - Validates property injection setters (SPLATDI002)
-- `CodeFixes/ConstructorCodeFixProvider.cs` - Adds `[DependencyInjectionConstructor]` attribute
-- `CodeFixes/PropertyCodeFixProvider.cs` - Fixes property setter accessibility
-
-**Test Projects**
-- `Splat.DependencyInjection.SourceGenerator.Tests/` - 342 snapshot tests using Verify.SourceGenerators
-- `Splat.DependencyInjection.Analyzer.Tests/` - 45 analyzer and code fix tests
-
-### Key Architectural Patterns
-
-**Incremental Generator Pipeline (IIncrementalGenerator)**
-- **Predicate functions** - Fast syntax-only checks (e.g., `IsRegisterInvocation`)
-- **Transform functions** - Semantic analysis + POCO extraction (no ISymbol in output!)
-- **Generation functions** - String-based code output using StringBuilder
-
-**Value-Equatable Models (Critical for Caching)**
-- ALL pipeline models must implement `IEquatable<T>`
-- NEVER include ISymbol or SyntaxNode references in pipeline outputs
-- Use `EquatableArray<T>` for array equality in records
-- Extract strings from symbols using `ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)`
-
-**Generic-First API (AOT Compatible)**
-- Generated code uses `resolver.Register<T>()` instead of `Register(factory, typeof(T))`
-- Eliminates boxing for value types
-- Full Native AOT and trimming support
-
-**Code Generation Strategy**
-- Uses StringBuilder with raw string literals (`"""`)
-- 3-5x faster than SyntaxFactory approach
-- No dependency on ReactiveMarbles.RoslynHelpers or ILRepack
-
-**Analyzer Separation (Roslyn Best Practice)**
-- Generator focuses on code generation only
-- Separate analyzer project provides real-time diagnostics
-- Code fix providers offer automatic fixes (Quick Actions)
-
-### Diagnostic IDs
-
-| ID | Severity | Description | Code Fix Available |
-|----|----------|-------------|--------------------|
-| SPLATDI001 | Warning | Multiple constructors without `[DependencyInjectionConstructor]` | ✅ Yes |
-| SPLATDI002 | Error | Property lacks accessible setter | ✅ Yes |
-| SPLATDI003 | Error | Multiple constructors marked | ❌ Manual fix |
-| SPLATDI004 | Error | Constructor not accessible | ✅ Yes |
-
-## Code Style & Quality Requirements
-
-**CRITICAL:** All code must comply with ReactiveUI contribution guidelines: https://www.reactiveui.net/contribute/index.html
-
-### Style Enforcement
-
-- EditorConfig rules (`.editorconfig`) - comprehensive C# formatting and naming conventions
-- StyleCop Analyzers - builds fail on violations
-- Roslynator Analyzers - additional code quality rules
-- Analysis level: latest with enhanced .NET analyzers
-- **All public APIs require XML documentation comments** (including protected methods of public classes)
-
-### C# Style Rules
-
-- **Braces:** Allman style (each brace on new line)
-- **Indentation:** 4 spaces, no tabs
-- **Fields:** `_camelCase` for private/internal, `readonly` where possible, `static readonly` (not `readonly static`)
-- **Visibility:** Always explicit (e.g., `private string _foo` not `string _foo`), visibility first modifier
-- **Namespaces:** File-scoped preferred, imports outside namespace, sorted (system then third-party)
-- **Types:** Use keywords (`int`, `string`) not BCL types (`Int32`, `String`)
-- **Modern C#:** Use nullable reference types, pattern matching, switch expressions, records, init setters, target-typed new, collection expressions, file-scoped namespaces, primary constructors
-- **Avoid `this.`** unless necessary
-- **Use `nameof()`** instead of string literals
-- **Use `var`** when it improves readability or aids refactoring
-
-See `.github/COPILOT_INSTRUCTIONS.md` for complete style guide.
-
-## Testing Guidelines
-
-- Unit tests use **TUnit** framework with **Microsoft Testing Platform**
-- Test projects: `Splat.DependencyInjection.Analyzer.Tests` and `Splat.DependencyInjection.SourceGenerator.Tests`
-- Coverage configured in `src/testconfig.json` (Cobertura format)
-- Parallel test execution disabled (`"parallel": false` in testconfig.json)
-- Snapshot testing uses Verify.SourceGenerators with `*.verified.cs` files
-- Always write unit tests for new features or bug fixes
-- Follow existing test patterns in test projects
-- Use `TestUtilities.AreEquivalent()` for newline-agnostic source code comparison
-
-### TUnit Testing Framework
-
-- Uses `[Test]` attribute instead of `[Fact]`/`[Theory]`
-- Uses `[Before(Test)]` and `[After(Test)]` hooks instead of IDisposable
-- Uses `await Assert.That(x).IsEqualTo(y)` instead of `Assert.Equal(y, x)`
-- No `ITestOutputHelper` - TUnit uses Microsoft.Testing.Platform for output
-
-## Common Tasks
-
-### Adding a New Feature to Source Generator
-
-1. **Design incremental pipeline** - predicate → transform → generate
-2. **Create value-equatable POCOs** - no ISymbol/SyntaxNode references
-3. Create failing tests first (snapshot tests in SourceGenerator.Tests)
-4. Implement minimal functionality in Generator.cs
-5. Update code generation in CodeGenerator.cs (use StringBuilder, not SyntaxFactory)
-6. Ensure generic-first API usage: `resolver.Register<T>()` not `typeof(T)`
-7. Verify snapshots match expected output (C# 7.3 compatible)
-8. Add XML documentation to all public APIs
-9. Run formatting validation before committing
-
-### Adding a New Analyzer Diagnostic
-
-1. Add diagnostic descriptor to `DiagnosticWarnings.cs`
-2. Create analyzer in `Splat.DependencyInjection.Analyzer/Analyzers/`
-3. Implement `DiagnosticAnalyzer` using `RegisterSymbolAction` or `RegisterSyntaxNodeAction`
-4. Create corresponding code fix provider if fixable
-5. Add tests in `Splat.DependencyInjection.Analyzer.Tests/`
-6. Use `TestUtilities.AreEquivalent()` for source comparison
-7. Update README.md with new diagnostic ID
-
-### Fixing Bugs
-
-1. Create reproduction test (use Verify snapshots)
-2. Fix with minimal changes
-3. Ensure pipeline still caches properly (POCOs value-equatable)
-4. Verify no regression in existing tests
-5. Accept snapshot changes if expected
-
-### Updating Generated Code Format
-
-1. Modify code generation in `CodeGeneration/CodeGenerator.cs`
-2. Use raw string literals (`"""`) for multi-line code
-3. Ensure generic-first API: `resolver.Register<T>()` not `typeof(T)`
-4. Run all snapshot tests - expect 342 failing tests
-5. Review each `.verified.cs` diff carefully
-6. Accept snapshots only if changes are correct
-7. Ensure C# 7.3 compatibility (no file-scoped namespaces, no init properties)
-
-## What to Avoid
-
-- **ISymbol/SyntaxNode in pipeline outputs** - breaks incremental caching
-- **Runtime reflection** in generated code - breaks AOT compatibility
-- **SyntaxFactory for code generation** - 3-5x slower than StringBuilder
-- **Type-based API** - use `resolver.Register<T>()` not `Register(factory, typeof(T))`
-- **Diagnostics in generator** - use separate analyzer project instead
-- **Heavy dependencies** - keep generator lightweight (netstandard2.0 target)
-- **Breaking changes** to generated code format without major version bump
-- **Non-value-equatable models** in pipeline - breaks caching
-
-## Important Notes
-
-- **Value-Equatable POCOs:** CRITICAL for incremental generator caching - never include ISymbol/SyntaxNode
-- **Generic-First API:** All generated code must use `resolver.Register<T>()` for AOT compatibility
-- **String-Based Generation:** Use StringBuilder with raw string literals, not SyntaxFactory
-- **Separate Analyzer:** Diagnostics in separate project following Roslyn best practices
-- **No shallow clones:** Repository requires full clone for git version information used by Nerdbank.GitVersioning
-- **Required .NET SDKs:** .NET 8.0, 9.0, and 10.0 (all three required for full build)
-- **Snapshot Testing:** Review `.verified.cs` diffs carefully before accepting
-- **Comprehensive Instructions:** `.github/COPILOT_INSTRUCTIONS.md` contains detailed development guidelines
-- **Code Formatting:** Always run `dotnet format whitespace` and `dotnet format style` before committing
-
-**Philosophy:** Generate simple, efficient, AOT-compatible dependency injection code at compile-time. Minimize runtime overhead, maximize build performance with incremental caching, and provide excellent developer experience with real-time diagnostics and automatic code fixes.
+- **Platform Support**: This project **builds fully only on Windows**. Linux/macOS have partial support due to ILRepack tooling requirements.
+- **Development Tools**: Visual Studio 2022 or VS Code with C# extension.
+
+### Code Style and Analysis Enforcement
+- **EditorConfig Compliance**: Repository uses comprehensive `.editorconfig` with 500+ rules for C# formatting, naming conventions, and code analysis
+- **StyleCop Analyzers**: Enforces consistent C# code style with `stylecop.analyzers` (v1.2.0-beta.556)
+- **Roslynator Analyzers**: Additional code quality rules with `Roslynator.Analyzers` (v4.14.0)
+- **Analysis Level**: Set to `latest` with enhanced .NET analyzers enabled
+- **CRITICAL**: All code must comply with **ReactiveUI contribution guidelines**: https://www.reactiveui.net/contribute/index.html
+
+### Code Formatting (Fast - Always Run)
+- **ALWAYS** run formatting before committing:
+  ```bash
+  cd src
+  dotnet format whitespace --verify-no-changes
+  dotnet format style --verify-no-changes
+  ```
+  Time: **2-5 seconds per command**.
+
+## Project Overview
+
+### What is Splat DI Source Generator?
+This project is a source generator that produces Splat-based registrations for both constructor and property injection. It eliminates the need for reflection by using C# Source Generation to create dependency injection registrations at compile time.
+
+### Key Features
+- **Constructor Injection**: Automatic registration generation based on constructor parameters
+- **Property Injection**: Support for `[DependencyInjectionProperty]` attribute on properties
+- **Lazy Singleton Support**: `RegisterLazySingleton<TInterface, TImplementation>()` for singleton instances
+- **No Reflection**: Full native speed through compile-time code generation
+- **Splat Integration**: Seamless integration with the Splat service location framework
+
+## Common Development Tasks
+
+### Source Generator Development
+1. **Follow Roslyn Source Generator best practices** - see Microsoft documentation on source generators
+2. **Ensure StyleCop compliance** - all code must pass StyleCop analyzers (SA* rules)
+3. **Run code analysis** - `dotnet build` must complete without analyzer warnings
+4. **Add unit tests** - use Microsoft.CodeAnalysis.Testing for source generator tests
+5. **Update documentation** - especially for public APIs with XML doc comments
+6. **Test generated code** - verify the output compiles and behaves correctly
+
+### Adding New Features
+1. **Follow coding standards** - see ReactiveUI guidelines: https://www.reactiveui.net/contribute/index.html
+2. **Ensure cross-platform compatibility** - while builds require Windows, generated code should work everywhere
+3. **Add comprehensive tests** - test both the generator and the generated code
+4. **Update README.md** - document new attributes or registration methods
+5. **Consider performance** - source generators run during compilation
+
+### Testing Source Generators
+- Use `Microsoft.CodeAnalysis.Testing` framework for testing source generators
+- Test both successful generation and error cases
+- Verify generated code compiles and produces expected registrations
+- Test edge cases like multiple constructors, missing dependencies, etc.
+
+## CI/CD Integration
+
+### GitHub Actions (Windows-based)
+- Uses `reactiveui/actions-common` workflow
+- Requires Windows runner for full build due to ILRepack tooling
+- Installs all workloads automatically
+- Runs comprehensive test suite and uploads coverage
+
+### Local Development
+- **Use** Linux/macOS for quick iteration on core source generator logic
+- **Format code** before every commit
+- **Test generated output** when changing generation logic
+- **Full builds require Windows** due to IL merging requirements
+
+## Troubleshooting
+
+### Common Issues
+1. **"ILRepack not found" errors**: Platform limitation - use Windows for full builds
+2. **"Invalid framework identifier" errors**: Use explicit `-p:TargetFramework=netstandard2.0`
+3. **Source generator not running**: Clean and rebuild, ensure generator is referenced correctly
+4. **Build hangs**: Normal for large builds - wait up to 45 minutes
+5. **Test failures**: May be platform-specific - verify on Windows
+
+### Quick Fixes
+- **Format issues**: Run `dotnet format whitespace` and `dotnet format style`
+- **StyleCop violations**: Check `.editorconfig` rules and `src/stylecop.json` configuration
+- **Analyzer warnings**: Build with `--verbosity normal` to see detailed analyzer messages
+- **Missing XML documentation**: All public APIs require XML doc comments per StyleCop rules
+- **Package restore issues**: Clear NuGet cache with `dotnet nuget locals all --clear`
+- **Generator not working**: Verify `<Analyzer Include="..." />` references in consuming projects
+
+### When to Escalate
+- **Source generator compilation errors** affecting code generation
+- **Cross-platform compatibility** issues affecting generated code
+- **Performance regressions** in generator execution time
+- **Test failures** that persist across platforms
+- **Build system changes** affecting CI/CD pipeline
+
+## Development Patterns
+
+### Source Generator Structure
+- **Incremental Generators**: Use `IIncrementalGenerator` for better performance
+- **Syntax Receivers**: Implement efficient syntax filtering for DI attributes
+- **Code Generation**: Generate clean, readable C# code with proper formatting
+- **Error Handling**: Provide clear diagnostics for invalid usage patterns
+
+### Dependency Injection Patterns
+- **Constructor Injection**: Primary pattern for mandatory dependencies
+- **Property Injection**: For optional dependencies with `[DependencyInjectionProperty]`
+- **Lazy Dependencies**: Use `Lazy<T>` for expensive-to-create dependencies
+- **Service Location**: Integration with Splat's `Locator.Current`
+
+## Resources
+
+### Governance & Contributing
+- **Contribution Hub**: https://www.reactiveui.net/contribute/index.html
+- **ReactiveUI Repository README**: https://github.com/reactiveui/ReactiveUI#readme
+- **Contributing Guidelines**: https://github.com/reactiveui/ReactiveUI/blob/main/CONTRIBUTING.md
+- **Code of Conduct**: https://github.com/reactiveui/ReactiveUI/blob/main/CODE_OF_CONDUCT.md
+
+### Engineering & Style
+- **ReactiveUI Coding/Style Guidance** (start here): https://www.reactiveui.net/contribute/
+- **Build & Project Structure Reference**: https://github.com/reactiveui/ReactiveUI#readme
+
+### Source Generator Resources
+- **Source Generators Documentation**: https://learn.microsoft.com/dotnet/csharp/roslyn-sdk/source-generators-overview
+- **Microsoft.CodeAnalysis.Testing**: https://github.com/dotnet/roslyn-sdk/tree/main/src/Microsoft.CodeAnalysis.Testing
+- **Incremental Generators**: https://github.com/dotnet/roslyn/blob/main/docs/features/incremental-generators.md
+- **Source Generator Cookbook**: https://github.com/dotnet/roslyn/blob/main/docs/features/source-generators.cookbook.md
+
+### Ecosystem
+- **Splat** (service location/DI and logging): https://github.com/reactiveui/splat
+- **DynamicData** (reactive collections): https://github.com/reactivemarbles/DynamicData
+- **ReactiveUI.SourceGenerators**: https://github.com/reactiveui/ReactiveUI.SourceGenerators
+
+### Source Generators & AOT/Trimming
+- **ReactiveUI.SourceGenerators**: https://github.com/reactiveui/ReactiveUI.SourceGenerators
+- **.NET Native AOT Overview**: https://learn.microsoft.com/dotnet/core/deploying/native-aot/
+- **Prepare Libraries for Trimming**: https://learn.microsoft.com/dotnet/core/deploying/trimming/prepare-libraries-for-trimming
+- **Trimming Options (MSBuild)**: https://learn.microsoft.com/dotnet/core/deploying/trimming/trimming-options
+- **Fixing Trim Warnings**: https://learn.microsoft.com/dotnet/core/deploying/trimming/trim-warnings
+
+### Copilot Coding Agent
+- **Best Practices for Copilot Coding Agent**: https://gh.io/copilot-coding-agent-tips
+
+### CI & Misc
+- **GitHub Actions** (Windows builds and workflow runs): https://github.com/reactiveui/Splat.DI.SourceGenerator/actions
+- **ReactiveUI Website Source** (useful for docs cross-refs): https://github.com/reactiveui/website
 
 ---
 > Source: [reactiveui/Splat.DI.SourceGenerator](https://github.com/reactiveui/Splat.DI.SourceGenerator) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-22 -->
+<!-- tomevault:4.0:agents_md:2026-07-24 -->
