@@ -1,0 +1,63 @@
+{
+  "name": "script-samples",
+  "owner": "pnp",
+  "repo": "script-samples",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "script-samples",
+      "path": "scripts/cowork-skills-upload/assets/SKILL.md",
+      "github_url": "https://github.com/pnp/script-samples/tree/main/scripts/cowork-skills-upload/assets/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "script-samples",
+      "path": "scripts/spo-ai-skills-upload/assets/SKILL.md",
+      "github_url": "https://github.com/pnp/script-samples/tree/main/scripts/spo-ai-skills-upload/assets/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "script-samples",
+      "path": ".github/skills/sample-scaffolder/SKILL.md",
+      "github_url": "https://github.com/pnp/script-samples/tree/main/.github/skills/sample-scaffolder/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/pnp/script-samples",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-24T11:55:32Z"
+}
