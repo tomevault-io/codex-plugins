@@ -1,0 +1,75 @@
+{
+  "name": "heji",
+  "owner": "ahaodev",
+  "repo": "heji",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "android-architecture",
+      "path": "client/.github/skills/android-architecture",
+      "github_url": "https://github.com/ahaodev/heji/tree/main/client/.github/skills/android-architecture",
+      "description": ""
+    },
+    {
+      "name": "android-testing",
+      "path": "client/.github/skills/android-testing",
+      "github_url": "https://github.com/ahaodev/heji/tree/main/client/.github/skills/android-testing",
+      "description": ""
+    },
+    {
+      "name": "compose-navigation",
+      "path": "client/.github/skills/compose-navigation",
+      "github_url": "https://github.com/ahaodev/heji/tree/main/client/.github/skills/compose-navigation",
+      "description": ""
+    },
+    {
+      "name": "shadmin-feature-dev",
+      "path": "server/.claude/skills/shadmin-feature-dev",
+      "github_url": "https://github.com/ahaodev/heji/tree/main/server/.claude/skills/shadmin-feature-dev",
+      "description": ""
+    },
+    {
+      "name": "xml-to-compose-migration",
+      "path": "client/.github/skills/xml-to-compose-migration",
+      "github_url": "https://github.com/ahaodev/heji/tree/main/client/.github/skills/xml-to-compose-migration",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/ahaodev/heji",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-24T13:30:46Z"
+}
