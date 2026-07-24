@@ -1,0 +1,51 @@
+{
+  "name": "aksel",
+  "owner": "navikt",
+  "repo": "aksel",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "aksel",
+      "path": ".github/skills/ds-component-restructure/SKILL.md",
+      "github_url": "https://github.com/navikt/aksel/tree/main/.github/skills/ds-component-restructure/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/navikt/aksel",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-24T16:59:39Z"
+}
