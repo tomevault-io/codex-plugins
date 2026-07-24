@@ -4,7 +4,7 @@
   "repo": "Splat.DI.SourceGenerator",
   "description": "",
   "type": "config",
-  "source_format": "CLAUDE.md",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/reactiveui/Splat.DI.SourceGenerator",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-23T04:07:10Z"
+  "distributed_at": "2026-07-24T14:48:21Z"
 }
