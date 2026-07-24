@@ -1,0 +1,105 @@
+{
+  "name": "Azure-Sentinel",
+  "owner": "Azure",
+  "repo": "Azure-Sentinel",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "Azure-Sentinel",
+      "path": ".github/skills/run-solution-analyzer/SKILL.md",
+      "github_url": "https://github.com/Azure/Azure-Sentinel/tree/main/.github/skills/run-solution-analyzer/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Azure-Sentinel",
+      "path": ".github/skills/asim-parser-validator/SKILL.md",
+      "github_url": "https://github.com/Azure/Azure-Sentinel/tree/main/.github/skills/asim-parser-validator/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Azure-Sentinel",
+      "path": ".github/skills/asim-parser-la-deployer/SKILL.md",
+      "github_url": "https://github.com/Azure/Azure-Sentinel/tree/main/.github/skills/asim-parser-la-deployer/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Azure-Sentinel",
+      "path": ".github/skills/update-solution-analyzer/SKILL.md",
+      "github_url": "https://github.com/Azure/Azure-Sentinel/tree/main/.github/skills/update-solution-analyzer/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Azure-Sentinel",
+      "path": ".github/skills/asim-parser-create-parser/SKILL.md",
+      "github_url": "https://github.com/Azure/Azure-Sentinel/tree/main/.github/skills/asim-parser-create-parser/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Azure-Sentinel",
+      "path": ".github/skills/asim-parser-user-prompter/SKILL.md",
+      "github_url": "https://github.com/Azure/Azure-Sentinel/tree/main/.github/skills/asim-parser-user-prompter/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Azure-Sentinel",
+      "path": ".github/skills/asim-parser-github-pr-packager/SKILL.md",
+      "github_url": "https://github.com/Azure/Azure-Sentinel/tree/main/.github/skills/asim-parser-github-pr-packager/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Azure-Sentinel",
+      "path": ".github/skills/log-analytics-workspace-queryer/SKILL.md",
+      "github_url": "https://github.com/Azure/Azure-Sentinel/tree/main/.github/skills/log-analytics-workspace-queryer/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Azure-Sentinel",
+      "path": ".github/skills/asim-parser-creator-orchestrator/SKILL.md",
+      "github_url": "https://github.com/Azure/Azure-Sentinel/tree/main/.github/skills/asim-parser-creator-orchestrator/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Azure-Sentinel",
+      "path": ".github/skills/asim-parser-create-parameter-parser/SKILL.md",
+      "github_url": "https://github.com/Azure/Azure-Sentinel/tree/main/.github/skills/asim-parser-create-parameter-parser/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/Azure/Azure-Sentinel",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-24T13:48:20Z"
+}
