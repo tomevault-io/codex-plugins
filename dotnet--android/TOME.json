@@ -1,0 +1,81 @@
+{
+  "name": "android",
+  "owner": "dotnet",
+  "repo": "android",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "android",
+      "path": ".github/skills/tests/SKILL.md",
+      "github_url": "https://github.com/dotnet/android/tree/main/.github/skills/tests/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "android",
+      "path": ".github/skills/ci-status/SKILL.md",
+      "github_url": "https://github.com/dotnet/android/tree/main/.github/skills/ci-status/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "android",
+      "path": ".github/skills/update-tpn/SKILL.md",
+      "github_url": "https://github.com/dotnet/android/tree/main/.github/skills/update-tpn/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "android",
+      "path": ".github/skills/android-reviewer/SKILL.md",
+      "github_url": "https://github.com/dotnet/android/tree/main/.github/skills/android-reviewer/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "android",
+      "path": ".github/skills/read-assembly-store/SKILL.md",
+      "github_url": "https://github.com/dotnet/android/tree/main/.github/skills/read-assembly-store/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "android",
+      "path": ".github/skills/azdo-build-investigator/SKILL.md",
+      "github_url": "https://github.com/dotnet/android/tree/main/.github/skills/azdo-build-investigator/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/dotnet/android",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-24T13:46:18Z"
+}
