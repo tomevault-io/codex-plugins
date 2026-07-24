@@ -1,10 +1,10 @@
+# GEMINI.md
 
-# CLAUDE.md
+This file provides guidance to Gemini CLI when working with code in this repository.
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
-
-Also consult [AGENTS.md](AGENTS.md), which is the canonical reference for project workflows, tooling, architecture, testing strategy, and development conventions.
+Consult [AGENTS.md](AGENTS.md), which is the canonical reference for project workflows, tooling,
+architecture, testing strategy, and development conventions.
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/keithrbennett) — claim your Tome and manage your conversions.
-<!-- tomevault:4.0:agents_md:2026-04-09 -->
+> Source: [keithrbennett/wifiwand](https://github.com/keithrbennett/wifiwand) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-07-24 -->
