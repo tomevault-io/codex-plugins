@@ -1,0 +1,123 @@
+{
+  "name": "convey",
+  "owner": "bitovi",
+  "repo": "convey",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "convey",
+      "path": ".github/skills/debugging/SKILL.md",
+      "github_url": "https://github.com/bitovi/convey/tree/main/.github/skills/debugging/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "convey",
+      "path": ".github/skills/create-skill/SKILL.md",
+      "github_url": "https://github.com/bitovi/convey/tree/main/.github/skills/create-skill/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "convey",
+      "path": ".github/skills/naming-guide/SKILL.md",
+      "github_url": "https://github.com/bitovi/convey/tree/main/.github/skills/naming-guide/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "convey",
+      "path": ".github/skills/debug-e2e-test/SKILL.md",
+      "github_url": "https://github.com/bitovi/convey/tree/main/.github/skills/debug-e2e-test/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "convey",
+      "path": ".github/skills/write-e2e-test/SKILL.md",
+      "github_url": "https://github.com/bitovi/convey/tree/main/.github/skills/write-e2e-test/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "convey",
+      "path": ".github/skills/frontend-design/SKILL.md",
+      "github_url": "https://github.com/bitovi/convey/tree/main/.github/skills/frontend-design/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "convey",
+      "path": ".github/skills/dev-environments/SKILL.md",
+      "github_url": "https://github.com/bitovi/convey/tree/main/.github/skills/dev-environments/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "convey",
+      "path": ".github/skills/component-registry/SKILL.md",
+      "github_url": "https://github.com/bitovi/convey/tree/main/.github/skills/component-registry/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "convey",
+      "path": ".github/skills/create-react-modlet/SKILL.md",
+      "github_url": "https://github.com/bitovi/convey/tree/main/.github/skills/create-react-modlet/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "convey",
+      "path": ".github/skills/tailwind-vocabulary/SKILL.md",
+      "github_url": "https://github.com/bitovi/convey/tree/main/.github/skills/tailwind-vocabulary/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "convey",
+      "path": ".github/skills/mode-button-behavior/SKILL.md",
+      "github_url": "https://github.com/bitovi/convey/tree/main/.github/skills/mode-button-behavior/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "convey",
+      "path": ".github/skills/extract-ui-component/SKILL.md",
+      "github_url": "https://github.com/bitovi/convey/tree/main/.github/skills/extract-ui-component/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "convey",
+      "path": ".github/skills/preview-className-component/SKILL.md",
+      "github_url": "https://github.com/bitovi/convey/tree/main/.github/skills/preview-className-component/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/bitovi/convey",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-24T11:42:31Z"
+}
