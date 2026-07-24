@@ -1,0 +1,99 @@
+{
+  "name": "rally",
+  "owner": "jsturtevant",
+  "repo": "rally",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "rally",
+      "path": ".squad-templates/skill.md",
+      "github_url": "https://github.com/jsturtevant/rally/tree/main/.squad-templates/skill.md",
+      "description": ""
+    },
+    {
+      "name": "rally",
+      "path": ".claude/skills/rally/SKILL.md",
+      "github_url": "https://github.com/jsturtevant/rally/tree/main/.claude/skills/rally/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "rally",
+      "path": ".squad/skills/ink-ui-patterns/SKILL.md",
+      "github_url": "https://github.com/jsturtevant/rally/tree/main/.squad/skills/ink-ui-patterns/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "rally",
+      "path": ".squad/skills/pr-review-process/SKILL.md",
+      "github_url": "https://github.com/jsturtevant/rally/tree/main/.squad/skills/pr-review-process/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "rally",
+      "path": ".squad/skills/squad-conventions/SKILL.md",
+      "github_url": "https://github.com/jsturtevant/rally/tree/main/.squad/skills/squad-conventions/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "rally",
+      "path": ".squad/skills/squad-sdk-local-build/SKILL.md",
+      "github_url": "https://github.com/jsturtevant/rally/tree/main/.squad/skills/squad-sdk-local-build/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "rally",
+      "path": ".squad/skills/rally-design-checklist/SKILL.md",
+      "github_url": "https://github.com/jsturtevant/rally/tree/main/.squad/skills/rally-design-checklist/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "rally",
+      "path": ".claude/skills/parallel-worktree-agents/SKILL.md",
+      "github_url": "https://github.com/jsturtevant/rally/tree/main/.claude/skills/parallel-worktree-agents/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "rally",
+      "path": ".squad-templates/skills/squad-conventions/SKILL.md",
+      "github_url": "https://github.com/jsturtevant/rally/tree/main/.squad-templates/skills/squad-conventions/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/jsturtevant/rally",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-24T13:47:18Z"
+}
