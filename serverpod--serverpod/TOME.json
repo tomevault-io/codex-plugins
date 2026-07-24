@@ -1,0 +1,171 @@
+{
+  "name": "serverpod",
+  "owner": "serverpod",
+  "repo": "serverpod",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "serverpod-auth-module",
+      "path": "packages/serverpod/skills/serverpod-auth-module",
+      "github_url": "https://github.com/serverpod/serverpod/tree/main/packages/serverpod/skills/serverpod-auth-module",
+      "description": ""
+    },
+    {
+      "name": "serverpod-webserver",
+      "path": "packages/serverpod/skills/serverpod-webserver",
+      "github_url": "https://github.com/serverpod/serverpod/tree/main/packages/serverpod/skills/serverpod-webserver",
+      "description": ""
+    },
+    {
+      "name": "serverpod",
+      "path": "packages/serverpod/skills/serverpod-auth/SKILL.md",
+      "github_url": "https://github.com/serverpod/serverpod/tree/main/packages/serverpod/skills/serverpod-auth/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "serverpod",
+      "path": "packages/serverpod/skills/serverpod-models/SKILL.md",
+      "github_url": "https://github.com/serverpod/serverpod/tree/main/packages/serverpod/skills/serverpod-models/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "serverpod",
+      "path": "packages/serverpod/skills/serverpod-streams/SKILL.md",
+      "github_url": "https://github.com/serverpod/serverpod/tree/main/packages/serverpod/skills/serverpod-streams/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "serverpod",
+      "path": "packages/serverpod/skills/serverpod-caching/SKILL.md",
+      "github_url": "https://github.com/serverpod/serverpod/tree/main/packages/serverpod/skills/serverpod-caching/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "serverpod",
+      "path": "packages/serverpod/skills/serverpod-logging/SKILL.md",
+      "github_url": "https://github.com/serverpod/serverpod/tree/main/packages/serverpod/skills/serverpod-logging/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "serverpod",
+      "path": "packages/serverpod/skills/serverpod-modules/SKILL.md",
+      "github_url": "https://github.com/serverpod/serverpod/tree/main/packages/serverpod/skills/serverpod-modules/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "serverpod",
+      "path": "packages/serverpod/skills/serverpod-database/SKILL.md",
+      "github_url": "https://github.com/serverpod/serverpod/tree/main/packages/serverpod/skills/serverpod-database/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "serverpod",
+      "path": "packages/serverpod/skills/serverpod-sessions/SKILL.md",
+      "github_url": "https://github.com/serverpod/serverpod/tree/main/packages/serverpod/skills/serverpod-sessions/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "serverpod",
+      "path": "packages/serverpod/skills/serverpod-overview/SKILL.md",
+      "github_url": "https://github.com/serverpod/serverpod/tree/main/packages/serverpod/skills/serverpod-overview/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "serverpod",
+      "path": "packages/serverpod/skills/serverpod-webserver/SKILL.md",
+      "github_url": "https://github.com/serverpod/serverpod/tree/main/packages/serverpod/skills/serverpod-webserver/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "serverpod",
+      "path": "packages/serverpod/skills/serverpod-endpoints/SKILL.md",
+      "github_url": "https://github.com/serverpod/serverpod/tree/main/packages/serverpod/skills/serverpod-endpoints/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "serverpod",
+      "path": "packages/serverpod/skills/serverpod-upgrading/SKILL.md",
+      "github_url": "https://github.com/serverpod/serverpod/tree/main/packages/serverpod/skills/serverpod-upgrading/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "serverpod",
+      "path": "packages/serverpod/skills/serverpod-migrations/SKILL.md",
+      "github_url": "https://github.com/serverpod/serverpod/tree/main/packages/serverpod/skills/serverpod-migrations/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "serverpod",
+      "path": "packages/serverpod/skills/serverpod-scheduling/SKILL.md",
+      "github_url": "https://github.com/serverpod/serverpod/tree/main/packages/serverpod/skills/serverpod-scheduling/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "serverpod",
+      "path": "packages/serverpod/skills/serverpod-file-uploads/SKILL.md",
+      "github_url": "https://github.com/serverpod/serverpod/tree/main/packages/serverpod/skills/serverpod-file-uploads/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "serverpod",
+      "path": "packages/serverpod/skills/serverpod-configuration/SKILL.md",
+      "github_url": "https://github.com/serverpod/serverpod/tree/main/packages/serverpod/skills/serverpod-configuration/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "serverpod",
+      "path": "packages/serverpod/skills/serverpod-health-checks/SKILL.md",
+      "github_url": "https://github.com/serverpod/serverpod/tree/main/packages/serverpod/skills/serverpod-health-checks/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "serverpod",
+      "path": "packages/serverpod/skills/serverpod-server-events/SKILL.md",
+      "github_url": "https://github.com/serverpod/serverpod/tree/main/packages/serverpod/skills/serverpod-server-events/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "serverpod",
+      "path": "packages/serverpod/skills/serverpod-flutter-frontend/SKILL.md",
+      "github_url": "https://github.com/serverpod/serverpod/tree/main/packages/serverpod/skills/serverpod-flutter-frontend/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/serverpod/serverpod",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-24T15:34:51Z"
+}
