@@ -1,0 +1,81 @@
+{
+  "name": "zotonic",
+  "owner": "zotonic",
+  "repo": "zotonic",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "zotonic",
+      "path": ".agents/skills/zotonic-coding/SKILL.md",
+      "github_url": "https://github.com/zotonic/zotonic/tree/main/.agents/skills/zotonic-coding/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "zotonic",
+      "path": ".agents/skills/zotonic-security/SKILL.md",
+      "github_url": "https://github.com/zotonic/zotonic/tree/main/.agents/skills/zotonic-security/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "zotonic",
+      "path": ".agents/skills/zotonic-javascript/SKILL.md",
+      "github_url": "https://github.com/zotonic/zotonic/tree/main/.agents/skills/zotonic-javascript/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "zotonic",
+      "path": ".agents/skills/zotonic-module-porting/SKILL.md",
+      "github_url": "https://github.com/zotonic/zotonic/tree/main/.agents/skills/zotonic-module-porting/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "zotonic",
+      "path": ".agents/skills/zotonic-elm-to-templates/SKILL.md",
+      "github_url": "https://github.com/zotonic/zotonic/tree/main/.agents/skills/zotonic-elm-to-templates/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "zotonic",
+      "path": ".agents/skills/zotonic-template-creation/SKILL.md",
+      "github_url": "https://github.com/zotonic/zotonic/tree/main/.agents/skills/zotonic-template-creation/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/zotonic/zotonic",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-24T22:53:10Z"
+}
