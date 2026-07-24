@@ -1,0 +1,225 @@
+{
+  "name": "SadConsole",
+  "owner": "Thraka",
+  "repo": "SadConsole",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "SadConsole",
+      "path": ".squad/skill.md",
+      "github_url": "https://github.com/Thraka/SadConsole/tree/main/.squad/skill.md",
+      "description": ""
+    },
+    {
+      "name": "SadConsole",
+      "path": ".squad/templates/skill.md",
+      "github_url": "https://github.com/Thraka/SadConsole/tree/main/.squad/templates/skill.md",
+      "description": ""
+    },
+    {
+      "name": "SadConsole",
+      "path": ".copilot/skills/nap/SKILL.md",
+      "github_url": "https://github.com/Thraka/SadConsole/tree/main/.copilot/skills/nap/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "SadConsole",
+      "path": ".copilot/skills/reskill/SKILL.md",
+      "github_url": "https://github.com/Thraka/SadConsole/tree/main/.copilot/skills/reskill/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "SadConsole",
+      "path": ".copilot/skills/humanizer/SKILL.md",
+      "github_url": "https://github.com/Thraka/SadConsole/tree/main/.copilot/skills/humanizer/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "SadConsole",
+      "path": ".copilot/skills/init-mode/SKILL.md",
+      "github_url": "https://github.com/Thraka/SadConsole/tree/main/.copilot/skills/init-mode/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "SadConsole",
+      "path": ".copilot/skills/cli-wiring/SKILL.md",
+      "github_url": "https://github.com/Thraka/SadConsole/tree/main/.copilot/skills/cli-wiring/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "SadConsole",
+      "path": ".copilot/skills/cross-squad/SKILL.md",
+      "github_url": "https://github.com/Thraka/SadConsole/tree/main/.copilot/skills/cross-squad/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "SadConsole",
+      "path": ".copilot/skills/git-workflow/SKILL.md",
+      "github_url": "https://github.com/Thraka/SadConsole/tree/main/.copilot/skills/git-workflow/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "SadConsole",
+      "path": ".copilot/skills/economy-mode/SKILL.md",
+      "github_url": "https://github.com/Thraka/SadConsole/tree/main/.copilot/skills/economy-mode/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "SadConsole",
+      "path": ".copilot/skills/agent-conduct/SKILL.md",
+      "github_url": "https://github.com/Thraka/SadConsole/tree/main/.copilot/skills/agent-conduct/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "SadConsole",
+      "path": ".copilot/skills/external-comms/SKILL.md",
+      "github_url": "https://github.com/Thraka/SadConsole/tree/main/.copilot/skills/external-comms/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "SadConsole",
+      "path": ".copilot/skills/personal-squad/SKILL.md",
+      "github_url": "https://github.com/Thraka/SadConsole/tree/main/.copilot/skills/personal-squad/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "SadConsole",
+      "path": ".copilot/skills/docs-standards/SKILL.md",
+      "github_url": "https://github.com/Thraka/SadConsole/tree/main/.copilot/skills/docs-standards/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "SadConsole",
+      "path": ".copilot/skills/release-process/SKILL.md",
+      "github_url": "https://github.com/Thraka/SadConsole/tree/main/.copilot/skills/release-process/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "SadConsole",
+      "path": ".copilot/skills/model-selection/SKILL.md",
+      "github_url": "https://github.com/Thraka/SadConsole/tree/main/.copilot/skills/model-selection/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "SadConsole",
+      "path": ".copilot/skills/history-hygiene/SKILL.md",
+      "github_url": "https://github.com/Thraka/SadConsole/tree/main/.copilot/skills/history-hygiene/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "SadConsole",
+      "path": ".copilot/skills/test-discipline/SKILL.md",
+      "github_url": "https://github.com/Thraka/SadConsole/tree/main/.copilot/skills/test-discipline/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "SadConsole",
+      "path": ".copilot/skills/distributed-mesh/SKILL.md",
+      "github_url": "https://github.com/Thraka/SadConsole/tree/main/.copilot/skills/distributed-mesh/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "SadConsole",
+      "path": ".copilot/skills/session-recovery/SKILL.md",
+      "github_url": "https://github.com/Thraka/SadConsole/tree/main/.copilot/skills/session-recovery/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "SadConsole",
+      "path": ".copilot/skills/gh-auth-isolation/SKILL.md",
+      "github_url": "https://github.com/Thraka/SadConsole/tree/main/.copilot/skills/gh-auth-isolation/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "SadConsole",
+      "path": ".copilot/skills/squad-conventions/SKILL.md",
+      "github_url": "https://github.com/Thraka/SadConsole/tree/main/.copilot/skills/squad-conventions/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "SadConsole",
+      "path": ".copilot/skills/reviewer-protocol/SKILL.md",
+      "github_url": "https://github.com/Thraka/SadConsole/tree/main/.copilot/skills/reviewer-protocol/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "SadConsole",
+      "path": ".copilot/skills/ci-validation-gates/SKILL.md",
+      "github_url": "https://github.com/Thraka/SadConsole/tree/main/.copilot/skills/ci-validation-gates/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "SadConsole",
+      "path": ".copilot/skills/agent-collaboration/SKILL.md",
+      "github_url": "https://github.com/Thraka/SadConsole/tree/main/.copilot/skills/agent-collaboration/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "SadConsole",
+      "path": ".copilot/skills/github-multi-account/SKILL.md",
+      "github_url": "https://github.com/Thraka/SadConsole/tree/main/.copilot/skills/github-multi-account/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "SadConsole",
+      "path": ".copilot/skills/client-compatibility/SKILL.md",
+      "github_url": "https://github.com/Thraka/SadConsole/tree/main/.copilot/skills/client-compatibility/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "SadConsole",
+      "path": ".copilot/skills/windows-compatibility/SKILL.md",
+      "github_url": "https://github.com/Thraka/SadConsole/tree/main/.copilot/skills/windows-compatibility/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "SadConsole",
+      "path": ".copilot/skills/architectural-proposals/SKILL.md",
+      "github_url": "https://github.com/Thraka/SadConsole/tree/main/.copilot/skills/architectural-proposals/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "SadConsole",
+      "path": ".copilot/skills/pending-wrap-resolution/SKILL.md",
+      "github_url": "https://github.com/Thraka/SadConsole/tree/main/.copilot/skills/pending-wrap-resolution/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/Thraka/SadConsole",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-24T13:53:05Z"
+}
