@@ -1,0 +1,81 @@
+{
+  "name": "azure-api-management-policy-toolkit",
+  "owner": "Azure",
+  "repo": "azure-api-management-policy-toolkit",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "azure-api-management-policy-toolkit",
+      "path": ".github/skills/policy-testing/SKILL.md",
+      "github_url": "https://github.com/Azure/azure-api-management-policy-toolkit/tree/main/.github/skills/policy-testing/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "azure-api-management-policy-toolkit",
+      "path": ".github/skills/policy-emulator/SKILL.md",
+      "github_url": "https://github.com/Azure/azure-api-management-policy-toolkit/tree/main/.github/skills/policy-emulator/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "azure-api-management-policy-toolkit",
+      "path": ".github/skills/policy-authoring/SKILL.md",
+      "github_url": "https://github.com/Azure/azure-api-management-policy-toolkit/tree/main/.github/skills/policy-authoring/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "azure-api-management-policy-toolkit",
+      "path": ".github/skills/policy-compilation/SKILL.md",
+      "github_url": "https://github.com/Azure/azure-api-management-policy-toolkit/tree/main/.github/skills/policy-compilation/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "azure-api-management-policy-toolkit",
+      "path": ".github/skills/policy-emulator-testing/SKILL.md",
+      "github_url": "https://github.com/Azure/azure-api-management-policy-toolkit/tree/main/.github/skills/policy-emulator-testing/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "azure-api-management-policy-toolkit",
+      "path": ".github/skills/policy-codebase-reference/SKILL.md",
+      "github_url": "https://github.com/Azure/azure-api-management-policy-toolkit/tree/main/.github/skills/policy-codebase-reference/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/Azure/azure-api-management-policy-toolkit",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-24T11:52:20Z"
+}
