@@ -1,0 +1,99 @@
+{
+  "name": "BEEQ",
+  "owner": "Endava",
+  "repo": "BEEQ",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "BEEQ",
+      "path": "apps/beeq-docs/skill.md",
+      "github_url": "https://github.com/Endava/BEEQ/tree/main/apps/beeq-docs/skill.md",
+      "description": ""
+    },
+    {
+      "name": "BEEQ",
+      "path": ".agents/skills/review-doc/SKILL.md",
+      "github_url": "https://github.com/Endava/BEEQ/tree/main/.agents/skills/review-doc/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "BEEQ",
+      "path": ".agents/skills/doc-component/SKILL.md",
+      "github_url": "https://github.com/Endava/BEEQ/tree/main/.agents/skills/doc-component/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "BEEQ",
+      "path": ".agents/skills/write-stories/SKILL.md",
+      "github_url": "https://github.com/Endava/BEEQ/tree/main/.agents/skills/write-stories/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "BEEQ",
+      "path": ".agents/skills/write-e2e-tests/SKILL.md",
+      "github_url": "https://github.com/Endava/BEEQ/tree/main/.agents/skills/write-e2e-tests/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "BEEQ",
+      "path": ".agents/skills/review-component/SKILL.md",
+      "github_url": "https://github.com/Endava/BEEQ/tree/main/.agents/skills/review-component/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "BEEQ",
+      "path": ".agents/skills/write-unit-tests/SKILL.md",
+      "github_url": "https://github.com/Endava/BEEQ/tree/main/.agents/skills/write-unit-tests/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "BEEQ",
+      "path": ".agents/skills/create-component/SKILL.md",
+      "github_url": "https://github.com/Endava/BEEQ/tree/main/.agents/skills/create-component/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "BEEQ",
+      "path": ".agents/skills/fix-accessibility/SKILL.md",
+      "github_url": "https://github.com/Endava/BEEQ/tree/main/.agents/skills/fix-accessibility/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/Endava/BEEQ",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-24T18:54:49Z"
+}
