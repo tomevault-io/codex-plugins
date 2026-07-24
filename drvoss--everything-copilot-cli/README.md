@@ -1,8 +1,6 @@
 # AI instruction files for everything-copilot-cli
 
-> Sourced from [drvoss/everything-copilot-cli](https://github.com/drvoss/everything-copilot-cli) and converted for every major platform by [TomeVault](https://tomevault.io)
-
-The definitive guide & configuration system for GitHub Copilot CLI — agents, skills, rules, multi-AI orchestration, and more
+> Sourced from [drvoss/everything-copilot-cli](https://github.com/drvoss/everything-copilot-cli), graded against the public Tome Standard and kept consistent across every major platform by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
@@ -17,7 +15,7 @@ Original source: `copilot-instructions.md` in [drvoss/everything-copilot-cli](ht
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [drvoss/everything-copilot-cli](https://github.com/drvoss/everything-copilot-cli) — a repo with 29+ stars on GitHub.
+From [drvoss/everything-copilot-cli](https://github.com/drvoss/everything-copilot-cli) — a repo with 41+ stars on GitHub.
 
 ---
 
