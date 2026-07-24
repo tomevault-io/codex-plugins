@@ -1,0 +1,69 @@
+{
+  "name": "pulumi-digitalocean",
+  "owner": "pulumi",
+  "repo": "pulumi-digitalocean",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "provider-code-review",
+      "path": ".claude/skills/provider-code-review",
+      "github_url": "https://github.com/pulumi/pulumi-digitalocean/tree/main/.claude/skills/provider-code-review",
+      "description": ""
+    },
+    {
+      "name": "pulumi-digitalocean",
+      "path": ".claude/skills/upstream-patches/SKILL.md",
+      "github_url": "https://github.com/pulumi/pulumi-digitalocean/tree/main/.claude/skills/upstream-patches/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "pulumi-digitalocean",
+      "path": ".claude/skills/provider-code-review/SKILL.md",
+      "github_url": "https://github.com/pulumi/pulumi-digitalocean/tree/main/.claude/skills/provider-code-review/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "pulumi-digitalocean",
+      "path": ".claude/skills/pulumi-upgrade-provider/SKILL.md",
+      "github_url": "https://github.com/pulumi/pulumi-digitalocean/tree/main/.claude/skills/pulumi-upgrade-provider/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/pulumi/pulumi-digitalocean",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-24T15:55:42Z"
+}
