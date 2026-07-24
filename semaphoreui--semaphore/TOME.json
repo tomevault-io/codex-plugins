@@ -1,0 +1,51 @@
+{
+  "name": "semaphore",
+  "owner": "semaphoreui",
+  "repo": "semaphore",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "semaphore-third-party-licenses",
+      "path": ".claude/skills/semaphore-third-party-licenses",
+      "github_url": "https://github.com/semaphoreui/semaphore/tree/main/.claude/skills/semaphore-third-party-licenses",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/semaphoreui/semaphore",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-24T16:13:51Z"
+}
