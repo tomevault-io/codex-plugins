@@ -1,0 +1,69 @@
+{
+  "name": "vscode-cosmosdb",
+  "owner": "microsoft",
+  "repo": "vscode-cosmosdb",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "vscode-cosmosdb",
+      "path": "skills/cosmosdb-best-practices/SKILL.md",
+      "github_url": "https://github.com/microsoft/vscode-cosmosdb/tree/main/skills/cosmosdb-best-practices/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "vscode-cosmosdb",
+      "path": ".github/skills/backport/SKILL.md",
+      "github_url": "https://github.com/microsoft/vscode-cosmosdb/tree/main/.github/skills/backport/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "vscode-cosmosdb",
+      "path": ".github/skills/telemetry-best-practices/SKILL.md",
+      "github_url": "https://github.com/microsoft/vscode-cosmosdb/tree/main/.github/skills/telemetry-best-practices/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "vscode-cosmosdb",
+      "path": ".github/skills/accessibility-aria-expert/SKILL.md",
+      "github_url": "https://github.com/microsoft/vscode-cosmosdb/tree/main/.github/skills/accessibility-aria-expert/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/microsoft/vscode-cosmosdb",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-24T11:38:29Z"
+}
