@@ -1,0 +1,57 @@
+{
+  "name": "DevOpsExamples",
+  "owner": "LanceMcCarthy",
+  "repo": "DevOpsExamples",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "DevOpsExamples",
+      "path": ".github/skills/configure-telerik-nuget/SKILL.md",
+      "github_url": "https://github.com/LanceMcCarthy/DevOpsExamples/tree/main/.github/skills/configure-telerik-nuget/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "DevOpsExamples",
+      "path": ".github/skills/github-actions-failure-debugging/SKILL.md",
+      "github_url": "https://github.com/LanceMcCarthy/DevOpsExamples/tree/main/.github/skills/github-actions-failure-debugging/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/LanceMcCarthy/DevOpsExamples",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-24T14:16:07Z"
+}
