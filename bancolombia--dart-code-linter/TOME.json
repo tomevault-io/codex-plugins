@@ -1,0 +1,57 @@
+{
+  "name": "dart-code-linter",
+  "owner": "bancolombia",
+  "repo": "dart-code-linter",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "dart-code-linter",
+      "path": ".cursor/skills/fix-lints/SKILL.md",
+      "github_url": "https://github.com/bancolombia/dart-code-linter/tree/main/.cursor/skills/fix-lints/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "dart-code-linter",
+      "path": ".cursor/skills/analyze-code/SKILL.md",
+      "github_url": "https://github.com/bancolombia/dart-code-linter/tree/main/.cursor/skills/analyze-code/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/bancolombia/dart-code-linter",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-24T12:03:27Z"
+}
