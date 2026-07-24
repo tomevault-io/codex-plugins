@@ -1,0 +1,183 @@
+{
+  "name": "terraform-provider-azurecaf",
+  "owner": "aztfmod",
+  "repo": "terraform-provider-azurecaf",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "terraform-provider-azurecaf",
+      "path": ".github/skills/azure-caf-sync/SKILL.md",
+      "github_url": "https://github.com/aztfmod/terraform-provider-azurecaf/tree/main/.github/skills/azure-caf-sync/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "terraform-provider-azurecaf",
+      "path": ".github/skills/e2e-test-runner/SKILL.md",
+      "github_url": "https://github.com/aztfmod/terraform-provider-azurecaf/tree/main/.github/skills/e2e-test-runner/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "terraform-provider-azurecaf",
+      "path": ".github/skills/changelog-update/SKILL.md",
+      "github_url": "https://github.com/aztfmod/terraform-provider-azurecaf/tree/main/.github/skills/changelog-update/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "terraform-provider-azurecaf",
+      "path": ".github/skills/coverage-analysis/SKILL.md",
+      "github_url": "https://github.com/aztfmod/terraform-provider-azurecaf/tree/main/.github/skills/coverage-analysis/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "terraform-provider-azurecaf",
+      "path": ".github/skills/semver-assessment/SKILL.md",
+      "github_url": "https://github.com/aztfmod/terraform-provider-azurecaf/tree/main/.github/skills/semver-assessment/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "terraform-provider-azurecaf",
+      "path": ".github/skills/example-generator/SKILL.md",
+      "github_url": "https://github.com/aztfmod/terraform-provider-azurecaf/tree/main/.github/skills/example-generator/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "terraform-provider-azurecaf",
+      "path": ".github/skills/contributor-guide/SKILL.md",
+      "github_url": "https://github.com/aztfmod/terraform-provider-azurecaf/tree/main/.github/skills/contributor-guide/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "terraform-provider-azurecaf",
+      "path": ".github/skills/docs-resource-sync/SKILL.md",
+      "github_url": "https://github.com/aztfmod/terraform-provider-azurecaf/tree/main/.github/skills/docs-resource-sync/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "terraform-provider-azurecaf",
+      "path": ".github/skills/terraform-mock-test/SKILL.md",
+      "github_url": "https://github.com/aztfmod/terraform-provider-azurecaf/tree/main/.github/skills/terraform-mock-test/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "terraform-provider-azurecaf",
+      "path": ".github/skills/pr-compliance-check/SKILL.md",
+      "github_url": "https://github.com/aztfmod/terraform-provider-azurecaf/tree/main/.github/skills/pr-compliance-check/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "terraform-provider-azurecaf",
+      "path": ".github/skills/provider-build-test/SKILL.md",
+      "github_url": "https://github.com/aztfmod/terraform-provider-azurecaf/tree/main/.github/skills/provider-build-test/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "terraform-provider-azurecaf",
+      "path": ".github/skills/resource-bulk-import/SKILL.md",
+      "github_url": "https://github.com/aztfmod/terraform-provider-azurecaf/tree/main/.github/skills/resource-bulk-import/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "terraform-provider-azurecaf",
+      "path": ".github/skills/resource-diff-report/SKILL.md",
+      "github_url": "https://github.com/aztfmod/terraform-provider-azurecaf/tree/main/.github/skills/resource-diff-report/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "terraform-provider-azurecaf",
+      "path": ".github/skills/readme-resource-table/SKILL.md",
+      "github_url": "https://github.com/aztfmod/terraform-provider-azurecaf/tree/main/.github/skills/readme-resource-table/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "terraform-provider-azurecaf",
+      "path": ".github/skills/azure-naming-research/SKILL.md",
+      "github_url": "https://github.com/aztfmod/terraform-provider-azurecaf/tree/main/.github/skills/azure-naming-research/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "terraform-provider-azurecaf",
+      "path": ".github/skills/pre-release-validation/SKILL.md",
+      "github_url": "https://github.com/aztfmod/terraform-provider-azurecaf/tree/main/.github/skills/pre-release-validation/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "terraform-provider-azurecaf",
+      "path": ".github/skills/regression-test-runner/SKILL.md",
+      "github_url": "https://github.com/aztfmod/terraform-provider-azurecaf/tree/main/.github/skills/regression-test-runner/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "terraform-provider-azurecaf",
+      "path": ".github/skills/test-failure-diagnosis/SKILL.md",
+      "github_url": "https://github.com/aztfmod/terraform-provider-azurecaf/tree/main/.github/skills/test-failure-diagnosis/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "terraform-provider-azurecaf",
+      "path": ".github/skills/issue-to-resource-spec/SKILL.md",
+      "github_url": "https://github.com/aztfmod/terraform-provider-azurecaf/tree/main/.github/skills/issue-to-resource-spec/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "terraform-provider-azurecaf",
+      "path": ".github/skills/release-notes-generator/SKILL.md",
+      "github_url": "https://github.com/aztfmod/terraform-provider-azurecaf/tree/main/.github/skills/release-notes-generator/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "terraform-provider-azurecaf",
+      "path": ".github/skills/naming-rules-drift-check/SKILL.md",
+      "github_url": "https://github.com/aztfmod/terraform-provider-azurecaf/tree/main/.github/skills/naming-rules-drift-check/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "terraform-provider-azurecaf",
+      "path": ".github/skills/resource-definition-json/SKILL.md",
+      "github_url": "https://github.com/aztfmod/terraform-provider-azurecaf/tree/main/.github/skills/resource-definition-json/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "terraform-provider-azurecaf",
+      "path": ".github/skills/resource-completeness-check/SKILL.md",
+      "github_url": "https://github.com/aztfmod/terraform-provider-azurecaf/tree/main/.github/skills/resource-completeness-check/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/aztfmod/terraform-provider-azurecaf",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-24T13:55:38Z"
+}
