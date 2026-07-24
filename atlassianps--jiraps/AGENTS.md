@@ -1,0 +1,23 @@
+# GitHub Copilot Entry Point
+
+Copilot should treat `AGENTS.md` as the canonical project rule set.
+Keep this file small to avoid duplicating context.
+
+## Read First
+
+- `../AGENTS.md`
+- `ai-context/powershell-rules.md` for Cloud/Data Center or REST/API changes
+- `instructions/` for Copilot file-pattern rules
+
+## Critical Rules
+
+- One functionality per commit: code, tests, docs, and green validation.
+- Use `Invoke-Build -Task Build, Test` as the full-suite gate before commit.
+- All behavior changes must work on Jira Cloud and Data Center unless explicitly scoped.
+- Cloud uses `accountId`; Data Center uses `username` or `name`.
+- REST calls must go through `Invoke-JiraMethod`.
+- Public cmdlet help lives in `docs/en-US/commands/*.md`, not comment-based help.
+
+---
+> Source: [AtlassianPS/JiraPS](https://github.com/AtlassianPS/JiraPS) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-07-24 -->
