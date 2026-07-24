@@ -1,0 +1,243 @@
+{
+  "name": "BlazorWebFormsComponents",
+  "owner": "FritzAndFriends",
+  "repo": "BlazorWebFormsComponents",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "BlazorWebFormsComponents",
+      "path": ".squad/skill.md",
+      "github_url": "https://github.com/FritzAndFriends/BlazorWebFormsComponents/tree/main/.squad/skill.md",
+      "description": ""
+    },
+    {
+      "name": "BlazorWebFormsComponents",
+      "path": ".ai-team/skill.md",
+      "github_url": "https://github.com/FritzAndFriends/BlazorWebFormsComponents/tree/main/.ai-team/skill.md",
+      "description": ""
+    },
+    {
+      "name": "BlazorWebFormsComponents",
+      "path": ".squad/templates/skill.md",
+      "github_url": "https://github.com/FritzAndFriends/BlazorWebFormsComponents/tree/main/.squad/templates/skill.md",
+      "description": ""
+    },
+    {
+      "name": "BlazorWebFormsComponents",
+      "path": ".copilot/skills/git-workflow/SKILL.md",
+      "github_url": "https://github.com/FritzAndFriends/BlazorWebFormsComponents/tree/main/.copilot/skills/git-workflow/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "BlazorWebFormsComponents",
+      "path": ".copilot/skills/error-recovery/SKILL.md",
+      "github_url": "https://github.com/FritzAndFriends/BlazorWebFormsComponents/tree/main/.copilot/skills/error-recovery/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "BlazorWebFormsComponents",
+      "path": ".copilot/skills/test-discipline/SKILL.md",
+      "github_url": "https://github.com/FritzAndFriends/BlazorWebFormsComponents/tree/main/.copilot/skills/test-discipline/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "BlazorWebFormsComponents",
+      "path": ".copilot/skills/session-recovery/SKILL.md",
+      "github_url": "https://github.com/FritzAndFriends/BlazorWebFormsComponents/tree/main/.copilot/skills/session-recovery/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "BlazorWebFormsComponents",
+      "path": ".copilot/skills/squad-conventions/SKILL.md",
+      "github_url": "https://github.com/FritzAndFriends/BlazorWebFormsComponents/tree/main/.copilot/skills/squad-conventions/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "BlazorWebFormsComponents",
+      "path": ".copilot/skills/reviewer-protocol/SKILL.md",
+      "github_url": "https://github.com/FritzAndFriends/BlazorWebFormsComponents/tree/main/.copilot/skills/reviewer-protocol/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "BlazorWebFormsComponents",
+      "path": ".copilot/skills/agent-collaboration/SKILL.md",
+      "github_url": "https://github.com/FritzAndFriends/BlazorWebFormsComponents/tree/main/.copilot/skills/agent-collaboration/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "BlazorWebFormsComponents",
+      "path": "migration-toolkit/skills/bwfc-migration/SKILL.md",
+      "github_url": "https://github.com/FritzAndFriends/BlazorWebFormsComponents/tree/main/migration-toolkit/skills/bwfc-migration/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "BlazorWebFormsComponents",
+      "path": ".squad/skills/semantic-pattern-authoring/SKILL.md",
+      "github_url": "https://github.com/FritzAndFriends/BlazorWebFormsComponents/tree/main/.squad/skills/semantic-pattern-authoring/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "BlazorWebFormsComponents",
+      "path": ".squad/skills/semantic-pattern-guardrails/SKILL.md",
+      "github_url": "https://github.com/FritzAndFriends/BlazorWebFormsComponents/tree/main/.squad/skills/semantic-pattern-guardrails/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "BlazorWebFormsComponents",
+      "path": ".squad/skills/cli-compile-surface-hardening/SKILL.md",
+      "github_url": "https://github.com/FritzAndFriends/BlazorWebFormsComponents/tree/main/.squad/skills/cli-compile-surface-hardening/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "BlazorWebFormsComponents",
+      "path": "migration-toolkit/skills/bwfc-data-migration/SKILL.md",
+      "github_url": "https://github.com/FritzAndFriends/BlazorWebFormsComponents/tree/main/migration-toolkit/skills/bwfc-data-migration/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "BlazorWebFormsComponents",
+      "path": "migration-toolkit/skills/migration-standards/SKILL.md",
+      "github_url": "https://github.com/FritzAndFriends/BlazorWebFormsComponents/tree/main/migration-toolkit/skills/migration-standards/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "BlazorWebFormsComponents",
+      "path": "migration-toolkit/skills/bwfc-ascx-migration/SKILL.md",
+      "github_url": "https://github.com/FritzAndFriends/BlazorWebFormsComponents/tree/main/migration-toolkit/skills/bwfc-ascx-migration/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "BlazorWebFormsComponents",
+      "path": ".squad/skills/codebehind-class-body-location/SKILL.md",
+      "github_url": "https://github.com/FritzAndFriends/BlazorWebFormsComponents/tree/main/.squad/skills/codebehind-class-body-location/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "BlazorWebFormsComponents",
+      "path": ".squad/skills/gridview-templatefield-regression/SKILL.md",
+      "github_url": "https://github.com/FritzAndFriends/BlazorWebFormsComponents/tree/main/.squad/skills/gridview-templatefield-regression/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "BlazorWebFormsComponents",
+      "path": "migration-toolkit/skills/bwfc-identity-migration/SKILL.md",
+      "github_url": "https://github.com/FritzAndFriends/BlazorWebFormsComponents/tree/main/migration-toolkit/skills/bwfc-identity-migration/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "BlazorWebFormsComponents",
+      "path": "migration-toolkit/skills/l3-performance-optimization/SKILL.md",
+      "github_url": "https://github.com/FritzAndFriends/BlazorWebFormsComponents/tree/main/migration-toolkit/skills/l3-performance-optimization/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "BlazorWebFormsComponents",
+      "path": "migration-toolkit/skills/bwfc-custom-control-migration/SKILL.md",
+      "github_url": "https://github.com/FritzAndFriends/BlazorWebFormsComponents/tree/main/migration-toolkit/skills/bwfc-custom-control-migration/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "BlazorWebFormsComponents",
+      "path": ".github/skills/aspire/SKILL.md",
+      "github_url": "https://github.com/FritzAndFriends/BlazorWebFormsComponents/tree/main/.github/skills/aspire/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "BlazorWebFormsComponents",
+      "path": ".github/skills/documentation/SKILL.md",
+      "github_url": "https://github.com/FritzAndFriends/BlazorWebFormsComponents/tree/main/.github/skills/documentation/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "BlazorWebFormsComponents",
+      "path": ".github/skills/bunit-testing/SKILL.md",
+      "github_url": "https://github.com/FritzAndFriends/BlazorWebFormsComponents/tree/main/.github/skills/bunit-testing/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "BlazorWebFormsComponents",
+      "path": ".github/skills/webforms-migration/SKILL.md",
+      "github_url": "https://github.com/FritzAndFriends/BlazorWebFormsComponents/tree/main/.github/skills/webforms-migration/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "BlazorWebFormsComponents",
+      "path": ".github/skills/acceptance-testing/SKILL.md",
+      "github_url": "https://github.com/FritzAndFriends/BlazorWebFormsComponents/tree/main/.github/skills/acceptance-testing/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "BlazorWebFormsComponents",
+      "path": ".github/skills/bunit-test-migration/SKILL.md",
+      "github_url": "https://github.com/FritzAndFriends/BlazorWebFormsComponents/tree/main/.github/skills/bunit-test-migration/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "BlazorWebFormsComponents",
+      "path": ".github/skills/analyzer-development/SKILL.md",
+      "github_url": "https://github.com/FritzAndFriends/BlazorWebFormsComponents/tree/main/.github/skills/analyzer-development/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "BlazorWebFormsComponents",
+      "path": ".github/skills/component-development/SKILL.md",
+      "github_url": "https://github.com/FritzAndFriends/BlazorWebFormsComponents/tree/main/.github/skills/component-development/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "BlazorWebFormsComponents",
+      "path": ".github/skills/wingtip-migration-test/SKILL.md",
+      "github_url": "https://github.com/FritzAndFriends/BlazorWebFormsComponents/tree/main/.github/skills/wingtip-migration-test/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "BlazorWebFormsComponents",
+      "path": ".github/skills/contoso-migration-test/SKILL.md",
+      "github_url": "https://github.com/FritzAndFriends/BlazorWebFormsComponents/tree/main/.github/skills/contoso-migration-test/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "BlazorWebFormsComponents",
+      "path": ".github/skills/cli-transform-authoring/SKILL.md",
+      "github_url": "https://github.com/FritzAndFriends/BlazorWebFormsComponents/tree/main/.github/skills/cli-transform-authoring/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/FritzAndFriends/BlazorWebFormsComponents",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-24T11:40:04Z"
+}
