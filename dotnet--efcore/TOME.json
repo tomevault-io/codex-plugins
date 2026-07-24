@@ -1,0 +1,147 @@
+{
+  "name": "efcore",
+  "owner": "dotnet",
+  "repo": "efcore",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "efcore",
+      "path": ".agents/skills/triage/SKILL.md",
+      "github_url": "https://github.com/dotnet/efcore/tree/main/.agents/skills/triage/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "efcore",
+      "path": ".agents/skills/testing/SKILL.md",
+      "github_url": "https://github.com/dotnet/efcore/tree/main/.agents/skills/testing/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "efcore",
+      "path": ".agents/skills/tooling/SKILL.md",
+      "github_url": "https://github.com/dotnet/efcore/tree/main/.agents/skills/tooling/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "efcore",
+      "path": ".agents/skills/make-skill/SKILL.md",
+      "github_url": "https://github.com/dotnet/efcore/tree/main/.agents/skills/make-skill/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "efcore",
+      "path": ".agents/skills/migrations/SKILL.md",
+      "github_url": "https://github.com/dotnet/efcore/tree/main/.agents/skills/migrations/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "efcore",
+      "path": ".agents/skills/scaffolding/SKILL.md",
+      "github_url": "https://github.com/dotnet/efcore/tree/main/.agents/skills/scaffolding/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "efcore",
+      "path": ".agents/skills/run-apichief/SKILL.md",
+      "github_url": "https://github.com/dotnet/efcore/tree/main/.agents/skills/run-apichief/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "efcore",
+      "path": ".agents/skills/servicing-pr/SKILL.md",
+      "github_url": "https://github.com/dotnet/efcore/tree/main/.agents/skills/servicing-pr/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "efcore",
+      "path": ".agents/skills/sqlite-adonet/SKILL.md",
+      "github_url": "https://github.com/dotnet/efcore/tree/main/.agents/skills/sqlite-adonet/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "efcore",
+      "path": ".agents/skills/model-building/SKILL.md",
+      "github_url": "https://github.com/dotnet/efcore/tree/main/.agents/skills/model-building/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "efcore",
+      "path": ".agents/skills/query-pipeline/SKILL.md",
+      "github_url": "https://github.com/dotnet/efcore/tree/main/.agents/skills/query-pipeline/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "efcore",
+      "path": ".agents/skills/change-tracking/SKILL.md",
+      "github_url": "https://github.com/dotnet/efcore/tree/main/.agents/skills/change-tracking/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "efcore",
+      "path": ".agents/skills/update-pipeline/SKILL.md",
+      "github_url": "https://github.com/dotnet/efcore/tree/main/.agents/skills/update-pipeline/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "efcore",
+      "path": ".agents/skills/cosmos-provider/SKILL.md",
+      "github_url": "https://github.com/dotnet/efcore/tree/main/.agents/skills/cosmos-provider/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "efcore",
+      "path": ".agents/skills/make-custom-agent/SKILL.md",
+      "github_url": "https://github.com/dotnet/efcore/tree/main/.agents/skills/make-custom-agent/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "efcore",
+      "path": ".agents/skills/make-instructions/SKILL.md",
+      "github_url": "https://github.com/dotnet/efcore/tree/main/.agents/skills/make-instructions/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "efcore",
+      "path": ".agents/skills/make-github-actions-workflow/SKILL.md",
+      "github_url": "https://github.com/dotnet/efcore/tree/main/.agents/skills/make-github-actions-workflow/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/dotnet/efcore",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-24T09:35:42Z"
+}
