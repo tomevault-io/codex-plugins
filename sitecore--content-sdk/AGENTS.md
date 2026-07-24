@@ -1,18 +1,16 @@
+# GitHub Copilot — Sitecore Content SDK
 
-# Testing
+For AI agent instructions, commands, and coding rules in this repository, use:
 
-- Mocha with ts-node/register
-- Nearby `*.test.ts` with success + failure cases
-- Stub child-process and fs as needed
+- **`AGENTS.md`** (repo root) — Canonical source: project overview, quick commands, package structure, DO/DON'T, boundaries, git workflow. For scaffolded head apps under `samples/`, use that app's `AGENTS.md`.
+- **`CLAUDE.md`** — How to layer AI context for this monorepo (start with `AGENTS.md`; add detail only when needed).
+- **`.cursor/rules/`** — Detailed coding rules (code-style, safety, sitecore, testing, etc.). Security and secrets: see `safety.mdc`.
+- **`Skills.md`** and template **`.agents/skills/`** — Capability-level instructions for scaffolded apps (see `packages/create-content-sdk-app/src/templates/`).
 
-Commands:
+Do not edit `dist/**`, commit `.env`/`.env.local`, or change CI/config without explicit instruction.
 
-- Package level: `npm run test`, `npm run coverage`
-- Monorepo level: `yarn test-packages`, `yarn coverage-packages`
-
-Referenced:
-@src/bin.test.ts
+**Docs:** [Content SDK](https://doc.sitecore.com/sai/en/developers/content-sdk/sitecore-content-sdk-for-sitecoreai.html)
 
 ---
 > Source: [Sitecore/content-sdk](https://github.com/Sitecore/content-sdk) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-05-20 -->
+<!-- tomevault:4.0:agents_md:2026-07-24 -->
