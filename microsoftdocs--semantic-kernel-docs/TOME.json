@@ -1,0 +1,87 @@
+{
+  "name": "semantic-kernel-docs",
+  "owner": "MicrosoftDocs",
+  "repo": "semantic-kernel-docs",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "semantic-kernel-docs",
+      "path": ".github/skills/toc/SKILL.md",
+      "github_url": "https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/.github/skills/toc/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "semantic-kernel-docs",
+      "path": ".github/skills/breadcrumbs/SKILL.md",
+      "github_url": "https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/.github/skills/breadcrumbs/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "semantic-kernel-docs",
+      "path": ".github/skills/redirection/SKILL.md",
+      "github_url": "https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/.github/skills/redirection/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "semantic-kernel-docs",
+      "path": ".github/skills/code-snippets/SKILL.md",
+      "github_url": "https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/.github/skills/code-snippets/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "semantic-kernel-docs",
+      "path": ".github/skills/sample-structure/SKILL.md",
+      "github_url": "https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/.github/skills/sample-structure/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "semantic-kernel-docs",
+      "path": ".github/skills/per-concept-documentation/SKILL.md",
+      "github_url": "https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/.github/skills/per-concept-documentation/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "semantic-kernel-docs",
+      "path": ".github/skills/cross-repository-references/SKILL.md",
+      "github_url": "https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/.github/skills/cross-repository-references/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/MicrosoftDocs/semantic-kernel-docs",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-24T11:53:08Z"
+}
