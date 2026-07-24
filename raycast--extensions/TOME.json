@@ -1,0 +1,57 @@
+{
+  "name": "extensions",
+  "owner": "raycast",
+  "repo": "extensions",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "extensions",
+      "path": "extensions/vocabuilder/.agents/skills/raycast-extension-release/SKILL.md",
+      "github_url": "https://github.com/raycast/extensions/tree/main/extensions/vocabuilder/.agents/skills/raycast-extension-release/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "extensions",
+      "path": "extensions/codex-manager/tests/fixtures/skill.md",
+      "github_url": "https://github.com/raycast/extensions/tree/main/extensions/codex-manager/tests/fixtures/skill.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/raycast/extensions",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-24T14:02:38Z"
+}
