@@ -3,8 +3,8 @@
   "owner": "tenstorrent",
   "repo": "tt-metal",
   "description": "",
-  "type": "config",
-  "source_format": ".cursor/rules/*.mdc",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -37,8 +37,45 @@
       "platform": "Windsurf"
     }
   ],
-  "skills": [],
+  "skills": [
+    {
+      "name": "tt-metal",
+      "path": ".cursor/commands/skills/bash-safety/SKILL.md",
+      "github_url": "https://github.com/tenstorrent/tt-metal/tree/main/.cursor/commands/skills/bash-safety/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "tt-metal",
+      "path": ".cursor/commands/skills/test-driven-development/SKILL.md",
+      "github_url": "https://github.com/tenstorrent/tt-metal/tree/main/.cursor/commands/skills/test-driven-development/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "tt-metal",
+      "path": "tt_metal/tt-llk/.claude/skills/run-test/SKILL.md",
+      "github_url": "https://github.com/tenstorrent/tt-metal/tree/main/tt_metal/tt-llk/.claude/skills/run-test/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "tt-metal",
+      "path": "tt_metal/tt-llk/.claude/skills/arch-lookup/SKILL.md",
+      "github_url": "https://github.com/tenstorrent/tt-metal/tree/main/tt_metal/tt-llk/.claude/skills/arch-lookup/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "tt-metal",
+      "path": "tt_metal/tt-llk/.claude/skills/port-kernel/SKILL.md",
+      "github_url": "https://github.com/tenstorrent/tt-metal/tree/main/tt_metal/tt-llk/.claude/skills/port-kernel/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "tt-metal",
+      "path": "tt_metal/tt-llk/.claude/skills/debug-kernel/SKILL.md",
+      "github_url": "https://github.com/tenstorrent/tt-metal/tree/main/tt_metal/tt-llk/.claude/skills/debug-kernel/SKILL.md",
+      "description": ""
+    }
+  ],
   "source_url": "https://github.com/tenstorrent/tt-metal",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-24T13:49:04Z"
+  "distributed_at": "2026-07-24T13:33:55Z"
 }
