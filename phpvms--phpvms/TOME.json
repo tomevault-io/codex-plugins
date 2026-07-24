@@ -1,0 +1,57 @@
+{
+  "name": "phpvms",
+  "owner": "phpvms",
+  "repo": "phpvms",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "phpvms",
+      "path": ".github/skills/pest-testing/SKILL.md",
+      "github_url": "https://github.com/phpvms/phpvms/tree/main/.github/skills/pest-testing/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "phpvms",
+      "path": ".github/skills/tailwindcss-development/SKILL.md",
+      "github_url": "https://github.com/phpvms/phpvms/tree/main/.github/skills/tailwindcss-development/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/phpvms/phpvms",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-24T14:18:37Z"
+}
