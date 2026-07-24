@@ -1,0 +1,57 @@
+{
+  "name": "autorest.go",
+  "owner": "Azure",
+  "repo": "autorest.go",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "autorest.go",
+      "path": ".github/skills/typespec-go-add-spector-test/SKILL.md",
+      "github_url": "https://github.com/Azure/autorest.go/tree/main/.github/skills/typespec-go-add-spector-test/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "autorest.go",
+      "path": ".github/skills/typespec-go-bump-and-release/SKILL.md",
+      "github_url": "https://github.com/Azure/autorest.go/tree/main/.github/skills/typespec-go-bump-and-release/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/Azure/autorest.go",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-24T12:09:07Z"
+}
