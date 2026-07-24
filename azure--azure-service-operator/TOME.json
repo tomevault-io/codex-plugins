@@ -1,0 +1,63 @@
+{
+  "name": "azure-service-operator",
+  "owner": "Azure",
+  "repo": "azure-service-operator",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "azure-service-operator",
+      "path": ".agents/skills/testing-aso-recordings/SKILL.md",
+      "github_url": "https://github.com/Azure/azure-service-operator/tree/main/.agents/skills/testing-aso-recordings/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "azure-service-operator",
+      "path": ".agents/skills/diagnosing-vcr-failures/SKILL.md",
+      "github_url": "https://github.com/Azure/azure-service-operator/tree/main/.agents/skills/diagnosing-vcr-failures/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "azure-service-operator",
+      "path": ".agents/skills/migrate-group-versioning/SKILL.md",
+      "github_url": "https://github.com/Azure/azure-service-operator/tree/main/.agents/skills/migrate-group-versioning/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/Azure/azure-service-operator",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-24T13:59:56Z"
+}
