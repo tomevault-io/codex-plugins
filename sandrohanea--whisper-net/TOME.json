@@ -1,0 +1,93 @@
+{
+  "name": "whisper.net",
+  "owner": "sandrohanea",
+  "repo": "whisper.net",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "whisper.net",
+      "path": ".github/skills/validate-noavx-tests/SKILL.md",
+      "github_url": "https://github.com/sandrohanea/whisper.net/tree/main/.github/skills/validate-noavx-tests/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "whisper.net",
+      "path": ".github/skills/change-native-runtimes/SKILL.md",
+      "github_url": "https://github.com/sandrohanea/whisper.net/tree/main/.github/skills/change-native-runtimes/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "whisper.net",
+      "path": ".github/skills/validate-runtime-loading/SKILL.md",
+      "github_url": "https://github.com/sandrohanea/whisper.net/tree/main/.github/skills/validate-runtime-loading/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "whisper.net",
+      "path": ".github/skills/manage-whisper-test-models/SKILL.md",
+      "github_url": "https://github.com/sandrohanea/whisper.net/tree/main/.github/skills/manage-whisper-test-models/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "whisper.net",
+      "path": ".github/skills/validate-maui-mobile-tests/SKILL.md",
+      "github_url": "https://github.com/sandrohanea/whisper.net/tree/main/.github/skills/validate-maui-mobile-tests/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "whisper.net",
+      "path": ".github/skills/validate-managed-api-changes/SKILL.md",
+      "github_url": "https://github.com/sandrohanea/whisper.net/tree/main/.github/skills/validate-managed-api-changes/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "whisper.net",
+      "path": ".github/skills/validate-runtime-packages-and-releases/SKILL.md",
+      "github_url": "https://github.com/sandrohanea/whisper.net/tree/main/.github/skills/validate-runtime-packages-and-releases/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "whisper.net",
+      "path": ".github/skills/run-dotnet-tests-with-preview-nativelibs/SKILL.md",
+      "github_url": "https://github.com/sandrohanea/whisper.net/tree/main/.github/skills/run-dotnet-tests-with-preview-nativelibs/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/sandrohanea/whisper.net",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-24T15:48:32Z"
+}
