@@ -1,0 +1,123 @@
+{
+  "name": "nanvix",
+  "owner": "nanvix",
+  "repo": "nanvix",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "ci-cd-pipeline",
+      "path": ".github/skills/ci-cd-pipeline",
+      "github_url": "https://github.com/nanvix/nanvix/tree/main/.github/skills/ci-cd-pipeline",
+      "description": ""
+    },
+    {
+      "name": "nanvix",
+      "path": ".github/skills/test/SKILL.md",
+      "github_url": "https://github.com/nanvix/nanvix/tree/main/.github/skills/test/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "nanvix",
+      "path": ".github/skills/build/SKILL.md",
+      "github_url": "https://github.com/nanvix/nanvix/tree/main/.github/skills/build/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "nanvix",
+      "path": ".github/skills/benchmarking/SKILL.md",
+      "github_url": "https://github.com/nanvix/nanvix/tree/main/.github/skills/benchmarking/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "nanvix",
+      "path": ".github/skills/gdb-debugging/SKILL.md",
+      "github_url": "https://github.com/nanvix/nanvix/tree/main/.github/skills/gdb-debugging/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "nanvix",
+      "path": ".github/skills/ci-cd-pipeline/SKILL.md",
+      "github_url": "https://github.com/nanvix/nanvix/tree/main/.github/skills/ci-cd-pipeline/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "nanvix",
+      "path": ".github/skills/troubleshooting/SKILL.md",
+      "github_url": "https://github.com/nanvix/nanvix/tree/main/.github/skills/troubleshooting/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "nanvix",
+      "path": ".github/skills/coding-standards/SKILL.md",
+      "github_url": "https://github.com/nanvix/nanvix/tree/main/.github/skills/coding-standards/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "nanvix",
+      "path": ".github/skills/test-development/SKILL.md",
+      "github_url": "https://github.com/nanvix/nanvix/tree/main/.github/skills/test-development/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "nanvix",
+      "path": ".github/skills/daemon-development/SKILL.md",
+      "github_url": "https://github.com/nanvix/nanvix/tree/main/.github/skills/daemon-development/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "nanvix",
+      "path": ".github/skills/kernel-development/SKILL.md",
+      "github_url": "https://github.com/nanvix/nanvix/tree/main/.github/skills/kernel-development/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "nanvix",
+      "path": ".github/skills/library-development/SKILL.md",
+      "github_url": "https://github.com/nanvix/nanvix/tree/main/.github/skills/library-development/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "nanvix",
+      "path": ".github/skills/user-app-development/SKILL.md",
+      "github_url": "https://github.com/nanvix/nanvix/tree/main/.github/skills/user-app-development/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/nanvix/nanvix",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-24T11:35:07Z"
+}
