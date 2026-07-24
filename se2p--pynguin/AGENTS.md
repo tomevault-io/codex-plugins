@@ -4,7 +4,7 @@ SPDX-FileCopyrightText: 2019–2026 Pynguin Contributors
 SPDX-License-Identifier: CC-BY-4.0
 -->
 
-# Gemini Instructions
+# GitHub Copilot Instructions
 
 **See [AGENTS.md](./AGENTS.md) for:**
 - Project architecture and codebase structure
