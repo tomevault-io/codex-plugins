@@ -1,0 +1,123 @@
+{
+  "name": "core",
+  "owner": "dotnet",
+  "repo": "core",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "core",
+      "path": ".github/skills/api-diff/SKILL.md",
+      "github_url": "https://github.com/dotnet/core/tree/main/.github/skills/api-diff/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "core",
+      "path": ".github/skills/release-notes/SKILL.md",
+      "github_url": "https://github.com/dotnet/core/tree/main/.github/skills/release-notes/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "core",
+      "path": ".github/skills/verify-releases/SKILL.md",
+      "github_url": "https://github.com/dotnet/core/tree/main/.github/skills/verify-releases/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "core",
+      "path": ".github/skills/generate-changes/SKILL.md",
+      "github_url": "https://github.com/dotnet/core/tree/main/.github/skills/generate-changes/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "core",
+      "path": ".github/skills/generate-features/SKILL.md",
+      "github_url": "https://github.com/dotnet/core/tree/main/.github/skills/generate-features/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "core",
+      "path": ".github/skills/editorial-scoring/SKILL.md",
+      "github_url": "https://github.com/dotnet/core/tree/main/.github/skills/editorial-scoring/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "core",
+      "path": ".github/skills/update-os-packages/SKILL.md",
+      "github_url": "https://github.com/dotnet/core/tree/main/.github/skills/update-os-packages/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "core",
+      "path": ".github/skills/update-supported-os/SKILL.md",
+      "github_url": "https://github.com/dotnet/core/tree/main/.github/skills/update-supported-os/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "core",
+      "path": ".github/skills/update-release-graph/SKILL.md",
+      "github_url": "https://github.com/dotnet/core/tree/main/.github/skills/update-release-graph/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "core",
+      "path": ".github/skills/review-release-notes/SKILL.md",
+      "github_url": "https://github.com/dotnet/core/tree/main/.github/skills/review-release-notes/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "core",
+      "path": ".github/skills/update-distro-packages/SKILL.md",
+      "github_url": "https://github.com/dotnet/core/tree/main/.github/skills/update-distro-packages/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "core",
+      "path": ".github/skills/update-existing-branch/SKILL.md",
+      "github_url": "https://github.com/dotnet/core/tree/main/.github/skills/update-existing-branch/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "core",
+      "path": ".github/skills/publish-release-announcements/SKILL.md",
+      "github_url": "https://github.com/dotnet/core/tree/main/.github/skills/publish-release-announcements/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/dotnet/core",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-24T11:45:02Z"
+}
