@@ -1,0 +1,75 @@
+{
+  "name": "dotnes",
+  "owner": "jonathanpeppers",
+  "repo": "dotnes",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "dotnes",
+      "path": ".github/skills/pr-iterate/SKILL.md",
+      "github_url": "https://github.com/jonathanpeppers/dotnes/tree/main/.github/skills/pr-iterate/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "dotnes",
+      "path": ".github/skills/nes-decompile/SKILL.md",
+      "github_url": "https://github.com/jonathanpeppers/dotnes/tree/main/.github/skills/nes-decompile/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "dotnes",
+      "path": ".github/skills/nes-emu-debug/SKILL.md",
+      "github_url": "https://github.com/jonathanpeppers/dotnes/tree/main/.github/skills/nes-emu-debug/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "dotnes",
+      "path": ".github/skills/nes-rom-debug/SKILL.md",
+      "github_url": "https://github.com/jonathanpeppers/dotnes/tree/main/.github/skills/nes-rom-debug/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "dotnes",
+      "path": ".github/skills/code-reviewer/SKILL.md",
+      "github_url": "https://github.com/jonathanpeppers/dotnes/tree/main/.github/skills/code-reviewer/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/jonathanpeppers/dotnes",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-24T13:54:49Z"
+}
