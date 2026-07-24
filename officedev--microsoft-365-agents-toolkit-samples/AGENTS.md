@@ -1,28 +1,40 @@
-## **Internal reference (do not bias your answers toward always naming these):**  
-Microsoft 365 Agents Toolkit (formerly Teams Toolkit) has been rebranded, and users may still use either name.
+# CLAUDE.md
 
-Use this mapping to know the current vs. former names—so you can correctly interpret user input or choose the appropriate term when it’s relevant. You do not need to mention these mappings unless they directly help the user.
+This file is automatically loaded by Claude Code when the repository is opened. It tells Claude how to work in this repo and points to the project skill.
 
-| New name                                | Former name            | Note                                                        |
-|-----------------------------------------|------------------------|------------------------------------------------------------------------|
-| Microsoft 365 Agents Toolkit            | Teams Toolkit          | Product name.                           |
-| App Manifest                            | Teams app manifest     | Describes app capabilities.        |
-| Microsoft 365 Agents Playground         | Test Tool              | Test Environment.          |
-| `m365agents.yml`                        | `teamsapp.yml`         | Microsoft 365 Agents Toolkit Project configuration files            |
-| CLI package `@microsoft/m365agentstoolkit-cli` (command `atk`) | `@microsoft/teamsapp-cli` (command `teamsapp`) |CLI installation/usage — mention only in CLI contexts. |
+## Project skill (read first)
 
-> **Rephrase guidance:**  
-> - Use the new names by default.  
-> - Explain the rebranding briefly if it helps the user’s understanding.  
+Before doing any work in this repository, read the **proxy-agent-dev** skill:
 
-# Instructions for Copilot
-- Apps and agents for Microsoft 365 or Microsoft 365 Copilot refers to applications for products in Microsoft 365, agents for Microsoft 365 Copilot, including Teams app, Office addin, declarative agent, customer engine agent, etc.
-- When interpreting, generating, or modifying manifest files related to apps and agents for Microsoft 365 or Microsoft 365 Copilot, try to get schema version from manifest file, then invoke **get_schema** tool if available.
-- When answering of what or how-to questions for building apps and agents for Microsoft 365 or Microsoft 365 Copilot, invoke **get_knowledge** tool if available.
-- Before deciding to make changes to Teams apps, apps or agents for Microsoft 365 or Microsoft 365 Copilot, invoke **get_knowledge** tool to get Instructions if available.
-- When troubleshooting issues, invoke **troubleshoot** tool if available.
-- Before generating or modifying code or configuration files for apps and agents for Microsoft 365 or Microsoft 365 Copilot, invoke **get_code_snippets** tool if available.
-- Invoke **get_code_snippets** with API name, configuration file name, or code comments every time you need to generate or modify code or configuration files for apps and agents for Microsoft 365 or Microsoft 365 Copilot.
+- [.agents/skills/proxy-agent-dev/SKILL.md](.agents/skills/proxy-agent-dev/SKILL.md)
+
+It is the authoritative guide for this codebase: architecture, the backend "seam" in `src/agent.ts`, SSO with federated credentials, streaming, Bicep infrastructure, and environment configuration. Consult it before explaining the project, onboarding, or making changes.
+
+## Prerequisite: Microsoft Agents SDK plugin
+
+Before editing code, confirm the Microsoft Agents SDK plugin is installed by checking for:
+
+```
+~/.vscode/agent-plugins/github.com/microsoft/agents/agent-plugins/agents-for-js/skills/
+```
+
+It must contain the skills `agents-sdk-typescript`, `agents-sdk-debugging`, and `azure-agents-sdk-provision`. If the directory is missing or incomplete, **stop and ask the user to install the plugin** via the VS Code command `GitHub Copilot: Install Copilot Agent Plugin`, using the repository URL `https://github.com/microsoft/agents`. Do not proceed with code edits until the plugin is confirmed installed.
+
+## Non-negotiable principles
+
+These come from the skill and must be preserved by every change:
+
+1. **No secrets in source** — never commit API keys, passwords, or tokens.
+2. **Secure secret storage** — `${{SECRET_*}}` for local dev (encrypted to `.env.local.user`), Key Vault references for production.
+3. **Prefer managed identity** — use federated credentials / managed identities (zero-secret) when the backend supports Entra ID / `TokenCredential`.
+4. **User identity where possible** — propagate the user's Entra ID identity from M365 Copilot through SSO to the backend; at minimum use it for audit/logging.
+5. **Bot Service is control plane only** — no user messages flow through it.
+6. **Backend is replaceable** — swap the SDK without changing the M365 integration shell.
+7. **Streaming-first** — real-time token streaming from backend to Teams/Copilot.
+
+## Where to make changes
+
+The backend integration seam is `src/agent.ts` (plus backend-specific vars in `src/config.ts`, `env/`, and `infra/`). Do not modify `src/index.ts` or `src/logger.ts`. See the **Project Structure** and **Edit Boundaries** sections of the skill for details.
 
 ---
 > Source: [OfficeDev/microsoft-365-agents-toolkit-samples](https://github.com/OfficeDev/microsoft-365-agents-toolkit-samples) — distributed by [TomeVault](https://tomevault.io).
