@@ -1,0 +1,57 @@
+{
+  "name": "tracee",
+  "owner": "aquasecurity",
+  "repo": "tracee",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "tracee",
+      "path": ".cursor/skills/shell-style-guide/SKILL.md",
+      "github_url": "https://github.com/aquasecurity/tracee/tree/main/.cursor/skills/shell-style-guide/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "tracee",
+      "path": ".cursor/skills/tracee-testing-guide/SKILL.md",
+      "github_url": "https://github.com/aquasecurity/tracee/tree/main/.cursor/skills/tracee-testing-guide/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/aquasecurity/tracee",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-24T18:43:11Z"
+}
