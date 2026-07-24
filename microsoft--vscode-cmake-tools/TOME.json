@@ -1,0 +1,87 @@
+{
+  "name": "vscode-cmake-tools",
+  "owner": "microsoft",
+  "repo": "vscode-cmake-tools",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "vscode-cmake-tools",
+      "path": ".github/skills/add-command/SKILL.md",
+      "github_url": "https://github.com/microsoft/vscode-cmake-tools/tree/main/.github/skills/add-command/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "vscode-cmake-tools",
+      "path": ".github/skills/add-setting/SKILL.md",
+      "github_url": "https://github.com/microsoft/vscode-cmake-tools/tree/main/.github/skills/add-setting/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "vscode-cmake-tools",
+      "path": ".github/skills/pr-readiness/SKILL.md",
+      "github_url": "https://github.com/microsoft/vscode-cmake-tools/tree/main/.github/skills/pr-readiness/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "vscode-cmake-tools",
+      "path": ".github/skills/backend-tests/SKILL.md",
+      "github_url": "https://github.com/microsoft/vscode-cmake-tools/tree/main/.github/skills/backend-tests/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "vscode-cmake-tools",
+      "path": ".github/skills/presets-vs-kits/SKILL.md",
+      "github_url": "https://github.com/microsoft/vscode-cmake-tools/tree/main/.github/skills/presets-vs-kits/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "vscode-cmake-tools",
+      "path": ".github/skills/validation-project/SKILL.md",
+      "github_url": "https://github.com/microsoft/vscode-cmake-tools/tree/main/.github/skills/validation-project/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "vscode-cmake-tools",
+      "path": ".github/skills/add-diagnostic-parser/SKILL.md",
+      "github_url": "https://github.com/microsoft/vscode-cmake-tools/tree/main/.github/skills/add-diagnostic-parser/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/microsoft/vscode-cmake-tools",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-24T16:01:27Z"
+}
