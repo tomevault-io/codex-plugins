@@ -1,86 +1,540 @@
-# GitHub Copilot Instructions
+# Copilot Instructions — everything-copilot-cli
 
-> Concise project instructions for GitHub Copilot.
-> For the full guide, see [`COPILOT-INSTRUCTIONS.md`](../COPILOT-INSTRUCTIONS.md) in the repository root.
+> The equivalent of `CLAUDE.md` for the GitHub Copilot CLI ecosystem.
+> This file tells Copilot CLI how to understand, navigate, and contribute to this repository.
 
 ---
 
-## Project Context
+## Project Overview
 
-This is **everything-copilot-cli** — a reference repository defining agents, skills, rules,
-orchestration patterns, and MCP configurations for GitHub Copilot CLI.
-Content is Markdown and JSON configuration, not application code.
+**everything-copilot-cli** is the definitive guide and configuration system for GitHub Copilot CLI.
+It provides a structured collection of agents, skills, rules, orchestration patterns,
+MCP configurations, and multi-AI workflows.
 
-## Essential Rules
+This is a **reference repository** — it defines conventions, patterns, and reusable configurations
+that projects can adopt. When working in this repo, Copilot CLI should treat content as
+**configuration and documentation**, not application code.
 
-1. **Use YAML frontmatter** in all agent, skill, and rule files
-2. **Use kebab-case** for all filenames (e.g., `build-error-resolver.md`)
-3. **Use conventional commits** (`feat:`, `fix:`, `docs:`, `chore:`)
-4. **Include Co-authored-by trailer** in commits when Copilot assists
-5. **Run validation before committing**: `npm run validate && npm run lint:md && npm test`
-6. **Don't mix concerns** — one agent/skill/rule per file, one topic per PR
+## Response Voice
 
-## Directory Structure
+Write like a teammate handing off to another builder:
 
-| Directory | Contents |
-|-----------|----------|
-| `agents/` | Agent definitions with persona, tools, model, behavior |
-| `skills/` | Composable skill modules by domain (`development/`, `security/`, `testing/`, `documentation/`, `copilot-exclusive/`) |
-| `rules/common/` | Universal behavioral rules |
-| `rules/languages/` | Language-specific coding standards |
-| `orchestration/` | Multi-agent coordination (`patterns/`, `configs/`, `examples/`, `skills/`) |
-| `contexts/` | Execution context definitions |
-| `mcp-configs/` | MCP server configurations |
-| `examples/` | Complete example projects (`nextjs-app/`, `python-api/`, `dotnet-webapp/`, `monorepo/`) |
+- lead with the outcome, not process narration
+- stay concrete and repository-specific
+- prefer short, dense explanations over marketing language
+- avoid AI self-reference, consultant filler, and vague encouragement
+- when a next step matters, name it plainly instead of hedging
 
-## Agent Type Selection
+### What This Repo Contains
 
-Use the right Copilot agent type for each task:
+| Directory | Purpose |
+|-----------|---------|
+| `agents/` | Agent definitions (persona, tools, model, behavior) |
+| `skills/` | Composable skill modules organized by domain |
+| `rules/` | Behavioral rules (common + language-specific) |
+| `orchestration/` | Multi-agent coordination patterns |
+| `contexts/` | Context definitions for scoped execution |
+| `mcp-configs/` | Model Context Protocol server configurations |
+| `guides/` | Documentation and usage guides |
+| `examples/` | Complete example projects (Next.js, Python, .NET, monorepo) |
+| `scripts/` | Validation, setup, and utility scripts |
+| `tests/` | Configuration validation tests |
 
-| Task Type | Agent Type | Examples |
-|-----------|-----------|----------|
-| Understanding code/configs | `explore` | "What agents are defined?", "How does orchestration work?" |
-| Running builds/tests/lints | `task` | "Validate all configs", "Run the test suite" |
-| Complex multi-step changes | `general-purpose` | "Add a new agent with skills and tests", "Refactor rule structure" |
-| Reviewing changes | `code-review` | "Review this PR", "Check for issues in staged changes" |
-| Parallel independent work | Fleet mode | "Create example configs for all 4 project types" |
+---
 
-## File Conventions
+## Key Concepts
 
-### Agent files (`agents/*.md`)
+### Agents
 
-Required frontmatter: `name`, `description`, `agent_type`, `model`, `tools`, `escalation`
+Agents are personas with defined responsibilities, tool permissions, and behavioral guardrails. Each agent has:
 
-### Skill files (`skills/<category>/*.md`)
+- **Identity**: Name, role description, expertise areas
+- **Tools**: Which tools the agent can use (e.g., `grep`, `edit`, `powershell`)
+- **Model**: Recommended AI model (e.g., `claude-sonnet-4.6`, `gpt-5-mini`)
+- **Behavioral Rules**: How the agent should approach tasks
+- **Escalation Policy**: When to hand off to another agent or human
 
-Required frontmatter: `name`, `category`, `triggers`, `requires_tools`
-Must include a "When to Use" section.
+### Skills
 
-### Rule files (`rules/**/*.md`)
+Skills are composable capabilities that agents can invoke. They are organized by domain:
 
-Required frontmatter: `name`, `scope`, `severity`
-Language-specific rules also need: `language`
-Must include ✅ Correct and ❌ Incorrect examples.
+- `skills/copilot-exclusive/` — GitHub-specific integrations (PRs, Issues, Actions, fleet, background agents)
+- `skills/development/` — Code generation, refactoring, debugging
+- `skills/documentation/` — Doc generation, README updates, API docs
+- `skills/security/` — Vulnerability scanning, secret detection
+- `skills/testing/` — Test generation, coverage analysis, TDD workflows
+- `skills/workflow/` — End-to-end development workflows (sprint, security audit, retrospective)
+- `skills/product/` — Product management (OST framework, feature prioritization, launch strategy)
+- `skills/content/` — Content strategy and AI visibility (GEO, llms.txt, SEO)
 
-### Orchestration patterns (`orchestration/patterns/*.md`)
+Skills follow the [agentskills.io](https://agentskills.io) spec: each skill lives in a
+`skill-name/SKILL.md` directory, not a flat `.md` file. This ensures compatibility with
+`agy skills install`, Codex CLI, and other skill-compatible tools.
 
-Required frontmatter: `name`, `type`, `agents`
-Types: `pipeline`, `fan-out`, `review-chain`, `iterative`
+See [`skills/README.md`](skills/README.md) for the full catalog and installation instructions.
 
-## Multi-AI Delegation
+Each skill file should include a **"When to Use"** section describing trigger conditions.
 
-- **Keep in Copilot CLI**: GitHub integration, PR/Issue management, MCP workflows, orchestration
-- **Delegate to Claude Code**: Deep reasoning, architecture analysis, large context (200K tokens)
-- **Delegate to Codex**: Fast code generation, boilerplate, transformations
+### Rules
 
-## Validation
+Rules define behavioral constraints and coding standards:
 
-```bash
-npm run validate   # Check configs against schemas
-npm run lint:md    # Lint all Markdown
-npm test           # Run test suite
+- `rules/common/` — Universal rules (commit formats, file naming, error handling)
+- `rules/languages/` — Language-specific rules (TypeScript conventions, Python style, etc.)
+
+### Orchestration Patterns
+
+Orchestration defines how multiple agents collaborate:
+
+- `orchestration/patterns/` — Reusable coordination patterns (pipeline, fan-out, review-chain, sub-agent-sandboxing)
+- `orchestration/configs/` — Configuration for specific orchestration setups
+- `orchestration/examples/` — Worked examples of multi-agent workflows
+- `orchestration/skills/` — Orchestration-specific skill combinations
+
+---
+
+## Architecture
+
+```text
+┌─────────────────────────────────────────────────┐
+│                   User Request                   │
+└─────────────────────┬───────────────────────────┘
+                      │
+                      ▼
+┌─────────────────────────────────────────────────┐
+│              Orchestration Layer                  │
+│  (patterns/ configs/ — decides agent routing)    │
+└──────┬──────────┬──────────┬──────────┬─────────┘
+       │          │          │          │
+       ▼          ▼          ▼          ▼
+┌──────────┐┌──────────┐┌──────────┐┌──────────┐
+│  Agent 1 ││  Agent 2 ││  Agent 3 ││  Agent N │
+│(planner) ││(architect)││(reviewer)││  (...)   │
+└────┬─────┘└────┬─────┘└────┬─────┘└────┬─────┘
+     │           │           │           │
+     ▼           ▼           ▼           ▼
+┌─────────────────────────────────────────────────┐
+│                  Skills Layer                    │
+│  (composable capabilities agents can invoke)     │
+└─────────────────────┬───────────────────────────┘
+                      │
+                      ▼
+┌─────────────────────────────────────────────────┐
+│                  Rules Layer                     │
+│  (behavioral constraints & coding standards)     │
+└─────────────────────┬───────────────────────────┘
+                      │
+                      ▼
+┌─────────────────────────────────────────────────┐
+│              MCP / Tool Layer                    │
+│  (GitHub API, filesystem, build tools, etc.)     │
+└─────────────────────────────────────────────────┘
 ```
 
 ---
+
+## Working with This Repository
+
+### Adding a New Agent
+
+Create a Markdown file in `agents/` with this structure:
+
+```markdown
+---
+name: agent-name
+description: One-line description of what this agent does
+agent_type: general-purpose | explore | task | code-review
+model: claude-sonnet-4.6 | gpt-5-mini | claude-haiku-4.5
+tools:
+  - grep
+  - glob
+  - view
+  - edit
+  - powershell
+escalation: human | planner | architect
+---
+
+# Agent Name
+
+## Role
+Detailed description of the agent's purpose and expertise.
+
+## When to Use
+- Bullet list of scenarios where this agent is the right choice.
+
+## Behavioral Rules
+1. Always do X before Y.
+2. Never modify files outside scope Z.
+3. Escalate to [other-agent] when [condition].
+
+## Tool Permissions
+| Tool | Permission | Notes |
+|------|-----------|-------|
+| edit | ✅ Allowed | Only within designated directories |
+| powershell | ⚠️ Limited | Read-only commands only |
+| github API | ✅ Allowed | Full access |
+
+## Example Prompts
+- "Break down this feature into implementable tasks"
+- "Review this PR for security issues"
+```
+
+### Adding a New Skill
+
+Create a `SKILL.md` file inside a subdirectory in the appropriate `skills/<category>/` folder:
+
+```markdown
+---
+name: skill-name
+description: What the skill does
+metadata:
+  category: development | testing | security | documentation | copilot-exclusive | workflow | product | content
+---
+
+# Skill Name
+
+## Purpose
+What this skill accomplishes.
+
+## When to Use
+Describe the conditions under which this skill should be activated.
+
+## Steps
+1. First action to take.
+2. Second action to take.
+3. Validation/verification step.
+
+## Output Format
+Describe what the skill produces (files, PR comments, reports, etc.).
+```
+
+### Adding a New Rule
+
+Create a Markdown file in the appropriate `rules/` subdirectory:
+
+- `rules/common/` for universal rules (e.g., `commit-format.md`, `error-handling.md`)
+- `rules/languages/` for language-specific rules (e.g., `typescript.md`, `python.md`)
+
+````markdown
+---
+name: rule-name
+scope: common | language-specific
+language: typescript | python | go | csharp  # only for language-specific
+severity: error | warning | info
+---
+
+# Rule Name
+
+## Description
+What this rule enforces and why.
+
+## Examples
+
+### ✅ Correct
+
+```text
+// good example
+```
+
+### ❌ Incorrect
+
+```text
+// bad example
+```text
+
+## Exceptions
+
+When this rule can be relaxed and why.
+````
+
+### Adding an Orchestration Pattern
+
+Create files in `orchestration/patterns/`:
+
+```markdown
+---
+name: pattern-name
+type: pipeline | fan-out | review-chain | iterative
+agents:
+  - agent1
+  - agent2
+  - agent3
+---
+
+# Pattern Name
+
+## Flow
+Describe the coordination flow between agents.
+
+## When to Use
+Scenarios where this orchestration pattern applies.
+
+## Agent Responsibilities
+| Step | Agent | Action | Output |
+|------|-------|--------|--------|
+| 1 | planner | Break down task | Task list |
+| 2 | architect | Design solution | Architecture doc |
+| 3 | code-reviewer | Review implementation | Feedback |
+
+## Example
+Worked example showing the pattern in action.
+```
+
+---
+
+## Copilot Agent Mode Mapping
+
+Copilot CLI operates in different modes. Here's how they map to this repository's patterns:
+
+### Interactive Mode (Default)
+
+Standard question-and-answer with user approval at each step.
+
+- **Use for**: Exploratory work, learning the codebase, small targeted changes
+- **Agent mapping**: Single agent with human-in-the-loop
+- **Best agents**: `explore`, individual specialist agents
+- **Example**: "What does the planner agent do?" → reads `agents/planner.md`, explains
+
+### Plan Mode
+
+Structured planning with a visual plan document for user approval before execution.
+
+- **Use for**: Multi-step features, refactoring, migration tasks
+- **Agent mapping**: Planner agent creates plan → user approves → execution agents implement
+- **Best agents**: `planner` → `architect` → specialist agents
+- **Example**: "Add a new security scanning skill" → plan created → approved → implemented
+
+### Autopilot Mode
+
+Autonomous execution without step-by-step approval.
+
+- **Use for**: Well-defined tasks with clear acceptance criteria
+- **Agent mapping**: Single agent or pipeline executing without checkpoints
+- **Best agents**: `task` agent for builds/tests, `doc-updater` for docs
+- **Example**: "Run all validation scripts and fix any issues" → executes autonomously
+
+### Fleet Mode
+
+Parallel task distribution across multiple agents.
+
+- **Use for**: Large-scale changes, batch operations, independent subtasks
+- **Agent mapping**: Fan-out pattern — multiple agents working simultaneously
+- **Best agents**: Multiple `general-purpose` agents in parallel
+- **Example**: "Add example configs for all 4 example projects" → 4 parallel agents
+
+---
+
+## Agent Type Usage
+
+Map repository agents to Copilot CLI's built-in agent types:
+
+| Copilot Agent Type | Best For | Repository Agents |
+|-------------------|----------|-------------------|
+| `explore` | Codebase understanding, file discovery, reading configs | Used by: planner (analysis phase), doc-updater (discovery) |
+| `task` | Builds, tests, linting, dependency installs | Used by: build-error-resolver, tdd-guide (test runs) |
+| `general-purpose` | Complex multi-step implementation, refactoring | Used by: architect, refactor-cleaner, security-reviewer |
+| `code-review` | Reviewing changes, PR feedback | Used by: code-reviewer, security-reviewer |
+
+### Agent Type Selection Guide
+
+```text
+Is it a read-only question about the codebase?
+  → explore agent
+
+Is it running a command (build, test, lint, install)?
+  → task agent
+
+Is it reviewing existing changes?
+  → code-review agent
+
+Is it implementing something complex?
+  → general-purpose agent
+
+Can parts of the work be done independently?
+  → fleet mode with multiple agents
+```
+
+---
+
+## Multi-AI Orchestration Guidelines
+
+This repository supports workflows that span multiple AI coding assistants. Use the right tool for each job.
+
+### When to Delegate to Claude Code
+
+Claude Code excels at tasks requiring deep reasoning and large context windows (200K tokens):
+
+- **Architecture decisions** — analyzing entire codebases for structural changes
+- **Complex refactoring** — understanding interconnected dependencies across many files
+- **Long document generation** — comprehensive guides, detailed specifications
+- **Debugging subtle issues** — tracing logic across deep call chains
+- **Code review with full context** — reviewing PRs that touch many files
+
+**How**: Use `CLAUDE.md` (this repo's equivalent: `COPILOT-INSTRUCTIONS.md`) to provide project context. Claude Code reads project instructions automatically.
+
+### When to Delegate to Codex
+
+Codex (OpenAI) excels at fast, focused code generation:
+
+- **Implementing well-defined functions** — clear input/output contracts
+- **Code transformations** — converting between languages, frameworks, or patterns
+- **Generating boilerplate** — CRUD endpoints, test scaffolding, config files
+- **Quick prototyping** — rapid iteration on implementation ideas
+
+**How**: Provide clear specifications with examples. Codex works best with precise prompts.
+
+### When to Keep in Copilot CLI
+
+Copilot CLI is the best choice when GitHub integration matters:
+
+- **PR and Issue management** — creating, reviewing, commenting on PRs/Issues
+- **GitHub Actions** — debugging workflows, checking CI status
+- **Repository operations** — branch management, commit history, file operations
+- **MCP-powered workflows** — leveraging MCP servers for extended capabilities
+- **Multi-agent orchestration** — coordinating tasks across agent types
+
+**How**: Use the agent types and orchestration patterns defined in this repository.
+
+### MCP Bridges
+
+Use MCP configurations in `mcp-configs/` to bridge between AI systems:
+
+- **GitHub MCP Server** — gives any AI assistant access to GitHub APIs
+- **Filesystem MCP Server** — standardized file access across tools
+- **Custom MCP Servers** — project-specific integrations
+
+```text
+┌──────────────┐     ┌─────────────┐     ┌──────────────┐
+│  Copilot CLI │────▶│  MCP Bridge │◀────│  Claude Code │
+│  (orchestrate)│     │  (shared     │     │  (deep       │
+│              │     │   context)   │     │   reasoning) │
+└──────────────┘     └─────────────┘     └──────────────┘
+                           ▲
+                           │
+                     ┌─────────────┐
+                     │    Codex    │
+                     │  (fast code │
+                     │   gen)      │
+                     └─────────────┘
+```
+
+---
+
+## Coding Standards
+
+All contributions must follow the rules defined in `rules/`:
+
+### Common Rules (`rules/common/`)
+
+- **Commit format**: Use conventional commits (`feat:`, `fix:`, `docs:`, `chore:`)
+- **File naming**: Use kebab-case for all Markdown files (e.g., `build-error-resolver.md`)
+- **Frontmatter**: All agent, skill, and rule files must include YAML frontmatter
+- **Line length**: Markdown lines should wrap at 100 characters for readability
+- **Links**: Use relative links within the repository
+
+### Language-Specific Rules (`rules/languages/`)
+
+Language rules apply when writing example code or scripts:
+
+- **JavaScript/TypeScript**: ESM imports, strict mode, no `any` types
+- **Python**: Type hints, PEP 8, f-strings over `.format()`
+- **Go**: Standard library preferred, `gofmt` compliant
+- **C#/.NET**: Nullable reference types enabled, async/await patterns
+
+---
+
+## Testing Standards
+
+### Validating Configurations
+
+Run the validation suite before committing:
+
+```bash
+# Validate all configuration files against schemas
+npm run validate
+
+# Lint all Markdown files
+npm run lint:md
+
+# Run the full test suite
+npm test
+```
+
+### What Gets Validated
+
+- **Frontmatter**: Required fields present and correctly typed
+- **Internal links**: All cross-references resolve to existing files
+- **Agent references**: Agents referenced in orchestration patterns exist in `agents/`
+- **Skill references**: Skills referenced by agents exist in `skills/`
+
+### Adding Tests
+
+Place test files in `tests/` using Node.js built-in test runner:
+
+```javascript
+import { test, describe } from 'node:test';
+import assert from 'node:assert/strict';
+
+describe('agent validation', () => {
+  test('all agents have required frontmatter', async () => {
+    // Test implementation
+  });
+});
+```
+
+---
+
+## Git Workflow
+
+### Branching Strategy
+
+- `main` — stable, validated configurations
+- `feat/<name>` — new agents, skills, or patterns
+- `fix/<name>` — corrections to existing configurations
+- `docs/<name>` — documentation improvements
+
+### Commit Convention
+
+Use [Conventional Commits](https://www.conventionalcommits.org/):
+
+```text
+feat(agents): add security-reviewer agent definition
+fix(rules): correct TypeScript rule for strict null checks
+docs(guides): add getting-started guide for new contributors
+chore(schemas): update agent schema with model field
+```
+
+Always include the Co-authored-by trailer when Copilot assists:
+
+```text
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+```
+
+### Pull Request Guidelines
+
+1. **One concern per PR** — don't mix agent additions with rule changes
+2. **Run validation** — `npm run validate && npm run lint:md && npm test`
+3. **Update AGENTS.md** — if adding or modifying agents
+4. **Include examples** — show how the new configuration is used
+5. **Cross-reference** — link related agents, skills, and rules
+
+---
+
+## Quick Reference
+
+| Task | Command / Action |
+|------|-----------------|
+| Validate configs | `npm run validate` |
+| Lint Markdown | `npm run lint:md` |
+| Run tests | `npm test` |
+| Setup project | `npm run setup` |
+| Add an agent | Create `agents/<name>.md` with frontmatter |
+| Add a skill | Create `skills/<category>/<skill-name>/SKILL.md` (agentskills.io spec) |
+| Add a rule | Create `rules/common/<name>.md` or `rules/languages/<lang>.md` |
+| Add orchestration | Create `orchestration/patterns/<name>.md` |
+| Add an example | Create files in `examples/<project-type>/` |
+| Add MCP config | Create `mcp-configs/<name>.json` |
+
+---
 > Source: [drvoss/everything-copilot-cli](https://github.com/drvoss/everything-copilot-cli) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-05-04 -->
+<!-- tomevault:4.0:agents_md:2026-07-24 -->
