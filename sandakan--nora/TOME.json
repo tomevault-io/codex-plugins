@@ -1,0 +1,63 @@
+{
+  "name": "Nora",
+  "owner": "Sandakan",
+  "repo": "Nora",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "Nora",
+      "path": ".agents/skills/migrate-oxfmt/SKILL.md",
+      "github_url": "https://github.com/Sandakan/Nora/tree/main/.agents/skills/migrate-oxfmt/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Nora",
+      "path": ".agents/skills/migrate-oxlint/SKILL.md",
+      "github_url": "https://github.com/Sandakan/Nora/tree/main/.agents/skills/migrate-oxlint/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Nora",
+      "path": ".agents/skills/tanstack-query-patterns/SKILL.md",
+      "github_url": "https://github.com/Sandakan/Nora/tree/main/.agents/skills/tanstack-query-patterns/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/Sandakan/Nora",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-24T13:36:56Z"
+}
