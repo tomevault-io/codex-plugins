@@ -5,17 +5,17 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [dolanmiu/docx](https://github.com/dolanmiu/docx).
+Original source: `copilot-instructions.md` in [dolanmiu/docx](https://github.com/dolanmiu/docx).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [dolanmiu/docx](https://github.com/dolanmiu/docx) — a repo with 0+ stars on GitHub.
+From [dolanmiu/docx](https://github.com/dolanmiu/docx) — a repo with 5852+ stars on GitHub.
 
 ---
 
