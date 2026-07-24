@@ -1,0 +1,51 @@
+{
+  "name": "AspNetCore.Docs",
+  "owner": "dotnet",
+  "repo": "AspNetCore.Docs",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "AspNetCore.Docs",
+      "path": ".github/skills/whats-new-include-content-rules/SKILL.md",
+      "github_url": "https://github.com/dotnet/AspNetCore.Docs/tree/main/.github/skills/whats-new-include-content-rules/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/dotnet/AspNetCore.Docs",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-24T14:21:56Z"
+}
