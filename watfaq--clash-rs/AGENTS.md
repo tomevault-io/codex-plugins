@@ -1,156 +1,48 @@
-# CLAUDE.md
+# Copilot Instructions — clash-rs
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
-
-## Project Overview
-
-ClashRS is a custom protocol, rule-based network proxy software written in Rust. It's a high-performance proxy with support for multiple protocols (Shadowsocks/SS2022, Trojan, VMess, VLESS, WireGuard, Tor, TUIC, Hysteria2, ShadowQUIC, AnyTLS, SSH, Tailscale, Socks5), flexible routing rules, DNS anti-spoofing, and cross-platform support.
+## Overview
+Rust implementation of the Clash proxy protocol. Supports SS2022 (Shadowsocks 2022), Trojan, VMess, VLESS, Hysteria2, TUIC, ShadowQUIC, AnyTLS, WireGuard, SSH, Tailscale, Tor, and more. Built on Tokio async runtime.
 
 ## Workspace Structure
+Six crates: `clash-bin` (binary), `clash-lib` (core), `clash-doc`, `clash-ffi` (mobile FFI), `clash-dns`, `clash-netstack`. Rust 2024 edition, resolver = "3".
 
-This is a Rust workspace with six main crates:
-- `clash-bin/` - Main binary executable
-- `clash-lib/` - Core library containing all proxy logic
-- `clash-doc/` - Documentation generation
-- `clash-ffi/` - FFI bindings for mobile platforms
-- `clash-dns/` - DNS resolution components
-- `clash-netstack/` - Network stack implementation
+## Workflow Rules
+- **Never commit directly to master** — always use a PR branch
+- CI on PRs builds all target binaries as artifacts (downloadable without merging), even with `only-clippy-tests-on-pr: true`
+- CI uses **nightly rustfmt** — import order is case-sensitive ASCII (uppercase before lowercase). Do not trust local stable rustfmt; check CI fmt output
+- A push to master creates/updates the `latest` **pre-release** tag. To fetch it via API use `/releases/tags/latest`, NOT `/releases/latest` (which skips pre-releases)
+- Always run `cargo +nightly fmt --all` and `cargo clippy -p clash-lib --all-features` (both must be clean) before committing
 
-## Common Commands
-
-### Build
-```bash
-cargo build                    # Debug build
-cargo build --release          # Release build
-cargo build --features plus    # Build with all features including Tor
-```
-
-### Testing
-```bash
-cargo test --all --all-features                    # Run all tests
-CLASH_RS_CI=true cargo test --all --all-features  # Run tests in CI mode
-make test-no-docker                                # Run tests without Docker
-```
-
-### Documentation
-```bash
-make docs                      # Generate documentation
-cargo doc -p clash_doc --no-deps  # Generate config docs only
-```
-
-### Running
-```bash
-./target/debug/clash-rs -c config.yaml  # Run with config file
-./target/debug/clash-rs -t               # Test configuration
-./target/debug/clash-rs -h               # Show help
-./target/debug/clash-rs -l logfile.log   # Additionally log to file
-```
-
-### Development Setup
-```bash
-# Install pre-commit hooks for code quality
-pipx install pre-commit
-pre-commit install
-
-# Install required dependencies
-# - cmake (3.29 or newer)
-# - libclang (LLVM)
-# - nasm (Windows only)
-# - protoc (for geodata proto generation)
-```
-
-## Architecture
-
-### Core Components
-
-**clash_lib/src/app/** - Main application modules:
-- `api/` - REST API handlers for web dashboard
-- `dispatcher/` - Traffic routing and connection management
-- `dns/` - DNS resolution with anti-spoofing
-- `inbound/` - Inbound connection handling
-- `outbound/` - Outbound proxy connections
-- `router/` - Rule-based routing logic
-
-**clash_lib/src/proxy/** - Protocol implementations:
-- `shadowsocks/`, `trojan/`, `vmess/`, `vless/`, `socks/` - Core proxy protocols
-- `hysteria2/`, `tuic/`, `shadowquic/` - QUIC-based protocols
-- `anytls/` - AnyTLS protocol (inbound + outbound)
-- `wg/` - WireGuard via boringtun
-- `ssh/` - SSH tunneling
-- `tailscale/` - Tailscale integration
-- `tor/` - Tor onion routing
-- `group/` - Proxy group types (selector, fallback, load balance)
-- `transport/` - Underlying transports (TLS, WebSocket, gRPC, H2, ShadowTLS)
-- `tun/`, `tproxy/`, `redir/` - Transparent proxy / TUN device support
-
-**clash_lib/src/config/** - Configuration parsing and validation
-
-### Key Design Patterns
-
-- **Async/await**: Heavy use of Tokio for async networking
-- **Trait-based**: Extensible proxy system using traits
-- **Error handling**: Comprehensive error types with `thiserror`
-- **Feature flags**: Conditional compilation for different protocols
-- **Zero-copy**: Optimized data paths where possible
-- **Workspace structure**: Uses Rust 2024 edition with resolver = "3"
-- **Release optimization**: Configured for size optimization with LTO and strip
-
-## Testing
-
-Tests are located in `clash_lib/tests/` and include:
-- `smoke_tests.rs` - Basic functionality tests
-- `api_tests.rs` - API endpoint tests (run with `--all-features`; requires `shadowsocks` feature for SS proxies)
-- Integration tests with Docker containers for various proxy protocols
-
-Set `CLASH_RS_CI=true` environment variable when running tests to enable CI-specific behavior.
+## Testing a Branch Without Merging
+Download the `x86_64-unknown-linux-gnu-binaries` artifact from the PR's CI run via the GitHub API and deploy it directly. No need to merge to get a testable binary.
 
 ## Version Building
+- **Master branch** (`GITHUB_REF=refs/heads/master`): version = `{cargo_version}-alpha+sha.{short_sha}` (e.g. `0.10.2-alpha+sha.abc1234`)
+- **Tagged releases**: version = `{cargo_version}` only
+- Commit SHA is also exposed separately as `CLASH_GIT_SHA_SHORT` env var, and the `/version` API returns a `commit` field (present only for master builds)
 
-The version string is set at compile time via `CLASH_VERSION_OVERRIDE`:
-- **Master branch builds**: `{cargo_version}-alpha+sha.{short_sha}` (e.g. `0.10.2-alpha+sha.abc1234`)
-- **Tagged/release builds**: `{cargo_version}` (e.g. `0.10.2`)
+## API: Version Endpoint
+`GET /version` returns `{"version": "...", "meta": false, "commit": "abc1234"}` — `commit` is only present on master/nightly builds.
 
-The commit SHA is also emitted separately as `CLASH_GIT_SHA_SHORT` and exposed via the `/version` API endpoint as a `commit` field (present only when non-empty).
+## AnyTLS Protocol
+- AnyTLS inbound: `clash-lib/src/proxy/anytls/inbound/`. Uses rustls-pemfile for cert loading, SHA256 for user map lookup, CancellationToken for relay coordination. No UDP listener (UoT v2 tunnels UDP over TCP).
+- Tests using rustls directly must call `rustls::crypto::aws_lc_rs::default_provider().install_default()` before constructing TLS configs.
 
-## Platform-Specific Notes
+## SS2022 Multi-user UDP
+- Server response must be encrypted with the user's **uPSK** (per-user key), not the server iPSK
+- `InboundShadowsocksDatagram` uses a per-client `HashMap<SocketAddr, UdpSocketControlData>` to track session context; `poll_next` upserts on receive, `poll_flush` looks up by `dst_addr`
+- `server_session_id` is shared per socket; `packet_id` and `client_session_id`/`user` are per-client
+- IPv4-mapped IPv6 addresses (`::ffff:x.x.x.x`) from dual-stack SS2022 inbound must be canonicalized before socket creation to avoid EINVAL on bind
 
-- **iOS/macOS**: Use `scripts/build_apple.sh` to build XCFramework
-- **Windows**: Requires `wintun.dll` in same directory as executable
-- **Linux**: Enhanced with platform-specific UDP socket optimizations
+## Outbound Manager
+- Provider proxies are stored in `proxy_providers: HashMap<String, ThreadSafeProxyProvider>` separately from `registry` (static proxies+groups)
+- `get_outbound()` only searches `registry` — this is by design, not a regression
+- Common proxy response fields (name/type/udp/history/alive) are centralized in `OutboundManager::apply_common_proxy_fields`
 
-## Feature Flags
-
-Key features that can be enabled:
-- `shadowsocks` - Shadowsocks/SS2022 protocol support
-- `tuic` - TUIC protocol support
-- `ssh` - SSH tunnel support
-- `onion` - Tor support
-- `shadowquic` - ShadowQUIC protocol support
-- `wireguard` - WireGuard support via boringtun
-- `tailscale` - Tailscale integration
-- `tun` - TUN device / transparent proxy
-- `tproxy` - Linux TPROXY support
-- `redir` - TCP redirect support
-- `telemetry` - OpenTelemetry tracing
-- `dashboard` - Embedded web dashboard (default on)
-- `tokio-console` - Tokio console debugging
-- `bench` - Benchmarking tools
-
-## Configuration
-
-The project uses YAML configuration files. Sample configs are in `clash/tests/data/config/`.
-
-Main configuration sections:
-- `port` - HTTP/SOCKS proxy port
-- `dns` - DNS server settings
-- `rules` - Traffic routing rules
-- `proxies` - Outbound proxy definitions
-- `proxy-groups` - Proxy group configurations
-
-## Git Workflow
-
-**Never commit or push directly to `master`** — always create a PR branch and open a pull request.
+## Testing Notes
+- Run `cargo test -p clash-lib --all-features` for api_tests (requires `--all-features` for SS proxy config)
+- `CLASH_RS_CI=true` enables CI-specific test behavior
 
 ---
 > Source: [Watfaq/clash-rs](https://github.com/Watfaq/clash-rs) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-22 -->
+<!-- tomevault:4.0:agents_md:2026-07-24 -->
