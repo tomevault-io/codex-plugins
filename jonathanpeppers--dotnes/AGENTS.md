@@ -1,0 +1,158 @@
+# .NES (dotnes) AI Coding Instructions
+
+## Overview
+.NES transpiles .NET IL code into 6502 assembly, producing NES ROMs. C# compiles to MSIL, then `Transpiler` reads it via `System.Reflection.Metadata` and emits machine code for the NES.
+
+## Architecture
+
+### Transpilation Pipeline
+```
+Program.cs → dotnet build → .dll (MSIL) → Transpiler → .nes ROM
+                                ↑                ↓
+                           chr_generic.s    IL2NESWriter → NESWriter
+```
+
+**Key files:**
+- [src/dotnes.tasks/Utilities/Transpiler.cs](src/dotnes.tasks/Utilities/Transpiler.cs) - Single-pass MSIL reader and ROM assembler
+- [src/dotnes.tasks/Utilities/IL2NESWriter.cs](src/dotnes.tasks/Utilities/IL2NESWriter.cs) - IL→6502 opcode mapping
+- [src/dotnes.tasks/Utilities/NESWriter.cs](src/dotnes.tasks/Utilities/NESWriter.cs) - ROM binary format
+- [src/dotnes.tasks/ObjectModel/BuiltInSubroutines.cs](src/dotnes.tasks/ObjectModel/BuiltInSubroutines.cs) - 6502 assembly for all built-in subroutines
+- [src/dotnes.tasks/ObjectModel/Program6502.cs](src/dotnes.tasks/ObjectModel/Program6502.cs) - ROM code block ordering and address resolution
+- [src/neslib/NESLib.cs](src/neslib/NESLib.cs) - Reference-only API (all methods `throw null!`)
+
+### Reference Assembly Pattern
+`neslib` has **no implementations**—methods provide compile-time API only. The transpiler looks up method names to emit corresponding 6502 subroutine calls. Adding new NES APIs requires:
+1. Add method stub in `NESLib.cs` with `throw null!`
+2. Implement 6502 equivalent in `BuiltInSubroutines.cs`
+
+## Build & Test
+
+```bash
+dotnet build                    # Build entire solution
+dotnet test                     # Run tests (ALWAYS rebuilds, NEVER use --no-build)
+cd samples/hello && dotnet run  # Build + run in emulator
+```
+
+**⚠️ IMPORTANT:** Always run `dotnet test` without `--no-build`. The test project depends on build outputs that must be fresh.
+
+**Diagnostic logging:** Add `<NESDiagnosticLogging>true</NESDiagnosticLogging>` to project.
+
+### Diagnostic Scripts
+
+> **💡 Skills available:**
+> - `nes-rom-debug` — Static binary analysis: disassembly, byte comparison, IL dump. Use when investigating transpiler output or comparing ROMs.
+> - `nes-emu-debug` — Dynamic runtime analysis: run ROMs headlessly in Mesen2 to inspect memory, palette, nametable, screen buffer, CPU/PPU state. Use when a ROM doesn't display correctly or you need to verify runtime behavior.
+
+- `python scripts/disasm.py <file.nes> [start_hex] [end_hex]` — Disassembles PRG ROM into 6502 assembly (default: full `$8000-$FFFF` range)
+- `python scripts/compare_rom.py <cc65.nes> <dotnes.nes>` — Side-by-side ROM comparison with 6502 disassembly (useful for debugging transpiler output vs cc65 reference)
+- `dotnet run scripts/ildump.cs -- <path-to-dll>` — Dumps IL opcodes from a .NET DLL (useful for understanding what IL the transpiler will process)
+- `dotnet run scripts/screenshot-nes.cs -- <rom.nes> [delay_ms] [output.png]` — Launches the ROM in ANESE emulator, captures a screenshot, and saves it as PNG (Windows only, default 3000ms delay)
+- `dotnet run scripts/record-nes.cs -- <rom.nes> [--gif] [--frames N] [--interval N] [--delay N] [--output FILE]` — Records a PNG screenshot or animated GIF from a running ROM (Windows only)
+- `dotnet run scripts/record-all-samples.cs` — Builds all samples and records PNG/GIF for each into `samples/{name}/{name}.png` or `.gif`
+- `python scripts/gen_chr_tileset1.py` — One-time generator that created the `tileset1` CHR ROM `.s` files. Use as a template when adding new samples with custom CHR tilesets.
+
+### MSBuild Binary Logs
+
+Use `dotnet build -bl:output.binlog` to capture binary logs for debugging MSBuild evaluation issues. Analyze with the `binlogtool` .NET global tool:
+
+```bash
+dotnet tool install --global binlogtool     # Install once
+binlogtool search output.binlog "term"      # Search for properties, items, messages
+binlogtool listproperties output.binlog     # List all evaluated properties
+binlogtool savestrings output.binlog out.txt # Extract all strings
+```
+
+## MSBuild Integration
+- [bin/Debug/dotnes.props](bin/Debug/dotnes.props) - Disables BCL (`NoStdLib=true`), forces `Optimize=true`
+- [bin/Debug/dotnes.targets](bin/Debug/dotnes.targets) - Runs `TranspileToNES` task after Build
+
+The Transpile target automatically creates `.nes` from `.dll` + `*.s` files.
+
+**⚠️ When adding new public MSBuild properties**, always update [docs/msbuild-properties.md](docs/msbuild-properties.md) with the property name, type, default value, description, and an XML example.
+
+## Testing Patterns
+Tests in [src/dotnes.tests/](src/dotnes.tests/) use **Verify snapshots** and **Roslyn-based** tests:
+- Test data DLLs live in `Data/` folder (pre-compiled debug/release)
+- `TranspilerTests.Write` verifies entire ROM output byte-for-byte
+- `TranspilerTests.ReadStaticVoidMain` verifies IL parsing
+- `RoslynTests` compile C# source at test time via Roslyn and assert on emitted 6502 bytes
+
+**⚠️ CRITICAL: The `.verified.bin` files are the source of truth for existing samples. Any code change that causes `TranspilerTests.Write` to produce different bytes for an unchanged sample is WRONG — fix the code, not the verified file. When adding or modifying a sample (e.g., changing `Program.cs`), rebuild its test DLLs and update the verified.bin to match.**
+
+**⚠️ Prefer RoslynTests for new transpiler features.** When adding or testing new IL opcode support, write `RoslynTests` instead of creating new `samples/` directories and pre-compiled DLLs. RoslynTests are self-contained (C# source + assertions in one test method), don't require pre-compiled DLLs, and are easier to maintain. Use `GetProgramBytes(source)` to compile and transpile, then assert on the hex output with `Assert.Contains`. Only create new samples for features that need to be run in an emulator or showcased as standalone projects.
+
+**Adding new test cases (legacy):** Compile sample code, copy `.dll` to `Data/`, add `[InlineData("name", true/false)]`.
+
+**Per-sample CHR ROM:** Tests look for `chr_{name}.s` in the Data folder first, falling back to `chr_generic.s`. The music sample uses an empty CHR (no graphics).
+
+## NES Program Constraints
+
+**Supported:** Top-level statements, user-defined methods (with parameters and return values), local variables (zero page `$0325+`), byte arrays as ROM tables, ushort arrays as note tables, while loops, NESLib API calls, NES APU music playback
+
+**Not supported:** Classes, objects, BCL, string manipulation, GC
+
+**Required:** Programs MUST end with `while (true) ;` (NES has no exit)
+
+**⚠️ NEVER redefine constants or enums that are already provided by neslib.** The `PAD` enum (`PAD.A`, `PAD.UP`, `PAD.LEFT`, etc.), `MASK` constants, PPU register constants, and APU constants are all built-in. Use them directly — do not create local `const byte PAD_A = 0x01` or similar redefinitions. This leads to bugs when the values are wrong and makes code harder to maintain.
+
+## Adding IL Opcode Support
+1. Add case in `IL2NESWriter.Write(ILInstruction)` switch
+2. Emit via `Write(NESInstruction.*, value)`
+3. Test with a `RoslynTests` method using `GetProgramBytes` and hex assertions
+
+## 6502 Assembly Basics
+
+Common patterns in [IL2NESWriter](src/dotnes.tasks/Utilities/IL2NESWriter.cs):
+```csharp
+Emit(Opcode.LDA, AddressMode.Immediate, 0x02);     // A9 02 - Load immediate
+EmitWithLabel(Opcode.JSR, AddressMode.Absolute, "pal_col"); // 20 xx xx - Jump subroutine
+Emit(Opcode.STA, AddressMode.ZeroPage, TEMP);       // 85 17 - Store zero page
+Emit(Opcode.BNE, AddressMode.Relative, offset);     // D0 xx - Branch if not equal
+EmitWithLabel(Opcode.JMP, AddressMode.Absolute, "main");    // 4C xx xx - Jump absolute
+```
+
+**6502 registers:** A (accumulator), X/Y (index). Zero page ($00-$FF) is fast memory; stack at $0100-$01FF.
+
+## Music Architecture
+
+Music subroutines (`play_music`, `start_music`) are emitted BEFORE `main()` to match cc65's ROM layout. The transpiler handles these IL patterns:
+
+- `set_music_pulse_table(ushort[])` / `set_music_triangle_table(ushort[])` — transpiler-only directives that store note frequency tables as interleaved lo/hi byte pairs
+- `apu_init()` — emits `JSR apu_init` (built-in subroutine that initializes APU registers)
+- `start_music(byte[])` — loads music data address into A/X, then `JSR start_music`
+- `play_music()` — emits `JSR play_music` (called every NMI frame)
+
+See [docs/music-sample.md](docs/music-sample.md) for ROM layout details and cc65 comparison.
+
+**Resources:** [6502 Instruction Set](https://www.masswerk.at/6502/6502_instruction_set.html) | [NES Dev Wiki](https://wiki.nesdev.org/w/index.php/INES) | [8bitworkshop](https://8bitworkshop.com)
+
+## Git Workflow
+
+**⚠️ NEVER commit or push directly to `main`.** All changes must go through pull requests. This includes documentation, skills, config files — everything. Create a branch, push it, and open a PR.
+
+**⚠️ PR and issue descriptions must use plain Markdown only.** When calling `gh pr create --body` or `gh issue create --body`:
+- **NEVER** use backslash escapes like `\``, `\"`, or `\\` — they render as literal `\"` garbage on GitHub
+- For inline code, use double-backticks: ` ``code here`` ` (these survive shell interpolation)
+- For code blocks, use triple-backtick fenced blocks on their own lines
+- Write naturally with **bold**, bullet points, and simple formatting
+
+## Code Review Guidelines
+
+**⚠️ DO NOT suggest these changes in code reviews:**
+
+1. **Do not use .Where() for filtering when the loop body needs TryResolve out parameters**
+   - BAD: `foreach (var kvp in dict.Where(kvp => TryResolve(kvp.Value, out _))) { TryResolve(kvp.Value, out var x); }`
+   - GOOD: `foreach (var kvp in dict) { if (TryResolve(kvp.Value, out var x)) { } }`
+   - Reason: The Where() clause calls TryResolve twice (slower) and doesn't capture the out parameter
+
+2. **Do not rename parameters to avoid shadowing field names unless it causes actual bugs**
+   - Example: Parameter `local` in `WriteStloc(Local local)` is fine even though there's a field `readonly ushort local = 0x325`
+   - Reason: The types are different (Local vs ushort) and the context makes usage clear
+
+3. **Do not change conditional logic that appears redundant without understanding the semantic relationship**
+   - Example: `if (needsDecsp4 && usedMethods.Contains("pad_poll"))` correctly adds PadTrigger/PadState blocks
+   - Reason: When decsp4 is needed, pad_trigger and pad_state are internal implementation dependencies of the pad_poll feature, not separate user-facing methods. They should be added together when pad_poll is used with needsDecsp4, not checked individually.
+
+---
+> Source: [jonathanpeppers/dotnes](https://github.com/jonathanpeppers/dotnes) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-07-24 -->
