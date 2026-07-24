@@ -1,44 +1,129 @@
-# Claude Code Guide
+# GitHub Copilot Instructions for BTrace
 
-Follow the repository-wide rules in [AGENTS.md](AGENTS.md). This file intentionally contains only Claude-specific orientation; `AGENTS.md` is the canonical operational contract.
+## About BTrace
+BTrace is a safe, dynamic tracing tool for the Java platform. It dynamically instruments running Java applications to inject tracing code at runtime using bytecode instrumentation.
 
-## Common commands
+## Project Structure
+- **Gradle multi-module project** with modules named `btrace-*`
+- **Core modules**: `btrace-core`, `btrace-agent`, `btrace-runtime`, `btrace-client`, `btrace-instr`
+- **Build artifacts**: `btrace-dist` for distributions
+- **Tests**: `integration-tests/` for integration tests, `src/test/java` in modules for unit tests
+- **Documentation**: `docs/` directory
 
-Use a workspace-local Gradle cache when appropriate, and redirect Gradle output to a log before filtering and reading it (see [AGENTS.md](AGENTS.md#build-and-verification)).
+## Architecture Overview
+- **btrace-agent**: Attachable Java agent with class transformer, manages script lifecycle
+- **btrace-compiler**: Verifies and compiles BTrace scripts to bytecode
+- **btrace-instr**: ASM-based instrumentation and weaving utilities
+- **btrace-runtime**: APIs for scripts (printing, timers, data collection)
+- **btrace-client**: CLI/attach tooling for sending scripts to target JVM
+- **services**: SPI for pluggable exporters (e.g., statsd)
 
+## Development Guidelines
+
+### Language & Versions
+- **Language**: Java
+- **Source/Target**: Java 8
+- **Build toolchain**: JDK 11
+- **Test framework**: JUnit Jupiter (JUnit 5)
+
+### Code Style
+- **Format**: Google Java Format enforced via Spotless
+- **Packages**: All under `io.btrace.*`
+- **Naming**: Module names follow `btrace-<component>` pattern
+- **Imports**: Order enforced; remove unused imports
+- **Comments**: Only add if they match existing style or explain complex logic
+
+### Building & Testing
 ```bash
-# Distribution and all unit tests
-GRADLE_USER_HOME=$(pwd)/.gradle-user ./gradlew :btrace-dist:build
+# Full build with unit tests
+./gradlew build
 
-# Module, test class, or formatting check
-GRADLE_USER_HOME=$(pwd)/.gradle-user ./gradlew :btrace-agent:test
-GRADLE_USER_HOME=$(pwd)/.gradle-user ./gradlew :btrace-agent:test --tests '*InstrStackTest'
-GRADLE_USER_HOME=$(pwd)/.gradle-user ./gradlew spotlessCheck
+# Build distribution only
+./gradlew :btrace-dist:build
 
-# Integration tests: build the distribution first
-GRADLE_USER_HOME=$(pwd)/.gradle-user ./gradlew -Pintegration :integration-tests:test
+# Run unit tests
+./gradlew test
 
-# Intentional instrumentation-bytecode changes only
-GRADLE_USER_HOME=$(pwd)/.gradle-user ./gradlew test -PupdateTestData
+# Run integration tests (requires dist build first)
+./gradlew -Pintegration test
+
+# Format code
+./gradlew spotlessApply
+
+# Check formatting
+./gradlew spotlessCheck
 ```
 
-## Where to look
+### Important Environment Variables
+- `JAVA_HOME`: Required for builds
+- `TEST_JAVA_HOME`: Required for integration tests (typically JDK 11)
+- `BTRACE_TEST_DEBUG=true`: Enable verbose integration test output
+- `BTRACE_HOME`: Optional, points to exploded dist
 
-- Script compiler and verifier: `btrace-compiler`
-- Agent lifecycle and bytecode weaving: `btrace-agent` (instrumentation engine lives in its `io.btrace.instr` package)
-- Script API, runtime, and protocol: `btrace-core`, `btrace-runtime`
-- CLI: `btrace-client`; packaging: `btrace-dist`
-- Golden instrumentation data: `btrace-agent/src/test/resources/instrumentorTestData/`
+### Testing Best Practices
+- Unit tests: `src/test/java` with `*Test` suffix
+- Integration tests: `integration-tests/src/test/java`
+- BTrace scripts: `integration-tests/src/test/btrace`
+- Always run relevant tests after making changes
+- Update golden files when changing instrumentor: `./gradlew test -PupdateTestData`
 
-## Detailed references
+### Commit & PR Guidelines
+- **Commit style**: Conventional Commits (e.g., `feat(core): add probe`, `fix(instr): handle null arg`)
+- **Clear descriptions**: Link related issues
+- **Tests required**: Update/add tests; ensure CI passes
+- **Formatting**: Must pass `spotlessCheck`
+- **No unrelated changes**: Keep changes focused and minimal
 
-- [Documentation index](docs/README.md)
-- [Masked JAR architecture](docs/architecture/MaskedJarArchitecture.md) — required reading for distribution/class-loading changes
-- [Instrumentation backends](docs/architecture/InstrumentationBackends.md)
-- [Protocol architecture](docs/architecture/Version2ProtocolArchitecture.md)
-- [Extension development](docs/BTraceExtensionDevelopmentGuide.md)
-- [Troubleshooting](docs/Troubleshooting.md)
+## Troubleshooting
+
+### Build Issues
+- **Attach disabled**: Remove `-XX:+DisableAttachMechanism` from target JVM
+- **Permission errors**: Attach requires same OS user as target JVM
+- **Toolchain issues**: Verify `JAVA_HOME` and `TEST_JAVA_HOME` point to valid JDKs
+
+### Restricted Environments
+```bash
+# Use workspace-local Gradle cache
+GRADLE_USER_HOME=$(pwd)/.gradle-user
+
+# Force IPv4 to avoid network interface issues
+JAVA_TOOL_OPTIONS="-Djava.net.preferIPv4Stack=true -Djava.net.preferIPv6Addresses=false"
+```
+
+## Code Generation Tips
+- **Prefer simplicity**: Simple, performant solutions over complex designs
+- **Use existing patterns**: Follow patterns from similar code in the repository
+- **Minimal changes**: Make the smallest possible changes to achieve the goal
+- **Reuse libraries**: Use ASM for bytecode, JCTools for concurrency, existing BTrace APIs
+- **No temporary files in repo**: Use `/tmp` for scratch work
+- **Security**: Never commit secrets; avoid introducing vulnerabilities
+
+## Example BTrace Script Pattern
+```java
+package example;
+import static io.btrace.core.BTraceUtils.*;
+import io.btrace.core.annotations.*;
+
+@BTrace
+public class ExampleTrace {
+  @OnMethod(clazz="com.example.Target", method="methodName")
+  public static void onMethod(@ProbeMethodName String method) {
+    println("Called: " + method);
+  }
+}
+```
+
+## Key Dependencies
+- **ASM**: Bytecode manipulation
+- **JCTools**: High-performance concurrent data structures
+- **hppcrt**: Optimized collections
+- **JUnit Jupiter**: Testing framework
+
+## Additional Resources
+- Full guidelines: See `AGENTS.md` in repository root
+- Tutorial: `docs/BTraceTutorial.md`
+- Binary releases: https://github.com/btraceio/btrace/releases
 
 ---
 > Source: [btraceio/btrace](https://github.com/btraceio/btrace) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-22 -->
+<!-- tomevault:4.0:agents_md:2026-07-24 -->
