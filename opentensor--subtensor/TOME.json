@@ -1,0 +1,69 @@
+{
+  "name": "subtensor",
+  "owner": "opentensor",
+  "repo": "subtensor",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "subtensor",
+      "path": ".agents/skills/skeptic/SKILL.md",
+      "github_url": "https://github.com/opentensor/subtensor/tree/main/.agents/skills/skeptic/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "subtensor",
+      "path": ".claude/skills/skeptic/SKILL.md",
+      "github_url": "https://github.com/opentensor/subtensor/tree/main/.claude/skills/skeptic/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "subtensor",
+      "path": ".agents/skills/auditor/SKILL.md",
+      "github_url": "https://github.com/opentensor/subtensor/tree/main/.agents/skills/auditor/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "subtensor",
+      "path": ".claude/skills/auditor/SKILL.md",
+      "github_url": "https://github.com/opentensor/subtensor/tree/main/.claude/skills/auditor/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/opentensor/subtensor",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-24T15:50:12Z"
+}
