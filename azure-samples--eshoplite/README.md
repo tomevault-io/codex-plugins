@@ -1,8 +1,6 @@
 # AI instruction files for eShopLite
 
-> Sourced from [Azure-Samples/eShopLite](https://github.com/Azure-Samples/eShopLite) and converted for every major platform by [TomeVault](https://tomevault.io)
-
-eShopLite is a set of reference .NET applications implementing an eCommerce site with features like Semantic Search, MCP, Reasoning models and more.
+> Sourced from [Azure-Samples/eShopLite](https://github.com/Azure-Samples/eShopLite), graded against the public Tome Standard and kept consistent across every major platform by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
