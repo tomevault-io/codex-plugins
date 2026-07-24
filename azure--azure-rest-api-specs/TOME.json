@@ -1,0 +1,93 @@
+{
+  "name": "azure-rest-api-specs",
+  "owner": "Azure",
+  "repo": "azure-rest-api-specs",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "azure-rest-api-specs",
+      "path": ".github/skills/azure-api-review/SKILL.md",
+      "github_url": "https://github.com/Azure/azure-rest-api-specs/tree/main/.github/skills/azure-api-review/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "azure-rest-api-specs",
+      "path": ".github/skills/azure-typespec-author/SKILL.md",
+      "github_url": "https://github.com/Azure/azure-rest-api-specs/tree/main/.github/skills/azure-typespec-author/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "azure-rest-api-specs",
+      "path": ".github/skills/openai-typespec-update/SKILL.md",
+      "github_url": "https://github.com/Azure/azure-rest-api-specs/tree/main/.github/skills/openai-typespec-update/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "azure-rest-api-specs",
+      "path": ".github/skills/azsdk-common-sdk-release/SKILL.md",
+      "github_url": "https://github.com/Azure/azure-rest-api-specs/tree/main/.github/skills/azsdk-common-sdk-release/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "azure-rest-api-specs",
+      "path": ".github/skills/azsdk-common-prepare-release-plan/SKILL.md",
+      "github_url": "https://github.com/Azure/azure-rest-api-specs/tree/main/.github/skills/azsdk-common-prepare-release-plan/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "azure-rest-api-specs",
+      "path": ".github/skills/azsdk-common-generate-sdk-locally/SKILL.md",
+      "github_url": "https://github.com/Azure/azure-rest-api-specs/tree/main/.github/skills/azsdk-common-generate-sdk-locally/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "azure-rest-api-specs",
+      "path": ".github/skills/azsdk-common-pipeline-troubleshooting/SKILL.md",
+      "github_url": "https://github.com/Azure/azure-rest-api-specs/tree/main/.github/skills/azsdk-common-pipeline-troubleshooting/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "azure-rest-api-specs",
+      "path": ".github/skills/azsdk-common-apiview-feedback-resolution/SKILL.md",
+      "github_url": "https://github.com/Azure/azure-rest-api-specs/tree/main/.github/skills/azsdk-common-apiview-feedback-resolution/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/Azure/azure-rest-api-specs",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-24T15:39:37Z"
+}
