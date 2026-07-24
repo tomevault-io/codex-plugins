@@ -1,46 +1,65 @@
-# Gemini CLI Mandates for POCS
+# POCS - GitHub Copilot Quick Reference
 
-This file establishes foundational mandates for Gemini CLI when working on the PANOPTES Observatory Control System (POCS).
+> **📖 IMPORTANT:** See [`AGENTS.md`](../AGENTS.md) for comprehensive guidelines, architecture details, hardware documentation, and development processes.
 
-## Primary Directive
+## Essential Commands
 
-**All instructions and guidelines defined in [AGENTS.md](./AGENTS.md) are absolute mandates.** 
+```bash
+# Setup (first time)
+curl -LsSf https://astral.sh/uv/install.sh | sh
+uv sync --all-extras --group dev
 
-Gemini CLI must rigorously adhere to the standards, workflows, and architectural principles detailed in `AGENTS.md`, including but not limited to:
+# Development cycle
+uv run pytest                    # Run all tests
+uv run ruff check .              # Lint
+uv run ruff format .             # Format
+uv build                         # Build package
 
-- **Code Style:** Use Ruff for linting and formatting. Use double quotes and 110-character line limits.
-- **Type Safety:** Python 3.12+ type hints are required for all function signatures.
-- **Documentation:** Use Google-style docstrings for all public classes and functions. All documentation must be written in Markdown for MkDocs. Do not use reStructuredText (.rst) or Sphinx.
-- **Testing:** Every change MUST include corresponding `pytest` tests. Maintain high coverage.
-- **Package Management:** Use `uv` for all dependency and environment management.
-- **Logging:** Use `loguru` via `self.logger` (from `PanBase`) or direct import for standalone utilities.
-- **Configuration:** The `panoptes-config-server` MUST be running for POCS or its tests to function correctly.
+# Before every commit (CI will fail without these)
+uv run ruff check .
+uv run ruff format --check .
+uv run pytest
+```
 
-## Project-Specific Workflow Mandates
+## Code Standards Checklist
 
-- **Changelog Requirement:** A `CHANGELOG.md` entry is required for **every feature or bug fix**. All entries must be added under an `## [Unreleased]` section at the top of the file. Minor changes (e.g., documentation tweaks, internal refactoring) do not necessarily require a changelog entry.
-- **Commit Message Format:** Use the format `Brief description (#issue-number)`.
-- **Utility Preference:** ALWAYS check the [`panoptes-utils`](https://github.com/panoptes/panoptes-utils) library for existing functionality before implementing new utilities or importing external libraries.
-- **Simulator-First Testing:** POCS controls physical hardware. Always prioritize safety and use simulators for verification. Never bypass state machine transitions. Use the `--simulator` flag or appropriate configuration to ensure no real hardware commands are sent during development and testing.
+- ✅ Python 3.12+ with type hints
+- ✅ Google-style docstrings
+- ✅ Line length: 110 chars
+- ✅ Update `CHANGELOG.md` for all PRs
 
-## Research & Validation Commands
+## Quick Navigation
 
-- **Research:** Use `grep_search` to find existing implementations of similar logic to ensure architectural consistency.
-- **Linting & Formatting:** 
-    - `uv run ruff check .`
-    - `uv run ruff format --check .` (use `uv run ruff format .` to fix)
-- **Testing:** 
-    - `uv run pytest <test_path>`
-    - Always ensure the config server is running (usually on port 6563) before starting tests.
+```
+src/panoptes/pocs/
+├── core.py          # State machine (the brain)
+├── observatory.py   # Hardware coordinator
+├── scheduler/       # Observation scheduler
+├── camera/          # Camera drivers
+├── mount/           # Telescope mount drivers
+├── dome/            # Dome control
+├── focuser/         # Focus control
+└── utils/           # Utilities and CLI
+```
 
-## Reference Documents
+## Critical Info
 
-- **Architecture:** `docs/architecture-for-beginners.md`
-- **Contributing:** `CONTRIBUTING.md`
-- **Glossary:** `docs/glossary.md`
-- **CLI Guide:** `docs/cli-guide.md`
+**Config Server:** Port 6563 (must be running)  
+**Test Config:** `tests/testing.yaml`  
+**State Machine:** Understand state flow before modifying `core.py`  
+**Timing:** Tests may take several minutes
+
+## Need More Info?
+
+| Topic | See |
+|-------|-----|
+| Architecture | AGENTS.md → "Architecture Guidelines" |
+| State machine | AGENTS.md → "State Machine (POCS Core)" |
+| Hardware drivers | AGENTS.md → "Hardware Drivers" |
+| Testing strategy | AGENTS.md → "Testing Requirements" |
+| Configuration | AGENTS.md → "Configuration" |
+| All details | **[AGENTS.md](../AGENTS.md)** ← Read this first |
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/panoptes)
-> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/panoptes)
-<!-- tomevault:4.0:agents_md:2026-04-08 -->
+> Source: [panoptes/POCS](https://github.com/panoptes/POCS) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-07-24 -->
