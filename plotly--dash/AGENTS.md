@@ -1,21 +1,36 @@
-# CLAUDE.md
+# Copilot Instructions
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to GitHub Copilot when working with this repository.
 
-## Required Reading
-
-**At the start of each session, read the documentation in `.ai/` before making changes:**
-
-1. `.ai/COMMANDS.md` - Build, test, lint commands
-2. `.ai/ARCHITECTURE.md` - Backend, callbacks, pages, assets, errors, background callbacks, Jupyter, config, stores, async, security
-3. `.ai/RENDERER.md` - Frontend, crawlLayout, Redux store, clientside API, component API
-4. `.ai/COMPONENTS.md` - Component system, generation, resources
-5. `.ai/TESTING.md` - Testing framework, fixtures, patterns, type compliance
-6. `.ai/TROUBLESHOOTING.md` - Common errors and solutions
+For detailed documentation, see the [`.ai/`](../.ai/) directory:
+- [Commands](../.ai/COMMANDS.md) - Build, test, lint
+- [Architecture](../.ai/ARCHITECTURE.md) - Backend, layout, callbacks
+- [Components](../.ai/COMPONENTS.md) - Component system, generation, resources
 
 ## Project Overview
 
 Dash is a Python framework for building reactive web-based data visualization applications. Built on Plotly.js, React, and Flask.
+
+## Quick Reference
+
+```bash
+# Setup
+pip install -e .[ci,dev,testing,celery,diskcache] && npm ci
+
+# Build
+npm run build                                    # Linux/Mac
+npm run first-build                              # Windows (use Bash)
+dash-update-components "dash-core-components"    # Single component
+
+# Test
+pytest tests/unit                                # Unit tests
+pytest tests/integration                         # Integration tests
+pytest -k test_name                              # Specific test
+
+# Lint
+npm run lint                                     # All linters
+npm run private::format.black                    # Auto-format Python
+```
 
 ## Key Files
 
@@ -28,4 +43,4 @@ Dash is a Python framework for building reactive web-based data visualization ap
 
 ---
 > Source: [plotly/dash](https://github.com/plotly/dash) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-22 -->
+<!-- tomevault:4.0:agents_md:2026-07-24 -->
