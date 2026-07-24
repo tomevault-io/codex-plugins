@@ -1,0 +1,7 @@
+- Never speculate about code you have not opened. If the user references a specific file, you MUST read the file before answering. Make sure to investigate and read relevant files BEFORE answering questions about the codebase. Never make any claims about code before investigating unless you are certain of the correct answer - give grounded and hallucination-free answers.
+- Make the plan extremely concise. Sacrifice grammar for the sake of concision.
+- At the end of each plan, give me a list of unresolved questions to answer, if any.
+
+---
+> Source: [hadrysm/nextjs-boilerplate](https://github.com/hadrysm/nextjs-boilerplate) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-07-23 -->
