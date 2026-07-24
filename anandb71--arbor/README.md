@@ -1,23 +1,21 @@
 # arbor
 
-> Source: [Anandb71/arbor](https://github.com/Anandb71/arbor) — distributed by [TomeVault](https://tomevault.io)
-
-Graph-native code intelligence that replaces embedding-based RAG with deterministic program understanding.
+> Source: [Anandb71/arbor](https://github.com/Anandb71/arbor). Graded, signed and kept in sync across platforms by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [Anandb71/arbor](https://github.com/Anandb71/arbor).
+Original source: `CLAUDE.md` in [Anandb71/arbor](https://github.com/Anandb71/arbor).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [Anandb71/arbor](https://github.com/Anandb71/arbor) — a repo with 108+ stars on GitHub.
+From [Anandb71/arbor](https://github.com/Anandb71/arbor) — a repo with 150+ stars on GitHub.
 
 ---
 
