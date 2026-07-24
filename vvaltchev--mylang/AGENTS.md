@@ -1,0 +1,5089 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with
+code in this repository.
+
+> **READ `README.md` IN FULL BEFORE TOUCHING ANYTHING.** This is a small project
+> and the README is
+> the complete language specification (every keyword, every builtin, every
+> semantic rule, with
+> examples). It is not optional reference material to consult on demand — read
+> the whole thing up
+> front, once, so you know the language the interpreter implements. This
+> CLAUDE.md covers the *C++
+> implementation*; the README covers the *language*. You need both in your head
+> before making changes.
+
+> **KEEP THE DOCS IN SYNC WITH THE SOURCE — IN THE SAME CHANGE.** `README.md`
+> and this `CLAUDE.md`
+> are part of the codebase, not afterthoughts. Any code change must carry its
+> documentation update in
+> the *same commit*, never as a follow-up:
+> - **`README.md`** whenever script-visible behavior changes — a
+>   new/removed/renamed keyword, builtin,
+>   operator, or numeric constant; changed semantics; new error conditions.
+>   README is the language
+>   spec; if it and the interpreter disagree, that's a bug.
+> - **`CLAUDE.md`** whenever the *implementation* shape changes — a new source
+>   file or `.cpp.h`, a new
+>   `TypeE`/AST node, a changed design rule or invariant, a new convention, or
+>   anything that would make
+>   a sentence in this file wrong. After editing code, reread the relevant
+>   CLAUDE.md section and fix any
+>   statement the change just falsified.
+>
+> A change that alters behavior or architecture but leaves the docs stale is
+> incomplete.
+
+## What this is
+
+MyLang is an educational, dynamically-typed scripting language (C-looking
+syntax, Python-ish
+semantics) implemented as a tree-walking interpreter in portable C++17. It has
+**no dependencies**
+beyond the standard library, including for its tests. The single `mylang`
+executable both compiles
+(lex + parse + const-fold) and runs scripts. Author's goal was to have fun
+writing a recursive-descent
+parser; correctness and clarity matter more than raw speed, though performance
+shaped several core
+design choices (see the value model below).
+
+## Build & run
+
+```
+make -j                    # release build (-O3) -> build/mylang
+make -j TESTS=1 OPT=0      # debug build, unit tests compiled in (for -rt)
+make -j BUILD_DIR=other    # out-of-tree build
+make clean
+```
+
+`OPT` defaults to 1 (`-O3`); `OPT=0` drops it. `TESTS=1` adds `-DTESTS`, which
+is what compiles the
+`-rt` suite into the binary. Base flags:
+`-std=c++17 -ggdb -Wall -Wextra -Wno-unused-parameter
+-fwrapv`. The Makefile auto-generates header dependencies under `.d/`.
+
+**LTO is on by default for optimized builds.** `LTO` defaults to `OPT`, so a
+release build links with `-flto=auto` (added to `BASE_FLAGS`, which the link
+line passes too) — ~7% smaller binary and ~8-9% faster on `bench/`. It works on
+both GCC and clang and is verified to keep `-rt` green. Build with `LTO=0` to
+disable (e.g. for a faster/debuggable link); an `OPT=0` build is non-LTO anyway.
+
+**Sanitizers default on for debug builds.** `ASAN` and `UBSAN` (AddressSanitizer
+/ UndefinedBehaviorSanitizer) both default to **on when `OPT=0`** and **off when
+`OPT=1`**, and either can be forced: `make ASAN=0` (debug, no ASan),
+`make OPT=1 UBSAN=1` (sanitized release). The flags go into `BASE_FLAGS` so they
+reach the compile and link lines. UBSan is configured `-fno-sanitize=signed-
+integer-overflow`, because the codebase relies on `-fwrapv` wraparound (that
+overflow is *defined* here, not a bug); it also runs with
+`-fno-sanitize-recover=undefined`, so a UBSan finding **aborts** (non-zero exit)
+instead of diagnose-and-continue — otherwise a real UB could print and still
+exit 0 past CI's exit-code check. `-fno-omit-frame-pointer` is added whenever
+either sanitizer is on. `-rt` is verified green under both.
+
+**Assertions: `ASSERTS` (default 1).** The C `assert()` + the project's
+`ML_CHECK()` invariant net (see *Invariants & hazards*) are **on for every build
+type** (debug AND release), so every build and CI lane exercises them. With
+`ASSERTS` on the build also enables libstdc++ container hardening
+(`-D_GLIBCXX_ASSERTIONS`, ABI-safe; the libc++ analog is set per-OS in CI).
+`make ASSERTS=0` defines `-DNDEBUG`, compiling all of that away — use it on an
+optimized build to measure the assertion overhead, e.g. `make OPT=1 ASSERTS=0`
+vs the default `make OPT=1`. **`RECYCLE` (default 0):** `make RECYCLE=1 TESTS=1`
+builds the adversarial node allocator (see *Invariants & hazards*).
+
+**Warnings-as-errors: `WERROR` (default 1).** Every build (both build systems,
+every type, ALL THREE compilers) treats a warning as an ERROR, so a warning
+CANNOT be pushed — it fails the build and must be addressed (see the warning
+rule under *Conventions*). GCC/Clang get `-Werror`; MSVC gets `/WX` (its CMake
+default level is `/W3`). CMake also gains the Makefile's `-Wall -Wextra
+-Wno-unused-parameter` for GCC/Clang (it set none before, so CI was laxer than a
+local build — that gap is why the MSVC narrowing/`getenv` warnings accumulated
+unnoticed). `make WERROR=0` (or CMake `-DWERROR=OFF`) opts out for a
+work-in-progress build.
+
+**VM hardening: `VM_HARDENING` (default = debug).** The heavy per-op VM
+invariants (`ML_VM_CHECK`, `defs.h`) — a **frame-slot bounds check on every
+register access** (`Frame::at`) plus an **operand type-tag check** in the VM's
+int/float readers — are too hot for a normal release (a compare per register
+access), so they default **ON for a debug build (`OPT=0`) and OFF for a release
+(`OPT=1`)**. `make VM_HARDENING=1` forces them on; **CI turns them ON in the
+*release* lanes** (`-DVM_HARDENING=ON`), so a CI release runs with far more
+safety than a local one — a layout-dependent VM UB (a bad slot index reading an
+unconstructed/out-of-range `LValue` → a garbage type pointer → a crash only on
+some toolchains) fails as a **loud, located `ML_VM_CHECK` assertion** instead of
+a mystery segfault. Still gated by `ASSERTS` (a no-op under `NDEBUG`). CMake:
+`-DVM_HARDENING=ON/OFF` (default follows the build type). See *Invariants &
+hazards*.
+
+**THE NATIVE IN-VM CALL STACK (plans/vm-native-call-stack.md, phases A-F
+complete).** A VM->VM call (`CallV`/`CachedCallV`/`CallValueV` with a
+chunked callee) is a STATE CHANGE inside the dispatch loop, not a C++
+call: `vm_enter_call` pushes a **call record** + a frame **window** on the
+activation's SEGMENTED slot stack (segments never move - C++ builtins hold
+frame pointers across user callbacks, so windows must be address-stable),
+binds args with a `fast_bind` copy loop (or the coercing loop for typed
+params), switches `chunk`/`pc`/`captures`, and dispatches; `ReturnV`/`Halt`
+pop the record and write the parent's result slot directly (FlowState is
+gone from in-VM returns; the deleted `LoopBackEdge` was its last reader).
+Per-frame state (handler stack, dict/dyn iterator pools, in-flight caught
+exception, finally-pend, the per-frame `PureCache` - stashed/restored so
+the shared view Frame can't leak it into global memoization) lives in the
+records as watermarked slices of shared stacks. The exceptional path is a
+FRAME WALK at the activation's single landing pad: dispatch to a handler in
+the current frame, else capture that record's backtrace frame (descriptor
+name/params + `loc_at(ret_chunk, ret_pc-1)` + the pure tag), pop, flush the
+call op's inlined frames, continue - byte-identical backtraces
+(differential-pinned). Boundary frames (main, `do_func_call` entries)
+convert to the `g_vm_exc_pending` signal as before. Builtin->callback loops
+(map/filter/sort's comparator/make_dict/find/make_array) use
+**`VmInvoker`** (vm.h): the callee frame is pushed ONCE per loop and each
+element just rebinds the param slots through the activation's reusable
+invoke context (its OWN FlowState - reusing the caller's would let a
+callback's boundary return corrupt the enclosing frame's flow); single-shot
+callbacks use `vm_try_invoke` (eval_func's gate). Runaway recursion throws
+the CATCHABLE **`StackOverflowEx`** at the `MYLANG_VM_STACK` slot cap
+(default 1M; README) instead of exhausting the C stack. The `code` pointer
+is cached LOOP STATE (making `chunk` reseatable killed the compiler's hoist
+of `chunk->code.data()` - a double-load per dispatch, front-end-amplified;
+refreshed only at the four chunk-change sites). Zero-copy arg binding was
+MEASURED AND DECLINED (the bind is ~2 instructions per 1-arg call; the
+protocol around it is what costs - see the plan's Phase E verdict).
+**`Chunk::ref_slots` (2026-07-18 profile #2):** the audited list of frame
+slots that can EVER hold a >= t_str value (non-coerced params + every dst
+of a non-`op_writes_scalar` op; a chunk with a use-def BARRIER op lists
+all slots). `pop_window`'s and `VmInvoker::invoke`'s reference-release
+scans iterate ONLY these — the fib-class all-scalar frame and the
+per-element comparator skip the O(nslots) walk; a VM_HARDENING build
+re-scans the full window and ASSERTS the list missed nothing (the audit
+net, green across the differential). A NEW op that writes a frame slot
+must join `visit_use_def` AND be classified in `op_writes_scalar`.
+Net (interleaved full-suite A/B): suite parity with the pre-C1 baseline
+plus recursion 0.68x, sort/map 0.85x, make_dict 0.88x, fib 0.86x.
+
+**B1/B2 SPECIALIZED ARITHMETIC (`specialize_arith_ops`, codegen.cpp).** 23
+per-operator, per-shape variants of `IntBin`/`FloatBin` (Int Add/Sub/Mul/
+And/Or/Xor/Shl/Shr x RR/RI, IntModRI nonzero-imm only, Float Add/Sub/Mul x
+RR/RI - see the enum comment in bytecode.h), selected by an IN-PLACE
+post-codegen rewrite run AFTER `extract_locs` (opcode swap + a lit-first
+commutative op's operand swap into RI; no pc shifts, no loc/pool
+interaction). Each removes IntBin's inner 11-way `aop` switch AND both
+`is_lit` operand-decode branches. Div/mod-by-reg keep the checked IntBin
+path; shifts call `bit_shl`/`bit_shr`. Measured: VM-wall geomean -6.3%,
+suite 4.09-4.17x -> **4.45-4.48x vs CPython** (01_while_loop -25%,
+03_int_arith -20%, mandelbrot -19%, bit benches -18%).
+
+**D1 - `AppendV` (the append/push fast op).** `append(a, x)`/`push(a, x)`
+with one value arg emits `AppendV` (CallBuiltinLV's operand layout: the
+builtin_calls pool idx, arg0's kind+slot, the value's slot) instead of
+`CallBuiltinLV`+rest-run: the handler forms arg0's `LValue*` from the slot
+and runs **`arr_append_fast`** (arr.cpp.h) inline - the shared
+NEVER-THROWING append core (flat int/float/bool/POD-struct-match/general +
+`arr_append_maintain_hash`; returns false for null/non-array/const/
+readonly/slice/flat-mismatch) that `builtin_append` itself now uses after
+its slice-clone step, so both engines share ONE append implementation. Any
+decline falls back to the full `vm_call_builtin_lv_rest`, byte-identical
+(the flat-mismatch TypeErrorEx, COW, carets). Measured: VM-wall 0.983,
+13_array_append 0.82x, suite 4.49-4.50x.
+
+**F1 - `MathFnV` (typed math-builtin calls).** A float-proven math-builtin
+call (`sqrt`/`cbrt`/`sin`/`cos`/`tan`/`asin`/`acos`/`atan`/`exp`/`exp2`/
+`log`/`log2`/`log10`/`ceil`/`floor`/`trunc`/`float`/`abs`-on-float +
+2-arg `pow`) whose args compile as float expressions lowers to `MathFnV`
+(`target2` = a `MathFn` selector, bytecode.h): raw operand read
+(`read_float_operand` - an int arg promotes), a direct libm call in the
+ML_NOINLINE `vm_math_fn` (loop-body text rule), raw `write_float_slot` -
+the whole `CallBuiltinV` marshal (per-arg boxed moves into the run, the
+arg-buffer copy, ArgLocs, the builtin fn-pointer call, the boxed store)
+is deleted. Selected by `try_math_fn` (codegen.cpp) ahead of the generic
+lowering; gated on an unshadowed builtin, EXACT arity (a wrong-arity call
+must throw -> generic path), and `th == f` on the call node (so
+`abs(int)` -> int result and `float("str")` -> parse stay generic). The
+op NEVER THROWS (the float builtins have no domain checks - libm NaN/inf
+semantics - and arity/type errors are compile-time-excluded), so it is
+loc- AND node-free. Measured: 40_math_builtins 0.50x VM-wall (my/py
+0.42x -> 0.19-0.20x, ~5x CPython), suite VM-wall geomean 0.999.
+
+**H2 v2 - THE unordered_map NODE POOL (`PoolAlloc`, poolalloc.h; the
+core in types.cpp - the global-mutable-state home).** A chained
+`unordered_map` heap-allocates a ~96-byte node PER INSERT (hash + the
+32-byte EvalValue key + 48-byte LValue + next) and frees it on erase.
+`PoolAlloc` serves single-element allocations from PROGRAM-LIFETIME
+per-size-class free lists over chunked arenas (single-threaded, no
+locks; multi-element allocations - the bucket-pointer arrays - pass
+through to operator new; arena blocks stay reachable for leak
+checkers; teardown-order-safe: the free-list heads are POD). Wired
+into BOTH hot maps: the dict's `inner_type` (shareddict.h) and the
+per-frame `PureCache` (eval.h). Node-POINTER STABILITY is untouched
+(rehash moves only the bucket array), so every held-LValue*/iterator
+invariant holds - a pure drop-in; the FLAT open-addressing map was
+REJECTED by the maintainer for exactly that stability reason.
+**UNDER ASAN THE POOL COMPILES TO PASS-THROUGH** (poolalloc.h: pooled
+reuse would mask a node use-after-free from AddressSanitizer - the
+RECYCLE philosophy from the other direction), so the ASan lanes keep
+their bug-finding power; test a pool-ACTIVE debug build with
+`make ASAN=0 UBSAN=0 OPT=0 TESTS=1`. Measured: 67_make_dict 0.770x,
+23_dict_insert 0.929x, 10_recursion_deep 0.968x, suite VM-wall 0.987,
+my/py 4.70-4.71x.
+
+**B3 - THE 32-BYTE PACKED `Instr` (bytecode.h).** `sizeof(Instr) == 32`
+(static_asserted), down from 56: `slot` and `lit` are mutually exclusive
+(is_lit discriminates), so each operand is ONE 8-byte payload (`pa`/`pb`,
+default -1 = the old unset slot); the per-operand tag bits live in the
+shared `opflags` byte; `Op` is `: unsigned char`. Exactly two
+instructions per cache line. `Operand` SURVIVES as the codegen-side
+VALUE type (int_lit()/slot_op()/float_lit(), all compile_* plumbing
+unchanged) - an Instr packs one via `set_a()`/`set_b()` and unpacks via
+`a()`/`b()` (the cold pass-by-const-ref sites); the HOT readers use the
+direct accessors `a_slot()`/`a_lit()`/`a_flit()`/`a_is_lit()`/`a_kind()`.
+SEVEN ops (the CallBuiltinLV family incl. AppendV, and the chain stores
+StoreElem2V/StoreElemChainV/StoreLValueChainV) used the fat Operand's
+slot AND lit as TWO independent ints at once - they use the DUAL view
+(`set_a_dual(lo, hi)`, `a_dual_lo()`/`a_dual_hi()`: int32 halves of the
+payload; an op uses EITHER the plain view OR the dual view, never both).
+Measured: VM-wall geomean 0.970 (broad -2-4%), my/py 4.67-4.68x.
+**Stage 2: the runtime `Instr` has NO `node_idx` AT ALL** - codegen
+builds a `vector<CgInstr>` (`CgInstr : Instr` + the transient handle,
+implicitly constructible from Instr so plain emit sites are unchanged),
+`extract_locs`/`verify_ast_free` consume it, and `codegen_chunk` SLICES
+the Instr sub-objects into `Chunk::code` (specialize_arith_ops runs on
+the sliced chunk) - the zero-AST-at-runtime rule is enforced by the TYPE
+SYSTEM for instructions. A refactor of this kind is verified by
+BYTE-IDENTICAL `-vd` dumps over bench/ + samples/ (which caught
+pp_thread still reading the now-empty Chunk::code - a silent peephole
+WEAKENING that -rt cannot see; dump-diff output-preserving refactors).
+
+**H3 - join/split reserve + borrow (engine-shared, str.cpp.h).**
+`builtin_join` on GENERAL storage (a string array is always general)
+borrows each element by const ref (no boxed copy / SharedStr refcount
+round-trip per part) and RESERVES the exact result size from a
+type-checking pre-pass, so the append loop never reallocates; the flat-
+storage branch keeps the kind-aware `arr_elem_at` loop (same TypeError,
+empty flat still ""). `builtin_split` pre-counts the pieces (a memchr
+scan, no stores) and reserves its LValue result vector. Measured:
+47_wordcount 0.882x (my/py 0.51x), suite VM-wall 0.990, my/py
+4.59-4.60x; 31_str_split_join ~flat (growth was already amortized there
+- the residual is the inherent per-piece slice LValue).
+
+**H2 - the dict/slot-write micro pair (engine-shared).** From bench 62's
+callgrind profile (`counts[key] += 1` cost ~1130 instrs; the insert-alloc
+hypothesis was wrong - 62 is UPDATE-bound): (1) **`LValue::put` has an
+INLINE fast path** (evalvalue.h) - a put with no container back-pointer
+(frame slots, dict values, globals, captures - the overwhelmingly common
+case) assigns directly; only the array-element COW path calls the
+out-of-line `put_slow` (every put used to pay an out-of-line
+`get_value_for_put()` call, on every slot write VM-wide). (2) **String
+equality has an IDENTITY shortcut** (`str_views_eq`, str.cpp.h): equal
+data pointer + size == equal, no memcmp - the hot case is a string-keyed
+dict probe, whose stored key is the SAME StrObj as the probing value (the
+key freeze returns strings as-is). Measured: 62_dict_word_count 0.896x
+(my/py 0.42x), broad -4-10%, suite VM-wall 0.992, my/py 4.57-4.58x. The
+design-level flat open-addressing dict (23_dict_insert's node allocs)
+stays a maintainer-sign-off item - roadmap H2 v2.
+
+**H1 - STRUCT CREATION (dst-slot reuse + typed member reads).** Two
+pieces (plans/vm-performance-roadmap.md H1): (1) **`vm_struct_ctor`
+constructs INTO the dst slot with REUSE** - when the slot's current value
+is a same-def, non-readonly POD instance with `use_count() == 1` (the
+slot's handle is the only owner), the fields are coerced into a stack
+buffer (BEFORE dst is touched - throw-safety) and written over ITS bytes:
+zero allocations in the steady-state `var p = Point(...)`-in-a-loop
+shape (the same overwrite-in-place + COW-guard trick the flat-struct-
+array foreach uses; an aliased/const/other-def dst takes the fresh path,
+pinned by a dedicated aliasing test). `coerce_struct_field` is exported
+from eval.cpp for the pre-coercion; the fresh path stores the coerced
+bytes directly (construct_struct_from_values would coerce twice).
+(2) **`LoadMemberInt`/`LoadMemberFloat`** - the MEASURED discovery was
+that allocation was NOT the dominant cost: bench 64's body was 5
+`member.v` + 6 boxed arith per iteration, because a STANDALONE struct
+member read had no typed lowering (only the foreach-array
+LoadStructField* and dict DictLoad* pairs existed). The new pair (the VM
+analog of the tree-walker's M8 `MemberExpr::eval_int/eval_float`,
+`try_member_scalar` in codegen.cpp: th==i/f + `MemberExpr::base_struct`
++ a resolved-LOCAL base) reads a POD field's scalar straight from the
+instance's bytes via the member_keys pool; the boxed-struct/dict/const-
+member residue falls to the shared `member_read_core` +
+`write_scalar_slot` (fallback throws stamped with the pooled member
+caret). Measured (both, full-suite interleaved A/B): 64_struct_create
+0.095->0.074s (0.779x; my/py 0.63x -> 0.48x), suite VM-wall 0.999.
+
+**TYPED TERNARY (M8 + codegen).** `specialize_children` (the M8
+specializer's recursion, inferencer.cpp) descends into `TernaryExpr` /
+`CoalesceExpr` - previously ABSENT, so a ternary's cond/arms were never
+M8-specialized and BOTH engines ran them boxed (the recursion-unroll's
+guard ternaries - fib's whole body - were the visible cost). And a
+th==i/f `TernaryExpr` VALUE lowers natively (`try_typed_ternary`,
+codegen.cpp): a typed-compare condition emits one
+`JumpUnless{Int,Float}Cmp` to the else arm (any other condition boxes
+to `JumpUnlessTrueV`, arms still typed), both arms compile through the
+typed compilers into a common dst via MoveV/LoadImm, and the peephole's
+E1 join-move rule retargets the movs away - so fib$0's unrolled body is
+FULLY native (50 instrs of i.bin/i.jmp.ifnot/call.cached; zero boxed
+ops). Measured (full-suite interleaved A/B): 09_fib_recursive
+0.006->0.004s (**0.67x**), suite VM-wall geomean 0.990 (broad -3-9%
+on the arith/call benches).
+
+**THE #9 FUSION BATCH (2026-07-17, the top-10 list's last item).**
+Three more pair-profile superinstructions in the peephole's fusion
+block: **`IntAddStep`** (an int accumulate tail `s = s + x` fused into
+the counted-loop `ForLoopStep` - add+step+test+branch in ONE dispatch;
+never fires when a `continue` targets the step, since that pc is a
+branch target), **`ForStepElemInt`** (the back-edge `a[i]` load,
+indexed BY THE COUNTER, fused into the step: the original load stays
+in place for the loop-entry path and the fused op's target lands past
+it; the load's OOB caret rides the fused pc - and the ascending scan +
+the is_tgt map make it compose safely with JumpUnlessElemInt), and
+**`StructFieldAddInt`** (`dst = other + a[i].f`, GENERAL 3-address -
+the struct reduction chains adds through temps, so an accumulator-only
+shape would never fire; b_dual = field idx + other slot). The batch's
+ROOT-CAUSE bonus: `LoadStructFieldInt/Float`, `LoadMemberInt/Float`,
+`LoadStructElemV`, `LoadElemBool` were MISSING from `visit_use_def` -
+liveness BARRIERS that made every temp look live in a struct-loop body
+and silently blocked IntAddModRI there since E4 landed (audit any new
+op into that table, not only visit_pc_fields). Measured: 65_struct_
+field_sum 0.783x, 02_for_loop 0.75x, suite VM-wall geomean 0.987,
+my/py **4.89-4.93x**.
+
+**E4 FUSIONS (in the peephole; plans/vm-peephole.md).** Two profile-
+chosen superinstructions (a scratch op-pair profiler counted 760M
+executed adjacent pairs over the suite; the distribution is flat, so
+only the caret-safe top pairs shipped): **`IntAddModRI`** (`dst =
+(a+b) % IMM`, the checksum shape - never throws: imm nonzero +
+int32-gated in `target2`, the add wraps; loc/node-free) and
+**`JumpUnlessElemInt`** (`if (arr[i]) ...` - LoadElemInt +
+JumpUnlessTrueV in one dispatch; keeps the LOAD's node in place so the
+OOB caret is byte-identical; the elem temp must be liveness-dead on
+BOTH successor paths). The fusion rules run inside the peephole's
+liveness block; `BinOpV→CompoundV` was REJECTED - two throw sources
+with different carets can't share one pc's loc entry. A NEW fusion op
+with a pc field MUST be added to `visit_pc_fields` (JumpUnlessElemInt
+is). Measured: 68_nested/60_bit_sieve -4%, suite VM-wall 0.981, my/py
+4.75x.
+
+**THE POST-CODEGEN PEEPHOLE (`peephole_chunk`, codegen.cpp; design +
+field tables in plans/vm-peephole.md).** Runs in `codegen_chunk` BEFORE
+`extract_locs` - the load-bearing ordering: the loc/`inline_ctxs` side
+tables are built from the ALREADY-compacted code, so the pass only ever
+rewrites Instr pc fields (every pool is operand-indexed; `node_idx`
+handles ride inside the moved Instr structs). Iterated <=4 rounds, each:
+(E1) **MoveV elimination** - backward TEMP liveness (a single-word
+bitset over `[slot_count, slot_count+n_temps)`; >64 temps skips; an op
+not in the audited `visit_use_def` table is a BARRIER that reads every
+temp; when the chunk has handlers every op's live-out absorbs the
+handler pcs' live-in, since any throw may resume there), then
+`<producer dst=tX>; MoveV d=tX` (adjacent, tX a dead-after temp, no
+branch entering the move, producer in the audited `retargetable_dst`
+whitelist) retargets the producer to d and deletes the move; (E3)
+jump-chain threading, INT-only branch-over-jump inversion (float
+compares don't invert under NaN), jump-to-next deletion, reachability
+DFS, then compaction with a prefix-sum pc remap over `visit_pc_fields`.
+**`visit_pc_fields` is THE single audited pc-field enumeration** (a
+"target" field is NOT always a pc - `ForLoopStep::target2` is the
+COUNTER SLOT, `JumpUnlessTrueV::target2` the value slot,
+`SetPend::target` a Pend enum; the E-v1 fuzzer catch) - a new branching
+op MUST be added there, and ALWAYS run tests/nested_fuzz.py after a
+codegen-pass change. E2 (temp renumbering) was evaluated + DEFERRED (the
+native call stack made per-call temp cost ~nil - see the plan); E4 =
+this pass IS the fusion framework (no new fusions shipped). Measured
+(full-suite interleaved A/B): VM-wall geomean **0.987**, instrs -4.6%,
+MoveVs -31%, fib$0's chunk 68->56; the earlier STANDALONE
+threading-without-deletion attempt was a measured DECLINE (+3.2%, 1/77
+benches affected - roadmap E3 records it).
+
+**VM dispatch: `CGOTO` (default 1).** On GCC/clang the VM's dispatch loop
+(`vm_run_chunk`) is COMPUTED-GOTO (direct-threaded): a static table of
+code-label addresses generated in enum order from `ML_FOR_EACH_OPCODE`
+(bytecode.h, order/coverage static-asserted) and a `goto *tbl[op]` at the
+tail of every handler (`VM_NEXT`), so each opcode gets its OWN indirect
+branch instead of one 92-target switch hub. `make CGOTO=0` (CMake
+`-DCGOTO=OFF`) forces the portable `switch` dispatch - the A/B lever, and
+what MSVC always compiles (no computed goto there). The SAME handler bodies
+compile either way via `VM_CASE`/`VM_NEXT`/`VM_NEXT_COLD` (see vm.cpp's
+"DISPATCH MODE" comment; the _COLD variant is a direct-goto trampoline for
+the cross-frame exception sites - clang forbids an INDIRECT goto from
+exiting a scope with live destructors, which is also why each handler's
+terminal dispatch sits AFTER its case braces). Measured (release,
+ASSERTS=0, scale 10, best-of-7): ~10% geomean on the dispatch-bound loop
+benches (up to -22% on 44_primes_sqrt/07_nested_loops), suite my/py
+0.26x -> 0.25x, VM/TW 0.56x -> 0.53x; cachegrind -11-12% instructions and
+-25-42% indirect-branch mispredicts on untouched loops.
+
+CMake is also supported (used by CI):
+`cmake -DTESTS=1 -DCMAKE_BUILD_TYPE=Debug .. && cmake --build .`
+(`-DGCOV=ON` for a coverage build, GCC only). It enables LTO via
+`INTERPROCEDURAL_OPTIMIZATION` for the `Release`/`RelWithDebInfo` configs (so
+Debug and coverage builds are untouched), portable across GCC/clang/MSVC;
+configure with `-DLTO=OFF` to disable. The same `ASAN`/`UBSAN` options exist
+(`-DASAN=ON/OFF`), defaulting **on for a `Debug` build** and off otherwise — the
+analog of `OPT=0` vs `OPT=1` — and are applied on GCC/clang only (skipped on
+MSVC). CMake now also passes `-fwrapv` (non-MSVC), matching the Makefile so the
+relied-upon signed wraparound is defined in CMake builds too. It also has the
+**`-DASSERTS=ON/OFF`** (default ON; OFF defines `NDEBUG`, and since CMake's
+optimized configs add `-DNDEBUG` themselves, ASSERTS=ON appends `-UNDEBUG` to
+keep asserts in Release) and **`-DRECYCLE=ON/OFF`** (default OFF) options,
+mirroring the Makefile. It ALSO now sets `-Wall -Wextra -Wno-unused-parameter`
+for GCC/clang (it set no warning flags before) and **`-DWERROR=ON/OFF`**
+(default ON) — warnings-as-errors (`-Werror` / MSVC `/WX`), matching the
+Makefile's `WERROR`. CI (`.github/workflows/`) builds Debug+Release ×
+g+++clang on Linux (plus a `RECYCLE=ON` lane), macOS (with libc++ hardening),
+and Windows, and runs `./mylang -rt` — correctness only, no timing, so the
+lanes carry as many checks as possible.
+
+Running scripts:
+```
+./build/mylang FILE              # run a script; extra args become argv
+./build/mylang -e 'EXPR'         # run inline source (-e args concatenated)
+./build/mylang -s FILE           # dump syntax tree (const-folded), then ALSO
+                                 # the post-optimizer tree (inline/unroll), run
+./build/mylang -t FILE           # dump tokens
+./build/mylang -nc FILE          # disable const-eval (compare -s with/without)
+./build/mylang -ni FILE          # disable function inlining (debug)
+./build/mylang -npc FILE         # disable the per-frame pure-call cache
+                                 # (recursion still unrolls; for measurement)
+./build/mylang -it N FILE        # inline threshold: max inlined body (nodes)
+./build/mylang -nr FILE          # parse/validate only, don't run
+./build/mylang -vm FILE          # execute via the bytecode VM — the
+                                 # DEFAULT engine (flipped 2026-07-18);
+                                 # kept for pre-flip scripts/CI
+./build/mylang -tw FILE          # execute via the TREE-WALKER instead (the
+                                 # pre-flip default; still the const-eval +
+                                 # REPL engine, and the differential oracle)
+./build/mylang -vd FILE          # dump the VM bytecode disassembly (the
+                                 # bytecode analogue of -s), exit — disasm.h;
+                                 # dumps 100% of the serializable image: the
+                                 # custom TYPES (struct defs), every chunk +
+                                 # its POOLS (consts/catch_types/…/side tables);
+                                 # closures + their capture struct shown, 256-
+                                 # color syntax-highlighted on a TTY
+./build/mylang -nti FILE         # disable static type inference / checking
+./build/mylang -dti FILE   # dump every identifier's inferred type + uses
+./build/mylang -a FILE           # analyze: source colored by optimization
+./build/mylang -a --no-color F   # same, plain (for piping / diffing)
+./build/mylang -T CATS FILE      # trace the compiler's reasoning to stderr
+./build/mylang --trace all FILE  # CATS: infer,inline,specialize,template,
+                                 # autoconst,autopure,arrays,fold, or all
+```
+`-T`/`--trace` enables diagnostic trace categories (see `trace.{h,cpp}` and the
+REPL `:trace`) BEFORE compilation, so a script run narrates each optimizer
+decision to stderr (colored on a stderr TTY). The same categories drive the
+`trace()`/`traceoff()`/`tracing()` builtins and the REPL `:trace [<cat>...]
+on|off`. OFF by default — zero cost on a normal run (one mask test per guarded
+site).
+`-dti` runs inference (non-strict) and prints one tab-separated `ti`
+record per declared identifier — `name, kind (var|const|param|func), line, col,
+const, type, uses(line:col,...)` — then exits without running. It is the audit
+tool for the mandatory-`dyn` / type-driven work (see
+`plans/type-driven-specialization.md`): used to find identifiers inferred `dyn`
+/ `array<dyn>` and decide whether each is justified (annotate with `dyn`) or an
+inference gap (fix the inferencer).
+
+`-a` / `--analyze` reprints the source **verbatim** with ANSI colors marking
+where each compile-time optimization fired (a legend header is printed; exits
+without running; `--no-color` for plain). It is **non-strict** (analyzes code
+that a normal run would reject for a bare `dyn`). The legend: **yellow** =
+became const-like automatically (an auto-const `var` at decl + folded uses, an
+un-mutated parameter, an auto-`pure` function); **green** = a flat (unboxed)
+`array<int>`/`array<float>` **or** the `for` keyword of a counted loop that
+specialized to a `ForRangeStmt` (the two never collide — one lands on an
+identifier, the other on the `for` keyword); **red** = an `array<dyn>`;
+**blue** = an inlined call (expression-body or tail); **cyan** = a call
+redirected to a `name$sN` specialization clone; **magenta** = a call folded to a
+literal at compile time (pure/auto-pure/const-builtin with const args);
+**dim** = dead code the optimizer eliminated (a const-condition branch /
+`while (false)`). Precedence: call-site (blue/cyan/magenta) > array storage
+(green/red) > yellow; a dead range dims regardless. Implementation: a
+`Loc`-keyed `AnalysisInfo` (`analyzer.h`) populated by the passes only when
+threaded in — array colors from a non-strict inference pass
+(`collect_array_analysis`), auto-pure/param from a post-resolve walk
+(`collect_resolver_analysis`), the counted-`for` mark from `specialize_types`
+(it records `counted_for` for each `for` it rewrites — the analyze pipeline now
+runs it last, as `run_optimizers` does, gated on a non-null `AnalysisInfo *` so
+a normal run records nothing), and the mutation-time decisions (auto-const vars,
+dead code, inlined/specialized/folded) recorded *as they happen* by the parser
+(`ParseContext::analysis`), AutoConst, and the Inliner; `mylang.cpp` renders.
+Unlike `-s`/`-dti`, the analyze rendering now has a headless `-rt` test
+(`analyze:`, via `analyze_and_render` with color on).
+`-s` / `-nc` are the two indispensable debugging tools: `-s` shows you exactly
+what survived
+const-folding (and, after the optimizer runs, a second **"Optimized syntax
+tree"** dump showing the post-inline/unroll/specialize AST — the actual node
+shapes, e.g. an `InlinedCall(Block(...))`), and `-nc` lets you see the tree as
+written before folding. Reach for them whenever behavior surprises you.
+
+## Tests
+
+```
+./build/mylang -rt               # run the whole suite (needs a TESTS=1 build)
+./build/mylang -rt -s            # same, but dump the tree of a failing test
+./build/mylang --weights         # inlining cost-model calibration (any build;
+                                 # use OPT=1 ASSERTS=0 for meaningful numbers)
+```
+
+**`--weights` — the inlining cost-model calibration** (`run_weight_bench`,
+eval.cpp). Measures the per-node-type eval cost of the tree-walker by building
+the AST nodes **by hand in C++** (never parsed, so no fold/inline/specialize can
+perturb the measured nodes or the loop count) and timing each in a tight C++
+loop; per-node marginal cost is isolated by subtracting child-subtree costs and
+printed relative to a slot read. The **CALL** weight is the reference for the
+planned inliner benefit function (inline a body when the sum of its node weights
+is below the call weight — see `plans/function-inlining.md`). Re-run when the
+interpreter changes; reusable for the eventual bytecode VM (the weights change,
+the benefit function does not). Current (`OPT=1 ASSERTS=0`): id/lit/add/cmp ≈ 1,
+return ≈ 3, if ≈ 7, assign ≈ 11, **CALL ≈ 21** (×id-read).
+
+Tests are **not** a separate framework — they are entries in the `tests` table
+(a `static const std::vector<test>`) in `src/tests.cpp`. Each entry is a tuple:
+a name, a list of source-line strings, and an optional `&typeid(ExpectedEx)`.
+`check()` lexes+parses+evals the joined source lines. A test **passes** if it
+throws nothing — or, when an expected exception type is given, throws *exactly*
+that type (compared via `&typeid(e) != t.ex`). There is no single-test CLI
+selector; `-rt` runs all of them and `exit(1)`s if any fail. Add a test by
+appending an entry to that table (no registration needed). Note the expected
+exception is matched against the *static* C++ type; a user-level
+`throw <struct>` always surfaces as `ExceptionObject` (a.k.a.
+`DynamicExceptionEx`), not a distinct C++ type.
+
+**The `tests` list runs TWICE — once per execution engine (`g_exec_engine`) —
+but is COUNTED ONCE.** The headline `Tests passed: N/total` is unchanged
+(`total = tests + extra_checks + repl_tests`, the tree-walker pass). After it,
+`run_tests` reruns the **same** `tests` list under the **bytecode VM**
+(`vm_execute`, marked `vm:` in the output) and prints a **separate** line,
+`VM differential (same K tests via -vm): M/K` — it is the same tests a second
+time, not a new set, so it is *not* added to the headline total. Both must be
+green to `exit(0)`. This is the **differential-testing pillar** of the VM
+build-out (see "Execution strategy" + the plan): `check()` dispatches its final
+run on `g_exec_engine`, with the tree-walker as the oracle. Because the VM
+falls back to `do_eval` for any construct not yet lowered natively, the
+differential pass is green by construction today and stays a regression net as
+native opcodes land. A new functional test therefore auto-covers both engines
+with no extra work.
+
+## Benchmarks
+
+`bench/` is a standalone performance suite comparing MyLang against CPython,
+construct by construct
+(`bench/my/NN_name.my` paired with `bench/py/NN_name.py`; a few MyLang-only
+features like const-folding
+have no `.py`). MyLang scripts use the `.my` extension. `python3 bench/run.py`
+times every pair (best of N), prints a
+`my/py` ratio table (the ratio number is colored on a TTY — a green→red
+gradient, plain when piped or `--csv`), and
+checks the two implementations printed matching results. Each script takes a
+`scale` multiplier as its
+first argv. It is *not* wired into `make`/CI and has no third-party deps.
+`bench/README.md` is also the
+written answer to "do MyLang and Python behave the same?": they do *observably*
+— assignment aliases,
+slices act like independent copies (MyLang via lazy copy-on-write, so read-only
+slicing is far cheaper),
+`clone()` makes a shallow copy and `deepclone()` a deep one — with the
+divergences (64-bit wrapping vs bignum,
+truncating vs flooring division, unordered vs insertion-ordered dicts)
+enumerated there. (Floats match: both are 64-bit IEEE `double`.)
+`bench/verify_semantics.{my,py}` assert that equivalence and must both print the
+same line.
+
+**THE FULL-SUITE MEASUREMENT HARD RULE (maintainer-set, 2026-07-16).** Any
+claim about a VM perf change is made ONLY from FULL-SUITE `bench/run.py`
+runs, BOTH binaries built and run in the SAME session, repeated (>=2 runs
+each, interleaved A/B/A/B to cancel machine drift) — never from a bench
+subset probe, never by comparing my/py prints across sessions (the CPython
+denominator drifts several percent day to day on this box; it masked a real
+~5% Phase-C regression as "noise" once). Compare the VM WALL-CLOCK per bench
+(the my column) between the binaries, plus the my/py geomean, which run.py
+now prints with THREE digits (0.256x / ~3.91x) for exactly this. A phase
+does not land on a probe geomean.
+
+**`--vm` — the bytecode-VM performance gate.** `run.py` measures the VM by
+DEFAULT (the binary's default engine since the 2026-07-18 flip); `--vm`
+passes the flag explicitly (needed for a PRE-flip binary in a cross-flip
+A/B — pass `--vm` on both sides), and `--tw` runs the tree-walker. Combined
+with `--baseline <the same post-flip binary>`, `--vm` gives the baseline
+`-tw`, so the `cur/base` column and geomean are **VM / tree-walker** (<1 ==
+VM faster). This is the
+per-phase performance gate for the VM build-out (see "Execution strategy" +
+`plans/bytecode-vm.md`): run it release + `ASSERTS=0` at the end of each phase;
+a phase must not regress the tree-walker unless the regression is flagged as
+temporary + tracked to a later phase that erases it. Phase 0 (pure fallback) is
+neutral (geomean 1.00x), as it must be.
+
+## Source layout & compilation model
+
+**Only `src/*.cpp` are compiled** (the Makefile globs them) — twenty-one
+translation units:
+`lexer.cpp`, `parser.cpp`, `syntax.cpp`, `resolver.cpp`, `inferencer.cpp`,
+`eval.cpp`, `types.cpp`, `statictype.cpp`, `trace.cpp`, `coderender.cpp`,
+`backtrace.cpp`, `errfmt.cpp`, `highlight.cpp`, `lineedit.cpp`, `replhelp.cpp`,
+`repl.cpp`, `codegen.cpp`, `vm.cpp`, `disasm.cpp`, `mylang.cpp`, `tests.cpp`
+(six of them are the REPL — see "The interactive REPL" below; `trace.cpp` is the
+diagnostic tracer and `coderender.cpp` the optimized-AST "decompiler", both used
+by the REPL; `codegen.cpp`/`vm.cpp` are the bytecode-VM engine and `disasm.cpp`
+its text disassembler (`-vd`) — see "Execution strategy" — added by the glob,
+nothing to register).
+
+- `mylang.cpp` — CLI entry point, arg parsing, the top-level `try/catch` that
+  turns thrown
+  `Exception`s into formatted error output (`dumpLocInError` prints the source
+  line + a `^` caret).
+- `lexer.cpp` / `lexer.h` — `lexer(src, start_line, tokens)` appends tokens for
+  a WHOLE source buffer (not one line): it scans `src` in a single pass,
+  tracking the current line + line-start offset so each token's `Loc` is
+  (line, column). Scanning the whole buffer is what lets a **string literal or a
+  `/* */` block comment span newlines** (the embedded `\n` is ordinary content;
+  the line just advances). Callers join their source lines with `\n` and lex
+  once (`mylang.cpp`'s `lex_all`/`source`, the REPL's per-input `source`,
+  `tests.cpp`'s `check`); `start_line` lets the REPL continue line numbering
+  across inputs. `#` is a line comment; an unterminated string / block comment
+  at EOF throws `InvalidTokenEx` with `unterminated=true` (the REPL reads that
+  flag to keep the input open for more lines).
+- `parser.cpp` / `parser.h` — recursive-descent parser, const-folding woven in.
+  `pBlock()` is the
+  entry point.
+- `funcdesc.h` — **`FuncDescriptor`**, the SERIALIZABLE runtime function
+  identity (name/params/captures/frame data/purity/chunk pointer), plus the
+  `DeclType`/`SymKind`/`ResolvedSym` enums it needs (moved here from
+  syntax.h). The runtime call model reads ONLY this - see the value-model
+  section and plans/vm-ast-free-runtime.md.
+- `syntax.h` / `syntax.cpp` — the `Construct` AST node hierarchy, its
+  `serialize()` (what `-s` prints), and `clone()` (a deep copy of a subtree,
+  used by inlining; pure virtual so every concrete node must provide one — see
+  the `clone_as`/`copy_base_fields`/`clone_ops_into`/`clone_elems_into`
+  helpers). Also `desugar_named_call` (over a `ParamSpec` view) — the shared
+  named-argument → positional rewrite used by both the parser and the
+  inferencer (see *Static type inference*).
+- `resolver.cpp` / `resolver.h` — `resolve_names(root)`, a post-parse pass that
+  assigns function
+  params slot indices for O(1) access at runtime (see the value model section).
+  Optional and always
+  safe: anything it leaves unresolved falls back to the runtime map lookup. The
+  same file also hosts the **auto-const** folder (the `AutoConst` class), run at
+  the end of `resolve_names` (see the const-evaluation section), and the
+  **inliner** (the `Inliner` class), run after it (gated by `-ni`; see the value
+  model section / `plans/function-inlining.md`).
+- `eval.cpp` — the `do_eval()` bodies: the actual tree-walking interpreter.
+- `types.cpp` — the single TU that stitches the type system and builtins
+  together (see next section).
+- `statictype.cpp` / `statictype.h` — the **static-type lattice** for type
+  inference
+  (`StaticType`/`StaticTypeArena`:
+  `resolve`/`unify`/`assignable`/`join`/`equal`/
+  `to_string`). Distinct from the runtime `Type *` ops table — this is what the
+  compile-time inferencer reasons over (type variables, nullability `opt`,
+  structural array/dict/func shapes). See `plans/type-inference.md`.
+- `inferencer.cpp` / `inferencer.h` — `infer_types(root)`, the **whole-program
+  static type inference + checking** pass (see the dedicated section below).
+- `backtrace.cpp` / `backtrace.h` — `format_backtrace()`, which renders an
+  `Exception`'s captured call-stack (see the error model section).
+- `analyzer.h` / `analyzer.cpp` — the `AnalysisInfo` `Loc`-keyed annotation
+  collector + `AnnoKind` for the `-a`/`--analyze` colored optimization view, and
+  the shared `analyze_and_render` pipeline and `render_analysis` renderer (used
+  by both the `-a` file driver and the REPL `:analyze`). The collectors live in
+  the relevant passes (`collect_array_analysis` in `inferencer.cpp`,
+  `collect_resolver_analysis` in `resolver.cpp`, the counted-`for` mark inside
+  `specialize_types` in `inferencer.cpp`, mutation-time records in
+  `parser.cpp`/`resolver.cpp`). See the `-a` description under "Build & run".
+
+**The `.cpp.h` convention.** Files under `src/types/` and `src/builtins/` are
+named `*.cpp.h` and are
+`#include`d *once* into `types.cpp`. Each starts with a comment: "this is NOT a
+header file… it's a
+C++ file in the form of a header, just because it's faster to compile it this
+way." So `types.cpp` is
+the one TU that compiles every `TypeXxx` class and every `builtin_xxx`. When
+adding type or builtin
+code, put it in the matching `.cpp.h` and rely on it being pulled into
+`types.cpp` — it will not
+compile standalone, and there is nothing to add to the Makefile.
+`builtins/reflect.cpp.h` holds the **runtime reflection** builtins
+(`globals`/`typestr`/`kindstr`/`signature`/`layout`/`specializations`) and the
+shared `reflect_*` rendering helpers (signature/type/layout strings) the REPL's
+introspection commands reuse; it is `#include`d last (after the other builtins)
+so it can call `arr_elem_at`. See `plans/repl-introspection.md`.
+**`layout(S)` returns a structured value, not a string** — a **native composite
+type** (`StructLayout`, holding an `array<StructField>`), the first of the
+reflection objects. The two native `StructTypeDef`s are built in C++
+(`native_struct_field_def`/`native_struct_layout_def`, `eval.cpp`), the
+inferencer registers them in `struct_by_name` (`setup()`) and types `layout()`
+via `builtin_result`, and `reflect_make_layout` (reflect.cpp.h) constructs the
+boxed instance. This is the mechanism `Type` objects (the planned
+`type()`/`decltype()` return value) will reuse — see `plans/reflection.md`.
+
+**Why so many headers are templates.** `type.h` (`TypeTemplate`),
+`sharedarray.h`
+(`SharedArrayObjTempl`), `shareddict.h`, `exceptionobj.h` are templated *not*
+for genericity but to
+break a circular include order: they need `EvalValue`/`LValue`, which need them.
+`evalvalue.h`
+instantiates them with concrete types via typedefs
+(`typedef TypeTemplate<EvalValue> Type;`,
+`typedef SharedArrayObjTempl<LValue> SharedArrayObj;`, …). Treat these typedefs
+as the real types.
+
+## The pipeline
+
+**lexer → recursive-descent parser (with const-folding woven in) →
+type-inference + checking → name-resolution pass → typed specialization →
+tree-walking evaluator.**
+
+Type inference runs *between* parsing and `resolve_names` (on the clean,
+un-inlined tree); the typed-node *specialization* it enables runs *after*
+`resolve_names`. Both are gated by the CLI's `-nti` and on by default. See
+"Static type inference" below.
+
+**Implicit top-level `var` (`mark_implicit_globals`, `resolver.cpp`).** A tiny
+pre-pass run by every driver right after parse and *before* inference (script
+`mylang.cpp`, REPL `repl.cpp`, and the `-rt` harness's `check()`), so it is NOT
+gated by `-nti`. It scans the root block's **direct** statements and, for a
+plain `name = expr` (`Expr14`, `op == assign`, bare `Identifier` lvalue) whose
+name is not yet declared and is not a builtin, **sets `pInDecl` on that node** —
+turning it into an ordinary `var` decl that every later pass already handles (no
+other change anywhere). Only the OUTERMOST scope qualifies (a nested block /
+function body still needs `var`). The "already declared" set is built forward
+(explicit decls, func/struct names, earlier implicit vars) seeded with `known` —
+empty for a script, the prior-input globals (runtime + const scopes) for the
+REPL, so a later `a = 2` re-targets the existing global instead of re-declaring
+it. See README *Declaring variables*.
+
+**The post-inference optimizer pipeline is one shared function,
+`run_optimizers` (`resolver.cpp`/`.h`): `resolve_names` (slotting + auto-const
++ inlining + specialization) then `specialize_types` (M8).** Both drivers call
+it — the script path (`mylang.cpp`) with `repl_mode=false`, the REPL
+(`repl.cpp` `do_eval`) with `repl_mode=true` + the prior-input scope — so the
+REPL transforms the tree EXACTLY like a script (only the inference *front* end
+differs: one-shot `infer_types` vs incremental `ReplInfer::check_input`, both
+built on the same `Inferencer::infer_one`). A new pass added to
+`run_optimizers` reaches both identically — the REPL's optimization parity is
+not maintained by hand. Likewise the `-a`/`:analyze` collect-and-render
+pipeline is one shared `analyze_and_render` (`analyzer.cpp`).
+
+### Lexer
+
+Produces a `vector<Tok>`. A `Tok` is `{ TokType, Loc, value/op/kw }` where
+`TokType` ∈ {integer, id,
+op, kw, str, floatnum, unknown}. Operators (`Op` enum, `operators.h`) and
+keywords (`Keyword` enum,
+`lexer.h`) are recognized via `std::map`s built once from the `OpString` /
+`KwString` arrays — keep
+those arrays index-aligned with the enums if you add tokens. `invalid_tok` is
+the EOF sentinel.
+Chars are 8-bit; **no Unicode** (deliberate, to stay small). A **trailing `!`**
+is part of an identifier (Ruby/Scheme "bang" convention, e.g. `get!`), but only
+when it is not the start of `!=` — so `x!=y` still lexes as `x != y`.
+**The lexer scans the whole buffer in one pass** (see the file bullet above): a
+`lexer_ctx` tracks `cur_line`/`line_start` and stamps each token's start `Loc`
+into `tok_loc` when it begins (so a multi-line string reports the loc of its
+**opening quote**, not its close). Two **multi-line constructs**: a `"..."`
+string keeps embedded newlines in its value (the `string_view` spans them —
+which is *why* the lexer must see the whole buffer, not a line at a time), and a
+`/* ... */` **block comment** (`skip_block_comment`) is skipped across lines.
+`/*` can never be valid code (there is no unary `*`), so adding it broke
+nothing. Both throw `InvalidTokenEx` with **`unterminated=true`** at EOF if not
+closed (vs. a malformed token like `2_`, which is `unterminated=false`); the
+REPL's `is_incomplete` returns that flag to keep reading. `#` line comments and
+the trivial value paths are unchanged.
+
+### Parser — operator-precedence ladder
+
+Binary-operator precedence is encoded as a ladder of parse functions
+`pExpr01 … pExpr14`, each
+producing a matching AST node class `Expr01 … Expr14`. **The numbering has
+gaps** — only
+`02,03,04,05,06,07,08,09,10,11,12,14` carry real operators (the level numbers
+match C precedence; an unused level is skipped):
+
+- `pExpr01` — primaries + postfix chains: literals, `()`, `[...]` array, `{...}`
+  dict, identifiers, then any run of call `(...)`, subscript/slice `[...]`,
+  member `.id`. A call's argument list is parsed by `pArgList` (not the generic
+  `pList`), which also accepts **named arguments** `name: value` (label = a bare
+  IDENT followed by `:`, one-token lookahead) — see the inferencer's
+  `lower_named_args` and README *Named arguments*. A trailing **`++`/`--`**
+  (`Op::inc`/`Op::dec`) after the postfix chain makes a **postfix**
+  `IncDecExpr`. **Optional member access** `a?.b` (`Op::qmdot`, a new 2-char
+  token) sets `MemberExpr::optional`: `do_eval` returns `none` when the base is
+  `none` (else the member); the inferencer types it `opt(member)` and the check
+  pass skips the non-opt-base requirement for it. Each `?.` guards only its own
+  base (an all-optional chain `a?.b?.c` short-circuits; a plain `.c` after `?.`
+  is not guarded — a deliberate simplification vs JS's whole-chain guard).
+  Optional subscript/`?.[`/optional call `?.()` are not implemented.
+- `pExpr02` — unary `+ - ! ~` (right-recursive, so `!!x`, `-+x` work); `~` is
+  bitwise NOT here (the same `Op::bnot` token is the `dyn` alias in a *param*
+  position, but that is handled in `pFuncParam` before any expression, so they
+  never collide). A leading **`++`/`--`** makes a **prefix** `IncDecExpr` (so
+  `--1` now lexes as decrement-of-`1`, a compile error like C — not `-(-1)`)
+- `pExpr03` — `* / %`
+- `pExpr04` — `+ -`
+- `pExpr05` — `<< >> >>>` (shift; `>>` signed/arithmetic, `>>>` unsigned/logical)
+- `pExpr06` — `< > <= >=`
+- `pExpr07` — `== !=`
+- `pExpr08` — `&` (bitwise AND), `pExpr09` — `^` (XOR), `pExpr10` — `|` (OR)
+- `pExpr11` — `&&`
+- `pExpr12` — `||`
+- **`pExprCoalesce`** — null-coalescing `a ?? b` (right-assoc; `Op::coalesce`),
+  between `||` and the ternary
+- **`pExpr13`** — the ternary `cond ? a : b` (right-assoc else: `a?b:c?d:e` ==
+  `a?b:(c?d:e)`; the middle is a full `pExpr14`, bounded by `:`). Fills the
+  long-unused level-13 gap — exactly where C puts the conditional operator. Both
+  reuse the existing `?`/`:` tokens; only `??` is a new token. `pExpr14`'s lside
+  now enters at `pExpr13` (so every condition/slice/element reaches them). Both
+  const-fold (a const cond → the taken branch; a const `??` lhs → lhs/rhs); the
+  AutoConst analogue is in `fold_reads` (`resolver.cpp`), which **must** descend
+  into `TernaryExpr`/`CoalesceExpr` (it has no generic fallthrough — a missing
+  case silently fails to fold their children).
+- `pExpr14` — assignment `=  +=  -=  *=  /=  %=`, plus `var`/`const` decls and
+  id-list targets
+
+`pExprGeneric<ExprT>` implements the common left-associative chain: it collects
+`(Op, operand)` pairs
+into a `MultiOpConstruct`, evaluated left-to-right in `do_eval` by mutating an
+accumulator
+(`val.get_type()->add(val, rhs)`, etc.). `pBlock` is the entry point; `pStmt`
+dispatches statements
+(`if`/`while`/`for`/`foreach`/`func`/`try`/`throw`/`return`/braced
+block/expression-statement).
+
+**`func f(x) => expr` is parse-time SUGAR for `func f(x) { return expr; }`.**
+The parser's arrow branch (`pAcceptFuncDecl`) desugars immediately — the body
+is ALWAYS a `Block` (one body shape everywhere: the VM compiles every function
+body to a chunk; no later pass needs an expression-body special case; the
+synthetic `ReturnStmt`/`Block` carry the expression's locs so carets and
+backtraces are unchanged). The passes that OPTIMIZE the sugar look through the
+wrapper via **`func_expr_body(fd)`** (`syntax.h`: the inner expression iff the
+body is exactly `{ return <expr>; }` — hand-written or desugared, the two
+spellings are deliberately indistinguishable; tag-based, no dynamic_cast):
+the EXPRESSION inliner's classification + splice (`inlinable_decl`, the clone
+/ size gate / per-param use counts all run on the inner expr, so the `-it`
+threshold measures what it always measured), `do_func_call`'s direct-eval
+fast path (the tree-walker evaluates the inner expr with no Block loop /
+FlowState round-trip — skipped under `-vm` when the body's chunk exists,
+which is the native form of the same body), and coderender (a single-return
+body renders back as `=> expr;`). Two Inliner rules keep the engines
+disjoint and sound: a func registered in `funcs` (the `-it`-gated expression
+engine) stays OUT of `block_funcs` (block-inline is CALL_WEIGHT-gated and
+would bypass `-it`; a single-return body the expr engine REFUSES — a
+recursive one, for the unroll; a param-mutator — still reaches the block
+engines), and **`refold` never folds a LAZY builtin call**
+(`defined`/`isconst`/`isconstdecl` — `defined(g)` tolerates an UndefinedId
+arg, so a cctx eval "succeeds" and would answer a RUNTIME-order-dependent
+question at compile time; exposed by an inlined `return defined(gg)` body).
+
+**Bitwise / shift operators (`~ & ^ | << >> >>>`) are int-only.** New `Type`
+virtuals `band`/`bor`/`bxor`/`shl`/`shr`/`ushr` (binary) and `bnot` (unary) —
+base `Type` throws `TypeErrorEx`, only `TypeInt` implements them, so a `float`
+operand (which `num_bin_op` routes to `TypeFloat`) raises a type error; a `bool`
+promotes to `int` first like the other numeric ops, and the result is always
+`int`. `>>` is a SIGNED (arithmetic, sign-extending) right shift, `>>>` the
+UNSIGNED (logical, zero-filling) one (JavaScript semantics). The shift bounds /
+sign handling live in **`bitops.h`** (`bit_shl`/`bit_shr`/`bit_ushr`: count must
+be `>= 0` or `InvalidValueEx`, a count `>= 64` saturates to `0` / sign-fill
+instead of UB) — shared by `TypeInt` AND the **M8** unboxed path so they compute
+identically. M8: the BINARY bitwise nodes (`Expr05`/`08`/`09`/`10`) specialize
+into a `TypedScalarExpr` (`Cat::arith`, the int `eval_int` loop, which gained
+the `band`/.../`ushr` cases) — so a bit-manip tight loop is unboxed (~2x over
+`-nti`); unary `~` (an `Expr02`) stays the boxed path. The inferencer's
+`binop_result`/`unary_result` type them (int, int/bool operands; a float is
+`dyn` → the check pass reports "operator does not apply"). Precedence matches C
+exactly (see the `pExpr0N` ladder above), including the `a & b == c` →
+`a & (b == c)` trap.
+
+A `fl` bitmask of `pFlags` (`pInDecl`, `pInConstDecl`, `pInLoop`, `pInStmt`,
+`pInFuncBody`,
+`pInCatchBody`) is threaded through every parse function and gates legality:
+`break`/`continue` only
+under `pInLoop`, `return` only under `pInFuncBody`, `rethrow` only under
+`pInCatchBody`, and
+`var`/`const` set `pInDecl`/`pInConstDecl` so `pExpr14` knows to *declare*
+rather than *assign*.
+
+### Const-evaluation — the central design feature
+
+Constants are evaluated **at parse time**, like C++ `constexpr`. This is the
+project's defining trait
+and it lives *inside the parser*. Mechanics:
+
+- `ParseContext` owns a chain of **const `EvalContext`s** (`const_ctx`).
+  `pBlock` pushes a fresh
+  nested const ctx on entry and pops it on exit, so the const scope chain
+  mirrors lexical scope.
+- Every `Construct` carries an `is_const` flag, propagated bottom-up: a node is
+  const iff all its
+  children are const. String literals are const; `var`/freshly-declared
+  identifiers are not.
+- As soon as the parser finishes a const node, it evaluates it against
+  `const_ctx` and calls
+  **`MakeConstructFromConstVal()`** to replace the subtree with a literal node.
+  That function inlines
+  `int`/`float`/`none`/`str` unconditionally, and `arr`/`dict` only when
+  `process_arrays` is set — in which case it bakes the whole value into **one
+  `LiteralObj` node** (`syntax.h`), not one literal per element. (It stores
+  `v.clone()` so a small slice of a huge const array doesn't pin the huge
+  buffer.) `LiteralObj` carries an **`immutable`** flag. The materializer sets
+  it when **either** the target is a `const` decl (`fl & pInConstDecl`) **or the
+  value itself is already read-only** (`is_readonly_value()`). The second case
+  is how **const-ness propagates**: a slice/element/result derived from a const
+  is read-only, so `var s = y[1:3]` (with `y` const) keeps `s` read-only —
+  `var` only makes the *name* rebindable, not the value mutable. (This mirrors
+  runtime, where the value carries the flag; a *fresh* literal isn't read-only,
+  so `var a = [1,2,3]` stays mutable.) `LiteralObj::do_eval` (`eval.cpp`) then
+  either:
+  - for an `immutable` result: hands out the **deep read-only** value (baked via
+    `make_const_clone()` — every array/dict in it, recursively, is flagged
+    read-only — and shared, since it can't be mutated), so it is immutable
+    through *any* alias (e.g. a non-const function parameter, or a `var`); or
+  - for a mutable result: a *fresh, fully-mutable deep copy* via
+    `make_mutable_clone()`, exactly what the old per-element
+    `LiteralArray`/`LiteralDict` produced at runtime — a `var` bound to it must
+    be writable, and re-evaluating the node (loop body, function called twice)
+    must not see a prior mutation.
+
+  Direct reads of a const symbol (`y[k]`, `len(y)`) still fold to literals at
+  parse time; the runtime read-only flag is what additionally enforces
+  immutability through aliasing (see the copy-on-write section). `LiteralObj` is
+  `is_const` but deliberately **not** a `Literal` (which in this codebase means
+  a *scalar* literal — see auto-const's `is_scalar_literal`), so an array/dict
+  value is never mistaken for a promotable scalar.
+- **Scalars vs. containers (`ShouldConstSymbolExistAtRuntime`).** Const scalars
+  are inlined
+  everywhere and their declaration is dropped from the runtime AST entirely (the
+  decl parses to a
+  `NopConstruct`, which `pBlock` discards) — `-s` shows them simply gone. Const
+  **arrays, dicts, and
+  funcs** are *kept* as real runtime symbols (declared once), because inlining a
+  million-element array
+  at every use site would be wasteful; operations on them like `arr[2]` or
+  `len(arr)` still get
+  const-folded to literals though.
+- **Const-expression de-duplication (CSE).** The three sites that bake an
+  array/dict (`pAcceptCallExpr`, `pAcceptSubscript`, the `pExpr14` decl-rvalue)
+  go through **`cse_materialize()`** (`parser.cpp`) instead of calling
+  `MakeConstructFromConstVal` directly. It builds a canonical string key for the
+  expression (`cse_key`/`cse_key_rec`: identifiers resolved to their const
+  `LValue *` so shadowing can't alias; only cheap leaves — ids and scalar
+  literals — are eval'd, structural nodes recurse without evaluating; a
+  `CSE_KEY_CAP`-byte cap bounds key cost and skips huge literals) and looks it
+  up in **`CseCache`** (`parser.cpp`), a stack of `unordered_map<string,
+  EvalValue>`
+  scopes pushed/popped by `pBlock` in lockstep with `const_ctx`. On a hit it
+  shares the already-baked **deep read-only** value (no re-eval, no re-clone) —
+  this is why two identical const exprs report equal `intptr()`. On a miss it
+  bakes via `make_const_clone` and caches the value *only when it is read-only*
+  (the sole safely-shareable case; mutable `var`-bound literals are never
+  cached/shared). Popping a scope with its block is what stops a freed block's
+  reused stack addresses from colliding with a live key. `pExpr14` skips
+  re-materializing an rvalue that is *already* a `LiteralObj` (a subscript/call
+  result baked at its own site), so the de-dup lives at one layer and no double
+  clone happens. CSE is a pure optimization (miss == old behavior); its win is
+  compile time + memory, not runtime speed (folding already makes each use a
+  literal). `bench/52_cse_dedup` and the `CSE:` tests cover it.
+  `cse_materialize` is PIMPL-friendly: `CseCache` is forward-declared in
+  `parser.h` with an out-of-line `~ParseContext()`.
+- **Statement folding:** an `if` with a const condition is replaced by just its
+  taken branch; a
+  `while`/`foreach` proven to never execute (const-false condition / const-empty
+  container) is dropped.
+- **`pure func`s are the escape hatch.** `pure func f(...)` parses with
+  `is_const = true` and is
+  registered into `const_ctx`, so it *can* be invoked during const-eval (a plain
+  `func` cannot). Pure
+  funcs may not have a capture list and see only consts + their own params. A
+  `CallExpr` folds when
+  the callee and all args are const — that's how
+  `sort(arr, pure func(a,b) => a<b)` runs at parse time.
+- **Early failure:** exceptions raised *during* const-eval propagate immediately
+  and are *not*
+  catchable by script `try/catch` (the parser never enters a const assignment
+  inside a try). This is
+  intentional — const errors should fail the build, not be swallowed.
+- A const decl in `pInConstDecl` whose rvalue isn't actually const throws
+  `ExpressionIsNotConstEx`.
+
+`-s` (with vs. without `-nc`) is the way to *see* all of the above happening.
+
+**Auto-const (`AutoConst` in `resolver.cpp`).** A post-parse folding pass that
+does for plain `var`s what the parser does for `const`. It runs at the end of
+`resolve_names()` (so it can use the resolver's per-slot write counts and
+slot identity). For each function (and the top-level "main"), it:
+- **promotes** a `var` that is *write-once* (`slot_writes[slot] == 1`, i.e. only
+  the declaration writes it) with a constant **scalar** initializer into a
+  compile-time constant (keyed by slot), drops the declaration, and folds every
+  use to the literal — cascading in declaration order, so a `var` derived from
+  earlier auto-consts also promotes. Uses are folded in every read position,
+  including a `return` expression (`fold_child` handles `ReturnStmt` explicitly:
+  it's a plain `Construct`, not a `SingleChildConstruct`, so `fold_reads` skips
+  it — without that a promoted `var` used only in a `return` would
+  have its decl dropped but the use left dangling as an undefined variable);
+- **folds** all-literal arithmetic/logic/comparison (`MultiOpConstruct`) to a
+  single literal, reusing the interpreter (`mo->eval(&cctx)` against a const
+  `EvalContext`);
+- **short-circuit / identity folds** a logical op with const LEADING operands.
+  mylang's `&&`/`||` yield a **bool** (not the operand, unlike Python — `false
+  || 5` is `true`, not `5`), which shapes the rules. A const that **determines**
+  the result — `false && rest` → `false`, `true || rest` → `true` — folds the
+  whole expression to that bool (sound regardless of `rest`: it is
+  short-circuited, so never evaluated, even side effects / an undefined name).
+  This is what makes a feature-flag guard fold: `const DEBUG = false; if (DEBUG
+  && heavy())` → `if (false)`, which the DCE then drops — matching C++ `-O3`. A
+  **non-determining** leading const (`true && rest`, `false || rest`)
+  contributes nothing and is dropped: if ≥2 operands remain it stays a logical
+  op (`false || a || b` → `a || b`, sound for any types); if exactly ONE remains
+  the result is `bool(operand)`, so the const is dropped **only when that
+  operand is already bool** (`false || (x>0)` → `x>0`, via `produces_bool`: a
+  comparison / `&&` / `||` / `!` / bool literal, or its M8 typed form) — `false
+  || x` for a plain int `x` is left alone, since `bool(x) ≠ x`.
+- performs **dead-code elimination**: an `if`/`while` whose condition folds to a
+  literal has its dead branch dropped (`while (false)` removed). Crucially, a
+  branch it proves dead is *eliminated, not folded* — auto-const only analyzes
+  code it proves reachable (this is its DCE; eager fail-on-error in dead code is
+  the *parser's* behavior for explicit `const`/literals, not auto-const's).
+- **Safety (`prescan_blocked`)**: a slot is *not* promoted if the variable is
+  captured by a nested function (the capture must stay an identifier), passed as
+  the **first arg** of a builtin that takes it as an lvalue/identifier
+  (`append`/`push`/`pop`/`insert`/`erase`/`intptr`, listed in
+  `is_lvalue_arg_builtin` — a literal there throws `NotLValueEx`), used as a
+  subscript/member base (`a[i]`, `a.k`), or is a `foreach`
+  loop variable (implicitly reassigned each iteration despite its write count).
+  Args to pure/user functions and read-only builtins are **not** blocked, so
+  they fold — this is what lets pure-call folding and `isconst()` work.
+- **Same early-failure rule as the parser:** a fully-constant expression in
+  *reachable* code that throws when evaluated (e.g. `6/0`, a type mismatch) is
+  **not** deferred to runtime — the exception propagates out of `resolve_names`
+  and aborts before execution. `try/catch` does not catch it. The `runtime()`
+  builtin is the documented opt-out: it is a non-const builtin, so it is not in
+  the folder's const context and a call to it never folds; the containing
+  expression stays a runtime computation (its *argument* is still folded, so
+  `runtime(1/0)` still fails at compile time).
+- **Pure-call folding.** `register_pure_funcs` first registers every
+  effectively-pure NAMED function (`FuncDeclStmt::effective_pure`) into the
+  folder's const `EvalContext` (`cctx`), which already holds the const builtins.
+  Then a `CallExpr` with all-const arguments folds by simply `eval`-ing it
+  against `cctx`: a pure func / const builtin runs and yields a literal;
+  anything else (a non-pure func, `runtime()`, `print`, ...) is absent, the
+  lookup throws `UndefinedVariableEx`, it's caught, and the call is left for
+  runtime. This is how an auto-pure func's const-arg calls fold even though
+  auto-pure is decided *after* parsing (explicit `pure` funcs already fold at
+  parse time via the parser's const-eval).
+
+Implementation notes: slots are never reused across sibling scopes
+(`FuncState::next_slot` is monotonic), so the slot-keyed map can't collide.
+The pass needs a *complete* tree traversal, but `for_each_child` deliberately
+omits the nodes `walk()` handles itself (Block/for/foreach/try/`Expr14`), so
+`prescan_blocked`, `register_pure_funcs` and the folders descend into those
+explicitly.
+
+**Pure functions: no observable side effects.** A function is pure iff it has
+no side effects: it reads only consts + its params (+ calls pure functions),
+nests no function, **and does not mutate a reference parameter.** The last
+clause matters because mylang passes arrays/dicts/structs **by reference**, so
+`a[i] = v` / `a.f = v` / `append(a, …)` on a param *is* observable by the
+caller — such a function is NOT pure (mutating a **scalar** param is fine, it is
+a copy; mutating a **fresh local** container is fine, it never escaped).
+`func_mutates_input` (`resolver.cpp`) proves this with a small taint analysis:
+a non-scalar param is tainted, an *identifier-lvalue* assignment from a tainted
+value (`var b = a`, `var r = [a]`) taints the lhs, a `foreach` var over a
+tainted container taints the var — then an element/field **write** via a tainted
+base is a mutation. An element *store* `r[i] = a` does **not** taint `r` (it
+writes the possibly-fresh `r`, it doesn't make `r` alias `a`) — exactly what keeps
+the fresh-local builder `var r = [..]; r[i] = param` pure. Conservative
+(a `clone(a)`/slice of a param taints the result, costing a pure-classification,
+never soundness); the one residual gap is storing a param into a fresh empty
+local then deep-mutating (`var r=[]; r[0]=a; r[0][0]=v`). A mutating function is
+demoted to `effective_pure = false` for **both** auto-pure *and* an explicit
+`pure func` (its `explicit_pure` — the user's word — is kept, so `ispuredecl()`
+still reports it while `ispure()` does not; no error, to avoid breaking
+conservative false-positives like clone-and-mutate). **Why redefining `pure`
+this way costs ~no optimization:** a param-mutator can't const-fold (a const arg
+is read-only → the write throws), isn't inlined (mutators are block-bodied), and
+the for-range already excluded it — but it *enables* a sound pure-container-arg
+for-range bound (`compute(arr)`); see the eval below.
+
+**Auto-pure & const/pure introspection.** `func_body_is_pure` (`resolver.cpp`),
+run after a function body is resolved, promotes a non-pure, capture-free func to
+`effective_pure` when every free identifier (`sym.kind != local`) is
+`is_const` (a const global/builtin/explicit-pure func) **or the name of a
+function already proven pure** (`Resolver::pure_func_names`, populated in
+walk order as `process_function` decides each), it nests no function, **and it
+does not mutate a reference parameter** (`func_mutates_input`, above). So a
+function that calls an *earlier* auto-pure helper is itself recognized pure —
+`func f(x,y)=>add(x,y)` is pure once `add` is, so `f(1,2)` const-folds (the
+whole pure chain folds at compile time, like `-O3`). **A SELF-recursive function
+is auto-pure** when its body is otherwise pure: `process_function` optimistically
+adds the function's own name to `pure_func_names` before checking its body, so a
+recursive self-call counts as a call to a pure function (sound by induction — a
+recursive call to a pure function is pure), undoing the add if the body turns out
+impure. This is the purity the inliner needs to CSE duplicate calls when
+unrolling a recursive body (`fib(n-3)` appears twice → compute once). **But a
+recursive pure func is NOT eagerly const-folded** (`func_is_self_recursive`
+excludes it from AutoConst's fold context — `register_pure_funcs` + the ctor's
+`prior_pure` loop): evaluating `fib(40)` at compile time would hang. A const-arg
+recursion folds only through the depth/budget-bounded inliner unroll. Still
+conservative: a call to a *not-yet-decided* func (forward-referenced or
+**mutually**-recursive) stays impure. **Cross-input** (REPL): `resolve_names`'s
+`prior_pure` arg (the persistent runtime scope) seeds both `pure_func_names`
+(so a new input's `f` calling an earlier-input `add` is recognized pure) and
+`AutoConst`'s fold context with the earlier inputs' effectively-pure FuncObjects
+(so a call to one *folds* across inputs — `func f2()=>f(1,2)` with `f`'s
+instance from an earlier input becomes `=> 5`). The same `prior_pure` scope is
+also handed to the **Inliner** (`Inliner(.., prior_scope)`): its `run()`
+registers earlier inputs' **effectively-pure** functions (and their
+instances) into `funcs`/`spec_funcs`, so a call to a prior-input pure function
+**inlines / specializes** across inputs too — `func caller(a,b)=>f(a,2*b)`
+then (later) `func c2(x)=>caller(x,3)` folds `c2`'s instance body to `x + 6`,
+matching what one compilation (or C++ `-O3`) produces. Cross-input is restricted
+to **pure** functions on purpose: the inliner only ever CLONES a callee body, so
+reusing a prior retained decl is safe, but an *impure* prior function reads/
+writes mutable global state that may differ at the new site (and its result
+isn't compile-time-known anyway), so it is left a runtime call. Only pure
+*functions* are seeded (never a runtime var); registration skips any name the
+current input defines, so a redefinition wins and a redirected call already
+points at the current input's own instance. **A prior input's body is
+POST-specialization** (it already ran `specialize_types`, so it can hold M8
+`TypedScalarExpr` nodes — which the inliner never sees in a normal single
+compilation, since it runs *before* `specialize_types`). So
+`for_each_child`/`for_each_child_slot` (and `is_foldable_expr`) were taught the
+`TypedScalarExpr` case: substitution descends into it (else a param used twice —
+once outside, once inside a typed `a*2` — is only half-replaced, dangling the
+inner `a`), and a const-operand one refolds to a literal (`4*2`→`8`). Without
+this, `func mk(a)=>[a,a*2]` inlined cross-input crashed with "Undefined 'a'".
+**AutoConst folds an
+EXPRESSION-bodied function's body** (`fold_func_body` handles a bare-expr
+body, not only a `{...}` block — the older `fold_function` skipped the former,
+so a pure call in `func g()=>f(1,2)` never folded).
+`FuncDeclStmt::{explicit_pure, effective_pure}` back the
+runtime builtins `ispuredecl()`/`ispure()` (they evaluate the arg to a
+`FuncObject` and read its `FuncDeclStmt`). `isconst()`/`isconstdecl()` are
+resolved in the auto-const pass (`fold_isconst`): `isconstdecl` is true for
+parse-time consts and `const` params; `isconst` also accepts auto-const vars and
+auto-const params. All four are registered as runtime builtins (with fallback
+bodies) so the names resolve even when the pass doesn't fold them.
+
+**In progress: function inlining & specialization.** Designed and being built;
+see `plans/function-inlining.md` for the full plan and task order. Three aims:
+(1) *specialization* — propagate a const/auto-const argument into a (possibly
+non-pure) function and fold (the missing half of const-parameter propagation,
+since today only pure/auto-pure whole-call folding crosses a call); (2) *inline
+trivial bodies even with no const args* (`func f(x) => x+1` called `f(y)` folds
+to `y+1` in place — removes call overhead and exposes the body to the caller's
+const-folder); (3) keep backtraces identical with inlining on/off. The two
+formerly-open questions are settled: the **criterion** is "specialize→fold→
+measure→decide" (inline if tiny-after-fold; else emit a shared specialized clone
+if it folded a lot; else leave the call), and the **backtrace** uses
+"inlined-at" chains (`InlineCtx`, `errors.h`) flushed by `flush_inline_frames`
+(`backtrace.cpp`) at two error-path points (`Construct::eval` and
+`do_func_call`'s catch), keyed off `Exception::inline_origin_emitted` (see the
+re-fold paragraph), leaving `format_backtrace` unchanged. Algebraic
+simplification of non-constant operands (`x+1-1 -> x`, `a+a -> 2*a`,
+`x*2*3 -> x*6`) is done for **int-typed** operands only (`fold_int_arith`, see
+its own section) — sound because inference proves the type (`-fwrapv` makes int
+`+`/`-`/`*` associative); it stays out of scope for `float` (non-associative
+rounding) and `str`/`array` (`+`-overloading), and `/`/`%` (truncating division
+isn't associative). **Status:** the `InlineCtx` backtrace foundation exists (a
+`Construct::inline_ctx` field, the flush helper + the `Construct::eval` hook),
+**AST deep-clone** (`Construct::clone()`, all node types), and the **size-only
+inliner** (`Inliner` in `resolver.cpp`, run after `AutoConst`; gated by `-ni`).
+It splices eligible direct calls — top-level, expression-bodied, non-capturing,
+non-recursive, no nested function, arity match, body ≤ a node threshold (`-it
+N`, default 24), sound arg use
+(an arg is evaluated as often as the param is used; side-effecting args neither
+dropped nor duplicated). The spliced body's params are replaced by the args
+(which inherit the parameter occurrence's loc), and the whole splice is tagged
+with an `InlineCtx`. **The inliner re-scans each splice** (`walk(slot, depth+1)`
+after splicing), so a g-into-f-into-h chain collapses in one pass even when
+declaration order defeats the bottom-up walk (h declared before the callees it
+transitively reaches) or a call is newly exposed by the re-fold — this is the
+"fixpoint." Two bounds keep it finite: `MAX_INLINE_DEPTH` (16) caps nesting so
+mutual recursion (`a()=>b(); b()=>a()`) terminates, and `inline_budget`
+(`max(4096, 8 * program nodes)`) caps total nodes added so breadth-doubling
+(`f()=>g()+g()`) can't blow the tree up; hitting either bound just leaves the
+remaining calls in place (still correct — they run at runtime). A re-scanned
+splice's call site already carries an `InlineCtx`, so the new frame's parent is
+that existing chain (not null) and `rebase` (in `tag_inline`) re-roots the
+body's own chains under it — arbitrarily deep nesting renders correctly, and a
+chain mixing inlined and physical/recursive frames shows them in order. The
+inlined-frame flush is keyed off
+`Exception::inline_origin_emitted` (a bool), **not** the loc once-guard: the
+innermost inlined node's `Construct::eval` emits its frames once and sets the
+flag, so an error that arrives with a loc already set (a builtin like
+`append(tbl, 9)`, a not-an-lvalue assignment `d.k = v`) still keeps its frames.
+`do_func_call` sets the same flag after its own call-site flush so the enclosing
+`CallExpr` doesn't re-emit, while each physical call's flush stays unconditional
+(multi-level inlined call sites all show). Backtraces for **body** errors are
+byte-identical with/without inlining;
+**known limitation** — an error *evaluating an argument* (e.g. an undefined var)
+is attributed to the inlined callee rather than the call site (the arg node is
+both the call-site value and the in-body operand). After splicing, the inliner
+**re-folds** (`Inliner::refold`): a `MultiOpConstruct`, subscript, slice, member
+access, or const-builtin call folds to a literal when its operands are
+compile-time constants — scalar/array/dict literals *and* const globals (the
+top-level const array/dict decls are seeded into `cctx` by
+`seed_const_globals`). A `has_slotted_local` guard keeps it from dereffing a
+missing frame (it never evaluates a node referencing a runtime local), and it
+skips lvalue positions (an assignment target, an lvalue builtin's first arg) so
+a write target is never turned into a value. So a const arg propagates into a
+*non-pure* expression function (`f(3)` with `f(x) => x*10+g` -> `30+g`;
+`a[0]` -> `10`, `len(a)` -> `3`, `tbl[0]` -> the element) — the half AutoConst's
+whole-call folding misses. A non-inlined call to a **block-bodied** function
+with const arg(s) is instead **specialized**: the body is cloned, those params
+bound, and folded with DCE via `AutoConst::fold_specialized` (which *catches*
+const errors and discards, so a runtime error never becomes a compile one) then
+`refold`. Both **scalar** and **deep read-only array/dict** const args seed a
+specialization: a read-only array/dict is sound to substitute because it is
+only ever folded in read positions (`fold_reads` never rewrites an assignment
+lvalue or an lvalue builtin's first arg) and any *mutation* of it throws the
+same error at runtime as the un-specialized call (`prescan_blocked` gained a
+`block_subscript_bases` flag; the relaxed seed set keeps the genuinely-unsafe
+blocks — capture, lvalue-builtin first arg, callee, foreach var — but lets a
+subscript/member READ base fold, since the
+param decl is kept so an lvalue base can't dangle). The shrink decision uses
+`count_all_nodes` (a *complete* traversal, unlike `node_count`, so a fold buried
+in a kept `var t = a[0]+a[1]` rvalue is visible). If it shrinks, a shared clone
+`name$sN` is registered (deduped by (func, const-arg tuple) — an array/dict keyed
+by its `intptr` identity in `value_repr`, so the same const object shares one
+clone — inserted at the root block's front) and the call redirected; the clone
+keeps the same frame (no re-resolution) and a `FuncDeclStmt::display_name` makes
+backtraces show the original name, not `name$sN`. A **tail call to a block-bodied
+function** (`return f(args);` where f's body always returns — its last statement
+is a `ReturnStmt`) is inlined *directly* (`try_inline_tail`): f's body block
+replaces the return statement, sound because f's own returns become the caller's
+returns and f never falls through. f's params are substituted (so they must be
+non-reassigned and value-stable — `tail_arg_ok`: a caller local or a const
+literal, never a global or side-effecting expr, since the body reads the param
+at its use points rather than once up front), and f's locals are
+**re-resolved**: a single `splice_tail` pass decides each identifier by its
+ORIGINAL slot — a slot `< nparams` is a param (substitute the arg), a slot `>=
+nparams` is a local (remap by `caller_fsize - nparams` into a fresh range at the
+top of the caller's frame). The caller's frame (`FuncDeclStmt::frame_size`, or
+the root block's `slot_count` for "main", threaded through `walk` as `fsize`)
+grows by f's local count, capped at 64 (`Frame::live` is one 64-bit word); over
+that, the call is left as-is. The spliced body is tagged with an `InlineCtx`
+like an expression splice, so a runtime error shows f's virtual frame above the
+caller's real one.
+
+**Non-tail block-body inlining (`try_inline_block` → `InlinedCallExpr`).** A
+call to a block-bodied function in ANY expression position (not just
+`return f(args)`) is inlined by replacing the `CallExpr` with an
+**`InlinedCallExpr`** (`syntax.h`, a `SingleChildConstruct` so every
+`for_each_child` walk auto-descends into its body): the callee's cloned,
+param-substituted body. `InlinedCallExpr::do_eval` runs that body behind its OWN
+return boundary — it points `ctx->flow` at a stack-local `FlowState` for the
+body's duration and restores it (so `flow` is no longer `const`), making the
+body's `return`s yield THIS expression's value instead of returning from the
+caller. No statement hoisting and no eval-order change — the node sits exactly
+where the call was — and no child `EvalContext` (the body block is `scope_free`,
+so it runs in place; far cheaper than the EvalContext+Frame+bind a real call
+pays — ~1.4x on a call-heavy non-const loop). **Scope (`block_inlinable_decl`):**
+**resolved** (params + locals slotted), non-capturing, no nested function
+(`contains_func` — a COMPLETE walk; the plain `for_each_child` form missed a
+closure that is a decl rvalue `var h = func[..]..`, which let an inline break the
+capture), **non-recursive** (a COMPLETE `refs_uid` check), no scalar-param
+reassignment (a reassigned param is a by-value copy — substituting the arg would
+alias it). **Args (use count by SLOT):** a **value-stable** arg (`tail_arg_ok` —
+a caller LOCAL or const literal the body can't reassign) is substituted DIRECTLY;
+**any other arg** (a non-trivial expression, a global, a side-effecting call) is
+bound to a fresh frame **temp once** at the top of the body (`$a = arg`) and the
+param reads that temp — **"args as locals"**. Evaluating once captures the
+call-time value, so a body that mutates the passed-in global, or a multi-use
+side-effecting arg, stays sound (the earlier `sub_ok` allowed a bare global
+identifier, an unsoundness); it also lets `f(a+b)`, `f(g())`, `f(global)` inline,
+and is what the recursion-unroll needs (a self-call's arg is `n-1`). The size
+gate is the **cost model**: `body_weight` (a weighted
+node sum, weights from `--weights`/`run_weight_bench`: a CALL is ~21x an arith
+op, assign 11, if 7, return 3) must be **below `CALL_WEIGHT` (21)**. **Bodies WITH
+locals are handled** (v2): `splice_tail` substitutes the params (by slot) and
+**remaps the locals** into a fresh range at the top of the caller's frame (which
+grows by the local count, capped at 64) — the same machinery tail-inline uses;
+two inlines in one expression get distinct ranges. **Block-inline is SUPPRESSED
+inside a loop condition** (`walk`'s `no_block` flag, threaded into `ForStmt`/
+`WhileStmt` conds): the for-range specializer (run later) caches a pure-call
+bound, but only recognizes the call shape, not an opaque `InlinedCallExpr`, so
+inlining a `for (i; i < f(n); i++)` bound first would turn a once-evaluated
+`ForRangeStmt` into a per-iteration `ForStmt` — a regression; the call is left for
+for-range (expression-body inlining is NOT suppressed there — it yields a
+for-range-recognizable arithmetic expression). Bounded by `MAX_INLINE_DEPTH` +
+`inline_budget`, re-scanned (depth+1) so nested calls collapse, `InlineCtx`-tagged
+for backtraces. A const-arg call to such a (auto-pure) func is folded by AutoConst
+*before* the inliner, so block-inline only fires on the non-const-arg calls.
+Registered in `block_funcs` independently of `funcs`/`spec_funcs` (a func can be
+both tail-inlined and block-inlined; walk order: expr-inline, tail-inline,
+block-inline, specialize). coderender renders an `InlinedCallExpr` as its
+value (a single-return body) or an `inlined <name>` marker.
+
+**Guard bodies inline to an EXPRESSIBLE ternary, not an `InlinedCallExpr`.** An
+`InlinedCallExpr(Block(... return ... return ...))` sitting in expression
+position is NOT writable MyLang (a block-with-returns is not an expression) — an
+optimized AST that isn't a subset of the source AST. So when the spliced body is
+a **temp-free guard chain** — `{ if(c1) return a1; ...; return b; }`,
+`guard_to_ternary` — it is converted to the equivalent **`TernaryExpr`**
+`(c1 ? a1 : (... : b))`, real code that runs in the caller's frame like any
+expression (no flow boundary, no `InlinedCallExpr`). "Temp-free" requires the
+args to be DIRECT-substituted, not bound to temp statements; for a **pure**
+callee an arg is side-effect-free, so a cheap one (`body_weight ≤ ARG_SUBST_MAX`,
+which excludes a nested call) is substituted directly and re-evaluated at each
+param use (sound: a pure body can't change the arg's value). The recursion
+unroll therefore produces **nested ternaries** (fib →
+`(n-1<2 ? n-1 : fib(..)+fib(..)) + (n-2<2 ? n-2 : ..)`), and the frontier
+self-calls in the ternary branches still hit the per-frame cache. **A body with
+write-once LOCALS** is first run through **`collapse_locals`** (copy propagation):
+a `var t = <cheap side-effect-free expr>` whose slot is written once is
+substituted into its uses and the decl dropped, so `{ var t=a*a; return t; }`
+collapses to `{ return a*a; }` → a temp-free guard chain → a ternary/expression
+(`uc(x)` → `x*x+1`). Sound — a write-once local with a side-effect-free rvalue is
+just a name for that expression (re-evaluating a cheap rvalue is exact). With
+this, the small bodies that used to inline as a non-expressible
+`InlinedCallExpr(Block(...))` now inline as **expressible** code; the
+`InlinedCallExpr` form survives only for a residual that can't collapse (a
+reassigned / expensive / side-effecting local), which is almost always already
+over the block-inline weight gate (so not inlined at all). For this,
+`for_each_child_slot` gained `TernaryExpr` / `CoalesceExpr` cases — previously
+absent, so a call inside a `? :` was never inlined or devirtualized (a latent
+missed-optimization, now fixed). coderender no longer prints a per-node `inlined`
+marker (a ternary is self-evidently real code; the flood made a deep unroll
+unreadable) — only the `InlinedCallExpr` case emits one.
+
+**Int-algebra fold (`fold_int_arith`, run once after the inline fixpoint).** A
+bottom-up algebraic simplifier for **int-typed** (`th == i`) arithmetic chains,
+in three parts: (1) **`+`/`-` constant combining** — `(n-1)-1`→`n-2`, so the
+unrolled frontier reads **`fib(n-3)`/`fib(n-4)`** not `fib(((n-1)-1)-1)`;
+(2) **`+`/`-` like-term collection** (`fold_addsub`) — structurally-equal
+side-effect-free operands merge by net coefficient: `a+a`→`2*a`, `a-a`→`0`,
+`a+b-a`→`b`, `x+1+x+2`→`2*x+3` (`expr_equal` compares ids/int-literals/arith
+chains; a side-effecting operand is kept verbatim per occurrence); (3) **`*`
+constant-factor combining** (`fold_mul`) — `x*2*3`→`x*6`, `x*1`→`x`, `x*0`→`0`
+(the last only when the non-const factors are side-effect-free, so dropping them
+is sound). **SOUND for int ONLY** — `+`/`-`/`*` are associative & commutative mod
+2⁶⁴ under `-fwrapv`, so regroup/reorder/merge is exact — hence **gated on
+`th == i`**: a float chain (non-associative rounding) or a string `+`
+(concatenation) is never touched. `/` and `%` are excluded (truncating int
+division isn't associative). A rebuilt chain's base op is `Op::invalid` (asserted
+in `eval_first_rvalue`, so a structural mistake aborts rather than miscomputes).
+This is the type-narrowed realization of the long-deferred "algebraic
+simplification" pass, now safe because inference proved the type. **Caveat:** an
+UNTYPED template base
+(`func fib(n)`) has no `th`, so its body stays literal (`fib(((n-1)-1)-1)`) — its
+arithmetic CAN'T be folded soundly (a future instance might be float); a concrete
+/ `int`-annotated function (or any int instance) folds. The base-case guards are
+never dropped (`(n-1<2 ? ... )` stays — a flat "4 calls" is unsound for a
+variable `n`).
+
+**Recursion unroll + per-frame pure-call cache (the fib win).** A pure,
+TREE-recursive function (≥2 self-calls, `func_is_cacheable_recursive`) is
+admitted to `block_funcs` and **unrolled in place** ("unroll the definition"):
+the walk inlines its own self-calls, to a **per-function depth**
+(`rec_unroll_depth`) chosen from the COST MODEL — keep adding levels while the
+projected body weight (×branching each level) fits `REC_UNROLL_BUDGET` (tuned so
+fib, w0≈71/branching 2, gets 2 levels; tribonacci, w0≈97/branching 3, gets 1; a
+body weight >~150 gets 0 — 2 levels of a huge body is a waste, the fib-class is
+small). The runtime bound is **recursion DEPTH** (`rec_depth`, bumped around the
+recursive re-scan), NOT body size: a depth cap expands EVERY self-call to the
+same depth (BALANCED), while a size cap stops mid-level and leaves some
+self-calls un-expanded (LOPSIDED, which dedups far worse — e.g. a 3-self-call
+`tribonacci` lost its third branch under the old size cap). A LEVEL is
+all-or-nothing (every self-call at it is expanded). Two more correctness points:
+each self-call splices a clone of the **saved ORIGINAL body** (`rec_orig`), not
+the in-place-growing body, so the unroll does not compound; and `REC_NODE_CAP` is
+a high size BACKSTOP for a pathological body.
+The unroll's **duplicate self-calls**
+(`fib(n-1)` and `fib(n-2)`'s bodies both call `fib(n-3)`) land in ONE frame (the
+`InlinedCallExpr` shares the caller frame) and **dedup at runtime via a per-frame
+cache**: the
+inliner sets `FuncDeclStmt::cache_results`, the devirt pass turns a call to such
+a func into a **`CachedCallExpr`** (a `DirectCallExpr` subclass — a SEPARATE node
+so the plain `DirectCallExpr` path pays NO per-call cache check), and
+`cached_call` (eval.cpp) checks the caller `Frame`'s lazily-allocated `PureCache`
+(`{func, arg values}` → result): hit → reuse, miss → call + store. **Sound**:
+lazy (only calls actually made are cached → never evaluates a call the program
+wouldn't, so a recursion whose base case misses negatives — `fact(-1)` — can't
+diverge), and frame-scoped (the cache dies with the frame → not global
+memoization, which would be the script's job). Only a **scalar** result is cached
+(a pure func may return a fresh mutable container; caching it would alias it
+across callers). **The unroll only pays WITH the cache** — the per-frame dedup is
+what reduces the exponential; the unroll ALONE grows the body without dedup, so
+it is neutral (1 level) to harmful (deeper). So depth is tuned for the
+cache-on default; **`-npc`** disables the cache (the unroll still runs) to MEASURE
+its contribution. **Effect: ~14x on naive `fib(32)`** (0.01s vs 0.14s CPython;
+`-npc` 0.5s, `-ni` 0.28s — i.e. cache off is *slower* than no-inline, which is
+why the two ship together); more when a caller calls the same `fib(k)` repeatedly
+(the cache dedups those too); broad-suite geomean a slight net win. Correct for
+`fib`, `ackermann`, container-returning tree recursions. The unrolled body is
+**expressible** (guard bodies → ternaries, locals copy-propagated, arithmetic
+int-folded), so `:show fib$0` reads
+`(n-1<2 ? n-1 : fib$0(n-2)+fib$0(n-3)) + …` — real, writable MyLang. The
+base-case guards CANNOT be dropped for a variable arg (a flat "4 calls" is
+unsound — `n` could be 2). The only inlining-adjacent item still **deferred** is
+*general* flow-sensitive type narrowing beyond the null-narrowing the check pass
+already does (the int-algebraic part is done — see `fold_int_arith`).
+
+## Static type inference (`inferencer.cpp`)
+
+A **whole-program, compile-time** pass (`infer_types(root)`) that gives every
+variable, parameter, and function return a fixed static type and **rejects type
+violations before the program runs**. Gated by `-nti` (default ON; also runs
+under `-nr`, since type-checking is validation). It runs *after* parsing but
+*before* `resolve_names`, on the clean tree (not the inlined one), and stores
+nothing on the AST — it owns an `StaticTypeArena` (`statictype.h`) and side
+tables,
+so it
+leaves the tree untouched for the later passes (the one exception is the
+named-argument desugaring below, a deliberate lowering). Full design + the
+decisions behind it: `plans/type-inference.md`,
+`plans/type-inference-questions.md`.
+
+- **Named-argument desugaring (`lower_named_args`).** A call may pass arguments
+  by name (`f(x: 1, z: 3)`, see README *Named arguments*). The parser attaches
+  the labels to `ExprList::arg_names` (a transient `vector<const UniqueId *>`,
+  parallel to `elems`, empty == all positional) via `pArgList` (replacing the
+  generic `pList<ExprList>` for call args). The desugaring to positional form
+  (filling a skipped *interior* optional with an explicit `LiteralNone`,
+  enforcing the strict ordering — a leading run of positional args, then names
+  in declaration order; reordering / duplicate / unknown name / missing-required
+  is a compile error) happens in **two places**, because a named call must
+  const-fold *identically* to its positional twin (the syntax cannot cost an
+  optimization):
+  - **At parse time** (`pTryDesugarNamedCall` → `pDesugarNamedArgs`,
+    `parser.cpp`): when a named call's callee is a parse-time-const `pure func`
+    (its `FuncObject` is available, giving the param `Identifier`s), the parser
+    desugars *before* its const-fold step, so `const C = f(x: 1, z: 5)` folds
+    just like `f(1, none, 5)`. A non-pure / forward / builtin callee can't be
+    resolved here, so the parser marks the call non-const and leaves the names
+    for the inferencer.
+  - **In the inferencer** (`lower_named_args` → `lower_call_named_args`): right
+    after the structural pass and **before** the fixpoint/check, every remaining
+    named call is desugared. It resolves the callee with `callee_funcinfo` (so
+    names need a directly-named function — a `dyn`/func-value/builtin callee is
+    the error here), then maps labels to params (by interned name) the same way.
+
+  After both, the tree holds only positional calls, so the fixpoint, the check
+  pass, `resolve_names`, the optimizers, `specialize_types`, and eval **never
+  see a name** — named args have provably zero effect on them. The inferencer
+  lowering is syntactic, not type-checking, so it runs even when checks are
+  disabled: `-nti` no longer makes `infer_types` a full no-op — it sets
+  `checks_enabled = false`, and `run()` still does the structural pass +
+  lowering, then returns before the fixpoint.
+
+  Both sites share **one** mapping implementation, `desugar_named_call`
+  (`syntax.cpp`, declared in `syntax.h`): it takes the call plus a normalized
+  `vector<ParamSpec>` (`{const UniqueId *name; bool opt;}`) and owns all the
+  rules (label→position by interned name, the strict ordering, the `none`
+  fill, the errors). Each caller just builds the `ParamSpec` view from its own
+  param representation — the parser from a `FuncObject`'s param `Identifier`s
+  (`uid`/`opt_mod`), the inferencer from its `TypeSym`s (`name`/`opt_decl`) —
+  and the callee-resolution + "names need a directly-named function" decision
+  stays caller-specific. So a named call is rewritten, and therefore optimized,
+  byte-identically wherever it is lowered. (`intern_msg`, the stable-message
+  helper the compile errors need, is likewise shared from `errors.h`.)
+
+- **Static types** are `StaticType` (`statictype.h`), distinct from the runtime
+  `Type *`:
+  `None` (the only-none / not-yet-pinned unit), `Bool`, `Int`, `Float`, `Str`,
+  `Array<elem>`, `Dict<k,v>`, `Func(params)->ret`, `Exception`, `Dyn` (explicit
+  top), each with an `opt` (nullable) flag. The lattice ops are
+  `assignable`/`join`/`unify`/`equal` with the numeric promotion chain
+  **`Bool <= Int <= Float`** (`join` climbs by numeric rank: `join(bool,int)` is
+  int, `join(int,float)` is float; `assignable` lets bool fit int/float;
+  arithmetic over bools promotes to int — `binop_result`'s `arith_join` bumps a
+  bool result to int, so `true+true` is int 2; comparisons/logical → `Bool`).
+  `None`/`opt` give nullability; mixed container elements fall to `Dyn`; a
+  scalar/kind conflict is an error.
+- **Three passes**: (1) *structural* — build scopes, one `TypeSym` per
+  declaration, resolve every `Identifier` to its `TypeSym`, one `FuncInfo` per
+  function; (2) *fixpoint* — **Jacobi** iteration: each round recomputes every
+  symbol/return type into `acc` (the `join` of all contributions) while reading
+  the previous round's stable `type`, then commits; reading stable values makes
+  rounds order-independent, and since kinds only climb the lattice a `join`
+  conflict (e.g. `int` vs `str`) is a real, stable error raised immediately;
+  (3) *check* — with final types, validate every operator, call, assignment, and
+  return, throwing on a violation.
+- **Inference rules of note** (the non-obvious ones): a never-(concretely-)
+  called function's parameter finalizes to `Dyn` (its body must still
+  type-check), while an unconstrained *local* finalizes to `None`. Param
+  nullability is *declared* (`opt`/`opt dyn`) **and enforced**: the
+  mandatory-`opt` rule errors if a non-opt param can actually receive `none`
+  (see below) — this holds for `dyn` params too (a nullable dyn must be
+  `opt dyn`; nullability is orthogonal to dyn). Local/return nullability is
+  *inferred* (`None` joined with a concrete `T` is `opt T`; a `dyn` var that
+  gets `none` becomes `opt dyn`). `runtime(x)` returns `Dyn`
+  (its documented opt-out: it defers to runtime). `==`/`!=` are always
+  well-typed (→ int); ordering is numeric-or-string. `str + anything` → str.
+  **`int OP dyn` → `dyn`** — the NATURAL result of mixing a concrete with a
+  variant; it is NOT forced to the concrete type. So a FRESH `var r = 3 + d`
+  (d dyn) correctly infers `dyn` → `DynRequiredEx` (must be `var dyn r`), and
+  `var dyn r = 3 + d` holds the actual result (int/float/…). The accumulator
+  `var s = 0; s = s + x` keeps `s` int NOT by typing `s + x` int but by the
+  **dyn-into-concrete COERCION** (see the mandatory-`dyn` section): `s`'s type
+  comes from its non-dyn contribution (`0`), and the `dyn` rhs is a
+  runtime-checked coercion.
+  Higher-order builtins (`map(func,c)`, `filter(func,c)`, `sort(c,func)`,
+  `make_dict(keys,gen)`,...) feed the container's element type into the
+  callback's params (named **or** inline lambda; `callee_funcinfo`) — for
+  `make_dict` the callback's param is the KEYS array's element type (the key),
+  and the result is `dict<K, V>` (K the key type, V the callback's return), the
+  dict analogue of `make_array(N,gen)` (whose callback param is the int index).
+  This feeding **defers while the container type is Unknown** (never feeds `dyn`
+  — a premature `dyn` param is sticky and poisons the callback's ret, leaking a
+  sticky `dyn` into any accumulator of the higher-order result, e.g.
+  `total += make_dict(ks,f)[k]` in a loop with an inline `f`); `make_array` is
+  immune since it feeds `int` unconditionally. A `var f = <lambda>` binds `f`'s
+  `TypeSym` to the lambda's `FuncInfo`, so calls to `f` type its params and
+  check arity.
+- **New surface syntax**: the `opt` and `dyn` keywords, usable as modifiers on a
+  parameter (`func f(opt x, dyn y)`) or a var/const decl (`var dyn z = ...;`,
+  `var opt w;`), and **combinable as `opt dyn`** (in that order) on either.
+  `opt` = nullable (may hold `none`); `dyn` = dynamically *typed* (variant — any
+  type; type ops are runtime-checked). **Nullability is orthogonal to `dyn`
+  (Phase B):** a bare `dyn` is *non-null*, `opt dyn` is nullable — so the four
+  combinations are `T` / `opt T` / `dyn` / `opt dyn`. Implemented as
+  `Identifier::{opt_mod,dyn_mod}` (params, via `pFuncParam`) and
+  `pFlags::{pInOptDecl,pInDynDecl}` (decls; both can be set, for `opt dyn`).
+  In `StaticType`, `opt dyn` is `g_dyn[1]` (the opt-`Dyn` ground); `with_opt`
+  carries
+  the opt bit onto a `Dyn` kind, and `join` keeps it when a mix collapses to dyn
+  (`dyn | none` → `opt dyn`).
+- **Explicit type annotations** (`int x = 5;`, `func f(str s)`,
+  `array a = [...]`): the primitive type keywords `bool`/`int`/`float`/`str`/
+  `array`/`dict` may replace `var` on a decl/`for`-init or precede a parameter
+  name, combinable as `[const] [opt] TYPE name`. They are **not lexer keywords**
+  (they stay the builtins `int()`/`array()`/…); the parser disambiguates by
+  one-token lookahead — a type name is a type only when the next token (after an
+  optional `const`/`opt`) is the variable name (`pAcceptDeclPrefix` in
+  `parser.cpp`, shared by `pStmt` and `for`-init; uses `TokenStream::peek`). The
+  annotation rides on `Identifier::decl_type` (a `DeclType` enum, `syntax.h`),
+  threaded from the prefix via `ParseContext::pending_decl_type` and **also
+  propagated by the resolver from the declaration to every use** (so a
+  reassignment can coerce). Semantics, in the inferencer (`TypeSym::ann`): a
+  **scalar** annotation *pins* the symbol's type (`reset_round` seeds the
+  declared `StaticType`, `contribute` keeps it and checks each value is
+  `assignable` —
+  so `int x = 3.5` / `int x = 5; x = 2.5` / a wrong-typed arg to a typed param
+  are errors, while `float f = 3` widens). A **non-`opt` typed var can never be
+  `none`**: `int a = none` / a later `a = none` / `Point p; p = none` are a
+  `NullabilityEx`, checked in the **check pass** (`Expr14` branch, via
+  `ann_scalar_static_type` + `is_optish` on the rvalue) — *not* `contribute`,
+  which
+  defers on `none` so a transient none during the fixpoint (an `array(N)`
+  element before a write) isn't misflagged. A plain `var x` (no annotation) is
+  implicitly nullable and exempt; `int? a` / `opt int a` accepts `none`.
+  `array`/`dict` are **generic** (only
+  the kind is checked, by `enforce_decl_types` in the strict block — element
+  types stay inferred, so `array a = [1,2,3]` is still flat `array<int>`). A
+  scalar error is gated by `strict_dyn` (off for the `-a`/`-dti`
+  non-strict passes). **Runtime:** `coerce_to_decl_type` (`eval.cpp`) does the
+  numeric widenings (float←int/bool, int←bool) so a typed-float var/param holds
+  a float — at the decl/assign (`handle_single_expr14`, `op == assign`, lvalue's
+  `decl_type`) and at param bind (`bind_param`). **It NARROWS NOTHING and ERRORS
+  on a bad type** (a `float` into an `int` throws, never truncates — use an
+  explicit `int(x)`); a statically-typed rvalue can only be widening (the check
+  pass rejects a narrowing at compile time), so the throw fires ONLY for a `dyn`
+  value whose *runtime* type doesn't fit (the dyn-into-concrete coercion below).
+  `none` passes through (nullability is a separate `opt` check). Auto-const
+  inlining
+  (`resolver.cpp`) and the parser's const-scalar inlining both coerce too (their
+  own `coerce_decl_scalar`/`check_coerce_const_scalar` copies, since a `const`
+  scalar is inlined *before* the inferencer runs — that path also does the
+  type-check the inferencer can't). An **uninitialized** typed decl
+  (`int x;`) gets the type's zero value (`zero_value_literal`: 0/0.0/false/""/
+  []/{}), or `none` when `opt`.
+- **A user STRUCT type as an annotation** (`A obj;`, `A obj = A(10)`): a struct
+  name is a type in declaration position too (`StructName name`).
+  **Context-free recognition:** `pAcceptDeclPrefix` (and `pFuncParam`) decide
+  `A x` is a typed declaration by SHAPE alone — a (non-keyword) `IDENT`
+  followed, after an optional `?`, by another `IDENT` (the var name). An
+  `IDENT IDENT` run
+  is never a valid expression (MyLang has no juxtaposition), so this needs **no
+  symbol-table lookup for the parse decision** — the grammar stays context-free
+  (we deliberately avoid the C "typedef" hack of consulting the symbol table to
+  decide decl-vs-expr). `A(...)`/`A.x`/`a = ...` don't match the shape and stay
+  expressions. *Then* a SEMANTIC step resolves the type name via
+  `lookup_struct_type` (an identifier bound to a `StructTypeDef*` in the const
+  ctx; needs const-eval on, since structs register their descriptor there at
+  parse time): a name that doesn't resolve to a struct type is a clear
+  `SyntaxErrorEx` ("'foo' is not a type"), not a silent fall-through.
+  **Decl-vs-ternary:** a `T ? name` run is ambiguous with a ternary
+  (`flag ? a : b`), so when a `?` was seen the scanner requires the token after
+  `name` to be a decl terminator (`is_decl_terminator`: `;` `=` `,` `}` EOF) —
+  otherwise (`:`, `(`, an operator, …) it bails to expression parsing **before**
+  `lookup_struct_type` runs, so a non-struct condition name isn't wrongly
+  rejected as "not a type". A plain `T name` (no `?`) is unambiguous and skips
+  the check. Rides on
+  `Identifier::decl_struct` (the `StructTypeDef*`) with `decl_type ==
+  DeclType::strct`, threaded via `ParseContext::pending_decl_struct`. The
+  inferencer pins it exactly like a scalar annotation:
+  `ann_scalar_static_type` returns
+  `A.struct_ty(ann_struct, ...)` (the TypeSym gains `ann_struct`), so
+  `reset_round`/`contribute` pin the var and reject a wrong struct
+  (`A x = B(...)` / a later `x = B(...)` → `TypeMismatchEx`, via `struct_def`
+  identity in `static_type_assignable`). **Runtime:** no coercion (a struct
+  binds
+  as-is). An **uninitialized** struct var **zero-initializes recursively**
+  (`build_zero_struct_init`, `parser.cpp`): it desugars `A obj;` to the
+  constructor call `A(<zero per field>)` - 0/0.0/false/""/[]/{} per field
+  kind, `none` for an `opt` field, and a nested zero constructor for a struct
+  field. Being an ordinary `CallExpr`, it constructs a fresh value each eval and
+  is type-checked like a hand-written construction. (`opt A obj;` / `A? obj;` →
+  `none`.) **Parameters too** (`func f(A p)`): `pFuncParam` recognizes a typed
+  param the same way (by shape - a type `IDENT` before the param name; then
+  `lookup_struct_type` resolves it, an unresolved name being the same "not a
+  type" error), sets the param's `decl_struct`, and the inferencer copies it to
+  the param `TypeSym`'s
+  `ann_struct` - so the param pins to struct `A` and `check_call` rejects a
+  wrong-struct argument. (No runtime coercion; a struct binds as-is.)
+- **Parameterized containers `array<T>` / `dict<K, V>`** (compose recursively:
+  `dict<str, array<Point>>`, `array<array<int>>`). The element/key/value type is
+  a **`TypeAnnot`** (`structtype.h`): a small recursive struct
+  (`kind`/`opt`/`strct`/`elem`/`key`/`val`) built by **`pTypeAnnot`**
+  (`parser.cpp`), carried on `Identifier::decl_annot` (vars/params) and
+  `FieldDef::annot` (struct fields), shared (immutable after parse). **Parsing
+  stays context-free:** `pAcceptDeclPrefix` recognizes `array`/`dict` + `<` by
+  SHAPE (then `skip_angle_balanced` peeks past the balanced `<...>` to confirm
+  the var name follows); `pFuncParam` and the struct-field parser do the same.
+  Nested generics' merged closing token is handled by **`pAcceptCloseAngle`**
+  (the `pending_gt` counter splits a `>>`/`>>>` across levels - the C++11
+  trick), so no `>>` lexer change. The inferencer's **`annot_to_static_type`**
+  turns a
+  `TypeAnnot` into an `StaticType`; `ann_scalar_static_type` returns it (so a
+  parameterized
+  container is **pinned to its full type** exactly like a scalar - `reset_round`
+  seeds it, `contribute` checks each value/element is `assignable`, the non-opt
+  `none` rule applies), and `field_static_type` uses `fd.annot`.
+  `enforce_decl_types`
+  (the generic kind-only check) skips a pinned (`ann_annot`) symbol. A wrong
+  element type (`array<int> a = ["x"]`, a reassign, a struct-field arg, a
+  dyn-laundered `append(a,"x")`) is a compile error. **Flat storage:** the
+  existing `ArrHint` path makes a typed array flat - and an **empty** typed
+  array now starts flat too (`LiteralArray::do_eval` honors
+  `flat_i`/`flat_f`/`flat_b` for `elems.empty()`, matching the existing `flat_s`
+  case), so `array<int> a; append(a, 5)` stays unboxed. **The explicit/
+  inferred `= []` form too (2026-07-18 profile #1):** `eval_literal_obj`
+  gained the flat_i/f/b empty-array arms (only flat_s existed), so
+  `array<int> e = []` AND the inferred `var a = []; push(a, i)` (typed
+  array<int> by the fixpoint) start flat — the whole grow-from-empty class
+  ran on general 48-byte LValues before (bench 13: 3x faster fixed). Generic `array a` /
+  `dict d` (no `<...>`) are unchanged (element inferred). See
+  `plans/typed-containers-syntax.md`.
+- **Compile-time TYPE QUERIES: `type`/`decltype` (-> `Type` object),
+  `typestr`/`kindstr` (-> string).** All four are non-const builtins with an
+  **UNEVALUATED operand** (like C++ `decltype`/`sizeof` - the arg is never
+  evaluated). `fold_type_query` (`inferencer.cpp`, run in the **check pass**
+  where types are final) recognizes the call, takes the argument's STATIC type
+  (`decltype` requires an identifier-in-scope, else `TypeMismatchEx`/
+  `WrongArgCountEx`; the others take any expression via `type_of`), and
+  **replaces `args->elems[0]`** with the folded literal: a `LiteralStr` for
+  `typestr` (`static_type_to_string`) / `kindstr` (`static_type_kind_string` -
+  the bare kind,
+  matching runtime `TypeNames`), or a baked **const `LiteralObj` Type object**
+  (`build_type_value(StaticType)`, recursive) for `type`/`decltype`. It also sets
+  **`CallExpr::tq_folded`**, so the call (which now just returns `args[0]`) is
+  **ELIDED by BOTH engines** — the VM at codegen (a `LoadConstV`/
+  `LoadLiteralObjV` of the baked literal, no builtin call), the tree-walker in
+  `CallExpr`/`DirectBuiltinCallExpr::do_eval`. The **runtime builtins run ONLY
+  for a NON-folded query** (an `Unknown`-typed arg, or `-nti`, where no fold
+  ran): both the tree-walker `func` AND the VM's `func_v` (a **dual-ABI**
+  `make_builtin_customv` registration) always build the `Type`/string from the
+  runtime VALUE (`make_runtime_type_value` - a flat Type; `reflect_typeof` for
+  the strings). The `tq_folded` FLAG - not a node `dynamic_cast<Literal>` check -
+  is what keeps this `-nti`-correct: a user's own `typestr("hi")` is a literal
+  too, so under `-nti` it must still report `"str"`, not `"hi"` (the old
+  node-check heuristic was a latent tree-walker bug, now fixed). `Type` is a
+  native composite type (`native_struct_type_def`,
+  recursive via `opt Type` elem/key/val) registered in `struct_by_name` and
+  typed by `builtin_result`. So `type(a)?.elem?.kind` works (the `opt Type`
+  elem/key/val are read with optional chaining `?.`, or narrowed with `if`);
+  `typestr(x)`/`kindstr(x)` are the cheap string forms. The arg-slot
+  rewrite (not a whole-node replacement) needs no slot-based inferencer walk
+  (`args->elems` is a direct vector). The `?`-suffix nullability format
+  (`static_type_to_string`) matches `:type` and error messages.
+- **Nullable `?` suffix, `~` short form, `null` alias.** `?` is a token
+  (`Op::questionmark`, `operators.h`) that is the canonical short form of `opt`:
+  `int? x` ≡ `opt int x`, `var? x`, `dyn? x`, `array? a`. `pAcceptDeclPrefix` is
+  a run-scanner that consumes a prefix of `{const,var,dyn,opt,?,TYPE}` ending at
+  the name — `dyn` is now a standalone decl starter (`dyn z;`, not only
+  `var dyn z`), and a leading `?`/`opt` alone is *not* a starter (needs
+  const/var/dyn/TYPE), so `int(5)`/`x = 5` stay expressions. **Param-only short
+  forms** (`pFuncParam`, rejected in body decls since they're not in
+  `pAcceptDeclPrefix`): a leading **`~`** = `dyn` (reusing the otherwise-unused
+  `Op::bnot` token), and a trailing **`?` on the name** = `opt` — so
+  `func f(x, y?, ~z?)`. `null` is a keyword (`kw_null`) the parser treats
+  identically to `none` (a `LiteralNone`). The opt flag from `?` flows through
+  the existing `pInOptDecl`/`Identifier::opt_mod` path, so inference/runtime
+  need no `?`-specific code.
+- **Errors** are compile-time (`DECL`-style plain `Exception`s, **not**
+  `RuntimeException`s, so script `try/catch` cannot catch them; `errors.h`):
+  `TypeMismatchEx` (type change / bad operator / wrong arg type / not callable),
+  `NullabilityEx` (`none`/`opt` used where a non-opt value is required),
+  `WrongArgCountEx` (arity), `DynRequiredEx` (the mandatory-`dyn` rule below),
+  `OptRequiredEx` (the mandatory-`opt` rule for params, below), `ShadowingEx`
+  (a `foreach` loop var written WITHOUT `var` that would shadow an outer
+  variable — `ForeachStmt::implicit_var`, checked in the inferencer's structural
+  pass via `lookup` of the enclosing scope; `var` is now OPTIONAL in a `foreach`
+  header and always DECLARES a fresh loop-scoped var — the old bare-name
+  reuse-an-existing-var path is gone — so `idsVarDecl` is set for both forms).
+  Each carries an interned custom message + a `Loc`.
+- **Mandatory `dyn`** (`enforce_concrete_decls`, ON by default via
+  `infer_types(strict=true)`, off under `-nti`): a plain `var`/`const` must
+  infer a *concrete* type; if its type is `dyn` it throws `DynRequiredEx`
+  demanding an explicit `dyn`/`var dyn`. Phase A (`strict_deep=false`) flags a
+  top-level `dyn` — `array<dyn>` is tolerated; Phase B (the flag) would recurse
+  into containers. Skips params (a never-called func's param is legitimately
+  `dyn`), foreach loop vars (type derived from the container), and func names.
+  Runs **after** the check pass, so a var that is `dyn` *because of* a real type
+  error surfaces that error first. See `plans/type-driven-specialization.md`.
+- **dyn-into-concrete COERCION** (a plain `var` accepts a `dyn` value). `int OP
+  dyn` is `dyn` (above), so `var s = 0; s = s + x` (x `dyn`) contributes `dyn`
+  to `s`. Rather than widen `s` to dyn (which mandatory-`dyn` would then
+  reject), a `dyn` value is **assignable to a concrete NUMERIC local** — a
+  runtime-checked COERCION: `s` keeps the type of its NON-dyn contributions and
+  the store coerces the dyn value to it (a wrong runtime type — a float into an
+  int — throws; use `int(x)` to narrow). So `var s = 0; s = s + x` keeps `s`
+  int, works iff `x` is an int at runtime. Mechanism: `contribute` records a
+  `dyn` contribution (`round_got_dyn`) but does NOT join it (the accumulator
+  collects only non-dyn contributions); `commit_round` decides — a NUMERIC
+  accumulator + a dyn contribution → keep numeric and set `coerces_dyn`
+  (sticky); a non-numeric / dyn-only var → fold the dyn back in → `dyn` →
+  `DynRequiredEx`. For a `coerces_dyn` var the inferencer STAMPS the decl
+  `Identifier::decl_type` (i/f) — so `resolve_names` propagates it and the
+  store's `coerce_to_decl_type` fires, exactly like an explicit `int s`.
+  Order-independent (the numeric-vs-dyn decision is at commit, not when the dyn
+  arrived). A FRESH `var r = 3 + d` (only a dyn contribution) correctly stays
+  `dyn` → `DynRequiredEx`; `var dyn r = 3 + d` holds the actual result.
+  (`TypeSym::{round_got_dyn,coerces_dyn,decl_id}`.)
+- **Mandatory `opt` for params** (`enforce_nonnull_params`, same gate/timing as
+  mandatory-`dyn`): a parameter that can receive `none` from *some* call path,
+  if not declared `opt`, throws `OptRequiredEx` **at the param's declaration**
+  ("declare it 'opt'", or **"'opt dyn'" for a `dyn` param** — Phase B: even dyn
+  params are null-checked). The check pass sets `TypeSym::received_optish` when
+  a possibly-none argument reaches a non-opt param (`check_call`, where the
+  nullability check now runs *before* the dyn type-escape, so it applies to dyn
+  too), and this rule turns that into the declaration-site error — so
+  nullability is *proven* (a non-opt param, dyn or not, is guaranteed never
+  `none`, body uses it without a check), not merely checked per call site. A
+  call to a function *value* (no decl to point at) still reports the old
+  per-call `NullabilityEx`. The nullability analogue of mandatory-`dyn`; see
+  `[[nullability-opt-roadmap]]`. **A dict read is non-`opt`:** `type_of` types
+  `d[k]` / `d.k` (Subscript/MemberExpr on a `Dict`) as **`V`** (the value type):
+  a missing key *throws* `KeyNotFoundEx` at runtime (or returns the default of a
+  default dict), so the read is a value or an exception, never `none`. The
+  explicit accessors are `get(d,k)` → `opt V` (nullable lookup) and `get!(d,k)`
+  → `V` (value or throw); `dict(default_value)` → `dict<dyn, typeof default>`
+  (a default dict). See the dict-access runtime notes below and
+  `[[nullability-opt-roadmap]]`.
+- **The defer-on-Unknown/None invariant (soundness of the fixpoint).** Any type
+  computation (`binop_result`, `unary_result`, `elem_of`, `type_of` of
+  Subscript/Slice/Member/CallExpr-callee, `accumulate_foreach`) that meets an
+  operand the fixpoint hasn't pinned yet — `Unknown` (bottom) **or** a transient
+  `None` (an `array(N)` element before a write pins it) — must return
+  Unknown/defer, **never `dyn`**. A premature `dyn` is sticky (it climbs the
+  lattice and never comes back) and permanently poisons a self-referential
+  accumulator (`acc = (acc+i)*3`, `s += sum(a)`, a foreach loop var). The check
+  pass re-validates genuine errors (`require_nonopt`, not-subscriptable) with
+  the final types, so deferring during accumulate hides nothing. **When
+  touching the inferencer, audit any new `return A.dyn_ty()` for this.**
+  `-dti` dumps
+  every identifier's inferred type + uses to find spurious `dyn`s. The
+  invariant also applies to *contributions*, not just return types:
+  `accumulate_call`'s `contribute_container` (for `append`/`push`/`insert`)
+  defers when the element/key type is still `Unknown` — else it would
+  contribute `array<?>`, whose **outer** kind isn't `Unknown` so `contribute`'s
+  own pinned-symbol guard wouldn't catch it, tripping a PINNED global array's
+  cross-input assignability check before a template-instance arg settles
+  (`var g=[1,2,3]; func f(x){append(g,x);} f(3)`). The invariant also covers a
+  **call to a TEMPLATE**: `type_of` of a `CallExpr` whose callee is a template
+  returns `bottom` (defer), NOT the template's `ret` — a template's `ret`
+  finalizes to `dyn` (it is never inferred in isolation), and instantiation is
+  about to redirect this call to a concrete clone whose `ret` is the real type.
+  Returning `dyn` would be sticky and survive the redirect. This is what made a
+  **cross-input** `var x = fib(10)` (calling a prior-input, *pinned* template)
+  reject with `DynRequiredEx` — `x` got the template's `dyn` before the redirect,
+  stuck — which rolled back the instance, so a REPL template first called in a
+  *later* input was left un-instantiated (unlike a script). With the defer, the
+  call settles to the clone's type and the instance is retained + optimized
+  exactly as in a script (`repl:` cross-input test).
+- **Finalization of unconstrained symbols.** An unconstrained *param* or
+  *foreach loop var* → `dyn` (could be anything); a plain local → `none`. A func
+  with an Unknown *return* → `dyn` (it returns a value that depends on
+  unconstrained inputs, e.g. a func only ever passed as a value); a func with no
+  value-returning path → `none` (it contributed `none` to `ret_acc`). An
+  unresolved identifier / callee defers to Unknown (so the enclosing var isn't
+  forced to `dyn`, and the runtime `UndefinedVariableEx` surfaces); a *builtin*
+  used as a value is genuinely `dyn`.
+- **Null narrowing** (`check_if`/`narrow_target`, check pass only): inside a
+  proven branch a nullable var reads as non-opt — `if (x != none)` / `if (x)`
+  (then), `if (x == none) ... else` (else), and the guard clause
+  `if (x == none) return/throw; ...` (rest of the block). Sound (the branch
+  guarantees non-none). Not flow-narrowed elsewhere.
+- **Const-container types are exact** (`static_type_from_value` recurses): a
+  folded
+  const array/dict is typed `array<T>`/`dict<K,V>` from its actual elements
+  (heterogeneous -> `array<dyn>`; individual elements stay exact via const-fold
+  of a constant-index access). Container element joins absorb `None`
+  (`join_elem`) so `array(N)`-then-fill stays `array<int>`, not opt-element;
+  an empty `[]` (`array<none>`) or a `dyn`-element container fits any
+  `array<T>` (`static_type_elem_compat` — invariance relaxed at the bottom/top
+  element).
+- **Interaction**: const scalars are already inlined to literals before this
+  pass runs, so it never sees them as symbols. A statically-known type error
+  that used to surface as a runtime `TypeErrorEx`/`NotCallableEx` is now a
+  compile error — to keep such an error catchable at runtime, make the value
+  `dyn`. **Not yet done** (deferred): function subtyping is arity-only;
+  cross-statement narrowing beyond the patterns above.
+
+### M8 — typed scalar specialization (`specialize_types`, the speed payoff)
+
+After inference, `infer_types` stamps a `TypeHint` (`th`: `i`/`f`) on every node
+it proved is a non-null int/float. **A `bool` node is stamped `i` too** — bool
+flows through the int (`eval_int`) path, computing as `0`/`1`, which is exactly
+its promoted value, so a typed scalar over bool operands is unboxed like int
+(the boxing in `TypedScalarExpr::do_eval`/`LiteralBool` keeps a bool where it
+must — a comparison/logical/`!` result, a bool literal — while arithmetic over
+bools correctly yields int). `Construct`/`Identifier`/`Subscript`
+`eval_int`/`eval_float` read a bool value/slot/flat element as `0`/`1`. After
+`resolve_names`, `specialize_types`
+(`inferencer.cpp`, called from `mylang.cpp` + the test harness, gated by `-nti`)
+rewrites hot scalar nodes — `Expr03/04` (arith), `Expr06/07` (compare),
+`Expr11/12` (logical), `Expr02` (unary) — over typed operands into a single
+**`TypedScalarExpr`** node (`syntax.h`). It computes via **`eval_int()` /
+`eval_float()`** — typed (unboxed) eval virtuals on `Construct` (default boxes
+through `eval()`/`RValue`, so a typed node may call them on any child) — with no
+`num_bin_op` promotion dispatch, no PMF virtual call, and no intermediate
+`EvalValue` boxing. `Identifier`/`Subscript` override `eval_int`/`eval_float`
+to read a resolved-local slot / an array element's scalar directly
+(`EvalValue::get_ref<T>()` avoids a refcount bump); loop/if conditions take the
+unboxed path via `eval_cond` when the condition is a known int (a comparison
+result is bool-typed but specialized with `result_th = i`, so conditions stay
+fast). The specializer
+recurses bottom-up so nested typed subtrees chain `eval_int` calls with no
+boxing between them. **Effect:** ~2.8x on `bench/44_primes_sqrt`, ~2x on
+float-heavy reductions; the once-slower-than-Python primes benchmark is now
+faster. `th` is copied by `copy_base_fields` (clones/inliner preserve it), and
+the typed eval's `get<int_type>()` throws `TypeError` if inference were ever
+wrong (a safety net, not silent corruption). See `plans/type-inference.md` M8.
+**A base template's body is NOT specialized** (`FuncDeclStmt::is_template`,
+skipped in `specialize_types`): it is a monomorphization shell, cloned per
+signature (each clone specialized separately) and run boxed for indirect
+dispatch — specializing it would corrupt a different-signature clone (a float
+instance's `eval_int` on a float param). `type_of` learned the `TypedScalarExpr`
+case (a REPL retains a post-specialization body a later-input clone re-enters
+inference on) — a defensive robustness fix (the inliner already handles
+cross-input `TypedScalarExpr`).
+
+**Counted-loop specialization (`ForRangeStmt`).** Also in `specialize_types`
+(via `try_for_range`, run on the RAW `for` before its cond/inc are specialized),
+the four hottest loop shapes are rewritten to a dedicated `ForRangeStmt`
+(`syntax.h`): `for (var i = start; i </<= bound; i += step)` and
+`for (var i = start; i >=/> bound; i -= step)` (the comparison `Op` is kept in
+`cmp_op`) — matched when `i` is a resolved **int slot** (`sym.kind == local`,
+`th == i`), the comparison/step directions agree (`<`/`<=` with `+`, `>=`/`>`
+with `-`), and `bound`/`step` are **loop-immutable** (`fr_immutable`): a
+side-effect-free **int** expr built from literals, slotted-local ids,
+arith/bitwise chains, subscript/member READs, and **pure calls with immutable
+args** — a **const builtin** (`len(arr)`), or an **effectively-pure USER
+function** (`fr_is_pure_func`, from `g_fr_pure` — this program's
+`effective_pure` funcs plus, in the REPL, prior inputs' via `prior_scope`), with
+any immutable args including containers (`compute(arr)`). This is sound because
+**`pure` forbids mutating a reference parameter** (see *Pure functions* below /
+`func_mutates_input`): a pure call has no side effects and, given immutable
+args, the same result every iteration, so it is safe to evaluate once.
+Immutability is proven against two sets from `fr_collect_mutated` (which reuses
+the complete `Inferencer::for_each_child` so no write is missed): **`mut_len`**
+(an id whose value/length/identity may change — a direct reassign/`++`, or an
+*impure* call passed the container, since a mylang array/dict/struct is a
+reference an impure callee can `append`/mutate) and **`mut_content`**
+(additionally an `arr[i] =`/`obj.f =` element write). A bare id / `len(arr)` arg
+needs length-stability (`∉ mut_len`) — so the common fill
+`for(i;i<len(a);i++) a[i]=…` still specializes (an element write doesn't change
+the length); a subscript READ `arr[k]` additionally needs `∉ mut_content`. A
+*pure* call taints nothing (it can't mutate its args); an *impure* call taints
+the length and content of each non-scalar arg. `ForRangeStmt::do_eval`
+evaluates `bound`/`step` **once** (cached as raw `int_type`), then the
+per-iteration condition test and increment are plain C on the slot's
+`int_type` — no expression eval, no `num_bin_op`, no `TypedScalarExpr` dispatch
+(the body still gets M8). `step` is null for the `i++`/`i--` form. The slot is
+re-fetched each iteration so a body that reassigns `i` is honored;
+break/continue/return go through the same `FlowState` as `ForStmt`. **Effect:**
+~10% on the bench geomean (0.61x→0.55x). Cross-input guard: a prior REPL body
+is post-specialization and may hold a `ForRangeStmt` whose `i_slot` the
+inliner's substitution / tail re-resolution would not remap, so the inliner's
+cross-input registration **skips** a prior function containing one
+(`has_for_range`) — it still runs correctly as a call. coderender renders it as
+the equivalent `for (...) /* counted */` so `:show`/`-a` make the optimization
+visible. **Not yet specialized:** a pure-user-func bound with a *container* arg
+(would need to prove the callee doesn't mutate it), and a float loop var.
+
+### Function templates (monomorphization)
+
+**VALUE-USED templates instantiate too (plans/value-template-
+instantiation.md).** A template stored in a container/var and called
+INDIRECTLY (`ops = [add_op, sub_op]; fn = ops[i%2]; fn(st, i)`) gets a
+typed instance when every such call agrees on ONE settled signature: the
+`Func` StaticType carries a **finfo set** (`StaticType::finfos`, seeded
+by `func_static_type` for a template, UNIONED by `join`, copied by
+`with_opt` - metadata, never part of equal/assignable), which rides the
+ordinary lattice through array/dict elements and var joins, so each
+indirect call's callee type names its candidate templates with no new
+dataflow machinery. `value_instantiate_round` (run beside
+`instantiate_round`) checks per-template UNIFORMITY over the attributed
+sites, makes the instance through the ordinary clone machinery
+(`tmpl_cache`/`make_template_clone` - same `$N` naming/display_name),
+REDIRECTS every value-use Identifier IN PLACE (uid + id_sym rebind), and
+seeds the clone's params with the signature each fixpoint round (a
+phantom call - no direct call feeds them). **ESCAPES disable it**
+(`FuncInfo::value_escaped`): a join that DROPS the finfo set (collapse
+to dyn / conflict - recorded in the arena's `escaped_finfos` ledger,
+drained per round), an ARG-position value use (any call/builtin arg -
+`map(f, ...)`, `runtime(f)`), or a capture-list use - an untracked call
+site could reach the typed instance with a mismatched signature, so an
+escaped template keeps its boxed base (sound, as before). Non-uniform
+signatures across sites → no instantiation. All value uses redirect to
+ONE instance, so `ops[0] == add_op` identities hold. v1 is INPUT-LOCAL
+in the REPL (a prior input's array called later keeps the base -
+correct, unoptimized; pinned by a `repl:` test). This closed the last
+CPython-losing bench (76_funcval_dispatch 1.05-1.12x → **0.68x**; its
+callee bodies 6 boxed ops → 4 typed).
+
+
+
+A **named** function with ≥1 *template param* — un-annotated, non-`dyn`,
+non-`opt` — is a **template** (`FuncInfo::is_template`, set in
+`declare_funcdecl`): not type-checked in isolation, but **instantiated per
+call-site signature** as a typed clone the ordinary concrete-function path
+handles. So `func f(x){var t=x+1; return t;}` never needs `var dyn t`, a
+never-called template never errors, and `f(1); f("s")` makes two instances not a
+type conflict. `dyn` is the explicit one-instance-any-type param. Full design +
+deferrals: `plans/function-templates.md`.
+
+**`opt`/typed params coexist with template params** and just `join` within each
+clone — the signature is keyed by the *template params only*. So `func f(a, opt
+b)` is a template over `a` (`b` joins; arity in `instantiate_round` is the
+`[min,nparams]` range). `func f(opt x)` with no template param keeps the join
+model. **A var-bound lambda** (`var id = func(x)=>x`) becomes a template iff it
+is non-capturing and the var is **write-once + calls-only** (`mark_lambda_
+templates`, after the structural pass, using per-symbol `writes`/`value_used`
+bookkeeping — the decl write is counted in `walk_struct`, not `declare_target`,
+which runs twice via hoist); a value-used / capturing / reassigned lambda stays
+join. **D4:** past 64 instantiations a template's further calls run dynamically
+(`tmpl_inst_count`, a one-time stderr warning).
+
+Mechanism (`inferencer.cpp`): the fixpoint and check pass **skip** an
+un-instantiated template (`accumulate`/`accumulate_call`/`check`/`check_call`
+test `is_template`); an outer loop in `infer_one`, between the main fixpoint and
+finalize, runs `instantiate_round` — for each template call whose arg types have
+settled, it gets-or-makes the instance for that `(template, signature)`
+(`make_template_clone`: a `<name>$N` id - the user name plus a per-name
+monotonic counter, so it is readable AND inspectable, `typeof(f$0)`; with
+`display_name` keeping the original for backtraces -
+`walk_struct`'d, `is_template=false`, inserted at the root block's front),
+**redirects** the call to it, and re-runs the fixpoint; the clone's params
+accumulate their one signature through the concrete path. Arity is still checked
+for a template call; per-arg type/nullability is checked inside each clone.
+**The `(template, signature)` cache (`tmpl_cache`) is SESSION-persistent, NOT
+cleared per input** — a signature already instantiated by a prior input
+**reuses** that instance instead of building a duplicate (`f(2,3)` then `f(2,3)`
+again in a later input both run `f$0`, not `f$0` then `f$1`). To stay
+clear of the node-identity hazard below, the cache is keyed by the stable
+`template_sig_key` (the template's arena-stable `FuncInfo*` + the signature's
+type strings) and **valued by the instance's interned NAME** (a `UniqueId *`,
+never a node pointer); the redirect resolves that name in the global scope
+(`global->syms`, whose `TypeSym`/`FuncInfo` are pinned), so a prior input's
+instance is reached by name, not by a stale node. `infer_input` snapshots the
+cache and restores it if the input is rejected (so a rolled-back clone leaves no
+entry); the clone-name counter stays monotonic. **Subtlety:** `id_sym`/
+`func_of_decl` are keyed by node POINTER and
+persist for the session, so a fresh input node can reuse a freed node's address
+— `walk_struct` therefore **always re-resolves** an identifier (never
+`if (!id_sym.count(id))`, which would keep a stale entry and bind an input's
+callee to a prior clone), and `make_template_clone` clears the clone subtree's
+`id_sym`/`func_of_decl`. (This was an MSVC-only, address-dependent,
+non-deterministic bug, root-caused via CI instrumentation; GCC/clang +
+sanitizers never reproduced it.)
+
+## The value & type model (the subtle part)
+
+- **`EvalValue`** (`evalvalue.h`) is a hand-rolled tagged union: a `ValueU`
+  union plus a `Type *type`
+  tag. It deliberately avoids `std::variant` — the comment in `flatval.h`
+  records that `std::variant`
+  made the whole interpreter ~50% slower on a simple loop. `size_type` is
+  `uint32_t` (not `size_t`)
+  specifically to keep `EvalValue` small and fast to copy.
+- **`FlatVal<T>`** (`flatval.h`) is an `alignas(T) char[sizeof(T)]` buffer with
+  placement-new ctors.
+  It's what lets non-trivial C++ objects (`SharedStr`, `shared_ptr<…>`,
+  `SharedArrayObj`) live inside
+  the union. Because a union can't run their ctors/dtors, `EvalValue`'s
+  copy/move/destroy route
+  through **type-erased ops** (`TypeErasureOps` in `type.h`:
+  `default_ctor`/`dtor`/`copy_ctor`/
+  `move_ctor`/`copy_assign`/`move_assign`), which `TypeImpl<T>` (in
+  `evaltypes.cpp.h`) implements via
+  placement-new + `reinterpret_cast`.
+- **`Type`** is a polymorphic operations table, **one singleton per kind**, held
+  in the global
+  `AllTypes` array (`types.cpp`) indexed by the `Type::TypeE` enum (`type.h`).
+  Every operation —
+  `add`, `sub`, `mul`, `lt`, `eq`, `is_true`, `to_string`, `len`, `subscript`,
+  `slice`, `clone`,
+  `hash`, `use_count`, `intptr`, … — is a `virtual` on `TypeTemplate` dispatched
+  through the value's
+  `type` pointer. The base implementations throw `TypeErrorEx`; a type "gains" a
+  behavior purely by
+  overriding the relevant virtual (see `src/types/int.cpp.h` for the canonical
+  example). Binary ops
+  **mutate the left operand in place**
+  (`void add(EvalValue &a, const EvalValue &b)` does `a += b`).
+- **`to_string` vs `to_string_repr`.** `to_string` is the plain conversion
+  (`print`/`str` of a bare value: a string renders unquoted). `to_string_repr`
+  (`type.h`, default == `to_string`) is the **repr** form used when a value is
+  rendered *inside a container* and by the REPL `=>` echo: only `TypeStr`
+  overrides it, returning the **quoted + escaped** literal (`quote_str` in
+  `str.cpp.h`, the inverse of `unescape_str`). So `TypeArr`/`TypeDict`/
+  `TypeStruct::to_string` call `elem.to_string_repr()` on their elements/keys/
+  values — `["a", 1]`, `{"k": "v"}`, `P(name: "bob")` — matching how Python
+  prints a list (a container's *own* repr is just its `to_string`, which already
+  quotes its elements). The REPL echoes the top-level value via `to_string_repr`
+  too, so a bare string echoes `=> "hello"` (IRB-style); `print`/`str` of a bare
+  string stay unquoted.
+- **`pretty` (REPL multi-line echo).** A third `Type` virtual
+  (`pretty(a, indent, width)`, default == `to_string_repr`): a container whose
+  single-line repr would overflow `width` from column `indent` is **expanded one
+  element per line, indented, recursively**; anything that fits stays on one
+  line. Only `TypeArr`/`TypeDict`/`TypeStruct` override it (each iterates its own
+  elements and recurses via `EvalValue::pretty`). A dict/struct passes each
+  *value's* actual start column (`indent + key + ": "`) as the child indent, so a
+  nested value's fit check is accurate and its closing bracket lines up under the
+  opening one. Used ONLY by the REPL `=>` echo (`r.pretty(3, ...)`, then
+  `show_colorize` colors it line-by-line when color is on); `print`/`str` are
+  unaffected. A small value still echoes on one line.
+- **`bool` is a real scalar type (`t_bool`, `TypeBool` in
+  `src/types/bool.cpp.h`).** `true`/`false` are its only two values (parsed to
+  `LiteralBool`, `syntax.h`). It is stored in `EvalValue`'s `bval` union member
+  (which aliases `ival`'s low byte; the `EvalValue(bool)` ctor zeroes the full
+  `ival` first, so reading the slot as the int `0`/`1` is also valid). `bool`
+  sits at the bottom of the numeric promotion chain **`bool <= int <= float`**:
+  `num_bin_op` promotes a bool operand to `int 0/1` before dispatch, so
+  `TypeBool` itself only implements `is_true`/`to_string`/`hash` (the hash
+  matches the equal int `0/1`, so `true` and `1` are one dict key). Comparisons
+  (`Expr06`/`Expr07`), logical ops (`Expr11`/`Expr12`, via `logop_loc`), and
+  unary `!`/`-`/`+` produce a `bool` (`-true`/`+true` promote to int first); the
+  `EvalValue` comparison operators read the result via `is_true()`, **not**
+  `get<int_type>()` (a comparison result may now be a bool — `TypeArr::noteq`
+  was the one internal consumer that had to switch). `MakeConstructFromConstVal`
+  and `value_repr` (specialization-dedup key) handle bool. Bool-returning
+  predicate builtins (`defined`/`isconst`/`isconstdecl`/`ispure`/`ispuredecl`/
+  `startswith`/`endswith`/`isinf`/`isfinite`/`isnormal`/`isnan`) return a real
+  bool; `int()`/`float()` accept a bool.
+- **Mixed int/float promotion is centralized in `num_bin_op()`**
+  (`evalvalue.h`), not in the type
+  classes. The type virtuals are single-type: `TypeInt::add` only handles an int
+  RHS, `TypeFloat::add`
+  also accepts an int RHS (promoting it). `num_bin_op(a, b, &Type::op)` is the
+  dispatch chokepoint:
+  it first promotes a **bool** operand (either side) to `int 0/1`, then, when
+  `a` is int and `b` is float, promotes `a` to float, so `int OP float` lands in
+  `TypeFloat` and behaves identically to `float OP int` (and `bool OP x` like
+  `int OP x`). **Dispatch binary
+  arithmetic/comparison
+  through `num_bin_op`, never by calling `a.get_type()->add(...)` directly** —
+  every call site does
+  (the `ExprNN::do_eval` ladder and compound-assign in `eval.cpp`, `EvalValue`'s
+  `== != < <= > >=`
+  operators, `builtin_sum`). It is a no-op for any non-`(bool/int,float)`
+  operand pair, so string/array/etc.
+  comparisons pass through unchanged. (Logical `&&`/`||` and unary ops are *not*
+  routed through it.)
+  Note for dict keys: an integer-valued float hashes as the equal int
+  (`TypeFloat::hash`) so that
+  `1` and `1.0`, which compare equal, are the same key.
+- **The trivial / non-trivial boundary is `t_str`.** `TypeE` order matters:
+  `t_none, t_lval, t_undefid, t_int, t_builtin, t_float, t_bool` (`< t_str`,
+  trivial, stored inline,
+  bit-copyable) then `t_str, t_func, t_arr, t_ex, t_dict` (`>= t_str`,
+  non-trivial, need the
+  type-erased lifecycle ops). Hot paths branch on `type->t < Type::t_str` /
+  `>= Type::t_str` (e.g.
+  `EvalValue::clone()` short-circuits for trivial types). If you add a type, its
+  position relative to
+  `t_str` decides which machinery applies.
+- `t_lval` and `t_undefid` are **internal pseudo-types**, never visible to
+  scripts (blank entries in
+  `TypeNames`). They tag the two special `EvalValue` payloads below.
+- **`LValue`** (`evalvalue.h`) = an assignable slot: an `EvalValue` + `is_const`
+  flag + an optional
+  back-pointer (`container`, `container_idx`) used when the slot is an *element
+  of an array* (needed
+  for copy-on-write, below).
+- **`RValue(v)`** collapses an `EvalValue` holding an `LValue *` down to the
+  contained value, and
+  throws `UndefinedVariableEx` if it holds an `UndefinedId`. Builtins and
+  operators call `RValue(...)`
+  on every operand. `Identifier::do_eval` returns an `EvalValue` wrapping
+  `LValue *` when the symbol
+  is found (walking the parent chain), else an `UndefinedId{name}` sentinel —
+  *not* an immediate
+  error, which is what lets `defined()` and declaration-vs-assignment logic
+  work.
+- **`EvalContext`** (`eval.h`) is a lexical scope:
+  `map<const UniqueId *, LValue>` + `parent` pointer
+  + `const_ctx`/`func_ctx` flags. The root context auto-loads `const_builtins`
+    (always) and `builtins`
+  (only when not a const ctx). A `Block` evaluates in a fresh child
+  `EvalContext` — **except** a `scope_free` block (the resolver sets the flag
+  when every declaration in it is a frame slot: no capture, nested-func name, or
+  slot-budget overflow), which never touches the map and so runs its statements
+  directly in the parent context, skipping the per-entry `EvalContext`
+  build/teardown (a measurable win for loop/if/function bodies, re-entered every
+  iteration/call). The root block always builds its context.
+- **Slot resolution (`resolver.cpp`) bypasses the map for resolved locals.**
+  The post-parse `resolve_names()` pass assigns slot indices so an
+  `Identifier::do_eval` for a resolved local is an O(1) read of
+  `EvalContext::frame->slots[slot]` instead of the `map`+parent-chain walk. A
+  call's `Frame` (an inline slot buffer + heap spill past 8 — just
+  default-constructed slots, **no liveness bitmask**, so **no 64-slot limit**)
+  is created in `do_func_call` when `FuncDeclStmt::resolved`, and
+  for the program's implicit "main" by `Block::do_eval` on the root block;
+  nested blocks inherit the `frame` pointer.
+  **Slotted: a function's params and its locals** (`var`/`const`, `for`-init,
+  `foreach`, `catch` variables) **and top-level variables a function does NOT
+  read** (`SymKind::local`, the current call's `frame`), **plus top-level
+  FUNCTION names and every top-level variable a function DOES read**
+  (`SymKind::global`, the program-wide global table — see next bullet), **plus a
+  closure's captured variables** (`SymKind::capture`, the closure's per-instance
+  vector — see *capture slotting* below), **plus builtins not shadowed by a user
+  symbol** (`SymKind::builtin`, the program-wide builtin table — see *builtin
+  slotting* below). So *every* name a script resolves — local, global, function,
+  capture, or builtin — is an O(1) slot, never a scope-chain map walk; the
+  resolver's pass 1 collects the names functions read (`escaped`) and pass 2
+  routes an escaped top-level var into the global table rather than a main-frame
+  slot. **Not slotted (stay in the map):** REPL top-level names (open-world
+  redefinition) and anything genuinely unresolved (a truly-undefined name → the
+  runtime map → `UndefinedVariableEx`; the map fallback keeps the pass purely an
+  optimization). The resolver does a forward
+  lexical walk (no hoisting **for locals**, so `var x = x + 1` reads the outer
+  `x`; top-level *functions* ARE hoisted — see next bullet). **No per-slot
+  liveness**: a slot is default-constructed when the `Frame` is built, and a
+  local can only *resolve* to its slot AFTER its decl (forward resolution), so a
+  re-entered loop body re-binds its locals via their decls (which re-run each
+  iteration) and a use-before-decl resolves to an outer binding or errors via
+  the map — the slot's stale value is never observed. (This is why there is no
+  script `undef`: removing a binding would need per-slot definedness; the REPL's
+  `:undef` works on its map-resident globals instead.) Same-block duplicate
+  declarations are caught here (`AlreadyDefinedEx`) so the runtime decl path can
+  just overwrite. `Identifier::sym` and `FuncDeclStmt::{resolved, frame_size,
+  slot_writes}` carry the results; `slot_writes` (per-slot write counts:
+  write-once == 1 for a local, 0 for a never-reassigned param) is what the
+  auto-const folder uses to find promotable write-once vars (see the
+  const-evaluation section). The const-eval path runs before resolution, so pure
+  funcs invoked at parse time use the map (`resolved` is still false then).
+  **Slots also bypass the map on the WRITE side:** `handle_single_expr14`
+  (`eval.cpp`) fast-paths an assignment / compound-assignment to a resolved,
+  live, non-const local — it read-modify-writes `frame->slots[slot]` in place,
+  skipping the `lvalue->eval()` → `LValue*` → `doAssign()` round-trip (it falls
+  through to that general path when the slot is undefined or const, so the same
+  errors still fire). When both the slot and the rhs are ints, a
+  compound-assign (`+=`/`-=`/`*=`) does the op **directly** on the slot's int —
+  no `num_bin_op` PMF dispatch, no copy in/out (`div`/`mod` stay general, for
+  the zero check). And `Expr14::do_eval` has a sibling fast path for `local
+  += N` with an **int-literal** rhs: it skips evaluating the literal node too
+  (what an `i++` would compile to — there is no `++` operator). The literal is
+  recognized by a cheap `is_lit_int()` tag check (`ConstructType::lit_int`),
+  **not** a `dynamic_cast` — this path runs on every `i += 1`, so an RTTI
+  lookup there is a measurable tax (it dominated tight `while`/`for` loops).
+  `foreach` binds a resolved-local loop var the same way via `bind_loop_var`.
+  All use `as_resolved_local`, a cheap `is_id()` tag check (`ConstructType::id`),
+  not a `dynamic_cast`.
+- **Top-level functions AND escaped variables are slotted in a GLOBAL table
+  (`SymKind::global`).** A global symbol can't be a *frame* slot — a function
+  body runs parented to its definition scope (`capture_ctx` → root), not the
+  call site, so a global reference from deep in a recursion isn't in the current
+  `frame`. Instead each top-level function AND each top-level variable some
+  function reads gets a static slot in a program-wide **`GlobalFuncTable`**
+  (`eval.h`: a plain `vector<LValue> slots` + a `defined` flags vector + a
+  slot→name list for reflection — despite the name, it holds global *variables*
+  too), reachable from any call depth via `EvalContext::gfuncs` (inherited from
+  the parent; the root block owns the table). So `fib`/mutual-recursion/any
+  named-function call AND any function's read/write of a global variable is an
+  **O(1) table read, not a scope-chain map walk** — a real win on call-heavy and
+  global-heavy code (`bench/09_fib`). A plain vector with **no slot limit** — a
+  program may have any number of global functions/variables. The resolver
+  **hoists functions AND top-level structs** before resolving bodies
+  (`hoist_global_funcs` handles both; a struct name binds its descriptor in a
+  global slot like a func — so `P(...)`/`P.CONST` are O(1) slot reads, not a map
+  walk), so a forward / mutually-recursive reference resolves; for **variables**
+  it instead
+  records each function-side use site (`escaped_refs`) during pass 1 and stamps
+  it `SymKind::global` after pass 2 has given the var its table slot (a var, not
+  hoisted, gets its slot when its decl is walked). `resolve_ref` resolves a
+  reference innermost-out (a closure's capture scope is searched before the
+  global table, so a capture shadows a same-named global). A slot is `defined`
+  only once its decl executes (a function by
+  `FuncDeclStmt::do_eval`, a variable by `handle_single_expr14`'s global-decl
+  branch), so a reference reaching a symbol before its definition runs reads
+  "undefined" (same as the old map late-binding); `Identifier::do_eval`/
+  `eval_int`/`eval_float` read the slot, the assignment fast paths in
+  `handle_single_expr14` write it, and `globals()` enumerates the table's names.
+  **A top-level var is global only if a function reads it AND it's in the
+  OUTERMOST main scope** — a main nested-block local that merely shares a name
+  with a global stays a frame slot (a function is parented to root, so it can
+  only read an outermost top-level var); such a nested var legitimately shadows
+  the global. A non-escaped top-level var stays a main-frame `SymKind::local`
+  slot, so **auto-const (which only sees frame slots) is untouched** — only vars
+  no function reads are promotable, exactly as before. **Top-level STRUCT names
+  are hoisted into the global table too** (`hoist_global_funcs` handles both
+  `FuncDeclStmt` and `StructDeclStmt`): a struct is a non-capturing named decl
+  visible from any function body, so its name binds its type descriptor in a
+  global slot exactly like a function (`StructDeclStmt::do_eval` writes the slot
+  when `id->sym.kind == global`), and `P(...)`/`P.CONST` resolve to it — no map.
+  **Non-top-level named decls are SCOPED global slots
+  (`hoist_scoped_decls`).** A non-capturing function or struct declared inside a
+  block (nested in a function body, an `if`/`for`/`{ }`) is *effectively global*
+  (it closes over nothing), so it gets a real global-table slot — but via
+  `add_anon_global_slot` (appended to `global_names` for the table size, **NOT**
+  entered into `global_func_slots`) and registered **only in its lexical scope**.
+  So it is **block-scoped** (resolvable just within that block, popped with it)
+  and two same-named nested decls in sibling scopes get **distinct slots** and
+  never collide. The block handler pre-scans and hoists these into the scope
+  *before* walking the block's statements, so a forward/mutual reference within
+  the block resolves. This makes nested functions/structs lexically scoped like
+  variables (a script-visible change: a func in an `if`-block is no longer
+  visible after it — previously only TOP-LEVEL block funcs leaked; function-
+  nested ones already didn't). A **capturing** named func is excluded (it closes
+  over locals, so it is the enclosing scope's local via `declare_masking`, as
+  before) — though NOTE that the grammar rejects a capture list on a NAMED
+  func everywhere (`func f[x]()` is a SyntaxError; captures are for closure
+  EXPRESSIONS only), so that exclusion is dead in practice.
+  **Known limitation (pre-existing):** mutual recursion between *sibling
+  nested* functions doesn't resolve (each function's body resolves in its own
+  scope stack, which doesn't see the enclosing scope's scoped globals) — it was
+  already broken (a runtime `UndefinedVariableEx`), and stays so.
+  **FIXED CRASH (2026-07-14, `pWrapDeclBody` in parser.cpp):** a func (or
+  struct) decl as a **BRACE-LESS** `if`/loop body — `if (c) func g() => 1;`,
+  `while (i < 1) func g() => 1;` — ABORTED the tree-walker:
+  `hoist_scoped_decls` only pre-scans **Block** statement lists, so a
+  bare-statement body's decl was never hoisted to a scoped global; it fell to
+  `declare_masking` (a local map entry) and `FuncDeclStmt::do_eval`'s
+  `ctx->emplace` tripped the asserted-EMPTY script map
+  (`in_const_eval() || repl_mode`). The fix is a **TARGETED parser
+  normalization**: `pWrapDeclBody` wraps a brace-less body in a synthetic
+  single-statement `Block` **only when it is a func/struct decl** (the
+  crashing shapes, which nothing could have depended on). It is deliberately
+  NOT the blanket wrap first proposed, because a brace-less body **decl LEAKS
+  into the enclosing scope by long-standing behavior** — `if (c) var x = 5;
+  print(x)` prints 5, `if (c) const K = 7;` keeps `K` visible, a `while`-body
+  `var` too (all verified + pinned by tests) — and a blanket wrap would have
+  silently broken that. Two more preserved subtleties: the `if` applies the
+  wrap only to the RUNTIME statement, so a const-folded
+  `if (true) func g() => 1;` still folds to the bare decl (the feature-flag
+  pattern keeps `g` in the enclosing scope); and a PURE expr-bodied `g` is
+  const-folded/inlined at its call sites regardless of scope (a pre-existing
+  fold-vs-scope quirk, identical in both engines — the block-scoping tests
+  must use an IMPURE func). With the masked route gone, a SCRIPT's named
+  func/struct decl ALWAYS has a global slot — the VM codegen's `gen_stmt`
+  now `ML_CHECK`s that invariant instead of falling back.
+  **Scope, still map-bound:** lambdas (anonymous — no name binding; their
+  params/locals ARE slotted) and, in the **REPL** (top-level names stay
+  redefinable), all top-level names; template-instance clones, inserted before
+  resolve_names, ARE hoisted. **Optimizer-inserted `name$sN` specialization
+  clones**, though created *after* the hoist, are ALSO given a global slot in
+  SCRIPT mode (the Inliner appends the clone name to the root block's
+  `global_func_names` and stamps the clone decl + the redirected call's callee as
+  `SymKind::global`) — so a specialized call is an O(1) slot read, not a map
+  walk. In the REPL (no global table) a spec clone stays map-resident.
+- **The script runtime symbols map is EMPTY (asserted).** Once const-evaluation
+  finishes, a SCRIPT (not the REPL) has 100% of its names slotted (locals/
+  globals/captures/builtins/spec clones/structs/nested decls), so the runtime
+  `EvalContext::symbols` map is never a resolution fallback. The script root
+  therefore loads **no** builtins into the map (they are `SymKind::builtin`
+  slots); only a const-eval root (`const_builtins`, for parse-time folding) and
+  the REPL (both, open-world) populate it. `EvalContext::repl_mode` (a new
+  inherited flag, set on the REPL runtime root) distinguishes the REPL. The
+  invariant is enforced: `emplace` asserts `in_const_eval() || repl_mode`, and
+  `lookup` asserts `in_const_eval() || repl_mode || symbols.empty()` —
+  `in_const_eval()` walks the parent chain for a `const_ctx` ancestor, because
+  AutoConst folds pure functions in throwaway non-const args contexts whose ROOT
+  is the const `cctx` (so a struct/func decl inside a folded body legitimately
+  emplaces into a discarded map). A genuinely-undefined name at runtime reaches
+  `lookup` on an empty map → `UndefinedId` → `UndefinedVariableEx`, as before.
+- **Captured variables are slotted (`SymKind::capture`).** A closure's explicit
+  `[x,y]` capture list is snapshot into a per-instance `vector<LValue>`
+  **`FuncObject::capture_slots`** at closure creation (`func.cpp.h`), in
+  declaration order; a body reference to a captured name resolves to
+  `SymKind::capture` + its index there, read/written via **`EvalContext::
+  captures`** (the called closure's vector, set in `do_func_call`, inherited by
+  nested blocks) — an O(1) slot, **no map walk**. This storage lives in the
+  `FuncObject`, NOT the per-call `Frame`, because a mutable-by-value capture
+  must **persist across calls** to the same closure (a counter) — captures are
+  per-closure-instance, not per-invocation; the per-call Frame would reset them.
+  The resolver gives each function a **capture scope** (outermost, so a param
+  shadows a same-named capture) with `SymKind::capture` indices in a slot space
+  separate from the frame's `next_slot` (`process_function`). Capture indices
+  match the ctor's fill order, so a nested capture chain
+  (`func[a]{func[a,b]{…}}`) resolves correctly — the inner's capture-list entry
+  reads the middle's capture/param slot, snapshot into the inner's capture slot.
+  `Identifier::do_eval`/`eval_int`/`eval_float` read a capture slot;
+  `handle_single_expr14` writes it (the shared `slot_rmw` helper backs the local
+  / global / capture assignment fast paths). `clone()` of a capturing
+  `FuncObject` deep-copies `capture_slots` (independent per clone); a
+  non-capturing one clones to itself (the `capture_slots.empty()` check in
+  `TypeFunc::clone`). `capture_ctx` survives only as the empty linking context
+  that parents the body's args-context to root (for `gfuncs` + the builtins
+  map).
+- **Builtins are slotted (`SymKind::builtin`).** A builtin reference the
+  resolver couldn't shadow with a user symbol resolves to `SymKind::builtin`
+  plus an index into the program-wide **builtin table** (`builtin_slot`,
+  `types.cpp`: a flat `vector<LValue>` built once from `const_builtins` +
+  `builtins`), read by
+  `Identifier::do_eval` — an O(1) slot, **no scope-chain map walk for `print`,
+  `len`, `max`, …**. With this, a compiled script's runtime `EvalContext::
+  symbols` map is **empty and never a resolution path** (asserted — see *The
+  script runtime symbols map is EMPTY* above): the map is populated only by the
+  REPL (open-world redefinition) and the parse-time const-evaluator (which runs
+  before slots exist). A genuinely-undefined name reaches `lookup` on an empty
+  map and surfaces `UndefinedVariableEx`. **A user symbol always wins** — the resolver checks scopes (local/param/capture)
+  then the global table (user functions + escaped vars) BEFORE the builtin
+  table, so a `func len(x)` shadow resolves to `SymKind::global` and the builtin
+  is unreachable by name (`var <builtin>` for a *const* builtin is still a
+  parse-time `CannotRebindBuiltinEx` via the parser's `declExprCheckId`,
+  untouched). Builtin resolution for a function-body name is **deferred** to
+  post-pass-2 alongside escaped-ref stamping (`stamp_builtin`), because a user
+  `var print` read by a function (vars aren't hoisted) must still win — a user
+  global, else a builtin, else the map. Table entries are forced **is_const**,
+  so an `aBuiltin = x` assignment to an unshadowed builtin still raises
+  `CannotRebindBuiltinEx` and the shared singleton table can't be corrupted
+  (it outlives any one program, e.g. across `-rt` tests). **Const-context
+  subtlety:** in a const-eval context (`AutoConst` / the inliner's `refold`,
+  both `cctx(nullptr, true)`) `do_eval` makes a SymKind::builtin read return
+  `UndefinedId` for a *runtime* builtin (only `const_builtins` are visible
+  there, mirroring the const `EvalContext`) — so an `append()`/`print()` call
+  stays unfoldable (those passes catch the resulting `UndefinedVariableEx` to
+  keep it a runtime call); without this an `append(const_arr, …)` would be
+  wrongly evaluated at compile time. Not used in the REPL (builtins stay
+  map-resident, so they remain redefinable).
+- **`UniqueId`** (`uniqueid.h`) interns identifier strings in a global
+  `std::set`; symbols are keyed
+  by the interned *pointer*, so lookup is pointer comparison. (Global mutable
+  state lives in
+  `types.cpp`: `UniqueId::unique_set`, `EvalContext::builtins`, `AllTypes`,
+  `empty_str/empty_arr/none`.)
+
+## Evaluation specifics worth knowing before editing `eval.cpp`
+
+- **`return`/`break`/`continue` are signaled via `FlowState`, NOT C++
+  exceptions.** Each
+  `EvalContext` carries a `FlowState *flow` (`eval.h`) pointing at one
+  `FlowState` (a `type` enum + an `EvalValue value`) per *function invocation*:
+  function-boundary contexts (`func_ctx`) and the root own theirs, nested
+  blocks/loops inherit the parent's pointer (so a fresh one per call —
+  recursion never shares).
+  `BreakStmt`/`ContinueStmt`/`ReturnStmt::do_eval` just set `ctx->flow->type`
+  (and `->value` for ret)
+  and return; `Block::do_eval` stops its statement loop the moment
+  `flow->type != none`; the loop
+  evaluators (`While`/`For`/`Foreach::do_iter`) consume `brk`/`cont` (resetting
+  to `none`, with `for`
+  still running its `inc` on `cont`) and let `ret` pass through; `do_func_call`
+  reads `flow` after the
+  body and returns `flow->value`. `finally` (the scope guard in
+  `TryCatchStmt::do_eval`) *suspends* an
+  in-flight signal around the finally body, then resumes it (unless finally
+  raises its own). This
+  replaced exception-based control flow because a C++ `throw` costs ~1.6µs here
+  (heap alloc + DWARF
+  unwinding, irreducible by build flags) and `return` fires constantly — see
+  `bench/` for the ~9×
+  speedup on recursion. **Only genuinely exceptional control flow still throws
+  C++ exceptions:**
+  runtime errors (`RuntimeException` subclasses), user `throw`
+  (`ExceptionObject`), and `rethrow`
+  (`RethrowEx`, defined locally in `eval.cpp`) — caught by
+  `do_catch`/`TryCatchStmt`.
+- **`Construct::eval()` wraps `do_eval()`** to attach the node's source `Loc` to
+  any in-flight
+  `Exception` that doesn't already carry one — this is how runtime errors get
+  pointed at source.
+  Override `do_eval`, not `eval`.
+- **Function call scoping is lexical/closure-based, and the call model is
+  AST-FREE.** `do_func_call` binds params into an `args_ctx` whose parent is
+  the function's **`capture_ctx`**, not the call site. A `FuncObject` holds a
+  **`const FuncDescriptor *`** (funcdesc.h — NEVER a `FuncDeclStmt*`), the
+  per-instance **`capture_slots`** (captured values, read via
+  `SymKind::capture`; snapshot at creation from the descriptor's RESOLVED
+  capture kind/slot list via `read_sym`, the descriptor twin of
+  `Identifier::do_eval` — no capture Identifier is evaluated), and that
+  `capture_ctx` — an empty context parented to the *root* whose only job is
+  to link the body's `args_ctx` to root (for `gfuncs` + the builtins map).
+  Binding reads the descriptor's `ParamDesc` snapshot (uid, opt, const,
+  decl_type); the tree-walker reaches the body via `desc->decl` (null after
+  the `-vm` AST teardown, where every call runs the compiled chunk). The
+  descriptor is created by the `FuncDeclStmt` ctor, param-synced at parse end
+  (`sync_params`, also after a template/spec clone gets its synthetic id),
+  and holds the SINGLE storage of `resolved`/`frame_size`/`min_args`/purity/
+  `display_name`/`cache_results`/`vm_chunk` — the compiler passes write it
+  directly (no decl-side copy to drift). So functions cannot see caller
+  locals or globals, only captures (and, for pure funcs, only consts +
+  params). Builtins are different: they receive the **caller's `ctx`** and
+  the **unevaluated** `ExprList`.
+- **Devirtualized direct calls (`DirectCallExpr`, `syntax.h`).** When the
+  resolver proves a `CallExpr`'s callee is an identifier bound to a global-table
+  slot (a top-level/scoped function, an escaped global, or a struct descriptor),
+  it records the slot on `CallExpr::direct_func_slot`, and a slot-based swap pass
+  at the end of `resolve_names` (`devirtualize_direct_calls`, run after the
+  inliner so spec clones + redirected calls are covered, before
+  `specialize_types`) replaces that `CallExpr` with a **`DirectCallExpr`** (a
+  subclass; `CallExpr` is no longer `final`). Its `do_eval` reads the callee
+  **straight from the global slot** and, when the slot holds a `FuncObject`,
+  jumps to `do_func_call` — skipping the generic callee eval (the
+  `Construct::eval` wrapper + `Identifier::do_eval`), the `RValue` copy /
+  refcount bump, and the `Builtin`/`FuncObject`/`StructTypeDef` dispatch. A
+  runtime `is<FuncObject>` check keeps it sound: a struct construction
+  (`P(...)`, a global-slot call too), a slot reassigned to a non-function, an
+  undefined slot, or the REPL (no global table) **falls back to
+  `CallExpr::do_eval`**. It is a SEPARATE node, not a flag on the hot
+  `CallExpr::do_eval`, precisely so the plain-call path (builtin / closure /
+  lambda calls) is left byte-for-byte unchanged. **Effect:** ~15% on
+  `bench/09_fib_recursive` and call/recursion/dict-heavy code; neutral on the
+  broad suite (most micro-benchmarks aren't call-bound). Never set in the REPL
+  (top-level names are map-resident, not global slots), so REPL calls stay plain
+  `CallExpr`. coderender / serialize treat a `DirectCallExpr` as the `CallExpr`
+  it subclasses.
+  The same swap also specializes a call whose callee is an **unshadowed builtin**
+  (`SymKind::builtin`) into a **`DirectBuiltinCallExpr`**: the builtin table is an
+  immutable singleton, so it **bakes the builtin's function pointer** at compile
+  time (`builtin_slot(slot).getval<Builtin>()`) and `do_eval` calls it straight
+  (`builtin.func(ctx, args.get())`) — even leaner than `DirectCallExpr` (no slot
+  read, no `defined` check, no soundness fallback, since a builtin is always
+  callable and never reassigned). The builtin still gets the **caller's `ctx`**
+  and the **unevaluated** args, and `do_eval` reproduces the generic path's
+  argument-list loc stamping so **error reporting is byte-identical**. **Effect:**
+  ~20% fewer instructions on `bench/40_math_builtins` (cheap builtins in a tight
+  loop, where the per-call dispatch dominated); negligible where the builtin body
+  dominates (`sort`, big-array `sum`). Like `DirectCallExpr`, it is a separate
+  node so `CallExpr::do_eval` is untouched; never created in the REPL.
+- **Trailing `opt` parameters are skippable at the call site.** The
+  `do_func_bind_params` overloads (`eval.cpp`) accept any arg count in
+  `[FuncDescriptor::min_args, nparams]` and bind each omitted trailing param
+  to `none`. `min_args` is `1 + the index of the last non-opt param` (0 if
+  all opt), computed EAGERLY by `sync_params` (the old lazily-cached
+  `min_args_cache` is gone) — so a non-opt param *after* an opt
+  one raises the minimum and can't be skipped (`f(x, opt y, z)` still needs 3).
+  The inferencer's `check_call` enforces the same `[min, nparams]` range
+  (`WrongArgCountEx` with a "MIN to MAX" message); no per-call type contribution
+  is needed for the omitted params, since an `opt`-declared param is already
+  typed `opt T` at finalization (so the body must null-check it). The inliner /
+  tail-inliner / specializer all bail on an arg-count ≠ nparams mismatch, so an
+  under-arity call simply runs through `do_func_call` at runtime (correct).
+- **Const parameters.** A param declared `const` (`func f(const x, y)`, parsed
+  by `pFuncParam`, flagged `Identifier::const_param`) is bound as a const
+  `LValue`, so reassigning it throws — caught at compile time by the resolver
+  (a `const` param with a nonzero body write count → `CannotRebindConstEx`) and,
+  as a fallback, at runtime. Params are otherwise bound **mutable** — even
+  during const-eval — so a (pure) function may reassign its own by-value params;
+  binding const-ness is keyed off `const_param`, *not* `ctx->const_ctx`. A plain
+  param the resolver finds is never reassigned (`slot_writes == 0`) is tagged
+  `auto_const_param` (effectively const; used by `isconst()`).
+- **`clone()` semantics differ by capture.** A non-capturing `FuncObject` clones
+  to *itself* (shared
+  `shared_ptr`); a capturing one is deep-copied (its `capture_slots` vector
+  copied) so each clone has independent
+  captured state. This is
+  the mechanism behind the counter/closure examples in the README. (Decided by
+  `capture_slots.empty()` in `TypeFunc::clone`.)
+- **Multiple assignment & array expansion** all funnel through `Expr14` +
+  `handle_single_expr14`. An `IdList` lvalue with an **array** rvalue
+  destructures element-wise (`var a,b = [1,2]`); with a **non-array** rvalue it
+  spreads the same value to each (`var a,b = 0` → both 0 — a deliberate
+  convenience). Both the multi-assign array case (`handle_single_expr14`) AND
+  `foreach` array-destructuring (`do_iter`) are **STRICT**: the array must have
+  EXACTLY as many elements as targets, else `TypeErrorEx` ("cannot unpack an
+  array of length M into N variables"). The old lenient behavior — pad short
+  with `none`, drop extras, treat a scalar element as the first value — was
+  removed (it hid bugs and blocked a native lowering to plain scalar reads).
+  `foreach` runs strict on both engines (the VM falls back to `do_iter` for
+  unpack). The `indexed` keyword rides the same path. **`_` is the destructuring
+  PLACEHOLDER** (`Identifier::is_underscore`, syntax.h): in an `IdList`
+  destructure target OR a `foreach` loop-var position it is NOT declared and NOT
+  bound (its array slot is skipped), so it may **repeat** (`var a, _, _, d =
+  [1,2,3,4]`) and reading it is an `UndefinedVariableEx` — but it still **counts
+  toward the strict arity**. It is skipped at four sites: the two eval binders
+  (`handle_single_expr14`'s `IdList` loop, `bind_loop_var`) and the two declare
+  paths (resolver `declare_lvalue` IdList + the foreach loop, inferencer
+  `declare_target` IdList + the walk_struct foreach — which also skips its
+  no-`var` shadow check for `_`). **`_` is RESERVED** — it may ONLY appear in a
+  skipped placeholder position: a readable declaration of it (a single `var`/
+  `const`, a parameter, a `catch` var, a function name) is a compile
+  `SyntaxErrorEx`, enforced by ONE guard in the inferencer's `new_sym` (every
+  such name funnels through it, while the destructuring/foreach `_` is skipped
+  *before* reaching it — so the guard reserves `_` without touching the
+  placeholder). It runs for script + REPL + `-nti` (the structural pass). A `_`
+  **struct field** or **dict key** is still allowed (a member/key accessed via
+  `.`/`[]`, not a bare readable identifier).
+- **`++` / `--` (`IncDecExpr`, `syntax.h`)** — C-style pre/postfix increment and
+  decrement, **int/float only**. `IncDecExpr::do_eval` evaluates the operand
+  exactly ONCE via two paths: when the inferencer proved it int/float (`th` is
+  `i`/`f` — the usual case, incl. flat-array elements and POD fields that have
+  no `LValue`) it routes the mutation through `handle_single_expr14`
+  (`operand += 1`), reusing every store fast path (slot, flat array, COW,
+  struct), and **derives `old = new ∓ 1`** for postfix so it never re-reads the
+  operand; a `dyn`/un-hinted operand (always `LValue`-backed) goes through a
+  read-modify-write so the int/float requirement is enforced at runtime. The
+  **inferencer** types it (`type_of` = `operand ± 1`) and the **check pass**
+  rejects a non-lvalue, a `const`, or a non-int/float operand (bool included) at
+  compile time — `var b=true; b++` is a `TypeMismatchEx`, not a silent int.
+  The **resolver** counts it as a write (`count_write`), so a `++`'d var is not
+  auto-const-promoted; the **inliner** refuses to inline an expression body that
+  reassigns a SCALAR param (`func f(x)=>x++` — `mutates_a_param`), since the
+  param is a by-value copy (a mutation *through* a param — `p.x++`, `a[i]++` —
+  is allowed: that already has reference semantics, so inlining matches the
+  call). Lexing is maximal-munch, so `--1` is decrement-of-`1` (a compile error,
+  like C), not `-(-1)`.
+- **Dict access: throw-on-missing-read, insert-on-write, or default.**
+  `TypeDict::subscript(what, key, for_write)` and `MemberExpr::do_eval` (which
+  share the logic) handle a missing key by: returning the dict's default (a
+  *default dict* from `dict(default_value)`, `DictObject::{has_default,
+  default_val}`); else, on a **plain-assignment target** (`for_write`),
+  auto-vivifying (insert `none`/default) so `d[k] = v` inserts; else **throws**
+  `KeyNotFoundEx` — so a *read* or *compound assign* (`d[k]`, `d.k`, `d[k]+=1`)
+  of a missing key in a plain dict throws rather than yielding `none` (the read
+  is non-`opt`). `for_write` is `EvalContext::assign_target`, set by
+  `handle_single_expr14` only for `op == assign` and **consumed** by the
+  outermost subscript/member (so a nested base like `d[k1]` in `d[k1][k2]=v` is
+  read, not vivified). `get!()`/`get()` are the explicit fail-fast / nullable
+  accessors. A `const` dict folds known-key reads at parse time (a known-missing
+  key therefore throws at *compile* time). The clone paths
+  (`TypeDict::clone`, `clone_to_mutable`, `make_const_clone`) preserve
+  `has_default`/`default_val` (`dict()` stays a const builtin, so `dict(0)`
+  folds — hence the clone-preservation matters).
+- **Typed (M8) dict read fast path.** When the inferencer proves `d.k` / `d[k]`
+  is a non-null int/float (a `dict<_, int>`/`<_, float>` value), the specialized
+  arithmetic calls `MemberExpr`/`Subscript::eval_int`/`eval_float`. Those read a
+  **present** key's value directly via `dict_present_value` (`eval.cpp`) — no
+  re-evaluation of the base. The OLD code fell through to `Construct::eval_int`,
+  which re-ran `do_eval` and **re-fetched the dict** (a double eval per access);
+  removing that is why `bench/25_dict_member` beats CPython. A **missing** key
+  falls back to `do_eval`, so the default-dict vivify / key-freeze /
+  `KeyNotFoundEx` behavior is byte-for-byte unchanged (only the common
+  present-key path is fast).
+
+## Copy-on-write containers
+
+Strings, arrays, and dicts are reference-counted with value semantics preserved
+via COW. The handle is **`intrusive_ptr<T>`** (`intrusiveptr.h`), not
+`std::shared_ptr`: a single-threaded interpreter doesn't need shared_ptr's
+two-word layout (object + separate control block) or its *atomic* refcount ops,
+so the count lives in the pointee (which inherits `RefCounted`) and retain/
+release are plain `++`/`--`. This is what keeps `SharedArrayObj`/`SharedStr` at
+24 bytes (so `EvalValue` is 32 and the array element `LValue` is 48) and removes
+the atomic-refcount churn from copy-heavy array/dict code. **Gotcha:**
+`RefCounted`'s copy/move ctors reset the count to 0 — a cloned object owns a
+fresh count, never the original's (else it would never be freed). `use_count()`
+keeps shared_ptr's meaning (handles sharing the pointee), so the `> 1` COW tests
+are unchanged.
+
+- **`SharedStr`** (`sharedstr.h`): immutable `intrusive_ptr<StrObj{string}>` +
+  `off`/`len` slice view (StrObj just wraps the string so it can carry the
+  count). Slices are
+  cheap views; strings are never mutated in place. Copies are forbidden
+  (`= delete`), only moves —
+  enforcing the no-accidental-copy intent.
+- **`SharedArrayObj`** (`sharedarray.h`):
+  `intrusive_ptr<SharedObject{ vec, set<live slices> }>` +
+  `off`/`len`/`slice`. A slice registers itself in the parent's `slices` set
+  (and unregisters on
+  move/destroy — **and on `operator=`**: a copy/move *assign* into a
+  slice-holding value must first `slices.erase(this)` from its OLD `shobj`, or
+  that set keeps a **dangling pointer** to a value that now holds a different
+  array — the dtor did this but the two assign operators used not to. A
+  tree-walker temporary is torn down via the dtor, which masked it; a **VM frame
+  slot** holding a slice and then *overwritten* (slot reuse) hits the assign
+  path and freed the memory, so the stale registration became a genuine
+  use-after-free — UBSan-caught during an array COW). Writing through an
+  array-element `LValue`
+  (`LValue::get_value_for_put` in `eval.cpp`)
+  triggers COW: if the container is a slice, or is aliased (`use_count > 1` /
+  has live slices), it is
+  cloned first so the write doesn't bleed across logically-distinct arrays.
+  **Length invariant:** for a *non-slice*, `len` is only the size at
+  construction and goes stale once `+=`/`append`/`insert`/... grow the vector in
+  place — a non-slice reports its length via `size()` (= `vec.size()`), and
+  `offset()`/`size()` are the only correct way to read its range. (Bug to avoid:
+  `clone_internal_vec` must use `offset()`/`size()`, not the raw `off`/`len`, or
+  it truncates a grown array. `clone_aliased_slices` therefore clones each slice
+  while its `slice` flag is still set, so `offset()`/`size()` report the slice
+  range.)
+- **Flat STRING storage (`Storage::strs`, top-10 #7)** - a
+  `vector<SharedStr>` (24B handles vs 48B LValues), following the STRUCT
+  model, NOT the scalar one: VALUE-driven creation (`split()`/
+  `splitlines()` always; a string dict's `keys()`/`values()` under a
+  dflt hint; plain literals stay general), and any cold/unhandled op
+  AUTO-PROMOTES via `get_vec()` - a non-string element write PROMOTES
+  (flat_store_core stores a plain str flat, anything else promotes +
+  defers to the general path; `TypeArr::subscript` promotes on
+  for_write THROUGH THE ORIGINAL LVALUE - promoting the RValue() temp
+  freed the fresh vector with it, an ASan-caught UAF). `array<str>`
+  destinations get NO ArrHint (dflt - the value keeps its storage; the
+  old forced `general` would general-ify a baked flat literal).
+  `array_storage()` reports `"str"`. Fast paths: arr_elem_at/boxed,
+  join (direct SharedStr reads), foreach (a tree-walker do_iter branch
+  + the VM LoadElemValue strs arm), clone/const-clone stay flat
+  (strings are immutable - a handle copy IS the deep copy); sum/min/max
+  promote a LOCAL handle copy (the caller keeps flat; min/max's old
+  `!= general` guard mis-read the union for strs AND structs - a
+  latent pre-existing struct-array InternalError, fixed the same way).
+
+- **Flat (unboxed) int/float/bool storage.** `SharedObject` carries a `Storage
+  kind` (`general`/`ints`/`floats`/`bools`) and an **anonymous union** of `vec`
+  (the `vector<LValue>`, 48-byte slots), `ivec` (`vector<int_type>`), `fvec`
+  (`vector<float_type>`), and `bvec` (`vector<unsigned char>`, **one byte** per
+  element) — the flat members are unboxed, so a homogeneous int/float array
+  moves ~6× less memory in bulk ops and a bool array ~48× less. A `union`
+  member can't have non-trivial ctors/dtors, so `SharedObject` placement-news
+  the live member per kind and the dtor switches on `kind`.
+  **Representation is type-driven and fixed at creation — there is NO runtime
+  promotion** (`promote_to_general` was deleted). An array-producing node is
+  built flat **iff** the inferencer proved its *destination* is
+  `array<int>`/`array<float>`/`array<bool>`; a destination that is `array<dyn>`
+  (or any other element type) is built **general from the start**. The
+  inferencer's
+  `set_array_repr_hint` (in `annotate_hints`, runs on `a = <rvalue>` decls and
+  assigns) stamps an **`ArrHint`** (`syntax.h`: `dflt`/`general`/`flat_i`/
+  `flat_f`/`flat_b`) on the rvalue — on a
+  `range()`/`array()`/`make_array()`/`keys()`/`values()` call's args `ExprList`,
+  or directly on an array literal / folded `LiteralObj`. A
+  `dyn`-typed destination (`var dyn d = [1,2,3]`) also gets `general`, so
+  declaring `dyn` builds a polymorphic array from the start (else a later
+  `d[0]="x"` would wrongly hit the flat-array error on an already-`dyn` var).
+  Creators honor it: `range`, `builtin_array` (1-arg `flat_i`/`flat_f`/`flat_b`
+  → flat `0`/`0.0`/`false` fill, replacing the old `array(N)` rewrite;
+  `general` → general),
+  `make_array`, `keys`/`values` (`dict_extract` — a scalar dict's keys/values
+  build a flat `array<int>/<float>/<bool>` straight from the dict, no
+  per-element boxing; the big win for `keys()`/`values()` of a large dict, and
+  why `bench/27_dict_keys_values` beats CPython — only the bound form
+  `var k = keys(d)` gets the hint, an inline `keys(d)` arg stays general),
+  `LiteralArray::do_eval`, and `LiteralObj::do_eval` (a flat baked
+  literal bound to an `array<dyn>` dest is made general via
+  `make_general_array_clone`).
+  The fixpoint propagates the destination type through direct aliases
+  (`var b = a`), so they agree. Value-driven flat (`dflt`) is the fallback for
+  contexts the hint doesn't cover. The flat fast paths (each branches on
+  `skind()`, reads `flat_ints()`/`flat_floats()`/`flat_bools()`/`arr_elem_at`
+  directly, never
+  promotes): `sum`/`reverse`/`sort` (comparator and not — `comparator_heapsort`
+  is templated over the element vector)/`min`/`max`/`append`/`pop`/`top`/`find`/
+  `erase`/`insert`/`map`/`filter`/`foreach`/`intptr`/`dict`(from pairs)/`join`/
+  `writelines`, `TypeArr::{subscript (rvalue read), to_string, eq, add}`,
+  `Subscript::eval_int`/`eval_float`, the array-spread reads
+  (idlist/`foreach`-tuple, via `arr_elem_boxed`), and the flat subscript-store
+  `try_flat_subscript_store` (`eval.cpp`: `a[i] = v` / `a[i] OP= v` writes the
+  scalar straight into the flat vector — gated on a side-effect-free lvalue
+  *chain* via `no_side_effects`). `arr_elem_at`/`arr_elem_boxed` box a flat bool
+  element as a real `bool`; `sum` of an `array<bool>` returns an int (counts the
+  trues). `clone_internal_vec`, `make_const_clone`, and
+  `clone_to_mutable` are kind-aware so clone/COW/const keep flat. `size()` is
+  kind-aware. **`get_vec()`/`get_view()` are general-only** — they throw
+  `InternalErrorEx` on a flat array (an invariant tripwire, not a promotion);
+  every caller either guarantees general or reads flat directly. **The
+  dyn-launder error:** the only way a flat (statically-typed) array can be asked
+  to hold a non-fitting element is by laundering it through a `dyn` alias and
+  mutating it (`var dyn d = int_array; append(d, "x")` / `d[0]="x"` / `insert`).
+  Since the storage stays int-typed and an alias-affecting write can't change
+  its representation without promotion, that **throws a `TypeErrorEx`** (message
+  `flat_array_violation_msg`) — declare the array `dyn` from the start, or
+  promote an existing one with the **`dynarray(a)`** builtin
+  (`builtin_dynarray`: a fresh general copy, typed `array<dyn>`, usable in any
+  position; `clone`/`deepclone` deliberately preserve the layout). `runtime()`
+  does *not* promote — it only relabels the static type, not the storage.
+  `array_storage(a)` reports the element-type name
+  `"int"`/`"float"`/`"bool"`/`"struct"`/`"general"` (tests pin it). **Gotcha:**
+  any pass that
+  inspects a const array's element type must read from `skind()`, not
+  `get_view()`/`get_vec()` (now they'd throw on flat anyway). `array()` is a
+  **non-const** builtin (never folds to a baked literal, so `array(N)` is always
+  a runtime call the hint reaches, and a huge `array(1000000)` isn't baked). See
+  `plans/typed-arrays.md` (approach B) and
+  `plans/type-driven-specialization.md`.
+- **`DictObject`** (`shareddict.h`): the value handle is
+  `intrusive_ptr<DictObject>` (the object inherits `RefCounted`); the map is a
+  **`std::unordered_map<EvalValue, LValue>`** inside it — an O(1) hashmap (NOT a
+  sorted tree), keyed by `std::hash<EvalValue>` (→ `EvalValue::hash()` →
+  `Type::hash`) and `EvalValue::operator==`.
+- **Universal `hash()` (deep, by value).** `Type::hash` returns `size_t`; the
+  base throws, the leaves (`int`/`bool`/`float`/`str`) hash directly, and
+  `none` + the containers/structs hash deeply (`hashing.h` combiners,
+  `#include`d into `types.cpp`): **`hash_combine`** (a SplitMix64-avalanche
+  fold, order-DEPENDENT) for sequences — `TypeArr::hash` over `arr_elem_at`
+  elements,
+  `TypeStruct::hash` over fields in declaration order (salted with the def
+  pointer so distinct struct types differ; field-wise via `pod_get`, consistent
+  with `eq` for POD and boxed) — and **`hash_unordered`** (a commutative
+  SplitMix64-avalanche sum, NOT a weak xor) for `TypeDict::hash`, so two equal
+  dicts hash equal regardless of insertion order. `hash(none)` is a constant
+  (`none` is now hashable — a deliberate spec change from the old throw). The
+  scalar `hash()` builtin (`builtins/generic.cpp.h`) is unchanged and folds at
+  compile time. **String hashes are cached** on `StrObj`
+  (`mutable hash_cache`/`hash_valid`, computed lazily — strings are immutable),
+  so repeated string-key probes don't recompute; a *slice* hashes its sub-view
+  on demand. No cycle guard (matches `==`/`to_string`).
+- **Flat-scalar arrays cache their hash incrementally** (`SharedObject::
+  hash_cache`/`hash_valid`). `TypeArr::hash` returns the cache when valid;
+  `append` **maintains** it in O(1) (`arr_append_maintain_hash` — an append is
+  one more `hash_combine` step), and every other mutation **invalidates** it
+  (`invalidate_hash` at `pop`/`insert`/`erase`/`sort`/`reverse`/`+=`, the flat
+  element store, and `get_value_for_put`). Caching is restricted to a non-slice
+  **int/float/bool** array (`hash_cacheable`): its elements are scalars, so the
+  only way to change its hash is a mutation OF that array, all of which are
+  instrumented. A **general/struct** array is *not* cached — a nested mutation
+  (`a[i][j]=v`, a struct field, replacing an element) changes the outer array's
+  hash with no back-pointer to invalidate it — so it recomputes on demand
+  (correct, just not O(1)). A COW clone is a fresh object (the `SharedObject`
+  copy ctor is deleted) → starts invalid → recomputes; a read-only array never
+  mutates, so its cache, once set, is valid forever (the frozen-flat-key fast
+  path). The per-path safety net is `hash(a) == hash(deepclone(a))` after each
+  mutation (a stale cache fails it loudly). (An order-dependent removable hash —
+  polynomial / Rabin-Karp — could also make `a[i]=v` O(1), but it weakens the
+  hash, taxes the write path, and still can't do O(1) insert/erase; rejected for
+  B. See `plans/hash-and-dict.md`.)
+- **Any-type dict keys, frozen on insert.** Because `hash` is total, an array/
+  dict/struct/`none` can be a key. A key would corrupt the map if mutated after
+  insertion (its hash would change, leaving it in the wrong bucket — COW does
+  NOT protect a stored key), so every insert site (`TypeDict::subscript`'s two
+  `emplace`s, `LiteralDict::do_eval`, `builtin_dict`-from-pairs) stores
+  **`make_const_clone(key)`** — a deep read-only freeze. Scalars/strings are
+  returned as-is (cheap); only a container key pays a one-time clone.
+  `MemberExpr` keys are interned strings (already immutable), so they need no
+  freeze. See `plans/hash-and-dict.md`.
+- **Deep-const read-only flag.** Both `SharedObject` (arrays) and `DictObject`
+  carry a `readonly` bool (`is_readonly()`/`set_readonly()`). It backs `const`
+  values: `make_const_clone()` (`eval.cpp`) sets it on every array/dict in the
+  value, recursively, so `const` is *deep* read-only. The flag lives on the
+  shared object, so it travels with every alias and slice; `clone()` builds a
+  fresh object and is therefore always mutable (`TypeDict::clone` clears it
+  explicitly; `TypeArr::clone` gets a new `SharedObject` for free). Write paths
+  check it: `TypeArr::subscript`, `TypeDict::subscript` and `MemberExpr` return
+  an *rvalue* (and don't auto-vivify) for a read-only container, so the
+  element/member
+  assignment fails with `NotLValueEx`; `TypeArr::add` (`+=`) and the mutating
+  builtins (`append`/`pop`/`insert`/`erase`) throw `CannotChangeConstEx`;
+  `sort()` clones instead of sorting in place. This is what makes a const
+  immutable through a non-const alias (e.g. a function parameter) — parse-time
+  read-folding alone didn't. (Aside: `builtin_sum`'s general path must seed its
+  accumulator with a `clone()` of the first element, since `+=` mutates it in
+  place — it would otherwise mutate, or be rejected on, a read-only argument.
+  `builtin_sum` also has an all-int fast path that accumulates a raw `int_type`
+  in a tight loop — skipping `num_bin_op`'s promotion check and the per-element
+  virtual `TypeInt::add` — and falls back to the general loop at the first
+  non-int element, so a mixed int/float array still promotes correctly.)
+- **Getting a mutable copy of a const: `clone()` vs `deepclone()`.** Two helpers
+  in `eval.cpp` make mutable copies (scalars/strings returned as-is):
+  `make_mutable_clone` builds a fresh mutable *top* but **shares** any read-only
+  sub-object as-is, while `make_deep_mutable_clone` copies every level and drops
+  `readonly` (a fully independent writable value). `make_mutable_clone` backs
+  the per-eval copy a `var`-bound materialized value needs, and its
+  share-the-const behavior is what keeps **`clone()` shallow** (a const nested
+  in the result stays read-only) and makes const-ness propagate into fresh
+  literals (`var a = [y]` with `y` const keeps `a[0]` read-only). The `clone()`
+  builtin is the type's own shallow `clone` (one level); `deepclone()` (a
+  runtime builtin, `make_deep_mutable_clone`) is the deep one — the way to
+  obtain a fully mutable version of a const. (`deepclone` is *not* a const
+  builtin: it yields a mutable value that must be copied fresh per eval anyway,
+  so folding it would only bloat the tree.)
+- The non-const `intptr(symbol)` builtin exposes the underlying object pointer;
+  the test suite uses it
+  to assert exactly when two slices do/don't share storage. If you change COW
+  logic, those tests are
+  your spec.
+
+## Custom struct types
+
+User-defined value types (`struct Point { int x; int y; }`). Full design +
+phasing: `plans/structs.md`. **Status: complete (all 8 phases)** — decl,
+construction, field/const access, inference, const-folding, COW; the POD
+C-layout; nested (recursive) POD; flat `array<PodStruct>` storage; M8-style
+*direct* (unboxed) field access; and construct-in-place append. A flat struct
+array is now both a memory/cache win and array<int>-speed on field ACCESS
+(`a[i].x` reads straight from the bytes, within ~6% of `array<int>`'s `a[i]`).
+Construction stays more expensive than an inline int (a struct is an object),
+but the per-element `StructObject` allocation is gone (build overhead
+2.47x→1.76x vs `array<int>`; `bench/58_structs` ~26x→~21x CPython).
+
+- **POD vs boxed storage** (`StructTypeDef::compute_layout`, run by the parser).
+  A struct is **POD** iff every field is a non-opt scalar (`bool`/`int`/`float`)
+  **or a non-opt POD struct** (embedded *inline*, recursively); it then has a
+  native C byte layout (`pod_field_metrics` assigns offsets with our own fixed
+  alignment rules — `pod_field_size`/`align` in `structtype.h`, the one place an
+  arch assumption lives, depending only on `sizeof(int_type)`). Any ref/opt/
+  boxed-struct field makes it **boxed** (a `vector<LValue>` slot array). A
+  nested struct field embeds inline only if its type was *declared before* this
+  one (resolved via `const_ctx` in the parser → `FieldDef::struct_def`); a
+  forward/self reference to a **non-recursive** type stays a boxed pointer.
+- **Recursive-struct rejection** (`check_struct_no_recursion`, parser, run
+  before `compute_layout`). A **non-opt** struct field whose type — directly or
+  transitively through other non-opt struct fields — contains the struct itself
+  is a compile error (`SyntaxErrorEx`, "box it as `dyn? <name>`"): such a value
+  can never be constructed (infinite nesting; and inlined, infinite size). The
+  field-reference graph among earlier structs is a DAG (inline only goes
+  backward), so the only back-edge that can close a cycle is a forward/self
+  reference to the struct being declared — detected by a DFS over non-opt struct
+  fields (`struct_field_target` resolves each edge by `struct_def`, the
+  root's own name, or a `const_ctx` lookup for an intermediate forward ref). An
+  **`opt`** field (e.g. `dyn? next`) breaks the cycle (it can terminate with
+  `none`) and is allowed — the way to write a linked list / tree.
+- **`StructObject`** holds EITHER `bytes` (POD: a `def->size` C-laid-out buffer;
+  `pod_get`/`pod_set` load/store a typed scalar or an inline nested struct at a
+  field offset) OR `fields` (boxed). A POD field WRITE goes through
+  `try_pod_struct_store` (a direct byte store, mirroring
+  `try_flat_subscript_store`); a POD field READ in `MemberExpr` returns a value
+  (no per-field LValue). `==` is `memcmp` for POD, field-wise for boxed.
+- **Flat `array<PodStruct>`** — `SharedArrayObj::Storage::structs`: a contiguous
+  byte buffer + the element `StructTypeDef*` + cached `stride` (so the template
+  never needs `StructTypeDef` complete). Created value-driven (a literal of
+  same-type POD structs → `LiteralArray` mode 5) or type-driven for an empty
+  `[]` whose destination is `array<PodStruct>` (`ArrHint::flat_s` +
+  `Construct::arr_hint_struct`, honored by `LiteralArray`/`LiteralObj`), so
+  `var a=[]; append(a, S(..))` stays unboxed. Hot paths touch bytes directly
+  (subscript read/store, append, `==`, `to_string`, clone/const-clone,
+  `static_type_from_value`); **`foreach` reuses one `StructObject`** across
+  iterations
+  (overwrite-in-place with a `use_count` COW guard, so a captured element keeps
+  its value). Cold ops (insert/sort/map/...) **auto-promote** to a general array
+  via `get_vec()`'s `promote_structs_to_general()`, so every existing array op
+  works with no dedicated case and nothing throws. `array_storage` reports
+  `"struct"`.
+
+- **Direct (unboxed) field access** (M8, phase 8). The inferencer stamps a
+  `TypeHint` on `s.x` when the field is a non-null int/float; `MemberExpr::
+  eval_int`/`eval_float` then read it unboxed. `a[i].field` on a flat struct
+  array reads the scalar STRAIGHT from the array bytes
+  (`member_pod_array_scalar`) with **no per-element `StructObject`** built
+  (guarded by `no_side_effects` so the base evals once) — `a[i].x` is within ~6%
+  of `array<int>`'s `a[i]`. The resolved-local compound-assign fast path
+  (`sx += rhs`) treats a `th==i` rhs (e.g. `p.x`) as an `eval_int()` read, so a
+  reduction is fully unboxed.
+
+- **Construct-in-place append** (phase 8). `append(flat_struct_arr, S(...))`
+  recognizes a struct-constructor arg for the array's exact POD type and builds
+  the element straight into the array's byte buffer
+  (`try_construct_into_struct_array`, `eval.cpp`) — no temporary `StructObject`.
+  Field args are coerced into a stack buffer first (a throw mid-construct leaves
+  the array unchanged), then committed. Named/mixed args (already desugared) and
+  nested POD work; a non-constructor / different-type arg falls back to the
+  normal value-append (the arg is never evaluated twice). The byte store is the
+  shared `pod_store_field` (also backs `StructObject::pod_set`).
+
+- **Two value kinds, mirroring func's decl/object split** (`type.h` `TypeE`):
+  `t_structtype` (trivial, `< t_str`, a raw `StructTypeDef *`) is the **type
+  descriptor** the `struct` decl binds as a `const` in scope — callable
+  (construction) and `.CONST`-accessible; `t_struct` (non-trivial, `>= t_str`,
+  `intrusive_ptr<StructObject>`) is an **instance**. `TypeStruct` /
+  `TypeStructType` in `src/types/struct.cpp.h`; wired through `ValueU`,
+  `TypeToEnum`, `TypeNames`, `AllTypes`.
+- **`structtype.h`** defines `StructTypeDef` (owned by its `StructDeclStmt`
+  under the tree-walker; under `-vm`, `vm_compile` MOVES ownership into the
+  `VmProgram` so it outlives the AST teardown — the decl keeps a raw `def`
+  alias. Program-lifetime either way:
+  `name`, `fields` as `FieldDef{name, FieldKind, struct_ty, is_opt, slot,
+  offset, annot}`, folded `consts`, plus the `Layout`/`size`/`align` fields the
+  POD phases will fill) and `StructObject` (`RefCounted`: `def`, `readonly`, and
+  a boxed `vector<LValue> fields`). `evalvalue.h` forward-declares both. It also
+  defines **`TypeAnnot`** - the recursive parsed type behind the parameterized
+  container syntax `array<T>`/`dict<K,V>` (see the "Parameterized containers"
+  bullet above); `FieldDef::annot` and `Identifier::decl_annot` hold one.
+- **Parser** (`pAcceptStructDecl`, `parser.cpp`): the `struct` keyword
+  (`kw_struct`) → a `StructDeclStmt` (owns the `StructTypeDef`;
+  `do_eval` binds the descriptor like a func name, so it works inside a function
+  too). Fields are `[opt] TYPE name;` (a primitive keyword, `dyn`, or a
+  struct-type name → `FieldKind`); `const NAME = expr;` members fold immediately
+  (`make_const_clone`). v1 rejects `var` fields and `opt` on a non-ref field;
+  and duplicate member names.
+- **Construction is a call**: `Point(...)` parses as a `CallExpr`; what makes it
+  construction is only that the callee is a struct descriptor (decided in the
+  inferencer + at eval, never in the grammar). It reuses the named-arg pipeline:
+  the inferencer's `lower_named_args` and `check_call` recognize a struct callee
+  and build the `ParamSpec`/param-type list from the fields, so positional /
+  named / mixed and the arity-range / per-field-assignability / non-opt-not-none
+  checks all come from the shared machinery. `CallExpr::do_eval` →
+  `construct_struct` builds the boxed instance; `coerce_struct_field`
+  coerces a numeric field and **runtime-validates** each field's type (guarding
+  a `dyn`-laundered value; the `dynarray`-style escape hatch is just declaring
+  the field `dyn`). `type_of(Point(..))` is `StaticTypeKind::Struct`
+  (`statictype.h`'s
+  reserved `Struct` kind + `struct_def`/`struct_name`;
+  `StaticTypeArena::struct_ty`).
+- **Member access** (`MemberExpr::do_eval`): dispatch on the base — a `t_struct`
+  instance → `def->slot_of(memUid)` field (an lvalue when mutable, an rvalue for
+  a read-only/const instance so a write fails `NotLValueEx`) else a `const`
+  member else not-found; a `t_structtype` descriptor → only `const_of`; a dict
+  unchanged. `MemberExpr::memUid` (interned `UniqueId`, set in `pAcceptMember`
+  beside the dict-key `memId`) drives the slot lookup. The inferencer types
+  `s.field`/`Type.CONST` and validates membership; a `dyn`-base read resolves at
+  runtime via the tag.
+- **`const` works fully**: a struct construction folds **inside a `const` decl**
+  (`construct_struct`'s own validation makes it safe), baked deep read-only by
+  `make_const_clone`; `MakeConstructFromConstVal` / `clone_to_mutable` /
+  `is_readonly_value` / `ShouldConstSymbolExistAtRuntime` /
+  `static_type_from_value` all
+  handle a struct value. Outside a `const` decl, construction is left a runtime
+  `CallExpr` so the inferencer gives the precise field errors.
+- **Value semantics**: COW like arrays/dicts (`StructObject::readonly` backs a
+  deep `const`; plain assignment aliases; `clone()` shallow, `deepclone()`
+  deep). `==`
+  is structural between same-`def` instances (`TypeStruct::eq`); `hash`
+  combines the field hashes (see *Universal `hash()`* above), so a struct can be
+  a dict key. **Deferred** (plans/structs.md): `var` fields (call-site
+  field inference), `opt` scalar fields, methods, and empty structs.
+
+## Error model
+
+`errors.h` defines an `Exception` base (`name`, `msg`, `loc_start`, `loc_end`)
+and two macros:
+
+- `DECL_SIMPLE_EX` — parse-time / internal errors (`SyntaxErrorEx`,
+  `InternalErrorEx`,
+  `CannotRebindConstEx`, `ExpressionIsNotConstEx`, …). **Not catchable** from
+  script.
+- **Compile-time type errors** (`TypeMismatchEx`, `NullabilityEx`,
+  `WrongArgCountEx`, `DynRequiredEx`, `OptRequiredEx`) — from the inferencer
+  (see
+  "Static type inference"). Plain `Exception`s (not `RuntimeException`s), so
+  **not catchable** from script; each carries a custom interned message + `Loc`.
+  A statically provable type error is reported here, before the program runs.
+- `DECL_RUNTIME_EX` — subclasses of `RuntimeException` (adds `clone()` +
+  `[[noreturn]] rethrow()`):
+  `DivisionByZeroEx`, `TypeErrorEx`, `OutOfBoundsEx`, `KeyNotFoundEx`,
+  `NotLValueEx`, `NotCallableEx`,
+  `AssertionFailureEx`, `CannotOpenFileEx`, `InvalidValueEx`. These are the ones
+  script `try/catch`
+  can handle (matched by name).
+- **User exceptions are STRUCTS.** `throw <struct instance>`
+  (`ThrowStmt::do_eval`, `eval.cpp`) wraps the instance in an
+  `ExceptionObjectTempl` (`exceptionobj.h`) — a `RuntimeException` whose C++
+  type name is `"DynamicExceptionEx"`, whose `dyn_name` is the **struct type's
+  name** (so `catch (T)` matches by type), and whose `data` EvalValue is the
+  struct itself. `throw` accepts only a struct instance, or a caught built-in
+  exception object (re-throw); anything else is a `TypeErrorEx` (and a
+  statically-known non-struct/non-exception throw is a compile-time
+  `TypeMismatchEx` from the inferencer). `do_catch` matches a catch clause by
+  the `dyn_name`/built-in `name` string, and `catch (T as e)` binds `e` to the
+  **struct instance** (`exObj->get_data()`, so `e.field` works) when the
+  exception carries one, else to a fresh `ExceptionObject` wrapper (the
+  payload-less built-in case — printable/re-throwable). The catch variable is
+  typed `dyn` by the inferencer (member access resolved at runtime). `finally`
+  runs via a scope guard; `rethrow` re-throws the saved exception with the
+  rethrow site's `Loc`. (The old `exception()`/`ex()`/`exdata()` builtins were
+  removed once structs existed — a struct field IS the payload.)
+- Always pass `Loc start, end` to thrown exceptions where you can, so
+  `mylang.cpp` can render the caret.
+
+### Error location & caret rendering
+
+- **A `Loc`'s `end` is "last-char-column + 2"**, so the caret width is
+  `loc_end.col - loc_start.col - 1` (and the printed end column is
+  `loc_end.col - 1`). A construct that ends with a closing token sets
+  `end = <that token's loc> + 2` (e.g. `CallExpr`/`Subscript`/`Slice` through
+  their `)`/`]`, array/dict literals through `]`/`}`). Keep this convention when
+  adding constructs, or carets will be off by one or two.
+- **`Construct::eval`** stamps a node's `start`/`end` onto any escaping
+  exception that has no loc yet — so an error gets the loc of the *innermost*
+  node whose `eval` it traversed. Because `RValue()` and the type ops throw with
+  *no* loc, that used to be the whole enclosing expression. The operator ladder
+  (`eval.cpp`) now routes operand evaluation through `num_binop_loc` /
+  `logop_loc` / `stamp_operand_loc`, and `Expr14`/`CallExpr` wrap their
+  rhs/callee evals, so undefined-variable / type / division errors point at the
+  **offending operand** (e.g. `var y = foobar` marks `foobar`, not `y =`).
+- **Multi-line spans**: `dumpLocInError` (`mylang.cpp`) renders every source
+  line in `[loc_start.line, loc_end.line]` with a caret row per line (start from
+  `loc_start.col` to EOL, full middle lines, end line up to `loc_end`).
+- **Context keywords**: `break`/`continue`/`return`/`rethrow` outside their
+  valid context (gated by `pFlags` in `pStmt`) raise a clear `SyntaxErrorEx`
+  ("... only allowed in a loop", etc.), not a generic "unexpected token".
+- **Not-callable vs undefined**: a var used as a callee is excluded from
+  auto-const promotion (`prescan_blocked` blocks `CallExpr::what`), so calling a
+  defined non-function reports `NotCallableEx`, not a bogus "undefined var".
+- **Uncaught user exceptions** print their throw-site loc + caret and their
+  payload struct (`errfmt.cpp`'s `ExceptionObject` handler renders
+  `get_data()` via `to_string`). The payload struct references its
+  `StructTypeDef` (owned by the AST), so `main` (`mylang.cpp`) declares the
+  `root` AST **outside** the `try` — unwinding must not free the def before the
+  catch handler renders the value.
+- **Backtrace frames are LAZY (2026-07-18 profile #3).** A captured
+  `BacktraceFrame` holds `{const FuncDescriptor *desc, Loc call_site}` — NO
+  strings; `format_backtrace` stringifies from the program-lifetime
+  descriptor at RENDER time, so a CAUGHT exception (backtrace never shown)
+  allocates nothing per frame (13% of the exception benches was that
+  malloc churn). The eager string form survives for the INLINE (virtual)
+  frames (their sources are AST-owned) and for a capture DURING CONST-EVAL
+  (`do_func_call`'s catch passes `ctx->in_const_eval()`): a compile-time
+  pure-fold can run a THROWAWAY clone whose descriptor dies with the fold
+  while the early-failure rule propagates the exception — a lazy frame
+  would dangle (ASan-caught during development). `vm_execute` (the
+  harness/REPL entry) RETAINS its VmPrograms in a session-static list for
+  the same reason: descriptors must outlive any exception's render.
+  RuntimeException also carries **ML_POOL_NEW_DELETE** (profile #4) —
+  inherited by every subclass, so the VM signal-path's make_unique/clone
+  exception objects come from the pool (a C++ `throw X` value still uses
+  the EH runtime's own allocation).
+
+- **Backtrace.** `Exception::backtrace` (a `vector<BacktraceFrame>`, `errors.h`)
+  is filled as the exception unwinds: `do_func_call`'s `catch (Exception &)`
+  records each frame innermost-first, capturing the function's name+params **as
+  strings** (the AST is torn down during unwinding, before the top-level handler
+  runs; the name is `FuncDeclStmt::display_name` when set — a specialization
+  clone's original name — else `id`) plus the *call site* (the `CallExpr`'s loc,
+  passed as `do_func_call`'s
+  `call_site`). `format_backtrace` (`backtrace.cpp` / `backtrace.h`) renders it:
+  frame `[0]` is the innermost (its line = the error site, `loc_start`), each
+  deeper frame's line is where it called the next, and a synthetic `main()` is
+  the bottom. Two passes: pass 1 builds each `name(params)` (param list
+  truncated to ~60 cols as `name(p1, ..., ...)`, the name never cut) and finds
+  the widest; pass 2 zero-pads frame numbers to a common width (only when >9
+  frames) and right-pads the name column so `at line N` aligns. It is a plain
+  function so tests can format synthetic/real backtraces and assert on them.
+- **Inlined (virtual) frames.** For function inlining, a node spliced from an
+  inlined body carries an `InlineCtx` "inlined-at" chain
+  (`Construct::inline_ctx`); `flush_inline_frames` (`backtrace.cpp`) appends one
+  `BacktraceFrame` per chain element so the physically-absent inlined calls
+  appear. It is flushed at two error-path points, both keyed off
+  `Exception::inline_origin_emitted` (not the loc once-guard, which many errors
+  pre-satisfy): `Construct::eval` at the innermost node (an error *inside*
+  inlined code) emits the chain once and sets the flag, and `do_func_call`'s
+  catch (a real call made *from* inlined code) flushes the call-site chain
+  unconditionally and sets the flag so the enclosing `CallExpr` doesn't re-emit.
+  `format_backtrace` is untouched. See `plans/function-inlining.md`.
+- **Tests** pin caret spans via the `test` struct's
+  `ex_col`/`ex_line`/`ex_col_end`/`ex_line_end` (each checked only when nonzero;
+  see the "err loc:" tests in `tests.cpp`); the "backtrace:" `extra_checks`
+  cover the formatter (including synthetic inlined-frame reconstruction).
+
+## The interactive REPL
+
+`mylang` with no FILE/`-e` on a TTY (or `--repl` to force it off a TTY, for
+testing) runs the REPL (`run_repl`, launched from `mylang.cpp`). Full design +
+status: `plans/repl.md`. Four TUs, split so the logic is headless-testable
+behind a thin terminal shell:
+
+- **`repl.{h,cpp}` — `ReplEngine`**, the headless evaluation core. Holds the
+  persistent interpreter state: a persistent **const-eval `EvalContext`** + a
+  persistent **runtime global `EvalContext`** (both roots, so they auto-load
+  the builtins) + the **retained input ASTs** (`vector<unique_ptr<Construct>>`
+  — never freed, so a prior pure func / struct / kept const stays valid and
+  foldable for later inputs) + the ever-growing source `lines` (for error
+  carets). `eval_input(src)` parses against the persistent const ctx with
+  `pBlock(pc, 0, /*push_const_scope=*/false)` (so top-level consts/pure-funcs/
+  structs survive — the parser drops a const *scalar* decl, but its *value*
+  lives in the const ctx, which is what folding reads), then evaluates each
+  top-level statement **directly in the persistent runtime ctx** (no fresh
+  Block context/frame — that's why state persists and a redeclaration can
+  rebind), capturing `print` output (via a `cout` rdbuf swap) and echoing the
+  last value as `=> ...` (pretty-printed - see the value model). A `none` result
+  is normally suppressed (a decl, `print`, `if`/loop, void call), **except** when
+  the last statement is a plain VALUE LOOKUP - a bare variable, a member/
+  subscript access, or the `none`/`null` literal (`repl_echo_none`) - so
+  `nn`/`none` echo `=> <none>` while `print(x)`/`func f(){}` stay quiet. Errors
+  are caught per input and the loop
+  continues — **including a lexer error**: the lexer can throw
+  (`InvalidTokenEx`, e.g. `2_`, or an unterminated single-line string), so every
+  REPL lex site is guarded — `do_eval`'s lex runs inside the parse `try` (it
+  reads the persistent `lines`, so the error's view stays valid for the caret),
+  `is_incomplete` catches and reports the input *complete* (a bad token is a
+  definitive error, not an input awaiting more — never let it escape the
+  `Submitter`, which would crash the raw-mode editor), and the inspection
+  meta-commands lex inside their own `try`. `InvalidTokenEx` now carries a `Loc`
+  so it renders a caret like every other error. The whole-program optimizers
+  (`resolve_names`/inliner/`infer_types`/`specialize_types`) are **not** run per
+  input yet (see "deferred" below), so top-level names are map-based globals.
+  - **Inputs auto-terminate** (`repl_auto_terminate`): you don't type `;` at a
+    prompt. Per physical line a `;` is appended unless the line is empty/
+    comment-only, ends inside an unclosed `(`/`[`, or ends on a continuation
+    token — and a `{` is classified as a statement **block** vs a dict
+    **literal** by whether the previous token expected a value, so a multi-line
+    func/if body gets interior `;` but a multi-line dict does not.
+    **Multi-line-string/comment aware:** `repl_scan_line` tracks an
+    `in_string`/`in_comment` state across physical lines and returns each line's
+    `[code_begin, code_end)` span (the part NOT inside a string/comment); a line
+    wholly inside one is passed through verbatim with no `;`, and only the code
+    span is lexed for the bracket/continuation logic (so it can never hit an
+    unterminated token). A multi-line string that **closes** at the start of a
+    line is itself a value, so the statement can be terminated there even with
+    no following code token (`closed_string`); a line that **opens** one that
+    continues gets no `;` (`open_at_end`).
+  - **`EvalContext::allow_redeclare`** (set only on the REPL global scope) makes
+    a re-declaration rebind the global instead of throwing `AlreadyDefinedEx`
+    (the script rule is unchanged — the resolver still catches same-scope dups
+    at compile time). **`pBlock`'s `push_const_scope`** flag (default true) is
+    the const-ctx analogue. **Gotcha:** the lexer stores `string_view`s into the
+    source lines, so all lines of a multi-line input are appended to `lines`
+    *first*, then lexed from the stable buffers (growing-while-lexing dangles
+    earlier tokens — an ASan-caught UAF).
+  - **Meta-commands** (`eval_input` dispatches a leading `:`): `:tree <code>`
+    (parse + serialize, non-committing — parsed with `push_const_scope=true` so
+    prior consts fold but new decls land in the popped scope), `:analyze
+    <code>` (the colored optimization view), `:source <file>` (split into
+    complete units via `is_incomplete` and replay each through
+    `do_eval(echo=false)`), `:help [topic]` (the documentation system,
+    `replhelp.cpp`), `:trace [<cat>...] on|off` (toggle the diagnostic
+    tracer), `:globals` (a table of every global — vars/consts/funcs/structs —
+    with its inferred/declared type, merging the runtime scope with the const
+    context so folded const SCALARS still appear), `:type <expr>` (a committed
+    global's inferred static type via `ReplInfer::global_type`, else the
+    runtime structural type of the expression evaluated in a throwaway child
+    scope), `:show <function>` (the optimized-AST decompiler, `coderender.cpp`
+    — renders the function and its `<name>$N` clones as synthetic code),
+    `:quit`.
+  - **`completions(buf, cursor)`** — Tab candidates: keywords + builtins + REPL
+    globals (`EvalContext::collect_symbols`), or a struct value/type's fields/
+    consts right after `base.`.
+- **`lineedit.{h,cpp}` — the hand-rolled, IRB-style multi-line editor.** A
+  **pure `LineEditor`** core driven one byte at a time via `feed()`: the edit
+  buffer **holds embedded newlines** (a multi-line block) and the cursor is an
+  offset with a 2-D view (`cursor_row`/`cursor_col`). **Enter SUBMITS only when
+  a `Submitter` callback says the buffer parses complete**, else inserts a
+  newline + auto-indents by bracket depth (`newline()`); **UP/DOWN move within
+  the block** (same column, prev/next line via `move_up`/`move_down`) and fall
+  through to history only at the first/last line; **Home/End and the kill keys
+  are line-relative** (`line_start`/`line_end` — including the `ESC[1~`/`ESC[4~`
+  variants). With no `Submitter` set it is the old single-line behavior, so the
+  feed-based unit tests are unchanged. It emits no output and touches no fd, so
+  it is unit-tested with raw byte scripts (assert `buffer()`/`cursor_row()`/
+  `cursor_col()`). `read_line` is the only non-pure part: termios raw mode via
+  an RAII guard, byte-at-a-time read, and the **2-D repaint** (each logical line
+  under its `>>`/`..` prompt, the cursor positioned in two dimensions, the prior
+  block cleared) — it assumes each logical line fits the terminal width (no
+  soft-wrap). Off a TTY it accumulates physical lines until complete. History
+  stores whole logical inputs, so UP recalls an entire block.
+  - **Inline autosuggestion (PowerShell-style ghost text).** A `Suggester`
+    callback (`std::function<string(const string&)>`) returns a full suggested
+    line for the current buffer; `LineEditor::suggestion()` returns the un-typed
+    **remainder** — but only when the cursor is at the end of a **single-line**
+    buffer that the suggestion strictly extends (so the 2-D renderer never has
+    to draw a multi-line ghost, mirroring PowerShell hiding the prediction once
+    the cursor leaves the line end). `read_line` renders that remainder in dim
+    gray (`\033[90m…\033[0m`) just past the cursor and repositions the cursor to
+    its start; **Right-arrow / `Ctrl-F` at the line end accept it**
+    (`accept_suggestion`: append the remainder; returns false otherwise so the
+    key falls back to moving the cursor right). `read_line` wires the suggester
+    to the **completer** (the same source as Tab: current variables, builtins,
+    keywords - NOT history; history is `Ctrl-R`'s job): it completes the
+    identifier ending the buffer with the shortest matching candidate's
+    remainder. Enabled only when **color is on** (the ghost must be visually
+    distinct; `NO_COLOR`/no-TTY get none). An un-accepted ghost is **erased on
+    leaving the line** (`move_below` emits a clear-to-EOL when `suggestion()` is
+    non-empty - which is only ever a single-line, cursor-at-end buffer, so it
+    hits exactly the ghost), else the committed line would show it (`ar` + dim
+    `ray` reading as `array`). The
+    pure core is unit-tested with a synthetic suggester (`suggestion()` +
+    accept); the gray rendering lives in `read_line` (untested, like the rest of
+    the TTY shell). A navigable dropdown completion menu is still deferred (see
+    `plans/repl.md`).
+  - **Reverse history search (`Ctrl-R`).** `class HistorySearch` (lineedit.h) is
+    the **pure** analogue of `LineEditor` for searching: a query + a ranked,
+    de-duplicated match list + a selected index, driven by `feed()` one byte at
+    a time (Up/Down or Ctrl-P/N move the selection, Ctrl-R cycles to the next
+    match, Enter → `accept`, Ctrl-G/Ctrl-C → `cancel`, Backspace/printable edit
+    the query). Ranking is `fuzzy_score(query_lc, cand)` — a case-insensitive
+    **subsequence** match scored by contiguity (gap-0 runs win big), word-
+    boundary/camelCase hits, and a length tie-break; `INT_MIN` == no match; an
+    empty query matches all with score 0, ordered by **recency** (a
+    `stable_sort` over the newest-first deduped list). `read_line` reads the raw
+    `Ctrl-R` byte (the editor never sees it) and renders a **bordered pane ~⅓
+    the screen high** below the input: a rounded box whose **top edge is the
+    search box** (`search: <query>` + an `N matches` count), over the live
+    result rows best-first, the selected one a full-width reverse-video bar and
+    the **matched query letters bolded** in every row (`fuzzy_match_positions`,
+    the same greedy scan as `fuzzy_score`). The border is rounded UTF-8
+    box-drawing when the locale is UTF-8 (`unicode_ok`), an ASCII fallback
+    (`+ - |`) otherwise — emitted as explicit UTF-8 *byte escapes* so the source
+    stays pure ASCII; each glyph is one display column, so the row-width math is
+    in columns, not bytes. A lone `Esc` (distinguished from an arrow burst via a
+    `byte_ready` select-timeout) cancels. Geometry is scroll-safe (reserve lines
+    by printing newlines then moving back up; `term_size` via `TIOCGWINSZ`); on
+    exit the pane is erased and the cursor returns to the input's first row.
+    **Enter LOADS** the selected command into the editor (it is not auto-run).
+    The scorer, match-position, and state machine are headless-tested
+    (`histsearch:`); the pane rendering is in `read_line` (untested TTY shell,
+    verified over a pty).
+  - **Bracketed paste.** `RawMode` enables it (`ESC[?2004h`, off on exit), so
+    the terminal wraps a paste in `ESC[200~ .. ESC[201~`. `LineEditor::feed`
+    recognizes the start marker (in `csi_final`, `esc_params == "200"`) and then
+    **swallows bytes verbatim** into `paste_buf` until the end marker - never
+    interpreting them as keystrokes (a pasted newline doesn't submit, a Tab
+    doesn't complete). On the end marker it calls `apply_paste`, which inserts
+    the block as inert text **re-indented to the editor's brace-depth style**
+    (`indent_depth`, shared with `newline()`): each line's own leading
+    whitespace is dropped and replaced by 2-spaces-per-level, a line opening
+    with a closing bracket dedents, and the first line is kept verbatim only
+    when it continues a non-empty line (`cursor_col() != 0`). Safe because
+    MyLang whitespace is purely cosmetic. `pasting()` lets `read_line` skip the
+    Ctrl-R interception and per-byte repaints mid-paste; the normal `repaint`
+    then re-renders the block syntax-highlighted. The re-indent + insert is
+    headless-tested (`lineedit:` bracketed-paste cases); the mode toggle is in
+    `read_line`.
+- **`highlight.{h,cpp}`** — `highlight_line`, a self-contained scanner (NOT the
+  lexer; tolerates mid-edit input) that wraps keywords/strings/numbers/comments/
+  type-words in ANSI color, preserving the bytes exactly otherwise. The two-arg
+  `highlight_line(src, int &state)` threads an `HlState` (`HL_NONE`/`HL_STRING`/
+  `HL_COMMENT`) across lines, so a string or `/* */` block comment is colored
+  **across rows**; `read_line`'s repaint carries that state row to row (the
+  one-arg form is the stateless wrapper for isolated lines). The `read_line`
+  highlight callback type is `string (*)(const string &, int &)` accordingly.
+- **`errfmt.{h,cpp}`** — `format_exception`/`dump_loc_in_error`, the
+  per-exception-type caret/backtrace rendering, factored out of `mylang.cpp`
+  (parameterized by an `ostream` + the source `lines`) so the file driver and
+  the REPL share it.
+- **`replhelp.{h,cpp}`** — `repl_help(topic, color)`, the `:help`
+  documentation system: a self-contained STATIC database (no interpreter
+  state) of every builtin (`{name, category, signature, summary, long?}`) and
+  of the language features — surface (values, vars, control, functions,
+  arrays, dicts, strings, structs, exceptions, the type system) *and* the
+  optimization passes (const-fold, auto-const/pure, inlining, specialization,
+  template instantiation, M8, flat arrays, CSE, COW), each with a syntax
+  sketch + prose and a pointer to its `:trace` category. `:help` overview,
+  `:help builtins[/<cat>]`, `:help <builtin>`, `:help language`,
+  `:help <category>`, `:help <feature>` all route through `repl_help`, plus a
+  **commands DB** (`:help commands`, `:help <command>`) documenting the REPL
+  meta-commands themselves. A leading `:` is stripped and means "this is a
+  command" (`:help :trace`); a bare topic resolves builtin → command →
+  language-category → feature, and when a builtin and a command share a name
+  (`trace`/`type`/`globals`) the builtin entry shows with a pointer to the
+  command. Feature ids are kept distinct from category ids. The trace category
+  list (names + descriptions) has one source of truth, `trace_categories_help()`
+  (`trace.cpp`), rendered as an aligned bullet list by `:trace help` and the
+  `trace`/`:trace` entries alike. Pure/headless, so it is unit-tested (`replhelp:`
+  extra_checks). See `plans/repl-introspection.md`.
+- **`coderender.{h,cpp}`** — `render_func_code(fn)` /
+  `render_construct_code(c)`, the optimized-AST **"decompiler"**: it unparses
+  the FINAL tree (after parse/fold/inference/`resolve_names`/`specialize_types`)
+  back into synthetic MyLang-like code, so you see what actually runs — dead
+  code gone, folded consts as literals, inlined call bodies spliced in
+  (annotated `inlined f`), flat-array element types as `array<int>`,
+  typed-scalar/annotation hints as the var's type. A precedence-aware
+  expression printer + statement walker, with a comment fallback for any
+  unhandled node (best-effort, NOT round-trippable). Backs the `show(f)` builtin
+  (a **dev-only** builtin — see the reflection-builtins note below; reserved in
+  scripts) and the REPL `:show <name>` (which also renders the `<name>$N`
+  clones). It
+  reads literal values via the public `ival()`/`fval()`/`bval()`/`strval()`/
+  `literal_value()` accessors on the `Literal*` nodes. `render_func_code` takes
+  an optional per-param inferred-type list: `:show` passes
+  `ReplInfer::func_param_types` (the instance's `FuncInfo::params` types,
+  empty for an un-instantiated template), so a template instance renders
+  `int func dot$0(int x, int y)` (param **and** return types, via
+  `func_param_types`/`func_return_type`) while the base shows untyped
+  `func dot(x, y)`; the `show()` builtin (no persistent inferencer) renders
+  AST-hint types only. `show()` / `:show` also accept an **expression** (not a
+  function): `render_construct_code` renders its optimized tree
+  (`:show 2 + 3 * 4` → `14`; `:show <expr>` parses + `resolve_names`'s the arg
+  non-committing). `:show` output is **syntax-highlighted** via `highlight_line`
+  (extended to color C-style block comments and treat `$` as an id char — the
+  `f$0` names). See `plans/repl-introspection.md`.
+- **`trace.{h,cpp}`** — the **diagnostic tracer** ("MyLang's mind"): a per-
+  category bitmask (`TraceCat`: infer/inline/specialize/template/autoconst/
+  autopure/arrays/fold) in `g_trace_mask`, the hot guard `trace_enabled(c)`,
+  and `trace_emit(c, indent, msg)` to a swappable sink (default `&std::cerr`).
+  The `TRACE(cat, indent, msg)` macro builds `msg` ONLY when the category is on
+  — so the guarded emits sprinkled at optimizer decision points (inferencer
+  `commit_round`/finalize, and — Pillar 3b — the resolver's inliner /
+  auto-const / auto-pure / specializer, the array-hint and fold sites) cost
+  one mask test when off. Control surface (both, builtins-first): the
+  `trace()`/`traceoff()`/`tracing()` builtins (`builtins/reflect.cpp.h`) and
+  the REPL `:trace [<cat>...] on|off` meta-command. The REPL points the sink at
+  its per-input capture stream (a `TraceSinkGuard` in `do_eval`) so an enabled
+  trace narrates into the REPL output just above the result (and is testable);
+  a script leaves it at `cerr` so trace never corrupts stdout. OFF by default,
+  so scripts/tests are unaffected. See `plans/repl-introspection.md`.
+
+`run_repl` (in `repl.cpp`) drives it: history loaded/saved to
+`~/.mylang_history`, colors gated on a TTY + `NO_COLOR` (passed into the
+engine via `ReplEngine::set_color`, since the engine is headless and the
+meta-commands `:help`/`:analyze`/`:show` would otherwise auto-detect stdout
+and bake ANSI escapes into the returned string — breaking `-rt`'s substring
+matches when stdout itself happens to be a TTY), Ctrl-C drops the
+current input, Ctrl-D at the prompt exits. The editor owns multi-line
+continuation (its `Submitter` wraps `ReplEngine::is_incomplete`, treating a
+leading-`:` meta-command as always complete), so `run_repl` reads one whole
+logical input per `read_line` — no per-line accumulation loop. **A function or
+struct can be REDEFINED at the prompt** (the edit-and-resubmit workflow):
+`EvalContext::allow_redeclare` is set on *both* the runtime and const scopes
+(structs/pure funcs register in the const ctx at parse time), and the
+`FuncDeclStmt`/`StructDeclStmt` eval paths erase-then-rebind under it instead of
+throwing `AlreadyDefinedEx`. A plain `var`'s TYPE still sticks (the inferencer's
+job — the type-commitment above; `:undef` resets it). **Redefining a function
+GCs its now-orphaned template/spec instances** (`gc_redefined_instances` in
+`do_eval`): an instance (`f$0`) created only by a throwaway top-level call
+(`f(1,2)` at the prompt) is removed from both scopes + the inferencer when its
+base `f` is redefined, so `globals()`/`specializations(f)`/`:show f` stop
+showing it; an instance still **consumed by a function body** is kept (else
+calling that function would break). "Consumed" is tracked soundly in the
+inferencer: `collect_calls` carries an `in_func` flag (a call below a
+`FuncDeclStmt` in the complete `for_each_child` walk), and `instantiate_round`
+sets `FuncInfo::has_func_consumer` when it redirects an in-function call to the
+instance; `ReplInfer::instance_has_consumer` exposes it. Only instances present
+*before* the input (so not the new ones it just created) and whose base name
+this input redefined are candidates.
+
+**Faithful per-input pipeline.** `do_eval` runs the REAL pipeline on each input
+(after parse): `ReplInfer::check_input` (type inference + checking) →
+`resolve_names(..., repl_mode=true)` → `specialize_types` → eval. So the REPL is
+the true interpreter — flat arrays, M8 specialization, inlining, slotted nested
+locals all happen and are inspectable (`:analyze`).
+- **`ReplInfer`** (`inferencer.{h,cpp}`) is a persistent `Inferencer`: the
+  one-shot `run()` is factored into `setup()` (once) + `infer_one(root)`
+  (per root), and `infer_input(root)` runs `infer_one` then marks this input's
+  new `TypeSym`s/`FuncInfo`s **`pinned`**. A `pinned` symbol is a committed
+  global: the fixpoint (`reset_round`/`commit_round`/finalize/the `enforce_*`
+  passes) **skips** it, and `contribute()` instead **checks** an assignment is
+  assignable to its committed type — the cross-input **type commitment** (`var
+  x = 3` then a later `x = "hello"` is a `TypeMismatchEx`, "has type" for an
+  inferred commit vs "is declared" for an annotated one). All `pinned` branches
+  are no-ops in the one-shot path, so scripts/tests are byte-identical. A
+  rejected input rolls back (`infer_input` restores the global scope + pins the
+  half-built syms). **An uninitialized `var a;` commits as `dyn?`, not `none`**
+  (`pin_new`): a script infers a plain `var`'s type from later uses
+  (`var a; a = 3` → `int?`; a conflicting `a = "x"` is an error), but the REPL
+  commits each input before seeing the next and so cannot defer — a `none`
+  commitment would reject *every* later assignment (`a = 1`), so an
+  unconstrained, un-annotated, non-`dyn`/non-param var is committed `opt dyn`
+  (it accepts any future assignment). This is a deliberate REPL-vs-script
+  divergence (the REPL can't see the future). The **`:undef <name>`**
+  meta-command
+  (`Impl::cmd_undef`) erases a global from the runtime + const scopes and calls
+  `ReplInfer::undef_global` to drop its committed type, so a later `var x` of a
+  new type is fresh. REPL redeclaration is **not** a feature: a re-declared
+  global hits the type-commitment check, and `:undef` is the way to change a
+  global's type. (There is no `undef` *builtin* — a script's symbols are fixed
+  slots at compile time, so `undef` is a REPL-only convenience; a script just
+  re-defines a name.)
+- **`resolve_names`'s `repl_mode`** keeps EVERY top-level decl in the map as a
+  persistent global (never slotted into "main", never auto-const-promoted — the
+  open-world soundness point); nested function locals slot/inline/specialize
+  normally. `eval` runs the input's elems directly in the persistent global
+  scope, so globals persist and nested calls build their own frames.
+- **`render_analysis`/`anno_code`** moved from `mylang.cpp` to `analyzer.cpp`
+  (an `ostream` param) so `-a` and `:analyze` share one renderer.
+
+**Tests:** all headless. The **`repl:`** tests drive ONE `ReplEngine` through a
+sequence of `(input, expected-substring)` steps, so the persisted global scope
+AND the cross-input type commitment / `:undef` reset / per-input optimizers are
+exercised; the **`lineedit:`** / **`highlight:`** `extra_checks` feed byte
+scripts / strings to the pure cores. Only `read_line`'s few syscalls are not
+unit-tested. **Not yet (Phase 5):** an IRB-style dropdown completion menu,
+reverse-search / bracketed paste, and the Windows raw-input backend.
+
+## Optimizations must generalize (the bar is a compiler, not an example)
+
+The compile-time optimizations (const-fold, auto-const, auto-pure, inline,
+specialize, DCE, short-circuit) exist to do for MyLang what a `-O3` compiler
+does: **everything knowable at compile time should fold.** A recurring failure
+mode here was an optimization that passed its one hand-written test but did
+**not** generalize — it worked "pro forma." Several shipped silently broken
+(auto-pure that didn't propagate through a call so a 2-deep pure chain didn't
+fold; const-fold / inline / specialize that only saw the *current* REPL input so
+a call to a prior-input function never folded; a const-false `if` with no `else`
+that left a NULL statement and broke the *next* line; no short-circuit folding at
+all, so a `const FLAG=false; if (FLAG && …)` guard was never eliminated). Each
+was found by a user in minutes of REPL play, not by the suite. So, when you add
+or touch ANY optimization, a passing example is the START of the test set, not
+the proof. Before calling it done:
+
+- **Test CROSS-INPUT, not just single-compilation.** `check()` (the whole `-rt`
+  suite) joins all of a test's source lines into **one** compilation, so it
+  *structurally cannot* catch a pass that only sees the current input — yet the
+  REPL compiles each input separately and is where users actually hit this. An
+  optimizer that doesn't bridge inputs (the `prior_pure` / `prior_scope`
+  plumbing on `resolve_names`/`AutoConst`/`Inliner`) regresses there invisibly.
+  Add a **`repl:`** test that defines a helper in one input and exercises the
+  optimization from a LATER input (`:show` the result). This is the single
+  highest-value rule: every cross-input gap above was invisible to single-
+  compilation tests by construction.
+- **Test COMPOSITION and TRANSITIVITY, not one shape.** A rewrite that removes
+  or replaces a node must be tested *followed by another statement*, as the last
+  statement, inside a function body, nested, and **chained** (`g`→`f`→`h`,
+  partial-const, a side-effecting operand). The bugs live at the seams: a
+  folded-away statement that returns NULL breaks the next one; auto-pure that
+  doesn't cross a call breaks the chain; an expression-bodied function body that
+  a fold pass skips never folds. One example proves nothing about the seam.
+- **Use C++ `-O3` as an ORACLE** where the comparison is meaningful (const-prop,
+  folding, inlining, specialization, DCE, short-circuit — not machine-level
+  codegen). Write the equivalent C++, `g++ -O3 -S`, and confirm MyLang folds
+  what the compiler folds — or document *precisely* why not. The legitimate
+  "why not"s are dynamic-typing soundness (`x+0`≠`x` since `x` may be a string;
+  `false||5`≠`5` since `||` yields bool) and deliberately-out-of-scope passes
+  (general algebraic simplification, loop unrolling, recursion folding). "It
+  folds my example" is not the bar; "it folds what a compiler folds, or there's
+  a written reason it can't" is.
+- **State the PROPERTY, then test the property.** "A pure call with const args
+  folds to a literal" is a property — so test a chain, a partial-const, a
+  cross-input, a nested, and a side-effecting-operand case. If only the example
+  works, the feature is unfinished: either generalize it or pin the limitation
+  with a test that documents the current (limited) behavior, so the gap is
+  *visible* and intentional rather than a latent surprise.
+
+## Execution strategy: strip compile-time overhead first, THEN a bytecode VM
+
+> ## ⛔ THE ABSOLUTE, NON-NEGOTIABLE RULE — ZERO AST AT RUNTIME ⛔
+>
+> **AFTER COMPILATION IS DONE, A SCRIPT RUNS WITH *ZERO* AST NODES. NONE.**
+>
+> This is the WHOLE POINT of the bytecode VM. Read it ten times:
+>
+> 1. **After codegen, there is NO `Construct*` reachable from the runtime
+>    image.** Not in `Instr`, not in a pool, not in a side table, not behind an
+>    index, not behind a `node_idx`, not in a `node_table`, not ANYWHERE.
+> 2. **Every `Construct*` object is FREED after compilation.** The whole AST is
+>    droppable. If a chunk pins even one `Construct*`, the goal is NOT met.
+> 3. **A native op must NEVER call `node->eval(...)` at runtime — and none
+>    CAN: the fallback ops are ALL DELETED** (`EvalStmt`, `EvalToSlot`,
+>    `JumpIfFalse` — the opcodes no longer exist). The codegen is NO-FAIL: a
+>    statement none of the compilers accept THROWS `NotLoweredEx` at compile
+>    time (`throw_not_lowered`, always-on, release included) — a compiled
+>    chunk structurally cannot re-enter the AST, and a future lowering gap
+>    is a loud compile refusal, never a silent tree-walk.
+> 4. **All information an op needs at runtime is extracted into POOLED,
+>    SERIALIZABLE, AST-FREE data DURING compilation** — source `Loc`s in the loc
+>    side table, member keys / catch types / literals / struct defs / arg carets
+>    in their pools, etc. Pooled data is plain values (ints, strings, `Loc`s,
+>    interned `UniqueId*`), NEVER a `Construct*`.
+> 5. **A "loc-keyed" or "pc-keyed" table of `Construct*` is STILL A VIOLATION.**
+>    (The former `Chunk::node_table` and the `ast_nodes` pool are DELETED —
+>    `Chunk` holds NO `Construct*`-typed member AT ALL (`closure_defs` holds
+>    `FuncDescriptor*`); `verify_ast_free` asserts every `Instr`'s
+>    codegen-transient `node_idx` was nulled when codegen finishes.)
+> 6. **During compilation you MAY hold `Construct*`** — e.g. an
+>    `unordered_map<const Instr*, const Construct*>` (or the current `node_idx`
+>    handle) to associate an op with its node before its final pc is known. That
+>    is fine, and often simpler than indices. **But it is a COMPILE-TIME-ONLY
+>    scratch structure; it is destroyed when codegen finishes.** The finished
+>    chunk carries none of it.
+> 7. **The ONLY exceptions are the REPL and the `-rt` test harness** (they
+>    retain the AST for their own reasons — decompilation, differential
+>    testing). A plain script run (`mylang file.my`, `-vm`, and the eventual
+>    `.myv`) has ZERO AST at runtime.
+> 8. **The endgame is a serializable `.myv` file** (`mylang -c file.my` →
+>    binary, run with no AST). That is IMPOSSIBLE while any `Construct*`
+>    survives codegen. So this rule is not aspirational polish — it is the
+>    load-bearing invariant the whole VM exists to satisfy.
+> 9. **When you find a construct that isn't natively lowered, NATIVIZE IT.** Do
+>    not add a node-holding op. Do not relocate the node. Extract its loc/data
+>    to a pool and emit real bytecode. (Since the no-fail contract landed, an
+>    unlowered construct is a NotLoweredEx compile abort, so a gap cannot hide
+>    — fix it by lowering, never by re-adding a fallback.)
+> 10. **Say it once more: after compilation, NO AST NODES, NO `Construct*`, NO
+>     pointers, NO indexes, NO tables — the AST is FREED and the script runs on
+>     bytecode + pooled data alone.**
+>
+> **THE RULE IS NOW FULLY SATISFIED AND MACHINE-PROVEN** (2026-07-15,
+> plans/vm-ast-free-runtime.md): the call model runs on the serializable
+> **`FuncDescriptor`** (funcdesc.h) — `FuncObject::func` points at it, never
+> at a `FuncDeclStmt`; params bind from its `ParamDesc` snapshot, captures
+> snapshot via its resolved kind/slot list (`read_sym`), backtraces and the
+> reflection builtins read it, `Chunk::closure_defs` holds descriptors, and
+> chunks are keyed/stamped on the descriptor. `vm_compile` MOVES every
+> descriptor + `StructTypeDef` into the **`VmProgram`** image, and the script
+> driver then calls **`vm_ast_teardown`** (ASSERTS builds, debug AND default
+> release; a no-op under ASSERTS=0): every descriptor's compile-time `decl`
+> back-pointer is NULLED, the whole AST is destroyed — each freed node
+> `memset(0)`ed by the Construct class `operator delete` — and
+> `Construct::live_nodes == 0` is ML_CHECKed. The VM then runs with the AST
+> provably gone. The historical inventory lives in
+> `plans/vm-fallback-elimination.md`; the descriptor/teardown design in
+> `plans/vm-ast-free-runtime.md`.
+
+MyLang's performance philosophy is a two-front strategy, in this deliberate
+order — the same order a real C/C++ compiler works in:
+
+1. **Do at compile time everything a compiler would.** The AST tree-walker
+   runs *at parse time* (const-eval) and the optimizer stack (fold,
+   auto-const/pure, inline, specialize, monomorphize, M8, flat arrays,
+   recursion unroll, int-algebra) rewrites the tree into an **optimal AST**
+   with the pointless work already removed. This is the project's defining
+   trait and is **not** compromised for the VM: the tree-walker is a permanent
+   part of the compiler — both as the parse-time const evaluator (woven into
+   the parser; it can *never* be a VM's job, since const-eval happens before
+   any bytecode exists) and as the producer of the optimized AST the VM
+   consumes. A `-vm` run still runs every optimizer pass, then lowers the
+   result; the VM never re-does compile-time work.
+2. **THEN execute that optimal AST fast at runtime with a bytecode VM.** The
+   tree-walker is already ~2.7x faster than CPython (geomean); a flat bytecode
+   interpreter removes the residual per-node virtual-dispatch tax — which we
+   *measured* to be the tree-walker's floor (an instruction-count study with
+   cachegrind killed node-level "superinstructions": fusing a typed operator's
+   operand reads saved ~1 instruction/iteration, 0.03%, because it only trades
+   a well-predicted monomorphic vcall for an equal-length inline branch; the
+   per-node dispatch can only be removed *wholesale*, which is what a VM does).
+   Target: **5-10x CPython**.
+
+The VM does **not** replace the runtime value/scope model — it reuses
+`EvalValue`, `EvalContext`, `Frame`/slots, the global/builtin tables,
+`num_bin_op`, the `Type` ops, and every builtin unchanged. It is a *dispatch
+strategy* (a flat instruction stream + a switch loop) layered over the same
+runtime, not a second interpreter — which is what keeps it small and correct.
+
+**Status: Phase 5 in progress** (register machine over frame slots —
+resolved-local int/float/mixed scalar loops run native at top level, inside
+function bodies via a `do_func_call` hook, and NESTED — nested loops + `if` in a
+loop body compile directly into the chunk; array element read/write `a[i]` /
+`a[i]=v` / `a[i][j]` (and a subscript **inc-dec** `a[i]++`/`d[k]++`/`a[i]--` →
+`StoreElemInt`/`Float` with a constant 1 for a flat array, or a `DictStore` with
+a boxed 1 + the compound op for a dict — `== x[k] += 1`, the subscript's loc for
+its caret) and a scalar builtin/call in an expression are native. The subscript
+STORE ops **`DictStore`/`StoreElemValue`** are **AST-free**:
+`vm_subscript_store`
+(the shared `Type::subscript(for_write)` + `slot_rmw`) handles ANY base type, so
+the `is<Dict>`/`is<Array>` guard + `node->eval` fallback were dropped and its
+not-an-lvalue caret is now a `Loc` pair (from the loc side table, recorded by
+`extract_locs` from `node` = the `Subscript`), not an `Expr14`-cast node. A
+flow-free statement runs as a fallback within an otherwise-native loop so
+array-building loops (matrix/sieve) go native; recursion stays neutral; **suite
+geomean 0.75x, VM ~1.3x faster than the tree-walker**). A **boxed (dyn/string)
+value tier** then removed the `node->eval` fallback for scalar `dyn`/string
+expressions — assign / compound-assign / comparison / logical `&&`/`||` over
+locals, globals, captures, builtins, literals, subscripts (`a[i]` via the
+runtime `Type::subscript`), members (`obj.f` / `d.k` via a shared
+`member_read` factored out of `MemberExpr::do_eval`), and **slices**
+(`a[i:j]` / `s[i:j]` → **`SliceV`**, via the runtime `base.get_type()->slice()`
+— the same COW-registered sub-view path as `Slice::do_eval`, absent bounds
+passed as `none`; ~2x on `bench/15`/`16` array-slice, `29` fully native) —
+and **`foreach` over an array** lowers to a counted loop (snapshot + `ArrLen`
++ a per-element load + the
+fused `ForLoopStep`, −64% instructions): a flat `array<int>`/`array<float>`
+reads the raw scalar (`LoadElemInt/Float`, stamped `ForeachStmt::elem_th`), and
+a **GENERAL element (`array<str>` / `array<array>` / `array<dict>` /
+`array<dyn>`)** binds the element's existing `EvalValue` into the loop var via
+**`LoadElemValue`** — **box-free (no box/unbox)**, matching the tree-walker's
+general `elem = view[i].get()`, ~1.7x on a general-array foreach loop; the
+inferencer stamps `ForeachStmt::container_is_array`. Both the **single-var**
+(`foreach (e in a)`) and the **INDEXED 2-var** (`foreach (i, e in indexed a)`)
+forms are native: for indexed, the index var IS the loop counter (the body
+reads it) and the element loads into the 2nd var. A flat **`array<bool>`** binds
+each element as a REAL bool (not 0/1) via **`LoadElemBool`**
+(`ForeachStmt::elem_is_bool`), so `print(x)`/`str(x)` show `true`/`false` and
+`x == true` holds — matching `arr_elem_boxed`'s bool case. A **foreach over a
+proven STRING**
+(`ForeachStmt::container_is_str`) is the same counted-loop shape with two string
+ops: **`StrLen`** (the char count
+bound, once) and **`LoadStrChar`** (bind char i as a fresh 1-char string, box-
+free — matching `SharedStr(string(&view[i], 1))`); single-var and indexed 2-var
+both native (`str.len`/`load.strchar` in `-vd`). Neither op can throw (i is
+loop-bounded), so both are node/loc-free. A **flat `array<PodStruct>` foreach**
+whose body reads the loop var
+ONLY as SCALAR FIELDS (`p.x`) is native via a **DIRECT read**: the loop var is
+NEVER materialized — the counted loop runs and each `p.field` compiles to
+**`LoadStructFieldInt`/`LoadStructFieldFloat`**, a scalar read STRAIGHT from the
+array element's bytes (`vm_struct_field_int/float`), skipping the per-iteration
+`StructObject` + `memcpy` the tree-walker's reused-object foreach pays (**~4x**
+on `65_struct_field_sum`). The inferencer stamps
+`ForeachStmt::container_struct_def`; the codegen's `struct_fe_body_ok` proves
+every loop-var use is a scalar-field READ (a whole-`p` use or a `p.field` WRITE
+— which must NOT hit the array, `p` is a copy — falls back to the tree-walker's
+reused-`StructObject` bind), and a per-body `sfe` mapping makes
+`compile_int/float_expr` emit the direct read for `p.field`. The
+**STRICT-UNPACK**
+`foreach (x, y in
+pairs)` over a proven `array<array<int>>` / `array<array<float>>` (flat
+sub-arrays) is native too: the outer array iterates counted, and per element a
+**`UnpackElemInt`/`UnpackElemFloat`** op reads `pairs[i]` (a general element = a
+flat sub-array), strict-checks its length == the loop-var count `N`, and writes
+its `N` scalars into the consecutive loop-var slots (`base..+N-1`) — matching
+`do_iter`'s strict destructure (same two `TypeErrorEx`s, same container loc, via
+the loc side table so the op is `node`-free). **Storage-kind guarded:** the
+BOX-FREE raw read (`flat_ints`/`flat_floats`) fires only when the sub-array's
+`skind()` actually IS that flat kind; ELSE (a MIXED-numeric literal like
+`[int, float]`, which inference types `array<float>` by int|float join but
+builds GENERAL storage, or a flat array of the OTHER scalar kind) it binds each
+element's ACTUAL boxed value via `vm_arr_elem` — so an int stays an int under
+`UnpackElemFloat`, byte-identical to `bind_loop_var` (blindly reading
+`flat_floats()` on the general sub-array asserted/crashed — a fixed bug).
+Stamped by the inferencer as `ForeachStmt::unpack_elem_th` (i/f). A
+**general / dyn / str / mixed** sub-array (`array<array<dyn>>`,
+`array<array<str>>`) — where the flat scalar path doesn't apply — is the
+**`UnpackElemValue`** variant (`ForeachStmt::unpack_elem_value`): same op shape,
+each element binds its boxed value via `vm_arr_elem`. This variant ALSO carries
+the **`indexed` unpack** `foreach (i, name, price in indexed products)`
+(shopping's F-2b shape): the index var is the loop counter and the unpack
+targets follow it (`unpack_base = base + 1`, width `N - 1`). The inferencer's
+`accumulate_foreach` was fixed to type an indexed 3+var loop's targets as the
+sub-array's ELEMENT type (`dyn`/`str`), not the whole sub-array — matching
+`do_iter` (which destructures the element), a latent front-end bug shopping
+survived only because it used the vars in lenient builtins (`rpad`/`str`), never
+arithmetic. A **`_` placeholder or a non-consecutive slot layout** (the loop
+vars don't land in one contiguous run — a `_` gets NO slot) takes the
+**`UnpackElemTargets`** variant: same op shape, but the per-position target
+slots live in the **`Chunk::unpack_targets`** pool (`-1` for a `_`, which is
+skipped) and each element binds box-free via `vm_arr_elem` (flat or general —
+so it covers int/float/str/dyn sub-arrays uniformly). Handles the non-indexed
+`foreach (a, _, c in pairs)` AND the indexed `foreach (i, _, v in indexed
+rows)`. A non-local target still falls back. `20_foreach_unpack` (flat) 0.80x,
+`75_indexed_unpack` (indexed str) 0.71x vs the tree-walker.
+**Dict `foreach (k, v in d)` / `foreach (k in d)`** is native via a **LIVE
+dict iterator** — a dict has no O(1) index, so it is NOT the counted-loop
+but a while-shaped loop over two ops: **`DictIterInit`** pins the dict
+(an `intrusive_ptr` copy → alive for the loop, matching the tree-walker's
+lifetime-extended `cval`) and sets the `unordered_map` iterator to `begin()`;
+**`DictIterNext`** tests it (→ end_pc on end), binds the key (and value,
+`.put(it->first)`/`.put(it->second.get())` — like the array general case), and
+`++`s. The per-loop iterator STATE lives in a **`vm_run_chunk`-local
+`std::vector<DictIterState>`** (`{intrusive_ptr<DictObject> dict; iterator;}`)
+sized by **`Chunk::n_dict_iters`** and indexed by a codegen-assigned `iter_id`
+(monotonic, never reset → nested/sequential dict foreachs get distinct slots); a
+mid-loop `return`/exception releases it when the frame unwinds — no cleanup op.
+Advance is BEFORE the body: the visited sequence is identical to the
+tree-walker's range-for, and the only difference (`++it` timing) is observable
+only under mutation-during-iteration, which is UB in both engines (dicts don't
+COW, so a body write hits the same map either way — a snapshot would DIVERGE, so
+we DON'T snapshot). The inferencer stamps `ForeachStmt::container_is_dict` for a
+1/2-var (key[+value]) loop over a proven `Dict` type — and the **INDEXED** form
+`foreach (i, k[, v] in indexed d)` too: `ids[0]` is an int index counter
+(`LoadImmInt 0` before the loop, `IntBin += 1` at each `continue` point, so it
+holds the iteration number during the body, matching `do_iter`), and the
+key/value follow it. Fixing this also fixed a **latent front-end mis-typing**:
+`accumulate_foreach` typed an indexed dict's two targets as a destructured
+element (both the KEY type), but `do_iter` binds `ids[1]=key`, `ids[2]=value`
+(count==2) — so `v` was wrongly `str` for a `dict<str,int>`; now key + value
+are typed distinctly (the tree-walker hid it by binding dynamically). A `dyn`
+container falls back; `_`/keys-only bind a slot of `-1` (skip). ~1.5x on
+`62_dict_word_count`
+(0.71x→0.64x vs the tree-walker).
+**A `foreach (<ids> in [indexed] <dyn>)`** — the
+container's static type is `dyn`, so array-vs-dict can't be proven — is native
+via a runtime-dispatching LIVE iterator, **`ForeachDynInit`**/**`ForeachDynNext`**
+(like the dict pair, over a **`Chunk::n_dyn_iters`** `DynIterState` pool),
+**GENERAL over the id list**: any var count, the `indexed` form, and `_`
+placeholders. Init
+pins the container, records the loop shape (`in.a.lit` packs
+`nvars | indexed << 8`; the per-var frame slots — `-1` == `_` — are an
+`unpack_targets` pool entry, `in.b`), and chooses ONCE — an
+array (`{idx, size}`) or a dict (`{it}`), else throws `TypeErrorEx` (loc side
+table); Next binds BOX-FREE from the state and advances, exactly as
+`do_iter`: `indexed` binds `targets[0]` = the iteration counter; an ARRAY
+element binds a single remaining var (`vm_arr_elem` → `arr_elem_at`) or is
+STRICT-unpacked into N remaining vars (the same non-array / wrong-length
+`TypeErrorEx`s, container caret via the side table, recorded on the Next op);
+a DICT binds key [, value [, `none`-padded further vars]] (`do_iter`'s
+count-2 padding). The inferencer stamps `ForeachStmt::container_is_dyn`
+for ANY foreach over a `Dyn` container (a non-local — global/capture — loop
+var still falls back, rare). An `opt` container is compile-REJECTED
+(`NullabilityEx`), so "unproven container" has no valid-script residue.
+This is the **F-2a** win — a `dyn`-param function dispatched
+indirectly (its param never gets a concrete container type, e.g. phonebook's
+`cmd_view`) now iterates natively instead of an `EvalStmt` fallback.
+**Related fix:** a 1-var `indexed` foreach (`foreach (i in indexed a)`) has
+NO value var — `do_iter`'s single-bind read `ids->elems[1]` OUT OF BOUNDS
+and ABORTED (container hardening; UB in a plain release); it now binds
+nothing beyond the index, consistent with the dict path. **~1.8x
+CPython** on `66_dyn_foreach` (single-var; VM 0.59x the tree-walker) and **~3x
+CPython** on `74_dyn_foreach_kv` (2-var dict; VM 0.54x the tree-walker) — the
+box-free bind is the win. **User-function calls** go
+native via `CallV`: a call
+proved a user function (`CallExpr::vm_direct_func`, a Func static type — not a
+struct constructor / builtin) that devirtualized to a global slot evaluates its
+args into a register run (a `VmArgs` view over the caller's frame slots — no
+per-call allocation) and calls `vm_call_func` → `do_func_call` with the VALUES
+(no `node->eval` of the call). An **INDIRECT call of a func VALUE** (a closure /
+lambda / func-valued var — a plain `CallExpr` with `vm_direct_func` but no
+global slot) goes native via **`CallValueV`**: the callee EXPRESSION is compiled
+into a temp (callee-first, matching the tree-walker), then the args run, and the
+op reads the temp's `FuncObject` and `vm_call_func`s it — so
+`11_closure_counter` (1.09x → 1.00x, no longer a VM loss) and `12_higher_order`
+(0.54x) go native. This covers both an EXPRESSION-position value call and a
+**discarded call STATEMENT** `fn(args);` (F-3, phonebook's `cmdfunc(data)` — a
+func picked from a dict/array and dispatched; `gen_stmt` + the loop-body stmt
+compiler route a plain-`CallExpr` statement to `try_native_value_call` after the
+`Direct{Call,BuiltinCall}Expr` handlers, its result discarded). Modest speed
+(the call is `do_func_call`-bound, both engines), but it removes phonebook's last
+live `EvalStmt` (`76_funcval_dispatch` VM 0.93x vs the tree-walker). A **baked const array/dict/struct literal** (a `LiteralObj` —
+what a fully-const `var a = [1,2,3]` / `d = {}` folds to) materializes via
+**`LoadLiteralObjV`**, which calls the shared **`eval_literal_obj`** (the
+immutable-share vs fresh-mutable-clone logic + the general/flat_s `arr_hint`
+cases, factored out of `LiteralObj::do_eval`) from a `Chunk::literal_objs` pool
+entry — AST-free, byte-identical to the tree-walker. A **plain assignment to a
+GLOBAL-table slot** `g = <expr>` (a top-level var a function reads — the write
+counterpart of `LoadGlobalV`) goes native via **`StoreGlobalV`** (`target` = the
+`GlobalFuncTable` slot, `a` = the value temp): it writes `gfuncs->slots[target]`
++ `defined[target]=1`, which for a plain assign is byte-identical to the
+tree-walker's decl (bind + define) AND reassign (`slot_rmw(op==assign)` ==
+`put(RValue)`). A **compound** `g += x` and **inc-dec** `g++`/`g--` (a global
+statement, lowered to `g += 1`/`-= 1`) use the SAME op with `aop` = the base op
+(`Op::invalid` == plain assign): it requires the slot already `defined` (else
+`UndefinedVariableEx`) then copy-modify-stores via `num_bin_op`, identical to
+`CompoundV` (the compound rhs is a boxed operand — a complex rhs falls back).
+The
+compound/inc-dec variant carries a `node` for its caret (div/undefined, via the
+loc side table); the plain assign is node-free. Compile in `compile_boxed_stmt`
+(the gate now also accepts a `SymKind::global` lvalue; a global `IncDecExpr`
+statement is handled at its top). An **INT/FLOAT-TYPED** global (needs
+`coerce_to_decl_type`'s numeric widen / dyn-narrow throw) and a `const` global
+(must throw `CannotRebindConstEx`) fall back to `EvalStmt`; a **non-scalar-typed
+global** (`array<int> g`, `str g`, …) is native (its coerce is a no-op — see the
+typed-decl note below).
+Script-only (no `SymKind::global` in the REPL), so never emitted there; **not**
+a pure-target retarget candidate (it writes the table, not a temp). A closure
+**CAPTURE write** `cap = v` / `cap += v` / `cap++` (a counter `start++`) is the
+exact analog — **`StoreCaptureV`** writes `(*ctx->captures)[target]` with the
+same plain/compound/inc-dec `aop` split, no defined check (a capture is always
+defined - snapshot at closure creation). So a closure BODY is now fully native
+(the capture write was its last `EvalStmt`); 0-bench (the `do_func_call` call
+overhead, engine-neutral, dominates a counter loop) but it completes the
+slot-write family (local / global / capture). An **array LITERAL**
+`[a, b, ..]` whose elements aren't all const (a fully-const *scalar* one is a
+baked `LoadConstV`) builds native via **`MakeArrayV`**: the element expressions
+compile into a
+register run (the same contiguous-run pattern native calls use for args, via
+`emit_args_range`), and the op builds the array through the tree-walker's shared
+**`build_array_from_values`** core — flat (int/float/bool) or general per the
+`ArrHint` carried in `target2`, box-free, never throwing (so `node`-free) — and
+is retargeted straight into the lvalue slot for `var a = [..]` (no `MoveV`). A
+**flat STRUCT-array literal** `[P(a,b), P(c,d)]` (`ArrHint::flat_s`, F-4) lowers
+to the **FUSED `MakeStructArrayV`** (`try_make_struct_array`) when every element
+is a same-POD-struct ctor with all-scalar field args: the N structs' field args
+compile INTERLEAVED into one run (struct i's field j at `base + i*M + j`,
+`M = nfields`), and `vm_make_struct_array` coerces them STRAIGHT into a
+contiguous flat byte buffer — **no intermediate `StructObject` per element** —
+then builds the mode-5 flat array. This **BEATS** the tree-walker's
+`LiteralArray::do_eval` (which allocates N `StructObject`s then packs them):
+`77_struct_array_lit` VM **0.85x** vs the tree-walker (was ~1.2x SLOWER under the
+earlier per-element `StructCtorV`+`MakeArrayV` lowering — the `EmplaceStruct`
+pattern for a whole literal). A MIXED / nested-struct-field / non-scalar-arg
+literal declines the fused op and falls to per-element `StructCtorV` +
+`MakeArrayV` (`build_array_from_values` packs the run VALUE-DRIVEN, the def off
+the first element), and a still-unliftable one to `EvalStmt`. The `StructCtorV`
+arg gate (shared `is_typed_scalar_arg`) accepts a scalar LITERAL (not only a
+`th`-stamped operand), so an auto-const-folded arg (`var a=1; [P(a,a)]`, whose
+folded literal has no `th`) lowers too. So a per-iteration array literal
+(`22_multi_assign` 1.05x→0.89x; matrix/sieve/wordcount) no longer falls back to
+`EvalStmt`. A **dict LITERAL** `{k0: v0, ..}` is the twin **`MakeDictV`**: the
+key/value pairs compile INTERLEAVED into the run (`[k0,v0,k1,v1,..]`, key at
+even/value at odd), and the op builds via the shared **`build_dict_from_pairs`**
+(which freezes each key). Both share **`compile_to_run_slot`** (factored out of
+`emit_args_range`) to place each element in its run slot. Dict-literal loops
+(`25_dict_member` 0.63x, `62_dict_word_count` 0.69x vs the tree-walker) go
+native. A **CLOSURE** `func [caps] (params) {..}` in expression position (a
+returned / var-bound / call-arg lambda, `id == null`) builds via
+**`MakeClosureV`**: `make_intrusive<FuncObject>(def, &ctx)` snapshots the
+captures from `ctx` — byte-identical to `FuncDeclStmt::do_eval` for a lambda —
+where `def` is a program-lifetime **`FuncDescriptor*`** from a
+`Chunk::closure_defs` pool (the `Instr` holds only the index, and the pool
+holds NO `Construct*`; the ctor never throws for a resolved closure, so no
+loc). A **top-level `func f(..){}` decl
+STATEMENT** bound into a hoisted GLOBAL slot reuses the same op — `gen_stmt`
+emits `MakeClosureV` (the `FuncObject`) + **`StoreGlobalV`** (write the slot +
+mark `defined`), byte-identical to `FuncDeclStmt::do_eval`'s global-bind
+`slots[slot] = LValue(func, false); defined = 1` (a capturing named func / the
+REPL map falls back). So the **whole function/closure path is native** — decl
+BIND, closure CREATE, capture read/write, indirect CALL, and the compiled body —
+via `MakeClosureV` + `StoreGlobalV`/`StoreCaptureV` + `CallV`/`CallValueV`.
+Removing the per-func-decl `EvalStmt` cut the bench-suite fallback count 54→24.
+A **`const` DECL of an arr/dict/func kept as a runtime symbol** (`const x =
+<LiteralObj>`; const SCALARS are inlined, so never here) goes native via
+**`DeclConstV`**: materialize the rvalue then BIND the slot as a **const
+`LValue`** (`LValue(v, true)`) — a LOCAL (`target2==0`) or GLOBAL (`==1`) slot.
+Binding const (not a plain `put`) is what keeps a later rebind throwing
+`CannotRebindConstEx` (a rebind, having no `pInConstDecl`, stays `EvalStmt` and
+throws via the tree-walker). The codegen (`compile_boxed_stmt`) recognizes it by
+`Expr14::fl & pInConstDecl` — which distinguishes a DECL from a REASSIGN (a
+const reassign is a RUNTIME error, not caught at compile time, so the codegen
+does see it and must leave it to the tree-walker).
+A **`struct P {..}` decl** binds the same way — `gen_stmt` bakes the type
+descriptor (a trivial `t_structtype` value holding the program-lifetime
+`StructTypeDef*`) into the const pool -> **`LoadConstV` + `StoreGlobalV`**.
+The tree-walker binds it `const`, but that flag is unobservable at runtime (a
+reassign `P = x` is a compile-time `CannotRebindConstEx`, `isconst` folds), so a
+plain `StoreGlobalV` is differential-identical (a REPL map-resident struct falls
+back). A standalone POD construction `P(x, y)` builds via **`StructCtorV`**: the
+field args compile into a register run, then `construct_struct_from_values`
+coerces them into the POD bytes (the `StructTypeDef*` is a `Chunk::struct_defs`
+index, so node-free). It's gated on **every arg a typed scalar** (`th==i/f`) —
+the inferencer already rejected a non-fitting typed arg, so `coerce` can't throw
+and no per-arg loc is needed; a **nested POD-struct-field arg** (`L(P(1,2),
+P(3,4))`) is accepted too (`pod_ctor_arg_safe`: the nested `StructCtorV`
+produces exactly that struct type, so the parent's `coerce` can't throw), while
+a `dyn` arg falls back to the tree-walker, which reports the exact arg loc (the
+`append`-fused ctor is `EmplaceStruct`). A **BOXED (non-POD) construction**
+`B(a, x)` with runtime args — an `array`/`dyn`/`opt` field makes B boxed (a
+const-arg one folds to a `LiteralObj`) — is **`StructCtorBoxedV`**
+(`CallExpr::vm_struct_boxed_def`, copied onto the `DirectCallExpr` in
+`devirtualize_calls`): the field args compile into a register run, then
+`construct_struct_boxed_from_values` mirrors `construct_struct`'s boxed loop
+(coerce + emplace, none-fill omitted trailing opt fields). Here a field coerce
+CAN throw (a dyn-laundered wrong value), so the **per-arg carets** are pooled in
+a new serializable `Chunk::boxed_ctors` (`{def, ArgLoc[]}`) and the throw
+reports the offending arg's caret — byte-identical to the tree-walker, AST-free.
+The POD path exposed a latent VM bug: `a[i] =
+<struct>` into a **flat struct array** has no boxed element LValue, so the
+general `StoreElemValue` path (`subscript(for_write)`) wrongly raised
+`NotLValueEx`; `vm_subscript_store` now byte-stores a flat POD-struct element
+directly (bounds/type-check/COW/`memcpy`), mirroring `try_flat_subscript_store`.
+
+**The residual container-STORE family (all now native).** A **struct field
+store** `s.f = v` / `s.f OP= v` → **`StoreMemberV`** (`vm_member_store`: a POD
+field coerces + byte-stores, a boxed field takes the field LValue + `slot_rmw`),
+gated on the inferencer's `MemberExpr::base_struct`; a **nested store**
+`a[i][j] = v` → **`StoreElem2V`** (`vm_nested_subscript_store` reads `a[i]` as a
+reference then stores `[j]` into it — a FLAT inner via the shared
+`flat_store_core`, a GENERAL inner via the element LValue; COW writes back
+through the inner element), the generic N-level `a[k0]..[kn] = v` →
+**`StoreElemChainV`** (`vm_subscript_chain_store` over a key temp run). Both are
+AST-free with **PER-STEP subscript carets** in the **`Chunk::chain_locs`** pool
+(a `{Loc,Loc}` per step, inside-out; a pointer, deref only on the throw path so
+the hot store stays cheap): an INTERMEDIATE `a[9]` OOB carets the inner
+subscript, the FINAL store the outer — byte-identical to the tree-walker's
+per-node stamp (this replaced an earlier single-outer-loc imprecision where an
+inner throw showed the whole `a[i][j]` span). **A store's base may be a GLOBAL
+or CAPTURE container**, not only a
+frame local: `as_container_base` (codegen) returns a slot **KIND** (0 local / 1
+global / 2 capture) which the store ops carry in `in.target`, and
+`vm_store_base`
+(vm.cpp) forms the base `LValue*` from the frame / the `GlobalFuncTable` /
+`ctx->captures` (an undefined global → `UndefinedVariableEx`) — so `a[i]=v` /
+`d[k]=v` / `s.f=v` targeting a top-level container a function reads, or a
+captured one, go native. **`StoreElemValue` is the UNIVERSAL store**:
+`vm_subscript_store` now handles a **flat scalar** base too (via the shared
+`flat_store_core`, factored out of `try_flat_subscript_store` alongside
+`flat_writable_array`), so it dispatches **flat / general / dict** at runtime
+exactly like the tree-walker's `try_flat`→general. The codegen emits it as the
+**catch-all** for any container-slot base a fast path didn't take — a proven
+GENERAL array, a **DYN / captured / unproven** base, or a flat int array whose
+index isn't int-compilable (the flat `StoreElemInt` path rolls back and falls
+through) — while a **proven flat int/float array keeps its unboxed
+`StoreElemInt`/`StoreElemFloat`** (the catch-all excludes `th==f && base_array`,
+left to `compile_float_stmt`). A **GENERAL nested lvalue-chain store** mixing
+MEMBER and SUBSCRIPT steps (`a[i].f=v`, `q.p.x=v`, `s.f[i]=v`, `d.a[0].f=v`) →
+**`StoreLValueChainV`** (`try_native_chain_store` decomposes the lvalue into a
+slotted base + a `Chunk::chain_steps` list — a member is a `member_keys` pool
+index, a subscript a pre-evaluated key temp, each with its own node loc). The
+runtime walk (`vm_chain_lvalue_store_op`) carries `cur` as EITHER an `LValue*`
+ref OR a plain VALUE — exactly the tree-walker's chained `do_eval`, where an
+immutable intermediate (a POD field, a readonly instance) is a value READ
+(`member_read_core`) the walk continues on, only failing `NotLValueEx` at the
+FINAL store (so `q.p.x` on nested-POD carets the whole lvalue, not the inner
+step). The final step dispatches: a struct → `vm_member_store` (POD byte / boxed
+field), a **DICT member `d.f=v` → `vm_subscript_store(memId)`** (== `d["f"]=v`,
+auto-vivify), a subscript → `vm_subscript_store`. Each step's throw uses ITS
+node's loc (a subscript-only chain keeps the tuned `StoreElem2V`/
+`StoreElemChainV`; a single `s.f`/`a[i]` keeps `StoreMemberV`/`StoreElemValue`).
+So a member-in-the-middle nested store — which WORKS for boxed structs / dict
+values, throws for POD — is native, byte-identical incl. carets. **P8 exceptions
+are now fully native** (see
+`plans/vm-exceptions.md`): try/catch/finally + throw + rethrow + all
+flow-crossing-try (incl. nested-finally chaining) are native ops. **G1
+(2026-07-17): a VM-RAISED exception NEVER C++-throws, cross-frame included.**
+`vm_raise` (the shared raise for `Throw`/`Reraise`/`Rethrow`/`EndFinally`'s
+reraise and the IntBin/FloatBin div0 pair) dispatches to a SAME-frame handler
+first (the un-cold fast path — routing it through the cold walk cost a
+measured +12% on 42_exceptions), else runs the native FRAME WALK
+(`vm_unwind_walk`) directly: pop in-VM records (capturing their backtrace
+frames), dispatch at the first frame with a handler (the caller refreshes the
+cached `code` pointer), or convert to the `g_vm_exc_pending` SIGNAL at the
+activation's BOUNDARY record — pointer work end to end, no landing pad, no
+exception clone (69_exc_crossframe 0.564x VM-wall, my/py 1.43x → **0.80x** —
+the last CPython-losing bench now wins). Backtraces are byte-identical,
+inclusive of INLINED virtual frames (`Chunk::inline_ctxs`, flushed by
+`vm_flush_inline`). The boundary catch remains ONLY for the TYPE-SYSTEM C++
+throws the VM can't pre-detect (OOB / KeyNotFound / a boxed `TypeErrorEx`):
+a same-frame catch of those is native (boundary dispatch), a cross-frame one
+pays one landing-pad to the boundary before the walk takes over.
+
+A **multi-assign destructure of an array LITERAL** — `a, b, c = [e0, e1,
+e2]` (an `Expr14` whose lvalue is an `IdList`) — is lowered by
+**`try_multi_literal_store`** (codegen) NOT by building the array and unpacking,
+but by compiling each element into a snapshot temp and **distributing** the
+snapshots to the target slots — **eliminating the array alloc entirely** (the
+real win; box-free for int/float elements). Snapshot-FIRST makes it swap-safe
+(`a, b = [b, a]`), matching the tree-walker's build-then-bind. Only when the
+rvalue is a `LiteralArray` of EXACTLY the target count and every target is a
+real (non-`_`), resolved-local, non-const, non-coerced identifier; a `_`
+placeholder, an arity mismatch (a runtime strict error), a non-literal array
+(`a,b = f()`), or a typed/const target all fall back to the strict
+`handle_single_expr14` `EvalStmt` (byte-identical under the differential).
+A **SCALAR SPREAD** `a, b, c = <non-array scalar>` (the sibling
+`try_multi_scalar_spread`) compiles the rvalue ONCE and **`MoveV`s (copy/alias)
+it to every target** — no array, no runtime destructure-vs-spread branch. Gated
+on a provably-non-array rvalue (a proven int/float `th`, or a scalar `Literal` —
+int/bool/float/str/none, NOT `LiteralObj`); an array/dyn rvalue falls back to
+the strict destructure. So `var a,b,c = 0` / `= "hi"` / `= x` (int `x`) are
+native. **Effect: `22_multi_assign` 0.89x → 0.18x** (the per-iteration
+array alloc was the whole cost). Every OTHER IdList destructure — an array
+VALUE (`x, y, z = arr`, `= products[pnum]`), a const array literal (a folded
+`LiteralObj`), a `dyn` rvalue — is the catch-all **`MultiUnpackV`**
+(`try_multi_unpack`), tried after the two eliding paths: it compiles the rvalue
+into a temp and the op runs the tree-walker's STRICT destructure — an array
+value is length-checked and its elements distributed **box-free** via
+`vm_arr_elem` (skind-dispatched: sound for a general/flat/dyn element), a
+non-array SPREADs to every target. AST-free: the target slots (with `-1` for
+`_`) live in the **`Chunk::unpack_targets`** pool, and the strict-length caret
+in the loc side table records the enclosing `Expr14`'s span — matching the
+tree-walker, whose loc-less IdList lvalue makes the error inherit the Expr14
+loc via `Construct::eval`. So the WHOLE IdList branch is native (no residual
+`EvalStmt`); a typed/const target still falls back. **Effect: `73_multi_unpack`
+(the array-value form) 0.30x vs the tree-walker.** A
+**`return <expr>;`** likewise lowers to a
+`ReturnV` that compiles the return expression (so `return f(x)` → CallV) then
+sets flow={ret,value} and stops the chunk. A **ternary VALUE** (`cond ? a : b`)
+compiles to a branch producing one arm into a slot, and a **`CachedCallV`**
+(a `CachedCallExpr`) routes through the caller frame's per-frame `PureCache` —
+together these make a recursion-unroll return native, so **`fib` runs fully
+native** (a plain CallV would BYPASS the cache and recompute the exponential).
+A **read-only builtin** with the VALUE ABI (`Builtin::func_v` — args
+pre-evaluated, no `node->eval`; set by `make_const_builtin_v`, which also
+registers a generic adapter as the tree-walker's `func`) dispatches natively via
+`CallBuiltinV`. **`func_v` is AST-FREE**: instead of an `ExprList *`, it takes an
+**`ArgLocs`** (`evalvalue.h`) — the whole-args caret + per-arg carets
+(`arg(i)->start/end`) + the array-repr `arr_hint`, i.e. EXACTLY the source-loc
+data a builtin's error messages used to reach through the arg nodes, and nothing
+executable. The tree-walker adapter builds it from the real `ExprList`
+(`build_arglocs`, types.cpp); the VM builds it (`vm_build_arglocs`, vm.cpp) —
+today from `dc->args` (the node), next from a serializable `Chunk` pool — so a
+migrated builtin holds NO AST pointer, and its carets are byte-identical in both
+engines. A **mutating builtin** (append/pop/insert/erase/intptr) uses the
+**lvalue ABI** (`Builtin::func_lv` — a UNION with `func_v`, discriminated by
+`DirectBuiltinCallExpr::lvalue_arg0`): it gets arg0 as an `LValue*` target,
+dispatching via **`CallBuiltinLV`** when arg0 is a slotted identifier
+(local/global/capture — the op forms the `LValue*` straight from the table). The
+value args (1..n) — the `rest` args, i.e. the **TAIL ARGS BY VALUE** (everything
+after the arg0 lvalue) — come in one of three forms, decided **PER-OP** (the VM
+reads `in.b.is_lit` — a valid `b` = a compiled rest run = this op is rest-native
+— NOT a per-builtin flag): (1) a **rest-native** builtin (`insert`/`erase`,
+`make_builtin_lv_v` + `lvalue_rest_native`, ALWAYS) has them pre-evaluated in
+`rest`/`n_rest` (the VM compiles a register run, base in `Instr::b`;
+`vm_call_builtin_lv_rest` copies by value) — **zero `node->eval`**; (2) a
+**rest-native-CAPABLE** builtin (`append`/`push`, `lvalue_rest_capable`) has its
+single value arg pre-evaluated too, but only in the PLAIN case — the codegen
+compiles the value into a rest run PER-OP and marks that op, while the ctor case
+(`EmplaceStruct`) and the subscript-target case (`CallBuiltinLVElem`) stay
+self-eval (see below); (3) a **self-eval** call (`rest == nullptr`) reads its
+args off `exprList` — the tree-walker's append/push (so construct-in-place fires),
+`pop`/`intptr` (no value args), `sort`/`reverse` (their cmp arg), and any
+append/push op the codegen left self-eval (a ctor-fallthrough, a subscript
+target). This **per-op** design is what lets `append`'s three call shapes coexist
+(a plain `append(a, x)` is rest-native = no `node->eval`, `append(a, P(..))`
+= `EmplaceStruct`, `append(a[i], x)` = `CallBuiltinLVElem`).
+**`append(struct_arr, Ctor(args))` fuses to an
+`EmplaceStruct` op (Phase 2b)**: the inferencer stamps a POD struct construction
+with `CallExpr::vm_struct_ctor_def`; the codegen recognizes append/push of such
+a ctor, compiles the ctor's field-arg VALUES into a register run, and emits
+`EmplaceStruct` (arg0's `LValue*` by slot kind + the run base in `b`);
+`vm_emplace_struct` (eval.cpp) coerces those values straight into the flat
+`array<Struct>`'s bytes — **no temp `StructObject`** (a non-flat `array<dyn>`
+target falls back to build+append, matching the tree-walker). So a
+`append(pts, Point(i, i*2))` build loop is fully native. **`EmplaceStruct` is
+AST-FREE** (the `Chunk::emplace_sites` pool: the ctor's POD def + the
+container-arg caret + the per-field coerce carets + the callee name, indexed
+by the kind-packed `Instr::a`; the whole-args caret rides the loc side
+table), so a struct-append chunk serializes with an empty `node_table`.
+An **AST builtin**
+(defined/type/…, needs the arg node) keeps the union null (its call site
+falls back whole) — EXCEPT `defined`, now fully lowered: only a bare
+`Identifier`
+can evaluate to the `UndefinedId` sentinel (`Identifier::do_eval` is its sole
+producer), so `defined(<non-identifier expr>)` is exactly "evaluate the arg
+(effects/throws included), then `true`" (`try_native_defined_expr`: compile
+the arg + `LoadConstV true`, AST-free), and a wrong-arity `defined(a, b)` —
+which throws BEFORE evaluating any arg — is a bare
+`ThrowRuntimeV(bad_args)` → `InvalidNumberOfArgsEx` with the args caret.
+With `try_fold_defined` (identifiers) + `DefinedGlobalV` (globals), every
+`defined` form is now fold/native.
+**The read-only builtin migration to `func_v` is
+complete** (see `plans/builtin-abi-migration.md`): every read-only builtin whose
+args are plain values now dispatches via `CallBuiltinV`. **`sort`/`rev_sort`/
+`reverse`** — whose arg0 is an `LValue` (slice write-back + a const's copy) —
+migrated to a **const-capable lvalue ABI**: `make_const_builtin_lv` registers a
+custom `func` (the tree-walker / const-eval path, `sort_arr`/`reverse_arr`,
+eval's arg0 as value-or-lvalue) PLUS a `func_lv` (`sort_lv`/`reverse_lv`,
+handed arg0's slot `LValue*` by the VM's `CallBuiltinLV`), sharing a
+`sort_core`/`reverse_core` so both engines behave identically and a const-array
+sort still folds at parse time. They're now in `is_lvalue_arg_builtin` (so the
+VM devirtualizes to `CallBuiltinLV`, and AutoConst/the specializer correctly
+treat arg0 as a write position — no unsound const substitution into a sort).
+**`map`/`filter`** — which must validate arg0 (the function) and throw BEFORE
+evaluating arg1 (a TESTED order the eager value ABI would break) — go native via
+a two-op sequence in **`compile_boxed_expr`** (`try_native_map_filter`): compile
+arg0 into a temp, **`CheckFuncV`** (throws with arg0's caret if it isn't a
+function, BEFORE arg1's code runs), compile arg1, **`MapFilterV`** (calls the
+shared **`vm_map_filter`** in generic.cpp.h, declared in eval.h — map builds a
+fresh array, filter keeps truthy elements; array→array, dict→dict — the SAME
+core the tree-walker's `builtin_map`/`builtin_filter` now call). The
+devirtualize pass sets `DirectBuiltinCallExpr::map_filter_kind` from the callee
+name. So the residual old-ABI (`func`, node-based) floor is now exactly ONE
+principled group — the **AST builtins** (`defined`/`isconst`/`isconstdecl`/
+`type`/`decltype`/`typestr`/`kindstr`/`show`: an unevaluated / node-property
+operand, inherently node-based).
+**A SUBSCRIPT lvalue target `append/push/pop(a[i], d[k])` goes native too
+(Phase 2c, `CallBuiltinLVElem`)**: the codegen compiles the index and records
+the base slot; the handler forms the element `LValue*` by calling the runtime
+`Type::subscript(base, idx, for_write=false)` directly — the SAME COW the
+tree-walker's `Subscript::do_eval` uses — then `func_lv`. Still fallbacks: a
+MEMBER target (`append(s.f, x)`), `insert`/`erase` with a subscript target, a
+NESTED base (`a[i][j]`), and struct construction. **THE DEFAULT
+FLIPPED 2026-07-18**: a script/`-e` run executes on the VM (both documented
+conditions long met — full parity + the VM ~2.2x the tree-walker on the
+bench geomean, suite 5.0x CPython); `-tw` selects the tree-walker, `-vm` is
+accepted as the explicit default (pre-flip scripts/CI), the two are
+mutually exclusive. The REPL and parse-time const-eval remain tree-walker
+by design (they need the AST). `tests/nested_fuzz.py`'s tw lane passes
+`-tw` explicitly; `bench/run.py` runs the VM by default (`--tw` for the
+tree-walker; `--vm --baseline <same post-flip binary>` still gates VM vs
+tree-walker — the baseline now gets `-tw`). Implemented in its **own files** — `bytecode.h` (the `OpCode`
+enum — named `OpCode`, since `Op` is already the operator enum in
+`operators.h` — plus `Instr`/`Chunk`), `codegen.{h,cpp}` (`codegen_program`,
+AST→`Chunk` lowering), `vm.{h,cpp}` (`vm_execute` + the `g_exec_engine`
+harness switch) — never woven into `eval.cpp`. The build-out is strictly
+incremental behind three safety pillars: an **AST-fallback opcode**
+(`OpCode::EvalStmt`, and later `EvalExpr`, whose handler is just
+`node->eval(ctx)`) so the VM executes the *whole* language from day one; a
+**differential test harness** (the `tests` table reruns under the VM and must
+match the tree-walker — see "Tests"); and a **performance gate** (`bench/run.py
+--vm --baseline`, `cur/base` = VM/tree-walker — see "Benchmarks"). We replace
+fallbacks with native opcodes one small, fully-tested step at a time — never a
+big-bang 10k-LoC drop; a temporary, *tracked* scaffolding regression from the
+smallest sensible step is acceptable, an accidental one is not.
+**Phase 0** lowered the optimized root to one `EvalStmt` per top-level statement
++ `Halt`, building the root `EvalContext`/`Frame`/`GlobalFuncTable` exactly as
+`Block::do_eval`'s root path — byte-identical to `root->eval(nullptr)`.
+**Phase 1** added native control flow (`Jump`/`JumpIfFalse`/`LoopBackEdge`) and
+flattened **top-level `if`/`while`** to jumps; conditions/bodies still fell back
+(one `do_eval` each). (`JumpIfFalse` and its Phase-1 gen_if/gen_while flatten
+forms are since DELETED; `LoopBackEdge` is DELETED too — once the no-fail
+codegen removed every fallback body, nothing could set a brk/cont/ret
+FlowState inside a chunk and codegen had already stopped emitting it, so
+the VM's only remaining FlowState use is ReturnV's value hand-off to
+do_func_call — see plans/vm-native-call-stack.md Phase A.)
+**Phase 2** is a **REGISTER machine over the frame slots** (the VM's registers
+ARE the resolved-local slots — NO value stack), with fused superinstructions:
+`IntBin` (3-address `dst = a <arith> b`, operands = slot or int immediate) and
+`JumpUnlessIntCmp` (fused compare+branch). A `while` whose condition is an int
+compare and whose body is int assignments (compound `s += i*i`, plain
+`x = a*b+1`, `++`/`--`) compiles with **no tree-walker fallback**; **nested
+expressions** use scratch temp slots (`compile_int_expr` + a temp register
+allocator above the resolved locals; `Chunk::n_temps` grows the frame). Anything
+else (a bare/bool leaf plain-assign, a global/capture operand, a call) falls
+back to Phase 1. **Bool-safety:** a plain assign's rhs must be `definitely_int`
+(arith/neg/int-literal, never a leaf id or comparison — both can be bool), since
+writing an int into a bool slot would corrupt it. **Float** loops compile too
+(`FloatBin`/`JumpUnlessFloatCmp`, operands promote), as do **mixed** int/float
+loops (each condition/statement dispatched by its own kind) and **counted `for`
+loops** — the last via a **fused `ForLoopStep`** superinstruction (`i += step` +
+test + branch in one dispatch, matching the tree-walker's raw-C `ForRangeStmt`
+counter; a naive 3-op encoding regressed +28%, the fused op wins). A counted
+loop's **bound AND step may be non-trivial** — `for (i; i < len(s); i++)`,
+`i < f()`, `i += st[0]` —
+not just a slot/immediate: `try_native_for_range` compiles each once into
+a reserved temp (the for-range specializer proved them loop-immutable) that
+`ForLoopStep` re-reads each iteration, so a `len()`-bounded counted loop (and
+nested forms) goes native instead of falling back — e.g. `30_str_index_iterate`
+1.03x→0.80x vs the tree-walker. **The temps compile AFTER the loop's `init`**,
+matching `ForRangeStmt::do_eval`'s init → bound → step order — compiling the
+bound first evaluated it BEFORE a side-effecting init that changed it (a real
+wrong-result `-vm` divergence, pinned by the "init evaluates BEFORE the
+once-read bound" test). A general (non-range) `for` also lowers with **no
+cond** (`for (;;)` — an unconditional loop exiting via break/return, like the
+tree-walker) and with a **BOXED increment** (`out += "x"`, a dyn `d++` — the
+same three-tier statement dispatch as any body statement). This is where
+the VM *wins*: `01_while_loop` −50%, a nested int loop −61%, a pure-float loop
+−71%, `03_int_arith` (top-level `for`) −72% instructions. **Phase 4** ran these
+loops inside **function bodies** too (via `do_func_call`); since the NATIVE
+CALL STACK landed (see its section below) a VM->VM call never goes through
+`do_func_call` at all - the chunk is stamped on the function's
+**`FuncDescriptor`** (stored in `g_func_chunks`, keyed by descriptor) and
+the dispatch loop pushes/pops call records itself. **Compilation is AOT, not
+lazy** (`vm_precompile_all`, run by `vm_compile`): it walks `collect_funcs`
+(which recurses via the COMPLETE `for_each_child_of`, so a func declared in a
+try body / slice / anywhere is not missed) and compiles EVERY function body
+UPFRONT, stamping each descriptor's `vm_chunk` + `vm_chunk_tried`, so
+`do_func_call` reads a precomputed pointer and never compiles at call time
+(the maintainer's no-lazy rule + a `.myv`-serialization prerequisite; the lazy
+`vm_func_chunk` miss path is a never-hit safety net). The per-function compile
++ gate is the shared **`codegen_func_body`** (codegen.cpp) — the single source
+of truth for "which functions have bytecode", used by BOTH the precompile AND
+the `-vd` dump, so `-vd` faithfully shows the real compiled chunk set. A
+**dead base template is the ONLY exclusion** from that set: the inferencer
+marks `FuncDescriptor::is_template_base` for a template NEVER used as a value
+(`!value_used` — all its calls are direct and were redirected to `name$N`
+instances, so the base never runs); a VALUE-used template (dict/var/arg-
+dispatched INDIRECTLY, e.g. phonebook's `cmd_*`) is NOT marked, so its base
+keeps its chunk (the indirect call runs the base body). So `55_float_sum` (a
+loop in a function) is −62%. **EVERY other callable body keeps its chunk**
+(post-teardown the chunk is the only way to run it): the old "has at least
+one REAL op" gate is dropped (an empty body is a bare `Halt` returning none),
+a ZERO-SLOT function (a param-less, local-less closure — `next_slot == 0`, so
+the resolver leaves it `resolved == false`) runs its chunk through a
+temps-only frame (`do_func_call`'s chunk hook is NOT gated on `resolved`),
+and the one genuinely un-compilable body — the pathological un-slottable
+>64-param function (its blocks are never `scope_free`) — is a loud
+compile-time `NotLoweredEx`, never a silent tree-walk. A function chunk
+(`codegen_chunk`) whose body ends in a `ReturnV`
+OMITS the trailing `Halt`: `ReturnV` already `return`s from `vm_run_chunk`, so
+the `Halt` would be dead AND unreferenced (the codegen emits no jump to the
+chunk end past a return — an if whose branches all return leaves no merge
+`Jump`, a loop-exit targets the following op). A FALL-THROUGH body (`main`, a
+void function, a trailing loop/if) keeps the `Halt` as its implicit-return-
+`none` terminator + jump target. Recursion with arith stays ~neutral (`fib`
+−0.08%).
+
+**Phase 5** widens native coverage: array element read/write
+(`a[i]` / `a[i]=v` → `LoadElem`/`StoreElem`, mirroring the flat-array
+subscript/store incl. COW; a dict subscript stays a fallback via the inferencer-
+set `Subscript::base_array`), and **nested control flow** — the loop codegen
+emits the body directly into the chunk with backpatching, so nested loops and an
+`if` in a loop body go native (this is the broad win: many benchmarks wrap their
+work loop in a `for(rep)` amplifier whose body — a loop — used to force the
+whole thing to fall back). **Loop CONDITIONS are as capable as `if`
+conditions:** `emit_cond_jumps` (the while/for helper) now falls through to the
+boxed `JumpUnlessTrueV` path (the same one `if` uses) for a condition that isn't
+a `TypedScalarExpr` — a **bool VARIABLE** (`while (flag)`), a bool var in a `&&`
+conjunct (`while (flag && j < N)`, split per-conjunct so the bool one boxes and
+the comparison stays a native `JumpUnlessIntCmp`), a `||` chain, or a dyn/string
+truthiness test. Before, a bool-var loop cond bailed the WHOLE loop to an
+`EvalStmt`; `try_native_for` was unified onto the same helper so a general
+`for` gets it too. A **var-initialized loop** (`for (var k = i; ...)`) also goes
+native: `emit_init` falls through to a boxed move (`compile_boxed_stmt`) before
+`EvalStmt` — the raw int-store path rejects a bare-identifier rhs (it can't
+prove int-not-bool for a raw store, since a bool is `th==i` too), but a boxed
+move preserves the real type. A **15-level randomly-nested if/while/for
+(optimized + general) spine lowers with ZERO `EvalStmt` fallback** (see the
+`vm/codegen: deep 15-level nest` test + `bench/*/68_nested`, ~4x CPython; and
+the `tests/nested_fuzz.py` differential fuzzer, which generates thousands of
+random deep-nested programs + their Python twins and checks tree-walker == VM ==
+CPython).
+**Suite geomean 0.61x, VM ~1.6x faster than the
+tree-walker** (improved from 0.82x as the container-STORE residuals — struct
+field, nested `a[i][j]`, global/capture base, and the universal dyn-base
+`StoreElemValue` — went native, so matrix/dict/struct benches no longer fall
+back: `68_nested` 0.22x, `65_struct_field_sum` 0.22x vs the tree-walker). The
+register choice (over a stack machine, which the
+already-M8-optimized tree-walker would beat) is also the right IR for the
+eventual native x86-64 codegen. Full roadmap + phase order:
+`plans/bytecode-vm.md`.
+
+**Build the VM FOUNDATIONS before optimizing a construct — do NOT bolt a native
+op onto an incomplete architecture.** A native lowering that lacks the
+architecture-level features it needs ends up SLOWER than the M8 tree-walker, not
+faster — proven: the `foreach` nativization (a `ForeachBind` op) *regressed*
+(19_foreach_indexed 0.27x→0.30x, geomean 4.02→4.01) and was reverted. Two root
+causes, both foundational: **(1) it referenced the AST** (`Instr::node =
+ForeachStmt*`), which is wrong on its own terms — a `node` pointer can't be
+serialized (no `__pycache__`-style dump), can't be JIT'd to machine code, and is
+8 dead bytes in a 64-byte `Instr` (2× an `EvalValue`; size + I-cache locality
+matter here exactly as they do for `EvalValue`) — AND having the node made it
+*easy* to reuse the tree-walker's boxing binding path instead of doing the work
+in registers. **(2) Box/unbox + shuffled temporaries** (`arr_elem_boxed`
+boxes a flat scalar, `bind_loop_var` builds a 48-byte `LValue`), which is the
+SAME per-element cost the tree-walker already pays in `do_iter` — so the VM
+only added dispatch overhead. **The VM NEVER needs to box/unbox.** A flat
+int/float/bool loop var reads the raw scalar into its register slot; a
+GENERAL loop var just binds the array element's *existing* `EvalValue` into its
+slot (a copy, no box, no unbox) — which is not slower than the tree-walker, only
+not as fast as the flat path. A construct only earns a native op once the
+foundation exists to lower it to slot/constant-pool operands with no AST
+reference and no round-trip boxing; **do NOT rush a construct-by-construct win —
+the goal is outstanding end-state results, not an immediate delta.** The
+foundations to build first: an **AST-free instruction** (op-data in a constant
+pool as indices, loop vars as slot operands, locs in a `pc→loc` side table — so
+`Instr` drops the `node` field and shrinks), and a **box-free value/slot flow**.
+See `plans/vm-fallback-elimination.md` (the foreach negative-result note) and
+`[[vm-nativization-heuristic]]`.
+
+**Foundation step 1 — the loc SIDE TABLE (`Chunk::locs`, done).** An op that can
+throw records its caret `Loc` in `Chunk::locs` (a `{pc,start,end}` vector,
+by pc, binary-searched by `Chunk::loc_at` on the throw path ONLY) instead of
+carrying an `Instr::node` AST pointer just for the error loc. A post-codegen
+pass, **`extract_locs` (codegen.cpp), runs on the FINISHED chunk** (so the
+codegen's rollback is untouched) and, for the ops whose ONLY use of `node` was
+the loc, records it and **NULLs `node`** — making them AST-free. It migrated the
+div/mod carets of `IntBin`/`FloatBin` (throw via `vm_throw_div0(chunk, pc)`,
+which uses `loc_at`, not `node`) and dropped the dead `node` from the
+non-throwing `JumpUnlessIntCmp`/`JumpUnlessFloatCmp`/`ForLoopStep`. So the whole
+register/loop CORE is now `node`-free. **The runtime `Instr` holds no live AST
+reference** (see *AST-node side table* below): a residual node is looked up by pc
+in the pc-keyed `node_table`, and the codegen-transient `node_idx` handle is
+nulled after codegen — so the bytecode has no AST pointer in its instruction
+stream.
+
+**Foundation step 2 — op-data into the CONST POOL (member key, started).**
+`DictLoadInt`/`DictLoadFloat` (the typed `d.k` / `d[k]` read) are now fully
+AST-free: a member's key is baked into `Chunk::consts` at codegen (`add_const`)
+and `Instr::a` carries its index as an immediate (`a.is_lit` distinguishes a
+member key from a subscript's key temp), so the handler needs no `MemberExpr::
+memId`. The PRESENT-key path stays `dict_present_value` (hot); the MISSING-key
+path (a default-dict insert or `KeyNotFoundEx`) now routes through the shared
+`Type::subscript(for_write=false)` - the tree-walker's exact logic - with its
+loc from the side table, NOT `node->eval_int/eval_float`. `extract_locs` records
+the caret + nulls the node. So DictLoad joined the register core as node-free.
+The same loc-side-table move then freed every op whose only remaining `node` use
+was the error caret: **`SubscriptV`** (`base[idx]` via `Type::subscript`) and
+the **boxed scalar ops `BinOpV`/`CompoundV`/`CmpV`** (their `num_bin_op` PMF is
+baked from `aop`; the catch does `vm_stamp_loc(chunk, pc, e)`), plus **`LogV`**
+(never throws - node was dead). The shared `vm_stamp_loc` helper (vm.cpp) does
+the cold-path `chunk.loc_at(pc, ...)` stamp for them all. **`LoadGlobalV`** is
+node-free too: its only use was the cold undefined-global error, whose NAME is
+in `gfuncs`'s slot->name list and its loc in the side table. **`MemberV`**
+(`base.member`) took the next op-data step - a **member-key pool** (`Chunk::
+MemberKey` = the name as a dict key + the interned uid + the optional flag +
+both carets member_read throws with), so the op is a bare pool index
+(`Instr::a`); `member_read` was factored into `member_read_core(dval, memId,
+memUid, optional, mstart, mend, bstart, bend)` shared by the tree-walker wrapper
+and the VM. **`CallV`/`CachedCallV`** are node-free too: the callee name (an
+undefined-slot error) is in `gfuncs`'s slot->name list, the caret in the loc
+side table (recording the callee-IDENTIFIER loc, matching the tree-walker's
+undefined-callee error), and the backtrace call-site loc - a PER-CALL value -
+is NOT looked up per call: `do_func_call` gained `(const Chunk *call_ck, size_t
+call_pc)` params and resolves `loc_at` in its EXISTING catch, on the error path
+only, so the hot success path pays no lookup (`vm_call_func`/`vm_cached_call`
+pass `&chunk, pc` not a `Loc`; fib stays 0.95x vs the tree-walker, and multi-
+frame backtraces are byte-identical). **The foreach / array-read ops
+(`LoadElem*`, `ArrLen`, `DictIter*`, `ForeachDyn*`, `UnpackElem*`,
+`LoadStructField*`) are now node-free too** (the loc side table; `LoadElem*`'s
+dead non-array `node->eval` else-branch - unreachable, `base_array` is proven -
+became an `InternalErrorEx` net). The builtin-call ops
+(`CallBuiltinV`/`LV`/`LVElem`) read the serializable `builtin_calls` pool and
+`EmplaceStruct` the `emplace_sites` pool, so the ONLY remaining `node` user
+is the single fallback op (`EvalStmt`) — `CallValueGenericV` reads the
+`call_sites` pool. P8
+exceptions are fully native (they no longer reach a fallback op). The FALLBACK-OP
+AUDIT (`plans/vm-fallback-elimination.md`) that followed found LIVE `EvalStmt`
+fallbacks in several more shapes — **F-1..F-4, all now NATIVE**: the multi-assign
+/ IdList forms (`MultiUnpackV`), the residual `foreach` shapes (2-var dyn
+container, indexed general-value unpack), the discarded-result indirect call
+(`CallValueV` as a statement), and the flat `array<PodStruct>` literal (the
+fused `MakeStructArrayV`). **The last residual was the reflection builtins**,
+resolved by what each needs (so the ONLY node-holder left is dev-only `show`):
+- **`show()` — DEV-ONLY builtin, now COMPILE-TIME-FOLDED** (the
+  `make_dev_builtin` category, `types.cpp`; `is_dev_builtin` /
+  `g_dev_builtins_allowed`, `eval.h`): it decompiles the AST — and since it
+  RETURNS a string, `fold_show_calls` (end of `specialize_types`, the final
+  tree) replaces the whole call with that string as a `LiteralStr`: a
+  directly-named top-level function renders via `render_func_code(decl)`, a
+  non-identifier expression via `render_construct_code(arg)` (the arg is never
+  evaluated, so folding moves no side effect — byte-identical to the runtime
+  builtin's answer over the same final tree). Self-gating: the callee must be
+  a resolved `SymKind::builtin` identifier, so the fold fires in
+  scripts/harness only; the REPL (map-resident builtins) keeps the runtime
+  builtin and its **`:show` meta-command is UNCHANGED**. `show` is still a
+  **compile-time error in a script** (`reject_dev_builtins`, structural pass,
+  `-nti` included; a user `func show` shadow is left alone). With the fold,
+  show NEVER reaches codegen — which is what allowed deleting the last
+  fallback op (see *THE NO-FAIL CODEGEN* below). The residue an identifier
+  arg that is NOT a named top-level function (a var holding a func) stays a
+  runtime call: fine under the tree-walker/REPL, a NotLoweredEx compile abort
+  under -vm (harness-only territory).
+- **`type`/`typestr`/`kindstr`/`decltype` — DONE (AST-free).** Two moves:
+  (1) the inferencer's `fold_type_query` already bakes the answer into `args[0]`
+  (a `LiteralStr`/`LiteralObj`) in the common case and sets **`CallExpr::tq_folded`**
+  — so both engines **ELIDE** the folded call (return the baked `args[0]`): the
+  VM at codegen (a plain `LoadConstV`/`LoadLiteralObjV`, no call), the
+  tree-walker in `CallExpr`/`DirectBuiltinCallExpr::do_eval`. The flag (not a
+  `dynamic_cast<Literal>` node check) is what makes it `-nti`-correct: under
+  `-nti` no fold runs, so a user's `typestr("hi")` is NOT elided and must report
+  `"str"`, not `"hi"`. (2) The rare NON-folded query (`-nti` / a still-`Unknown`
+  arg type) is a **dual-ABI builtin** (`make_builtin_customv`): a custom `func`
+  (tree-walker) and a `func_v` (the VM's `CallBuiltinV`), BOTH always building
+  the `Type`/string from the runtime VALUE (`make_runtime_type_value` /
+  `reflect_typeof` / `TypeNames`) — the folded literal never reaches them (it's
+  elided), so there is no node-based folded/non-folded ambiguity and the two
+  engines stay byte-identical. This also fixed a latent tree-walker `-nti` bug
+  (the old `dynamic_cast<LiteralStr>` heuristic wrongly returned a user
+  string-literal arg instead of its type). No new storage (struct defs are
+  already in `Chunk::struct_defs` + each value's own `def`; the folded `Type`
+  object is a serializable `LiteralObj`). So the reflection residual is now ONLY
+  the dev-only `show` (above), which deliberately keeps its AST.
+
+**Script-mode real-code fallbacks — a further sweep (all now NATIVE).** After
+F-1..F-4, a `ML_DBG_FB` audit hook in codegen `emit()` (compiled out by default;
+logs the rendered construct behind an `EvalStmt`)
+found the remaining SCRIPT-mode shapes a real program can hit, each now native:
+a **`foreach` over `array<bool>`** (`LoadElemBool`, a real-bool bind, above); a
+**nested / boxed struct construction** (`StructCtorV`'s widened
+`pod_ctor_arg_safe` gate + the new `StructCtorBoxedV`, above); a **bare
+discarded-value expression statement** (`s[3];`, `a[i:j];`, `x + y;` —
+`gen_stmt` compiles it into a scratch temp and drops the result, so an OOB /
+missing-key / type error still throws with the byte-identical caret; a bare LEAF
+identifier / scalar literal is skipped, since the tree-walker never RValue-s a
+discarded statement, so an undefined name stays its harmless `UndefinedId` no-op
+rather than a `LoadGlobalV` throw); and an **inc-dec used as a VALUE**
+(`y = x++`, `y = a[i]++` — `compile_boxed_expr`'s `IncDecExpr` case lowers it to
+read-lvalue + mutate (postfix) / mutate + read (prefix), reusing the statement
+compilers for the in-place mutation, gated by `incdec_lvalue_pure` on a side-
+effect-free lvalue so the two evals of the slot/index agree). This last one
+surfaced a **pre-existing tree-walker bug**: auto-const promoting a write-once
+INDEX var (`var i=1; a[i]++`) dropped its decl but `fold_reads` had no
+`IncDecExpr` case, dangling the promoted `i` — fixed by folding the READS in an
+inc-dec lvalue like an assignment lvalue. **Net: ALL of `bench/` and `samples/`
+lower with an EMPTY `node_table` (100% native, serializable) — the struct
+benches' last `EmplaceStruct` ctor node is gone too (its def + carets moved
+into the serializable `emplace_sites` pool).**
+
+**Error-path constructs → native throwing ops (`ThrowRuntimeV`).** The
+always-throwing constructs the tree-walker ran and threw on are now native: an
+UNRESOLVED name in an rvalue/callee position (`var y = foobar` /
+`undefined_fn()` / `undef(5)` / a `_` read), an assignment to a scalar LITERAL
+(`0 = 99`, `true = false`, a const-inlined `K = 6`) or a BUILTIN (`print = 5`),
+and a REQUIRES-lvalue builtin (`append`/`push`/`pop`/`insert`/`erase`/`intptr`)
+on a provably-non-lvalue arg0 (`append([1,2], 3)` — the only lvalues are
+id/subscript/member), and a **REBIND of a runtime `const`** (`const c = [..]; c
+= x` / `c += x`, a func/array/dict kept in a slot → `CannotRebindConstEx`; a
+const *scalar* is inlined, so its rebind hits the bad-lvalue throw instead). New
+op **`ThrowRuntimeV`** + a serializable
+`Chunk::throws` pool (`{ThrowKind, Loc, name}`) throws the pooled exception with
+the exact caret
+— byte-identical, AST-free. Codegen: an `SymKind::unresolved` id in
+`compile_boxed_expr` (a CALL with an unresolved callee throws before its args,
+matching `what->eval` first); a bad-lvalue in `compile_boxed_stmt` (rhs compiled
+FIRST for its side effects, then the throw, matching the tree-walker's rhs-then-
+target order); the same rhs-first + throw for a `const` rebind (the rhs's side
+effects run before `CannotRebindConstEx`, for both a plain and a compound
+rebind); a non-lvalue arg0 in `try_native_mutating_builtin` (gated by
+`builtin_requires_lvalue_arg0`, which EXCLUDES `sort`/`rev_sort`/`reverse` —
+they accept a value arg0 and sort the copy). The bare-LEAF guard keeps a
+discarded `foobar;` a no-op.
+
+**A DYN callee → a generic value-call (`CallValueGenericV`).** An indirect call
+of a `dyn` callee (`var dyn a = len; a("hi")`, `a(1)` on a non-func) is native.
+A dyn callee is resolved at RUNTIME and may be a `FuncObject`, a read-only
+`Builtin`, a MUTATING builtin (needs an lvalue arg), an AST builtin (`defined` —
+needs the unevaluated arg node), or a struct descriptor, so the dispatch is
+AST-dependent TODAY — the op
+KEEPS its CallExpr node (its args ExprList + callee caret), but the callee LOAD
+is native and a `FuncObject` body runs native (the do_func_call hook). The
+dispatch is the shared **`dispatch_call_value`** helper (`eval.cpp`) reused by
+BOTH the tree-walker's `CallExpr::do_eval` AND the op, so the two engines are
+byte-identical (FuncObject → do_func_call, Builtin → its ExprList ABI, struct →
+construct, else `NotCallableEx`). `extract_locs` records the op's CALL-SITE loc
+(for a FuncObject body's backtrace) WHILE keeping the node — the LAST
+non-fallback node-keeping op. A Func-TYPED callee still uses the leaner
+register-run `CallValueV`. **The LAZY-ARG rule (fork F1 step 1, LANDED
+2026-07-14):** a LAZY-ARG builtin — **`defined`/`isconst`/`isconstdecl`**,
+whose argument is a NODE property that is never evaluated (`decltype` turned
+out NOT lazy: like `type`/`typestr`/`kindstr` it is dual-ABI, its `func_v`
+builds from the runtime value, so the type queries stay usable as values;
+`show` was already script-rejected) — **cannot be used as a VALUE in a
+script** (only called directly): `var dyn f = defined;`, `[isconst]`, or
+passing one as an argument is a compile-time `SyntaxErrorEx`. Implemented as
+a COMPILE-TIME reject only (`is_lazy_builtin`/`mark_lazy_builtin`,
+types.cpp; the check rides the `reject_dev_builtins` walk, same
+`g_dev_builtins_allowed` gate — the REPL retains the AST, so the indirect
+form keeps working there, the `show` precedent). A runtime check in
+`dispatch_call_value` is unnecessary: a script can no longer produce such a
+value. Documented in README (`defined`, `isconst`). **Step 2 (LANDED
+2026-07-14) — the op is AST-FREE.** Two pieces:
+(1) **Every `Builtin` carries a `Kind` tag** (value / lvalue / map / filter /
+lazy / node — `evalvalue.h`; Builtin grows 16→24 bytes, still inside the
+24-byte `EvalValue` payload), so an indirect callee's ABI is decidable from
+the VALUE at runtime (a direct call knows it at compile time; an indirect
+one cannot). Every `make_*` registration stamps it.
+(2) **Args pre-evaluated + the `Chunk::CallSite` pool** (`b` = nargs |
+site << 12): the ArgLocs data (whole-args + per-arg carets, arr_hint) PLUS
+**arg0's LVALUE DESCRIPTOR** — the by-ref encoding. Frame slots can't hold
+an `LValue*`-boxed value (`LValue::type_checks`), so instead of
+materializing the tree-walker's raw arg value the dispatch RE-DERIVES
+arg0's `LValue*` from the descriptor, only when the callee turns out
+`func_lv` (the `CallBuiltinLV`/`LVElem`/`LVMember` model): forms none
+(a non-lvalue expr → null target → `NotLValueEx`), slot (id kind+slot; an
+undefined GLOBAL surfaces at the CONSUMER as the tree-walker's raw
+`UndefinedId` does), elem (base kind/slot + a RESERVED index temp; run[0]
+holds the element VALUE, filled by an ordinary `SubscriptV` at arg0's
+position so OOB/key throws keep argument order; the func_lv re-derive
+repeats the subscript — idempotent, and a between-args container mutation
+THROWS where the tree-walker's stale `LValue*` is UB — safer), member
+(member_keys idx; run[0] via `MemberV`), undef (a pooled name). So the
+SLICE WRITE-BACK, const, and literal-arg0 errors of an indirect
+`append`/`sort` are byte-identical to the direct call. A **`CheckCallableV`**
+op sits between the callee and the arg run (a non-callable callee throws
+`NotCallableEx` BEFORE the args evaluate, the tree-walker's order — the
+earlier FuncObject-only version was reverted for rejecting builtin callees;
+this one admits all three callable kinds). Dispatch: FuncObject →
+`vm_call_func` (run[0] filled with the derived RValue — an undefined name
+throws at BIND); struct → **`construct_struct_v`** (the values twin of
+construct_struct: full runtime arity + per-field coerce with pooled
+carets); Builtin → **`dispatch_builtin_values`** by Kind. **The EAGER-ARGS
+language rule:** an INDIRECT builtin call evaluates its args first, then
+the builtin's checks run — implemented in the ONE shared
+`dispatch_builtin_values` (eval.cpp) that BOTH engines call (the
+tree-walker's `dispatch_call_value` routes a `vm_dyn_callee`-stamped call
+with a non-lazy Builtin through raw left-to-right arg evals + the same
+dispatch; a DIRECT tree-walked call — const-eval, REPL, unspecialized —
+keeps the node ABI, so `map`'s validate-before-arg1 and `sort`'s custom
+arg0 are unchanged there). README documents the rule under `map`. Known
+corner (documented, not observable in well-formed code): an UNRESOLVED id
+in a non-arg0 position throws at its own position under the VM
+(`ThrowRuntimeV` in the run) but at the consumer in the tree-walker, so a
+LATER arg's side effects may run in one engine and not the other — both
+throw the same `UndefinedVariableEx`. **With this, `node_table`'s only
+user is the ONE fallback op** (`EvalStmt`).
+
+**Niche STATEMENTS → native (a further sweep).** Several residual real shapes
+went native: an **inc-dec STATEMENT on an int/float member/nested subscript**
+(`p.x++`, `a[i][j]++` == the compound store `lvalue += 1`, via
+compile_int_stmt's IncDecExpr handler → StoreMemberV / DictStore / StoreElem2V;
+gated on a PROVEN int/float lvalue — inc-dec is int/float-only, so a dyn field
+falls back), the **VALUE form** of those (`o = p.x++` — `incdec_lvalue_pure`
+widened to a member/nested lvalue), a **whole-`p` flat-struct-array `foreach`**
+(`foreach (var p in a)` using `p` as a value — **`LoadStructElemV`**
+materializes a fresh StructObject per iteration, byte-identical to the
+tree-walker's reused-object bind, so `append(o, p)` / `q = p` go native;
+scalar-field-only bodies keep the faster direct read), and a **compound
+multi-target assign** (`a, b += rhs` — `MultiUnpackV` gained a base op: each
+target reads its current value, applies the op with its element/scalar, writes
+back). A **dyn SCALAR** inc-dec (`d++` on a dyn/general local/global/capture) is
+native via **`IncDecCheckedV`** (reads the value, THROWS `TypeErrorEx` unless
+int/float — inc-dec is int/float-ONLY, unlike a compound `+= 1` which would
+concat a string — then ±1), and a **dyn ELEMENT** inc-dec `c[k]++`/`c[k]--` (a
+dyn dict / general array / dyn base — anything NOT a proven flat int/float
+element, which `compile_int/float_stmt` already handle) via
+**`IncDecElemCheckedV`**: it forms the element LValue via the runtime
+`subscript(for_write=false)` and does the same int/float-checked ±1, mirroring
+`IncDecExpr::do_eval`'s dyn read-modify-write (a flat scalar element has no
+LValue → `NotLValueEx`, exactly as the tree-walker). It is **AST-FREE**: its
+TWO distinct error carets — the SUBSCRIPT loc for a subscript-internal throw
+(`KeyNotFound`/OOB) vs the INC-DEC loc for its own `NotLValue`/`const`/
+`TypeError` — which a one-loc-per-pc side table can't hold, live in the
+serializable **`Chunk::incdec_sites`** pool (`Instr::b` = the index, O(1));
+the undefined-global-BASE caret comes from the loc side table
+(`vm_store_base`, node = null). A **dyn MEMBER** inc-dec `d.f++`/`d.f--` (a
+dyn/general base holding a struct or dict) is the exact twin,
+**`IncDecMemberCheckedV`**:
+it forms the member LValue like `MemberExpr::do_eval`'s rooted-base path (a
+mutable boxed STRUCT field or a DICT value is an lvalue; a POD field / readonly
+/ a missing dict key throws `NotLValueEx`/`KeyNotFoundEx`), int/float-checks,
+±1. Same pool-carried dual-loc (the MEMBER loc for a `KeyNotFound` vs the
+INC-DEC loc for `NotLValue`/`TypeError`), plus the member key
+(`memId`/`memUid` ride in the same `incdec_sites` entry). Both cover a
+proven-struct NON-numeric member
+too (`s.name++` on a str field → `TypeError`, `th != i/f` so it isn't the M8
+`StoreMemberV` path). An optional `d?.f++` still falls back (rare).
+
+**Non-tail block-body inline (`InlinedCallExpr`) → native.** A `y = f(args)`
+whose block-bodied `f` inlined with a residual that couldn't collapse to a
+ternary (a leading side-effecting statement, a reassigned local) is an
+`InlinedCall(Block(...))` — the callee's body run behind its OWN return
+boundary (a `return v` inside yields THIS expr's value, not the enclosing
+function's; `InlinedCallExpr::do_eval` swaps `ctx->flow`). The VM lowers it via
+a **scoped return boundary** in the codegen (an `inline_returns` stack, like the
+loop stack): `compile_boxed_expr` inits a result slot to `none` (a fall-through
+body yields none), compiles the body's statements inline, and `try_native_
+return` — gated on `inline_returns` — redirects each `return` to "**MoveV into
+the result slot + Jump to the body end**" instead of `ReturnV`-ing the whole
+chunk. A body statement/return that can't lower (a try crossed INSIDE the
+boundary) fails the whole inline → the tree-walker runs the `InlinedCallExpr`
+(byte-identical). This surfaced + FIXED a latent bug: `make_typed`
+(`specialize_types`) hand-copied base fields and **dropped `inline_ctx`**, so a
+specialized arith node inside an inlined body lost its inlined-at chain — the
+tree-walker hid it (the Block wrapper flushes) but the VM's flat body has no
+wrapper, so a backtrace crossing it dropped the virtual frame; `make_typed` now
+uses `copy_base_fields`. So an error inside a native InlinedCall shows the
+byte-identical virtual `f$0` frame.
+
+**Typed NON-SCALAR decls/assigns → native (a plain boxed store).** An
+explicitly-typed decl/reassign/compound whose declared type is `bool` / `str` /
+`array<…>` / `dict<…>` / a struct (`str s = ..`, `array<int> a = ..`,
+`Point p = P(..)`, `s += ".."`, and their global/capture/const forms) is now a
+plain `StoreGlobalV`/`StoreCaptureV`/`DeclConstV`/retarget store, NOT an
+`EvalStmt`. Sound because **`coerce_to_decl_type` is a no-op for every declared
+type EXCEPT `int`/`float`** (`eval.cpp` — it returns the value unchanged; the
+type is proven at compile time by the inferencer), and the tree-walker's
+decl path only calls the coerce for `DeclType::i`/`f` (`handle_single_expr14`).
+The `i`/`f` decline is gone too: a typed int/float PLAIN assign fed a boxed
+value now lowers to **`CoerceNumV`** (dst = `coerce_to_decl_type(src)` — the
+widen / pass-none / dyn-narrowing-throw, the exact function the tree-walker
+runs; for a LOCAL lvalue the op IS the store, a global/capture store coerces
+into a temp first; the Expr14-span caret rides the loc side table). Its live
+producer is the inferencer's `coerces_dyn` accumulator stamp — `var s = 0;
+s = s + d` was the last `EvalStmt` in a plain accumulator body (an EXPLICIT
+`int x = <dyn>` is compile-rejected, so it never reaches codegen). A COMPOUND
+(`s += d`) does NOT coerce (`handle_single_expr14` coerces `op == assign`
+only) and lowers as a plain `CompoundV`/`StoreGlobalV` compound.
+A typed array/dict keeps its FLAT
+storage (the `ArrHint` rides on the rvalue node, honored by `MakeArrayV`/
+`LoadLiteralObjV` regardless of the decl), and an uninitialized `array<int> a;`
+/ `str s;` / `Point p;` is already desugared (at parse) to a zero-value literal
+/ zero-struct ctor rvalue, so it lowers the same way.
+
+**The Tier-1 endgame (2026-07-14): `EvalToSlot` + `JumpIfFalse` are
+DELETED; `EvalStmt` is THE single fallback op.** The last live expression/
+statement roots went native first: **coalesce** `a ?? b` (a
+`compile_boxed_expr` case: MoveV lhs into the dst — reserved BELOW the
+scratch temps — + the new **`JumpIfNotNoneV`** op to skip the rhs, so the
+`??` short-circuit is preserved); **chained boxed comparisons**
+`x == y == z` (the `emit_boxed_chain` 2-operand limit removed — the chain
+loop already accumulates left-to-right like the tree-walker);
+**assignment as an EXPRESSION** `a = (b = x + 1) + 2` (an `Expr14` case in
+`compile_boxed_expr` for a resolved-local non-const id target: run the
+int/float/boxed STATEMENT compilers, then use the target's slot as the
+operand — this exposed and fixed a retarget-guard bug where the
+plain-assign retarget could steal an inner store's dst: it now requires
+`rslot >= temp_base`); and the **typed IdList destructure** `fa, fb =
+[1, 2]` with int/float-annotated targets (`try_multi_unpack` accepts
+them; a per-target coerce vector rides the serializable
+**`Chunk::unpack_coerce`** pool — parallel to `unpack_targets`,
+`Instr::b` indexes it — and MultiUnpackV runs `vm_coerce_decl_num` per
+store, same TypeErrorEx + caret as the tree-walker). With those native,
+the two per-fragment fallback ops became unreachable and were REMOVED
+(opcodes, handlers, `vm_eval_cond`, `eval_to_temp`, the Phase-1
+`gen_if`/`gen_while` flatten forms, disasm renders). Decline semantics
+now: an operand/condition/loop-init that can't lower fails its WHOLE
+statement to one `EvalStmt` (`emit_init` returns bool; `compile_native_if`
+failure → a whole-if `EvalStmt` in `gen_stmt`) — never a per-op node
+fallback. **R4 is now NATIVE too — `IncDecChainV`** (the impure-lvalue
+inc-dec VALUE form, `y = a[f()]++` / `++d[kf()]` / `a[f()][g()]++` /
+`a[f()].x++` / `mk()[0]++`): the codegen decomposes the lvalue into a
+root (a container slot, or a compiled RVALUE temp — kind 3, whose VALUE
+seed keeps the tree-walker's rvalue-ness, so `mk()[0]++` still throws
+NotLValueEx) plus member/subscript steps with each KEY compiled into a
+temp ONCE (side effects run exactly once, in source order), pooled in
+the serializable **`Chunk::incdec_chains`** (steps + tier + prefix +
+the `allow_flat`/`allow_pod` gates — `no_side_effects(final base)`,
+the tree-walker's own AST-shape-dependent try_flat/try_pod gate, so it
+is compile-time data — + carets). The runtime walk is the shared
+StoreLValueChainV intermediate walk (`vm_chain_walk`); the final step
+runs `vm_incdec_final` (eval.cpp) — IncDecExpr::do_eval's EXACT tier
+semantics: tier 2 (proven int/float) = the compound `±= 1`
+(flat_store_core / member-store / general-lvalue slot_rmw) then
+old = new ∓ 1 derived with NO re-read; tier 3 (dyn) = the checked
+read-modify-write. A follow-up closed the LAST real-code emitter: a
+**nested named func/struct decl inside a loop/if body** (a scoped
+global) now lowers via the shared `emit_func_decl`/`emit_struct_decl`
+(MakeClosureV/LoadConstV + StoreGlobalV — re-bound each iteration,
+exactly as the tree-walker re-evals the decl; gen_stmt already covered
+top-level/function-body decls, the loop/if body compiler did not).
+**THE NO-FAIL CODEGEN (2026-07-15, maintainer-directed): `EvalStmt` is
+DELETED — there is NO fallback op AT ALL.** Two moves made the codegen
+total: (1) **`show()` folds at COMPILE time** (`fold_show_calls`, end of
+`specialize_types` — the tree is final there, so the fold renders exactly
+what the runtime builtin rendered; show already RETURNED a string, so the
+call becomes a `LiteralStr`): a directly-named top-level function →
+`render_func_code(decl)`, a non-identifier expression →
+`render_construct_code(arg)`; self-gating on a `SymKind::builtin` callee,
+so it fires in scripts/harness only — the REPL (map-resident builtins)
+keeps the runtime builtin and **`:show` is untouched** (a meta-command,
+never codegen). A user `func show` shadow is `SymKind::global` → never
+folded. (2) The former decline NETS are **`throw_not_lowered` /
+`NotLoweredEx`** — an always-on (release included) compile ABORT naming
+the construct: every statement/expression either lowers or the compiler
+REFUSES loudly; a future gap cannot hide as a silent tree-walk. Flipping
+the nets flushed out + fixed the last REAL gaps, each now native: a
+typed `!x` as a VALUE (`Cat::lnot` → boxed UnaryV — undetected while
+expr bodies had no chunks), EMPTY loop/foreach bodies (the obsolete
+"all-fallback body" gate dropped), the loop-body DISCARD tier (any
+expression statement — a discarded `map(...)`, a ctor — compiles into a
+scratch temp; inert leaves skip, an unresolved/global bare id keeps its
+throw-or-noop semantics), an unresolved-lvalue assignment in a function
+(rhs side effects, then the pooled UndefinedVariableEx), zero-arg lvalue
+builtins (`intptr()` → pooled InvalidNumberOfArgsEx), the sort family
+with a VALUE arg0 (`sort(clone(a))` — materialized into a temp slot),
+the CHECKED POD ctor (`Point(dynval, 2)` — routed through
+StructCtorBoxedV's pooled per-arg carets; `construct_struct_boxed_from_
+values` dispatches on `is_pod`, and a non-qualifying `append(arr,
+P(dyn))` compiles the ctor as a rest VALUE), a dyn-base member store
+(`p.x = 5` in a dyn-param body — a single-MEMBER StoreLValueChainV;
+proven bases keep StoreMemberV/DictStore priority), and **foreach is
+UNIVERSAL** (the ForeachDyn ops lost their `container_is_dyn` gate —
+they runtime-dispatch array|dict exactly like `do_iter`, so they are the
+catch-all tried after the fast forms: a lone `_`, a 1-var indexed array,
+a >2-var none-padded dict all lower). **Deleted with the op:**
+`Chunk::node_table` + `node_at_pc`, the `Chunk::ast_nodes` pool (now a
+CODEGEN-object scratch; `build_node_table` became `verify_ast_free` —
+every `node_idx` must be nulled when codegen finishes), the disasm
+`node_table` section (the "NOT serializable" signal is now a compile
+refusal instead), and the `ML_DBG_FB` hook. `Chunk`'s only remaining
+`Construct*`-typed member is GONE too since the FuncDescriptor step
+(`closure_defs` holds descriptors).
+The `InlinedCallExpr` return-across-try residue is CLOSED: a `return`
+crossing trys INSIDE the inline boundary inlines each crossed try's
+handler-pop + finally at the return (bounded at the BOUNDARY, not the
+function — the same `inline_crossed_finallys` chaining a real return uses,
+with the value copied to a protected temp before the finallys), then yields
+via the boundary's MoveV+Jump. Flow across NESTED trys (any depth) was
+already fully chained by `inline_crossed_finallys` — pinned by a
+2-finally break/return test.
+None appear in `bench/` or `samples/` (both stay 100% native). The `_`-in-unpack
+/ indexed dict `foreach`, the ≥3-level SUBSCRIPT nested store, the **general
+member/subscript lvalue-chain store** (`a[i].f=v` / `q.p.x=v` / `d.a[0].f=v`),
+the dyn scalar/element/member inc-dec, `append` to a struct member, the common
+`InlinedCallExpr`, typed NON-scalar decls, EVERY `defined` form (fold /
+`DefinedGlobalV` / the non-identifier arg / wrong arity), and a
+runtime-`const` rebind are all now native (above).
+
+**The AST-NODE SIDE TABLE — `Chunk::node_table` (the indexed `ast_nodes` POOL is
+DROPPED).** A runtime-node op looks its `Construct*` up by **pc** in the
+pc-keyed **`node_table`** (`{pc, Construct*}`, sorted, binary-searched by
+`node_at_pc` on the COLD path only — SAME shape/cost as `locs` / `inline_ctxs`),
+NOT via a per-`Instr` index into a pool. The residual nodes are now ONLY the
+ONE fallback op (`EvalStmt`, `node->eval`).
+The builtin-call ops read the `builtin_calls` pool,
+`EmplaceStruct` the `emplace_sites` pool (ctor def + container/field carets),
+`CallValueGenericV` the `call_sites` pool (carets + arg0's lvalue
+descriptor — F1 step 2),
+`CheckFuncV`/`MapFilterV` and the flat int/float element stores the loc side
+table, and the checked inc-decs the `incdec_sites` / `incdec_chains`
+pools — all AST-free.
+**How it's built:** `Instr::node_idx`
+(a 4-byte index into a CODEGEN-TRANSIENT `Chunk::ast_nodes`, appended by
+`Codegen::add_ast_node`) is the SPLICE-STABLE handle codegen needs before an
+op's final pc is known (ops grow + roll back, and an index survives that where a
+pc would not); `extract_locs` nulls the loc-only ops' `node_idx` (their caret is
+in the loc side table) and a KEEP-list marks the genuine runtime-node ops; then
+**`build_node_table`** (post-`extract_locs`, pcs final) flattens each surviving
+`{pc → ast_nodes[node_idx]}` into `node_table`, NULLS every live `node_idx`, and
+CLEARS `ast_nodes`. So the finished chunk carries NO indexed pool and NO live
+per-`Instr` `node_idx` — the runtime uses `node_at_pc(pc)` (`node_idx` stays a
+codegen-only handle, always `-1` at runtime; one `Instr` layout, no codegen-vs-
+runtime split). A **fully-native chunk ends with an EMPTY `node_table`** — a
+non-empty one is EXACTLY the "this chunk still needs the AST, a `.myv` writer
+must keep it or reject" signal (`-vd` dumps it labelled *NOT serializable*).
+This is the ONE remaining non-serializable side table (the loc / member-key /
+catch-type / literal-obj / closure-def / struct-def / unpack-target / chain-locs
+/ inline-frames pools are all plain data or by-name-re-internable). The
+node-drop was ~orthogonal to the VM-exception work (see
+`plans/vm-fallback-elimination.md`).
+
+**A THIRD side table — `Chunk::inline_ctxs` (`pc → inline_frames index`, P8 Inc
+4).** Same shape/cost as `locs` (sorted, binary-searched, throw path only),
+populated by `extract_locs` from an op's `node->inline_ctx`: it records the
+"inlined-at" chain of any op spliced from an inlined body, so a backtrace
+crossing inlined code shows the virtual frames under the VM too
+(`vm_flush_inline`, flushed at `vm_raise` / a call-op signal-propagation / the
+boundary catch). **It is now SERIALIZABLE (no AST pointer):** the `InlineCtx*`
+chain is FLATTENED into the **`Chunk::inline_frames`** pool — each entry pure
+data (`callee_name` + `params` + `call_site` loc + a **parent index** into the
+same pool, `-1` == root; a parent always has a lower index) — and the side table
+maps `pc → a pool index`. `intern_inline_ctx` (codegen) flattens each op's chain
+in `extract_locs`, deduping shared chains via a memo (interning the parent
+first, so the pool is topologically ordered); `vm_flush_inline` walks the pool
+by parent index, pushing the SAME `BacktraceFrame`s a tree-walker
+`flush_inline_frames` over the `InlineCtx` chain would (byte-identical, single
+AND nested/recursion-unroll inlines). This is the analogue of the `chain_locs`
+per-step-loc pool — the last non-`locs` side table off the AST. (The tree-walker
+still uses the `InlineCtx*`-based `flush_inline_frames` directly, from
+`node->inline_ctx`.)
+
+**The disassembler dumps the WHOLE serializable image, not just funcs
+(`disasm.cpp`, `-vd`).** `disassemble_program` prints the program's custom TYPES
+(every `struct` def - name, POD byte-offset / boxed-slot layout, folded consts)
+first, then each chunk's code, then that chunk's POOLS + side tables (`consts`,
+`member_keys`, `incdec_sites`, `incdec_chains`, `emplace_sites`,
+`call_sites`, `catch_types`,
+`literal_objs`, `closure_defs`, `struct_defs`,
+`unpack_targets`, `chain_locs`, the pc-keyed `node_table` - labelled *NOT
+serializable* -, `locs`, `inline_ctxs` + its `inline_frames` pool - non-empty
+ones only). This is the audit surface for the `.myv` stored-bytecode endgame:
+everything a serialized file must hold is visible in the dump, and — now that
+`inline_ctxs` is flattened into the serializable `inline_frames` pool — a
+non-empty `node_table` is the ONE remaining section that says the AST can't yet
+be dropped for that chunk.
+
+## Invariants & hazards (defense in depth)
+
+This project deliberately builds many overlapping correctness layers (a
+"Swiss-cheese" model: every check has blind spots, but stacked checks with
+*different* blind spots make a bug clear them all very unlikely). The rules
+below came out of a real, nasty bug — an MSVC-only, non-deterministic
+wrong-result in cross-input REPL template instantiation, root-caused via CI
+instrumentation (see `plans/function-templates.md`).
+
+- **A red test on ANY platform is a real bug — never route around it.** A
+  one-platform CI failure you can't reproduce locally is NOT "flakiness" to
+  revert or disable the feature over; it is a defect to root-cause. "Can't
+  reproduce locally" raises the instrumentation bar, it never lowers the bug's
+  reality. Multi-compiler / multi-platform CI exists precisely to expose UB and
+  logical-identity bugs the dev allocator hides — lean into it.
+
+- **MyLang is single-threaded — there is NO "I can't reproduce this bug."** No
+  threads, no races, no timing nondeterminism. A failure is a pure function of
+  (source commit, build config, inputs), plus at most ASLR — and ASLR only
+  shifts a memory bug's *manifestation*, never its *existence*; ASan / valgrind
+  are deterministic. So "I couldn't reproduce it" is NEVER an acceptable
+  stopping point — it means you have not yet matched one of those inputs. In
+  practice the miss is almost always **the commit**: build the failing CI run's
+  EXACT `headSha` (a rebase diverges SHA *and* code, so a local same-named
+  commit may already contain the fix) with the SAME config (RECYCLE+ASan for a
+  RECYCLE-lane failure — plain ASan can miss an AST-node UAF), and it
+  reproduces. Keep going until it does.
+
+- **On a CI failure, read the logs of ALL failing jobs — never sample.** Do NOT
+  look at one job, form a theory, and stop. Pull every failing lane's full log
+  (`gh run view <id> --log-failed`) and read it — different lanes fail
+  DIFFERENTLY and one of them usually hands you the answer. A real case: several
+  lanes showed only a bare `Segmentation fault`, but ONE lane (the RECYCLE/ASan
+  job) carried a complete AddressSanitizer use-after-free backtrace pinpointing
+  the bug — and sampling the wrong lane turned a five-minute fix into a long,
+  wrong "unreproducible heisenbug" hunt. Grep the FULL log for
+  `AddressSanitizer`/`runtime error`/`Assertion`/backtrace frames, per job.
+
+- **DO NOT BE LAZY. Do all the work, check everything, do not give up.** Every
+  failing lane, every log, the exact SHA, the actual reproduction — not a
+  plausible-sounding shortcut. Sampling one artifact, guessing from a partial
+  read, declaring a deterministic bug "unreproducible", or handing back a theory
+  instead of a proven root cause are all failures of diligence, not of skill.
+  When the evidence and a convenient conclusion disagree, chase the evidence.
+
+- **Never key a long-lived map by a raw AST-node pointer.** A `Construct *` is
+  NOT a stable identity: the allocator recycles a freed node's *address*, so a
+  map that outlives the node (e.g. across REPL inputs) can match a stale entry
+  with a fresh node — a silent wrong-lookup, invisible to ASan (the memory is
+  valid; the *identity* is wrong). Use a stable identity instead: the codebase's
+  established ones are **`UniqueId *`** (interned names, never freed) and the
+  **monotonic arenas** (`all_syms`/`all_funcs` — never truncated, only marked
+  `pinned`). For nodes there is now **`Construct::node_id`** (a monotonic
+  `uint64`; a clone gets a fresh one). The two remaining node-keyed maps
+  (`id_sym`, `func_of_decl`, inferencer) are instead **scoped to one input**
+  (cleared each `infer_input`) and re-resolved every pass, so no stale entry can
+  survive — that combination is the fix for the bug above.
+
+- **`ML_CHECK` / `ML_CHECK_MSG` (`defs.h`) are the assertion layer.** Use them —
+  not bare `assert` — to state an invariant the code RELIES ON but a wrong
+  change could break: "this is impossible if the code is correct." They must be
+  **side-effect-free**. They follow the C `assert()` exactly: active unless
+  `NDEBUG`, i.e. gated by the **`ASSERTS`** build flag (defaults **ON for every
+  build type**, debug AND release, in both build systems — so every build and
+  every CI lane exercises the full net). `ASSERTS=0` defines `NDEBUG`, compiling
+  both the C asserts and these away — the way to measure their overhead
+  (`make OPT=1 ASSERTS=0` vs `make OPT=1`). When ASSERTS is on, the build also
+  enables stdlib container hardening (`_GLIBCXX_ASSERTIONS` / libc++
+  `_LIBCPP_HARDENING_MODE`). **Assert the right things:** logical
+  invariants the sanitizers CANNOT see — a union/tag mismatch (reading the wrong
+  active member is valid memory, wrong meaning), a refcount underflow, a state
+  the type system should have made impossible, a stable-identity check. Do NOT
+  add asserts for plain out-of-bounds / shift-overflow / use-after-free —
+  ASan/UBSan already catch those, and a real *runtime* condition (bad user
+  input, I/O failure, a genuine type error) must `throw` a proper `Exception`,
+  not assert. Examples in place: the `flat_*()` union-kind checks
+  (`sharedarray.h`), `intrusive_ptr::release` refcount-underflow
+  (`intrusiveptr.h`), `pod_get`/`pod_set` field validity (`structtype.h`),
+  `Frame::init` `frame_size <= 64` (`eval.h`).
+
+- **`ML_VM_CHECK` (`defs.h`) — the VM's HEAVY per-op layer.** A separate, hotter
+  tier than `ML_CHECK`, for invariants too expensive to run on every register
+  access in a normal release: a **frame-slot bounds check** (`Frame::at(i)`, now
+  used for *every* `frame->slots[i]` in `vm.cpp` and `eval.cpp` — the
+  resolved-local path both engines share) and an **operand type-tag check** (a
+  `th==i/f` operand must actually hold an int/float;
+  `read_int_operand`/`read_float_operand`). This is the net for a
+  **layout-dependent VM UB**: a bad slot index reads an *unconstructed* inline
+  slot (`[size, 8)`) or an *out-of-range* one — a garbage `LValue` whose garbage
+  type pointer crashes only on some toolchains — and the bounds/tag check turns
+  that into a **loud, located** failure *everywhere* it occurs, not just where
+  the garbage happens to be a bad pointer. Gated by `ML_VM_HARDENING` (the
+  **`VM_HARDENING`** build flag: default ON for a debug build, OFF for a plain
+  release; CI forces it ON in the *release* lanes — see *VM hardening* under
+  "Build & run") **and** by `ASSERTS` (a no-op under `NDEBUG`). It was added
+  after a rare, non-deterministic CI-only segfault at a VM inline test that
+  reproduced under NO local tool (Release loops, ASan, UBSan, RECYCLE, valgrind
+  memcheck — 100+ runs on the failing commit and HEAD): the bug spans a *range*
+  of commits and is layout/toolchain-specific, so the response is *more
+  instrumentation on CI* (this + the Linux core-dump artifact), not a bisect.
+  `Frame` gained a `size` field (the constructed-slot count) for the bound.
+
+- **The TREE-WALKER recurses on the C stack — Windows needs a bigger stack
+  reserve.** The tree-walker (`do_eval`) recurses per call; the VM no
+  longer does (the native call stack runs VM->VM calls inside ONE
+  `vm_run_chunk` activation - C-stack depth is O(1) per activation, and a
+  runaway recursion throws the CATCHABLE `StackOverflowEx` at the
+  `MYLANG_VM_STACK` slot cap instead of crashing). The C++ recursion that
+  remains under `-vm` is per BOUNDARY entry (a builtin callback re-entering
+  the loop), not per call. Deep
+  recursion (the ackermann test, deep `fib`) needs more than **Windows' 1 MB
+  default** stack; Linux and macOS default to **8 MB**, which is why they never
+  hit this. The **fix is a linker flag** — `CMakeLists.txt` sets
+  `/STACK:8388608` (8 MB) for the MSVC build, giving Windows parity (legitimate
+  provisioning for an interpreter, not a workaround). This was a **Windows-CI-
+  only crash** the VM's ackermann test hit (exit 127), that **no Linux tool
+  reproduces** (ASan and `ML_VM_CHECK` do not catch a stack-DEPTH overflow — it
+  is not a slot-bounds bug); it surfaced only after P8 added a `try/catch` EH
+  frame to `vm_run_chunk` (MSVC Debug's EH + `/RTC` + no-scoped-local-overlap
+  frame is much larger than GCC/clang's, tipping it over 1 MB). **Complementary
+  hygiene (keep the recursive frame lean anyway):** an op whose handler needs a
+  sizable stack buffer puts it in an `ML_NOINLINE` helper (e.g. `vm_make_array` /
+  `vm_struct_ctor` / `vm_make_struct_array_op` — the buffer lives in the HELPER's
+  frame, alive only during that op, NOT reserved in every recursive
+  `vm_run_chunk` frame), never inline in the `vm_run_chunk` switch. **To
+  reproduce/measure a deep-recursion stack cost on Linux:** run `-rt` under a
+  smaller stack (`( ulimit -s 1024 && ./mylang -rt )`) — ASan then reports a
+  `stack-overflow in vm_run_chunk`; and `g++ -fstack-usage` (grep the `.su` for
+  `vm_run_chunk`), optionally with `-fstack-reuse=none` to mimic MSVC's
+  no-overlap frame (still an under-estimate — MSVC Debug's EH/`/RTC` overhead is
+  extra).
+
+- **`RECYCLE=1` — the adversarial allocator.** `make RECYCLE=1 TESTS=1` builds a
+  `Construct` allocator (a size-keyed LIFO free-list, `syntax.cpp`) that hands a
+  just-freed node's address straight back to the next allocation, so any
+  "AST pointer used as a stable identity" bug manifests DETERMINISTICALLY under
+  `-rt` instead of depending on the host allocator's luck (ASan-poisons the
+  free window too, so a dangling read is still caught). It is a general stress
+  tool for that whole class and a future-regression net. **Honest scope:** it
+  did *not* by itself reproduce the specific cross-input bug above — the REPL
+  test path retains its ASTs, so there were no intra-test frees to recycle; the
+  per-input map clear is the guard there. It runs as a dedicated CI lane
+  (`linux.yml`, `-DRECYCLE=ON`) and a local matrix entry — not a replacement for
+  the structural fixes.
+
+- **Reproducing an AST-node use-after-free: RECYCLE+ASan is the detector, and
+  build the EXACT failing SHA.** A dangling `Construct*` UAF is fully
+  DETERMINISTIC — MyLang is single-threaded, so it is never a race; the only
+  variable is the allocator's address-reuse *pattern*, which decides whether a
+  freed node's memory is poisoned at the stale read. **Plain ASan can MISS it**
+  (its quarantine reuses the address before the read — a real case here passed
+  under plain ASan even with `ASAN_OPTIONS=quarantine_size_mb=2048`), while
+  **`make RECYCLE=1 TESTS=1 OPT=0` reproduces it 3/3** (immediate reuse + poison
+  of the freed `Construct`). So reach for **RECYCLE+ASan**, not plain ASan, for
+  any suspected node UAF. **And when a CI job fails, check out the run's exact
+  `headSha`** (`gh run view <id> --json headSha`), not your local same-named
+  commit: after a rebase the SHAs *and the code* diverge, so a local build can
+  silently already contain the fix (this exact trap cost a long "unreproducible
+  heisenbug" hunt — the local commit had the fix, the CI's pre-rebase SHA did
+  not). No exotic tooling (a GCC plugin, etc.) is needed; the deterministic
+  repro was there under the existing RECYCLE lane the whole time.
+
+- **The VM body hook must not compile a chunk during compile-time folding.**
+  `do_func_call`'s Phase-4 hook reads (and, via the never-hit safety net, can
+  compile) a function body's `Chunk`, stamped on the `FuncDescriptor`. During
+  `resolve_names` (AutoConst / the inliner's refold) the tree is STILL being
+  mutated, so a fold that reached the hook would cache pointers into nodes the
+  optimizer then frees → a UAF (exactly the bug above). Two layers stop it: the
+  **`!ctx->in_const_eval()` gate** in `do_func_call` (a fold's ctx is rooted at
+  the const `cctx`, so `in_const_eval()` is true and the hook is skipped) and a
+  **`g_vm_executing` assert in `vm_func_chunk`** (set only inside
+  `vm_compile`/`vm_run`), so any future fold path that slips past the gate
+  fails LOUDLY instead of corrupting memory.
+
+- **The ZERO-AST teardown proof (`vm_ast_teardown`, plans/vm-ast-free-
+  runtime.md).** In every ASSERTS build (debug AND the default release; a
+  no-op under `ASSERTS=0`), a `-vm` SCRIPT run destroys the ENTIRE AST between
+  compilation and execution: `vm_compile` MOVES every `FuncDescriptor` +
+  `StructTypeDef` into the `VmProgram` image (the in-memory shape of the
+  future `.myv`), then the driver NULLs each descriptor's `decl` back-pointer,
+  `root.reset()`s the tree, and ML_CHECKs `Construct::live_nodes == 0`. The
+  Construct class `operator new/delete` (defined in all non-NDEBUG builds;
+  the RECYCLE allocator maintains the same counter) count live nodes and
+  `memset(0)` every freed node, so a residual `Construct*` anywhere reads
+  zeroed, freed memory — a loud crash, never a silent dependence. The REPL
+  and the `-rt` harness retain their ASTs by design (`vm_execute` =
+  compile+run with no teardown); `mylang.cpp` owns the `VmProgram` OUTSIDE
+  the try block for the same reason `root` is out there — an uncaught struct
+  exception's payload references its (now program-owned) `StructTypeDef`.
+
+- **CI maximizes correctness checks (it does not time anything).** Every CI lane
+  builds with `ASSERTS` on (C asserts + `ML_CHECK` + stdlib container
+  hardening) **and `VM_HARDENING=ON`** (the `ML_VM_CHECK` per-op tier — so even
+  the **release** lanes, where a local release runs *without* it, get the
+  frame-slot bounds + operand type-tag checks), Debug lanes add ASan + UBSan,
+  UBSan runs with `-fno-sanitize-recover` (a finding ABORTS, so it can't
+  print-and-still-exit-0 past the exit-code check), and there is a `RECYCLE=ON`
+  lane. Slower is fine — performance is measured separately (`bench/`, a plain
+  `make` release, which is NOT hardened). Adding a new check here is cheap
+  insurance; reach for it.
+
+- **CI core-dump capture (`linux.yml`).** Both Linux jobs (the Debug/Release
+  matrix and the `recycle` lane) enable core dumps (`ulimit -c unlimited` + a
+  `core.%e.%p` pattern in the build dir) before `-rt`, and on ANY failure a
+  `Backtrace on crash` step installs `gdb` and prints `thread apply all bt full`
+  from each core to the log, while an `Upload crash artifacts` step
+  (`if: failure()`) uploads the core **and the exact binary** as a downloadable
+  artifact. So when the rare layout-dependent VM crash DOES occur on CI it is
+  immediately debuggable (a real backtrace, an offline-loadable core) instead of
+  a bare "Segmentation fault". This is the deliberate response to a
+  can't-reproduce-locally bug: *raise the instrumentation bar on CI*. (A blind
+  loop-`-rt`-N-times was rejected — it burns CI without improving the odds much;
+  the `VM_HARDENING` checks, which fire on the bad access itself rather than
+  only when its garbage is a bad pointer, are the higher-value catch.)
+
+## Recipes
+
+### Adding a builtin
+1. Implement `EvalValue builtin_xxx(EvalContext *ctx, ExprList *exprList)` in
+   the appropriate
+   `src/builtins/*.cpp.h`. Builtins get **unevaluated** argument expressions —
+   evaluate each yourself
+   with `RValue(exprList->elems[i]->eval(ctx))`, and validate arity
+   (`InvalidNumberOfArgsEx`) and
+   types (`TypeErrorEx`), passing the argument's `start`/`end` `Loc`s for good
+   error messages.
+2. Register it in `types.cpp`: `make_const_builtin(...)` in the `const_builtins`
+   map if it is pure and
+   safe to run during const-eval, otherwise `make_builtin(...)` in the
+   `builtins` map (runtime only —
+   I/O, `rand`, mutation, `exit`, …). Const builtins are what const-folding is
+   allowed to call. **A builtin that inherently needs the AST** (like `show()`,
+   which decompiles it) should instead be a **dev-only builtin**:
+   `make_dev_builtin(...)` — it registers like `make_builtin` but records the
+   name in `g_dev_builtin_ids`, so the inferencer (`reject_dev_builtins`) makes a
+   SCRIPT call a compile-time error while the REPL / test harness (which set
+   `g_dev_builtins_allowed`) allow it. This keeps the AST out of serialized
+   script bytecode. **A builtin whose argument is a NODE property (never
+   evaluated — `defined`/`isconst`/`isconstdecl`) must additionally be wrapped
+   in `mark_lazy_builtin(...)`** at registration: a script may only CALL it
+   directly — using the name as a VALUE is a compile error (the F1 rule; an
+   indirect dyn call could never reproduce the lazy semantics AST-free).
+3. Document it in `README.md` (const vs. non-const section) and add a test in
+   `src/tests.cpp`.
+
+**Memory safety with user callbacks.** A builtin that drives a sort/search with
+a *user-supplied* callback must not assume the callback is well-behaved — it is
+arbitrary script code. In particular `sort(arr, cmp)` (`builtins/arr.cpp.h`)
+uses a **hand-rolled iterative heapsort**, not `std::sort`, for the
+custom-comparator path: `std::sort`'s unguarded partition/insertion reads off
+the ends of the buffer when the comparator isn't a strict weak ordering (a
+heap-buffer-overflow reachable straight from a script), whereas the heapsort's
+`sift_down` index strictly descends — so it terminates for *any* comparator —
+and only ever indexes within `[0, n)`. It is hand-rolled rather than
+`std::make_heap`/`std::sort_heap` because MSVC's debug STL wraps those in
+comparator-validity instrumentation that *hangs* on a non-ordering comparator.
+The default (no-comparator) path keeps `std::sort` — its `operator<` is a valid
+ordering for homogeneous types and throws `TypeErrorEx` for incomparable ones.
+Keep this distinction if you touch sorting or add another callback-driven
+algorithm. **Callback handle lifetime:** when a builtin keeps a raw
+`FuncObject *` to the callback, the `shared_ptr` that owns it must outlive every
+call — an inline lambda (`find(a, x, func(e)=>…)`) has *no other owner*, so a
+raw pointer extracted from a `RValue()` temporary that goes out of scope before
+the loop is a use-after-free (the `find()` key-func bug: the handle was pulled
+out inside the `if (3 args)` block but used after it; fixed by holding a
+`shared_ptr` for the whole call). Bind the owning value at the same scope as the
+use, or copy the `shared_ptr` to keep it alive.
+
+### Adding a value type
+Touch all of: the `TypeE` enum (`type.h`) — mind the trivial/non-trivial
+position vs. `t_str`; the
+`TypeToEnum` specialization + `ValueU` union member (`evalvalue.h`); the
+`TypeNames` and `AllTypes`
+arrays (`types.cpp`, kept index-aligned with `TypeE`); and a new `TypeXxx` class
+overriding the
+needed virtuals in `src/types/xxx.cpp.h` (extend `TypeImpl<T>` for non-trivial
+types to inherit the
+type-erased lifecycle ops). Then `#include` the new `.cpp.h` in `types.cpp`.
+
+### Adding an operator or keyword
+Add to the `Op`/`Keyword` enum and the matching `OpString`/`KwString` array
+(keep indices aligned),
+wire it into the right `pExprNN` level (or `pStmt`) in `parser.cpp`, add the
+`do_eval` behavior (a new
+`Type` virtual for an operator, or a new node in
+`syntax.h`/`syntax.cpp`+`eval.cpp` for a statement),
+and cover it in `tests.cpp`. A **new `Construct` node must also implement
+`clone()`** (pure virtual) — usually a few lines using the shared helpers;
+omitting it is a compile error.
+
+## Conventions
+
+- **NEVER do anything LAZILY unless the maintainer explicitly asked for it.**
+  As a decision heuristic, ~95% of the time on THIS project the right call is
+  the NON-lazy one — so default to non-lazy / deterministic / upfront, and only
+  consider a lazy design after explicit sign-off. (The "95%" describes how to
+  bias YOUR choices, NOT a fraction of the work.) Do NOT introduce
+  lazy/on-demand/first-touch computation, caching, compilation, or allocation on
+  your own initiative; if one seems warranted, PROPOSE it, get sign-off first.
+  The ONLY approved lazy exception to date is the **per-frame pure-call cache**
+  (a lazily-populated `PureCache`, sound because frame-scoped — see recursion),
+  reviewed + approved case-by-case. **The former lazy-VM-compile deviation is
+  FIXED:** the VM now compiles EVERY function body to its `Chunk` UPFRONT
+  (`vm_precompile_all`, run by `vm_compile`), so the AST is 100% bytecode
+  before the VM runs (full AOT); `do_func_call` reads a precomputed
+  `FuncDescriptor::vm_chunk` and never compiles at call time (the old lazy
+  `min_args_cache` is gone too — `min_args` computes at `sync_params`). When
+  in doubt: upfront, not lazy.
+
+- **The TYPE MODEL is C++ (static everywhere), with `dyn` as the one variant.**
+  Every type is decided at COMPILE time and NEVER changes at runtime. `var` is
+  C++'s `auto` — a statically-inferred concrete type, not a dynamic slot. A
+  function with un-annotated params is a TEMPLATE, monomorphized per concrete
+  call signature (like a C++ template), so `foo(x)` called with `int` and with
+  `str` is two separate typed instances. **`dyn` is the ONE variant type — big,
+  fat, and slower** — the deliberate escape hatch: a `dyn` variable's STATIC
+  type is `dyn` forever (it does NOT change), but the runtime VALUE it holds may
+  be a different concrete type moment to moment (checked at runtime; a mismatch
+  is a runtime error). So "types don't change" holds even for `dyn`: the type
+  stays `dyn`, only the boxed value's dynamic type varies. This is WHY it ALL
+  AOT-compiles upfront (all types + template instances — incl. a `dyn`
+  instance — known before any bytecode runs) and why a native op must have
+  BOTH a typed fast tier and a boxed `dyn`/variant tier, never an AST fallback.
+
+- **A breaking language change must update `samples/` too, in the SAME change.**
+  The extensionless scripts in `samples/` (`fib`, `gcd`, `loop`, `phonebook`,
+  `primes`, `primes2`, `rand_sort`, `shopping`, `strloop`, …) are part of the
+  codebase, not throwaway demos — they are the human-facing showcase of the
+  language and must always run. When a change alters script-visible behavior
+  (a removed/changed keyword, a stricter rule, a new error condition), run every
+  sample and fix any that broke, in the same commit as the change (alongside the
+  `README.md` update — see the doc-sync rule at the top). Verify with the actual
+  interpreter, not by eye; some samples are interactive (`phonebook` reads
+  stdin), so a bare run "erroring" may just be the script's own handling of
+  empty input, not a regression — distinguish a MyLang `Exception`/compile error
+  from the script's own output. (A sample that was ALREADY broken by an earlier,
+  unrelated change is a separate bug to fix on its own, but don't let a breaking
+  change ADD to the pile.)
+
+- **Incremental is fine; ending in a half-measure is not.** Landing a feature in
+  stages — even with temporary duplication or a stubbed corner — is welcome, as
+  long as the *task* ends at a proper solution. Don't stop at "works but
+  duplicated/limited" and call it done; either finish the clean version or
+  leave a written, tracked follow-up that says exactly what remains. A specific,
+  non-negotiable instance: **the named-argument syntax must never cost an
+  optimization.** A named call has to be optimized (const-fold, inline,
+  specialize) *identically* to the positional call it desugars to — if a name
+  ever disabled a fold that the positional form would get, the feature is a
+  regression and would be better not used at all. Hold any sugar to the same
+  bar: it may add spelling, never subtract capability.
+- **Interactive `git rebase -i` is permitted in this repo** (the environment's
+  general "no interactive flags" restriction is waived here by the maintainer) —
+  use it to keep history clean / bisectable, e.g. squashing a fix into the
+  commit that introduced the bug. Drive it non-interactively from an agent with
+  `GIT_SEQUENCE_EDITOR` (rewrite the todo) and `GIT_EDITOR` (supply messages).
+  `exp-work` is a topic branch whose history may be rewritten freely.
+- **Never edit a source file while a build that compiles it is running.** A
+  background `make`/`cmake` reads `src/` AND writes shared dep files (`.d/`) as
+  it goes; editing during that window makes it compile a half-written file or
+  corrupt a dep, producing a *bogus* "BUILD FAILED" that looks like a real
+  regression and wastes a debugging cycle. Serialize: let a background build (or
+  the test matrix) finish before touching sources, or run it in a separate
+  `BUILD_DIR` / worktree. Docs (`CLAUDE.md`, `README.md`, plans) are not
+  compiled, so editing those during a build is fine.
+- **Every line stays within 80 columns** — code, comments, and the Markdown
+  docs (`CLAUDE.md` included). Wrap long expressions; put a comment that would
+  overflow on its own line above the code instead of trailing it. (A few legacy
+  files predate this and still have long lines; hold new or edited code to 80.)
+- C++17, `-Wall -Wextra -Wno-unused-parameter`, compiled with `-fwrapv` (signed
+  overflow wraps — and
+  is *relied upon*; don't "fix" wrap-dependent arithmetic).
+- **Compiler warnings must be ADDRESSED, not SILENCED — the build stays
+  warning-clean on ALL THREE CI compilers (g++, clang, MSVC).** A warning is a
+  real signal; fix the ROOT CAUSE, never suppress it with a `#pragma`, a
+  `-Wno-...` / `/wd####` flag, `_CRT_SECURE_NO_WARNINGS`, or a cast / `(void)`
+  that hides it. When a warning looks like a false positive, make the INTENT
+  EXPLICIT (which also documents it) instead of disabling the diagnostic — e.g.
+  a `-Wmissing-field-initializers` on aggregate-initializing a struct with an
+  anonymous union → give the struct a **constructor** that inits every member
+  (done for `Builtin`); a `-Wextra` "base should be explicitly initialized in
+  the copy constructor" → **name the base** in the init list (`FuncObject`'s
+  copy ctor lists `RefCounted()` for "a clone owns a fresh count").
+  **MSVC is stricter about narrowing than g++/clang** (silent under the project
+  flags): `C4244`/`C4267` (`int_type`/`size_t` → `int`) are fixed by widening
+  the target param to `int_type` where it is a slot/index (`Frame::at`, the VM's
+  `write_*_slot`, `disasm`'s `reg`/`arglist`, `vm_struct_field_*` — a widening
+  call is warning-free everywhere) or an explicit `static_cast<int>` at a
+  one-off site; `C4996` (MSVC deprecating standard `getenv`) by a cross-platform
+  wrapper (`env_get`, `_dupenv_s` on `_WIN32`), NOT `_CRT_SECURE_NO_WARNINGS`.
+  After any
+  change a clean `make clean && make` must show ZERO warnings on g++ AND clang
+  (`make CXX=clang++`); MSVC's set is only visible on the Windows CI lane, so
+  read its log after a build-touching change.
+- Every file starts with `/* SPDX-License-Identifier: BSD-2-Clause */`.
+- Core typedefs (`defs.h`): `int_type = intptr_t`, `float_type = double`
+  (printf/snprintf with `%f`/`%.*f`; the comment warns to update the format
+  strings and math builtins if you change it). `double` (not `long double`)
+  keeps `EvalValue` small — long double's 16-byte alignment padded it from 40
+  to 48 bytes, inflating array memory traffic and every value copy — matches
+  Python's float, and uses the faster double libm. `size_type = uint32_t`
+  (`size_t` on MSVC).
+- No third-party dependencies, ever — that's a hard design constraint of the
+  project, including for the
+  test harness. Don't introduce one.
+- **No arbitrary copy-paste from other open-source projects.** Code must be
+  **original**. Do NOT paste a snippet from a copyrighted project even when its
+  license is permissive; a comment labeling code as `"<project>-style"` is
+  itself a red flag that it was copied. If a piece of logic is genuinely needed
+  from elsewhere, two acceptable routes: **(a)** reimplement it from scratch (a
+  short algorithm — a hash mix, a formula — is best rewritten originally, or
+  taken from a clearly **public-domain / CC0** reference such as SplitMix64;
+  mathematical constants like 2^64/phi or a hash prime are facts, not
+  copyrightable); or **(b)** bring the upstream code in *deliberately and
+  legally*: first confirm its license is **compatible with our BSD-2-Clause**
+  (MIT/BSD/ISC/Apache-2.0/BSL-1.0/public-domain are), then add a **`NOTICE`**
+  file at the repo root naming the project, pasting its **full license text**,
+  and stating **which file(s)** use it, and attribute it at the use site.
+  **Evaluate (b) with the maintainer before doing it** — it is the exception,
+  not the default; prefer (a).
+- When implementation behavior and the README disagree, treat it as a bug to
+  surface, not a silent
+  choice to make — the README is the spec.
+
+---
+> Source: [vvaltchev/mylang](https://github.com/vvaltchev/mylang) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-07-23 -->
