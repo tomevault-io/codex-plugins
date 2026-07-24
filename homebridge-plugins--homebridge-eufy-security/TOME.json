@@ -1,0 +1,81 @@
+{
+  "name": "homebridge-eufy-security",
+  "owner": "homebridge-plugins",
+  "repo": "homebridge-eufy-security",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "homebridge-eufy-security",
+      "path": ".claude/skills/qa/SKILL.md",
+      "github_url": "https://github.com/homebridge-plugins/homebridge-eufy-security/tree/main/.claude/skills/qa/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "homebridge-eufy-security",
+      "path": ".claude/skills/support/SKILL.md",
+      "github_url": "https://github.com/homebridge-plugins/homebridge-eufy-security/tree/main/.claude/skills/support/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "homebridge-eufy-security",
+      "path": ".claude/skills/planner/SKILL.md",
+      "github_url": "https://github.com/homebridge-plugins/homebridge-eufy-security/tree/main/.claude/skills/planner/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "homebridge-eufy-security",
+      "path": ".claude/skills/developer/SKILL.md",
+      "github_url": "https://github.com/homebridge-plugins/homebridge-eufy-security/tree/main/.claude/skills/developer/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "homebridge-eufy-security",
+      "path": ".claude/skills/architect/SKILL.md",
+      "github_url": "https://github.com/homebridge-plugins/homebridge-eufy-security/tree/main/.claude/skills/architect/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "homebridge-eufy-security",
+      "path": ".claude/skills/new-device-support/SKILL.md",
+      "github_url": "https://github.com/homebridge-plugins/homebridge-eufy-security/tree/main/.claude/skills/new-device-support/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/homebridge-plugins/homebridge-eufy-security",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-24T11:56:19Z"
+}
