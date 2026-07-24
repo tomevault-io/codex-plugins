@@ -1,0 +1,81 @@
+{
+  "name": "bigUML",
+  "owner": "borkdominik",
+  "repo": "bigUML",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "bigUML",
+      "path": "client/.github/skills/docs/SKILL.md",
+      "github_url": "https://github.com/borkdominik/bigUML/tree/main/client/.github/skills/docs/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "bigUML",
+      "path": "client/.github/skills/new-webview/SKILL.md",
+      "github_url": "https://github.com/borkdominik/bigUML/tree/main/client/.github/skills/new-webview/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "bigUML",
+      "path": "client/.github/skills/new-uml-element/SKILL.md",
+      "github_url": "https://github.com/borkdominik/bigUML/tree/main/client/.github/skills/new-uml-element/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "bigUML",
+      "path": "client/.github/skills/new-glsp-action/SKILL.md",
+      "github_url": "https://github.com/borkdominik/bigUML/tree/main/client/.github/skills/new-glsp-action/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "bigUML",
+      "path": "client/.github/skills/new-vscode-command/SKILL.md",
+      "github_url": "https://github.com/borkdominik/bigUML/tree/main/client/.github/skills/new-vscode-command/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "bigUML",
+      "path": "client/.github/skills/new-feature-package/SKILL.md",
+      "github_url": "https://github.com/borkdominik/bigUML/tree/main/client/.github/skills/new-feature-package/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/borkdominik/bigUML",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-24T11:39:17Z"
+}
