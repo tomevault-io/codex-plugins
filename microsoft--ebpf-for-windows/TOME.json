@@ -1,0 +1,75 @@
+{
+  "name": "ebpf-for-windows",
+  "owner": "microsoft",
+  "repo": "ebpf-for-windows",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "ebpf-for-windows",
+      "path": ".github/skills/build-ebpf/SKILL.md",
+      "github_url": "https://github.com/microsoft/ebpf-for-windows/tree/main/.github/skills/build-ebpf/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "ebpf-for-windows",
+      "path": ".github/skills/verify-bpf/SKILL.md",
+      "github_url": "https://github.com/microsoft/ebpf-for-windows/tree/main/.github/skills/verify-bpf/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "ebpf-for-windows",
+      "path": ".github/skills/build-prevail/SKILL.md",
+      "github_url": "https://github.com/microsoft/ebpf-for-windows/tree/main/.github/skills/build-prevail/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "ebpf-for-windows",
+      "path": ".github/skills/verify-prevail/SKILL.md",
+      "github_url": "https://github.com/microsoft/ebpf-for-windows/tree/main/.github/skills/verify-prevail/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "ebpf-for-windows",
+      "path": ".github/skills/debug-crash-dump/SKILL.md",
+      "github_url": "https://github.com/microsoft/ebpf-for-windows/tree/main/.github/skills/debug-crash-dump/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/microsoft/ebpf-for-windows",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-24T13:49:58Z"
+}
