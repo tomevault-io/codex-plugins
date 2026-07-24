@@ -1,5 +1,11 @@
 # Copilot Instructions for cel2sql
 
+## Repository Information
+
+**Repository Owner**: SPANDigital  
+**Repository URL**: https://github.com/SPANDigital/cel2sql  
+**Maintainer**: Richard Wooding (@richardwooding)
+
 ## Project Overview
 
 This project converts [CEL (Common Expression Language)](https://opensource.google/projects/cel) expressions to PostgreSQL SQL conditions. It was recently migrated from BigQuery to PostgreSQL using the latest pgx v5 driver.
@@ -12,48 +18,12 @@ This project converts [CEL (Common Expression Language)](https://opensource.goog
 2. **`pg/provider.go`** - PostgreSQL type provider for CEL type system integration
 3. **`sqltypes/types.go`** - Custom SQL type definitions for CEL (Date, Time, DateTime)
 4. **`test/testdata.go`** - PostgreSQL schema definitions for testing
-5. **`json.go`** - JSON/JSONB nested path handling and PostgreSQL operator generation
-
-### JSON/JSONB Support
-
-The system provides comprehensive support for nested JSON/JSONB field access:
-
-- **Nested Path Generation**: Converts CEL expressions like `table.metadata.corpus.section` to PostgreSQL JSON paths `table.metadata->'corpus'->>'section'`
-- **Automatic Type Casting**: Detects numeric comparisons and adds `::numeric` casting where needed
-- **Array Operations**: Handles array membership with `jsonb_array_elements_text()` functions
-- **Mixed JSON Types**: Supports both JSON and JSONB columns with appropriate operators
-
-#### JSON Path Operators
-
-- `->` - JSON object field access (returns JSON)
-- `->>` - JSON object field access (returns text)
-- Rule: Use `->` for intermediate navigation, `->>` for final text extraction
-
-#### Supported Patterns
-
-```cel
-// String comparisons
-information_assets.metadata.corpus.section == "Getting Started"
-// → information_assets.metadata->'corpus'->>'section' = 'Getting Started'
-
-// Numeric comparisons (with automatic casting)
-information_assets.metadata.version.major > 1
-// → (information_assets.metadata->'version'->>'major')::numeric > 1
-
-// Array membership
-"documentation" in information_assets.metadata.corpus.tags
-// → 'documentation' = ANY(ARRAY(SELECT jsonb_array_elements_text(...)))
-
-// Complex nested conditions
-info.metadata.corpus.section == "Guide" && info.metadata.version.major == 2
-```
 
 ### Type System Integration
 
 - Uses CEL's protobuf-based type system (`exprpb.Type`, `exprpb.Expr`)
 - Maps PostgreSQL types to CEL types through the `pg.TypeProvider`
 - Supports composite types, arrays, and nested schemas
-- Handles JSON/JSONB fields with automatic path detection and operator selection
 
 ## Development Guidelines
 
@@ -73,8 +43,26 @@ info.metadata.corpus.section == "Guide" && info.metadata.version.major == 2
   - `boolean` → `decls.Bool`
   - `double precision` → `decls.Double`
   - `timestamp with time zone` → `decls.Timestamp`
+  - `json` → `decls.String` (with JSON path support)
+  - `jsonb` → `decls.String` (with JSON path support)
 - Support arrays with `Repeated: true`
 - Handle composite types with nested `Schema` fields
+- JSON/JSONB fields support PostgreSQL path operations (`->>`)
+
+### JSON/JSONB Support
+
+- CEL expressions like `user.preferences.theme` automatically convert to `user.preferences->>'theme'`
+- The converter detects JSON/JSONB columns and applies proper PostgreSQL syntax
+- Nested JSON access is supported: `user.profile.settings.key` → `user.profile->>'settings'->>'key'`
+- JSON field detection happens in `shouldUseJSONPath()` and `visitSelect()` functions
+
+### CEL Comprehensions Support
+
+- **Full comprehension support**: `all()`, `exists()`, `exists_one()`, `filter()`, `map()`
+- **PostgreSQL UNNEST integration**: All comprehensions use `UNNEST()` for array processing
+- **Pattern recognition**: `comprehensions.go` handles AST pattern matching for comprehension types
+- **Nested comprehensions**: Support for complex nested operations
+- **Schema integration**: Works with `pg.Schema` including array fields and composite types
 
 ### Testing
 
@@ -82,8 +70,7 @@ info.metadata.corpus.section == "Guide" && info.metadata.version.major == 2
 - Use `pg.NewTypeProvider()` with `pg.Schema` definitions
 - Include tests for nested types and arrays
 - Verify SQL output matches PostgreSQL syntax
-- Test JSON/JSONB nested path expressions with `testcontainers-go`
-- Include comprehensive tests for complex nested structures
+- Use testcontainers for integration testing
 
 ### Dependencies
 
@@ -91,7 +78,7 @@ info.metadata.corpus.section == "Guide" && info.metadata.version.major == 2
 - **PostgreSQL**: `github.com/jackc/pgx/v5` - Database driver
 - **Protobuf**: Required for CEL (don't remove these dependencies)
 - **Testing**: `github.com/stretchr/testify`
-- **Test Containers**: `github.com/testcontainers/testcontainers-go` - PostgreSQL integration tests
+- **Containers**: `github.com/testcontainers/testcontainers-go`
 
 ## Common Patterns
 
@@ -101,10 +88,27 @@ info.metadata.corpus.section == "Guide" && info.metadata.version.major == 2
 schema := pg.Schema{
     {Name: "field_name", Type: "text", Repeated: false},
     {Name: "array_field", Type: "text", Repeated: true},
+    {Name: "json_field", Type: "jsonb", Repeated: false},
     {Name: "composite_field", Type: "composite", Schema: []pg.FieldSchema{...}},
-    {Name: "json_field", Type: "jsonb", Repeated: false}, // For JSON/JSONB fields
 }
 provider := pg.NewTypeProvider(map[string]pg.Schema{"TableName": schema})
+```
+
+### Dynamic Schema Loading
+
+```go
+// Load schema from PostgreSQL database
+provider, err := pg.NewTypeProviderWithConnection(ctx, connectionString)
+if err != nil {
+    return err
+}
+defer provider.Close()
+
+// Load specific table schema
+err = provider.LoadTableSchema(ctx, "tableName")
+if err != nil {
+    return err
+}
 ```
 
 ### CEL Environment Setup
@@ -116,16 +120,6 @@ env, err := cel.NewEnv(
 )
 ```
 
-### JSON/JSONB Field Configuration
-
-```go
-// Configure tables with JSON/JSONB fields for nested path detection
-jsonFields := map[string][]string{
-    "information_assets": {"metadata", "properties", "classification"},
-    "documents": {"content", "structure", "taxonomy", "analytics"},
-}
-```
-
 ### Adding New SQL Functions
 
 1. Add function mapping in `cel2sql.go` conversion logic
@@ -134,13 +128,24 @@ jsonFields := map[string][]string{
 
 ## Migration Context
 
-This project was recently migrated from BigQuery to PostgreSQL:
+This project was recently migrated from BigQuery to PostgreSQL and modernized:
 
 - **Removed**: All `cloud.google.com/go/bigquery` dependencies
 - **Removed**: `bq/` package entirely
 - **Added**: `pg/` package with PostgreSQL-specific logic
-- **Updated**: All tests to use PostgreSQL schemas
+- **Updated**: All tests to use PostgreSQL schemas and testcontainers
 - **Updated**: Documentation to reflect PostgreSQL usage
+- **Added**: Comprehensive JSON/JSONB support with path operations
+- **Enhanced**: Type system with dynamic schema loading
+- **Improved**: SQL generation with PostgreSQL-specific syntax
+
+## Current Version Features (v2.4.0)
+
+- **JSON/JSONB Support**: Full PostgreSQL JSON path operations
+- **Dynamic Schema Loading**: Load table schemas from live PostgreSQL databases
+- **Enhanced Testing**: Comprehensive testcontainer integration tests
+- **PostgreSQL Optimized**: Single quotes, POSITION(), ARRAY_LENGTH(,1), etc.
+- **Type Safety**: Improved type mappings and error handling
 
 ## Things to Avoid
 
@@ -163,8 +168,6 @@ This project was recently migrated from BigQuery to PostgreSQL:
 - Check `typeMap` in converter for type resolution issues
 - PostgreSQL arrays use `[]` suffix in type names
 - Composite types require proper nested schema navigation
-- For JSON path issues, check `shouldUseJSONPath()` and `hasJSONFieldInChain()` functions
-- Verify JSON field detection in `isJSONArrayField()` and `isJSONBField()` functions
 
 ## Security Considerations
 
@@ -173,6 +176,50 @@ This project was recently migrated from BigQuery to PostgreSQL:
 - Sanitize field names and table names in SQL output
 - Be cautious with user-provided schema definitions
 
+## Release Process
+
+1. Run full test suite including integration tests
+2. Update version in `go.mod` if needed
+3. Create release notes documenting changes
+4. Tag release following semantic versioning
+5. Update documentation as needed
+
+## Contact
+
+For questions or issues, contact Richard Wooding or create an issue on the SPANDigital/cel2sql repository.
+
+## Project Structure
+
+- **Root files**: Core library files (`cel2sql.go`, `comprehensions.go`)
+- **`pg/`**: PostgreSQL-specific type provider and schema handling
+- **`sqltypes/`**: Custom SQL type definitions for CEL integration
+- **`test/`**: Test data and schema definitions
+- **`examples/`**: Example implementations in separate directories:
+  - `examples/basic/`: Basic usage examples
+  - `examples/load_table_schema/`: Dynamic schema loading examples
+  - `examples/comprehensions/`: CEL comprehensions examples
+  - Each example should be in its own directory with a `main.go` and `README.md`
+
+### Example Directory Guidelines
+
+- Each example must be in its own subdirectory under `examples/`
+- Main file should be named `main.go` (not named after the feature)
+- Include a comprehensive `README.md` explaining the example
+- Examples should be runnable with `go run main.go` from their directory
+- Document expected output and key concepts demonstrated
+
+### Code Quality and Linting
+
+- **golangci-lint**: All code must pass `golangci-lint run` without issues
+- **Required before commits**: Run `golangci-lint run` and fix all issues
+- **Common linting rules**:
+  - Use `errors.New()` instead of `fmt.Errorf()` for static error messages
+  - Rename unused parameters to `_` (e.g., `func foo(used string, _ string)`)
+  - Add comments for exported constants and types
+  - Include package comments for main packages in examples
+- **Formatting**: Always run `go fmt ./...` before committing
+- **Static analysis**: Ensure `go vet ./...` passes without warnings
+
 ---
 > Source: [SPANDigital/cel2sql](https://github.com/SPANDigital/cel2sql) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-05-07 -->
+<!-- tomevault:4.0:agents_md:2026-07-24 -->
