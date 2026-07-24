@@ -1,21 +1,21 @@
-# wifiwand — distributed by TomeVault
+# wifiwand
 
-> Originally from [keithrbennett/wifiwand](https://github.com/keithrbennett/wifiwand). Converted and distributed by [TomeVault](https://tomevault.io)
+> Source: [keithrbennett/wifiwand](https://github.com/keithrbennett/wifiwand). Graded, signed and kept in sync across platforms by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [keithrbennett/wifiwand](https://github.com/keithrbennett/wifiwand).
+Original source: `GEMINI.md` in [keithrbennett/wifiwand](https://github.com/keithrbennett/wifiwand).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
-- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Quality verified by TomeVault's automated analysis pipeline. [View quality report](https://tomevault.io/claim/keithrbennett#quality)
+Graded against the Tome Standard, TomeVault's public ruleset for whether AI instructions load, read clearly and stay safe. Source: [github.com/keithrbennett/wifiwand](https://github.com/keithrbennett/wifiwand)
 
 ---
 
@@ -23,6 +23,6 @@ Install this config instantly:
 ```
 npx tomevault install keithrbennett/wifiwand
 ```
-Or browse all formats at [https://tomevault.io/claim/keithrbennett](https://tomevault.io/claim/keithrbennett).
+Source: [github.com/keithrbennett/wifiwand](https://github.com/keithrbennett/wifiwand).
 
 <!-- genome:d-i-q -->
