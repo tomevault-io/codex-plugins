@@ -1,0 +1,123 @@
+{
+  "name": "LuisaCompute",
+  "owner": "LuisaGroup",
+  "repo": "LuisaCompute",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "LuisaCompute",
+      "path": ".agents/skills/ast/SKILL.md",
+      "github_url": "https://github.com/LuisaGroup/LuisaCompute/tree/main/.agents/skills/ast/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "LuisaCompute",
+      "path": ".agents/skills/hlsl/SKILL.md",
+      "github_url": "https://github.com/LuisaGroup/LuisaCompute/tree/main/.agents/skills/hlsl/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "LuisaCompute",
+      "path": ".agents/skills/test/SKILL.md",
+      "github_url": "https://github.com/LuisaGroup/LuisaCompute/tree/main/.agents/skills/test/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "LuisaCompute",
+      "path": ".agents/skills/xmake/SKILL.md",
+      "github_url": "https://github.com/LuisaGroup/LuisaCompute/tree/main/.agents/skills/xmake/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "LuisaCompute",
+      "path": ".agents/skills/cmake/SKILL.md",
+      "github_url": "https://github.com/LuisaGroup/LuisaCompute/tree/main/.agents/skills/cmake/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "LuisaCompute",
+      "path": ".agents/skills/lc_dsl/SKILL.md",
+      "github_url": "https://github.com/LuisaGroup/LuisaCompute/tree/main/.agents/skills/lc_dsl/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "LuisaCompute",
+      "path": ".agents/skills/lc_core/SKILL.md",
+      "github_url": "https://github.com/LuisaGroup/LuisaCompute/tree/main/.agents/skills/lc_core/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "LuisaCompute",
+      "path": ".agents/skills/cpp-style/SKILL.md",
+      "github_url": "https://github.com/LuisaGroup/LuisaCompute/tree/main/.agents/skills/cpp-style/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "LuisaCompute",
+      "path": ".agents/skills/lc_runtime/SKILL.md",
+      "github_url": "https://github.com/LuisaGroup/LuisaCompute/tree/main/.agents/skills/lc_runtime/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "LuisaCompute",
+      "path": ".agents/skills/ir_pipeline/SKILL.md",
+      "github_url": "https://github.com/LuisaGroup/LuisaCompute/tree/main/.agents/skills/ir_pipeline/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "LuisaCompute",
+      "path": ".agents/skills/rust_workspace/SKILL.md",
+      "github_url": "https://github.com/LuisaGroup/LuisaCompute/tree/main/.agents/skills/rust_workspace/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "LuisaCompute",
+      "path": ".agents/skills/project_structure/SKILL.md",
+      "github_url": "https://github.com/LuisaGroup/LuisaCompute/tree/main/.agents/skills/project_structure/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "LuisaCompute",
+      "path": ".agents/skills/backend_architecture/SKILL.md",
+      "github_url": "https://github.com/LuisaGroup/LuisaCompute/tree/main/.agents/skills/backend_architecture/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/LuisaGroup/LuisaCompute",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-24T11:44:12Z"
+}
