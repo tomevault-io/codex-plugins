@@ -1,0 +1,177 @@
+{
+  "name": "wove",
+  "owner": "mits-pl",
+  "repo": "wove",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "wove",
+      "path": ".claude/skills/seo/SKILL.md",
+      "github_url": "https://github.com/mits-pl/wove/tree/main/.claude/skills/seo/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "wove",
+      "path": ".claude/skills/seo-geo/SKILL.md",
+      "github_url": "https://github.com/mits-pl/wove/tree/main/.claude/skills/seo-geo/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "wove",
+      "path": ".claude/skills/seo-plan/SKILL.md",
+      "github_url": "https://github.com/mits-pl/wove/tree/main/.claude/skills/seo-plan/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "wove",
+      "path": ".claude/skills/seo-page/SKILL.md",
+      "github_url": "https://github.com/mits-pl/wove/tree/main/.claude/skills/seo-page/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "wove",
+      "path": ".kilocode/skills/add-rpc/SKILL.md",
+      "github_url": "https://github.com/mits-pl/wove/tree/main/.kilocode/skills/add-rpc/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "wove",
+      "path": ".claude/skills/seo-local/SKILL.md",
+      "github_url": "https://github.com/mits-pl/wove/tree/main/.claude/skills/seo-local/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "wove",
+      "path": ".claude/skills/seo-audit/SKILL.md",
+      "github_url": "https://github.com/mits-pl/wove/tree/main/.claude/skills/seo-audit/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "wove",
+      "path": ".kilocode/skills/waveenv/SKILL.md",
+      "github_url": "https://github.com/mits-pl/wove/tree/main/.kilocode/skills/waveenv/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "wove",
+      "path": ".claude/skills/seo-images/SKILL.md",
+      "github_url": "https://github.com/mits-pl/wove/tree/main/.claude/skills/seo-images/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "wove",
+      "path": ".claude/skills/seo-schema/SKILL.md",
+      "github_url": "https://github.com/mits-pl/wove/tree/main/.claude/skills/seo-schema/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "wove",
+      "path": ".claude/skills/seo-content/SKILL.md",
+      "github_url": "https://github.com/mits-pl/wove/tree/main/.claude/skills/seo-content/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "wove",
+      "path": ".claude/skills/seo-sitemap/SKILL.md",
+      "github_url": "https://github.com/mits-pl/wove/tree/main/.claude/skills/seo-sitemap/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "wove",
+      "path": ".kilocode/skills/add-wshcmd/SKILL.md",
+      "github_url": "https://github.com/mits-pl/wove/tree/main/.kilocode/skills/add-wshcmd/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "wove",
+      "path": ".kilocode/skills/add-config/SKILL.md",
+      "github_url": "https://github.com/mits-pl/wove/tree/main/.kilocode/skills/add-config/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "wove",
+      "path": ".kilocode/skills/wps-events/SKILL.md",
+      "github_url": "https://github.com/mits-pl/wove/tree/main/.kilocode/skills/wps-events/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "wove",
+      "path": ".claude/skills/seo-hreflang/SKILL.md",
+      "github_url": "https://github.com/mits-pl/wove/tree/main/.claude/skills/seo-hreflang/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "wove",
+      "path": ".claude/skills/online-order/SKILL.md",
+      "github_url": "https://github.com/mits-pl/wove/tree/main/.claude/skills/online-order/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "wove",
+      "path": ".kilocode/skills/create-view/SKILL.md",
+      "github_url": "https://github.com/mits-pl/wove/tree/main/.kilocode/skills/create-view/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "wove",
+      "path": ".claude/skills/seo-technical/SKILL.md",
+      "github_url": "https://github.com/mits-pl/wove/tree/main/.claude/skills/seo-technical/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "wove",
+      "path": ".kilocode/skills/electron-api/SKILL.md",
+      "github_url": "https://github.com/mits-pl/wove/tree/main/.kilocode/skills/electron-api/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "wove",
+      "path": ".kilocode/skills/context-menu/SKILL.md",
+      "github_url": "https://github.com/mits-pl/wove/tree/main/.kilocode/skills/context-menu/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "wove",
+      "path": ".claude/skills/seo-programmatic/SKILL.md",
+      "github_url": "https://github.com/mits-pl/wove/tree/main/.claude/skills/seo-programmatic/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/mits-pl/wove",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-24T13:45:21Z"
+}
