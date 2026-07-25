@@ -1,26 +1,9 @@
-# PostgreSQL for Doctrine — AI Instructions
+# PostgreSQL for Doctrine — Copilot Instructions
 
-@AGENTS.md
+See [AGENTS.md](../AGENTS.md) for full project instructions, coding standards, and workflows.
 
-## Quick Reference
-
-| Task | How | Key rules |
-|------|-----|-----------|
-| New DBAL type | `/new-dbal-type` skill | dbal-types, dbal-value-object-conventions, exceptions, since-annotations |
-| New DQL function | `/new-dql-function` skill | dql-function-completeness, variadic-functions, since-annotations |
-| Fix failing tests | `composer run-unit-tests`, filter with `--filter` | testing-and-iteration, test-naming-patterns |
-| Pre-PR quality check | `/run-quality-gate` skill | phpstan-compliance, code-quality |
-| Session handover | `/handover` skill | — |
-
-## Hooks
-
-- **PostCompact**: Re-injects critical rules after context compaction
-- **PostToolUse**: Auto-formats PHP files after Edit/Write
-
-## Persistent Learning
-
-Session corrections are logged in `.claude/notepad.md`. Read it at the start of each session. When a correction appears 3+ times, promote it to `.ai-tools/rules/`.
+Detailed rules are auto-applied from `.github/instructions/` (symlinked from `.ai-tools/rules/`).
 
 ---
 > Source: [martin-georgiev/postgresql-for-doctrine](https://github.com/martin-georgiev/postgresql-for-doctrine) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-22 -->
+<!-- tomevault:4.0:agents_md:2026-07-24 -->
