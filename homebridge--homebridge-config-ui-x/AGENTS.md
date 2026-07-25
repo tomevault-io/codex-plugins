@@ -1,109 +1,115 @@
-# CLAUDE.md
+# Homebridge Config UI X
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Homebridge Config UI X is a web-based management tool for Homebridge written in TypeScript using Nest.js (with Fastify) for the server backend and Angular for the client frontend.
 
-## Repository layout
+Always reference these instructions first and fallback to search or bash commands only when you encounter unexpected information that does not match the info here.
 
-This is a monorepo with two npm packages that ship together as the `homebridge-config-ui-x` plugin:
+## Pull Request Guidelines
 
-- **`/` (root)** — Nest.js backend (TypeScript, ESM, Fastify adapter). Compiles to `dist/`. Requires Node `^22.12.0 || ^24.0.0`.
-- **`/ui`** — Angular 22 frontend (private package). Compiles to `public/` (served as static assets by the backend — `outputPath` in `ui/angular.json` is `../public`).
+**CRITICAL**: Always create pull requests against the current beta branch, NOT the main/latest branch.
 
-The UI package has its own `package.json`, `node_modules`, and tsconfig. **You must `npm install` in both root and `ui/` separately.**
+- **Target Branch**: Always target the current beta branch (typically named `beta-X.Y.Z`, e.g., `beta-5.24.1`)
+- **Finding the Current Beta Branch**: Use `git branch -a | grep beta` or check the GitHub repository branches to identify the latest beta branch
+- **Never target**: `main`, `latest`, or any other non-beta branch unless explicitly instructed otherwise
+- **Branch Naming**: When creating feature branches, use descriptive names like `copilot/fix-XXXX` or `feature/description`
 
-## Common commands
+This ensures all changes go through the beta testing process before being merged to production releases.
 
-Run from the repo root unless noted.
+## Working Effectively
 
-```sh
-# First-time setup
-npm install && npm install --prefix ui
+- Bootstrap, build, and test the repository:
+  - Install dependencies: `npm install && npm install --prefix ui` — the root and `ui/` are separate npm packages with separate `node_modules`; installing only the root is not enough
+  - Full build: `npm run build` - takes about 30 seconds. NEVER CANCEL. Set timeout to 60+ minutes.
+    - Server build: `npm run build:server` - compiles `src/` to `dist/`
+    - UI build: `npm run build:ui` - Angular production build, compiles `ui/src/` to `public/` (note: `public/` is gitignored, so a successful UI build produces no `git status` diff)
+  - Lint check: `npm run lint` - covers both packages, zero warnings allowed. NEVER CANCEL. Set timeout to 30+ minutes.
+  - Fix linting issues: `npm run lint:fix`
+  - Run tests: `npm run test` - full e2e suite (~590 tests), takes about a minute. Tests run serially by design (`fileParallelism: false`) because they share filesystem state. NEVER CANCEL. Set timeout to 30+ minutes.
+  - Run a single test file: `npm run test -- test/e2e/auth.e2e-spec.ts`
+  - Run tests with coverage: `npm run test-coverage`. NEVER CANCEL. Set timeout to 60+ minutes.
 
-# Full build (server + ui)
-npm run build               # ~30s; runs build:server then build:ui
-npm run build:server        # tsc -p tsconfig.build.json → dist/
-npm run build:ui            # ng build production → public/ (prebuild regenerates the Font Awesome subset)
+- Development workflow:
+  - Start development servers: `npm run watch` - starts the Angular dev server on port 4200 and the backend (via `hb-service`) on port 8581. The dev UI at :4200 is hard-coded to talk to the backend at :8581 (see `ui/src/environments/environment.ts`).
+  - Start backend only: `npm start` - standalone mode; defaults to port 8080 when the config has no port set
+  - Start UI dev server only: `npm start --prefix ui` - runs on port 4200
+  - Translation sync: `npm run lang-sync` - syncs translation keys across all language files (`ui/src/i18n/en.json` is the master; never hand-edit the other locales)
 
-# Dev (live reload, two processes via concurrently)
-npm run watch               # UI dev server on :4200, backend on :8581
+## Node.js Requirements
 
-# Lint (eslint flat config, antfu base, max-warnings=0; covers both packages)
-npm run lint
-npm run lint:fix
+- **CRITICAL**: Node.js version requirements: `^22.12.0 || ^24.0.0` (see `engines` in `package.json`)
 
-# Tests — Vitest e2e, ~45s full suite, runs against real Nest module instances
-npm run test
-npm run test -- test/e2e/auth.e2e-spec.ts          # single file
-npm run test -- -t "should reject invalid login"   # single test by name
-npm run test-coverage
+## Environment Setup
 
-# Translation key sync (en.json is the master)
-npm run lang-sync
+For development and testing, set these environment variables:
+
+```bash
+UIX_DEVELOPMENT=1
+UIX_INSECURE_MODE=1
+UIX_SERVICE_MODE=1
+HOMEBRIDGE_CONFIG_UI_TERMINAL=1
+UIX_STORAGE_PATH=/tmp/homebridge  # or your preferred storage path
 ```
 
-## Three entry points to understand
+Create a basic homebridge config for testing:
 
-The plugin can be loaded three ways, and each goes through a different bootstrap path. This is unusual and worth knowing before navigating `src/bin/`:
+```bash
+mkdir -p /tmp/homebridge
+echo '{"bridge": {"name": "Test", "username": "CC:22:3D:E3:CE:32", "port": 51826, "pin": "031-45-154"}, "accessories": [], "platforms": []}' > /tmp/homebridge/config.json
+```
 
-1. **As a Homebridge plugin** (`src/index.ts`) — Homebridge calls `registerPlatform`. The plugin class does almost nothing; it just sets `UIX_CONFIG_PATH`/`UIX_STORAGE_PATH` env vars from the Homebridge API. The actual UI server is launched by Homebridge as a separate child process via `src/bin/fork.ts`, which then loads `main.ts`.
-2. **Via `hb-service`** (`src/bin/hb-service.ts`, exposed as the `hb-service` bin) — the supported way to run Homebridge as an OS service on Linux/macOS/Windows/FreeBSD. `hb-service run` forks both Homebridge itself and the UI, manages restarts, and pipes logs. Platform-specific installers live in `src/bin/platforms/{darwin,linux,win32,freebsd}.ts`.
-3. **Standalone** (`src/bin/standalone.ts`) — for development or `npm run start`. Just sets `UIX_STORAGE_PATH` then imports `main.js`.
+## Validation
 
-All three eventually call `bootstrap()` in `src/main.ts`, which builds the Nest app on Fastify, registers helmet/multipart/CSP, mounts the SPA at `/`, the API at `/api`, Swagger at `/swagger`, a Socket.io gateway under namespace `app`, and (optionally) advertises the UI over mDNS/Bonjour.
+- **MANUAL VALIDATION REQUIREMENT**: Always test functionality after making changes by running the application and verifying it responds correctly (port 8581 backend / 4200 UI when using `npm run watch`).
+- Test the web interface: `curl -s -o /dev/null -w "%{http_code}" http://localhost:8581/` should return `200`
+- Web interface title should be: `<title>Homebridge</title>`
+- **Always run complete build and test cycle before finalizing changes**: `npm run build && npm run lint && npm run test`
+- The watch mode (`npm run watch`) allows live development with automatic rebuilds.
 
-## Backend ↔ Homebridge IPC
+## Project Structure
 
-The UI doesn't import Homebridge as a library — it talks to the running Homebridge process over Node IPC. The bridge is `src/core/homebridge-ipc/homebridge-ipc.service.ts`, which extends `EventEmitter` and is wired up by `hb-service` after it forks Homebridge (it calls `setHomebridgeProcess()` on the exported `HomebridgeIpcService` from `main.ts`). Events like `childBridgeStatusUpdate` and `serverStatusUpdate` flow through this service to the rest of the app and out via WebSocket gateways.
+Both packages are ESM (`"type": "module"`): local imports must use the `.js` extension even from `.ts` source (e.g. `import { Foo } from './foo.js'`).
 
-When standalone or in dev watch mode (`npm run watch`), there's no Homebridge process attached, so IPC-dependent features (child bridge controls, restart, log tail) won't work end-to-end — that's expected.
+### Backend (Nest.js) - `/src/`
 
-## Backend module layout
+- **Main entry**: `src/main.ts` - builds the Nest app on Fastify; API at `/api`, Swagger at `/swagger`, SPA served from `public/`
+- **Infrastructure**: `src/core/` - `auth` (JWT + passport, HTTP and WebSocket guards), `config`, `homebridge-ipc` (talks to the running Homebridge process over Node IPC), `node-pty` (terminal), `spa`, `ssl`, and others
+- **Feature modules**: `src/modules/` - `accessories`, `backup`, `child-bridges`, `config-editor`, `custom-plugins`, `log`, `platform-tools`, `plugins`, `server`, `setup-wizard`, `status`, `users`
+- **Service binary**: `src/bin/hb-service.ts` - service management tool (exposed as the `hb-service` bin); platform installers in `src/bin/platforms/`
 
-`src/app.module.ts` imports feature modules from `src/modules/` and infrastructure from `src/core/`:
+### Frontend (Angular) - `/ui/src/`
 
-- **`core/`** — cross-cutting: `auth` (JWT + passport, HTTP guards plus WS guards in `guards/`), `config` (loads/parses `config.json`, holds runtime env detection — Docker/Synology/RPi/etc.), `feature-flags`, `fs`, `homebridge-ipc`, `logger`, `matter` (interfaces), `node-pty` (terminal), `scheduler`, `spa` (catch-all filter so non-`/api` routes serve `index.html`), `ssl`.
-- **`modules/`** — one folder per feature surface, each with a `*.module.ts`, controller, service, gateway (when WS-enabled), and DTOs. The set is: `accessories`, `backup`, `child-bridges`, `config-editor`, `custom-plugins`, `log`, `platform-tools`, `plugins`, `server`, `setup-wizard`, `status`, `users`.
+- **Main entry**: `ui/src/main.ts`
+- **Core services**: `ui/src/app/core/` - `communication/` (HTTP API + socket.io services), `auth/` (JWT handling)
+- **App modules**: `ui/src/app/modules/` mirrors the backend feature modules - when adding a feature, expect to touch a backend module and its UI counterpart
+- **Translations**: `ui/src/i18n/` contains language files (`en.json` is master; sync others with `npm run lang-sync`)
+- **Patched deps**: `ui/patches/` contains `patch-package` patches for `@ng-formworks/*`, applied on `npm install` in `ui/`
 
-## Frontend layout
+### Tests - `/test/`
 
-`ui/src/app/` splits into `core/` (singletons, guards, interceptors), `modules/` (routed feature areas), and `shared/`:
+- **E2E tests**: `test/e2e/` - each spec boots a real Nest testing module against a temp storage dir (`test/.homebridge`) seeded from `test/mocks/`
+- **Test runner**: Vitest with SWC; there are no isolated unit tests
 
-- **`core/communication/`** — `api.service.ts` (HTTP wrapper for `/api`), `ws.service.ts` (socket.io-client), `notification.service.ts`. JWT handling lives in `core/auth/` (via `@auth0/angular-jwt`).
-- **`modules/`** — mirror the backend feature modules (`config-editor`, `plugins`, `status`, `users`, `platform-tools`, …). When adding a feature, expect to touch a backend module + its UI counterpart.
-- In dev mode, `ui/src/environments/environment.ts` hard-codes the backend at port `8581` on the current hostname — that's why `npm run watch` runs the backend on 8581.
-- Notable UI libs: ng-bootstrap + Bootstrap 5, Monaco editor (`ngx-monaco-editor-v2`) for the config editor, xterm for the terminal, `@ng-formworks/*` for plugin settings forms (JSON schema → form).
+## CRITICAL Build Timing Warnings
 
-## Testing
+- **NEVER CANCEL** builds, lints, or tests — they are all expected to complete within a few minutes, but always set generous timeouts (30-60+ minutes) rather than cancelling.
 
-Tests are e2e, not unit: each spec builds a real Nest `TestingModule` for the module under test, backed by a real temp storage dir (`test/.homebridge`, seeded from fixtures in `test/mocks/`). Vitest compiles them with SWC (`unplugin-swc`). `vitest.config.js` sets `fileParallelism: false` — specs share filesystem state (storage paths, `config.json`) and must run serially. Don't expect fast isolated unit-test feedback; expect ~45s for the full suite.
+## Development Dependencies
 
-## Key environment variables
+The project uses these main frameworks:
 
-These drive runtime behaviour and are set by `hb-service`, the watch script, or the user's environment. Most are read in `src/core/config/config.service.ts`:
+- **Backend**: Nest.js with Fastify, TypeScript
+- **Frontend**: Angular 22 with Bootstrap 5 (ng-bootstrap), Monaco Editor, xterm
+- **Testing**: Vitest e2e suite
+- **Build**: TypeScript compiler, Angular CLI
 
-- `UIX_CONFIG_PATH`, `UIX_STORAGE_PATH` — Homebridge config + storage roots (required).
-- `UIX_BASE_PATH` — plugin install root (where `public/` is served from).
-- `UIX_INSECURE_MODE=1` — skip auth (dev/testing).
-- `UIX_DEVELOPMENT=1` — verbose logging, dev CORS.
-- `UIX_SERVICE_MODE=1` — running under hb-service (enables IPC features).
-- `UIX_CUSTOM_PLUGIN_PATH` — extra location to scan for plugins.
-- `HOMEBRIDGE_CONFIG_UI=1` (Docker), `HOMEBRIDGE_SYNOLOGY_PACKAGE=1`, `HOMEBRIDGE_APT_PACKAGE=1` — packaging-mode flags that toggle features like terminal access and host shutdown/restart.
+## Troubleshooting
 
-`nodemon.json` shows the canonical dev invocation: `UIX_DEVELOPMENT=1 UIX_INSECURE_MODE=1 UIX_SERVICE_MODE=1 HOMEBRIDGE_CONFIG_UI_TERMINAL=1 tsx src/bin/hb-service.ts run --stdout`.
-
-## Pull request convention
-
-**Always target the current beta branch (e.g. `beta-5.24.1`), never `latest` or `main`.** Find it with `git branch -a | grep beta`. This is enforced by project policy — bug fixes and features go through the beta branch first, only release commits land on `latest`.
-
-## Things that bite
-
-- **ESM throughout**: both packages have `"type": "module"`. Local imports must use the `.js` extension even from `.ts` source (e.g. `import { Foo } from './foo.js'`). The compiled output is what runs.
-- **Two `node_modules`**: if you change a dep in `ui/package.json`, run `npm install --prefix ui` — root `npm install` won't touch it.
-- **Built UI is gitignored but shipped on publish**: `public/` is the compiled UI. It is in `.gitignore`, so `npm run build:ui` won't show up in `git status` — don't expect (or try to commit) a `public/` diff. It still reaches the npm package: `prepublishOnly` runs `npm run build` to regenerate it, and `.npmignore` (which npm uses in preference to `.gitignore` because it exists) does not exclude `public/`.
-- **Translations**: `ui/src/i18n/en.json` is the source of truth; other locales are synced from it via `npm run lang-sync`. Don't hand-edit non-English files for new keys.
-- **Patched dependencies**: the UI runs `patch-package` on postinstall; patches for `@ng-formworks/*` live in `ui/patches/`. If you bump one of those packages, the patch must be re-created or it will fail to apply.
-- **Install-script allow-list**: both `package.json` files have an `allowScripts` block (npm's install-script approval). Approvals are pinned to exact versions, so bumping an approved package (e.g. `esbuild`) makes npm prompt again — re-approve with `npm install-scripts approve <pkg>`.
+- **Permission errors in watch mode**: Expected when not running as root, UI development still works
+- **Port conflicts**: Backend uses 8581 in watch mode (8080 standalone default), UI dev server uses 4200
+- **Build failures**: Check Node.js version matches requirements (`^22.12.0 || ^24.0.0`)
+- **npm install-script prompts**: both `package.json` files have an `allowScripts` block; approvals are pinned to exact versions, so after bumping an approved package run `npm install-scripts approve <pkg>` again
+- **Test failures**: Ensure storage paths are properly configured and accessible
 
 ---
 > Source: [homebridge/homebridge-config-ui-x](https://github.com/homebridge/homebridge-config-ui-x) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-22 -->
+<!-- tomevault:4.0:agents_md:2026-07-24 -->
