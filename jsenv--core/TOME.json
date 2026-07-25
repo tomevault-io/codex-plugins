@@ -3,8 +3,8 @@
   "owner": "jsenv",
   "repo": "core",
   "description": "",
-  "type": "config",
-  "source_format": "copilot-instructions.md",
+  "type": "tome",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -37,8 +37,27 @@
       "platform": "Windsurf"
     }
   ],
-  "skills": [],
+  "skills": [
+    {
+      "name": "core",
+      "path": ".agents/skills/testing/SKILL.md",
+      "github_url": "https://github.com/jsenv/core/tree/main/.agents/skills/testing/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "core",
+      "path": ".agents/skills/demo-files/SKILL.md",
+      "github_url": "https://github.com/jsenv/core/tree/main/.agents/skills/demo-files/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "core",
+      "path": ".agents/skills/new-component/SKILL.md",
+      "github_url": "https://github.com/jsenv/core/tree/main/.agents/skills/new-component/SKILL.md",
+      "description": ""
+    }
+  ],
   "source_url": "https://github.com/jsenv/core",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-25T00:49:12Z"
+  "distributed_at": "2026-07-25T08:55:17Z"
 }
