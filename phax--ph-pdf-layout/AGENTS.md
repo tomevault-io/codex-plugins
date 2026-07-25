@@ -1,78 +1,108 @@
-# CLAUDE.md
+# Copilot Instructions for ph-pdf-layout
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This repository is a Java library for creating fluid page layouts with Apache PDFBox 3.x.
+It uses a CSS-like box model to abstract the low-level PDF primitives.
 
-## Build & Test Commands
+## Architectural Overview
 
-```bash
-# Build everything (compile + test + package)
-mvn clean verify -pl ph-pdf-layout
+The core paradigm is a hierarchical box model where elements are composed to form pages.
 
-# Compile only (no tests)
-mvn compile -pl ph-pdf-layout
+### Key Components
 
-# Run all tests
-mvn test -pl ph-pdf-layout
+*   **`PageLayoutPDF`**: The main entry point and container for the entire document. It holds metadata and a list of `PLPageSet`s.
+*   **`PLPageSet`**: Represents a group of pages with the same properties (page size, orientation, margin). Elements added to a `PLPageSet` flow across multiple pages if necessary.
+*   **Elements (`com.helger.pdflayout.element`)**: The building blocks of the layout.
+    *   **Containers**: `PLBox` (general container), `PLHBox` (horizontal row), `PLVBox` (vertical stack), `PLTable`.
+    *   **Content**: `PLText` (text with font/styles), `PLImage` (bitmap images), `PLBulletPointList`.
+    *   **Structure**: `PLSpacerX`, `PLSpacerY`, `PLPageBreak`.
+*   **Styling**: Elements support CSS-like properties:
+    *   `margin` (outer spacing)
+    *   `border` (visual boundary)
+    *   `padding` (inner spacing)
+    *   `minSize` / `maxSize`
+    *   `fillColor` (background)
 
-# Run a single test class
-mvn test -pl ph-pdf-layout -Dtest=PLTextTest
+### Coordinate System & Layout
 
-# Run a single test method
-mvn test -pl ph-pdf-layout -Dtest=PLTextTest#testBasic
+*   The library abstracts PDF's native bottom-left origin.
+*   Layout is generally **top-down, left-to-right** (like HTML/CSS), handled by `PLVBox` and `PLHBox`.
+*   You rarely calculate absolute coordinates manually. Instead, you nest boxes and configure alignments (`EHorzAlignment`, `EVertAlignment`).
+
+## Developer Workflow
+
+### Dependencies & Build
+
+*   **Build System**: Maven (`pom.xml`).
+*   **Key Dependencies**:
+    *   `org.apache.pdfbox:pdfbox` (v3.x)
+    *   `com.helger:ph-commons` (General utility library found throughout the codebase)
+    *   `com.helger:ph-fonts` (Font handling)
+
+### Testing & Visual Verification
+
+*   Tests are the primary way to verify layout logic.
+*   **Mechanism**:
+    1.  Tests generate PDF files into `ph-pdf-layout/pdf/`.
+    2.  `PDFTestComparer.renderAndCompare(layout, targetFile)` renders the layout and compares the output pixel-by-pixel (or internally structure-wise) against a reference file.
+    3.  **Reference Files**: Stored in `example-files/`.
+*   **Workflow for changes**:
+    *   If you intentionally modify layout logic, the test *will fail* because the output differs from the reference.
+    *   Visually verify the validitity of the new PDF generated in `ph-pdf-layout/pdf/...`.
+    *   If correct, **overwrite** the corresponding file in `example-files/` with the new version to update the baseline.
+
+## Coding Conventions
+
+*   **Prefix**: Most public classes start with `PL` (e.g., `PLBox`, `PLText`).
+*   **Fluent API**: Setters almost always return `this` to allow method chaining (e.g., `new PLBox().setBorder(...).setPadding(...)`).
+*   **Nullability**: The project uses `org.jspecify.annotations` (`@Nullable`, `@NonNull`).
+*   **Collections**: Prefers `com.helger.commons.collection` types (e.g., `CommonsArrayList`) over standard JDK collections for additional utility methods.
+*   **Text Handling**: `PLText` handles newlines (`\n`) automatically but requires explicit font specification via `FontSpec`.
+
+## Common Implementation Patterns
+
+### Creating a Simple Document
+
+```java
+PageLayoutPDF doc = new PageLayoutPDF();
+PLPageSet pageSet = new PLPageSet(PDRectangle.A4);
+
+// Add a title
+pageSet.addElement(new PLText("Document Title", new FontSpec(PreloadFont.REGULAR, 20))
+    .setHorzAlign(EHorzAlignment.CENTER)
+    .setPaddingBottom(10));
+
+// Add a content box with border
+PLBox content = new PLBox();
+content.setBorder(PLColor.BLACK);
+content.setPadding(5);
+content.addElement(new PLText("Content goes here...", new FontSpec(PreloadFont.REGULAR, 12)));
+pageSet.addElement(content);
+
+doc.addPageSet(pageSet);
+doc.renderTo(new File("output.pdf"));
 ```
 
-## Architecture
+### Table Layout (Using Box Model)
 
-Java library for creating fluid page layouts with Apache PDFBox 3.x. Uses a CSS-like box model (margin/border/padding) to abstract low-level PDF primitives. Java 17+.
+Tables are often constructed explicitly or using `PLTable`:
 
-### Document Model
+```java
+PLTable table = new PLTable();
+table.setHeaderRowCount(1);
 
-`PageLayoutPDF` (document) -> `PLPageSet` (page group with shared size/margins) -> elements
+// Header Row
+PLTableRow header = new PLTableRow();
+header.addCell(new PLTableCell(new PLText("ID", fontBold)));
+header.addCell(new PLTableCell(new PLText("Name", fontBold)));
+table.addRow(header);
 
-Elements flow top-down within a page set and automatically split across pages when needed.
-
-### Two-Phase Rendering
-
-1. **Preparation phase**: `PLPageSet.prepareAllPages()` calculates sizes and splits elements across pages via `PreparationContext`/`PreparationContextGlobal`
-2. **Rendering phase**: `PLPageSet.renderAllPages()` writes to PDFBox via `PageRenderContext`
-
-Negative intermediate sizes (e.g. `-2.0` for height) are legitimate during preparation when elements with padding/border exceed available space. The commented-out `ValueEnforcer` checks in `SizeSpec` and `PreparationContext` are intentionally disabled.
-
-### Element Hierarchy
-
-- **Block elements** (`AbstractPLBlockElement`): `PLText`, `PLBox`, `PLVBox`, `PLHBox`, `PLTable`, `PLBulletPointList`, `PLImage`
-- **Inline elements** (`AbstractPLInlineElement`): `PLExternalLink` (wraps another element as a clickable link)
-- **Special**: `PLPageBreak`, `PLSpacerX`, `PLSpacerY`, `PLSpacerXY`
-
-All elements extend `AbstractPLRenderableObject` -> `AbstractPLElement` -> `AbstractPLObject`.
-
-### Font System
-
-`PreloadFont` -> `LoadedFont` (per-document). Fonts are registered in `PreloadFontManager`, lazily loaded into PDFBox `PDFont` instances per document. Standard 14 PDF fonts available via `PreloadFont.REGULAR`, `.BOLD`, etc. Custom fonts via `PreloadFontManager.getOrAddEmbeddingPreloadFont(IFontResource)`.
-
-### XML Serialization
-
-Spec classes (`FontSpec`, `BorderSpec`, `MarginSpec`, etc.) have micro-type converters in `config/xml/` for XML round-tripping via ph-commons microdom. Registration happens in `PDFMicroTypeConverterRegistry`.
-
-### PDFBox Extensions
-
-`org.apache.pdfbox.pdmodel.font.PDFontHelper` and `PDDocumentHelper` are package-private extensions placed in the PDFBox package namespace to access internal APIs.
-
-## Test Patterns
-
-- **Framework**: JUnit 4 with `PLDebugTestRule` (manages debug state per test)
-- **PDF comparison**: `PDFTestComparer.renderAndCompare(layout, targetFile)` renders a layout and compares pixel-by-pixel against reference files in `example-files/`
-- **Generated PDFs**: Written to `ph-pdf-layout/pdf/` during test runs
-- **When layout changes**: Tests fail because output differs from reference. Visually verify the new PDF in `pdf/`, then overwrite the corresponding `example-files/` baseline
-
-## Key Conventions
-
-- Class prefix `PL` for all public layout classes
-- Fluent API: all setters return `this` for chaining
-- `@Nullable`/`@NonNull` from `org.jspecify.annotations`
-- ph-commons collection types (`ICommonsList`, `CommonsArrayList`) for return types; standard Java types for parameters
-- Debug logging controlled via `PLDebugLog` and `PLDebugRender` (static flags, off by default)
+// Data Row
+PLTableRow row = new PLTableRow();
+row.addCell(new PLTableCell(new PLText("1", fontReg)));
+row.addCell(new PLTableCell(new PLText("Alice", fontReg)));
+table.addRow(row);
+```
 
 ---
 > Source: [phax/ph-pdf-layout](https://github.com/phax/ph-pdf-layout) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-22 -->
+<!-- tomevault:4.0:agents_md:2026-07-24 -->
