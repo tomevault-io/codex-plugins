@@ -4,7 +4,7 @@
   "repo": "ngx-countUp",
   "description": "",
   "type": "config",
-  "source_format": "GEMINI.md",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/inorganik/ngx-countUp",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-25T00:50:09Z"
+  "distributed_at": "2026-07-25T21:29:04Z"
 }
