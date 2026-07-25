@@ -1,8 +1,6 @@
 # AI instruction files for alpaca-main
 
-> Sourced from [naveedkhan1998/alpaca-main](https://github.com/naveedkhan1998/alpaca-main) and converted for every major platform by [TomeVault](https://tomevault.io)
-
-Realtime trading data boilerplate
+> Sourced from [naveedkhan1998/alpaca-main](https://github.com/naveedkhan1998/alpaca-main), graded against the public Tome Standard and kept consistent across every major platform by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
