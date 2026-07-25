@@ -1,0 +1,93 @@
+{
+  "name": "matrixone",
+  "owner": "matrixorigin",
+  "repo": "matrixone",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "matrixone",
+      "path": ".agents/skills/mo-dev/SKILL.md",
+      "github_url": "https://github.com/matrixorigin/matrixone/tree/main/.agents/skills/mo-dev/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "matrixone",
+      "path": ".claude/skills/mo-dev/SKILL.md",
+      "github_url": "https://github.com/matrixorigin/matrixone/tree/main/.claude/skills/mo-dev/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "matrixone",
+      "path": ".agents/skills/mo-bug-triage/SKILL.md",
+      "github_url": "https://github.com/matrixorigin/matrixone/tree/main/.agents/skills/mo-bug-triage/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "matrixone",
+      "path": ".claude/skills/mo-bug-triage/SKILL.md",
+      "github_url": "https://github.com/matrixorigin/matrixone/tree/main/.claude/skills/mo-bug-triage/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "matrixone",
+      "path": ".agents/skills/mo-self-review/SKILL.md",
+      "github_url": "https://github.com/matrixorigin/matrixone/tree/main/.agents/skills/mo-self-review/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "matrixone",
+      "path": ".claude/skills/mo-self-review/SKILL.md",
+      "github_url": "https://github.com/matrixorigin/matrixone/tree/main/.claude/skills/mo-self-review/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "matrixone",
+      "path": ".agents/skills/unhappy-path-audit/SKILL.md",
+      "github_url": "https://github.com/matrixorigin/matrixone/tree/main/.agents/skills/unhappy-path-audit/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "matrixone",
+      "path": ".claude/skills/unhappy-path-audit/SKILL.md",
+      "github_url": "https://github.com/matrixorigin/matrixone/tree/main/.claude/skills/unhappy-path-audit/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/matrixorigin/matrixone",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-25T06:37:57Z"
+}
