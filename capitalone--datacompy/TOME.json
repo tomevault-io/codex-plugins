@@ -4,7 +4,7 @@
   "repo": "datacompy",
   "description": "",
   "type": "config",
-  "source_format": "CLAUDE.md",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/capitalone/datacompy",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-23T18:19:56Z"
+  "distributed_at": "2026-07-25T03:33:34Z"
 }
