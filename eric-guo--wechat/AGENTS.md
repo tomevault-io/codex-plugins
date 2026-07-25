@@ -1,76 +1,114 @@
-# Gemini Project Context: wechat
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Project Overview
 
-This project is a Ruby gem named `wechat`. It provides a comprehensive DSL (Domain-Specific Language) and API for integrating Ruby on Rails applications with various WeChat platforms, including:
+WeChat is a Ruby gem for integrating with [WeChat Official Accounts Platform](https://developers.weixin.qq.com/doc/offiaccount/Getting_Started/Overview.html), [WeChat Enterprise](https://developer.work.weixin.qq.com/), and [WeChat Mini Program](https://developers.weixin.qq.com/miniprogram/dev/framework/) APIs. It provides both Rails integrations (`wechat_responder`, `wechat_api`) and a standalone command-line interface.
 
-*   WeChat Official Accounts Platform
-*   WeChat Enterprise Accounts (WeCom)
-*   WeChat Mini Programs
-
-The gem simplifies handling WeChat callbacks, messaging, JSSDK configuration, and OAuth 2.0 authentication. It also provides a standalone command-line interface (`wechat`) for interacting with the WeChat API directly.
-
-## Key Technologies
-
-*   **Language:** Ruby (>= 2.7)
-*   **Framework:** Primarily for Ruby on Rails (>= 6.0), with support for older versions.
-*   **HTTP Client:** `httpx`
-*   **XML Parsing:** `nokogiri`
-*   **CLI:** `thor`
-*   **Testing:** RSpec
-*   **Code Style:** RuboCop
-
-## Building and Running
-
-### 1. Setup
-
-Install the required dependencies using Bundler:
+## Common Development Commands
 
 ```bash
-bundle install
-```
+# Run full test suite and linting
+bundle exec rake
 
-### 2. Running Tests
+# Run only RSpec tests
+bundle exec rake spec
 
-The project uses RSpec for testing. To run the full test suite, use one of the following commands:
+# Run specific test file
+bundle exec rspec spec/lib/wechat/http_client_spec.rb
 
-```bash
-# Using bundler
-bundle exec rspec
-
-# Using the rake task
-rake spec
-```
-
-### 3. Code Style and Linting
-
-The project uses RuboCop to enforce code style. To check for offenses:
-
-```bash
-# Using bundler
+# Run RuboCop linting
 bundle exec rubocop
-
-# Using the rake task
-rake rubocop
 ```
 
-### 4. Default Rake Task
+## Code Architecture
 
-A default `rake` task is configured to run both the test suite and the linter:
+### Core Structure
 
-```bash
-rake
-```
+The gem uses **Zeitwerk autoloading** (see `lib/wechat.rb:4`). The main components are:
 
-## Development Conventions
+1. **API Clients** (`lib/wechat/`):
+   - `api.rb` - Public account API (inherits from ApiBase)
+   - `corp_api.rb` - Enterprise account API
+   - `mp_api.rb` - Mini program API
+   - `api_base.rb` - Shared base implementation
 
-*   **Rails Integration:** The gem is designed to integrate tightly with Rails, providing generators (`rails g wechat:install`) to create configuration files (`config/wechat.yml`), controllers, and initializers.
-*   **Responder DSL:** A key feature is the `wechat_responder` DSL in controllers, which allows for an event-driven approach to handling incoming messages and events from WeChat.
-*   **API Access:** The `Wechat.api` object provides direct access to the WeChat API for use in any part of a Rails application, including ActiveJob or Rake tasks.
-*   **Command-Line Interface:** A `wechat` executable is included for performing API actions directly from the shell, configured via `~/.wechat.yml` or project-level `config/wechat.yml`.
-*   **CI/CD:** The `.gitlab-ci.yml` file defines the continuous integration pipeline, which validates pushes and merge requests by running `rspec` and `rubocop`.
+2. **HTTP & Token Management**:
+   - `http_client.rb` - HTTP client with retry logic and network settings
+   - `token/` - Access token management (PublicAccessToken, CorpAccessToken)
+   - `ticket/` - JSAPI ticket management (PublicJsapiTicket, CorpJsapiTicket)
+   - `api_loader.rb` - Configuration and API instance management
+
+3. **Message Handling**:
+   - `responder.rb` - DSL for handling incoming messages (see `wechat_responder`)
+   - `message.rb` - Message formatting and templates
+   - `controller_api.rb` - Rails controller helpers
+
+4. **Rails Integration** (`lib/action_controller/`):
+   - `wechat_responder.rb` - Provides `wechat_responder` DSL
+   - `wechat_api.rb` - Provides `wechat_api` method
+   - `callback.rb` - Webhook callback handling
+
+5. **Rails Generators** (`lib/generators/`):
+   - `wechat/` - Generators for `rails generate wechat:install`, `wechat:config`, etc.
+
+6. **Helpers & Utilities**:
+   - `helpers.rb` - View helpers like `wechat_config_js`
+   - `cipher.rb` - Message encryption/decryption
+   - `signature.rb` - WeChat signature verification
+   - `concern/` - Shared modules (Common, Draft, Qcloud)
+
+### Key Design Patterns
+
+- **Multi-account support**: Use `Wechat.api(:account_name)` to access different WeChat accounts. Configure via `config/wechat.yml` with environment-specific sections.
+- **Token caching**: Access tokens and tickets are cached in files or databases to avoid repeated API calls.
+- **Responder DSL**: Use `on :text, with: 'help' do |request|` syntax to define message handlers.
+- **Error handling**: `ResponseError` wraps WeChat API errors with error codes.
+
+### Configuration Flow
+
+1. Configuration loaded via `ApiLoader` (`lib/wechat/api_loader.rb`)
+2. Supports multiple sources: YAML files → Environment variables → Database records
+3. Configuration precedence: Database > YAML > Environment variables
+4. Reload with `Wechat.reload_config!` after database changes
+
+## Testing
+
+The project uses **RSpec** with:
+- `spec/spec_helper.rb` - Test configuration and SimpleCov setup
+- `spec/dummy/` - Minimal Rails app for integration tests
+- `spec/support/` - Shared test helpers
+
+Tests mirror the lib structure (e.g., `spec/lib/wechat/http_client_spec.rb`).
+
+SimpleCov coverage reports are generated in `coverage/index.html`.
+
+## Code Style
+
+- **Ruby 2.6+**
+- **Line length**: 180 characters
+- **RuboCop** is authoritative - run before commits
+- **Frozen string literals** in all new files
+- Standard Ruby naming conventions (snake_case methods, CamelCase classes)
+
+## Known Important Files
+
+- `config/wechat.yml` - Generated by `rails g wechat:install`, holds account configurations
+- `~/.wechat.yml` - CLI configuration for standalone `wechat` command
+- `AGENTS.md` - Project development guidelines
+- `CHANGELOG.md` - Recent changes
+- `README.md` - Full documentation
+
+## Development Tips
+
+- Enterprise accounts must use encrypt mode (`encrypt_mode: true` is default)
+- Multi-account setup mirrors Rails database.yml structure
+- Use `rails g wechat:redis_store` for distributed token/ticket storage
+- Access tokens are auto-refreshed; `AccessTokenExpiredError` is handled internally
+- The `wechat` command has different commands for public vs enterprise accounts
+- JS-SDK requires `trusted_domain_fullname` in development behind reverse proxies
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/Eric-Guo)
-> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/Eric-Guo)
-<!-- tomevault:4.0:agents_md:2026-04-08 -->
+> Source: [Eric-Guo/wechat](https://github.com/Eric-Guo/wechat) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-07-22 -->
