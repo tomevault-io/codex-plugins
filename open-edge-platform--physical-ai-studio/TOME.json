@@ -3,8 +3,8 @@
   "owner": "open-edge-platform",
   "repo": "physical-ai-studio",
   "description": "Physical AI Studio is an end-to-end framework for training robots to perform tasks through imitation learning from human demonstrations.",
-  "type": "config",
-  "source_format": "copilot-instructions.md",
+  "type": "tome",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -37,8 +37,39 @@
       "platform": "Windsurf"
     }
   ],
-  "skills": [],
+  "skills": [
+    {
+      "name": "physical-ai-studio",
+      "path": "skills/library/physicalai-train-adding-a-policy/SKILL.md",
+      "github_url": "https://github.com/open-edge-platform/physical-ai-studio/tree/main/skills/library/physicalai-train-adding-a-policy/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "physical-ai-studio",
+      "path": "skills/library/physicalai-train-training-a-policy/SKILL.md",
+      "github_url": "https://github.com/open-edge-platform/physical-ai-studio/tree/main/skills/library/physicalai-train-training-a-policy/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "physical-ai-studio",
+      "path": "skills/library/physicalai-train-working-with-datasets/SKILL.md",
+      "github_url": "https://github.com/open-edge-platform/physical-ai-studio/tree/main/skills/library/physicalai-train-working-with-datasets/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "physical-ai-studio",
+      "path": "skills/library/physicalai-train-benchmarking-a-policy/SKILL.md",
+      "github_url": "https://github.com/open-edge-platform/physical-ai-studio/tree/main/skills/library/physicalai-train-benchmarking-a-policy/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "physical-ai-studio",
+      "path": "skills/library/physicalai-train-exporting-and-validating/SKILL.md",
+      "github_url": "https://github.com/open-edge-platform/physical-ai-studio/tree/main/skills/library/physicalai-train-exporting-and-validating/SKILL.md",
+      "description": ""
+    }
+  ],
   "source_url": "https://github.com/open-edge-platform/physical-ai-studio",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-06T03:00:55Z"
+  "distributed_at": "2026-07-25T20:38:56Z"
 }
