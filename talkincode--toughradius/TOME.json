@@ -1,0 +1,135 @@
+{
+  "name": "toughradius",
+  "owner": "talkincode",
+  "repo": "toughradius",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "toughradius",
+      "path": ".agents/skills/review-pr/SKILL.md",
+      "github_url": "https://github.com/talkincode/toughradius/tree/main/.agents/skills/review-pr/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "toughradius",
+      "path": ".agents/skills/reference-rfc/SKILL.md",
+      "github_url": "https://github.com/talkincode/toughradius/tree/main/.agents/skills/reference-rfc/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "toughradius",
+      "path": ".agents/skills/groom-roadmap/SKILL.md",
+      "github_url": "https://github.com/talkincode/toughradius/tree/main/.agents/skills/groom-roadmap/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "toughradius",
+      "path": ".agents/skills/add-eap-method/SKILL.md",
+      "github_url": "https://github.com/talkincode/toughradius/tree/main/.agents/skills/add-eap-method/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "toughradius",
+      "path": ".agents/skills/write-go-tests/SKILL.md",
+      "github_url": "https://github.com/talkincode/toughradius/tree/main/.agents/skills/write-go-tests/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "toughradius",
+      "path": ".agents/skills/release-version/SKILL.md",
+      "github_url": "https://github.com/talkincode/toughradius/tree/main/.agents/skills/release-version/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "toughradius",
+      "path": ".agents/skills/document-go-apis/SKILL.md",
+      "github_url": "https://github.com/talkincode/toughradius/tree/main/.agents/skills/document-go-apis/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "toughradius",
+      "path": ".agents/skills/add-config-schema/SKILL.md",
+      "github_url": "https://github.com/talkincode/toughradius/tree/main/.agents/skills/add-config-schema/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "toughradius",
+      "path": ".agents/skills/add-radius-vendor/SKILL.md",
+      "github_url": "https://github.com/talkincode/toughradius/tree/main/.agents/skills/add-radius-vendor/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "toughradius",
+      "path": ".agents/skills/add-acceptance-test/SKILL.md",
+      "github_url": "https://github.com/talkincode/toughradius/tree/main/.agents/skills/add-acceptance-test/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "toughradius",
+      "path": ".agents/skills/orchestrate-roadmap/SKILL.md",
+      "github_url": "https://github.com/talkincode/toughradius/tree/main/.agents/skills/orchestrate-roadmap/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "toughradius",
+      "path": ".agents/skills/sync-upstream-radius/SKILL.md",
+      "github_url": "https://github.com/talkincode/toughradius/tree/main/.agents/skills/sync-upstream-radius/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "toughradius",
+      "path": ".agents/skills/add-adminapi-endpoint/SKILL.md",
+      "github_url": "https://github.com/talkincode/toughradius/tree/main/.agents/skills/add-adminapi-endpoint/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "toughradius",
+      "path": ".agents/skills/align-feature-checklist/SKILL.md",
+      "github_url": "https://github.com/talkincode/toughradius/tree/main/.agents/skills/align-feature-checklist/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "toughradius",
+      "path": ".agents/skills/add-react-admin-resource/SKILL.md",
+      "github_url": "https://github.com/talkincode/toughradius/tree/main/.agents/skills/add-react-admin-resource/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/talkincode/toughradius",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-25T00:34:13Z"
+}
