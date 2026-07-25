@@ -1,11 +1,11 @@
-# Claude Code Instructions
+# GitHub Copilot Instructions
 
-## Skills and Agents
+## Skills and Agent Information
 
-At the start of each session, run `git pull` in `/usr/local/webpros-claude-skills/` to
-ensure you have the latest skills and agents. That directory contains project-wide
-skills (under `skills/`) and agents (under `agents/`) that provide commit message
-standards, workflow conventions, and other shared guidance used across WebPros projects.
+Always run `git pull` in `/usr/local/webpros-copilot-skills` before reading it, to
+ensure you have the latest instructions. Then look there for agent and general skills
+information, including commit message standards, workflow conventions, and other
+project-specific guidance.
 
 ## Project Overview
 
@@ -62,11 +62,11 @@ Commits follow the cPanel/WHM convention:
 2. **Blank line**
 3. **Body**: Detailed description; **must begin** with `Case PROJECT-XXXXX:` if a ticket/case exists (use the branch name as the case number when on a case branch).
 4. **Trailers** (in this order):
-   - `Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>`
+   - `Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>`
    - `Changelog:` — leave empty for internal-only changes; describe user-visible changes otherwise.
 
 `Changelog:` **must always be the last line** of the commit message.
 
 ---
 > Source: [cpanel/elevate](https://github.com/cpanel/elevate) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-22 -->
+<!-- tomevault:4.0:agents_md:2026-07-24 -->
