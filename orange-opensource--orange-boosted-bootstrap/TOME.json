@@ -1,0 +1,111 @@
+{
+  "name": "Orange-Boosted-Bootstrap",
+  "owner": "Orange-OpenSource",
+  "repo": "Orange-Boosted-Bootstrap",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "Orange-Boosted-Bootstrap",
+      "path": ".github/skills/code-review/SKILL.md",
+      "github_url": "https://github.com/Orange-OpenSource/Orange-Boosted-Bootstrap/tree/main/.github/skills/code-review/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Orange-Boosted-Bootstrap",
+      "path": ".github/skills/multi-brand/SKILL.md",
+      "github_url": "https://github.com/Orange-OpenSource/Orange-Boosted-Bootstrap/tree/main/.github/skills/multi-brand/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Orange-Boosted-Bootstrap",
+      "path": ".github/skills/token-system/SKILL.md",
+      "github_url": "https://github.com/Orange-OpenSource/Orange-Boosted-Bootstrap/tree/main/.github/skills/token-system/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Orange-Boosted-Bootstrap",
+      "path": ".github/skills/accessibility/SKILL.md",
+      "github_url": "https://github.com/Orange-OpenSource/Orange-Boosted-Bootstrap/tree/main/.github/skills/accessibility/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Orange-Boosted-Bootstrap",
+      "path": ".github/skills/diagnose-errors/SKILL.md",
+      "github_url": "https://github.com/Orange-OpenSource/Orange-Boosted-Bootstrap/tree/main/.github/skills/diagnose-errors/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Orange-Boosted-Bootstrap",
+      "path": ".github/skills/validate-tokens/SKILL.md",
+      "github_url": "https://github.com/Orange-OpenSource/Orange-Boosted-Bootstrap/tree/main/.github/skills/validate-tokens/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Orange-Boosted-Bootstrap",
+      "path": ".github/skills/create-component/SKILL.md",
+      "github_url": "https://github.com/Orange-OpenSource/Orange-Boosted-Bootstrap/tree/main/.github/skills/create-component/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Orange-Boosted-Bootstrap",
+      "path": ".github/skills/scss-conventions/SKILL.md",
+      "github_url": "https://github.com/Orange-OpenSource/Orange-Boosted-Bootstrap/tree/main/.github/skills/scss-conventions/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Orange-Boosted-Bootstrap",
+      "path": ".github/skills/project-knowledge/SKILL.md",
+      "github_url": "https://github.com/Orange-OpenSource/Orange-Boosted-Bootstrap/tree/main/.github/skills/project-knowledge/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Orange-Boosted-Bootstrap",
+      "path": ".github/skills/component-patterns/SKILL.md",
+      "github_url": "https://github.com/Orange-OpenSource/Orange-Boosted-Bootstrap/tree/main/.github/skills/component-patterns/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Orange-Boosted-Bootstrap",
+      "path": ".github/skills/javascript-conventions/SKILL.md",
+      "github_url": "https://github.com/Orange-OpenSource/Orange-Boosted-Bootstrap/tree/main/.github/skills/javascript-conventions/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/Orange-OpenSource/Orange-Boosted-Bootstrap",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-25T22:36:35Z"
+}
