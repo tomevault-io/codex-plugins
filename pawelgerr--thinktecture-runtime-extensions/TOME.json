@@ -1,0 +1,51 @@
+{
+  "name": "Thinktecture.Runtime.Extensions",
+  "owner": "PawelGerr",
+  "repo": "Thinktecture.Runtime.Extensions",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "Thinktecture.Runtime.Extensions",
+      "path": "skills/thinktecture-runtime-extensions/SKILL.md",
+      "github_url": "https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/tree/main/skills/thinktecture-runtime-extensions/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/PawelGerr/Thinktecture.Runtime.Extensions",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-25T00:37:01Z"
+}
