@@ -1,55 +1,59 @@
-# CLAUDE.md
+# Copilot Instructions
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+## Build, test, and lint commands
 
-## Overview
-
-This is the reference implementation of [Pact](https://pact.io) contract testing written in Rust. It provides shared libraries for consumer and provider testing, with FFI bindings for use in other languages. The project supports Pact specification V1–V4.
-
-> Note: The mock server crates (`pact_mock_server`, `pact_mock_server_cli`) have moved to https://github.com/pact-foundation/pact-core-mock-server and are excluded from this workspace.
-
-## Build & Test Commands
-
-All Cargo commands must be run from the `rust/` subdirectory (the workspace root):
+The main Rust workspace lives in `rust/`. Run Cargo commands there unless you are working on the compatibility suite.
 
 ```bash
 cd rust
 
-# Build all crates
+# Build and test the full workspace
 cargo build
-
-# Run all tests
 cargo test
 
-# Run tests for a specific crate
+# Lint and lighter validation
+cargo clippy
+cargo check
+cargo check --no-default-features
+
+# Run tests for one crate
 cargo test --package pact_models
 
-# Run a single test by name (exact match)
+# Run one exact test
 cargo test --package pact_models -- my_test_name --exact
 
-# Run tests in a specific module
+# Run tests in one module
 cargo test --package pact_matching headers::tests
 
-# Run tests with log output
+# Run tests with tracing output
 RUST_LOG=debug cargo test -- --nocapture
 
-# Lint
-cargo clippy
-
-# Check without building (faster)
-cargo check
-
-# Release build (strip=true, opt-level="z")
+# Release build
 cargo build --release
 ```
 
-### WASM targets (pact_models and pact_matching only)
+WASM builds are only checked for `pact_models` and `pact_matching`:
 
 ```bash
-cargo build --target wasm32-wasip2
+cd rust/pact_models && cargo build --target wasm32-wasip2
+cd rust/pact_matching && cargo build --target wasm32-wasip2
 ```
 
-### Cross-compilation / MUSL static builds
+The compatibility suite is a separate crate under `compatibility-suite/` and is run independently from the main workspace:
+
+```bash
+cd compatibility-suite
+cargo test --test v1_consumer
+cargo test --test v1_provider
+cargo test --test v2_consumer
+cargo test --test v2_provider
+cargo test --test v3
+cargo test --test v3_provider
+cargo test --test v3_message
+cargo test --test v4
+```
+
+Cross-platform MUSL builds use the project Docker image:
 
 ```bash
 docker run --rm --user "$(id -u)":"$(id -g)" \
@@ -58,59 +62,44 @@ docker run --rm --user "$(id -u)":"$(id -g)" \
   ./scripts/ci-musl-build.sh
 ```
 
-## Crate Architecture
+## High-level architecture
 
-The dependency graph flows upward — each layer depends on those below it:
+This repository is the Rust reference implementation of Pact and exposes the same core through Rust crates, a C-compatible FFI layer, and a verifier CLI.
 
+The crate dependency graph flows upward:
+
+```text
+pact_models          <- Pact data structures and pact file IO
+    ^
+pact_matching        <- Request/response/message matching rules
+    ^           \
+pact_verifier    pact_consumer   <- Provider verification library / consumer DSL
+    ^                ^
+pact_verifier_cli  pact_ffi      <- CLI wrapper / foreign-language entry point
 ```
-pact_models          ← Pact data structures, reading/writing pact files
-    ↑
-pact_matching        ← Request/response matching logic
-    ↑           ↖
-pact_verifier    pact_consumer   ← Verification library / Consumer DSL
-    ↑                ↑
-pact_verifier_cli  pact_ffi      ← Standalone CLI / C FFI bindings
-```
 
-### Crates
+Key architectural boundaries:
 
-- **pact_models**: Core data structures for Pact contracts. Handles JSON serialization of pact files. WASM-compatible (no `tokio`/`reqwest` on WASM). Features: `datetime`, `xml`, `form_urlencoded`.
+- `pact_models` is the foundation: pact JSON models, parsing, serialization, and shared data structures.
+- `pact_matching` builds on `pact_models` and owns matching logic, matcher execution, and plugin-aware matching.
+- `pact_consumer` provides the Rust consumer DSL and depends on the external `pact_mock_server` crate.
+- `pact_verifier` implements provider verification logic on top of the core model and matching crates.
+- `pact_verifier_cli` is a thin executable wrapper over `pact_verifier`.
+- `pact_ffi` exposes consumer and verifier capabilities to other languages through a C ABI.
+- The mock server crates were moved to `pact-foundation/pact-core-mock-server` and are excluded from this workspace, even though some crates still depend on them as external packages.
+- `compatibility-suite/` is separate from `rust/` and contains Cucumber-based spec compliance tests for Pact V1-V4.
 
-- **pact_matching**: Implements all matching rules and interaction matching. Supports plugin-based extensibility via `pact-plugin-driver`. Features: `datetime`, `xml`, `plugins`, `multipart`, `form_urlencoded`.
+## Key conventions
 
-- **pact_consumer**: DSL for writing consumer tests in Rust. Integrates with `pact_mock_server` (external repo). Features: `datetime`, `xml`, `plugins`, `multipart`, `tls`, `colour`.
-
-- **pact_verifier**: Core provider verification logic (library). Compiled as `cdylib` + `rlib`. Features: `datetime`, `xml`, `plugins`, `multipart`.
-
-- **pact_ffi**: C-compatible FFI layer exposing consumer and verifier APIs. Compiled as `cdylib`, `staticlib`, and `rlib`. Uses Rust edition 2021 (differs from other crates, which use 2024).
-
-- **pact_verifier_cli**: Command-line tool wrapping `pact_verifier`. Features include `junit` output format.
-
-## Key Conventions
-
-- **Rust edition**: 2024 for all crates except `pact_ffi` (2021).
-- **Minimum Rust version**: 1.88.0 (required for edition 2024).
-- **Async runtime**: `tokio` throughout (except WASM builds).
-- **Logging**: `tracing` / `tracing-subscriber` (not `log`).
-- **Test helpers**: `rstest`, `hamcrest2`, `expectest`, `pretty_assertions` are common dev-dependencies.
-- **Workspace patch**: `pact_models` is patched in `rust/Cargo.toml` to always use the local path (`./pact_models`), so changes propagate across all crates without a publish.
-
-## Commit Messages
-
-Follow [Conventional Changelog](https://github.com/bcoe/conventional-changelog-standard/blob/master/convention.md) format:
-- `feat: ...` for new features
-- `fix: ...` for bug fixes
-- `chore: ...` for maintenance
-- `refactor: ...` for refactoring
-
-## Compatibility Suite
-
-BDD-style integration tests covering V1–V4 spec compliance live in `/compatibility-suite/`. These use the `cucumber` framework and run separately from the main workspace tests.
-
-## Releasing
-
-Each crate has a `release.groovy` script that guides the release process and updates changelogs. Releases are published to [crates.io](https://crates.io) and tagged on GitHub. CI builds attach platform binaries to each GH release.
+- Most crates use Rust edition 2024 and require Rust 1.88+. `pact_ffi` is the exception and still uses edition 2021.
+- Keep dependencies aligned with the layering above. New code should normally depend "downward" into lower-level crates, not sideways or upward.
+- Feature flags are intentionally propagated across crates (`datetime`, `xml`, `plugins`, `multipart`, `form_urlencoded`, `tls`, `junit`). When adding an optional capability, check whether it also needs wiring through dependent crates and target-specific builds.
+- `pact_models` is patched in `rust/Cargo.toml` via `[patch.crates-io]` to the local path. Changes there automatically affect workspace crates without publishing.
+- Logging and test output are centered on `tracing`/`tracing-subscriber`; tests commonly use `test-log` so `RUST_LOG=debug` is useful when debugging failures.
+- Common test helpers across crates are `rstest`, `expectest`, `hamcrest2`, and `pretty_assertions`. Follow those existing choices before introducing new test utilities.
+- CI exercises more than the default happy path: full workspace build/test, Linux `cargo clippy`, `cargo check --no-default-features`, WASM builds for `pact_models` and `pact_matching`, and a separate run with `PACT_MATCHING_ENGINE=v2`.
+- Commit messages follow Conventional Changelog style (`feat:`, `fix:`, `chore:`, `refactor:`).
 
 ---
 > Source: [pact-foundation/pact-reference](https://github.com/pact-foundation/pact-reference) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-22 -->
+<!-- tomevault:4.0:agents_md:2026-07-24 -->
