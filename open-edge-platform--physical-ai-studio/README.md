@@ -1,26 +1,34 @@
 # AI instruction files for physical-ai-studio
 
-> Sourced from [open-edge-platform/physical-ai-studio](https://github.com/open-edge-platform/physical-ai-studio) and converted for every major platform by [TomeVault](https://tomevault.io)
+> Sourced from [open-edge-platform/physical-ai-studio](https://github.com/open-edge-platform/physical-ai-studio), graded against the public Tome Standard and kept consistent across every major platform by [TomeVault](https://tomevault.io)
 
 Physical AI Studio is an end-to-end framework for training robots to perform tasks through imitation learning from human demonstrations.
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [open-edge-platform/physical-ai-studio](https://github.com/open-edge-platform/physical-ai-studio).
+Original source: `CLAUDE.md` in [open-edge-platform/physical-ai-studio](https://github.com/open-edge-platform/physical-ai-studio).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/open-edge-platform/physical-ai-studio](https://github.com/open-edge-platform/physical-ai-studio)
+## Bundled Skills (5)
+
+- [physical-ai-studio](https://github.com/open-edge-platform/physical-ai-studio/tree/main/skills/library/physicalai-train-adding-a-policy/SKILL.md)
+- [physical-ai-studio](https://github.com/open-edge-platform/physical-ai-studio/tree/main/skills/library/physicalai-train-training-a-policy/SKILL.md)
+- [physical-ai-studio](https://github.com/open-edge-platform/physical-ai-studio/tree/main/skills/library/physicalai-train-working-with-datasets/SKILL.md)
+- [physical-ai-studio](https://github.com/open-edge-platform/physical-ai-studio/tree/main/skills/library/physicalai-train-benchmarking-a-policy/SKILL.md)
+- [physical-ai-studio](https://github.com/open-edge-platform/physical-ai-studio/tree/main/skills/library/physicalai-train-exporting-and-validating/SKILL.md)
+
+Graded against the Tome Standard, TomeVault's public ruleset for whether AI instructions load, read clearly and stay safe. Source: [github.com/open-edge-platform/physical-ai-studio](https://github.com/open-edge-platform/physical-ai-studio)
 
 ---
 
-Explore more instruction files on [TomeVault](https://tomevault.io) — the open index of AI config files for every platform.
+Explore more instruction files on [TomeVault](https://tomevault.io), the platform that grades AI instruction files and catches silent drift across every major tool.
 
 <!-- genome:a-e-q -->
