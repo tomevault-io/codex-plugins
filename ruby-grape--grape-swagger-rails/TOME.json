@@ -4,7 +4,7 @@
   "repo": "grape-swagger-rails",
   "description": "",
   "type": "config",
-  "source_format": "CLAUDE.md",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/ruby-grape/grape-swagger-rails",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-24T06:30:46Z"
+  "distributed_at": "2026-07-25T19:29:22Z"
 }
