@@ -1,156 +1,58 @@
-# CLAUDE.md
+# Copilot Instructions for Cachier
 
-## 📦 Project Overview
+Welcome to the Cachier codebase! Please follow these guidelines to ensure code suggestions, reviews, and contributions are robust, maintainable, and compatible with our multi-backend architecture.
 
-**Cachier** is a Python library providing persistent, stale-free, local and cross-machine caching for Python functions via a decorator API. It supports multiple backends (pickle, memory, MongoDB, SQL, Redis), is thread-safe, and is designed for extensibility and robust cross-platform support.
+## 1. Decorator and API Usage
 
-- **Repository:** [python-cachier/cachier](https://github.com/python-cachier/cachier)
-- **Primary Language:** Python 3.9+
-- **Key Dependencies:** `portalocker`, `watchdog` (optional: `pymongo`, `sqlalchemy`, `redis`)
-- **Test Framework:** `pytest` with backend-specific markers
-- **Linting:** `ruff` (replaces black/flake8)
-- **Type Checking:** `mypy`
-- **CI:** GitHub Actions (matrix for backends/OS with Dockerized services)
-- **Issue Tracking:** GitHub Issues
-- **Additional Docs:** `.github/copilot-instructions.md` for contributor guidelines
+- The main decorator is `@cachier`. It supports parameters such as `stale_after`, `backend`, `mongetter`, `cache_dir`, `pickle_reload`, `separate_files`, `wait_for_calc_timeout`, `allow_none`, and `hash_func`.
+- Arguments to cached functions must be hashable; for unhashable arguments, provide a custom hash function via the `hash_func` parameter.
+- The default backend is pickle-based, storing cache files in `~/.cachier/` unless otherwise specified. MongoDB and memory backends are also supported.
+- Cachier is thread-safe and supports per-function cache clearing via the `clear_cache()` method on decorated functions.
+- Global configuration is possible via `set_default_params`, `set_global_params`, and `enable_caching`/`disable_caching`.
 
-______________________________________________________________________
+## 2. Optional Dependencies and Backends
 
-## 🗂️ Repository Structure
+- Cachier supports multiple backends: `pickle`, `memory`, `mongo`, and `sql`.
+- Not all dependencies are required for all backends. Code and tests for optional backends (e.g., MongoDB, SQL/SQLAlchemy) **must gracefully handle missing dependencies** and should not break import or test collection for other backends.
+- Only raise errors or warnings for missing dependencies when the relevant backend is actually used (not at import time).
 
-```
-cachier/
-├── src/cachier/           # Main library code
-│   ├── __init__.py
-│   ├── core.py            # Decorator logic, backend selection
-│   ├── cores/             # Backend implementations
-│   │   ├── pickle.py
-│   │   ├── memory.py
-│   │   ├── mongo.py
-│   │   ├── sql.py
-│   │   ├── redis.py
-│   │   └── base.py
-│   ├── config.py          # Global/default config
-│   ├── _types.py          # Type definitions
-│   ├── _version.py
-│   └── __main__.py
-├── tests/                 # Pytest-based tests, backend-marked
-│   ├── test_*.py
-│   └── requirements_*.txt # Backend-specific test requirements
-├── examples/              # Usage examples
-├── README.rst             # Main documentation
-├── pyproject.toml         # Build, lint, type, test config
-├── .pre-commit-config.yaml
-├── .github/               # CI, issue templates, workflows
-└── ... (see full tree above)
-```
+## 3. Testing Matrix and Markers
 
-______________________________________________________________________
+- Tests are located in the `tests/` directory and should be run with `pytest`.
+- Tests are marked with `@pytest.mark.<backend>` (e.g., `@pytest.mark.sql`, `@pytest.mark.mongo`, `@pytest.mark.local`).
+- The CI matrix runs different backends on different OSes. Do **not** assume all tests run on all platforms.
+- MongoDB-related tests require either a mocked or live MongoDB instance.
+- When adding new backends that require external services (e.g., databases), update the CI matrix and use Dockerized services as in the current MongoDB and PostgreSQL setup. Exclude backends from OSes where they are not supported.
 
-## 🚦 Quick Start
+## 4. Coverage, Linting, and Typing
 
-1. **Install core dependencies:**
+- Code must pass `mypy`, `ruff`, and `pytest`.
+- Use per-file or per-line ignores for known, justified issues (e.g., SQLAlchemy model base class typing, intentional use of `pickle`).
+- All new code must include full type annotations and docstrings matching the style of the existing codebase.
+- All docstrings should follow numpy docstring conventions.
 
-   ```bash
-   pip install .[all]
-   ```
+## 5. Error Handling and Warnings
 
-   - For backend-specific dev: see `tests/requirements_*.txt`.
+- Do **not** emit warnings at import time for missing optional dependencies. Only raise errors or warnings when the relevant backend is actually used.
 
-2. **Run tests:**
+## 6. Backward Compatibility
 
-   ```bash
-   pytest                           # All tests
-   pytest -m "pickle or memory"     # Basic backends only
-   pytest -m "not (mongo or sql)"  # Exclude external service backends
-   ```
+- Maintain backward compatibility for public APIs unless a breaking change is explicitly approved.
+- Cachier supports Python 3.10+.
 
-3. **Lint and type-check:**
+## 7. Documentation and Examples
 
-   ```bash
-   ruff check .
-   mypy src/cachier/
-   ```
+- When adding a new backend or feature, provide:
+  - Example usage in the README
+  - At least one test for each public method
+  - Documentation of any new configuration options
+- For documentation, follow numpy docstring conventions and validate changes to `README.rst` with `python setup.py checkdocs`.
 
-4. **Try an example:**
+## 8. General Style
 
-   ```bash
-   # Quick test
-   python -c "
-   from cachier import cachier
-   import datetime
-
-   @cachier(stale_after=datetime.timedelta(days=1))
-   def test_func(x):
-       return x * 2
-
-   print(test_func(5))  # Calculates and caches
-   print(test_func(5))  # Returns from cache
-   "
-
-   # Or run the Redis example (requires Redis server)
-   python examples/redis_example.py
-   ```
-
-______________________________________________________________________
-
-## 🧑‍💻 Development Guidelines
-
-### 1. **Code Style & Quality**
-
-- **Python 3.9+** only.
-- **Type annotations** required for all new code.
-- **Docstrings:** Use numpy style, multi-line, no single-line docstrings.
-- **Lint:** Run `ruff` before PRs. Use per-line/file ignores only for justified cases.
-- **Type check:** Run `mypy` before PRs.
-- **Testing:** All public methods must have at least one test. Use `pytest.mark.<backend>` for backend-specific tests.
-- **No warnings/errors for missing optional dependencies at import time.** Only raise when backend is used.
-
-### 2. **Backends**
-
-- **Default:** Pickle (local file cache, `~/.cachier/`)
-- **Others:** Memory, MongoDB, SQL, Redis
-- **Adding a backend:** Implement in `src/cachier/cores/`, subclass `BaseCore`, add tests with appropriate markers, update docs, and CI matrix if needed.
-- **Optional dependencies:** Code/tests must gracefully skip if backend deps are missing. Install backend-specific deps via `tests/requirements_*.txt`.
-- **Requirements files:** `tests/requirements_mongodb.txt`, `tests/requirements_postgres.txt`, `tests/requirements_redis.txt` for backend-specific dependencies.
-
-### 3. **Decorator Usage**
-
-- Main API: `@cachier`
-- Key params: `stale_after`, `backend`, `mongetter`, `cache_dir`, `pickle_reload`, `separate_files`, `wait_for_calc_timeout`, `allow_none`, `hash_func`
-- Arguments to cached functions must be hashable. For unhashable, provide `hash_func`.
-
-### 4. **Testing**
-
-- **Run all tests:** `pytest`
-- **Backend-specific:** Use markers, e.g. `pytest -m mongo`, `pytest -m redis`, `pytest -m sql`
-- **Available markers:** `mongo`, `memory`, `pickle`, `redis`, `sql`, `maxage` (see `pyproject.toml`)
-- **Requirements:** See `tests/requirements_*.txt` for backend test deps.
-- **CI:** Matrix covers OS/backend combinations. Mongo/SQL/Redis require Dockerized services.
-- **Missing deps:** Tests gracefully skip if optional backend dependencies are missing.
-
-### 5. **Documentation**
-
-- **README.rst** is the canonical user/developer doc.
-- **New features/backends:** Update README, add usage example, document config options.
-- **Doc validation:** `python setup.py checkdocs`
-
-### 6. **Error Handling**
-
-- **No import-time warnings for missing optional deps.**
-- **Raise errors/warnings only when backend is used.**
-- **Graceful fallback/skip for missing backend deps in tests.**
-- **Thread-safety:** All backends must be thread-safe and handle concurrent access properly.
-
-### 7. **Backward Compatibility**
-
-- **Public API must remain backward compatible** unless breaking change is approved.
-- **Support for Python 3.9+ only.**
-
-### 8. **Global Configuration & Compatibility**
-
-- Use `set_default_params`, `set_global_params`, `enable_caching`, `disable_caching` for global config.
-- **Copilot Integration:** This file works alongside `.github/copilot-instructions.md` for comprehensive contributor guidance.
+- Prefer concise, readable, and well-documented Python code.
+- Follow the existing code style and conventions for imports, docstrings, and type annotations.
+- Prefer explicit, readable code over cleverness.
 
 ## 9. The Code Base
 
@@ -158,7 +60,6 @@ ______________________________________________________________________
 
 The repository contains a Python package called Cachier that provides persistent function caching with several backends:
 
-```
 cachier/
 ├── src/cachier/ # Main library code
 │ ├── __init__.py
@@ -180,7 +81,6 @@ cachier/
 ├── examples/ # Usage examples
 ├── README.rst # Main documentation
 └── ...
-```
 
 ### Key functionality
 
@@ -409,208 +309,48 @@ if __name__ == "__main__":
 
 ______________________________________________________________________
 
-## 🛠️ Common Bash & MCP Commands
+## 10. Contributing Guidelines
 
-- **Install all dev dependencies:**
-  ```bash
-  pip install -e .
-  pip install -r tests/requirements.txt
-  # For specific backends:
-  pip install -r tests/requirements_mongodb.txt
-  pip install -r tests/requirements_redis.txt
-  pip install -r tests/requirements_postgres.txt
-  ```
-- **Run all tests:** `pytest`
-- **Run backend-specific tests:** `pytest -m <backend>` (mongo, redis, sql, memory, pickle, maxage)
-- **Run multiple backends:** `pytest -m "redis or sql"`
-- **Exclude backends:** `pytest -m "not mongo"`
-- **Lint:** `ruff check .`
-- **Type check:** `mypy src/cachier/`
-- **Format:** `ruff format .`
-- **Pre-commit:** `pre-commit run --all-files`
-- **Build package:** `python -m build`
-- **Check docs:** `python setup.py checkdocs`
-- **Run example:** `python examples/redis_example.py`
-- **Update requirements:** Edit `tests/requirements_*.txt` as needed (`requirements_mongodb.txt`, `requirements_postgres.txt`, `requirements_redis.txt`).
+### Issue Reporting
 
-### Local Testing with Docker
+- Before opening a new issue, search existing issues to avoid duplicates
+- Use issue templates when available
+- Provide clear reproduction steps for bugs
+- Include environment details (OS, Python version, backend used)
+- For feature requests, explain the use case and expected behavior
 
-**Quick Start - Test Any Backend Locally:**
+### Pull Request Process
 
-```bash
-# Test single backend
-./scripts/test-local.sh mongo
-./scripts/test-local.sh redis
-./scripts/test-local.sh sql
+1. **Fork and Branch**: Fork the repository and create a feature branch from `master`
+2. **Make Changes**: Follow the code style guidelines and add tests for new features
+3. **Run Tests**: Ensure all tests pass locally before submitting
+   - Run `pytest` for all tests
+   - Run `pytest -m <backend>` for backend-specific tests
+   - Run `ruff check .` for linting
+   - Run `mypy src/cachier/` for type checking
+4. **Commit**: Use clear, descriptive commit messages
+5. **Submit PR**: Reference related issues and provide a clear description of changes
+6. **Code Review**: Address review feedback and re-run tests as needed
+7. **Merge**: Maintainers will merge once approved
 
-# Test multiple backends
-./scripts/test-local.sh mongo redis
-./scripts/test-local.sh external  # All external (mongo, redis, sql)
-./scripts/test-local.sh all       # All backends
+### Development Workflow
 
-# Test with options
-./scripts/test-local.sh mongo redis -v -k  # Verbose, keep containers running
-```
+- **Branch Naming**: Use descriptive names like `feature/add-redis-backend`, `fix/mongo-connection-issue`, `docs/update-readme`
+- **Commit Messages**: Use clear, present-tense messages (e.g., "Add Redis backend support", not "Added Redis backend support")
+- **Testing**: Always add tests for new features or bug fixes
+- **Documentation**: Update README.rst and docstrings for new features
 
-**Make Targets:**
+### Release Process
 
-- `make test-local CORES="mongo redis"` - Test specified cores
-- `make test-all-local` - Test all backends with Docker
-- `make test-external` - Test all external backends
-- `make test-mongo-local` - Test MongoDB only
-- `make test-redis-local` - Test Redis only
-- `make test-sql-local` - Test SQL only
-- `make services-start` - Start all Docker containers
-- `make services-stop` - Stop all Docker containers
-
-**Available Cores:**
-
-- `mongo` - MongoDB backend
-- `redis` - Redis backend
-- `sql` - PostgreSQL backend
-- `memory` - Memory backend (no Docker)
-- `pickle` - Pickle backend (no Docker)
-- `all` - All backends
-- `external` - All external backends (mongo, redis, sql)
-- `local` - All local backends (memory, pickle)
-
-**Options:**
-
-- `-v, --verbose` - Verbose pytest output
-- `-k, --keep-running` - Keep containers running after tests
-- `-h, --html-coverage` - Generate HTML coverage report
-
-**Note:** External backends (MongoDB, Redis, SQL) require Docker. Memory and pickle backends work without Docker.
+- Releases are managed by maintainers
+- Version numbers follow semantic versioning (MAJOR.MINOR.PATCH)
+- Release notes are generated from PR titles and descriptions
+- PyPI releases are automated via GitHub Actions
 
 ______________________________________________________________________
 
-## 🧩 Claude Code Integration
-
-### a. **File Navigation & Context**
-
-- **Core logic:** `src/cachier/core.py`
-- **Backends:** `src/cachier/cores/`
-- **Config:** `src/cachier/config.py`
-- **Types:** `src/cachier/_types.py`
-- **Tests:** `tests/`
-- **Examples:** `examples/`
-- **Docs:** `README.rst`
-
-### b. **Best Practices for Claude**
-
-- **Always check for backend-specific requirements** before running backend tests or code (see `tests/requirements_*.txt`).
-- **When adding a backend:** Update all relevant places (core, tests, docs, CI matrix, requirements files).
-- **When editing core logic:** Ensure all backends are still supported and tested.
-- **When updating the decorator API:** Update docstrings, README, and tests.
-- **When adding config options:** Update `config.py`, docstrings, README, and add tests.
-- **When changing global config:** Ensure backward compatibility and update docs.
-- **Cross-reference:** Always check `.github/copilot-instructions.md` for additional contributor guidelines.
-
-### c. **Claude-Specific Tips**
-
-- **Use standard git and gh CLI first** for commits, pushes, PRs, and other
-  git/GitHub operations. Use git/GitHub MCP tools only when the CLI has a gap,
-  the CLI is unavailable, or the user explicitly requests MCP usage.
-- **When in doubt, prefer explicit, readable code over cleverness.**
-- **Never use non-ASCII characters or the em dash.**
-- **If stuck, suggest opening a new chat with latest context.**
-- **If adding new dependencies, use context7 MCP to get latest versions.**
-- **Always check GitHub Issues before starting new features/PRs.**
-- **Create a relevant issue for every new PR.**
-- **Use per-file or per-line ignores for mypy/ruff only when justified.**
-- **All new code must have full type annotations and numpy-style docstrings.**
-
-______________________________________________________________________
-
-## 🧪 Testing Matrix & Markers
-
-- **Markers:** `@pytest.mark.<backend>` (mongo, memory, pickle, redis, sql, maxage)
-- **Backend services:** Mongo/SQL/Redis require Dockerized services for CI.
-- **Tests must not break if optional backend deps are missing.**
-- **CI matrix:** See `.github/workflows/` for details on OS/backend combinations.
-- **Local testing:** Use specific requirement files for backends you want to test.
-
-______________________________________________________________________
-
-## 📝 Documentation & Examples
-
-- **README.rst:** Main user/developer doc. Update for new features/backends.
-- **Examples:** Add usage examples for new features/backends in `examples/`.
-- **Docstrings:** Numpy style, multi-line, no single-line docstrings.
-- **Copilot Instructions:** See `.github/copilot-instructions.md` for detailed contributor guidelines.
-- **This file:** Update CLAUDE.md when project conventions or workflows change.
-
-______________________________________________________________________
-
-## 🛡️ Security & Performance
-
-- **No secrets in code or tests.**
-- **Do not emit warnings/errors for missing optional deps at import time.**
-- **Thread safety:** All backends must be thread-safe.
-- **Performance:** Avoid unnecessary serialization/deserialization.
-
-______________________________________________________________________
-
-## 🏷️ Branching & Workflow
-
-- **Workflow:** Issue → Feature branch → GitHub PR
-- **Branch naming:** `feature/<desc>`, `bugfix/<desc>`, etc.
-- **PRs:** Reference relevant issue, link to tests/docs as needed.
-- **Commits:** Use standard `git` CLI first. Use git MCP tools only when the CLI
-  has a gap, the CLI is unavailable, or the user explicitly requests MCP usage.
-
-______________________________________________________________________
-
-## 🧭 Quick Reference
-
-| Task                       | Command/Location                  |
-| -------------------------- | --------------------------------- |
-| Run all tests              | `pytest`                          |
-| Run backend-specific tests | `pytest -m <backend>`             |
-| Test multiple backends     | `pytest -m "redis or sql"`        |
-| Exclude backends           | `pytest -m "not mongo"`           |
-| Lint                       | `ruff check .`                    |
-| Type check                 | `mypy src/cachier/`               |
-| Format code                | `ruff format .`                   |
-| Build package              | `python -m build`                 |
-| Check docs                 | `python setup.py checkdocs`       |
-| Backend requirements       | `tests/requirements_*.txt`        |
-| Main decorator             | `src/cachier/core.py`             |
-| Backends                   | `src/cachier/cores/`              |
-| Global config              | `src/cachier/config.py`           |
-| Tests                      | `tests/`                          |
-| Examples                   | `examples/`                       |
-| Documentation              | `README.rst`                      |
-| Contributor guidelines     | `.github/copilot-instructions.md` |
-
-______________________________________________________________________
-
-## 🧠 Claude Code: Special Instructions
-
-- **This file is committed to the repository and so should never include any secrets.**
-- **Always read this file and the README.rst before making changes.**
-- **Cross-reference:** Also read `.github/copilot-instructions.md` for detailed contributor guidelines.
-- **When adding new features/backends, update all relevant docs, tests, CI, and requirements files.**
-- **If a test fails due to missing optional dependency, skip gracefully.**
-- **Never emit warnings/errors for missing optional deps at import time.**
-- **All code must be Python 3.9+ compatible.**
-- **All new code must have full type annotations and numpy-style docstrings.**
-- **Backend consistency:** Ensure all backends (pickle, memory, mongo, sql, redis) are supported.\*\*
-- **Validation:** Test examples in this file work: `python -c "from cachier import cachier; ..."` should succeed.
-- **If you are unsure about a pattern, check the README, this file, and .github/copilot-instructions.md first.**
-- **If you are stuck, suggest opening a new chat with the latest context.**
-
-______________________________________________________________________
-
-## 🏁 Final Notes
-
-- **This file is the canonical quick reference for Claude Code and human contributors.**
-- **Works alongside `.github/copilot-instructions.md` for comprehensive guidance.**
-- **Update this file whenever project conventions, workflows, or best practices change.**
-- **Keep this file concise, actionable, and up-to-date.**
-- **For detailed documentation, see README.rst and the codebase.**
-- **This file is committed to the repository and so should never include any secrets.**
+Thank you for contributing to Cachier! These guidelines help ensure a robust, maintainable, and user-friendly package for everyone.
 
 ---
 > Source: [python-cachier/cachier](https://github.com/python-cachier/cachier) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-22 -->
+<!-- tomevault:4.0:agents_md:2026-07-24 -->
