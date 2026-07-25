@@ -1,0 +1,51 @@
+{
+  "name": "edge-ai-suites",
+  "owner": "open-edge-platform",
+  "repo": "edge-ai-suites",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "edge-ai-suites",
+      "path": "education-ai-suite/teacher-assistant-claw-demo/workspace/skills/classroom_qa/SKILL.md",
+      "github_url": "https://github.com/open-edge-platform/edge-ai-suites/tree/main/education-ai-suite/teacher-assistant-claw-demo/workspace/skills/classroom_qa/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/open-edge-platform/edge-ai-suites",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-25T02:42:40Z"
+}
