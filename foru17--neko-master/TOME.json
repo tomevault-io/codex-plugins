@@ -1,0 +1,81 @@
+{
+  "name": "neko-master",
+  "owner": "foru17",
+  "repo": "neko-master",
+  "description": "A modern and elegant dashboard for network traffic visualization and analysis.",
+  "type": "tome",
+  "source_format": "CLAUDE.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "neko-master",
+      "path": ".claude/skills/release/SKILL.md",
+      "github_url": "https://github.com/foru17/neko-master/tree/main/.claude/skills/release/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "neko-master",
+      "path": ".claude/skills/verify-changes/SKILL.md",
+      "github_url": "https://github.com/foru17/neko-master/tree/main/.claude/skills/verify-changes/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "neko-master",
+      "path": ".claude/skills/ui-conventions/SKILL.md",
+      "github_url": "https://github.com/foru17/neko-master/tree/main/.claude/skills/ui-conventions/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "neko-master",
+      "path": ".claude/skills/db-conventions/SKILL.md",
+      "github_url": "https://github.com/foru17/neko-master/tree/main/.claude/skills/db-conventions/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "neko-master",
+      "path": ".claude/skills/agent-probe-dev/SKILL.md",
+      "github_url": "https://github.com/foru17/neko-master/tree/main/.claude/skills/agent-probe-dev/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "neko-master",
+      "path": ".claude/skills/add-stats-dimension/SKILL.md",
+      "github_url": "https://github.com/foru17/neko-master/tree/main/.claude/skills/add-stats-dimension/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/foru17/neko-master",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-25T08:32:38Z"
+}
