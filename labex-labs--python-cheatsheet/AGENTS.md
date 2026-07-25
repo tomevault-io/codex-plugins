@@ -1,32 +1,19 @@
-# Gemini Customization File
-
-This file provides instructions for Gemini to effectively assist with development in this project.
+# Python Cheatsheet - AI Coding Assistant Instructions
 
 ## Project Overview
 
-This project is a Python cheatsheet website built with Vue.js and Vite. The content is written in Markdown and located in the `docs/` directory.
+This is a Vue 3 + Vite-based documentation website for Python programming reference, featuring a comprehensive cheatsheet, blog posts, and built-in function documentation. The site uses Vue-SSG for static generation and is deployed on Netlify.
 
-## Technologies
+## Architecture & Key Patterns
 
-*   **Framework:** Vue.js 3
-*   **Build Tool:** Vite
-*   **Package Manager:** pnpm
-*   **Language:** TypeScript
-*   **Styling:** Tailwind CSS
-*   **Linting:** ESLint
-*   **Formatting:** Prettier
-*   **Testing:** Vitest
+### Content Structure
 
-## Coding Style and Conventions
+- **Cheatsheet pages**: Markdown files in `docs/cheatsheet/` (e.g., `basics.md`, `control-flow.md`)
+- **Built-in functions**: Individual pages in `docs/builtin/` (e.g., `abs.md`, `print.md`)
+- **Blog posts**: Markdown files in `docs/blog/` with frontmatter metadata
+- **Modules documentation**: Standard library references in `docs/modules/`
 
-*   Follow the existing coding style.
-*   Use TypeScript for all new code.
-*   Use pnpm for all package management.
-*   Components are located in `src/components`.
-*   Pages are located in `src/pages`.
-*   Content is in Markdown files in the `docs/` directory.
-
-## Routing & Layout System
+### Routing & Layout System
 
 - Uses `vite-plugin-pages` for file-based routing with multiple layouts:
   - `default.vue`: Main layout with sidebar + TOC
@@ -36,32 +23,31 @@ This project is a Python cheatsheet website built with Vue.js and Vite. The cont
 - Route metadata defined in `<route lang="yaml">` blocks
 - Navigation structure centralized in `src/store/navigation.ts`
 
-## Content Rendering
+### Content Rendering
 
 - Markdown files auto-converted to Vue components via `unplugin-vue-markdown`
 - Prism.js for syntax highlighting with custom theme
 - Custom Vue components available in markdown (e.g., `<base-title>`, `<base-disclaimer>`)
 - Automatic TOC generation from headings using `markdown-it-anchor`
 
-## Key Features Implementation
+### Key Features Implementation
 
 - **Reader Mode**: Full-screen reading with font size controls (`src/store/reader.ts`)
 - **Dark Mode**: Theme toggle with system preference detection
 - **Search**: Algolia DocSearch integration (`src/components/AlgoliaDocSearch.vue`)
 
-## Available Scripts
+## Development Workflows
 
-The following scripts are available in `package.json`:
+### Essential Commands
 
-*   `pnpm dev`: Starts the development server.
-*   `pnpm build`: Builds the project for production.
-*   `pnpm preview`: Previews the production build.
-*   `pnpm test`: Runs the tests.
-*   `pnpm lint`: Lints the code with ESLint.
-*   `pnpm typecheck`: Runs a type check with `vue-tsc`.
+```bash
+pnpm dev                    # Development server
+pnpm build                  # Production build (Vue-SSG)
+pnpm lint                   # ESLint check
+pnpm typecheck              # TypeScript validation
+```
 
-
-## Content Creation Patterns
+### Content Creation Patterns
 
 **New Cheatsheet Page:**
 
@@ -99,7 +85,7 @@ meta:
 <blog-title-header :frontmatter="frontmatter" title="Display Title" />
 ```
 
-## Navigation Updates
+### Navigation Updates
 
 - Add new routes to `src/store/navigation.ts` in appropriate section
 - Use `updated: true` flag for highlighting new content
@@ -114,11 +100,47 @@ meta:
 - **Icons**: `src/components/icons/` - SVG icon components
 - **Auto-imports**: Components auto-registered via `unplugin-vue-components`
 
-## State Management
+### Styling Approach
 
-- **Pinia stores** for global state (navigation, reader mode)
+- **Tailwind CSS** for utility-first styling
+- **Prose classes** for markdown content styling
+- **CSS custom properties** for theme variables
+- **Dark mode** via CSS classes, not Tailwind's dark variant
+
+### State Management
+
+- **Pinia stores** for global state (navigation, reader mode, newsletter)
 - **VueUse composables** for reactive utilities
 - **Auto-imports** for composables and Vue APIs
+
+### Build & Deployment
+
+- **SSG mode**: Pre-generates all routes for static hosting
+- **PWA enabled**: Service worker + offline support
+- **Sitemap generation**: Auto-generated in build process
+- **Netlify deployment**: Build command `pnpm build`, publish `dist/`
+
+## Integration Points
+
+### External Services
+
+- **Algolia Search**: App ID, API key, index name via env vars
+- **Newsletter**: Beehiiv integration for subscriptions
+- **Analytics**: Plausible analytics integration
+- **Sponsors**: Carbon Ads + custom sponsor components
+
+### GitHub Integration
+
+- **Edit links**: Point to correct repo paths (`docs/` vs `src/pages/`)
+- **Issue/discussion links**: Footer integration for feedback
+
+## Common Pitfalls & Solutions
+
+- **Route metadata**: Must duplicate frontmatter in `<route>` block for proper SSG
+- **Component imports**: Use auto-imports, avoid manual imports when possible
+- **Markdown components**: Register in `src/components.d.ts` for TypeScript
+- **Static assets**: Reference from `public/` directory in production builds
+- **TOC generation**: Requires proper heading hierarchy (h2, h3, etc.)
 
 ## Content Guidelines
 
