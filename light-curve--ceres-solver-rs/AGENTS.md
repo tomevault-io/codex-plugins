@@ -1,102 +1,187 @@
-# CLAUDE.md
+# Copilot Instructions for ceres-solver-rs
 
 ## Project Overview
 
-Safe Rust bindings for [Ceres Solver](http://ceres-solver.org), a C++ library for solving large-scale non-linear least squares (NLLS) optimization problems. The project is a Cargo workspace with three crates:
+This repository provides safe Rust bindings for [Ceres Solver](http://ceres-solver.org), a C++ library for solving large-scale optimization problems. The project consists of three main crates:
 
-- **`ceres-solver`**: Safe Rust bindings (main crate, `src/`)
-- **`ceres-solver-sys`**: Unsafe FFI bindings via the `cxx` crate (`ceres-solver-sys/`)
-- **`ceres-solver-src`**: Builds and statically links bundled Ceres Solver from source (`ceres-solver-src/`)
-
-MSRV: **1.85.0** (Rust 2024 edition)
+- **`ceres-solver`**: Safe Rust bindings (main crate)
+- **`ceres-solver-sys`**: Unsafe Rust bindings using [`cxx`](https://lib.rs/crates/cxx)
+- **`ceres-solver-src`**: Optional crate to build and distribute a minimal static Ceres Solver library
 
 ## Build and Test Commands
 
-```bash
-# Build with bundled Ceres (preferred for development)
-cargo build --features source
+### Building
 
-# Build with system-installed Ceres
+```bash
+# Build with system Ceres Solver (default)
 cargo build
+
+# Build with bundled Ceres Solver source
+cargo build --features source
 
 # Check all targets
 cargo check --all-targets --workspace --features source
+```
 
+### Testing
+
+```bash
 # Test with bundled source
 cargo test --features source
 
-# Test with system Ceres
+# Test with system Ceres Solver
 cargo test --features system
+```
 
+### Linting and Formatting
+
+```bash
 # Format code
 cargo fmt --all
 
-# Lint (no warnings allowed)
-cargo clippy --all-targets --workspace --no-default-features --features source -- -Dwarnings
+# Check formatting
+cargo fmt --all --check
 
-# Run all pre-commit checks
+# Run clippy
+cargo clippy --all-targets --workspace --no-default-features --features source -- -Dwarnings
+```
+
+### Pre-commit Hooks
+
+The project uses pre-commit hooks. Run checks with:
+
+```bash
 pre-commit run --all-files
 ```
 
 ## Project Structure
 
 ```
-src/                    # Main crate (safe Rust API)
-│   lib.rs              # Library entry point with top-level examples
-│   nlls_problem.rs     # Core: NllsProblem builder
-│   curve_fit.rs        # 1-D curve fitting convenience wrapper
-│   solver.rs           # SolverOptions / SolverSummary
-│   cost.rs             # CostFunction type definitions
-│   loss.rs             # Loss functions (Huber, Cauchy, Tukey, …)
-│   parameter_block.rs  # ParameterBlock with bounds management
-│   residual_block.rs   # ResidualBlock ID types
-│   error.rs            # Error types (thiserror)
-│   types.rs            # Shared helper types
-ceres-solver-sys/src/
-│   lib.rs              # Rust FFI declarations (cxx)
-│   lib.cpp             # C++ bridge implementation
-│   lib.h               # C++ header
-ceres-solver-src/       # CMake-based static library builder
-.github/workflows/test.yml  # CI (Ubuntu + macOS, MSRV + stable)
+.
+├── src/                    # Main crate source (safe bindings)
+│   ├── lib.rs             # Main library entry point with examples
+│   ├── cost.rs            # Cost function types
+│   ├── curve_fit.rs       # 1-D curve fitting utilities
+│   ├── error.rs           # Error types (uses thiserror)
+│   ├── loss.rs            # Loss function implementations
+│   ├── nlls_problem.rs    # Non-linear least squares problem builder
+│   ├── parameter_block.rs # Parameter block management
+│   ├── residual_block.rs  # Residual block builder
+│   ├── solver.rs          # Solver options and summary
+│   └── types.rs           # Common types
+├── ceres-solver-sys/      # Unsafe FFI bindings
+│   └── src/
+│       ├── lib.rs         # Rust FFI bindings
+│       ├── lib.cpp        # C++ bridge code
+│       └── lib.h          # C++ header
+└── ceres-solver-src/      # Optional static library builder
 ```
 
-## Code Conventions
+## Code Style and Conventions
 
-- Standard Rust naming: `snake_case` for functions/variables, `PascalCase` for types
-- **Builder pattern** throughout (e.g., `ResidualBlockBuilder`, `SolverOptionsBuilder`)
-- **Consuming methods** — builders take `self` and return a new/modified type
-- Error types use `thiserror`; all error enums live in `src/error.rs`
-- Doc comments: `//!` for module-level, `///` for items; include examples where useful
-- Minimize new dependencies; for MSRV compatibility, versions of `cxx`/`cxx-build` may be pinned
+### General Rust Guidelines
 
-## Adding New Features
+- Follow standard Rust naming conventions (snake_case for functions/variables, PascalCase for types)
+- Use `cargo fmt` for consistent formatting
+- Pass `cargo clippy` with `-Dwarnings` (no warnings allowed)
+- Check `Cargo.toml` for the current MSRV (minimum supported Rust version)
 
-1. Check the feature exists in the supported Ceres Solver C++ API (2.2)
-2. If adding FFI:
-   - Update `ceres-solver-sys/src/lib.h` and `lib.cpp` (C++ bridge)
-   - Update `ceres-solver-sys/src/lib.rs` (Rust `cxx` declarations)
-3. Add safe Rust wrappers in the appropriate `src/` file
-4. Write tests (unit tests in the same file; integration tests under `tests/`)
-5. Use the `approx` crate for floating-point comparisons in tests
-6. Update the feature status checklist in `README.md` if applicable
-7. Add an entry to `CHANGELOG.md` (Keep a Changelog format, semantic versioning)
+### Error Handling
 
-## CI
+- Use `thiserror` crate for error types
+- Error enums are in `src/error.rs`
+- Use descriptive error messages with context
 
-GitHub Actions runs on Ubuntu and macOS against MSRV (1.85) and stable Rust:
-- `cargo-fmt` — formatting check
-- `cargo-clippy` — lint check (`-Dwarnings`)
-- `ceres-built-from-source` — tests with `--features source`
-- `system-ceres` — tests with system-installed Ceres
+### Documentation
 
-Windows support is limited/experimental and not part of CI.
+- Use Rust doc comments (`//!` for module-level, `///` for item-level)
+- Include examples in doc comments where appropriate
+- See `src/lib.rs` for documentation style examples
+- Include ASCII diagrams for complex workflows when helpful
 
-## FFI Safety Notes
+### API Design Patterns
 
-- All unsafe FFI code is isolated in `ceres-solver-sys`; `ceres-solver` must remain safe
-- Parameter blocks use pin semantics to ensure stable memory addresses across the FFI boundary
-- Use modern C++17 features through `cxx`; avoid raw pointer arithmetic in new code
+- **Builder Pattern**: Used extensively (e.g., `ResidualBlockBuilder`, problem builders)
+- **Consuming Methods**: Many methods consume `self` and return a new or modified type (e.g., builder methods)
+- **Type Safety**: Leverage Rust's type system to prevent misuse at compile time
+
+### Dependencies
+
+- Minimize new dependencies
+- For FFI: `cxx` crate (version may be constrained for MSRV compatibility)
+- For errors: `thiserror` crate
+
+## Development Workflow
+
+### Adding New Features
+
+1. Check if the feature exists in the supported version of Ceres Solver C++ API
+2. If adding FFI bindings:
+   - Add C++ bridge code in `ceres-solver-sys/src/lib.cpp` and `lib.h`
+   - Add Rust FFI bindings in `ceres-solver-sys/src/lib.rs` using `cxx`
+3. Add safe Rust wrappers in appropriate `src/` files
+4. Add comprehensive documentation with examples
+5. Add tests in the same file or in `tests/` directory
+6. Update `README.md` status checklist if implementing listed features
+7. Run formatting and linting before committing
+8. Update `CHANGELOG.md` following [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) format
+
+### Testing Strategy
+
+- Unit tests in the same files as the code
+- Integration tests in `tests/` directory (if present)
+- Use `approx` crate for floating-point comparisons
+- Test both with `source` and `system` features where applicable
+
+### Changelog Maintenance
+
+- Follow semantic versioning
+- Categorize changes: Added, Changed, Deprecated, Removed, Fixed, Security
+- Mark breaking changes with **Breaking** prefix
+
+## CI/CD
+
+- GitHub Actions workflow in `.github/workflows/test.yml`
+- Tests run on Ubuntu and macOS (Windows not supported yet)
+- Tests run with MSRV and stable Rust toolchains
+- Pre-commit.ci runs formatting checks
+
+## Common Tasks
+
+### Adding a Cost Function Type
+
+1. Add FFI bindings in `ceres-solver-sys/src/`
+2. Add safe wrapper in `src/cost.rs`
+3. Update examples in `src/lib.rs` if applicable
+4. Add tests with various parameter configurations
+
+### Adding Solver Options
+
+1. Update FFI bindings in `ceres-solver-sys/src/lib.rs` and `.cpp`
+2. Add options to `SolverOptions` or related builders in `src/solver.rs`
+3. Ensure options are validated where necessary
+4. Document the option with details from Ceres Solver documentation
+
+### Fixing Build Issues
+
+- For linking issues, check platform-specific configuration in CI workflow
+- Ensure CMake is available for building from source
+- Check `LIBRARY_PATH`, `LD_LIBRARY_PATH`, and `C_INCLUDE_PATH` for system Ceres
+
+## Special Considerations
+
+- **FFI Safety**: All FFI code is in `ceres-solver-sys`; keep `ceres-solver` safe
+- **Memory Management**: Be careful with lifetime and ownership when crossing FFI boundary
+- **C++ Features**: The project uses modern C++ features through `cxx`
+- **Platform Support**: Ubuntu and macOS are fully supported; Windows support is limited
+- **Version Constraints**: Some dependencies like `cxx` and `cxx-build` may be version-constrained for MSRV compatibility
+
+## Resources
+
+- [Ceres Solver Documentation](http://ceres-solver.org)
+- [cxx crate documentation](https://docs.rs/cxx)
+- Repository status checklist in `README.md` shows implemented features
 
 ---
 > Source: [light-curve/ceres-solver-rs](https://github.com/light-curve/ceres-solver-rs) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-22 -->
+<!-- tomevault:4.0:agents_md:2026-07-24 -->
