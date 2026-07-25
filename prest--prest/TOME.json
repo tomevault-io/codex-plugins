@@ -1,0 +1,57 @@
+{
+  "name": "prest",
+  "owner": "prest",
+  "repo": "prest",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "prest",
+      "path": ".cursor/skills/sql-database-support/SKILL.md",
+      "github_url": "https://github.com/prest/prest/tree/main/.cursor/skills/sql-database-support/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "prest",
+      "path": ".cursor/skills/prest-integration-tests/SKILL.md",
+      "github_url": "https://github.com/prest/prest/tree/main/.cursor/skills/prest-integration-tests/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/prest/prest",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-25T18:43:26Z"
+}
