@@ -1,8 +1,8 @@
-# Matterbridge Claude Instructions (v.1.0.2)
+# Matterbridge Workspace Instructions (v.1.0.2)
 
 ## Style And Formatting
 
-- Follow [STYLEGUIDE.md](./STYLEGUIDE.md) for code style, naming, JSDoc, validation, logging, and formatting expectations.
+- Follow [STYLEGUIDE.md](../STYLEGUIDE.md) for code style, naming, JSDoc, validation, logging, and formatting expectations.
 - JSDoc requirements are enforced by the configured linter. Treat missing or incomplete JSDoc on required APIs as a real lint issue, not optional documentation.
 - Import and export ordering are enforced by the formatter. Preserve the existing grouped and sorted order unless a change requires updating it.
 - Formatting is enforced by oxfmt. Follow the existing formatting and do not fight the formatter.
@@ -12,7 +12,7 @@
 - Keep changes minimal and scoped to the request. Avoid unrelated refactors or broad cleanup.
 - Do not modify production code only to make a test pass. If a failing test points to a likely source issue, explain the issue and change behavior only when required by the task.
 - Preserve cross-platform behavior. Changes must work on Windows, macOS, and Linux, especially for paths, shell commands, environment variables, and networking behavior.
-- Maintain compatibility with the supported Node.js versions in this repository: 20.19, 22.13, 24 and 26.
+- Maintain compatibility with the supported Node.js versions in this repository: 20.19, 22.13, 24, and 26.
 
 ## Project Architecture
 
@@ -20,7 +20,7 @@
 
 ## Testing And Validation
 
-- Prefer the existing npm scripts in [package.json](./package.json) and the VS Code tasks in [tasks.json](./.vscode/tasks.json) for building, linting, and testing.
+- Prefer the existing npm scripts in [package.json](../package.json) and the VS Code tasks in [tasks.json](../.vscode/tasks.json) for building, linting, and testing.
 - Keep tests deterministic and simple. Prefer small data sets and straightforward setup.
 - Some tests are intentionally multi-step flows. State may persist across successive steps within a single test flow, but each test unit must remain isolated from other tests.
 - For validation, run the relevant full test file or the matching suite/task for the touched area rather than assuming arbitrary isolated single-test execution is reliable.
@@ -31,8 +31,8 @@
 
 ## Additional Agent Guidance
 
-- Use dedicated instruction files under [.claude/rules](.claude/rules/) when a rule applies only to specific file types or workflows.
+- Use dedicated instruction files under [.github/instructions](instructions/) when a rule applies only to specific file types or workflows.
 
 ---
 > Source: [Luligu/matterbridge-shelly](https://github.com/Luligu/matterbridge-shelly) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-22 -->
+<!-- tomevault:4.0:agents_md:2026-07-24 -->
