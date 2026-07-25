@@ -1,69 +1,138 @@
-## Quick context for AI coding agents
+# Novel Writer - Gemini CLI 配置
 
-This repository is an AI-first CLI tool and template collection for creating Chinese novels using a Spec-Driven Development (SDD) workflow. Key components:
+本项目已配置为支持 Google Gemini CLI，提供完整的小说创作工具集。
 
-- `src/cli.ts` — primary CLI entry (commands: `init`, `upgrade`, etc.). Look here for how projects are bootstrapped and how AI agent types map to filesystem layout.
-- `package.json` — build/dev scripts. `npm run build` compiles TypeScript; `npm run build:commands` generates per-agent command files from templates.
-- `dist/*` — build artifacts containing pre-generated agent command sets (copied into user projects by `init`).
-- `.specify/`, `spec/`, `stories/` — runtime project layout produced by `novel init`.
-- `other/spec-kit/AGENTS.md` — long-form guidance and agent conventions; use it as authoritative reference when adding new agents.
+## 可用命令
 
-Keep instructions short and concrete: reference the exact file and function you changed and prefer small, self-contained edits.
+本项目提供以下斜杠命令：
 
-## High-level architecture notes
+### 核心命令
+- `/method` - 智能写作方法助手
+- `/story` - 创建故事大纲
+- `/outline` - 规划章节结构
+- `/write` - 撰写章节内容
+- `/style` - 设置写作风格
+- `/expert` - 激活专家模式
 
-- The CLI bootstraps a project by copying built artifacts from the package root (`dist/<agent>`) into the target project and creating `.specify/*` scaffolding (`src/cli.ts`, copy logic around `sourceMap`).
-- Agent configuration is agent-centric: directories like `.claude/commands`, `.gemini/commands`, `.cursor/commands` are created and populated during `novel init`.
-- Agent metadata and behavioral decisions are centered in the Spec Kit patterns documented in `other/spec-kit/AGENTS.md`. When adding agents, prefer updating `AGENT_CONFIG` (in the spec-kit implementation) and the `scripts/*` update tooling.
+### 管理命令
+- `/chapters` - 章节管理
+- `/relations` - 人物关系管理
+- `/timeline` - 时间线管理
+- `/track` - 进度追踪
+- `/track:init` - 初始化追踪系统
 
-## Common developer workflows (how to run / build / test)
+### 检查命令
+- `/plot:check` - 情节逻辑检查
+- `/world:check` - 世界观一致性检查
 
-- Local development: `npm run dev` (runs `tsx src/cli.ts`) — fast way to iterate on CLI behavior without building.
-- Build: `npm run build` (TypeScript -> `dist/`), then `npm run build:commands` to regenerate per-agent command files. `prepare` and `prepublishOnly` call both.
-- If an `init` action warns that a dist artifact is missing, run `npm run build:commands` and re-run the command.
+## 使用方式
 
-Files to check when changes affect agent commands or templates:
-- `scripts/build/generate-commands.sh` — generator used by `npm run build:commands`.
-- `templates/` and `dist/<agent>/` — where generated templates and command files live.
+在 Gemini CLI 中，直接输入命令即可：
 
-## Project-specific conventions and gotchas (do not invent)
+```
+> /method
+> /story 一个关于冒险的奇幻故事
+> /outline
+> /write 第一章
+```
 
-- Use the actual CLI executable name as the agent key (e.g., `cursor-agent`, not `cursor`). This is enforced across scripts and the tool-checking logic (`other/spec-kit/AGENTS.md`).
-- Command formats differ per agent:
-  - Markdown prompts (Claude, Cursor, opencode): `$ARGUMENTS`, `{SCRIPT}` placeholders.
-  - TOML prompts (Gemini, Qwen): `{{args}}` placeholders and `prompt` keys.
-  See `other/spec-kit/AGENTS.md` for exact examples and `src/cli.ts` helpers `generateMarkdownCommand` / `generateTomlCommand`.
-- When adding files to `dist/` for an agent, update `scripts/*/update-agent-context.(sh|ps1)` and `.github/workflows/scripts/create-release-packages.sh` to include the agent packaging case.
+## 工具权限
 
-## What to change when adding or updating an agent
+本项目已配置以下工具权限：
+- 文件读写（read_file, write_file, edit_file）
+- Shell 命令执行（限制范围）
+- 文件搜索（glob_files）
 
-1. Update agent metadata in the single source of truth (AGENT_CONFIG in spec-kit implementation).
-2. Update `src/cli.ts` help text (the `--ai` option) and any `switch` that creates AI directories.
-3. Add generation support in `scripts/build/generate-commands.sh` (and release packaging scripts).
-4. Add or update templates in `templates/` and run `npm run build:commands`.
-5. Update `other/spec-kit/scripts/*` (bash + PowerShell) that collect agent context files for README/CLAUDE/Copilot docs.
+## 项目结构
 
-## Examples (explicit references)
+```
+stories/          # 故事内容
+├── [故事名]/
+│   ├── story.md      # 故事大纲
+│   ├── outline.md    # 章节规划
+│   └── chapters/     # 章节内容
 
-- To regenerate commands after editing a template: run `npm run build:commands`. If a CLI `init` cannot find `dist/<agent>`, this is usually the fix.
-- If you change how an agent is referenced, search `src/cli.ts` for the `sourceMap` and the `switch(options.ai)` branch that maps `--ai` values to directories.
-- If adding CLI detection or validation for a new agent, follow the `requires_cli` pattern described in `other/spec-kit/AGENTS.md` and update the scripts `scripts/bash/update-agent-context.sh` and `scripts/powershell/update-agent-context.ps1`.
+spec/             # 配置和知识库
+├── tracking/     # 进度追踪
+├── knowledge/    # 世界观设定
+└── presets/      # 写作方法模板
 
-## Safety and style
+.gemini/          # Gemini 配置
+├── commands/     # 命令定义（TOML）
+└── settings.json # Gemini 设置
+```
 
-- Small, focused patches are preferred. When editing templates, preserve frontmatter and `{SCRIPT}` placeholders used by the generators.
-- Prefer modifying `templates/` and running the generator instead of hand-editing `dist/` files.
+## 写作方法
 
-## Quick file map (start here)
+支持以下写作方法：
+- 三幕结构（three-act）
+- 英雄之旅（hero-journey）
+- 故事圈（story-circle）
+- 七点结构（seven-point）
+- 皮克斯公式（pixar-formula）
+- 雪花十步（snowflake）
+- 混合方法（hybrid）
 
-- `src/cli.ts` — CLI behavior and project bootstrap
-- `src/ai-interface.ts` — AI-facing APIs and method-selection logic
-- `scripts/build/generate-commands.sh` — command generator used in CI and local builds
-- `other/spec-kit/AGENTS.md` — agent conventions and integration steps (authoritative)
-- `package.json` — build/dev scripts (`dev`, `build`, `build:commands`, `prepare`)
+使用 `/method` 命令选择最适合的方法。
 
-If anything in this instruction page is unclear or you want more examples (for example: a sample TOML command converted from a Markdown command in this codebase), tell me which area to expand and I will iterate. 
+## 插件支持
+
+如果安装了插件，会有额外的命令可用。查看 `plugins/` 目录了解已安装的插件。
+
+## 注意事项
+
+1. **首次使用**：先运行 `/method` 选择写作方法
+2. **创建故事**：使用 `/story` 创建大纲
+3. **规划章节**：使用 `/outline` 规划结构
+4. **开始写作**：使用 `/write` 撰写内容
+
+## 获取帮助
+
+- 使用 `/expert` 激活专家模式获取深度指导
+- 查看 `docs/` 目录获取详细文档
+- 访问项目仓库：https://github.com/wordflowlab/novel-writer
+
+## 已知问题与解决方案
+
+### 中文乱码问题
+Gemini CLI 可能偶尔输出个别中文乱码（显示为 � 或其他乱码），这是 Gemini 的已知编码问题。
+
+#### 预防措施
+1. **终端设置**
+   - Windows：使用 Windows Terminal 或 PowerShell（避免使用 cmd）
+   - Mac/Linux：确保终端支持 UTF-8
+
+2. **环境变量设置**
+   ```bash
+   # Windows PowerShell
+   [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+
+   # Mac/Linux
+   export LANG=zh_CN.UTF-8
+   export LC_ALL=zh_CN.UTF-8
+   ```
+
+#### 出现乱码时的解决方法
+1. **重新生成**：重新运行相同的命令，通常第二次会正常
+2. **手动修复**：直接编辑生成的文件，将乱码字符替换为正确的中文
+3. **分段处理**：如果某一节出现乱码，只重新生成该节即可
+
+#### 常见乱码模式
+- `�` → 通常是"的"、"了"等常用字
+- `\u4e2d\u6587` → Unicode 转义，需转换回中文
+- 部分标点符号显示异常 → 手动替换为中文标点
+
+#### 临时解决方案
+如果乱码频繁出现，可以：
+1. 生成较短的段落（减少单次输出）
+2. 使用标准模式而非分节模式
+3. 生成后立即检查并修复
+
+注：Google 正在修复此问题，后续版本应会改善。
+
+---
+*本项目由 Novel Writer 团队开发，专为 AI 驱动的中文小说创作设计。*
 
 ---
 > Source: [wordflowlab/novel-writer](https://github.com/wordflowlab/novel-writer) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-05-04 -->
+<!-- tomevault:4.0:agents_md:2026-07-24 -->
