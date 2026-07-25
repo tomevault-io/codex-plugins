@@ -1,94 +1,195 @@
-# CLAUDE.md
+# Copilot Instructions for ph-commons
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This document provides essential information for coding agents working with the ph-commons repository. Follow these instructions to work efficiently and avoid common build failures.
 
-## Project Overview
+## Repository Overview
 
-**ph-commons** is a multi-module Java 17+ utility library (`com.helger.*`) with 32 Maven modules. Core modules: `ph-base` → `ph-collection` → `ph-commons` (in dependency order). Testing uses JUnit 4.
+**ph-commons** is a comprehensive Java 17+ utility library providing common functionality for Java applications. It consists of 32 Maven modules with over 600k lines of code, developed and maintained by Philip Helger.
 
-## Build Commands
+### Key Information
+- **Language**: Java 17+ (supports Java 17, 21, 24)
+- **Build System**: Apache Maven 3.x
+- **License**: Apache License 2.0
+- **Testing Framework**: JUnit 4
+- **Package Structure**: `com.helger.*`
 
+### Module Categories
+- **Core**: `ph-base`, `ph-collection`, `ph-commons`
+- **I/O & Serialization**: `ph-io`, `ph-xml`, `ph-json`
+- **Web & Network**: `ph-http`, `ph-wsclient`, `ph-mime`
+- **Security & Crypto**: `ph-security`, `ph-bc`
+- **Configuration**: `ph-config`, `ph-config-json`, `ph-settings`
+- **Testing**: `ph-unittest-support`, `ph-unittest-support-ext`
+- **Specialized**: `ph-jaxb`, `ph-matrix`, `ph-graph`, `ph-tree`, `ph-text`
+
+## Build Instructions
+
+### Environment Requirements
+- **Java**: JDK 17 or later (tested with 17, 21, 24)
+- **Maven**: 3.x (tested with 3.9.11)
+- **Memory**: Configure JVM with `-Xmx1024m` for tests
+
+### Essential Build Commands
+
+#### Standard Build Cycle
 ```bash
-# Install all modules (required before testing individual modules)
+# Clean project (always run first after git operations)
+mvn clean
+
+# Compile all modules
+mvn compile
+
+# Install without tests (fast dependency resolution)
 mvn install -DskipTests
 
 # Full build with tests (~2 minutes)
 mvn install
 
-# Test a specific module
+# Test specific module
 mvn test -pl ph-base
+```
 
-# Run a single test class
-mvn test -pl ph-base -Dtest=ValueEnforcerTest
+#### Validation Commands
+```bash
+# Generate SpotBugs report (non-failing)
+mvn spotbugs:spotbugs
 
-# Validation
+# Check SpotBugs violations (may fail with known issues)
 mvn spotbugs:check
+
+# Run forbidden-apis check
 mvn forbiddenapis:check
 ```
 
-**Critical**: Always run `mvn install -DskipTests` before testing individual modules due to inter-module dependencies.
+### Build Timing Expectations
+- **Clean**: ~1 second
+- **Compile**: ~30 seconds
+- **Install (no tests)**: ~1 minute
+- **Full build with tests**: ~2 minutes
+- **Single module test**: ~5-10 seconds
 
-## CI
+### Critical Build Requirements
 
-GitHub Actions matrix: Java 17, 21, 25. Command: `mvn --batch-mode --update-snapshots install`.
+#### Dependency Resolution
+**ALWAYS run `mvn install -DskipTests` before testing individual modules.** The multi-module structure requires all modules to be built and installed locally before running tests on specific modules.
 
-## Coding Conventions
+#### Module Build Order
+Maven automatically handles build order, but be aware of these key dependencies:
+- `ph-base` → foundation for all other modules
+- `ph-collection` → depends on `ph-base`
+- `ph-commons` → aggregates functionality from other modules
 
-### Naming (Hungarian Notation)
+## Project Architecture
 
-- **Interfaces**: `I` prefix (`ICommonsList`, `IBuilder<T>`)
-- **Instance fields**: `m_` prefix with type hint (`m_aItems`, `m_nSize`, `m_bEnabled`, `m_sName`)
-- **Static fields**: `s_` prefix (`s_aLogger`); static final may use UPPER_CASE
-- **Type prefixes**: `a` (object/array), `b` (boolean), `c` (char), `d` (double), `e` (enum), `f` (float), `n` (numeric), `s` (String)
-- **Private methods**: underscore prefix (`_doSomething()`)
-- **Abstract classes**: `Abstract` prefix; **Helper classes**: `Helper` suffix; **Test classes**: `Test` suffix
-
-### Formatting
-
-- 2-space indentation, no tabs
-- K&R brace style (opening brace on same line)
-
-### Class Structure Order
-
-1. Static fields → 2. Instance fields → 3. Constructors → 4. Private methods → 5. Protected/package methods → 6. Public instance methods → 7. Public static methods
-
-### Helper/Utility Classes
-
-Must be `final` with private constructor and a `@PresentForCodeCoverage` dummy instance:
-```java
-@Immutable
-public final class FooHelper {
-  @PresentForCodeCoverage
-  private static final FooHelper INSTANCE = new FooHelper();
-  private FooHelper() {}
-}
+### Source Organization
+```
+src/main/java/          # Main source code
+src/main/resources/     # Resources and configuration
+src/test/java/         # Test source code  
+src/test/resources/    # Test resources
+target/                # Build output (exclude from searches)
 ```
 
-### Annotations
+### Package Hierarchy
+- `com.helger.base.*` - Core utilities, reflection, I/O
+- `com.helger.collection.*` - Enhanced collections framework
+- `com.helger.commons.*` - High-level utility functions
+- Each module follows `com.helger.{module-name}.*` pattern
 
-- **Nullness**: `@NonNull` / `@Nullable` (from `org.jspecify`). Never annotate primitives with `@Nullable` — use wrapper types instead. Arrays of primitives can be `@Nullable`.
-- **Return types**: `@ReturnsMutableCopy` / `@ReturnsImmutableObject`
-- **Thread safety**: `@ThreadSafe` / `@NotThreadSafe` / `@Immutable` on every class
-- **Constraints**: `@Nonnegative`, `@Nonempty`
+### Configuration Files
+- `pom.xml` - Maven configuration in each module
+- `findbugs-exclude.xml` - SpotBugs exclusions (in most modules)
+- `META-INF/services/` - SPI configuration files
 
-### Key Patterns
+## Code Guidelines
 
-- **Parameter validation**: Always use `ValueEnforcer` (`ValueEnforcer.notNull()`, `.notEmpty()`, `.isGT0()`)
-- **Thread-safe classes**: Use `SimpleReadWriteLock` with `AutoLock` in try-with-resources
-- **Builders**: Implement `IBuilder<T>` or `IResettableBuilder<T>` with fluent API
-- **Collections**: Use `CommonsArrayList`, `CommonsHashMap`, etc. (not raw JDK collections)
-- **Logging**: `private static final Logger LOGGER = LoggerFactory.getLogger(ClassName.class);`
-- **Three-state logic**: `ETriState` instead of `Boolean`
-- **No `serialVersionUID`** — handled by Java runtime
+### Coding Standards
+Reference `ExtractedCodingStyleguide.md` for comprehensive guidelines. Key points:
 
-### File Headers
+#### Annotations (CRITICAL)
+- Use `@NonNull` and `@Nullable` consistently
 
-Every Java file must have the Apache License 2.0 header with copyright: `Copyright (C) YYYY-YYYY Philip Helger (www.helger.com)`
+- Note about primitives and arrays:
+	- Do NOT annotate primitive types with `@Nullable` (for example, `boolean`, `int`). Primitive types cannot be null. If a value may be null, use the corresponding wrapper type (e.g. `Boolean`, `Integer`) and annotate that with `@Nullable`.
+	- It is OK to annotate arrays of primitives with `@Nullable` (for example, `boolean[]`). Arrays are reference types in Java, so `@Nullable boolean[]` is valid when the reference itself may be null.
+- `@ReturnsMutableCopy` / `@ReturnsImmutableObject` for return values
+- `@ThreadSafe` / `@NotThreadSafe` for class-level thread safety
 
-### Performance
+#### Class Structure
+1. Static fields first
+2. Instance fields second  
+3. Constructors third
+4. Private/protected/package methods fourth
+5. Public instance methods fifth
+6. Public static methods last
 
-Prefer regular iteration over Stream API. Avoid unnecessary object creation. Use primitive arrays where possible.
+#### Error Handling
+- Use `ValueEnforcer` for parameter validation
+- Throw appropriate exceptions with descriptive messages
+- Document exception conditions in JavaDoc
+
+### Common Patterns
+- **Builder Pattern**: Implement `IBuilder<T>` interface
+- **Thread Safety**: Use `SimpleReadWriteLock` for thread-safe operations  
+- **Resource Management**: Implement `AutoCloseable` where appropriate
+- **Logging**: Private static final `Logger` instances
+
+## Continuous Integration
+
+### GitHub Actions
+- **Trigger**: Push to any branch, PRs to master
+- **Java Versions**: 17, 21, 25 (matrix build)
+- **Commands**: `mvn --batch-mode --update-snapshots install`
+- **Deployment**: Snapshots deployed to Maven Central (Java 17 only)
+
+### Pre-commit Validation
+Before creating PRs, ensure:
+1. `mvn clean install` passes
+2. No new SpotBugs errors in modified code
+3. All tests pass
+4. Code follows established patterns
+
+## Common Issues and Solutions
+
+### Build Failures
+- **Dependency Resolution**: Run `mvn install -DskipTests` first
+- **Memory Issues**: Increase heap size with `-Xmx1024m`
+- **Module Not Found**: Ensure proper module dependency order
+
+### SpotBugs Issues
+- SpotBugs check may fail with known issues (existing codebase has accepted violations)
+- Use `mvn spotbugs:spotbugs` to generate reports without failing
+- New code should not introduce additional violations
+
+### Test Failures
+- Some test output includes expected ERROR logs (e.g., reflection failures)
+- Tests requiring specific timing may be flaky in slow environments
+- Individual module tests require full project build first
+
+## Working Efficiently
+
+### File Search Optimization
+Exclude these directories from searches:
+- `target/` - Build output
+- `.git/` - Version control
+- `bin/` - Eclipse output
+
+### Focus Areas by Task Type
+- **Collection utilities**: `ph-collection`, `ph-base`
+- **I/O operations**: `ph-io`, `ph-base`
+- **XML/JSON processing**: `ph-xml`, `ph-json`
+- **Web functionality**: `ph-http`, `ph-wsclient`
+- **Configuration**: `ph-config*`, `ph-settings`
+
+### Module Selection Strategy
+- Start with core modules (`ph-base`, `ph-collection`) for fundamental changes
+- Use `ph-commons` for high-level utility additions
+- Choose specialized modules (`ph-xml`, `ph-security`, etc.) for domain-specific changes
+
+## Trust These Instructions
+
+These instructions are based on comprehensive analysis and testing of the ph-commons codebase. Trust them and avoid unnecessary exploration unless you encounter incomplete or incorrect information. The build system and project structure are well-established and stable.
 
 ---
 > Source: [phax/ph-commons](https://github.com/phax/ph-commons) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-22 -->
+<!-- tomevault:4.0:agents_md:2026-07-24 -->
