@@ -1,91 +1,66 @@
-# CLAUDE.md
+# DataComPy AI Assistant Guide
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This guide provides essential context for AI coding agents to be productive in the DataComPy codebase.
 
-## Project Overview
+## Architecture Overview
 
-DataComPy is a Python library for comparing two DataFrames/tables across multiple backends: Pandas, Polars, Spark, and Snowflake. It originated as a replacement for SAS's `PROC COMPARE`. Currently at v1.0.0 beta (pre-release on the `develop` branch).
+- **Strategy Pattern**: The core logic uses the Strategy design pattern. The abstract base class `datacompy.base.BaseCompare` defines the interface for all comparison operations. Each backend (Pandas, Spark, Polars, Snowflake) has a concrete implementation (`datacompy.pandas.PandasCompare`, etc.) that inherits from `BaseCompare` and implements its methods.
+- **Comparison Reports**: Reports are generated via Jinja2 templates in `datacompy/templates/`, with the main template being `report_template.j2`. All backends use a similar reporting interface.
+- **Extensibility**: To add or modify comparison logic for a backend, update the corresponding class. For changes affecting all backends, start with `BaseCompare`.
 
-## Common Commands
+## Developer Workflow
 
-### Setup
-```bash
-pip install -e ".[dev]"
-pre-commit install
-```
-
-### Testing
-```bash
-pytest                                          # all tests
-pytest tests/test_pandas.py                     # single backend
-pytest tests/test_pandas.py::TestPandasCompare::test_method  # single test
-pytest --cov=datacompy --cov-report=term-missing  # with coverage
-```
-
-Spark tests require Java 17 and `pyspark` installed. Snowflake tests require a live Snowflake session (or `--snowflake-session local` for local testing).
-
-### Linting & Formatting
-```bash
-ruff check                 # lint
-ruff check --fix           # lint with auto-fix
-ruff format --check        # format check
-ruff format                # apply formatting
-mypy .                     # type-check (strict mode)
-```
-
-### Documentation
-```bash
-make sphinx                # build docs (runs in docs/ subdirectory)
-```
-
-## Architecture
-
-### Strategy Pattern for Backend Comparisons
-
-The core design uses the **Strategy pattern** with two abstraction layers:
-
-1. **`BaseCompare`** (`datacompy/base.py`) — ABC defining the comparison interface. All backends implement: `_compare`, `_dataframe_merge`, `_intersect_compare`, `report`, `matches`, `subset`, `sample_mismatch`, `all_mismatch`, etc.
-
-2. **Backend implementations** — Each in its own module:
-   - `datacompy/pandas.py` → `PandasCompare`
-   - `datacompy/polars.py` → `PolarsCompare`
-   - `datacompy/spark.py` → `SparkSQLCompare`
-   - `datacompy/snowflake.py` → `SnowflakeCompare`
-
-Spark and Snowflake are optional imports (try/except in `__init__.py`).
-
-### Comparator Subpackage
-
-`datacompy/comparator/` provides type-specific column comparison logic, also using a strategy pattern:
-
-- `base.py` → `BaseComparator` ABC with `compare(col1, col2)` method
-- `numeric.py` → Numeric comparators per backend (handles tolerances)
-- `string.py` → String comparators per backend
-- `array.py` → Array-like comparators per backend
-
-Each type has backend-specific implementations: `Pandas*Comparator`, `Polars*Comparator`, `Spark*Comparator`, `Snowflake*Comparator`.
-
-### Reporting
-
-Reports use Jinja2 templates from `datacompy/templates/report_template.j2`. The `render()` function in `base.py` handles template resolution. Custom templates can be passed via `report(template_path=...)`.
-
-### Tolerance Handling
-
-Tolerances (`abs_tol`, `rel_tol`) can be a single float (applied globally) or a dict mapping column names to per-column values. Validated by `validate_tolerance_parameter()` in `base.py`.
+- **Environment Setup**:
+  ```bash
+  pip install -e ".[dev]"
+  pre-commit install
+  ```
+- **Testing**:
+  - Run all tests: `pytest`
+  - Backend-specific tests: see `tests/test_pandas.py`, `tests/test_spark.py`, etc.
+- **Linting & Formatting**:
+  - Lint: `ruff check`
+  - Format: `ruff format --check`
+  - Type-check: `mypy .` (strict mode)
+  - All are enforced via pre-commit hooks.
+- **Documentation**:
+  - Build docs: `make -C docs html`
+  - Docs source: `docs/source/`, output: `docs/build/html/`
 
 ## Code Conventions
 
-- **Typing**: All code must be fully type-hinted and pass `mypy --strict`
-- **Docstrings**: NumPy style
-- **Imports**: Only absolute imports (relative imports banned via ruff TID252)
-- **Pre-commit hooks**: ruff (lint + format), trailing whitespace, debug statements, end-of-file fixer, pyproject-fmt
+- **Typing**: All code must be fully type-hinted and pass `mypy --strict`.
+- **Docstrings**: Use [NumPy style](https://numpydoc.readthedocs.io/en/latest/format.html).
+- **Imports**: Only absolute imports are allowed (see `pyproject.toml`).
+- **Templates**: All reporting uses Jinja2 templates in `datacompy/templates/`.
+- **Backend-specific logic**: Each backend file (`pandas.py`, `spark.py`, `polars.py`, `snowflake.py`) implements the same interface and reporting pattern.
 
-## Branching
+## Patterns & Examples
 
-- `develop` is the active development branch for v1
-- `main` is the release branch
-- `support/0.19.x` maintained for v0 users (bug fixes only)
+- **Comparison Usage**:
+  ```python
+  from datacompy import PandasCompare
+  compare = PandasCompare(df1, df2, join_columns=[...])
+  print(compare.report())
+  ```
+- **Custom Templates**:
+  ```python
+  compare.report(template_path="custom_report.j2")
+  ```
+- **Tolerance Handling**: Tolerances can be set globally or per-column (see `validate_tolerance_parameter`).
+- **Unique/Intersect Rows**: Each backend exposes `df1_unq_rows`, `df2_unq_rows`, and `intersect_rows` for advanced analysis.
+
+## Integration Points
+
+- **Dependencies**: Core dependencies are in `pyproject.toml` (Jinja2, pandas, polars, pyspark, snowflake-snowpark-python, etc.).
+- **Pre-commit**: Linting, formatting, and type-checking are enforced via pre-commit hooks.
+- **Builds**: Use the Makefile for docs (`make sphinx`).
+- **CI**: See `.github/workflows/` for test and lint automation.
+
+---
+
+If any section is unclear or missing, please provide feedback to iterate and improve these instructions.
 
 ---
 > Source: [capitalone/datacompy](https://github.com/capitalone/datacompy) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-22 -->
+<!-- tomevault:4.0:agents_md:2026-07-24 -->
