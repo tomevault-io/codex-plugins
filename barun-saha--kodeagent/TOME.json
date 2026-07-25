@@ -2,9 +2,9 @@
   "name": "kodeagent",
   "owner": "barun-saha",
   "repo": "kodeagent",
-  "description": "The minimal AI agent engine",
+  "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "GEMINI.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/barun-saha/kodeagent",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-19T18:51:02Z"
+  "distributed_at": "2026-07-25T18:51:43Z"
 }
