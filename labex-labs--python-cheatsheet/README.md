@@ -5,14 +5,14 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [labex-labs/python-cheatsheet](https://github.com/labex-labs/python-cheatsheet).
+Original source: `copilot-instructions.md` in [labex-labs/python-cheatsheet](https://github.com/labex-labs/python-cheatsheet).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 From [labex-labs/python-cheatsheet](https://github.com/labex-labs/python-cheatsheet) — a repo with 4945+ stars on GitHub.
