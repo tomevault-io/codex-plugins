@@ -1,13 +1,11 @@
-# AI instruction files for ikiform
+# AI instruction files for Ikiform
 
-> Sourced from [preetsuthar17/ikiform](https://github.com/preetsuthar17/ikiform) and converted for every major platform by [TomeVault](https://tomevault.io)
-
-The open-source forms platform for effortless data collection and analysis.
+> Sourced from [preetsuthar17/Ikiform](https://github.com/preetsuthar17/Ikiform), graded against the public Tome Standard and kept consistent across every major platform by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [preetsuthar17/ikiform](https://github.com/preetsuthar17/ikiform).
+Original source: `copilot-instructions.md` in [preetsuthar17/Ikiform](https://github.com/preetsuthar17/Ikiform).
 
 ## Also available for
 
@@ -17,10 +15,14 @@ Original source: `copilot-instructions.md` in [preetsuthar17/ikiform](https://gi
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/preetsuthar17/ikiform](https://github.com/preetsuthar17/ikiform)
+Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/preetsuthar17/Ikiform](https://github.com/preetsuthar17/Ikiform)
 
 ---
 
-Own this repo? Install the TomeVault Relay to keep every platform's copy in sync on every push: [https://tomevault.io/install](https://tomevault.io/install).
+Install this config instantly:
+```
+npx tomevault install preetsuthar17/Ikiform
+```
+Source: [github.com/preetsuthar17/Ikiform](https://github.com/preetsuthar17/Ikiform).
 
-<!-- genome:a-c-q -->
+<!-- genome:a-i-p -->
