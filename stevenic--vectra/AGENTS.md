@@ -52,4 +52,4 @@ A lightweight, file-backed vector database for Node.js and browsers with Pinecon
 
 ---
 > Source: [Stevenic/vectra](https://github.com/Stevenic/vectra) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-06-29 -->
+<!-- tomevault:4.0:agents_md:2026-07-26 -->
