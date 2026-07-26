@@ -2,7 +2,7 @@
   "name": "minute",
   "owner": "roblibob",
   "repo": "minute",
-  "description": "Meeting transcription app",
+  "description": "",
   "type": "config",
   "source_format": "copilot-instructions.md",
   "formats": [
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/roblibob/minute",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-21T17:47:35Z"
+  "distributed_at": "2026-07-26T18:39:02Z"
 }
