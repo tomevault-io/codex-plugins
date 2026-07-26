@@ -5,7 +5,7 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `` in [tw-haiven/haiven](https://github.com/tw-haiven/haiven).
+Original source: `.windsurf/rules/*.md` in [tw-haiven/haiven](https://github.com/tw-haiven/haiven).
 
 ## Also available for
 
@@ -14,7 +14,6 @@ Original source: `` in [tw-haiven/haiven](https://github.com/tw-haiven/haiven).
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
-- **Windsurf** — `project-config.md`
 
 Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/tw-haiven/haiven](https://github.com/tw-haiven/haiven)
 
