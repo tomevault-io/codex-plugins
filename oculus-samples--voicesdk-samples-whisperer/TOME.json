@@ -4,7 +4,7 @@
   "repo": "voicesdk-samples-whisperer",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": ".windsurf/rules/*.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/oculus-samples/voicesdk-samples-whisperer",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-25T23:08:19Z"
+  "distributed_at": "2026-07-26T22:17:49Z"
 }
