@@ -1,8 +1,6 @@
 # minute
 
-> Tome by [roblibob](https://github.com/roblibob/minute) — distributed by [TomeVault](https://tomevault.io)
-
-Meeting transcription app
+> Tome by [roblibob](https://github.com/roblibob/minute), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
