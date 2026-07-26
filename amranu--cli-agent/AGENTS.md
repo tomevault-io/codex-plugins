@@ -1,725 +1,468 @@
-# CLAUDE.md - MCP Agent Architecture Documentation
+# AGENT.md
 
-This document provides comprehensive technical documentation for the MCP Agent codebase, specifically designed to help Claude Code and other AI assistants understand the modular architecture, components, and development patterns.
+This document provides a comprehensive technical overview of the MCP Agent codebase, designed to help coding agents understand the system's sophisticated architecture, components, and core functionalities.
 
-## 🏗️ Architecture Overview
+## 1. Overview
 
-The MCP Agent has been refactored from a monolithic 3,237-line file into a clean modular architecture with a sophisticated Provider-Model system. The system provides an extensible framework for creating language model-powered agents with tool integration, interactive chat, and multi-backend support via a flexible provider-model architecture.
+The MCP Agent is a sophisticated, extensible framework for creating language model-powered agents with advanced tool integration, subagent management, and multi-backend support. The codebase has evolved from a monolithic structure into a clean, modular architecture emphasizing maintainability, extensibility, and production-ready features.
 
-### Key Architectural Principles
+### Core System Capabilities
+- **Multi-LLM Backend Support:** Runtime-switchable support for 6 providers (Anthropic, OpenAI, DeepSeek, Google Gemini, OpenRouter, Ollama) with unified provider-model architecture
+- **Advanced Subagent System:** Process-isolated subagents with event-driven communication and automatic result integration
+- **Comprehensive Tool Ecosystem:** 16 built-in tools + external MCP protocol integration with unified execution pipeline
+- **Context Management:** Intelligent context preservation with automatic conversation compaction and subagent delegation strategies
+- **Professional UI/UX:** Event-driven terminal interface with streaming responses, interruption support, and slash commands
+- **Production Features:** Exponential backoff retry logic, fault tolerance, persistent configuration management, and comprehensive error handling
+- **Provider-Model Separation:** Same models accessible through different providers with flexible configuration
 
-- **Modular Design**: Components separated by responsibility
-- **Provider-Model Separation**: API providers separated from model characteristics
-- **Model Agnosticism**: Core logic independent of LLM implementation  
-- **Tool Extensibility**: Support for both built-in and MCP protocol tools
-- **Interactive & Programmatic**: CLI and library usage patterns
-- **Centralized Management**: Single source of truth for shared functionality
-- **Multi-Provider Support**: Same model accessible through different providers
+### Key Architectural Features
 
-## 📁 Modular File Structure
+- **Provider-Model Architecture:** Clean separation between API providers and model characteristics via composition
+- **Event-Driven Design:** Centralized event bus transforming streaming into discrete JSON events with interrupt support
+- **Modular Core System:** 29 core modules with specialized responsibilities (base_agent, chat_interface, tool_execution_engine, etc.)
+- **Strategy Pattern Implementation:** Interchangeable tool conversion and parsing strategies per LLM format
+- **Context-Aware Operation:** Smart delegation of context-heavy tasks to preserve main agent efficiency
+- **Stream-First Design:** Unified streaming interface across all backends with comprehensive interruption capabilities
+- **Fault-Tolerant Design:** Comprehensive error handling, exponential backoff retry logic, and graceful degradation
+- **Tool Extensibility:** Built-in tools (glob, grep, multiedit, etc.) + external MCP tool integration
+
+## 2. Modular Architecture
+
+The codebase implements a sophisticated modular architecture with clear separation of concerns and plugin-style extensibility:
 
 ```
-agent/
-├── cli_agent/                    # Main package - modular architecture
-│   ├── __init__.py              # Package exports and version
-│   ├── core/                    # Core agent functionality (29 core files)
-│   │   ├── __init__.py         # Core component exports
-│   │   ├── base_agent.py       # BaseMCPAgent abstract class (2,122 lines)
-│   │   ├── base_llm_provider.py # BaseLLMProvider shared functionality (456 lines)
-│   │   ├── base_provider.py    # BaseProvider API abstraction (279 lines)
-│   │   ├── model_config.py     # ModelConfig classes for LLM characteristics (531 lines)
-│   │   ├── mcp_host.py         # MCPHost unified provider+model interface (607 lines)
-│   │   ├── chat_interface.py   # Interactive chat management (912 lines)
-│   │   ├── input_handler.py    # InterruptibleInput terminal handling (303 lines)
-│   │   ├── slash_commands.py   # SlashCommandManager command system (806 lines)
-│   │   ├── tool_execution_engine.py # Tool execution and validation (280 lines)
-│   │   ├── builtin_tool_executor.py # Built-in tool implementations (685 lines)
-│   │   ├── event_system.py     # Central event bus architecture (523 lines)
-│   │   ├── display_manager.py  # Event-driven display coordination (400 lines)
-│   │   ├── response_handler.py # Response processing framework (682 lines)
-│   │   ├── subagent_coordinator.py # Subagent lifecycle management
-│   │   ├── tool_permissions.py # Tool access control system (421 lines)
-│   │   ├── terminal_manager.py # Terminal state management
-│   │   ├── global_interrupt.py # Centralized interrupt handling
-│   │   └── [15 additional core modules]
-│   ├── providers/               # API provider implementations
-│   │   ├── __init__.py         # Provider exports
-│   │   ├── anthropic_provider.py # Anthropic API provider
-│   │   ├── openai_provider.py  # OpenAI API provider
-│   │   ├── openrouter_provider.py # OpenRouter API provider
-│   │   ├── deepseek_provider.py # DeepSeek API provider
-│   │   └── google_provider.py  # Google Gemini API provider
-│   ├── tools/                   # Tool integration and execution
-│   │   ├── __init__.py         # Tool exports
-│   │   └── builtin_tools.py    # Built-in tool definitions (475 lines)
-│   ├── utils/                   # Utility functions (7 utility modules)
-│   │   ├── __init__.py         # Utility exports
-│   │   ├── tool_conversion.py  # Multi-format tool schema conversion
-│   │   ├── content_processing.py # Content extraction and cleaning utilities
-│   │   ├── diff_display.py     # Terminal diff visualization with colors
-│   │   ├── http_client.py      # HTTP client factory and lifecycle management
-│   │   ├── retry.py            # Exponential backoff retry logic
-│   │   └── tool_parsing.py     # Tool call parsing from LLM responses
-│   ├── mcp/                     # MCP protocol implementations
-│   │   ├── __init__.py         # MCP module initialization
-│   │   └── model_server.py     # MCP model server implementation
-│   │   ├── retry.py            # Retry logic utilities
-│   │   └── tool_parsing.py     # Tool parsing utilities
-│   ├── cli/                     # Command-line interface (future expansion)
-│   │   └── __init__.py
-│   └── subagents/              # Subagent management (future expansion)
-│       └── __init__.py
-├── agent.py                     # Main CLI entry point (505 lines)
-├── mcp_deepseek_host.py        # Legacy DeepSeek implementation (deprecated)
-├── mcp_gemini_host.py          # Legacy Gemini implementation (deprecated)
-├── config.py                   # Configuration management with provider-model support
-├── subagent.py                 # Subagent subprocess management
-└── README.md                   # Project documentation
+cli_agent/
+├── __init__.py                    # Package exports and version info
+├── core/                          # Core agent framework (29 core files)
+│   ├── base_agent.py              # Abstract base agent (2,122 lines)
+│   ├── base_llm_provider.py       # Centralized LLM provider functionality (456 lines)
+│   ├── base_provider.py           # Provider API abstraction (279 lines)
+│   ├── model_config.py            # Model-specific configurations (531 lines)
+│   ├── mcp_host.py                # Provider-model composition (607 lines)
+│   ├── chat_interface.py          # Interactive chat management (912 lines)
+│   ├── input_handler.py           # Terminal interaction utilities (303 lines)
+│   ├── slash_commands.py          # Command system management (806 lines)
+│   ├── tool_execution_engine.py   # Tool execution and validation (280 lines)
+│   ├── builtin_tool_executor.py   # Tool implementations (685 lines)
+│   ├── event_system.py            # Central event bus architecture (523 lines)
+│   ├── display_manager.py         # Event-driven display coordination (400 lines)
+│   ├── response_handler.py        # Response processing framework (682 lines)
+│   ├── subagent_coordinator.py    # Subagent lifecycle management
+│   ├── tool_permissions.py        # Tool access control system (421 lines)
+│   └── [15 additional specialized modules]
+├── providers/                     # API provider implementations
+│   ├── anthropic_provider.py      # Anthropic API provider
+│   ├── openai_provider.py         # OpenAI API provider
+│   ├── deepseek_provider.py       # DeepSeek API provider
+│   ├── google_provider.py         # Google Gemini API provider
+│   ├── openrouter_provider.py     # OpenRouter multi-model API
+│   └── ollama_provider.py         # Ollama local inference provider
+├── tools/                         # Built-in tool definitions
+│   ├── __init__.py                # Tool exports
+│   └── builtin_tools.py           # 16 built-in tools with JSON schemas (475 lines)
+├── utils/                         # Shared utility modules (7 utility modules)
+│   ├── __init__.py                # Centralized utility exports
+│   ├── tool_conversion.py         # Multi-format tool schema conversion
+│   ├── tool_parsing.py            # Tool call parsing from LLM responses
+│   ├── content_processing.py      # Content extraction and cleaning utilities
+│   ├── http_client.py             # HTTP client factory and lifecycle management
+│   ├── retry.py                   # Exponential backoff retry logic
+│   └── diff_display.py            # Terminal diff visualization with colors
+├── mcp/                           # MCP protocol implementations
+│   ├── __init__.py                # MCP module initialization
+│   └── model_server.py            # MCP model server implementation
+└── tests/                         # Testing framework (109 tests passing)
+    ├── unit/                      # Unit tests
+    ├── integration/               # Integration tests
+    └── fixtures/                  # Test fixtures
 ```
 
-## 🏗️ Provider-Model Architecture
+### `cli_agent/` Package: Modular Core Framework
 
-The system uses a sophisticated Provider-Model architecture that separates API integration concerns from model-specific behavior:
+#### `cli_agent/core/base_agent.py`: The Core Agent Framework
 
-### Architecture Layers
+Contains the foundational `BaseMCPAgent` class - a sophisticated abstract base class implementing the core agent functionality with centralized subagent management.
 
-1. **Provider Layer** (`BaseProvider`): Handles API integration
-   - Authentication and request formatting
-   - Streaming response processing
-   - Error handling and retry logic
-   - Rate limit management
-
-2. **Model Layer** (`ModelConfig`): Handles LLM characteristics
-   - Tool calling formats (OpenAI, Anthropic, Gemini)
-   - System prompt styles (message, parameter, prepend)
-   - Special features (reasoning content, thinking)
-   - Token limits and parameters
-
-3. **Host Layer** (`MCPHost`): Combines provider + model
-   - Unified interface inheriting from `BaseLLMProvider`
-   - Delegates API calls to provider
-   - Delegates formatting to model
-   - Maintains backward compatibility
-
-### Provider-Model Combinations
-
-The same model can be accessed through different providers:
-
+**Key Architecture:**
 ```python
-# Claude via different providers
-config.create_host_from_provider_model("anthropic:claude-3.5-sonnet")
-config.create_host_from_provider_model("openrouter:anthropic/claude-3.5-sonnet")
-
-# GPT-4 via different providers  
-config.create_host_from_provider_model("openai:gpt-4-turbo-preview")
-config.create_host_from_provider_model("openrouter:openai/gpt-4-turbo-preview")
+BaseMCPAgent (Abstract Base Class)
+└── MCPHost (Provider-Model Composition)
+    ├── BaseProvider + ModelConfig
+    └── Tool Conversion & Event-Driven Streaming
 ```
 
-## 🧩 Core Components
+**Core Responsibilities:**
+- **MCP Integration:** FastMCP client management for external tool servers
+- **Subagent System:** Centralized `SubagentManager` with event-driven communication
+- **Tool Ecosystem:** Unified execution pipeline for built-in and external tools
+- **Context Management:** Token tracking, conversation compaction, and smart delegation
+- **Interactive Framework:** Chat session management with interruption support
 
-### 1. BaseProvider (`cli_agent/core/base_provider.py`)
+**Major Components:**
+- **Initialization & Configuration:**
+  - Loads built-in tools from `cli_agent.tools.builtin_tools`
+  - Initializes centralized `SubagentManager` for main agents (excluded for subagents)
+  - Establishes MCP server connections with automatic tool discovery
+  - Sets up slash command integration via `SlashCommandManager`
 
-**Primary Role**: Abstract base class for API provider implementations
+- **Tool Management System:**
+  - `_execute_mcp_tool()`: Unified execution dispatcher for built-in vs external tools
+  - `start_mcp_server()`: Automated MCP server connection and tool registration
+  - Built-in tool access control (subagents have `task` tools removed to prevent recursion)
+  - Tool forwarding for subagents via communication sockets
 
-**Key Responsibilities**:
-- API authentication and client management
-- Request formatting and response parsing
-- Streaming response processing
-- Error handling and retry logic
-- Rate limit information extraction
+- **Conversation & Context Management:**
+  - `conversation_history`: Message storage with automatic token tracking
+  - `compact_conversation()`: AI-powered conversation summarization when approaching limits
+  - `get_token_limit()`: Model-specific token limit management (centralized)
+  - Context preservation strategies with subagent delegation guidance
 
-**Abstract Methods**:
+- **Interactive Chat Framework:**
+  - `interactive_chat()`: Centralized session management with streaming support
+  - Subagent task spawning, monitoring, and automatic result integration
+  - Real-time interruption handling with ESC key support
+  - Keep-alive message system during long tool executions
+
+- **Centralized Methods (Recently Consolidated):**
+  - `generate_response()`: Unified LLM response interface with streaming/interactive modes
+  - Subagent lifecycle management: spawning, monitoring, result collection
+  - System prompt customization (different for main agents vs subagents)
+
+- **Abstract Interface (LLM-Specific Implementation Required):**
+  - `convert_tools_to_llm_format()`: Transform tools to LLM-specific API format
+  - `parse_tool_calls()`: Extract and parse tool calls from LLM responses
+  - `chat_completion()`: LLM-specific API integration with streaming support
+
+#### `cli_agent/core/slash_commands.py`: Command System
+
+- **`SlashCommandManager` class (330 lines):**
+  - Manages slash commands like `/help`, `/clear`, `/compact`, `/tokens`
+  - Model switching: `/switch-chat`, `/switch-reason`, `/switch-gemini`
+  - Custom command loading from `.claude/commands/` directories
+  - MCP command integration with `mcp__<server>__<command>` format
+
+#### `cli_agent/core/input_handler.py`: Terminal Interaction
+
+- **`InterruptibleInput` class (194 lines):**
+  - Professional terminal input with prompt_toolkit integration
+  - Multiline input detection and smart handling
+  - ESC key interruption support during operations
+  - Asyncio-compatible threading for event loop safety
+
+#### `cli_agent/tools/builtin_tools.py`: Tool Definitions
+
+- **Built-in Tool Registry (475 lines):**
+  - **File Operations:** `read_file`, `write_file`, `replace_in_file`, `multiedit`, `list_directory`, `get_current_directory`
+  - **Search & Discovery:** `glob` (pattern matching), `grep` (content search)
+  - **System Integration:** `bash_execute` for shell command execution with interrupt support
+  - **Web Access:** `webfetch` for HTTP requests and content retrieval
+  - **Task Management:** `todo_read`, `todo_write` for session-specific task tracking
+  - **Subagent Control:** `task`, `task_status`, `task_results`, `emit_result` (filtered appropriately for subagents)
+  - **Tool Schema:** Complete JSON schemas with validation and parameter definitions
+  - **Centralized Access:** `get_all_builtin_tools()` function for tool registration
+  - **Advanced Features:** Whitespace-preserving edits, modification time sorting, regex search patterns
+
+#### `cli_agent/utils/`: Shared Utility Framework
+
+**Comprehensive utility system supporting the modular architecture:**
+
+##### `cli_agent/utils/tool_conversion.py`: LLM Format Conversion (188 lines)
+- **Abstract Factory Pattern:** `BaseToolConverter` → `OpenAIStyleToolConverter` / `GeminiToolConverter`
+- **OpenAI Format:** For DeepSeek and OpenAI-compatible APIs with function calling schema
+- **Gemini Format:** Specialized conversion with schema sanitization and type normalization
+- **ToolConverterFactory:** Automatic converter selection based on LLM type
+- **Features:** Name normalization (`server:tool` → `server_tool`), validation, fallback handling
+
+##### `cli_agent/utils/tool_parsing.py`: Multi-Format Response Parsing (280 lines)
+- **Unified Interface:** `ToolCallParser` base class with LLM-specific implementations
+- **DeepSeek Parser:** Custom format (`<｜tool▁calls▁begin｜>`), JSON blocks, Python-style calls
+- **Gemini Parser:** Structured function calls, XML-style calls, Python-style calls
+- **Smart Parsing:** Automatic format detection and multi-pattern support
+- **Consistent Output:** Normalized tool call objects regardless of source format
+
+##### `cli_agent/utils/content_processing.py`: Content Extraction
+- **Pattern-Based Extraction:** Extract text content before tool calls for streaming
+- **LLM-Specific Processors:** Custom patterns for DeepSeek vs Gemini content formatting
+- **Code Block Cleaning:** Remove markdown formatting and extract clean content
+- **Content Splitting:** Separate conversational text from tool execution sections
+
+##### `cli_agent/utils/http_client.py`: HTTP Client Management
+- **HTTPClientFactory:** Standardized client creation with timeout and connection pooling
+- **LLM-Specific Clients:** Optimized configurations for OpenAI, DeepSeek, Gemini
+- **Lifecycle Management:** `HTTPClientManager` for resource tracking and cleanup
+- **Connection Pooling:** Configurable limits and keepalive settings
+
+##### `cli_agent/utils/retry.py`: Retry Logic with Backoff
+- **RetryHandler:** Exponential backoff with jitter for API resilience
+- **Smart Error Detection:** Identifies retryable errors (timeouts, rate limits, 5xx)
+- **Async/Sync Support:** Works with both synchronous and asynchronous functions
+- **Configurable:** Base delay, max delay, backoff factor, max attempts
+
+### `agent.py`: CLI Interface (505 lines)
+
+- **Streamlined Entry Point:** Main CLI using Click framework
+- **Commands:** `chat`, `ask`, `init`, `mcp`, model switching commands
+- **Integration:** Imports from modular `cli_agent` package
+- **Host Selection:** Dynamic provider-model selection via configuration
+
+### Provider-Model Architecture
+
+The system implements a sophisticated provider-model separation architecture that replaces the legacy host implementations:
+
+#### **BaseProvider Abstraction:**
+- **AnthropicProvider:** Direct Anthropic API integration with native message format
+- **OpenAIProvider:** Direct OpenAI API integration with function calling support
+- **DeepSeekProvider:** OpenAI-compatible format with reasoning content extraction
+- **GoogleProvider:** Gemini API integration with complex message-to-content conversion
+- **OpenRouterProvider:** Multi-model aggregator with comprehensive model metadata
+- **OllamaProvider:** Local inference provider with dynamic model discovery
+
+#### **ModelConfig Classes:**
+- **ClaudeModel:** Anthropic tool format, parameter system prompts, reasoning support
+- **GPTModel:** OpenAI tool format, message system prompts, o1 model special handling
+- **GeminiModel:** Gemini tool format, prepend system prompts, function calling modes
+- **DeepSeekModel:** OpenAI format with reasoning content parsing for chain-of-thought models
+
+#### **MCPHost Composition:**
+- **Unified Interface:** Combines Provider + Model via composition pattern
+- **Tool Conversion:** Automatic format conversion based on model.get_tool_format()
+- **Backward Compatibility:** Inherits from BaseLLMProvider for seamless integration
+- **Event-Driven Streaming:** Interrupt-aware streaming with event bus integration
+
+#### **Key Benefits:**
+- **Provider Flexibility:** Same model accessible through different providers (e.g., Claude via Anthropic or OpenRouter)
+- **Easy Extensibility:** New providers or models require minimal code changes
+- **Tool Format Abstraction:** Automatic conversion between OpenAI, Anthropic, and Gemini formats
+- **Configuration Management:** Unified configuration system with provider-model combinations
+
+### Subagent System Architecture
+
+**Complete process-isolated subagent system with event-driven communication:**
+
+#### Core Components:
+
+**`subagent.py`: Subagent Management Framework**
+- **SubagentManager:** Orchestrates multiple concurrent subagent processes
+  - Async process spawning with UUID-based unique task IDs
+  - Event-driven message collection via async queues and callbacks
+  - Real-time message display during execution
+  - Automatic result collection and conversation restart
+- **SubagentProcess:** Individual subagent lifecycle management
+  - JSON-based task definition and communication protocol
+  - Async stdout monitoring with structured message parsing (`SUBAGENT_MSG:` prefix)
+  - Process cleanup and graceful termination handling
+- **Communication Protocol:** JSON-over-stdout with message types (`output`, `status`, `error`, `result`)
+
+**`subagent_runner.py`: Subprocess Execution Environment**
+- **Isolated Execution:** Creates independent host instances with `is_subagent=True`
+- **Tool Execution Monitoring:** Intercepts and reports tool execution progress
+- **Enhanced Prompting:** Adds specific instructions for focused task execution
+- **Result Emission:** Structured result reporting via `emit_result_with_id()`
+- **Resource Management:** Automatic cleanup and error handling
+
+#### Key Design Decisions:
+- **Process Isolation:** Subagents run in separate processes (not threads) for fault tolerance
+- **Tool Access Control:** Subagents have `task` tools removed to prevent infinite recursion
+- **Communication Model:** Event-driven async messaging for real-time feedback
+- **Result Integration:** Automatic collection and main conversation restart with results
+
+## 3. Execution Flow
+
+The sophisticated modular architecture provides a comprehensive execution flow with advanced features:
+
+### Primary Execution Pipeline:
+
+1.  **System Initialization:**
+    - **CLI Bootstrap:** `agent.py` entry point using Click framework with comprehensive command set
+    - **Configuration Loading:** Pydantic-based config with environment variable integration
+    - **Host Selection:** Dynamic instantiation of `MCPHost` with provider-model configuration
+    - **Base Agent Setup:** `BaseMCPAgent.__init__()` with centralized subagent management and tool loading
+    - **External Integration:** Automatic MCP server connections with tool discovery and registration
+
+2.  **Input Processing & Command Handling:**
+    - **Interactive Mode:** `InterruptibleInput` with prompt_toolkit for professional terminal interaction
+    - **Multiline Support:** Smart detection and handling of multiline inputs with proper formatting
+    - **Slash Commands:** `SlashCommandManager` processes meta-commands (`/help`, `/compact`, `/switch-*`, `/tools`)
+    - **Model Switching:** Runtime backend switching with configuration persistence
+    - **Non-Interactive Mode:** Single-turn processing via `ask` command with full tool support
+
+3.  **Context-Aware Message Processing:**
+    - **History Management:** Conversation storage with automatic token tracking per model
+    - **Smart Compaction:** AI-powered conversation summarization when approaching token limits
+    - **Context Delegation:** Intelligent subagent spawning for context-heavy tasks
+    - **Response Generation:** Centralized `generate_response()` with streaming/interactive mode detection
+
+4.  **LLM-Specific Processing Pipeline:**
+    - **Tool Format Conversion:** Factory-based conversion using `ToolConverterFactory` for LLM-specific schemas
+    - **API Integration:** Model-specific `chat_completion()` with retry logic and streaming support
+    - **Response Parsing:** Multi-format tool call extraction using `ToolCallParserFactory`
+    - **Content Processing:** LLM-specific content extraction and cleaning utilities
+
+5.  **Unified Tool Execution Framework:**
+    - **Tool Call Parsing:** Multi-format parsing (structured, XML, Python-style) with validation
+    - **Execution Routing:** Built-in tools executed locally, external tools via MCP clients
+    - **Parallel Execution:** Concurrent tool execution using `asyncio.gather()` for performance
+    - **Result Integration:** Structured result formatting and conversation continuation
+
+6.  **Advanced Streaming & UI:**
+    - **Real-Time Streaming:** Response streaming with ESC interruption and keep-alive messages
+    - **Terminal Management:** Professional output handling with carriage return management
+    - **Subagent Integration:** Real-time message display during subagent execution
+    - **Progress Indication:** Tool execution progress with visual indicators
+
+7.  **Subagent Orchestration:**
+    - **Process Spawning:** Isolated subprocess creation with unique task IDs
+    - **Event-Driven Communication:** Async message queues with real-time callbacks
+    - **Resource Management:** Automatic process cleanup and error handling
+    - **Result Collection:** Automatic gathering and main conversation restart with results
+
+### Advanced Features:
+
+8.  **Fault Tolerance & Recovery:**
+    - **Retry Logic:** Exponential backoff for API calls with smart error detection
+    - **Stream Recovery:** Automatic retry for failed streaming responses (Gemini-specific)
+    - **Graceful Degradation:** Fallback mechanisms for missing dependencies or failures
+    - **Process Isolation:** Subagent failures don't crash main agent
+
+9.  **Context Management Strategy:**
+    - **Token Awareness:** Model-specific limits with automatic monitoring
+    - **Delegation Patterns:** Smart identification of context-heavy tasks for subagent delegation
+    - **Memory Efficiency:** Strategic conversation compaction and cleanup
+    - **Subagent Context:** Separate context spaces for focused task execution
+
+## 4. Tool Integration
+
+The agent's tool integration is a core feature and is based on the following principles:
+
+- **Built-in Tools:** A set of essential tools is defined directly in `agent.py`. These tools are available to all agent implementations.
+- **External Tools (MCP):** The agent can connect to external tool servers using the MCP protocol. This allows for the integration of tools written in any language.
+- **Tool Abstraction:** The `BaseMCPAgent` class provides a unified interface for executing both built-in and external tools, making the tool execution process transparent to the agent's core logic.
+- **Model-Specific Formatting:** Each model implementation is responsible for formatting the tool specifications in the way that its API expects.
+
+## 5. Modular Architecture Benefits
+
+The refactoring from a monolithic 3,237-line file to a modular architecture provides significant benefits:
+
+### Before & After Comparison
+- **Before:** Single `agent.py` file (3,237 lines)
+- **After:** Modular architecture with 29 core files and specialized modules
+  - `base_agent.py`: 2,122 lines (core functionality)
+  - `chat_interface.py`: 912 lines (interactive chat management)
+  - `slash_commands.py`: 806 lines (enhanced command system)
+  - `builtin_tool_executor.py`: 685 lines (tool implementations)
+  - `response_handler.py`: 682 lines (response processing)
+  - `mcp_host.py`: 607 lines (provider-model composition)
+  - `event_system.py`: 523 lines (event bus architecture)
+  - `builtin_tools.py`: 475 lines (16 tool definitions)
+  - `agent.py`: 1,447 lines (comprehensive CLI interface)
+
+### Key Improvements
+- **Maintainability**: Each module has a single, clear responsibility with defined interfaces
+- **Testability**: Components can be unit tested independently (109 tests passing)
+- **Reusability**: Core modules work across different LLM implementations via provider-model architecture
+- **Scalability**: New features can be added without touching entire codebase (16 tools, 5 providers)
+- **Developer Experience**: Much easier to navigate and understand with comprehensive documentation
+- **Code Quality**: Enforced separation of concerns, reduced coupling, and event-driven patterns
+- **Event Architecture**: Clean separation via centralized event bus for display and processing
+- **Tool Extensibility**: Built-in tools + external MCP integration with unified execution pipeline
+- **Provider Flexibility**: Same models accessible through different providers with seamless switching
+
+## 6. Key Design Patterns & Architectural Decisions
+
+The sophisticated codebase employs numerous advanced design patterns and architectural decisions:
+
+### Core Design Patterns:
+- **Abstract Base Classes:** `BaseMCPAgent` provides centralized functionality with LLM-specific abstract methods
+- **Strategy Pattern:** Interchangeable LLM implementations with unified interfaces for tool conversion and parsing
+- **Factory Pattern:** `ToolConverterFactory`, `ContentProcessorFactory`, `HTTPClientFactory` for component creation
+- **Observer Pattern:** Event-driven subagent communication with callback registration and async message queues
+- **Command Pattern:** CLI framework with Click and slash command system for interactive operations
+- **Template Method:** `interactive_chat()` and `generate_response()` define flows with customizable steps
+- **Facade Pattern:** `BaseMCPAgent` provides simplified interface to complex tool and conversation management
+
+### Advanced Architectural Patterns:
+- **Plugin Architecture:** Modular tool integration with built-in tools + external MCP protocol support
+- **Event-Driven Architecture:** Async subagent messaging with real-time callbacks and queue-based communication
+- **Process-Based Concurrency:** Subagent isolation using subprocess rather than threading for fault tolerance
+- **Stream-First Design:** Unified streaming interface across all backends with interruption support
+- **Context-Aware Operation:** Smart delegation patterns for context preservation and efficiency
+- **Dependency Injection:** Configuration-driven component instantiation with environment variable integration
+
+### Notable Architectural Decisions:
+
+#### 1. **Centralized vs Distributed Tool Execution**
+- **Built-in Tools:** Direct execution within agent process for core functionality
+- **External Tools:** MCP server delegation for extensibility without code changes
+- **Unified Interface:** Transparent execution pipeline regardless of tool source
+
+#### 2. **Process Isolation for Subagents**
+- **Design Choice:** Subprocess isolation rather than threading for fault tolerance
+- **Benefits:** Independent resource management, graceful failure handling, scalable execution
+- **Trade-offs:** Higher overhead but better reliability and isolation
+
+#### 3. **Multi-Format Tool Call Support**
+- **Flexibility:** Support for structured, XML-style, and Python-style tool calls per LLM
+- **Robustness:** Multiple parsing strategies with automatic format detection
+- **Extensibility:** Easy addition of new formats without breaking existing functionality
+
+#### 4. **Streaming-First with Fallback**
+- **Primary Mode:** Real-time streaming responses with user interruption support
+- **Reliability:** Automatic retry logic for stream failures (especially Gemini)
+- **User Experience:** Immediate feedback with professional terminal handling
+
+#### 5. **Context Management Strategy**
+- **Token Awareness:** Model-specific limits with automatic monitoring and compaction
+- **Smart Delegation:** Guidance for agents to delegate context-heavy tasks to subagents
+- **Memory Efficiency:** Conversation summarization while preserving key context
+
+## 7. Development Guidelines
+
+### Adding New Components
+- **New LLM Backend:** Create new `BaseProvider` and `ModelConfig` classes, then compose via `MCPHost`
+- **New Tools:** Add to `cli_agent/tools/builtin_tools.py` or create MCP server
+- **New Commands:** Add handlers to `SlashCommandManager` or create custom command files
+- **New Utilities:** Add to `cli_agent/utils/` for shared functionality
+
+### Import Patterns
 ```python
-@abstractmethod
-async def make_request(self, messages, model_name, tools=None, stream=False, **params) -> Any
-@abstractmethod  
-def extract_response_content(self, response) -> Tuple[str, List[Any], Dict[str, Any]]
-@abstractmethod
-async def process_streaming_response(self, response) -> Tuple[str, List[Any], Dict[str, Any]]
-@abstractmethod
-def is_retryable_error(self, error: Exception) -> bool
-@abstractmethod
-def get_error_message(self, error: Exception) -> str
-@abstractmethod
-def get_rate_limit_info(self, response: Any) -> Dict[str, Any]
-```
-
-**Concrete Providers**:
-- `AnthropicProvider`: Direct Anthropic API integration
-- `OpenAIProvider`: OpenAI API integration
-- `OpenRouterProvider`: OpenRouter multi-model API
-- `DeepSeekProvider`: DeepSeek API (OpenAI-compatible)
-- `GoogleProvider`: Google Gemini API integration
-
-### 2. ModelConfig (`cli_agent/core/model_config.py`)
-
-**Primary Role**: Model-specific behavior and characteristics
-
-**Key Responsibilities**:
-- Tool calling format specification
-- System prompt style management
-- Message formatting for specific models
-- Parameter validation and defaults
-- Special content parsing (reasoning, thinking)
-
-**Abstract Methods**:
-```python
-@abstractmethod
-def get_tool_format(self) -> str  # "openai", "anthropic", "gemini"
-@abstractmethod
-def get_system_prompt_style(self) -> str  # "message", "parameter", "prepend"
-@abstractmethod
-def format_messages_for_model(self, messages) -> List[Dict[str, Any]]
-@abstractmethod
-def parse_special_content(self, text_content: str) -> Dict[str, Any]
-```
-
-**Concrete Models**:
-- `ClaudeModel`: Anthropic tool format, parameter system prompts
-- `GPTModel`: OpenAI tool format, message system prompts  
-- `GeminiModel`: Gemini tool format, prepend system prompts
-- `DeepSeekModel`: OpenAI tool format, reasoning content support
-
-### 3. MCPHost (`cli_agent/core/mcp_host.py`)
-
-**Primary Role**: Unified interface combining Provider + Model
-
-**Key Features**:
-- Inherits from `BaseLLMProvider` for compatibility
-- Delegates API calls to provider instance
-- Delegates formatting to model instance
-- Handles tool conversion via format-specific converters
-- Manages provider-specific features (reasoning, thinking)
-
-```python
-class MCPHost(BaseLLMProvider):
-    def __init__(self, provider: BaseProvider, model: ModelConfig, config: HostConfig):
-        self.provider = provider
-        self.model = model
-        super().__init__(config, is_subagent)
-        
-    def convert_tools_to_llm_format(self) -> List[Any]:
-        # Uses model.get_tool_format() to select appropriate converter
-        
-    async def _make_api_request(self, messages, tools=None, stream=True) -> Any:
-        # Delegates to provider.make_request()
-```
-
-### 4. BaseMCPAgent (`cli_agent/core/base_agent.py`)
-
-**Primary Role**: Abstract base class providing shared agent functionality
-
-**Key Responsibilities**:
-- Tool management and execution (built-in + MCP)
-- Conversation history and token management
-- Interactive chat with slash command integration
-- Subagent task spawning and communication
-- Abstract methods for LLM-specific implementations
-
-**Critical Methods**:
-```python
-# Abstract methods - must be implemented by subclasses
-async def generate_response(messages, tools=None) -> Union[str, Any]
-def convert_tools_to_llm_format() -> List[Dict]
-def parse_tool_calls(response) -> List[Dict[str, Any]]
-
-# Concrete shared functionality
-async def interactive_chat(input_handler, existing_messages=None)
-async def _execute_mcp_tool(tool_key, arguments) -> str
-def get_token_limit() -> int
-def compact_conversation(messages) -> List[Dict[str, Any]]
-```
-
-**Tool Integration**:
-- Built-in tools: `bash_execute`, `read_file`, `write_file`, `web_fetch`, `task`, etc.
-- MCP external tools via protocol integration
-- Unified execution interface: `_execute_mcp_tool()`
-
-**Subagent System**:
-- Event-driven subagent communication
-- Task spawning: `_task()`, status tracking: `_task_status()`, results: `_task_results()`
-- Interrupt-safe streaming with subagent result integration
-
-### 5. InterruptibleInput (`cli_agent/core/input_handler.py`)
-
-**Primary Role**: Professional terminal input handling with interruption support
-
-**Key Features**:
-- Multiline input detection and handling
-- ESC key interruption during operations
-- Raw terminal mode management
-- Prompt_toolkit integration with graceful fallbacks
-- Asyncio-compatible threading for event loop safety
-
-**Usage Pattern**:
-```python
-input_handler = InterruptibleInput()
-user_input = input_handler.get_multiline_input("You: ")
-if user_input is None:  # User interrupted
-    handle_interruption()
-```
-
-### 6. SlashCommandManager (`cli_agent/core/slash_commands.py`)
-
-**Primary Role**: Slash command system similar to Claude Code
-
-**Supported Commands**:
-- **Built-in**: `/help`, `/clear`, `/compact`, `/tokens`, `/tools`, `/quit`
-- **Provider-Model switching**: `/switch <provider>:<model>` (e.g., `/switch anthropic:claude-3.5-sonnet`)
-- **Legacy model switching**: `/switch-chat`, `/switch-reason`, `/switch-gemini`, `/switch-gemini-pro`
-- **Custom commands**: Loaded from `.claude/commands/` directories
-- **MCP commands**: `mcp__<server>__<command>` format
-
-**Extensibility**:
-- Project-specific commands: `.claude/commands/*.md`
-- Personal commands: `~/.claude/commands/*.md`
-- Dynamic MCP command discovery
-
-### 7. Built-in Tools (`cli_agent/tools/builtin_tools.py`)
-
-**Primary Role**: Core tool definitions and schemas
-
-**Available Tools**:
-```python
-def get_all_builtin_tools() -> Dict[str, Dict]:
-    return {
-        "builtin:bash_execute": {...},      # Execute bash commands with interrupt support
-        "builtin:read_file": {...},         # Read file contents with offset/limit
-        "builtin:write_file": {...},        # Write files with directory creation
-        "builtin:list_directory": {...},    # Directory listing with file type indicators
-        "builtin:get_current_directory": {...}, # Current directory
-        "builtin:replace_in_file": {...},   # Exact string replacement with whitespace validation
-        "builtin:multiedit": {...},         # Multiple sequential edits in one operation
-        "builtin:glob": {...},              # File pattern matching with modification time sorting
-        "builtin:grep": {...},              # Content search using regex patterns
-        "builtin:todo_read": {...},         # Read session-specific todo lists
-        "builtin:todo_write": {...},        # Write/update todo lists with structured format
-        "builtin:webfetch": {...},          # Web content fetching and processing
-        "builtin:task": {...},              # Spawn subagent for specific tasks
-        "builtin:task_status": {...},       # Check running subagent task status
-        "builtin:task_results": {...},      # Retrieve completed task results
-        "builtin:emit_result": {...},       # Emit subagent results (subagents only)
-    }
-```
-
-### 8. Tool Conversion System (`cli_agent/utils/tool_conversion.py`)
-
-**Primary Role**: Convert tools between different LLM API formats
-
-**Available Converters**:
-- `OpenAIStyleToolConverter`: For OpenAI, DeepSeek, and compatible APIs
-- `AnthropicToolConverter`: For Claude/Anthropic tool format
-- `GeminiToolConverter`: For Google Gemini function calling
-- `ToolConverterFactory`: Factory for creating appropriate converters
-
-```python
-# Usage via factory
-converter = ToolConverterFactory.create_converter("anthropic")
-tools = converter.convert_tools(available_tools)
-
-# Direct usage in MCPHost
-tool_format = self.model.get_tool_format()
-if tool_format == "anthropic":
-    converter = AnthropicToolConverter()
-tools = converter.convert_tools(self.available_tools)
-```
-
-## 🔌 Provider-Model Implementation Patterns
-
-### Provider Implementation Pattern
-
-```python
-class MyCustomProvider(BaseProvider):
-    @property
-    def name(self) -> str:
-        return "my-provider"
-        
-    def get_default_base_url(self) -> str:
-        return "https://api.my-provider.com"
-        
-    def _create_client(self, **kwargs) -> Any:
-        # Create API client (AsyncOpenAI, httpx, etc.)
-        
-    async def make_request(self, messages, model_name, tools=None, stream=False, **params):
-        # Format request and call API
-        
-    def extract_response_content(self, response) -> Tuple[str, List[Any], Dict[str, Any]]:
-        # Parse response into text, tool_calls, metadata
-        
-    def is_retryable_error(self, error: Exception) -> bool:
-        # Define retry logic for provider-specific errors
-```
-
-### Model Implementation Pattern
-
-```python
-@dataclass  
-class MyCustomModel(ModelConfig):
-    def __init__(self, variant: str = "my-model-default"):
-        super().__init__(
-            name=variant,
-            provider_model_name=variant,
-            context_length=128000,
-            supports_tools=True,
-            temperature=0.7
-        )
-    
-    @property
-    def model_family(self) -> str:
-        return "my-model"
-        
-    def get_tool_format(self) -> str:
-        return "openai"  # or "anthropic", "gemini"
-        
-    def get_system_prompt_style(self) -> str:
-        return "message"  # or "parameter", "prepend"
-        
-    def format_messages_for_model(self, messages) -> List[Dict[str, Any]]:
-        # Apply model-specific message formatting
-```
-
-### Configuration Integration
-
-```python
-# In config.py
-class HostConfig(BaseSettings):
-    # Add provider configuration
-    my_provider_api_key: str = Field(default="", alias="MY_PROVIDER_API_KEY")
-    my_provider_model: str = Field(default="my-model-v1", alias="MY_PROVIDER_MODEL")
-    
-    def create_host_from_provider_model(self, provider_model: str):
-        # Add case for your provider
-        if pm_config.provider_name == "my-provider":
-            provider = MyCustomProvider(api_key=pm_config.provider_config.api_key)
-            model = MyCustomModel(variant=pm_config.model_name)
-            return MCPHost(provider=provider, model=model, config=self)
-```
-
-## 🔄 Execution Flow
-
-### Provider-Model Host Creation
-
-1. **Configuration-Based Creation**:
-   ```python
-   config = load_config()
-   
-   # Create hosts for different provider-model combinations
-   deepseek_host = config.create_host_from_provider_model("deepseek:deepseek-chat")
-   claude_anthropic = config.create_host_from_provider_model("anthropic:claude-3.5-sonnet")
-   claude_openrouter = config.create_host_from_provider_model("openrouter:anthropic/claude-3.5-sonnet")
-   gpt4_openai = config.create_host_from_provider_model("openai:gpt-4-turbo-preview")
-   ```
-
-2. **Direct Creation**:
-   ```python
-   from cli_agent.core.mcp_host import MCPHost
-   from cli_agent.providers.anthropic_provider import AnthropicProvider
-   from cli_agent.core.model_config import ClaudeModel
-   
-   provider = AnthropicProvider(api_key="your-key")
-   model = ClaudeModel(variant="claude-3.5-sonnet")
-   host = MCPHost(provider=provider, model=model, config=config)
-   ```
-
-### Interactive Chat Session
-
-1. **Initialization**:
-   ```python
-   host = config.create_host_from_provider_model("anthropic:claude-3.5-sonnet")
-   input_handler = InterruptibleInput()
-   await host.interactive_chat(input_handler)
-   ```
-
-2. **User Input Processing**:
-   - Input captured via `InterruptibleInput`
-   - Slash commands handled by `SlashCommandManager`
-   - Regular messages added to conversation history
-
-3. **Response Generation**:
-   - `host.generate_response()` called (centralized implementation)
-   - `MCPHost` delegates to `provider.make_request()` for API call
-   - `model.format_messages_for_model()` formats messages appropriately
-   - Provider handles streaming/non-streaming responses
-
-4. **Tool Execution** (if requested):
-   - Tools converted via `model.get_tool_format()` and appropriate converter
-   - Tool calls parsed via `provider.extract_response_content()`
-   - Executed through `_execute_mcp_tool()`
-   - Results added to conversation, process repeats
-
-5. **Streaming Output**:
-   - Real-time response streaming
-   - ESC key interruption support
-   - Subagent result integration during streaming
-
-### Subagent Task Flow
-
-1. **Task Spawning**: `/task` or `task` tool call
-2. **Background Execution**: Separate subprocess with event communication
-3. **Result Integration**: Automatic collection and conversation injection
-4. **Status Tracking**: `/task-status` for monitoring active tasks
-
-## 🛠️ Development Patterns
-
-### Adding New Provider-Model Combination
-
-1. **Create Provider** (if new API):
-   ```python
-   class NewAPIProvider(BaseProvider):
-       @property
-       def name(self) -> str:
-           return "new-api"
-           
-       async def make_request(self, messages, model_name, tools=None, stream=False, **params):
-           # Implement API integration
-           
-       def extract_response_content(self, response):
-           # Parse API response format
-   ```
-
-2. **Create Model Config** (if new model family):
-   ```python
-   @dataclass
-   class NewLLMModel(ModelConfig):
-       @property
-       def model_family(self) -> str:
-           return "new-llm"
-           
-       def get_tool_format(self) -> str:
-           return "openai"  # or create custom converter
-           
-       def format_messages_for_model(self, messages):
-           # Handle model-specific message formatting
-   ```
-
-3. **Update Configuration**:
-   ```python
-   # Add to HostConfig in config.py
-   new_api_key: str = Field(default="", alias="NEW_API_KEY")
-   
-   def create_host_from_provider_model(self, provider_model: str):
-       # Add case for new provider
-       elif pm_config.provider_name == "new-api":
-           provider = NewAPIProvider(api_key=pm_config.provider_config.api_key)
-           model = NewLLMModel(variant=pm_config.model_name)
-           return MCPHost(provider=provider, model=model, config=self)
-   ```
-
-4. **Usage**:
-   ```python
-   # Use new provider-model combination
-   host = config.create_host_from_provider_model("new-api:new-llm-model")
-   ```
-
-### Adding Tool Format Converter
-
-1. **Create Custom Converter**:
-   ```python
-   class MyCustomToolConverter(BaseToolConverter):
-       def convert_tools(self, available_tools: Dict[str, Dict]) -> List[Dict]:
-           tools = []
-           for tool_key, tool_info in available_tools.items():
-               if not self.validate_tool_info(tool_key, tool_info):
-                   continue
-               # Convert to your custom format
-               tool = {
-                   "function_name": self.normalize_tool_name(tool_key),
-                   "description": self.generate_description(tool_info),
-                   "parameters": self.get_base_schema(tool_info)
-               }
-               tools.append(tool)
-           return tools
-   ```
-
-2. **Register in Factory**:
-   ```python
-   # Update ToolConverterFactory.create_converter()
-   converters = {
-       "openai": OpenAIStyleToolConverter,
-       "anthropic": AnthropicToolConverter, 
-       "gemini": GeminiToolConverter,
-       "my-custom": MyCustomToolConverter,
-   }
-   ```
-
-### Adding Custom Tools
-
-1. **Built-in Tools** (add to `cli_agent/tools/builtin_tools.py`):
-   ```python
-   def get_my_custom_tool() -> Dict:
-       return {
-           "server": "builtin",
-           "name": "my_custom_tool",
-           "description": "Description of what it does",
-           "schema": {...},  # JSON schema
-           "client": None
-       }
-   ```
-
-2. **MCP External Tools**: Create MCP server and connect via CLI
-
-### Adding Slash Commands
-
-1. **Built-in Commands** (in `SlashCommandManager`):
-   ```python
-   def _handle_my_command(self, args: str) -> str:
-       # Command implementation
-       return "Result message"
-   ```
-
-2. **Custom Commands**: Create `.claude/commands/my-command.md`
-
-## 🧪 Testing Patterns
-
-### Provider-Model Testing
-```python
-# Test provider-model combinations
-from config import load_config
-
-config = load_config()
-
-# Test configuration parsing
-provider, model = config.parse_provider_model_string("anthropic:claude-3.5-sonnet")
-assert provider == "anthropic"
-assert model == "claude-3.5-sonnet"
-
-# Test host creation
-host = config.create_host_from_provider_model("deepseek:deepseek-chat")
-assert host.provider.name == "deepseek"
-assert host.model.name == "deepseek-chat"
-```
-
-### Tool Conversion Testing
-```python
-# Test tool converters
-from cli_agent.utils.tool_conversion import ToolConverterFactory
-
-# Test different formats
-for llm_type in ["openai", "anthropic", "gemini"]:
-    converter = ToolConverterFactory.create_converter(llm_type)
-    tools = converter.convert_tools(sample_tools)
-    assert len(tools) > 0
-```
-
-### Component Testing
-```python
-# Test individual components
+# Core components
 from cli_agent.core.base_agent import BaseMCPAgent
 from cli_agent.core.input_handler import InterruptibleInput
 from cli_agent.tools.builtin_tools import get_all_builtin_tools
-from cli_agent.core.model_config import ClaudeModel, GPTModel
-from cli_agent.providers.deepseek_provider import DeepSeekProvider
 
-# Test tool definitions
-tools = get_all_builtin_tools()
-assert "builtin:bash_execute" in tools
-
-# Test model configs
-model = ClaudeModel(variant="claude-3.5-sonnet")
-assert model.get_tool_format() == "anthropic"
-assert model.get_system_prompt_style() == "parameter"
-
-# Test providers
-provider = DeepSeekProvider(api_key="test")
-assert provider.name == "deepseek"
-assert provider.supports_streaming() == True
+# Provider-Model Architecture
+from cli_agent.core.mcp_host import MCPHost
+from cli_agent.providers.anthropic_provider import AnthropicProvider
+from cli_agent.core.model_config import ClaudeModel
 ```
 
-## 🎯 Key Design Patterns
+### Recent Architectural Improvements:
 
-- **Abstract Base Class**: `BaseMCPAgent` and `BaseProvider` enforce interface contracts
-- **Strategy Pattern**: Interchangeable provider and model implementations
-- **Composition Pattern**: `MCPHost` combines provider + model via composition
-- **Factory Pattern**: `ToolConverterFactory` creates appropriate converters
-- **Command Pattern**: Slash commands and CLI structure
-- **Event-Driven**: Subagent communication via async queues
-- **Dependency Injection**: Configuration and tool injection
-- **Template Method**: `interactive_chat()` defines flow, subclasses customize steps
-- **Separation of Concerns**: Providers handle APIs, models handle behavior
+**Context Management & Subagent Integration:**
+- Enhanced system prompts with context preservation guidance for main agents vs focused execution for subagents
+- Tool access control preventing subagent recursion (task tools filtered out for subagents)
+- Smart delegation patterns with specific criteria for subagent spawning (>200 lines, multiple files, complex investigations)
 
-## 📊 Refactoring Benefits
+**Reliability & Production Features:**
+- Comprehensive retry logic with exponential backoff across all API interactions
+- Stream failure recovery with automatic retry for Gemini streaming responses
+- Enhanced error handling and graceful degradation for missing dependencies
+- Professional terminal interaction with proper carriage return handling
 
-**Before**: 3,237-line monolithic `agent.py`
-**After**: Modular provider-model architecture with focused components
+**Tool System Enhancements:**
+- Multi-format tool call parsing with automatic format detection and validation
+- Parallel tool execution using asyncio.gather() for improved performance
+- Enhanced argument parsing fixing issues with tools like bash_execute
+- Unified tool conversion pipeline supporting multiple LLM formats
 
-**Maintainability**: ✅ Each module has single responsibility
-**Testability**: ✅ Components can be unit tested independently
-**Reusability**: ✅ Providers and models can be mixed and matched
-**Scalability**: ✅ Easy to add new providers or models without touching existing code
-**Flexibility**: ✅ Same model accessible through multiple providers
-**Developer Experience**: ✅ Much easier to navigate, understand, and extend
-**Multi-Provider Support**: ✅ Reduces vendor lock-in and increases reliability
+**Development Experience:**
+- Comprehensive utility framework in cli_agent/utils/ for shared functionality
+- Factory pattern implementation for tool converters, content processors, and HTTP clients
+- Centralized configuration management with Pydantic validation and environment integration
+- Professional documentation and clear separation of concerns
 
-## 🚀 Usage Examples
-
-### Configuration-Based Usage
-
-```env
-# .env file - multiple provider configurations
-DEEPSEEK_API_KEY=your_deepseek_key
-ANTHROPIC_API_KEY=your_anthropic_key  
-OPENROUTER_API_KEY=your_openrouter_key
-OPENAI_API_KEY=your_openai_key
-
-# Default provider-model selection
-DEFAULT_PROVIDER_MODEL=anthropic:claude-3.5-sonnet
-```
-
-```python
-# Python usage
-from config import load_config
-
-config = load_config()
-
-# Create hosts for different combinations
-default_host = config.create_host_from_provider_model()  # Uses DEFAULT_PROVIDER_MODEL
-claude_anthropic = config.create_host_from_provider_model("anthropic:claude-3.5-sonnet")
-claude_openrouter = config.create_host_from_provider_model("openrouter:anthropic/claude-3.5-sonnet")
-gpt4_openai = config.create_host_from_provider_model("openai:gpt-4-turbo-preview")
-deepseek_reasoning = config.create_host_from_provider_model("deepseek:deepseek-reasoner")
-
-# Use any host with the same interface
-await claude_anthropic.interactive_chat(input_handler)
-```
-
-### Available Provider-Model Combinations
-
-```python
-# Get available combinations
-available = config.get_available_provider_models()
-print(available)
-# {
-#   "anthropic": ["claude-3-5-sonnet-20241022", "claude-3-5-haiku-20241022"],
-#   "openrouter": ["anthropic/claude-3.5-sonnet", "openai/gpt-4-turbo-preview"],
-#   "openai": ["gpt-4-turbo-preview", "gpt-3.5-turbo", "o1-preview"],
-#   "deepseek": ["deepseek-chat", "deepseek-reasoner"],
-#   "gemini": ["gemini-2.5-flash", "gemini-1.5-pro"]
-# }
-```
-
-### CLI Integration
-
-```bash
-# Switch between provider-model combinations
-/switch anthropic:claude-3.5-sonnet
-/switch openrouter:anthropic/claude-3.5-sonnet
-/switch deepseek:deepseek-reasoner
-/switch openai:gpt-4-turbo-preview
-```
-
-## 🚀 Future Expansion Areas
-
-- **`cli_agent/cli/`**: Extract CLI commands to separate modules
-- **`cli_agent/subagents/`**: Enhanced subagent management
-- **Additional Providers**: Azure OpenAI, Cohere, Mistral, local model servers
-- **Additional Models**: Support for new model families and variants
-- **Plugin System**: Dynamic tool loading and discovery
-- **Multi-Agent**: Agent-to-agent communication protocols
-- **Provider Fallbacks**: Automatic failover between providers
-- **Cost Tracking**: Per-provider usage and cost monitoring
-
-This provider-model architecture provides a solid, flexible foundation for continued development and extension of the MCP Agent system, enabling users to leverage the best combination of providers and models for their specific needs.
+This sophisticated modular architecture provides a production-ready, maintainable foundation that demonstrates advanced software engineering principles. The system successfully balances complexity with usability, offering both powerful capabilities and clean interfaces for developers working with the MCP Agent system.
 
 ---
 > Source: [amranu/cli-agent](https://github.com/amranu/cli-agent) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-05-06 -->
+<!-- tomevault:4.0:agents_md:2026-07-26 -->
