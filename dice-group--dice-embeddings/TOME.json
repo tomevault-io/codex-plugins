@@ -4,7 +4,7 @@
   "repo": "dice-embeddings",
   "description": "",
   "type": "tome",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -55,9 +55,27 @@
       "path": ".github/skills/link-prediction-api/SKILL.md",
       "github_url": "https://github.com/dice-group/dice-embeddings/tree/main/.github/skills/link-prediction-api/SKILL.md",
       "description": ""
+    },
+    {
+      "name": "dice-embeddings",
+      "path": ".claude/skills/add-model/SKILL.md",
+      "github_url": "https://github.com/dice-group/dice-embeddings/tree/main/.claude/skills/add-model/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "dice-embeddings",
+      "path": ".claude/skills/run-training/SKILL.md",
+      "github_url": "https://github.com/dice-group/dice-embeddings/tree/main/.claude/skills/run-training/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "dice-embeddings",
+      "path": ".claude/skills/link-prediction-api/SKILL.md",
+      "github_url": "https://github.com/dice-group/dice-embeddings/tree/main/.claude/skills/link-prediction-api/SKILL.md",
+      "description": ""
     }
   ],
   "source_url": "https://github.com/dice-group/dice-embeddings",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-24T11:45:50Z"
+  "distributed_at": "2026-07-26T13:39:00Z"
 }
