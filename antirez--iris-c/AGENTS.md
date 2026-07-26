@@ -395,4 +395,4 @@ Manual Z-Image sanity:
 
 ---
 > Source: [antirez/iris.c](https://github.com/antirez/iris.c) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-04-20 -->
+<!-- tomevault:4.0:agents_md:2026-07-26 -->
