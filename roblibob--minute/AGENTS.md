@@ -1,41 +1,48 @@
-# Minute — transcription and summarization companion app for obsidian
-This is a meeting note summarization app tailored to the user need for 
-private and local inference.
+# Minute Development Guidelines
 
-## Constitution
+Auto-generated from all feature plans. Last updated: 2026-02-04
 
-### Deterministic Output Contract
-Preserve the vault contract: exactly three files per processed meeting.
-  - `Meetings/YYYY/MM/YYYY-MM-DD HH.MM - <Title>.md`
-  - `Meetings/_audio/YYYY-MM-DD HH.MM - <Title>.wav`
-  - `Meetings/_transcripts/YYYY-MM-DD HH.MM - <Title>.md`
-WAV output must remain mono, 16 kHz, 16-bit PCM.
-Models output JSON, the app renders Markdown, and vault writes are atomic.
+## Active Technologies
+- JSON file-based metadata (Obsidian vault + internal app support) (003-meeting-type-prompts)
+- Swift 5.9 (Xcode 15.x) + SwiftUI (app), MinuteCore (SPM), MinuteLlama (llama XCFramework + CLI), FluidAudio (ASR/diarization), AVFoundation, ScreenCaptureKit (004-background-summarization)
+- Filesystem (vault outputs + temp dirs) + UserDefaults (settings, security-scoped bookmarks) (004-background-summarization)
+- Swift 5.9 (Xcode 15.x) + MinuteCore (Swift Package), local llama.cpp XCFramework integration (`MinuteLlama`), SwiftUI app target (005-meeting-type-autodetect)
+- N/A (classification is derived from transcript text; no new persisted entities required) (005-meeting-type-autodetect)
+- Swift 5.9 (Xcode 15.x) + SwiftUI (app), MinuteCore (SPM), FluidAudio (ASR/diarization), AVFoundation; bundled ffmpeg available in `Vendor/ffmpeg` for deterministic audio preprocessing (006-speaker-diarization)
+- Swift 5.9+ (Xcode 15.x), macOS 14+. (006-speaker-diarization)
+- Swift 5.9+ (Xcode 15.x), SwiftUI + SwiftUI, AppKit (for macOS window management), MinuteCore (domain logic) (007-fix-ui-layout)
+- N/A (UI layout fixes only) (007-fix-ui-layout)
+- Swift 5.9 (Xcode 15.x) + SwiftUI, AVFoundation, ScreenCaptureKit, MinuteCore (008-main-ui-refactor)
+- Files (vault outputs + app support) + UserDefaults for preferences (008-main-ui-refactor)
+- Swift 6.2 tools for `MinuteCore`; Swift/SwiftUI macOS app target on Xcode 15.x conventions + SwiftUI, Combine, `MinuteCore`, `MinuteLlama`, FluidAudio, AVFoundation, ScreenCaptureKit (016-reprocess-meeting-type)
+- Local vault files (meeting note/audio/transcript), temporary processing artifacts, security-scoped bookmarks and settings in `UserDefaults` (016-reprocess-meeting-type)
 
-### Local-Only Processing and Privacy
-Minute is a local first app. Models run locally. 
-  - No outbound network calls except model downloads.
+- Swift 5.9 + SwiftUI, Combine, AVFoundation, MinuteCore (Internal), Llama (Internal C++ wrapper) (001-meeting-type-prompts)
 
-### Test-Gated Core Logic
-Every new feature or contract change MUST add or update tests in MinuteCore
-Practise TDD
+## Project Structure
 
-### Consistent, Predictable UX
-- UI stays thin; business logic belongs in `MinuteCore`.
-- UX SHOULD follow apple guidelines for Human Interfaces
-- Use `MinuteError` for user-facing failures and `OSLog` for logs. Do not log raw transcripts by default.
+```text
+src/
+tests/
+```
 
-### Personality and AI guidance
-You are my main contributor 
-- Be curious, you are allowed to propose better solutions if you notice flaws.
-- Feel free to continue working without interruption but do ask your human
-  if you get stuck in a loop.
+## Commands
 
-## More information
-General documentation overview: `docs/overview.md`.
-Constitution: `.specify/constitution.md`.
-Specification history: `specs/`
+# Add commands for Swift 5.9
+
+## Code Style
+
+Swift 5.9: Follow standard conventions
+
+## Recent Changes
+- 016-reprocess-meeting-type: Added Swift 6.2 tools for `MinuteCore`; Swift/SwiftUI macOS app target on Xcode 15.x conventions + SwiftUI, Combine, `MinuteCore`, `MinuteLlama`, FluidAudio, AVFoundation, ScreenCaptureKit
+- 008-main-ui-refactor: Added Swift 5.9 (Xcode 15.x) + SwiftUI, AVFoundation, ScreenCaptureKit, MinuteCore
+- 007-fix-ui-layout: Added Swift 5.9+ (Xcode 15.x), SwiftUI + SwiftUI, AppKit (for macOS window management), MinuteCore (domain logic)
+
+
+<!-- MANUAL ADDITIONS START -->
+<!-- MANUAL ADDITIONS END -->
 
 ---
 > Source: [roblibob/minute](https://github.com/roblibob/minute) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-04-21 -->
+<!-- tomevault:4.0:agents_md:2026-07-24 -->
