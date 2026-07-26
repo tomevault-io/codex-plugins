@@ -1,5 +1,5 @@
 <!-- BEGIN ContextStream -->
-# Cursor Rules
+# Windsurf Rules
 ## ContextStream v0.4.x (Consolidated Domain Tools)
 
 v0.4.x uses ~11 consolidated domain tools for ~75% token reduction vs previous versions.
@@ -68,4 +68,4 @@ Full docs: https://contextstream.io/docs/mcp/tools
 
 ---
 > Source: [contextstream/mcp-server](https://github.com/contextstream/mcp-server) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-05-03 -->
+<!-- tomevault:4.0:agents_md:2026-07-26 -->
