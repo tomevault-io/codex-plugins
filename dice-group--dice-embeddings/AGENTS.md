@@ -1,13 +1,13 @@
-# DICE Embeddings — Project Instructions
-
-## Project Overview
+# dicee — Claude Code Instructions
 
 `dicee` is a hardware-agnostic framework for training and using large-scale **Knowledge Graph Embedding (KGE)** models. Users train models on triples `(head, relation, tail)`, then query them for link prediction, multi-hop reasoning, and literal prediction.
 
-**Key entry points:**
+**Entry points:**
 - CLI: `dicee --dataset_dir "KGs/UMLS" --model Keci`
-- Python: `from dicee.executer import Execute; Execute(args).start()`
+- Python training: `from dicee.executer import Execute; Execute(args).start()`
 - Inference: `from dicee import KGE; model = KGE(path="...")`
+
+Git workflow: PRs target `develop`, not `main` (see `CONTRIBUTING.md`).
 
 ---
 
@@ -15,24 +15,21 @@
 
 ```
 Input (dataset_dir | path_single_kg | sparql_endpoint)
-  ↓ ReadFromDisk (dicee/read_preprocess_save_load_kg/read_from_disk.py)
-  ↓ PreprocessKG  (dicee/read_preprocess_save_load_kg/preprocess.py)
-     → entity_to_idx, relation_to_idx, er_vocab, re_vocab, ee_vocab
-     → memory_map_train_set.npy
-  ↓ construct_dataset() (dicee/dataset_classes/_factory.py)
+  → ReadFromDisk       dicee/read_preprocess_save_load_kg/read_from_disk.py
+  → PreprocessKG       dicee/read_preprocess_save_load_kg/preprocess.py
+     → entity_to_idx, relation_to_idx, er_vocab, re_vocab, ee_vocab, memory_map_train_set.npy
+  → construct_dataset()  dicee/dataset_classes/_factory.py
      → torch.utils.data.Dataset per scoring technique
-  ↓ DICE_Trainer (dicee/trainer/dice_trainer.py)
-     → wraps TorchTrainer | TorchDDPTrainer | TensorParallel | PyTorch Lightning
-  ↓ Evaluation (dicee/evaluation/evaluator.py)
+  → DICE_Trainer       dicee/trainer/dice_trainer.py
+     → wraps TorchTrainer | TorchDDPTrainer | TorchFSDPTrainer | TensorParallel | PyTorch Lightning
+  → Evaluator          dicee/evaluation/evaluator.py (real implementation; dicee/evaluator.py is a re-export shim — edit the former)
      → MRR, MR, HITS@1, HITS@3, HITS@10
-  ↓ Results stored under storage_path / path_to_store_single_run
+  → Results under storage_path / path_to_store_single_run
 ```
-
----
 
 ## Models
 
-All models extend `BaseKGE` in `dicee/models/base_model.py`. Required interface:
+All models extend `BaseKGE` in `dicee/models/base_model.py` (`forward_triples` at line ~466, `forward_k_vs_all` at ~484). Required interface:
 
 ```python
 class MyModel(BaseKGE):
@@ -43,115 +40,74 @@ class MyModel(BaseKGE):
 
 | File | Models |
 |------|--------|
-| `dicee/models/real.py` | DistMult, TransE, Pyke, Shallom, LFMult |
+| `dicee/models/real.py` | DistMult, TransE, Shallom, Pyke, CoKE (+ CoKEConfig) |
 | `dicee/models/complex.py` | ComplEx, ConEx, AConEx |
 | `dicee/models/quaternion.py` | QMult, ConvQ, AConvQ |
 | `dicee/models/octonion.py` | OMult, ConvO, AConvO |
 | `dicee/models/clifford.py` | Keci, CKeci, DeCaL, KeciTransformer |
-| `dicee/models/function_space.py` | DualE |
-| `dicee/models/transformers.py` | BytE, CoKE |
+| `dicee/models/function_space.py` | FMult, GFMult, FMult2, LFMult1, LFMult |
+| `dicee/models/dualE.py` | DualE |
 | `dicee/models/pykeen_models.py` | PykeenKGE (wraps any PyKEEN model) |
+| `dicee/models/transformers.py` | BytE (**not** exported from `models/__init__.py`; import directly) |
 
-All models are exported from `dicee/models/__init__.py`.
+`dicee/models/__init__.py` star-imports real/complex/quaternion/octonion/pykeen_models/function_space and explicitly imports `Keci, CKeci, DeCaL, KeciTransformer` and `DualE`. `transformers.py`, `literal.py`, `ensemble.py`, and `fsdp_models.py` are **not** re-exported — import those submodules directly.
 
-**Clifford model convention:** `embedding_dim` must satisfy `embedding_dim / (p + q + 1) ∈ ℤ`.
-The `args` dict passed to `__init__` comes from `config.Namespace.__dict__`.
-
----
+**Clifford model convention:** `embedding_dim / (p + q + 1)` must be an integer. The `args` dict passed to `__init__` comes from `vars(config.Namespace())`.
 
 ## Trainers
 
-| `--trainer` value | Class | Use Case |
-|-------------------|-------|----------|
-| `torchCPUTrainer` | `TorchTrainer` | CPU or single GPU |
-| `PL` | PyTorch Lightning | Multi-GPU, recommended default |
-| `torchDDP` | `TorchDDPTrainer` | Native DDP via `torchrun` |
-| `TP` | `TensorParallel` | Tensor parallelism (1 model per GPU) — implements "Multiple Run Ensemble Learning with Low-Dimensional Knowledge Graph Embeddings" |
+| `--trainer` | Class | File | Use Case |
+|-------------|-------|------|----------|
+| `torchCPUTrainer` | `TorchTrainer` | `torch_trainer.py` | CPU or single GPU |
+| `PL` | `lightning.pytorch.Trainer` | — | Multi-GPU, recommended default |
+| `torchDDP` | `TorchDDPTrainer` | `torch_trainer_ddp.py` | Native DDP via `torchrun` |
+| `torchFSDP` | `TorchFSDPTrainer` | `torch_trainer_fsdp.py` | Fully-sharded data parallel |
+| `TP` | `TensorParallel` | `model_parallelism.py` | Tensor parallelism (1 model/GPU) — "Multiple Run Ensemble Learning with Low-Dimensional KGE" |
 
-Multi-GPU with PL uses all visible CUDA devices automatically.
-Use `CUDA_VISIBLE_DEVICES=0` to restrict to one GPU.
-`--path_to_store_single_run` is required for DDP/multi-GPU runs.
+Note: the dependency is the `lightning` package (`import lightning.pytorch as pl`), not the older standalone `pytorch-lightning`.
 
----
+Multi-GPU with `PL` uses all visible CUDA devices automatically; restrict with `CUDA_VISIBLE_DEVICES=0`. `--path_to_store_single_run` is required for DDP/FSDP/multi-GPU runs.
 
 ## Scoring Techniques
 
-| `--scoring_technique` | Dataset Class | Memory | Speed | Best For |
-|-----------------------|---------------|--------|-------|----------|
-| `NegSample` | `TriplePredictionDataset` | Low | Fast | Large KGs |
-| `FixedNegSample` | `FixedNegSampleDataset` | Low | Fast | Continual learning |
-| `1vsAll` | `OnevsAllDataset` | Medium | Medium | Small KGs |
-| `KvsAll` | `KvsAll` | High | Slow | Default recommended |
-| `KvsSample` | `KvsSampleDataset` | Medium | Medium | Balanced |
-| `AllvsAll` | `AllvsAll` | Very high | Very slow | Pairwise loss |
+Dataset classes live in `dicee/dataset_classes/` (`_negative_sampling.py`, `_label_based.py`, `_literal.py`, `_bpe.py`), all routed through `construct_dataset()` in `_factory.py`.
 
-Dataset classes live in `dicee/dataset_classes/`. All are routed through `construct_dataset()` in `dicee/dataset_classes/_factory.py`.
+| `--scoring_technique` | Dataset Class | Notes |
+|-----------------------|---------------|-------|
+| `NegSample` | `TriplePredictionDataset` | Large KGs; set `--neg_ratio` |
+| `FixedNegSample` | `FixedNegSampleDataset` | Continual learning; stable negatives |
+| `1vsAll` | `OnevsAllDataset` | Small KGs |
+| `KvsAll` | `KvsAll` | Default recommended |
+| `KvsSample` | `KvsSampleDataset` | Balanced memory/speed |
+| `AllvsAll` | `AllvsAll` | Full pairwise; very slow, avoid on large KGs |
+| `1vsSample` | `OnevsSample` | Sampled 1-vs-all |
+| `FSDP1vsSample` | `FSDP1vsSampleDataset` | FSDP-compatible variant |
 
----
+## Key Configuration (`dicee/config.py`)
 
-## Key Configuration Parameters (`dicee/config.py`)
-
-### Data
-| Param | Default | Description |
-|-------|---------|-------------|
-| `dataset_dir` | None | Folder with train.txt / valid.txt / test.txt |
-| `path_single_kg` | None | Single RDF/OWL file |
-| `sparql_endpoint` | None | SPARQL endpoint URL |
+| Param | Default | Notes |
+|-------|---------|-------|
+| `dataset_dir` / `path_single_kg` / `sparql_endpoint` | `None` | Pick one input source |
 | `backend` | `"pandas"` | `pandas` \| `polars` \| `rdflib` |
 | `separator` | `"\s+"` | Triple file column separator |
-
-### Model
-| Param | Default | Description |
-|-------|---------|-------------|
 | `model` | `"Keci"` | Model name string |
-| `embedding_dim` | 64 | Embedding vector size |
-| `p` | 0 | Clifford p-parameter |
-| `q` | 1 | Clifford q-parameter |
-| `input_dropout_rate` | 0.0 | Dropout on input embeddings |
-| `hidden_dropout_rate` | 0.0 | Dropout on hidden layer |
+| `embedding_dim` | 64 | |
+| `p`, `q` | 0, 1 | Clifford params |
 | `normalization` | `"None"` | `"LayerNorm"` \| `"BatchNorm1d"` \| `"None"` |
-
-### Training
-| Param | Default | Description |
-|-------|---------|-------------|
-| `num_epochs` | 150 | Training epochs |
-| `batch_size` | 1024 | Mini-batch size |
-| `lr` | 0.1 | Learning rate |
+| `num_epochs` | 150 | |
+| `batch_size` | 1024 | |
 | `optim` | `"Adam"` | `"Adam"` \| `"SGD"` \| `"ADOPT"` |
-| `weight_decay` | 0.0 | L2 regularization |
-| `neg_ratio` | 0 | Negatives per positive (NegSample) |
-| `label_smoothing_rate` | 0.0 | Label smoothing coefficient |
-| `trainer` | `"torchCPUTrainer"` | Trainer backend |
-| `scoring_technique` | `"KvsAll"` | Scoring/labelling strategy |
-| `num_core` | 0 | DataLoader worker processes |
+| `neg_ratio` | 0 | Must be ≥1 for `NegSample`/`FixedNegSample` |
+| `trainer` | `"torchCPUTrainer"` | See trainer table above |
+| `scoring_technique` | `"KvsAll"` | |
+| `eval_model` | `"train_val_test"` | `"None"` \| `"train"` \| `"train_val"` \| `"train_val_test"` \| `"test"` |
+| `eval_every_n_epochs` / `eval_at_epochs` | 0 / `None` | Periodic evaluation |
+| `swa` / `adaptive_swa` (**not** `aswa`) / `ema` / `swag` / `twa` | `False` | Weight averaging flags — implemented in `dicee/weight_averaging.py` + `dicee/callbacks.py` |
+| `swa_start_epoch` / `swa_c_epochs` | `None` / 1 | Averaging schedule |
 
-### Evaluation
-| Param | Default | Description |
-|-------|---------|-------------|
-| `eval_model` | `"train_val_test"` | Splits to evaluate: `"None"` \| `"train"` \| `"train_val"` \| `"train_val_test"` \| `"test"` |
-| `eval_every_n_epochs` | 0 | Periodic eval interval (0 = disabled) |
-| `eval_at_epochs` | None | List of specific epochs to evaluate |
-| `n_epochs_eval_model` | `"val_test"` | Splits for periodic eval |
-| `save_every_n_epochs` | False | Save checkpoint at each periodic eval |
+## Callbacks (`dicee/callbacks.py`)
 
-### Ensemble / Weight Averaging
-| Flag | Method |
-|------|--------|
-| `--swa` | Stochastic Weight Averaging |
-| `--aswa` | Adaptive SWA |
-| `--ema` | Exponential Moving Average |
-| `--swag` | SWA-Gaussian |
-| `--twa` | Trainable Weight Averaging |
-| `--swa_start_epoch N` | Start epoch (default: 0, except ASWA) |
-| `--swa_c_epochs N` | Averaging cycle interval |
-
-Weight averaging implemented in `dicee/weight_averaging.py` and `dicee/callbacks.py`.
-
----
-
-## Callbacks Pattern (`dicee/callbacks.py`)
-
-Callbacks must extend `AbstractCallback` from `dicee/abstracts.py`:
+Extend `AbstractCallback` (`dicee/abstracts.py`, itself an ABC + `lightning.pytorch.callbacks.Callback`):
 
 ```python
 class MyCallback(AbstractCallback):
@@ -159,61 +115,55 @@ class MyCallback(AbstractCallback):
     def on_train_epoch_end(self, trainer, model, loss): ...
     def on_fit_end(self, trainer, model, loss): ...
 ```
-
-Register via: `args.callbacks = {"MyCallback": {...config...}}`
-
----
+Register via `args.callbacks = {"MyCallback": {...config...}}`.
 
 ## Experiment Output Structure
 
 ```
-Experiments/                          # storage_path (or path_to_store_single_run)
-└── <timestamp>/                      # one folder per run
-    ├── configuration.json            # full run config
-    ├── entity_to_idx.csv             # entity → integer index
-    ├── relation_to_idx.csv           # relation → integer index
-    ├── memory_map_train_set.npy      # indexed triples
-    ├── er_vocab.p                    # (entity,relation) → tail set
-    ├── re_vocab.p                    # (relation,entity) → head set
-    ├── model.pt                      # final model weights
-    └── eval_report.json              # MRR, MR, HITS@k per split
+Experiments/<timestamp>/            # storage_path or path_to_store_single_run
+├── configuration.json
+├── entity_to_idx.csv / relation_to_idx.csv
+├── memory_map_train_set.npy
+├── er_vocab.p / re_vocab.p
+├── model.pt
+└── eval_report.json                # MRR, MR, HITS@k per split
 ```
 
----
-
-## Build and Test
+## Build, Lint, Test
 
 ```bash
-# Install (CPU)
-pip install -e . --extra-index-url https://download.pytorch.org/whl/cpu
-
-# Install (dev, all extras)
-pip install -e '.[dev]' --extra-index-url https://download.pytorch.org/whl/cpu
-
-# Run all tests
-python -m pytest -p no:warnings -x
-
-# Run only last failed
-python -m pytest -p no:warnings --lf
+pip install -e '.[dev]' --extra-index-url https://download.pytorch.org/whl/cpu   # CPU dev install
+ruff check dicee/ --line-length=200                                             # required before commit
+mypy dicee/ --config-file=pyproject.toml                                        # recommended
+python -m pytest -p no:warnings -x                                              # full suite (also default addopts)
 ```
-
----
+Requires Python >= 3.11. Test datasets: `wget https://files.dice-research.org/datasets/dice-embeddings/KGs.zip && unzip KGs.zip`.
 
 ## Conventions
 
-- Use `dicee/models/real.py` (`DistMult`) as the reference for simple bilinear models.
-- Use `dicee/models/clifford.py` (`Keci`) as the reference for Clifford algebra models.
-- `args` passed to model `__init__` is a `dict` (call `vars(namespace)` before passing).
-- Loss functions are set in `BaseKGE.__init__` based on the scoring technique's labelling form.
-- `form_of_labelling` is either `"EntityPrediction"` or `"RelationPrediction"`.
-- Reciprocal training automatically creates `rel_inverse` relations when enabled.
-- For BPE models (`--byte_pair_encoding`), entity/relation indices are subword token sequences.
+- Reference implementations: `real.py::DistMult` for simple bilinear models, `clifford.py::Keci` for Clifford algebra models.
+- `args` passed to a model's `__init__` is a plain `dict` (`vars(namespace)`), not a `Namespace` — use `self.args.get("key", default)`.
+- Don't redefine `entity_embeddings`/`relation_embeddings` in a new model — `BaseKGE.__init__` creates them.
+- Loss function is chosen in `BaseKGE.__init__` based on `form_of_labelling` (`"EntityPrediction"` or `"RelationPrediction"`).
+- Reciprocal training auto-creates `rel_inverse` relations when enabled.
+- BPE models (`--byte_pair_encoding`) use subword token sequences as entity/relation indices.
+- Type hints required on new public functions (`Optional[T]`, explicit return types); Google-style docstrings.
+- Conventional commits (`feat:`, `fix:`, `docs:`, `refactor:`, `test:`, `chore:`, `perf:`); PRs target `develop`.
+- `KGs.zip` and any loose root-level scratch scripts (e.g. `demo.py`, `example*.md`) are local artifacts, not canonical entry points — don't treat them as documented API.
 
-See skills for specific workflows:
-- `/add-model` — add a new KGE model
-- `/run-training` — configure and launch training
-- `/link-prediction-api` — use a trained model for inference
+## Specialized Subagents
+
+For focused work, delegate via the Agent tool to these project subagents (`.claude/agents/`) rather than guessing APIs from memory:
+
+| Task | Subagent |
+|------|----------|
+| Implement/extend a KGE model, new scoring function, algebra-based embedding | `kge-model-developer` |
+| Configure/launch training, trainer/scoring-technique choice, multi-GPU, SWA/EMA, continual learning | `kge-trainer` |
+| Diagnose poor MRR/HITS@k, NaN loss, over/underfitting (read-only) | `kge-debugger` |
+| Inference (`KGE` class), `predict_topk`, multi-hop queries, embeddings, literal prediction, Gradio | `kge-analyst` |
+
+Skills for detailed step-by-step workflows: `/add-model`, `/run-training`, `/link-prediction-api`. Slash commands: `/debug-evaluation`, `/extend-scoring-technique`.
 
 ---
 > Source: [dice-group/dice-embeddings](https://github.com/dice-group/dice-embeddings) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-24 -->
+<!-- tomevault:4.0:agents_md:2026-07-26 -->
