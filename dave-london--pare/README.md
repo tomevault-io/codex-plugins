@@ -5,14 +5,14 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [Dave-London/Pare](https://github.com/Dave-London/Pare).
+Original source: `copilot-instructions.md` in [Dave-London/Pare](https://github.com/Dave-London/Pare).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 From [Dave-London/Pare](https://github.com/Dave-London/Pare) — a repo with 135+ stars on GitHub.
