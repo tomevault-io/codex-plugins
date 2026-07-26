@@ -1,8 +1,8 @@
 {
-  "name": "ikiform",
+  "name": "Ikiform",
   "owner": "preetsuthar17",
-  "repo": "ikiform",
-  "description": "The open-source forms platform for effortless data collection and analysis.",
+  "repo": "Ikiform",
+  "description": "",
   "type": "config",
   "source_format": "copilot-instructions.md",
   "formats": [
@@ -38,7 +38,7 @@
     }
   ],
   "skills": [],
-  "source_url": "https://github.com/preetsuthar17/ikiform",
+  "source_url": "https://github.com/preetsuthar17/Ikiform",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-05T00:37:50Z"
+  "distributed_at": "2026-07-26T15:13:01Z"
 }
