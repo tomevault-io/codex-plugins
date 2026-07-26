@@ -5,21 +5,24 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [dice-group/dice-embeddings](https://github.com/dice-group/dice-embeddings).
+Original source: `CLAUDE.md` in [dice-group/dice-embeddings](https://github.com/dice-group/dice-embeddings).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-## Bundled Skills (3)
+## Bundled Skills (6)
 
 - [dice-embeddings](https://github.com/dice-group/dice-embeddings/tree/main/.github/skills/add-model/SKILL.md)
 - [dice-embeddings](https://github.com/dice-group/dice-embeddings/tree/main/.github/skills/run-training/SKILL.md)
 - [dice-embeddings](https://github.com/dice-group/dice-embeddings/tree/main/.github/skills/link-prediction-api/SKILL.md)
+- [dice-embeddings](https://github.com/dice-group/dice-embeddings/tree/main/.claude/skills/add-model/SKILL.md)
+- [dice-embeddings](https://github.com/dice-group/dice-embeddings/tree/main/.claude/skills/run-training/SKILL.md)
+- [dice-embeddings](https://github.com/dice-group/dice-embeddings/tree/main/.claude/skills/link-prediction-api/SKILL.md)
 
 Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/dice-group/dice-embeddings](https://github.com/dice-group/dice-embeddings)
 
