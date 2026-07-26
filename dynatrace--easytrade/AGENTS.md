@@ -1,119 +1,138 @@
-# EasyTrade
+<!-- SYNC NOTICE. This file is the primary context source for Claude Code.
+     Rules files live in .claude/rules/ — load automatically when editing matching files.
+     If Copilot is also used, mirror this file in .github/copilot-instructions.md
+     and mirror .claude/rules/*.md in .github/instructions/*.instructions.md. -->
 
-## Observability & Monitoring
+# CLAUDE.md
 
-Components of this repository are deployed to a Kubernetes Cluster and monitored by Dynatrace.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Detailed per-language conventions live in `.claude/rules/`.
 
-### Finding EasyTrade Service Entities
+## What is EasyTrade
 
-You can find entities via the `find_entities_by_name` tool using `easytrade` as well as specific service names (see service list in README).
-You should find entities like `[eks-playground][easytrade] BrokerService`.
+Fake stock-broking demo application for Dynatrace showcases. 19 microservices communicate over REST (mostly JSON; some services also accept XML). All traffic routes through an nginx reverse proxy (`frontendreverseproxy`) on port 80. A RabbitMQ queue (`Trade_Data_Raw`) carries trade data from `pricing-service` to `calculationservice`.
 
-### Finding Problems
+All services share one MSSQL database (`db`, port 1433). Connection string format differs by tech stack — see `compose.yaml` for the three variants (Java/JDBC, .NET, Go/sqlserver).
 
-You can find problems via the `list_problems` tool and applying the following filter:
+## Tech stacks
 
-```dql
-in(k8s.namespace.name, array("easytrade")) OR contains(dt.entity.application.name, "EasyTrade")
+| Stack | Services |
+|---|---|
+| Java 21 / Spring Boot / Gradle | `accountservice`, `contentcreator`, `credit-card-order-service`, `engine`, `feature-flag-service`, `third-party-service` |
+| Go + Go Modules | `aggregator-service`, `pricing-service`, `problem-operator` |
+| TypeScript / Node.js / npm | `frontend` (React + Vite), `loadgen`, `offerservice` (Express) |
+| C# / .NET 8 | `broker-service`, `loginservice`, `manager` |
+| Config only | `calculationservice` (C++, Dockerfile-only), `frontendreverseproxy` (nginx), `rabbitmq`, `db` (MSSQL) |
+
+## Build & test per stack
+
+**Java (run from service directory):**
+```bash
+./gradlew build        # compile + test
+./gradlew test         # tests only
+./gradlew test --tests "com.dynatrace.easytrade.SomeTest"  # single test
 ```
 
-If you want to narrow down the problem of a specific entity, like a service, you can use the following filter:
-
-```dql
-in(affected_entity_ids, "<entity-id>") OR matchesValue(affected_entity_ids, "<entity-id>") OR dt.entity.$type == "<entity-id>" OR ...
+**Go (run from service directory):**
+```bash
+go build .
+go test ./...
+go test ./path/to/pkg -run TestName
 ```
 
-### Metrics
-
-> **Important DQL rules for metrics:**
-> - Always use `timeseries` to query metrics. **Never use `fetch <metric-key>`** — metric keys like `dt.service.request.response_time` are not valid data objects for `fetch` and will produce a parse error.
-> - When specifying absolute timestamps, they **must be quoted strings**: `from:"2026-02-23T02:00:00Z"`. Unquoted ISO timestamps will produce a parse error.
-> - Relative time expressions do not need quotes: `from: now()-14d`.
-
-Query metrics for all EasyTrade services using the namespace filter:
-
-```dql
-timeseries from:"<ISO-timestamp>", to:"<ISO-timestamp>", by:{dt.entity.service}, interval:1m,
-  avg_response_time = avg(dt.service.request.response_time),
-  filter: k8s.namespace.name == "easytrade"
-| lookup [fetch dt.entity.service | fields id, entity.name], sourceField:dt.entity.service, lookupField:id, prefix:"svc."
-| fieldsRename service = svc.entity.name
-| fieldsRemove svc.id
+**TypeScript/Node.js (run from service directory):**
+```bash
+npm install
+npm run build   # tsc / vite build
+npm test        # vitest (frontend) or jest
+npm run lint    # eslint
 ```
 
-For a relative time window and a single service:
-
-```dql
-timeseries avg(<metric-key>),
-from: now()-14d, to: now(),
-filter: { dt.entity.service == "<service-id>" }
+**C# / .NET (run from `src/<service>/<ServiceName>/`):**
+```bash
+dotnet build
+dotnet test                        # runs xunit tests in test/ project
+dotnet test --filter "FullyQualifiedName~SomeTest"
 ```
 
-Additionally, you should add a filter like this: `| filter dt.entity.service == "<service-id>"` to focus on a specific service.
+## Running locally
 
-#### Service-Level Metrics
-
-- _Service Response Time_: `dt.service.request.response_time`
-- _Service Request Count_: `dt.service.request.count`
-- _Service Failure Count_: `dt.service.request.failure_count`
-
-#### Container-Level Metrics
-
-- _Container CPU Usage_: `dt.kubernetes.container.cpu_usage`
-- _Container Memory Working Set_: `dt.kubernetes.container.memory_working_set`
-- _Container CPU Requests_: `dt.kubernetes.container.requests_cpu`
-- _Container Memory Requests_: `dt.kubernetes.container.requests_memory`
-- _Container CPU Limits_: `dt.kubernetes.container.limits_cpu`
-- _Container Memory Limits_: `dt.kubernetes.container.limits_memory`
-
-#### Kubernetes Infrastructure Metrics
-
-- _Pod Conditions_: `dt.kubernetes.workload.conditions`
-- _Pod Status_: `dt.kubernetes.pods`
-- _Container State_: `dt.kubernetes.containers`
-
-#### Technology-Specific Metrics
-
-- _JVM Memory Usage_: `dt.runtime.jvm.memory.heap.used`, `dt.runtime.jvm.memory.heap.max`
-- _Goroutine count_: `dt.runtime.go.scheduler.goroutine_count`
-- _Go Worker thread count_: `dt.runtime.go.scheduler.worker_thread_count`
-- _Go Heap Memory_: `dt.runtime.go.memory.heap`
-- _Go Memory Committed_: `dt.runtime.go.memory.committed`
-
-You can find additional metrics via `fetch metric.series | filter dt.entity.service == "<service-id>" | limit 50` or for containers: `fetch metric.series | filter k8s.namespace.name == "easytrade" | filter metric.key == "dt.kubernetes.container.cpu_usage" or metric.key == "dt.kubernetes.container.memory_working_set" | limit 50`.
-
-### Logs
-
-You can find logs via the `fetch logs` tool and applying the following filter:
-
-```dql
-fetch logs
-| filter k8s.namespace.name == "easytrade"
-| sort timestamp desc
+Use `compose.dev.yaml` via the helper script:
+```bash
+./runDev.sh start       # proxy + contentcreator + engine (minimal)
+./runDev.sh start-all   # all services
+./runDev.sh build [service...]  # rebuild images
+./runDev.sh stop
 ```
 
-Filter error logs with
-
-```dql
-| filter loglevel == "ERROR"
+Or directly:
+```bash
+docker compose -f compose.dev.yaml up -d
+docker compose up          # uses pre-built images from registry (compose.yaml)
 ```
 
-You can furthermore narrow down logs for a specific service by adding a filter like this: `| filter contains(k8s.deployment.name, "<service-name>")`.
+App available at `http://localhost`. Dev credentials: `demouser/demopass`, `james_norton/pass_james_123`.
 
-### Problem Investigation Workflow
+## Dependency management & vulnerability fixes
 
-Every problem investigation **must** include:
+All Java services share the same `build.gradle` structure. Transitive dep bumps go in a marked block:
+```groovy
+// -- not direct dependencies but need bumps to patch vulns
+// -- can be removed once the parent packages upgrade
+```
+Apply the same bump to **all** affected `build.gradle` files in one pass.
 
-1. **A supporting metric chart** — always execute a `timeseries` DQL query that covers the problem's time window (use `event.start` and `event.end` from the problem record, plus a 30-minute buffer on each side). At minimum, plot `avg(dt.service.request.response_time)` or `sum(dt.service.request.failure_count)` for the affected service(s).
+For Go, stdlib vulns require bumping the `go` directive in `go.mod`, the builder image tag+digest in `Dockerfile`, then running `go mod tidy`.
 
-2. **A written summary** directly after the chart, following this format:
+For Node, use `overrides` in `package.json` to pin transitive deps; run `npm install` after.
 
-   > **Analysis — \<short incident title\> (\<time range\> UTC)**
-   >
-   > **Problem detected:** \<problem-id\> — \<event.description\>, confirmed by Dynatrace's investigation. Duration: \<duration in human-readable form\> (\<event.start time\> UTC), \<affected_users_count\> users affected.
-   >
-   > _Then explain: what the chart shows, when the onset was, what the peak looked like, when recovery occurred, and which service(s) were most impacted._
+## Feature flags / problem patterns
+
+Feature flags control four problem patterns (`DbNotResponding`, `ErgoAggregatorSlowdown`, `FactoryCrisis`, `HighCpuUsage`). Toggle via:
+```bash
+curl -X PUT "http://localhost/feature-flag-service/v1/flags/{flagId}/" \
+  -H "accept: application/json" \
+  -H "Content-Type: application/json" \
+  -d '{"enabled": true}'
+```
+Swagger: `http://localhost/feature-flag-service/swagger-ui/index.html`
+
+## Dynatrace / Observability
+
+Services are deployed on Kubernetes (namespace `easytrade`) and monitored by Dynatrace. See `AGENTS.md` for DQL query patterns, metric keys, and problem investigation workflow. Monaco configurations live in `./monaco/`.
+
+## Helm / Kubernetes
+
+```bash
+helm install easytrade oci://europe-docker.pkg.dev/dynatrace-demoability/helm/easytrade \
+  --create-namespace --namespace easytrade
+helm uninstall easytrade -n easytrade
+```
+
+## Conventions
+
+- NEVER commit secrets, tokens, or credentials — use environment variables
+- NEVER use `fetch <metric-key>` for metric queries — use `timeseries` instead (`fetch` is valid for `dt.davis.problems`, `dt.entity.*` and other non-metric record types)
+- Do NOT apply a dep bump to one `build.gradle` without applying it to all affected Java services
+- Do NOT modify `compose.yaml` (pre-built registry images) when you mean `compose.dev.yaml` (local dev)
+- Apply vulnerability fixes across all services in a single pass — partial updates leave the repo inconsistent
+
+## Validation
+
+Run the relevant build and lint command for the affected stack before declaring any task complete.
+If the build or lint fails, fix the failure — do not skip or suppress.
+
+## Self-Healing
+
+If you encounter a pattern in the codebase that contradicts these instructions, flag the discrepancy before proceeding. If `.claude/rules/*.md` files have drifted from the actual codebase patterns, flag it.
+
+## Instruction Sync
+
+| Claude Code source | Mirror (if Copilot used) |
+|---|---|
+| `CLAUDE.md` | `.github/copilot-instructions.md` |
+| `.claude/rules/*.md` | `.github/instructions/*.instructions.md` |
 
 ---
 > Source: [Dynatrace/easytrade](https://github.com/Dynatrace/easytrade) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-24 -->
+<!-- tomevault:4.0:agents_md:2026-07-26 -->
