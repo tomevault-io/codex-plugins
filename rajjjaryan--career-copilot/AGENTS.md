@@ -11,4 +11,4 @@ For setup, see `docs/SETUP.md`.
 
 ---
 > Source: [RajjjAryan/career-copilot](https://github.com/RajjjAryan/career-copilot) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-04-21 -->
+<!-- tomevault:4.0:agents_md:2026-07-26 -->
