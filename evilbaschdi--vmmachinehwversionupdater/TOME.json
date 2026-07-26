@@ -4,7 +4,7 @@
   "repo": "VmMachineHwVersionUpdater",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "GEMINI.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/evilbaschdi/VmMachineHwVersionUpdater",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-25T22:57:19Z"
+  "distributed_at": "2026-07-26T14:42:49Z"
 }
