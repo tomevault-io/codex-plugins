@@ -1,23 +1,21 @@
 # longcli-bench
 
-> Tome by [finyorko](https://github.com/finyorko/longcli-bench) — distributed by [TomeVault](https://tomevault.io)
-
-LongCLI-Bench's official repository
+> Tome by [finyorko](https://github.com/finyorko/longcli-bench), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [finyorko/longcli-bench](https://github.com/finyorko/longcli-bench).
+Original source: `copilot-instructions.md` in [finyorko/longcli-bench](https://github.com/finyorko/longcli-bench).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/finyorko/longcli-bench](https://github.com/finyorko/longcli-bench)
+Graded against the Tome Standard, TomeVault's public ruleset for whether AI instructions load, read clearly and stay safe. Source: [github.com/finyorko/longcli-bench](https://github.com/finyorko/longcli-bench)
 
 ---
 
