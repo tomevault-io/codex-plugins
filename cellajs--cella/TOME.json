@@ -4,7 +4,7 @@
   "repo": "cella",
   "description": "",
   "type": "tome",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -47,5 +47,5 @@
   ],
   "source_url": "https://github.com/cellajs/cella",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-26T11:59:45Z"
+  "distributed_at": "2026-07-26T14:03:37Z"
 }
