@@ -1,0 +1,57 @@
+{
+  "name": "igo2-lib",
+  "owner": "infra-geo-ouverte",
+  "repo": "igo2-lib",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "igo2-lib",
+      "path": ".agents/skills/angular-developer/SKILL.md",
+      "github_url": "https://github.com/infra-geo-ouverte/igo2-lib/tree/main/.agents/skills/angular-developer/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "igo2-lib",
+      "path": ".agents/skills/modular-architecture/SKILL.md",
+      "github_url": "https://github.com/infra-geo-ouverte/igo2-lib/tree/main/.agents/skills/modular-architecture/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/infra-geo-ouverte/igo2-lib",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-26T14:18:06Z"
+}
