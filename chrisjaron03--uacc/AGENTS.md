@@ -1,0 +1,9 @@
+# UACC
+
+Use MCP tools (`mcp_uacc_*`) directly — do NOT write separate Python scripts wrapping UACC.
+UACC has workflow memory: create_workflow, list_workflows, get_workflow, delete_workflow, run_workflow.
+See AGENTS.md for the full guide.
+
+---
+> Source: [chrisjaron03/UACC](https://github.com/chrisjaron03/UACC) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-07-26 -->
