@@ -1,14 +1,9 @@
-# Copilot Instructions for Bitfinex.Net
 
-This repository is **Bitfinex.Net**, a strongly typed C#/.NET client library for the Bitfinex REST and WebSocket APIs. It is part of the CryptoExchange.Net ecosystem.
+# Bitfinex.Net Conventions
 
-When generating code that consumes Bitfinex.Net, follow these conventions:
+This codebase uses **Bitfinex.Net** for Bitfinex exchange access. Do not write raw `HttpClient` calls to Bitfinex endpoints.
 
-## Use Bitfinex.Net, not raw HTTP
-
-Never generate `HttpClient` calls to Bitfinex API URLs. Always use `BitfinexRestClient` or `BitfinexSocketClient`. This ensures correct request signing, rate limiting, and error handling.
-
-## Client setup
+## Client setup pattern
 
 ```csharp
 using Bitfinex.Net;
@@ -20,55 +15,90 @@ var restClient = new BitfinexRestClient(options =>
 });
 ```
 
-For public market data, credentials are not required.
+For public market data only, no credentials are needed: `new BitfinexRestClient()`.
 
-## Result handling
+## Result pattern
 
-Methods return `WebCallResult<T>` (REST) or `CallResult<T>` (WebSocket). Always check `.Success` before reading `.Data`. The error is on `.Error`.
+All methods return `WebCallResult<T>` (REST) or `CallResult<T>` (WebSocket). Always check `.Success` before reading `.Data`:
 
-## API structure
+```csharp
+var ticker = await restClient.SpotApi.ExchangeData.GetTickerAsync("tBTCUSD");
+if (!ticker.Success) { /* ticker.Error */ return; }
+var price = ticker.Data.LastPrice;
+```
 
-- `restClient.SpotApi.ExchangeData` - public tickers, candles, books, trades, funding market data, derivative status, asset/symbol metadata
-- `restClient.SpotApi.Account` - wallets, deposits, withdrawals, margin info, ledgers, fees and account info
-- `restClient.SpotApi.Trading` - orders, user trades, positions and margin position actions
-- `restClient.GeneralApi.Funding` - authenticated funding offers, loans, credits, trades and auto-renew
-- `socketClient.SpotApi` - public streams, authenticated user streams, socket order actions and socket funding offer actions
+## API surface
 
-## Symbols
+- `restClient.SpotApi.ExchangeData` for public market, funding market, derivatives status and symbol metadata
+- `restClient.SpotApi.Account` for wallets, deposits, withdrawals, margin info, ledgers and account info
+- `restClient.SpotApi.Trading` for orders, trades and positions
+- `restClient.GeneralApi.Funding` for authenticated funding offers, loans, credits and auto-renew
+- `socketClient.SpotApi` for public and authenticated WebSocket streams and socket order/funding actions
 
-Bitfinex symbols are prefixed:
+Bitfinex symbol conventions matter:
 
-- Trading: `tBTCUSD`, `tETHUSD`
-- Funding: `fUSD`, `fBTC`
-- Derivatives: `tBTCF0:USTF0`
+- Trading symbols: `tBTCUSD`, `tETHUSD`
+- Funding symbols: `fUSD`, `fBTC`
+- Derivatives symbols: `tBTCF0:USTF0`
 
 ## Order placement
 
-Let the library auto-generate `clientOrderId`. Do not pass a custom value unless required for an existing operational flow.
+Let the library auto-generate `clientOrderId`. Do not pass a custom one unless required for an existing operational flow:
+
+```csharp
+var order = await restClient.SpotApi.Trading.PlaceOrderAsync(
+    "tBTCUSD", OrderSide.Buy, OrderType.ExchangeLimit,
+    quantity: 0.001m, price: 50000m);
+```
 
 ## WebSocket pattern
 
-Store the returned `UpdateSubscription` and unsubscribe on shutdown via `socketClient.UnsubscribeAsync(sub.Data)`.
+```csharp
+var socketClient = new BitfinexSocketClient();
+var sub = await socketClient.SpotApi.SubscribeToTickerUpdatesAsync(
+    "tBTCUSD",
+    update => { /* update.Data.LastPrice */ });
+if (!sub.Success) { /* sub.Error */ return; }
 
-## Cross-exchange
+// On shutdown:
+await socketClient.UnsubscribeAsync(sub.Data);
+```
 
-For code that needs to work across multiple exchanges, use `CryptoExchange.Net.SharedApis` interfaces (`ISpotTickerRestClient`, `ISpotOrderRestClient`, etc.) accessed via `.SharedClient` properties.
+## Multi-exchange code
 
-## Avoid
+For exchange-agnostic code, use `CryptoExchange.Net.SharedApis`:
 
-- Raw `HttpClient` calls to Bitfinex endpoints
-- Generic `ApiCredentials` for Bitfinex credentials
-- Invented roots such as `FuturesApi` or `FundingApi`; use `SpotApi` and `GeneralApi.Funding`
-- Missing symbol prefixes (`BTCUSD` instead of `tBTCUSD`)
-- Synchronous `.Result` / `.Wait()`
-- Instantiating clients per request
-- Manual ticker polling when a WebSocket subscription fits
-- Manual `clientOrderId` values unless required
+```csharp
+using CryptoExchange.Net.SharedApis;
+
+var shared = new BitfinexRestClient().SpotApi.SharedClient;
+var ticker = await shared.GetSpotTickerAsync(
+    new GetTickerRequest(new SharedSymbol(TradingMode.Spot, "BTC", "USD")));
+```
+
+Same pattern works against other CryptoExchange.Net libraries.
+
+Shared spot/futures symbol calls support `GetSymbolsRequest` filters and return `DisplayName` plus base/quote asset type and subtype metadata. After a successful call, the corresponding `SpotSymbolCatalog` or `FuturesSymbolCatalog` is available on `ISpotSymbolRestClient` or `IFuturesSymbolRestClient`.
+
+## Hard rules
+
+- Never write raw `HttpClient` to Bitfinex endpoints.
+- Never use `.Result` or `.Wait()`; use async all the way.
+- Never instantiate clients per request; reuse them or use DI.
+- Never skip checking `WebCallResult.Success`.
+- Prefer `BitfinexRestClient` and `BitfinexSocketClient`.
+- Never pass a custom `clientOrderId` to `PlaceOrderAsync` unless required.
+- Always use `BitfinexCredentials("key", "secret")`, not generic `ApiCredentials`.
+- Always store WebSocket subscriptions and unsubscribe on shutdown.
+- Use `GeneralApi.Funding` for authenticated funding operations.
+- Use Bitfinex symbol prefixes (`t` for trading, `f` for funding).
 
 ## Reference
 
-For detailed patterns and pitfalls see `AGENTS.md`, `llms.txt`, `docs/ai-api-map.md`, and `Examples/ai-friendly/`.
+- Skill: `AGENTS.md` in repo root has fuller examples
+- `llms.txt` in repo root for AI context
+- Examples: `Examples/ai-friendly/`
 
 ---
 > Source: [JKorf/Bitfinex.Net](https://github.com/JKorf/Bitfinex.Net) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-06-29 -->
+<!-- tomevault:4.0:agents_md:2026-07-26 -->
