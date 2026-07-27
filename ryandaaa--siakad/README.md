@@ -5,13 +5,13 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [ryandaaa/siakad](https://github.com/ryandaaa/siakad).
+Original source: `.cursor/rules/*.mdc` in [ryandaaa/siakad](https://github.com/ryandaaa/siakad).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
