@@ -1,6 +1,6 @@
 # MANDATORY INSTRUCTIONS - READ BEFORE PROCEEDING
 
-You MUST read and follow ALL instructions found in the common Agent rules document: [AGENT_INSTRUCTIONS.md](../docs/AGENT_INSTRUCTIONS.md).
+You MUST read and follow ALL instructions found in the common Agent rules document: [AGENT_INSTRUCTIONS.md](./docs/AGENT_INSTRUCTIONS.md).
 
 # VERIFICATION:
 Before proceeding with any changes, confirm you have:
@@ -11,4 +11,4 @@ Before proceeding with any changes, confirm you have:
 
 ---
 > Source: [clafollett/agenterra](https://github.com/clafollett/agenterra) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-05-06 -->
+<!-- tomevault:4.0:agents_md:2026-07-26 -->
