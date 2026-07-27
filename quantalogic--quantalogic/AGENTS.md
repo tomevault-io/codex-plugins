@@ -11,16 +11,10 @@ Code Rules:
 - ≤20 lines
 - ≤3 parameters
 - Descriptive names
-- Type hints (Python 3.10+ compatible)
+- Type hints
+- Prefer named arguments
 
-3. Python Version Compatibility
-- Support Python 3.10+ syntax
-- Use `Union[X, Y]` instead of `X | Y` for type hints
-- Use `Optional[X]` instead of `X | None`
-- Import `Union` and `Optional` from `typing`
-- Avoid features requiring Python 3.11+
-
-4. Project Structure
+3. Project Structure
 - Group by feature
 - Flat > nested
 - Keep related code together
@@ -33,7 +27,7 @@ Code Rules:
     ...
   main.py
 
-5. Development Practice
+4. Development Practice
 - Use standard libs/tools
 - Choose well-maintained libs
 - Handle errors explicitly 
@@ -41,7 +35,7 @@ Code Rules:
 - Document WHY not WHAT
 - Executable scripts
 
-6. Code Reviews
+5. Code Reviews
 - Question complexity
 - Check for dupes
 - Verify error handling
@@ -60,6 +54,8 @@ REMEMBER
 • Complexity kills
 • Requirements drive changes
 
+We use loguru for logging
+
 ---
 > Source: [quantalogic/quantalogic](https://github.com/quantalogic/quantalogic) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-05-18 -->
+<!-- tomevault:4.0:agents_md:2026-07-26 -->
