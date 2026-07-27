@@ -5,7 +5,7 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [openaeon/OpenAEON](https://github.com/openaeon/OpenAEON).
+Original source: `` in [openaeon/OpenAEON](https://github.com/openaeon/OpenAEON).
 
 ## Also available for
 
@@ -13,6 +13,7 @@ Original source: `GEMINI.md` in [openaeon/OpenAEON](https://github.com/openaeon/
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 Graded against the Tome Standard, TomeVault's public ruleset for whether AI instructions load, read clearly and stay safe. Source: [github.com/openaeon/OpenAEON](https://github.com/openaeon/OpenAEON)
