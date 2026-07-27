@@ -1,0 +1,28 @@
+# bc-code-intelligence
+
+> Tome by [JeremyVyska](https://github.com/JeremyVyska/bc-code-intelligence), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [JeremyVyska/bc-code-intelligence](https://github.com/JeremyVyska/bc-code-intelligence).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/JeremyVyska/bc-code-intelligence](https://github.com/JeremyVyska/bc-code-intelligence)
+
+---
+
+Install this config instantly:
+```
+npx tomevault install JeremyVyska/bc-code-intelligence
+```
+Source: [github.com/JeremyVyska/bc-code-intelligence](https://github.com/JeremyVyska/bc-code-intelligence).
+
+<!-- genome:t-i-p -->
