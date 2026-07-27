@@ -1,21 +1,19 @@
 # quantalogic
 
-> Tome by [quantalogic](https://github.com/quantalogic/quantalogic) — distributed by [TomeVault](https://tomevault.io)
-
-Quantalogic ReAct Agent - Coding Agent Framework - Gives a ⭐️ if you like the project
+> Tome by [quantalogic](https://github.com/quantalogic/quantalogic), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [quantalogic/quantalogic](https://github.com/quantalogic/quantalogic).
+Original source: `.windsurf/rules/*.md` in [quantalogic/quantalogic](https://github.com/quantalogic/quantalogic).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
-- **Windsurf** — `project-config.md`
 
 Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/quantalogic/quantalogic](https://github.com/quantalogic/quantalogic)
 
