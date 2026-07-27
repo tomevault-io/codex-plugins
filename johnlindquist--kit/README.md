@@ -1,0 +1,28 @@
+# kit
+
+> Tome by [johnlindquist](https://github.com/johnlindquist/kit), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [johnlindquist/kit](https://github.com/johnlindquist/kit).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+From [johnlindquist/kit](https://github.com/johnlindquist/kit) — a repo with 4187+ stars on GitHub.
+
+---
+
+Install this config instantly:
+```
+npx tomevault install johnlindquist/kit
+```
+Source: [github.com/johnlindquist/kit](https://github.com/johnlindquist/kit).
+
+<!-- genome:t-i-s -->
