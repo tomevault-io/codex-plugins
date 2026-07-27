@@ -1,21 +1,21 @@
 # swe-pruner
 
-> Tome by [Ayanami1314](https://github.com/Ayanami1314/swe-pruner) — distributed by [TomeVault](https://tomevault.io)
+> Tome by [Ayanami1314](https://github.com/Ayanami1314/swe-pruner), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [Ayanami1314/swe-pruner](https://github.com/Ayanami1314/swe-pruner).
+Original source: `.cursor/rules/*.mdc` in [Ayanami1314/swe-pruner](https://github.com/Ayanami1314/swe-pruner).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/Ayanami1314/swe-pruner](https://github.com/Ayanami1314/swe-pruner)
+Graded against the Tome Standard, TomeVault's public ruleset for whether AI instructions load, read clearly and stay safe. Source: [github.com/Ayanami1314/swe-pruner](https://github.com/Ayanami1314/swe-pruner)
 
 ---
 
