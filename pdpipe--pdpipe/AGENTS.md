@@ -1,20 +1,13 @@
-# GitHub Copilot Custom Instructions for pdpipe
 
-- pdpipe is a Python package for building serializable, chainable, and verbose data processing pipelines for pandas DataFrames, with a focus on data science and machine learning workflows.
-- Always follow the fit-transform design pattern compatible with scikit-learn transformers when discussing pipeline stages or API design.
-- Code must adhere to flake8 and black formatting standards (see pyproject.toml for details). Linting is enforced in CI.
-- Use numpy docstring conventions for all public functions, classes, and methods. Include clear parameter and return type documentation and examples where possible.
-- Do not mutate input DataFrames in place; all transformations should return new DataFrames.
-- When adding new pipeline stages, use informative, explicit naming (e.g., ColDrop, ValDrop) to maximize pipeline readability.
-- Tests must be added for all new code. Place tests in the appropriate module subdirectory under tests/, and use one test function per use case. Aim to maintain 100% test coverage.
-- Doctests and code examples are encouraged in docstrings for new stages and functions.
-- Some features are optional and require scikit-learn or nltk; code should gracefully degrade if these are not installed, issuing a warning but not failing.
-- Pipelines and stages should be highly configurable and support serialization/deserialization for production use.
-- Default behaviors should help users avoid common data science pitfalls (e.g., one-hot encoding drops one column by default to avoid the dummy variable trap).
-- pdpipe supports Python 3.9 and up. Ensure compatibility with all supported versions.
-- For configuration, support both config files and environment variables as described in the README.
-- For help, reference the official documentation at https://pdpipe.readthedocs.io/en/latest/ and the Gitter community.
+# Build and dependency system in cachier
+
+- We use pyproject.toml with the modern PEP 621 format.
+- I prefer working with uv for virtualenv management, depdency isnallation, etc.
+- Tests should be run inside the uv venv, and using the dev/scripts/run_pytest.sh, so using the command `uv run sh dev/scripts/run_pytest.sh`.
+- In this machine, uv is installed on pyenv's Python 3.12.10, and pyenv is not initialized on every terminal session *on purpose*, so you'll have to run `pyenv init - bash`, then `pyenv shell 3.12.10` and only then the above command for running pytest inside the uv venv.
+- Before every commit, run the pre-commit hooks defined by pre-commit-config.yaml by running `uv run pre-commit run --all-files` in the project's root, and fix every raised error.
+- Black formatting errors raised by the above pre-commit command should be handled by running `uv run black src` and `uv run black tests`
 
 ---
 > Source: [pdpipe/pdpipe](https://github.com/pdpipe/pdpipe) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-24 -->
+<!-- tomevault:4.0:agents_md:2026-07-26 -->
