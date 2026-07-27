@@ -1,0 +1,29 @@
+# Agents
+
+Agent adapters wrap agents from any framework to provide a unified interface for benchmarking. They handle execution, message history tracking, and callback hooks.
+
+[:material-github: View source](https://github.com/maseval/MASEval/blob/main/maseval/core/agent.py){ .md-source-file align=right }
+
+::: maseval.core.agent.AgentAdapter
+options:
+show_source: false
+
+## Interfaces
+
+Adapters that integrate MASEval with agent frameworks:
+
+[:material-github: View source](https://github.com/maseval/MASEval/blob/main/maseval/interface/agents/smolagents.py){ .md-source-file align=right }
+
+::: maseval.interface.agents.smolagents.SmolAgentAdapter
+
+[:material-github: View source](https://github.com/maseval/MASEval/blob/main/maseval/interface/agents/langgraph.py){ .md-source-file align=right }
+
+::: maseval.interface.agents.langgraph.LangGraphAgentAdapter
+
+[:material-github: View source](https://github.com/maseval/MASEval/blob/main/maseval/interface/agents/llamaindex.py){ .md-source-file align=right }
+
+::: maseval.interface.agents.llamaindex.LlamaIndexAgentAdapter
+
+---
+> Source: [parameterlab/MASEval](https://github.com/parameterlab/MASEval) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-07-26 -->
