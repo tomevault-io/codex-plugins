@@ -4,7 +4,7 @@
   "repo": "OpenSearch-VL",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/shawn0728/OpenSearch-VL",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-26T10:03:04Z"
+  "distributed_at": "2026-07-27T15:10:02Z"
 }
