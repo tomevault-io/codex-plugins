@@ -1,69 +1,22 @@
-﻿# Financial Calculator - Development Guidelines
+# General
+Don't add cmments to evey line. Add just the most important comments to explain some cases or complex logic.
 
-Auto-generated from feature plans. Last updated: 2026-01-24
+# TypeScript
+When you create the logic of the calculator, always use the BasicCalculator class.
+Always implement tests for the calculator using the current year. Tests have to contain all output values.
 
-## Technologies
 
-- **Framework**: Vue 3.4+ with Quasar 2.18+
-- **Language**: TypeScript 4.5+
-- **State**: Pinia 2.x
-- **Testing**: Vitest 2.x
-- **Platform**: PWA + Cordova
+# Vue.js
+If you create UI, use the Quasar components. 
+components/contractWork has the most up to date example of how to create a module.
+Use Polish language in the UI.
+If you set rules, use them from validationRules.
 
-## Project Structure
-
-```text
-src/
-├── components/[moduleName]/    # Calculator modules
-│   ├── components/             # Vue components
-│   ├── interfaces/             # TS interfaces
-│   ├── logic/                  # Logic (extends BasicCalculator)
-│   ├── pages/                  # Pages
-│   ├── types/                  # TS types
-│   └── store.ts                # Pinia store
-├── logic/                      # Shared logic
-│   ├── BasicCalculator.ts      # Base class
-│   ├── constants.ts            # Constants (taxes, ZUS)
-│   └── validationRules.ts      # Validation rules
-└── pages/                      # Main pages
-
-test/vitest/__tests__/
-├── modules/[moduleName]/       # Module tests
-└── logic/                      # Shared logic tests
-```
-
-## Commands
-
-```bash
-# Run dev server
-npm start
-
-# Test specific module
-npx vitest run test/vitest/__tests__/modules/[moduleName]/[testName].test.ts
-
-# All tests
-npm run test:unit:ci
-
-# Build
-npm run build
-```
-
-## Code Style
-
-- **Logic**: Extend `BasicCalculator`
-- **Validation**: Use `validationRules`
-- **UI**: Quasar components
-- **UI Language**: Polish
-- **Rounding**: 2 decimal places (grosze)
-- **Tests**: Include all output values
-
-## Module Pattern
-
-Reference: `src/components/contractWork/`
-
-<!-- MANUAL ADDITIONS START -->
-<!-- MANUAL ADDITIONS END -->
+# tests
+You should execute tests which are important for your case, not all tests. The comand to execute tests is: npx vitest run test/vitest/__tests__/modules/<moduleName>/<testName>.test.ts
+Tests have to contain all output values.
+Numbers usually should be used for comparison.
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/RacyMind) — claim your Tome and manage your conversions.
-<!-- tomevault:4.0:agents_md:2026-04-13 -->
+> Source: [RacyMind/kalkulator-dla-przedsiebiorcy-vue](https://github.com/RacyMind/kalkulator-dla-przedsiebiorcy-vue) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-07-26 -->
