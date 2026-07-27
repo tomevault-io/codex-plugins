@@ -4,7 +4,7 @@
   "repo": "guzzle-cache-middleware",
   "description": "",
   "type": "config",
-  "source_format": "GEMINI.md",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/Kevinrob/guzzle-cache-middleware",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-24T14:25:14Z"
+  "distributed_at": "2026-07-27T12:44:49Z"
 }
