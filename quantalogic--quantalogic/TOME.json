@@ -2,9 +2,9 @@
   "name": "quantalogic",
   "owner": "quantalogic",
   "repo": "quantalogic",
-  "description": "Quantalogic ReAct Agent - Coding Agent Framework - Gives a \u2b50\ufe0f if you like the project",
+  "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": ".windsurf/rules/*.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/quantalogic/quantalogic",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-18T18:04:20Z"
+  "distributed_at": "2026-07-27T00:20:20Z"
 }
