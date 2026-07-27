@@ -5,10 +5,11 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [okube-ai/laktory](https://github.com/okube-ai/laktory).
+Original source: `` in [okube-ai/laktory](https://github.com/okube-ai/laktory).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
