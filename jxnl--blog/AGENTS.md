@@ -1,110 +1,90 @@
-# CLAUDE.md
+# Blog Post Front Matter Standards
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+All blog posts in [docs/writing/posts/](mdc:docs/writing/posts/) must follow the standard front matter structure to ensure consistency and proper functionality with the MkDocs Material theme.
 
-## Repository Overview
+## Required Front Matter Structure
 
-This is Jason Liu's personal blog and consulting website built with MkDocs Material. The site features AI/ML technical content, consulting services, RAG education courses, and personal writing.
+Every blog post must include the following YAML front matter at the top of the file:
 
-## Build Commands
-
-```bash
-# Install dependencies (using uv as preferred)
-uv pip install -r requirements-doc.txt
-
-# Development server with live reload
-mkdocs serve
-
-# Build static site
-mkdocs build
-# or
-./build_mkdocs.sh
-
-# Utility scripts
-python check_links.py          # Verify all links in markdown files
-python generate_sitemap.py     # Generate SEO sitemap with AI summaries
-python generate_desc.py        # Add AI-generated descriptions to posts
+```yaml
+---
+authors:
+  - jxnl
+categories:
+  - [Single Category]
+comments: true
+date: YYYY-MM-DD
+description: [Multi-line description that can wrap]
+draft: false
+slug: [URL-friendly-slug]
+tags:
+  - [Tag 1]
+  - [Tag 2]
+  - [Tag 3]
+---
 ```
 
-## Architecture
+## Field Requirements
 
-The site uses MkDocs with Material theme for static site generation:
+### authors
+- **Required**: Always include `jxnl` as the author
+- **Format**: List format with single author
 
-- **Content**: All markdown files in `docs/` directory
-- **Blog posts**: Located in `docs/writing/posts/`
-- **Configuration**: `mkdocs.yml` defines site structure, theme, and plugins
-- **Automation**: Python scripts for SEO optimization and link checking
-- **Styling**: Custom CSS in `docs/stylesheets/`, JS in `docs/javascripts/`
+### categories
+- **Required**: Single category per post
+- **Examples**: "RAG", "Consulting", "Personal Growth", "Applied AI", "Software Engineering"
+- **Format**: List format with single category
 
-Key architectural decisions:
+### comments
+- **Required**: Always set to `true` to enable comments
+- **Type**: Boolean
 
-- Static site generation for performance and hosting simplicity
-- Material Design for modern, responsive UI
-- Blog plugin for chronological content organization
-- AI-powered tools for SEO metadata generation
-- YouTube color scheme for consistent branding
+### date
+- **Required**: Publication date in YYYY-MM-DD format
+- **Example**: `2024-10-31`
 
-## Adding Content
+### description
+- **Required**: Multi-line description of the post content
+- **Format**: Can wrap to multiple lines in YAML
+- **Purpose**: Used for SEO and post previews
 
-When adding new blog posts:
+### draft
+- **Required**: Set to `false` for published posts, `true` for drafts
+- **Type**: Boolean
 
-1. Create markdown file in `docs/writing/posts/`
-2. Include frontmatter with date, authors, description, categories, and draft status
-3. Run `python generate_desc.py` to generate AI descriptions if needed
-4. Links should be verified with `python check_links.py`
+### slug
+- **Required**: URL-friendly version of the title
+- **Format**: Lowercase, hyphens instead of spaces
+- **Example**: `consulting-everything-i-know` for "Everything I Know About Consulting"
 
-## Writing Style Guidelines
+### tags
+- **Required**: Multiple tags for categorization and search
+- **Format**: List format with multiple tags
+- **Examples**: "AI Consulting", "RAG", "Machine Learning", "Personal Growth"
 
-### Thought Leadership Posts
+## Content Structure After Front Matter
 
-**Structure:** Core insights upfront → glossary of key terms → concrete examples → actionable next steps
+1. **Main Heading**: H1 heading with the post title
+2. **Excerpt Separator**: Include `<!-- more -->` to indicate where the excerpt ends
+3. **Content**: Regular markdown content with proper formatting
 
-**Opening Format:** Use "**The core insight:**" or "**Two core insights:**" followed by direct statement. Include series positioning: "_This is part of the [Series Name](./series-index.md). I'm focusing on X because it's where theory meets practice._"
+## Examples
 
-**Subheadings:** Avoid corny/dramatic language. Use direct, descriptive headers like "Implementation Strategy" instead of "The Evolution from Chunks to Context" or "Why Agents Need Different Information Architecture" instead of "The Persistence Advantage: Why Agents Change Everything"
+See these existing posts for reference:
+- [rag.md](mdc:docs/writing/posts/rag.md) - Technical content example
+- [consulting-everything-i-know.md](mdc:docs/writing/posts/consulting-everything-i-know.md) - Consulting content example
+- [whoami.md](mdc:docs/writing/posts/whoami.md) - Personal content example
 
-**Citations:** Weave research naturally to support arguments. Use descriptive link text ("research shows", "Anthropic's approach"). Position strategically where they strengthen specific points.
+## Validation
 
-**Key insights:** "Bad context is cheap but toxic" (computational cheapness ≠ business value), coding agents as leading edge, economics/ergonomics matter, transferable principles across industries.
-
-**Tone:** Concise, practical urgency ("this matters now"), concrete metrics, honest about complexity. First-person perspective from consulting experience.
-
-**Consulting Attribution:** Include early reference: "Through my [consulting work](https://jxnl.co/services/), I help companies..." and conclude with collaboration invitation: "If these approaches resonate with your challenges or if you're interested in working together, I'd love to help."
-
-**Cross-linking:** Use blog-crosslink-optimizer agent to enhance posts with natural internal links that add reader value.
-
-## Series Writing Guidelines
-
-**Context Engineering Series:** Multi-post series exploring practical approaches to building better agentic RAG systems. Each post should:
-
-- Position within the broader series narrative
-- Include consistent glossary format with brief definitions
-- Link to services page and mention consulting experience
-- End with series navigation footer
-- Use concrete metrics and business outcomes
-- Avoid overly dramatic or "thought leadership" subheadings
-
-**Blog Post Titles:** Use direct, actionable formats like "Four Levels Every RAG System Should Implement" or "Two Experiments We Need to Run on AI Agent Compaction" rather than abstract concepts.
-
-## Important Notes
-
-- The site is live at https://jxnl.co/
-- Git repository: https://github.com/jxnl/blog/
-- Uses YouTube color scheme (dark theme)
-- Google Analytics enabled (G-686PKP2V2V)
-- RSS feed available for blog posts
-- MathJax enabled for mathematical notation
-
-## Shortlink CLI Rule
-
-- When adding new external links to any blog post, always use the `scripts/shortlinks.py` CLI to generate a Dub shortlink.
-- Always use the `--blog-tag` option to tag the link with the blog's slug or filename (e.g., `--blog-tag coding-agents-lessons`).
-- Example usage:
-  ```bash
-  uv run python scripts/shortlinks.py "https://example.com" --title "Descriptive Title" --desc "Short description" --tags "tag1,tag2" --external-id "unique-id-for-link" --blog-tag "blog-slug"
-  ```
-- This ensures all links are trackable and associated with the correct blog for analytics and management.
+Before committing any new blog post, ensure:
+1. All required fields are present
+2. Date format is correct (YYYY-MM-DD)
+3. Slug is URL-friendly
+4. Description is descriptive and accurate
+5. Tags are relevant and properly categorized
+6. Draft status is appropriate for the post state
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/jxnl) — claim your Tome and manage your conversions.
-<!-- tomevault:4.0:agents_md:2026-04-09 -->
+> Source: [jxnl/blog](https://github.com/jxnl/blog) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-07-26 -->
