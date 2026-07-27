@@ -27,5 +27,5 @@ When this file is modified, copy its contents to:
 This ensures all AI coding assistants have the same information.
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/utensils) — claim your Tome and manage your conversions.
-<!-- tomevault:4.0:agents_md:2026-04-09 -->
+> Source: [utensils/essex](https://github.com/utensils/essex) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-07-26 -->
