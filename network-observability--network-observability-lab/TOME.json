@@ -4,7 +4,7 @@
   "repo": "network-observability-lab",
   "description": "",
   "type": "config",
-  "source_format": "CLAUDE.md",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/network-observability/network-observability-lab",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-26T20:16:48Z"
+  "distributed_at": "2026-07-27T11:58:30Z"
 }
