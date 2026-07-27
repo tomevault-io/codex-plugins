@@ -5,7 +5,7 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [thatrebeccarae/claude-marketing](https://github.com/thatrebeccarae/claude-marketing).
+Original source: `.windsurf/rules/*.md` in [thatrebeccarae/claude-marketing](https://github.com/thatrebeccarae/claude-marketing).
 
 ## Also available for
 
@@ -13,7 +13,7 @@ Original source: `GEMINI.md` in [thatrebeccarae/claude-marketing](https://github
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
-- **Windsurf** — `project-config.md`
+- **Gemini CLI** — `GEMINI.md`
 
 Graded against the Tome Standard, TomeVault's public ruleset for whether AI instructions load, read clearly and stay safe. Source: [github.com/thatrebeccarae/claude-marketing](https://github.com/thatrebeccarae/claude-marketing)
 
