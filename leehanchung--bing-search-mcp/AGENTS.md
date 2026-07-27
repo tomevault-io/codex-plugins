@@ -162,4 +162,4 @@ This document contains critical information about working with this codebase. Fo
 
 ---
 > Source: [leehanchung/bing-search-mcp](https://github.com/leehanchung/bing-search-mcp) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-05-19 -->
+<!-- tomevault:4.0:agents_md:2026-07-26 -->
