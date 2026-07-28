@@ -1,103 +1,106 @@
 
-# GitHub Copilot Instructions
+# Translation and user-facing text
 
-This repository contains **Amber Express** - a Python 3.13+ Home Assistant custom component for real-time Amber Electric pricing with smart polling and WebSocket support.
+Custom integrations use `translations/en.json` (not `strings.json` like core integrations).
 
-## Project overview
+## Writing style
 
-Amber Express provides fast, real-time electricity pricing for Amber Electric customers in Australia. Key features:
+- **Tone**: Friendly and informative
+- **Perspective**: Second person ("you" and "your")
+- **Clarity**: Write for non-native English speakers
+- **Case**: Sentence case for all titles and messages
+- **Abbreviations**: Avoid when possible
 
-- **Smart polling**: Cron-based polling inspired by amber2mqtt - polls frequently at interval start, stops once confirmed price received
-- **WebSocket redundancy**: Optional connection to Amber's WebSocket API with automatic fallback to polling
-- **HAEO compatibility**: Forecast sensors designed to work seamlessly with HAEO for energy optimization
-- **Flexible pricing**: Choose between AEMO-based (per_kwh) or Amber's predicted pricing (advanced_price_predicted)
+## Formatting in messages
 
-### Core components
+- Use backticks for: file paths, filenames, variable names, field entries
+- Example: "Check the `config.json` file"
 
-- **Config Flow** (`config_flow.py`): Two-step setup (API token → site selection) with options flow
-- **Coordinator** (`coordinator.py`): Smart polling with estimate detection and data merging
-- **WebSocket** (`websocket.py`): Persistent WebSocket connection with exponential backoff
-- **Sensors** (`sensor.py`, `binary_sensor.py`): Price, forecast, descriptor, renewables, and spike sensors
+## strings.json structure
 
-### Project structure
-
+```json
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Configure Amber Express",
+        "description": "Enter your Amber Electric API key",
+        "data": {
+          "api_key": "API key"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Failed to connect to Amber API",
+      "invalid_api_key": "Invalid API key"
+    },
+    "abort": {
+      "already_configured": "This site is already configured"
+    }
+  },
+  "entity": {
+    "sensor": {
+      "general_price": {
+        "name": "General price"
+      },
+      "feed_in_price": {
+        "name": "Feed-in price"
+      }
+    }
+  },
+  "exceptions": {
+    "api_error": {
+      "message": "Failed to communicate with Amber API: {reason}"
+    }
+  }
+}
 ```
-custom_components/amber_express/
-├── __init__.py           # Integration setup
-├── config_flow.py        # Config and options flows
-├── const.py              # Constants and defaults
-├── coordinator.py        # Smart polling coordinator
-├── websocket.py          # WebSocket client
-├── sensor.py             # Sensor platform
-├── binary_sensor.py      # Binary sensor platform
-└── translations/         # i18n strings
-    └── en.json
-tests/                    # Test suite
+
+## Entity translations
+
+Use translation keys for entity names:
+
+```python
+class MySensor(SensorEntity):
+    _attr_has_entity_name = True
+    _attr_translation_key = "general_price"
 ```
 
-## Development tools
+## Exception translations
 
-- **Package manager**: uv (use `uv sync` for dependencies, `uv run` to execute tools)
-- **Testing**: pytest with pytest-homeassistant-custom-component
-- **Linting/Formatting**: Ruff (Python), Prettier (JSON)
-- **Type checking**: Pyright (strict mode)
+Use translation keys for user-facing exceptions:
 
-## Agent behavioral rules
+```python
+raise ServiceValidationError(
+    translation_domain=DOMAIN,
+    translation_key="api_error",
+    translation_placeholders={"reason": "timeout"},
+)
+```
 
-### Design principles
+## Sensor naming conventions
 
-**Convention over configuration**: Prefer uniform patterns that work the same everywhere.
+### Capitalization
 
-- Derive behavior from existing structure rather than adding metadata flags
-- Make all instances of a pattern work the same way - no special cases
-- Let config flow validation enforce constraints so downstream code can assume valid data
+Entity names should start with a capital letter, rest lowercase (unless proper noun or abbreviation):
 
-**Composition over complexity**: Build features by composing simple, focused components.
+- ✓ Correct: "General price", "Feed-in price", "Renewables percentage"
+- ✗ Incorrect: "General Price", "FEED-IN PRICE"
 
-- Separate concerns: validation happens at config flow boundaries
-- Avoid "check if X then do Y else do Z" patterns
+### Home Assistant entity naming requirements
 
-### Clean changes
+- `has_entity_name = True` - Required for all new integrations
+- `translation_key` - Used to look up translated entity names
+- `translation_placeholders` - Optional dict for parameterized translations
 
-When making changes, don't leave behind comments describing what was once there.
-Comments should describe code as it exists.
+### Entity name composition
 
-### Error context
+Home Assistant generates `friendly_name` by combining device and entity names:
 
-The main branch is always clean. Any errors or warnings you encounter are from recent changes and must be fixed.
-
-### Code review guidelines
-
-Rely on linting tools (Ruff and Pyright) for issues they detect. Focus review on:
-
-- Logic errors and bugs
-- Architectural concerns
-- Performance issues
-- Missing tests
-
-## Code standards
-
-- **Python**: 3.13+ with modern features (pattern matching, `str | None` syntax, dataclasses)
-- **Type hints**: Required on all functions and methods
-- **Formatting**: Ruff (Python), Prettier (JSON)
-- **Linting**: Ruff with ALL rules enabled
-- **Type checking**: Pyright strict mode
-- **Language**: American English
-- **Testing**: pytest with coverage
-
-### Version matching
-
-The version number must be consistent across:
-
-- `pyproject.toml` (`version = "x.y.z"`)
-- `custom_components/amber_express/manifest.json` (`"version": "x.y.z"`)
-
-When updating version numbers, update both files together.
-
-## Self-maintenance
-
-When the user provides feedback about systemic corrections, update the appropriate instruction file to capture that feedback for future sessions.
+- Entity not in device: `friendly_name = entity.name`
+- Entity in device with name: `friendly_name = f"{device.name} {entity.name}"`
+- Entity in device with `name=None`: `friendly_name = device.name`
 
 ---
 > Source: [hass-energy/amber-express](https://github.com/hass-energy/amber-express) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-05-02 -->
+<!-- tomevault:4.0:agents_md:2026-07-26 -->
