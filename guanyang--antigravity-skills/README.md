@@ -5,14 +5,14 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [guanyang/antigravity-skills](https://github.com/guanyang/antigravity-skills).
+Original source: `CLAUDE.md` in [guanyang/antigravity-skills](https://github.com/guanyang/antigravity-skills).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 From [guanyang/antigravity-skills](https://github.com/guanyang/antigravity-skills) — a repo with 935+ stars on GitHub.
