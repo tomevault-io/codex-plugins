@@ -1,0 +1,11 @@
+# CLAUDE.md — 1ai-ecosystem Engineering Rules
+
+This is a Claude Code project configuration for a 1ai-ecosystem repository.
+
+**You MUST read `AGENTS.md` in this repo's root.** It contains the mandatory engineering rules, session classification, and full protocol stack.
+
+→ Read `AGENTS.md` now before proceeding with any other task.
+
+---
+> Source: [oyi77/1proxy](https://github.com/oyi77/1proxy) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-07-28 -->
