@@ -1,0 +1,24 @@
+# conductor
+
+> Source: [conductor-oss/conductor](https://github.com/conductor-oss/conductor). Graded, signed and kept in sync across platforms by [TomeVault](https://tomevault.io)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [conductor-oss/conductor](https://github.com/conductor-oss/conductor).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+From [conductor-oss/conductor](https://github.com/conductor-oss/conductor) — a repo with 32032+ stars on GitHub.
+
+---
+
+Explore more instruction files on [TomeVault](https://tomevault.io), the platform that grades AI instruction files and catches silent drift across every major tool.
+
+<!-- genome:d-e-s -->
