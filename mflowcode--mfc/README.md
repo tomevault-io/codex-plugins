@@ -5,17 +5,17 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [MFlowCode/MFC](https://github.com/MFlowCode/MFC).
+Original source: `CLAUDE.md` in [MFlowCode/MFC](https://github.com/MFlowCode/MFC).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [MFlowCode/MFC](https://github.com/MFlowCode/MFC) — a repo with 389+ stars on GitHub.
+From [MFlowCode/MFC](https://github.com/MFlowCode/MFC) — a repo with 388+ stars on GitHub.
 
 ---
 
