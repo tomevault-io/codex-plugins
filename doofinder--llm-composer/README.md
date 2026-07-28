@@ -1,0 +1,29 @@
+# llm_composer
+
+> Source: [doofinder/llm_composer](https://github.com/doofinder/llm_composer). Graded, signed and kept in sync across platforms by [TomeVault](https://tomevault.io)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `` in [doofinder/llm_composer](https://github.com/doofinder/llm_composer).
+
+## Also available for
+
+- **Claude Code** — `CLAUDE.md`
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/doofinder/llm_composer](https://github.com/doofinder/llm_composer)
+
+---
+
+Install this config instantly:
+```
+npx tomevault install doofinder/llm_composer
+```
+Source: [github.com/doofinder/llm_composer](https://github.com/doofinder/llm_composer).
+
+<!-- genome:d-i-p -->
