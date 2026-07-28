@@ -1,21 +1,22 @@
 # movies
 
-> Tome by [oktay](https://github.com/oktay/movies) — distributed by [TomeVault](https://tomevault.io)
+> Tome by [oktay](https://github.com/oktay/movies), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [oktay/movies](https://github.com/oktay/movies).
+Original source: `` in [oktay/movies](https://github.com/oktay/movies).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [oktay/movies](https://github.com/oktay/movies) — a repo with 183+ stars on GitHub.
+From [oktay/movies](https://github.com/oktay/movies) — a repo with 182+ stars on GitHub.
 
 ---
 
