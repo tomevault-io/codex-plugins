@@ -1,21 +1,21 @@
 # AI instruction files for meshtui
 
-> Sourced from [ekollof/meshtui](https://github.com/ekollof/meshtui) and converted for every major platform by [TomeVault](https://tomevault.io)
+> Sourced from [ekollof/meshtui](https://github.com/ekollof/meshtui), graded against the public Tome Standard and kept consistent across every major platform by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [ekollof/meshtui](https://github.com/ekollof/meshtui).
+Original source: `copilot-instructions.md` in [ekollof/meshtui](https://github.com/ekollof/meshtui).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Quality verified by TomeVault's automated analysis pipeline. [View quality report](https://tomevault.io/claim/ekollof#quality)
+Graded against the Tome Standard, TomeVault's public ruleset for whether AI instructions load, read clearly and stay safe. Source: [github.com/ekollof/meshtui](https://github.com/ekollof/meshtui)
 
 ---
 
@@ -23,6 +23,6 @@ Install this config instantly:
 ```
 npx tomevault install ekollof/meshtui
 ```
-Or browse all formats at [https://tomevault.io/claim/ekollof](https://tomevault.io/claim/ekollof).
+Source: [github.com/ekollof/meshtui](https://github.com/ekollof/meshtui).
 
 <!-- genome:a-i-q -->
