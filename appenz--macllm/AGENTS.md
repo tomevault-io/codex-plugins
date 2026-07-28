@@ -1,0 +1,29 @@
+
+### Before doing anything, check the specs
+Read specs/overview.md for a high-level overview of the project
+Alwasy read relevant specs before reading the code
+If you find a spec that is out of date, always say so!
+
+# How to Plan
+When asking questions, just ask them in plain text. Do NOT use the structured
+multiple choice UI.
+
+### How to Test:
+- Run "make test" for the usual test suite
+- Run "make test-calendar" for calendar-specific tests
+- Run "make test-ui" for UI tests (opens a real window, drives keyboard input)
+- Run "make test-ui-external" for visual regression UI tests (requires API keys, uses vision LLM)
+- Run "make debug-render" to test rendering, it will delete the old screenshot and take a new one
+
+### IMPORTANT: Always use `make` targets, never call tools directly
+- `make` is on the shell allowlist; `uv` and `pytest` are NOT.
+- Running `uv run` or `pytest` directly will fail or reinstall wrong dependency versions.
+- Do not call `pytest` directly. Use the corresponding `make` target instead.
+
+### Upgrading dependencies
+- When upgrading a Python package, use `uv add <package>` (not `uv pip install --upgrade`).
+- `uv add` properly updates `pyproject.toml` and the lock file; `uv pip install` only touches the venv.
+
+---
+> Source: [appenz/macLLM](https://github.com/appenz/macLLM) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-07-26 -->
