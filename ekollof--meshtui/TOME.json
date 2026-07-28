@@ -4,7 +4,7 @@
   "repo": "meshtui",
   "description": "",
   "type": "config",
-  "source_format": "CLAUDE.md",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -38,7 +38,7 @@
     }
   ],
   "skills": [],
-  "claim_url": "https://tomevault.io/claim/ekollof",
+  "source_url": "https://github.com/ekollof/meshtui",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-13T01:46:11Z"
+  "distributed_at": "2026-07-28T00:56:39Z"
 }
