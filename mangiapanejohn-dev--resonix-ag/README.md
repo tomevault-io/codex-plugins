@@ -5,7 +5,7 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [mangiapanejohn-dev/Resonix-AG](https://github.com/mangiapanejohn-dev/Resonix-AG).
+Original source: `` in [mangiapanejohn-dev/Resonix-AG](https://github.com/mangiapanejohn-dev/Resonix-AG).
 
 ## Also available for
 
@@ -13,6 +13,7 @@ Original source: `GEMINI.md` in [mangiapanejohn-dev/Resonix-AG](https://github.c
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 From [mangiapanejohn-dev/Resonix-AG](https://github.com/mangiapanejohn-dev/Resonix-AG) — a repo with 33+ stars on GitHub.
