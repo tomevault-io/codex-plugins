@@ -1,18 +1,16 @@
 # AI instruction files for code-review-graph
 
-> Sourced from [tirth8205/code-review-graph](https://github.com/tirth8205/code-review-graph) and converted for every major platform by [TomeVault](https://tomevault.io)
-
-Local knowledge graph for Claude Code. Builds a persistent map of your codebase so Claude reads only what matters — 6.8× fewer tokens on reviews and up to 49× on daily coding tasks.
+> Sourced from [tirth8205/code-review-graph](https://github.com/tirth8205/code-review-graph), graded against the public Tome Standard and kept consistent across every major platform by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [tirth8205/code-review-graph](https://github.com/tirth8205/code-review-graph).
+Original source: `copilot-instructions.md` in [tirth8205/code-review-graph](https://github.com/tirth8205/code-review-graph).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
