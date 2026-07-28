@@ -1,26 +1,25 @@
 # unluac-rs
 
-> Source: [x3zvawq/unluac-rs](https://github.com/x3zvawq/unluac-rs) — distributed by [TomeVault](https://tomevault.io)
-
-A cross-platform, Rust-based Lua decompilation library for multiple dialects
+> Source: [x3zvawq/unluac-rs](https://github.com/x3zvawq/unluac-rs). Graded, signed and kept in sync across platforms by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [x3zvawq/unluac-rs](https://github.com/x3zvawq/unluac-rs).
+Original source: `` in [x3zvawq/unluac-rs](https://github.com/x3zvawq/unluac-rs).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [x3zvawq/unluac-rs](https://github.com/x3zvawq/unluac-rs) — a repo with 25+ stars on GitHub.
+From [x3zvawq/unluac-rs](https://github.com/x3zvawq/unluac-rs) — a repo with 50+ stars on GitHub.
 
 ---
 
-Explore more instruction files on [TomeVault](https://tomevault.io) — the open index of AI config files for every platform.
+Explore more instruction files on [TomeVault](https://tomevault.io), the platform that grades AI instruction files and catches silent drift across every major tool.
 
 <!-- genome:d-e-s -->
