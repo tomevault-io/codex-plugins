@@ -1,0 +1,24 @@
+# chroma
+
+> Tome by [chroma-core](https://github.com/chroma-core/chroma), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [chroma-core/chroma](https://github.com/chroma-core/chroma).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+From [chroma-core/chroma](https://github.com/chroma-core/chroma) — a repo with 28853+ stars on GitHub.
+
+---
+
+Own this repo? Install the TomeVault Relay to keep every platform's copy in sync on every push: [https://tomevault.io/install](https://tomevault.io/install).
+
+<!-- genome:t-c-s -->
