@@ -1,18 +1,16 @@
 # serenedb
 
-> Tome by [serenedb](https://github.com/serenedb/serenedb) — distributed by [TomeVault](https://tomevault.io)
-
-The First Distributed Real-Time Search Analytics Database
+> Tome by [serenedb](https://github.com/serenedb/serenedb), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [serenedb/serenedb](https://github.com/serenedb/serenedb).
+Original source: `CLAUDE.md` in [serenedb/serenedb](https://github.com/serenedb/serenedb).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
