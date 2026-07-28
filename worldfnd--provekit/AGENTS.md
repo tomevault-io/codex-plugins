@@ -210,5 +210,5 @@ When reviewing PRs, check for:
 - CI must pass before merge. Do not bypass branch protection without justification.
 
 ---
-> Source: [worldfnd/provekit](https://github.com/worldfnd/provekit) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-05-18 -->
+> Source: [worldfnd/ProveKit](https://github.com/worldfnd/ProveKit) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-07-23 -->
