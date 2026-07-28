@@ -1,23 +1,21 @@
 # amber-express
 
-> Source: [hass-energy/amber-express](https://github.com/hass-energy/amber-express) — distributed by [TomeVault](https://tomevault.io)
-
-Home Assistant integration for Amber Electric with adaptive polling, WebSocket support, and HAEO compatibility
+> Source: [hass-energy/amber-express](https://github.com/hass-energy/amber-express). Graded, signed and kept in sync across platforms by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [hass-energy/amber-express](https://github.com/hass-energy/amber-express).
+Original source: `.cursor/rules/*.mdc` in [hass-energy/amber-express](https://github.com/hass-energy/amber-express).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [hass-energy/amber-express](https://github.com/hass-energy/amber-express) — a repo with 30+ stars on GitHub.
+From [hass-energy/amber-express](https://github.com/hass-energy/amber-express) — a repo with 34+ stars on GitHub.
 
 ---
 
