@@ -1,0 +1,24 @@
+# shortlink
+
+> Tome by [shortlink-org](https://github.com/shortlink-org/shortlink), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `.cursor/rules/*.mdc` in [shortlink-org/shortlink](https://github.com/shortlink-org/shortlink).
+
+## Also available for
+
+- **Claude Code** — `CLAUDE.md`
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+From [shortlink-org/shortlink](https://github.com/shortlink-org/shortlink) — a repo with 770+ stars on GitHub.
+
+---
+
+Explore more instruction files on [TomeVault](https://tomevault.io), the platform that grades AI instruction files and catches silent drift across every major tool.
+
+<!-- genome:t-e-s -->
