@@ -5,15 +5,15 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.windsurf/rules/*.md` in [Accenture/mercury](https://github.com/Accenture/mercury).
+Original source: `copilot-instructions.md` in [Accenture/mercury](https://github.com/Accenture/mercury).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
 
 From [Accenture/mercury](https://github.com/Accenture/mercury) — a repo with 90+ stars on GitHub.
 
