@@ -1,21 +1,40 @@
-# Extracted from README.md
+# Hermes Agent + Hermes Tweet Copilot Instructions
 
-# React TypeScript Next.js Node.js  prompt file
+## Context
+- Build Hermes Agent plugins and skills that use `hermes-tweet` for X/Twitter automation.
+- Prefer the published `hermes-tweet` Python package and repository manifests over custom X API clients.
+- Keep explore, read, and action workflows separate so write operations stay explicit.
+- Use public configuration names only: `XQUIK_API_KEY` and `HERMES_TWEET_ENABLE_ACTIONS`.
 
-Author: Gabo Esquivel
+## Setup
+- Use Python 3.12 or newer.
+- Install `hermes-tweet` with the project package manager.
+- Require `XQUIK_API_KEY` before read or action tools call the network.
+- Keep action tools disabled unless `HERMES_TWEET_ENABLE_ACTIONS=true`.
+- Never hard-code API keys, tokens, cookies, or account identifiers.
 
-## What you can build
-Decentralized Finance Dashboard: Create a web app using Next.js 14 App Router and Wagmi v2 for aggregating and displaying DeFi related data such as token prices, liquidity pools, and yield farming opportunities. Use TypeScript interfaces for data modeling and Tailwind CSS for a responsive design.NFT Minting Platform: Develop a platform using Solidity for smart contract development, TypeScript for front-end logic, and Next.js for the server-side rendering of NFTs. Integrate Shadcn UI and Tailwind Aria for elegant UI components.Real-time Cryptocurrency Portfolio Tracker: Build a React application that uses the Viem v2 library for interacting with blockchain data in real-time. Use Next.js and functional components to render user portfolios dynamically, with responsiveness handled by Radix UI components.Decentralized Voting Application: Implement a secure voting system using Solidity for the backend logic and TypeScript with Next.js for the frontend. Use Zod for form input validation and ensure error resilience with custom error types.Smart Contract IDE Plugin: Create a Node.js-based plugin for IDEs that supports Solidity development, offering features like syntax highlighting and auto-completion. Use TypeScript for robust type checking and rely on modularization for code maintainability.Blockchain-based Supply Chain Management System: Design a fault-tolerant supply chain solution using Solidity for smart contract management, TypeScript for interfacing, and Next.js for presenting supply chain data to users in real-time, leveraging Tailwind CSS for effortless styling.Educational Platform for Web3 Developers: Build an interactive platform using Next.js and Vite to teach Web3 development, featuring courses on Solidity, smart contract development, and blockchain integration. Use React components for interactivity and a mobile-first design approach.DAO Management Interface: Develop a Decentralized Autonomous Organization (DAO) management app using Wagmi v2 and Solidity, hosted on a server-less architecture using Next.js. Employ Aria UI for accessibility and seamless user interaction.Crowdfunding Platform on Ethereum: Create a crowdfunding platform using TypeScript, with smart contract logic written in Solidity. Implement authentication and payment interfaces using React functional components and Radix UI for structure and style.Crypto Wallet Integration Library: Offer a library using Node.js and TypeScript to simplify the integration of cryptocurrency wallets into web apps. Embrace functional programming and export components for extensibility and ease of integration.
+## Hermes Agent Patterns
+- Register bundled skills with `ctx.register_skill`.
+- Keep tool handlers JSON-serializable and return strings when the agent runtime expects strings.
+- Accept `**kwargs` in handlers for forward-compatible runtime metadata.
+- Keep non-network exploration tools available without credentials.
+- Gate read tools on API availability and `XQUIK_API_KEY`.
+- Gate write tools on action enablement, `XQUIK_API_KEY`, and `HERMES_TWEET_ENABLE_ACTIONS=true`.
 
-## Benefits
+## X/Twitter Safety
+- Treat posting, liking, following, reposting, deleting, and replying as write actions.
+- Ask for confirmation before generating code paths that can publish or mutate accounts.
+- Prefer dry-run previews, explicit payload summaries, and clear error messages.
+- Do not add fallback write routes when a write service reports an error.
+- Do not log private profile data, credentials, cookies, or raw request headers.
 
-
-## Synopsis
-Developers working on Next.js projects can use this prompt to build modular, type-safe applications with efficient error handling and optimized component structures.
-
-## Overview of  prompt
-The  file provides guidelines for developers specializing in technologies such as Solidity, TypeScript, Node.js, and React. It emphasizes writing concise and technical responses using accurate TypeScript examples while promoting functional and declarative programming styles. Key principles include favoring modularization over duplication, using descriptive variable names, and preferring named exports for components. The file outlines specific practices for JavaScript and TypeScript, such as using the "function" keyword for pure functions, leveraging TypeScript interfaces, and prioritizing error handling. It stipulates dependencies like Next.js 14, Wagmi v2, and Viem v2, and offers guidance on using React/Next.js with a focus on functional components, responsive design, and efficient error management. Additionally, it provides conventions for using server actions, data handling, and maintaining performance priorities like Web Vitals.
+## Code Quality
+- Use typed request and response models instead of unstructured dictionaries.
+- Isolate network clients behind small functions or dependency injection.
+- Add tests for credential gating, action gating, invalid payloads, and JSON serialization.
+- Keep documentation examples minimal, public-safe, and copy-pasteable.
+- Preserve Hermes Agent compatibility when editing plugin manifests or install docs.
 
 ---
 > Source: [Vishavjeet6/awesome-copilot-instructions](https://github.com/Vishavjeet6/awesome-copilot-instructions) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-06-30 -->
+<!-- tomevault:4.0:agents_md:2026-07-25 -->
