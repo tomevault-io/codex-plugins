@@ -1,8 +1,6 @@
 # AI instruction files for convex-panel
 
-> Sourced from [robertalv/convex-panel](https://github.com/robertalv/convex-panel) and converted for every major platform by [TomeVault](https://tomevault.io)
-
-A React component for monitoring and debugging Convex applications
+> Sourced from [robertalv/convex-panel](https://github.com/robertalv/convex-panel), graded against the public Tome Standard and kept consistent across every major platform by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
@@ -17,7 +15,7 @@ Original source: `.cursor/rules/*.mdc` in [robertalv/convex-panel](https://githu
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [robertalv/convex-panel](https://github.com/robertalv/convex-panel) — a repo with 66+ stars on GitHub.
+From [robertalv/convex-panel](https://github.com/robertalv/convex-panel) — a repo with 69+ stars on GitHub.
 
 ---
 
