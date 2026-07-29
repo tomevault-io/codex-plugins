@@ -4,7 +4,7 @@
   "repo": "minio-rs",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/minio/minio-rs",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-28T21:15:22Z"
+  "distributed_at": "2026-07-29T02:15:08Z"
 }
