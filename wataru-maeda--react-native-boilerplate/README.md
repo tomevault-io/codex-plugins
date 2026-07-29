@@ -5,13 +5,13 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [wataru-maeda/react-native-boilerplate](https://github.com/wataru-maeda/react-native-boilerplate).
+Original source: `.cursor/rules/*.mdc` in [wataru-maeda/react-native-boilerplate](https://github.com/wataru-maeda/react-native-boilerplate).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
-- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
