@@ -47,4 +47,4 @@ The Scribe will merge it into the shared decisions file.
 
 ---
 > Source: [bradygaster/Squad-IRL](https://github.com/bradygaster/Squad-IRL) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-05-10 -->
+<!-- tomevault:4.0:agents_md:2026-07-24 -->
