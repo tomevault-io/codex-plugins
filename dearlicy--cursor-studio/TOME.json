@@ -1,0 +1,44 @@
+{
+  "name": "cursor-studio",
+  "owner": "DearLicy",
+  "repo": "cursor-studio",
+  "description": "Cursor Studio \u662f\u4e00\u6b3e Windows \u684c\u9762\u5de5\u5177\uff0c\u7528\u4e8e\u96c6\u4e2d\u7ba1\u7406\u4e2a\u4eba Cursor \u4f7f\u7528\u4f53\u9a8c\u3002\u4f60\u53ef\u4ee5\u5728\u4e00\u4e2a\u754c\u9762\u4e2d\u7ba1\u7406\u6a21\u578b\u4f9b\u5e94\u5546\u3001\u7528\u91cf\u3001\u4f1a\u8bdd\u3001\u63d0\u793a\u8bcd\u3001MCP\u3001Skills\u3001\u5916\u89c2\u548c Cursor \u8d44\u6599\u3002",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/DearLicy/cursor-studio",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-29T17:15:25Z"
+}
