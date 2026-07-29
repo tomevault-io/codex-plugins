@@ -2,9 +2,9 @@
   "name": "dreame-mower",
   "owner": "antondaubert",
   "repo": "dreame-mower",
-  "description": "Dreame Mower integration for Home Assistant",
+  "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/antondaubert/dreame-mower",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-05T18:35:46Z"
+  "distributed_at": "2026-07-29T15:43:09Z"
 }
