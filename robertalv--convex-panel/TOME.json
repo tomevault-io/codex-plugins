@@ -2,7 +2,7 @@
   "name": "convex-panel",
   "owner": "robertalv",
   "repo": "convex-panel",
-  "description": "A React component for monitoring and debugging Convex applications",
+  "description": "",
   "type": "config",
   "source_format": ".cursor/rules/*.mdc",
   "formats": [
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/robertalv/convex-panel",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-20T15:32:07Z"
+  "distributed_at": "2026-07-29T15:00:29Z"
 }
