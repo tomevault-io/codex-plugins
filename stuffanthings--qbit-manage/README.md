@@ -5,17 +5,17 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [StuffAnThings/qbit_manage](https://github.com/StuffAnThings/qbit_manage).
+Original source: `CLAUDE.md` in [StuffAnThings/qbit_manage](https://github.com/StuffAnThings/qbit_manage).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [StuffAnThings/qbit_manage](https://github.com/StuffAnThings/qbit_manage) — a repo with 1581+ stars on GitHub.
+From [StuffAnThings/qbit_manage](https://github.com/StuffAnThings/qbit_manage) — a repo with 1574+ stars on GitHub.
 
 ---
 
