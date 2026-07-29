@@ -1,0 +1,41 @@
+# GitHub Copilot Instructions
+
+## General
+
+- Deliver concise, BLUF feedback without suggesting code or editing the content. Raise each point as an inline review comment attached to the specific line(s) it concerns, using GitHub's pull request review functionality.
+- Flag any divergence from the requirements of the associated issue.
+- For prose, watch for plagiarism or derivative content. When you suspect it, provide the exact quote and a link to the source.
+- Every factual, quantitative, or temporal claim should be backed by a primary source. Fact-check named entities, figures, dates, and technical claims; flag anything unverifiable, misattributed, conflated, mislabeled, overstated, or future-dated.
+
+## `content/research/cyberattacks/wiki/**`
+
+- Require a substantive, original explainer of a distinct attack vector that matches sibling pages in depth, structure, and conventions, including a mitigations section.
+- Reject draft, stub, thin, derivative, or duplicate submissions that overlap existing wiki pages or open PRs.
+- Require an inline primary-source link for every factual or quantitative claim.
+- Enforce consistency with siblings across frontmatter, headings, naming, file layout, and internal cross-linking. Flag any divergence.
+
+## `content/research/cyberattacks/incidents/**`
+
+- Require accurate, verifiable, well-sourced write-ups consistent with sibling files: on-chain evidence (transaction hashes, addresses), dates, attribution, and root cause.
+- Flag thin narrative recaps, unverifiable or future-dated claims, and duplicates of existing incidents or other open PRs adding the same file.
+
+## `content/research/market-health/posts/**`
+
+- Scope is limited to sophisticated market manipulation: wash trading, spoofing, pump-and-dump, oracle/price manipulation, volume fabrication, supply concentration, etc. Reject as out of scope: security exploits, hacks, custody breaches, Ponzi/exit-scams, insolvency post-mortems, etc.
+- Conclusions must be derived from primary market data the author worked with — orderbook/trade feeds, statistically significant metric datasets, or computed DN Institute crypto-market-health API metrics — not figures lifted from news, filings, or papers.
+- Require a committed dataset and/or author-generated charts. Qualitative tables or round-number tables are not datasets. If the prose cites figures, images, or statistics, verify the underlying files are committed and reproducible, and flag any that are not.
+- Baseline against accepted siblings (e.g. Huobi, Senso). Output a strict, BLUF list of substantive improvements.
+
+## `content/research/market-health/docs/**`
+
+- Reject literature or regulatory summaries that lack data, visuals, or API-response documentation.
+
+## `**/posts/*.md`
+
+- Baseline quality against sibling files on the `main` branch.
+- Fact-check contentious claims with targeted research, and verify temporal accuracy by checking recent developments for the mentioned entities and events.
+- Prefer statistically significant metric datasets that support claims over narrative-driven data presented as if it were a structured dataset.
+
+---
+> Source: [1712n/dn-institute](https://github.com/1712n/dn-institute) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-07-24 -->
