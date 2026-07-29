@@ -1,103 +1,70 @@
-# CLAUDE.md
+# Copilot Instructions for actual-auto-sync
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+## Build and Test
 
-## Project Overview
+**Prerequisites:** Node.js >= 22, pnpm >= 10.8.1
 
-A background service that automatically runs bank sync on Actual Budget accounts on a configurable schedule. It uses the official `@actual-app/api` to connect to an Actual Budget server, download budgets, run bank syncs, and sync changes back to the server.
+**Commands:**
 
-## Plan
+- `pnpm install --frozen-lockfile` - Install dependencies
+- `pnpm build` - Compile TypeScript
+- `pnpm test` - Run tests
+- `pnpm test:coverage` - Run tests with coverage
 
-- Make plans as concise as possible. Sacrifice grammar to be concise.
-- At the end of every plan provide a list of unresolved questions to be answered.
+Always run build and tests before committing changes.
 
-## Commands
+## Code Style and Conventions
 
-```bash
-# Install dependencies
-pnpm install
+### TypeScript
 
-# Run locally (uses ts-node with ESM loader)
-pnpm start
+- Use strict TypeScript (ES2024, NodeNext modules)
+- **Always include `.js` extensions in import statements** (ESM requirement)
+- Use type-safe environment variable validation with zod schemas
 
-# Run tests
-pnpm test
+### Testing
 
-# Run tests with coverage
-pnpm test:coverage
+- Use Vitest for all tests
+- Test files: `src/__tests__/*.test.ts`
+- Write unit tests for all new functionality
+- Maintain high test coverage
 
-# Run a single test file
-pnpm test src/__tests__/utils.test.ts
+### Environment Variables
 
-# Run e2e tests (requires Actual Budget server running on localhost:5006)
-pnpm test:e2e
+- Define all environment variables in `src/env.ts` using zod schemas
+- Use @t3-oss/env-core package for type-safe validation
+- Document in both env.ts and README.md
+- Add tests in `src/__tests__/env.test.ts`
 
-# Run e2e tests with Docker (spins up server automatically)
-pnpm test:e2e:docker
+### Logging
 
-# Type check
-pnpm build
+- Use pino logger from `src/logger.ts`
+- Never log sensitive information (passwords, encryption keys, API tokens)
 
-# Build Docker image locally
-docker build -t actual-auto-sync .
-```
+## Common Tasks
 
-## Architecture
+### Adding a new environment variable
 
-```
-src/
-├── index.ts       # Entry point - sets up global error handlers, creates and starts cron job
-├── env.ts         # Environment configuration with Zod validation schemas
-├── cron.ts        # Cron job creation and lifecycle (onTick, onComplete)
-├── logger.ts      # Pino logger instance configured from env
-├── utils.ts       # Core sync logic - init, download budgets, run bank sync
-└── __tests__/
-    ├── *.test.ts  # Unit tests with vi.mock for external dependencies
-    └── e2e/       # E2E tests against real Actual Budget server
-        ├── setup.ts           # Test utilities (waitForServer, initApi, etc.)
-        └── sync.e2e.test.ts   # Main e2e test suite
-```
+1. Add schema to `src/env.ts` using zod
+2. Add to env configuration object
+3. Document in README.md
+4. Add tests in `src/__tests__/env.test.ts`
 
-### Key Flow
+### Modifying sync logic
 
-1. `index.ts` creates a cron job via `createCronJob()`
-2. On each tick (or on start if `RUN_ON_START=true`), `sync()` is called
-3. `sync()` initializes the Actual API, downloads configured budgets, runs `runBankSync()`, then syncs back to server
-4. The service handles unhandled rejections gracefully (required because `@actual-app/api` may throw these)
+- Main entry point: `src/index.ts`
+- Cron job creation: `src/cron.ts`
+- Test thoroughly - affects users' financial data
 
-### Environment Configuration
+## Best Practices
 
-Environment variables are validated at startup using `@t3-oss/env-core` with Zod schemas. Key schemas in `env.ts`:
-
-- `budgetIdSchema` - comma-separated list transformed to array
-- `encryptionPasswordSchema` - comma-separated passwords, positionally matched to budget IDs
-- `runOnStartSchema` - flexible boolean parsing (accepts "true", "1", "yes", "on", etc.)
-- `timezoneSchema` - validates against IANA timezone database using Luxon
-
-### Testing Patterns
-
-**Unit tests** use Vitest with:
-
-- `vi.mock()` for external dependencies (`@actual-app/api`, `node:fs/promises`)
-- Mock env object to avoid loading real environment during tests
-- Tests for both success paths and error handling
-
-**E2E tests** (`src/__tests__/e2e/`) run against a real Actual Budget server:
-
-- `docker-compose.e2e.yml` spins up an `actualbudget/actual-server` container and a mock SimpleFIN server
-- Workflow and bank-sync suites create fresh budgets/accounts/transactions programmatically via `@actual-app/api`
-- `runBankSync()` is called on unlinked accounts (completes without fetching transactions)
-- The mock SimpleFIN server provides test fixtures for bank sync integration testing
-- Use `pnpm test:e2e:docker` for the full Docker-based test flow
-
-## ESM Configuration
-
-This project uses ES modules. Important:
-
-- All imports use `.js` extension (e.g., `import { logger } from "./logger.js"`)
-- Uses `ts-node/esm` loader for development: `node --loader ts-node/esm`
-- Built files go to `dist/` and are run with plain `node dist/src/index.js` in Docker
+1. Make minimal changes to achieve the goal
+2. Leverage TypeScript's type system for safety
+3. Handle errors gracefully and log appropriately
+4. Write tests for new functionality
+5. Update README.md for user-facing features
+6. Never commit secrets or sensitive data
+7. Avoid breaking changes to environment variables
 
 ---
 > Source: [seriouslag/actual-auto-sync](https://github.com/seriouslag/actual-auto-sync) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-05-19 -->
+<!-- tomevault:4.0:agents_md:2026-07-26 -->
