@@ -4,7 +4,7 @@
   "repo": "mimir",
   "description": "",
   "type": "config",
-  "source_format": "CLAUDE.md",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/mimir/mimir",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-29T01:45:14Z"
+  "distributed_at": "2026-07-29T12:45:37Z"
 }
