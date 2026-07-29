@@ -4,7 +4,7 @@
   "repo": "pulumi-azure-native",
   "description": "",
   "type": "config",
-  "source_format": "CLAUDE.md",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/pulumi/pulumi-azure-native",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-28T07:24:04Z"
+  "distributed_at": "2026-07-29T14:11:21Z"
 }
