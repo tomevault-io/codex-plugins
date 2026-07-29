@@ -5,17 +5,17 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [ArthurSonzogni/FTXUI](https://github.com/ArthurSonzogni/FTXUI).
+Original source: `copilot-instructions.md` in [ArthurSonzogni/FTXUI](https://github.com/ArthurSonzogni/FTXUI).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [ArthurSonzogni/FTXUI](https://github.com/ArthurSonzogni/FTXUI) — a repo with 10462+ stars on GitHub.
+From [ArthurSonzogni/FTXUI](https://github.com/ArthurSonzogni/FTXUI) — a repo with 10464+ stars on GitHub.
 
 ---
 
