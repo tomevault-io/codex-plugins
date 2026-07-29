@@ -1,18 +1,16 @@
 # actual-auto-sync
 
-> Tome by [seriouslag](https://github.com/seriouslag/actual-auto-sync) — distributed by [TomeVault](https://tomevault.io)
-
-A background service that automatically runs the bank sync on a scheduled basis on Actual Budget.
+> Tome by [seriouslag](https://github.com/seriouslag/actual-auto-sync), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [seriouslag/actual-auto-sync](https://github.com/seriouslag/actual-auto-sync).
+Original source: `copilot-instructions.md` in [seriouslag/actual-auto-sync](https://github.com/seriouslag/actual-auto-sync).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
@@ -21,6 +19,6 @@ Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Sou
 
 ---
 
-Explore more instruction files on [TomeVault](https://tomevault.io) — the open index of AI config files for every platform.
+Explore more instruction files on [TomeVault](https://tomevault.io), the platform that grades AI instruction files and catches silent drift across every major tool.
 
 <!-- genome:t-e-p -->
