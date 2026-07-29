@@ -5,17 +5,17 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [apereo/cas](https://github.com/apereo/cas).
+Original source: `copilot-instructions.md` in [apereo/cas](https://github.com/apereo/cas).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [apereo/cas](https://github.com/apereo/cas) — a repo with 11355+ stars on GitHub.
+From [apereo/cas](https://github.com/apereo/cas) — a repo with 11354+ stars on GitHub.
 
 ---
 
