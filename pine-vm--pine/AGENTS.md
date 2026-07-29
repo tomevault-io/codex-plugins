@@ -1,0 +1,56 @@
+
+For any implementation tasks, follow the rules and guides found in [implement/implementation-rules.md](./../implement/implementation-rules.md)
+
+# 2025-07 Workaround Defect in GitHub Copilot
+
+Since the GitHub Copilot failed repeatedly to follow instructions above, copy file contents below. The copies can be removed once the GitHub Copilot is fixed.
+
+----
+
+# Implementation Rules
+
+Consider these rules for any work with and on the implementation found in the Pine repository. These rules also apply to any pull requests opened on the Pine repository.
+
+## Running Tests in .NET
+
+Since the .NET projects in this repository use the new [`Microsoft.Testing.Platform`](https://learn.microsoft.com/en-us/dotnet/core/testing/microsoft-testing-platform-intro?tabs=dotnetcli) the `dotnet test` command does not always work as usual.
+
+To run tests in a .NET project, run the command `dotnet  run` from the directory containing the `.csproj` file.
+
+### Running Specific Tests in .NET
+
+To filter tests to run by C# method name, use a command like this:
+
+```cmd
+dotnet  run  --  --filter-method="*method_name*"
+```
+
+> Warning: Running a command like `dotnet  test  --filter=method_name` does not work as expected, as it will silently ignore the filter and run all tests instead. (This issue been reported for example at <https://github.com/dotnet/sdk/issues/45927> and <https://github.com/dotnet/sdk/issues/49210>)
+
+The command-line interface of the test framework offers many more options, like filtering tests by various attributes, configuring a timeout and more. To see an overview of available options, run the following command from the directory containing the `.csproj` file:
+
+```cmd
+dotnet  run  --  --help
+```
+
+### Per-run test log files
+
+Every `dotnet  run` invocation of a .NET test project in this repository automatically writes the **complete terminal output** to a log file under `artifacts/test-logs/<TestProjectName>/<timestamp>_{full|filtered}.log` (relative to the working directory of the test project). The filename contains `filtered` when a `--filter*` / `--treenode-filter` / `--test-node-filter` argument was passed, and `full` otherwise. The first lines of the file record the command line that produced the log. The last line of both the terminal output and the file is:
+
+```
+Test log written to: <path>
+```
+
+Reminders for coding agents when running tests:
+
+1. **Do not pipe `dotnet  run` into `tail`, `head`, or `grep` on the first invocation.** Either let the output stream to the terminal as-is, or redirect to a file explicitly. The summary lines the agent typically needs (`total`, `failed`, `succeeded`, individual failure messages) are at the bottom of the output and will otherwise be lost.
+2. **Before re-running a `dotnet  run` that previously took more than 30 seconds, re-read the log file from `artifacts/test-logs/…`.** The file contains the entire terminal output of the earlier run, including the final summary and any failure messages. The last line of the previous run tells you the exact path. Running `grep`, `head`, `tail`, or `sed` against that file is free; re-running the test binary costs minutes of wall-clock time.
+3. The `artifacts/test-logs/` directory is git-ignored, so log files never pollute diffs.
+
+## Formatting C# Code
+
+Before submitting a pull request, format any added or changed C# code using the command `dotnet  format`
+
+---
+> Source: [pine-vm/pine](https://github.com/pine-vm/pine) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-07-24 -->
