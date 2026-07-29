@@ -7,13 +7,13 @@ Native deterministic requirements-as-code engine and read-only MCP server.
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [asdecided/core](https://github.com/asdecided/core).
+Original source: `copilot-instructions.md` in [asdecided/core](https://github.com/asdecided/core).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
