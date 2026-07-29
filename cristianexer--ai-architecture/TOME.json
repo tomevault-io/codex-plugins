@@ -1,0 +1,44 @@
+{
+  "name": "ai-architecture",
+  "owner": "cristianexer",
+  "repo": "ai-architecture",
+  "description": "Welcome to the AI Architect Handbook - your definitive guide to mastering the art and science of AI systems architecture.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/cristianexer/ai-architecture",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-29T23:00:54Z"
+}
