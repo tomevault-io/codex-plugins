@@ -1,24 +1,24 @@
 # molpy
 
-> Tome by [MolCrafts](https://github.com/MolCrafts/molpy) — distributed by [TomeVault](https://tomevault.io)
+> Tome by [MolCrafts](https://github.com/MolCrafts/molpy), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [MolCrafts/molpy](https://github.com/MolCrafts/molpy).
+Original source: `copilot-instructions.md` in [MolCrafts/molpy](https://github.com/MolCrafts/molpy).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/MolCrafts/molpy](https://github.com/MolCrafts/molpy)
+Graded against the Tome Standard, TomeVault's public ruleset for whether AI instructions load, read clearly and stay safe. Source: [github.com/MolCrafts/molpy](https://github.com/MolCrafts/molpy)
 
 ---
 
-Explore more instruction files on [TomeVault](https://tomevault.io) — the open index of AI config files for every platform.
+Explore more instruction files on [TomeVault](https://tomevault.io), the platform that grades AI instruction files and catches silent drift across every major tool.
 
 <!-- genome:t-e-q -->
