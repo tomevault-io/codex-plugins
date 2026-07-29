@@ -1,90 +1,60 @@
-# CLAUDE.md
+# Homebridge Plugin UI Utils
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+`@homebridge/plugin-ui-utils` is a small TypeScript helper library that Homebridge plugin authors install to build a custom config UI for their plugin. It is published to npm as an ESM package. It contains no application — just a server-side base class, a browser-side runtime script, type declarations, and a test mock.
 
-## What this package is
+Always reference these instructions first and fall back to search or bash commands only when you encounter unexpected information that does not match the info here.
 
-- `@homebridge/plugin-ui-utils` — a helper library that plugin authors install to build a custom config UI for their Homebridge plugin.
-- Published as an ESM package (`"type": "module"`). The `exports` map exposes three entry points: the root (`HomebridgePluginUiServer`, `RequestError`, UI interface types), `./ui.interface` (just the type declarations for `window.homebridge`), and `./ui.mock` (the Jest/Karma mock — deliberately not re-exported from the root, because it must never end up in a production build).
-- There are no automated tests in this repo. `npm test` is a stub — validation is `npm run lint && npm run build` plus manual testing against a real Homebridge UI (see `DEVELOPMENT.md`).
+## Pull Request Guidelines
 
-## Commands
+- **Target Branch**: The default branch is `latest`. Target `latest` unless a `beta-X.Y.Z` branch exists for the current release cycle — check with `git branch -a | grep beta` and prefer the beta branch when there is one.
+- **Commit / PR titles**: Follow Conventional Commits (e.g. `fix(ui): …`, `feat(server): …`, `docs(readme): …`). Release notes are assembled from these by Release Drafter.
+- **Never push to** `beta-*.*.*` or `alpha-*.*.*` branches casually — any push to those branches triggers an automatic npm prerelease publish (see `.github/workflows/release.yml`).
 
-```sh
-npm run build       # clean dist/, then run BOTH tsc projects — see dual-build note below
-npm run lint        # eslint via @antfu/eslint-config; prepublishOnly runs lint + build
-npm run lint:fix
-npm run check       # npm install + npm outdated, used to review dependency drift
-```
+## Working Effectively
 
-Always use `npm run build`, never `tsc` alone — `tsc --project tsconfig.json` silently misses `ui.ts`, and `tsc --project tsconfig.ui.json` misses everything else.
+- Install dependencies: `npm install`
+- Build: `npm run build` — takes a few seconds. This cleans `dist/` and runs **two** TypeScript projects:
+  - `tsconfig.json` — everything in `src/` except `ui.ts` → `dist/` (the importable package)
+  - `tsconfig.ui.json` — only `ui.ts` → `dist/ui.js` (the script the Homebridge UI injects into the plugin's iframe)
+  - Never run `tsc` directly with a single project; each project alone misses part of the output. After a build, `dist/ui.js` existing is the proof the second project ran.
+- Lint: `npm run lint` (fix with `npm run lint:fix`) — ESLint with `@antfu/eslint-config`. `prepublishOnly` runs lint + build, and CI runs both, so run them before finalizing any change.
+- Tests: **there is no test suite**. `npm test` is a stub that exits 0. Do not add test infrastructure unless explicitly asked. Validation is lint + build + (for behaviour changes) manual testing inside a real Homebridge UI, as described in `DEVELOPMENT.md`.
 
-## Architecture
+## Project Structure
 
-This library spans **two completely different runtime environments**, which is the main thing to understand before changing code:
+The library spans two completely different runtime environments — keep each file inside its own runtime (the shared tsconfig has both DOM and Node types enabled, so the compiler will not catch a mix-up):
 
-1. **Server side** — Node.js. Runs as a child process that the Homebridge UI spawns when the user opens the plugin's settings modal, and terminates when they close it.
-2. **UI side** — Browser. Runs inside an iframe that the Homebridge UI renders to host the plugin's custom HTML/CSS/JS.
+- `src/server.ts` — **Node.js**. `HomebridgePluginUiServer` base class + `RequestError`. Runs as a child process spawned by the Homebridge UI when the user opens the plugin's settings modal; talks to the parent over Node IPC (`process.send` / `process.on('message')`); SIGTERMs itself on IPC `disconnect`.
+- `src/ui.ts` — **Browser**. `HomebridgePluginUi`, injected into the plugin's iframe by the Homebridge UI and assigned to `window.homebridge`; talks to the parent window via `window.postMessage`. Incoming messages are security-filtered: only `window.parent` is accepted as a source, and the origin is pinned from the first message — do not weaken these checks.
+- `src/ui.interface.ts` — type declarations for everything on `window.homebridge`. Consumers import this for types only (`@homebridge/plugin-ui-utils/ui.interface`).
+- `src/ui.mock.ts` — `MockHomebridgePluginUi` for plugin authors' own Jest/Karma tests; exposed as the `./ui.mock` subpath, intentionally not re-exported from the root.
+- `src/index.ts` — public entrypoint; re-exports the server class, `RequestError`, and interface types. It does **not** export `ui.ts` (the UI runtime is injected, never imported).
+- `examples/` — two standalone mini-plugins (`basic-ui-server`, `push-events`) that demonstrate the API. Not part of the published package.
 
-The Homebridge UI itself (the `homebridge-config-ui-x` package) is the intermediary between the two — this repo only owns each end of the conversation, not the middle.
+## API Surface Consistency (important)
 
-### Source layout
+`ui.ts`, `ui.interface.ts`, `ui.mock.ts`, and `README.md` all describe the same `window.homebridge` API, but the build does not link them — `ui.ts` compiles in a separate project from its declarations. When adding or changing any method on `HomebridgePluginUi`, update **all four files** in the same change:
 
-- `src/server.ts` — `HomebridgePluginUiServer` base class and `RequestError`. Plugin authors extend the class in their own `server.js`. Communicates with the parent Homebridge UI process over **Node IPC** (`process.send` / `process.on('message')`). Lifecycle: the constructor registers a `process.on('disconnect')` handler that SIGTERMs the process as soon as the parent closes the IPC channel — this is how the server exits when the user closes the settings modal. The handler lives in the constructor (not module scope) so that merely importing the package does not install it. (There used to be a 10-second `process.connected` polling heartbeat; it was removed because `disconnect` covers it and the interval kept the event loop alive.)
-- `src/ui.ts` — `HomebridgePluginUi` class. The Homebridge UI **injects** this script into the plugin's iframe at render time and assigns the instance to `window.homebridge`. Plugin authors never import this file — they only consume it via `window.homebridge`. Communicates with the parent window using **`window.postMessage`**. Includes a polyfill for browsers where `EventTarget` is not a constructor.
-- `src/ui.interface.ts` — TypeScript declarations for everything on `window.homebridge` (`IHomebridgePluginUi`, `IHomebridgeUiFormHelper`, `IHomebridgeUiToastHelper`, plus `PluginConfig`, `PluginSchema`, `PluginFormSchema`, `PluginMetadata`, `ServerEnvMetadata`, `CachedAccessory`, `CachedMatterAccessory`). Plugin authors import this for types only.
-- `src/ui.mock.ts` — `MockHomebridgePluginUi` for plugin authors to use in their own Jest/Karma tests. Implements `IHomebridgePluginUi` against in-memory mock data. It dispatches its `ready` event via `queueMicrotask` so listeners attached right after construction still see it.
-- `src/index.ts` — public entrypoint. Re-exports `HomebridgePluginUiServer`, `RequestError`, and the UI interface types. Does **not** export `ui.ts` (the UI runtime is injected, not imported).
+1. Implementation in `src/ui.ts`
+2. Declaration in `src/ui.interface.ts`
+3. Mock in `src/ui.mock.ts`
+4. Documentation in `README.md`
 
-### Keep the four UI files in sync
+The same applies on the server side: changes to `HomebridgePluginUiServer` need a matching `README.md` update.
 
-`ui.ts` (implementation), `ui.interface.ts` (declarations), `ui.mock.ts` (mock), and `README.md` (docs) all describe the same `window.homebridge` surface. When you add or change a method on `HomebridgePluginUi`, update all four — there is no compiler link between `ui.ts` and `ui.interface.ts` (they are separate tsc projects), so drift will not be caught by the build.
+## Validation
 
-### Request / response correlation
+- Always run `npm run lint && npm run build` before finalizing changes; both must pass with no errors.
+- Check `dist/` after the build: it should contain `index.js`, `server.js`, `ui.interface.js`, `ui.mock.js`, **and** `ui.js` (plus `.d.ts` files for everything except `ui.js`'s project output).
+- ESLint also formats Markdown files (`formatters.markdown: true`), so lint any `.md` you touch — only `README.md` and `DEVELOPMENT.md` are excluded.
 
-Both sides use a small request/response protocol:
+## Troubleshooting
 
-- UI → server: `ui.ts:_requestResponse` generates a random `requestId`, posts a `{ action: 'request', path, body, requestId }` message to the parent window, and resolves a promise when a `MessageEvent` with that `requestId` arrives.
-- Server → UI: `server.ts:processRequest` looks up the registered handler for `request.path`, calls it, and sends `{ action: 'response', payload: { requestId, success, data } }` back via `process.send`. A `RequestError` thrown by the handler is unwrapped into `{ message, error: requestError }` and returned with `success: false`.
-- Streaming the other way: `server.ts:pushEvent` emits `{ action: 'stream', payload: { event, data } }` over IPC; the UI dispatches it as a `MessageEvent` named after `event` on the `homebridge` EventTarget so consumers can `addEventListener`.
-
-### postMessage hardening in `ui.ts` (don't loosen)
-
-`_handleIncomingMessage` enforces two checks that exist for security, not correctness:
-
-- Messages are only accepted from `window.parent` (`e.source !== window.parent` is dropped) — otherwise sibling iframes or popups could inject styles or spoof responses.
-- The origin is **pinned to whatever the first message arrived from**, and anything from a different origin is rejected afterwards. It cannot wait for `ready` to capture the origin, because the parent's wrapper posts `body-class` / `link-element` / `inline-style` before `ready`. Outgoing messages (including toasts, which route through the parent instance for this reason) target the pinned origin.
-
-Related timing detail: the `ready` handler awaits every `link-element` load before unhiding `document.body`, and each link resolves after 5 s even if `onload`/`onerror` never fires — a stuck stylesheet must not leave the plugin UI hidden forever.
-
-### Dual TypeScript build (important)
-
-There are two tsconfigs because the two sides have different inputs/outputs:
-
-- `tsconfig.json` — builds everything in `src/` **except `ui.ts`** into `dist/`. This is what consumers `import` from the package.
-- `tsconfig.ui.json` — extends the above but **only includes `ui.ts`**. Produces `dist/ui.js` for the Homebridge UI to inject into the iframe.
-
-If you change either tsconfig, make sure `ui.ts` is in exactly one project. Also note the shared `compilerOptions` include both `DOM` in `lib` and `node` in `types`, so the compiler will **not** stop you from using `window` in `server.ts` or `node:process` in `ui.ts` — keeping each file inside its own runtime is on you.
-
-## Lint rules worth knowing
-
-`eslint.config.js` uses `@antfu/eslint-config` with these notable overrides:
-
-- Single quotes only (`'quotes': ['error', 'single']`).
-- Sorted exports and named exports (`perfectionist/sort-exports`, `perfectionist/sort-named-exports`).
-- Sorted imports with grouped order (types → builtin → external → internal → relative → side-effect), newlines between groups. `import/order` and core `sort-imports` are off — the perfectionist rules replace them.
-- `1tbs` brace style.
-- Markdown files are formatted by ESLint (`formatters.markdown: true`), except `README.md` and `DEVELOPMENT.md`, which are in the ignore list — so this file and others **will** be lint-formatted.
-
-## Commits and releases
-
-- Commit messages follow Conventional Commits (`fix(ui): …`, `docs(readme): …`); release notes are assembled by Release Drafter.
-- Publishing (`release.yml`): a GitHub release tagged `vX.Y.Z` publishes to npm as `latest`; a push to a `beta-X.Y.Z` or `alpha-X.Y.Z` branch publishes a prerelease under the matching npm dist-tag. The default branch is `latest`.
-
-## Examples
-
-`examples/basic-ui-server` and `examples/push-events` are standalone mini-plugins demonstrating the API. They live in this repo but are not part of the published package — they each have their own `package.json` and a `homebridge-ui/` directory (`server.js` + `public/index.html`) in the layout described in `README.md`.
+- **`dist/ui.js` missing after build**: you ran `tsc` with only `tsconfig.json`. Use `npm run build`, which runs both projects.
+- **Import sorting lint errors**: the config uses `perfectionist/sort-imports` with grouped order (types → builtin → external → internal → relative → side-effect) and newlines between groups; `npm run lint:fix` resolves these automatically.
+- **ESM pitfalls**: the package is `"type": "module"` — local imports in `src/` use the `.js` extension (e.g. `from './server.js'`), and the examples are ESM too.
+- **Message protocol changes**: the request/response protocol (`requestId` correlation, `action: 'request' | 'response' | 'stream' | 'ready'`) is shared with `homebridge-config-ui-x`, which sits between the two ends of this library. Changing a payload shape here breaks compatibility with the Homebridge UI — coordinate any protocol change with that repo.
 
 ---
 > Source: [homebridge/plugin-ui-utils](https://github.com/homebridge/plugin-ui-utils) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-22 -->
+<!-- tomevault:4.0:agents_md:2026-07-26 -->
