@@ -70,4 +70,4 @@ For structured assessments, read and follow the step-by-step instructions in the
 
 ---
 > Source: [aws-samples/sample-well-architected-skills-and-steering](https://github.com/aws-samples/sample-well-architected-skills-and-steering) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-26 -->
+<!-- tomevault:4.0:agents_md:2026-07-27 -->
