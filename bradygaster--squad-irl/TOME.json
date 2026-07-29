@@ -2,8 +2,8 @@
   "name": "Squad-IRL",
   "owner": "bradygaster",
   "repo": "Squad-IRL",
-  "description": "Squad IRL \u2014 real-world samples showcasing the Squad SDK",
-  "type": "config",
+  "description": "",
+  "type": "tome",
   "source_format": "copilot-instructions.md",
   "formats": [
     {
@@ -37,8 +37,51 @@
       "platform": "Windsurf"
     }
   ],
-  "skills": [],
+  "skills": [
+    {
+      "name": "Squad-IRL",
+      "path": ".squad/skill.md",
+      "github_url": "https://github.com/bradygaster/Squad-IRL/tree/main/.squad/skill.md",
+      "description": ""
+    },
+    {
+      "name": "Squad-IRL",
+      "path": ".squad/templates/skill.md",
+      "github_url": "https://github.com/bradygaster/Squad-IRL/tree/main/.squad/templates/skill.md",
+      "description": ""
+    },
+    {
+      "name": "Squad-IRL",
+      "path": ".squad/skills/history-hygiene/SKILL.md",
+      "github_url": "https://github.com/bradygaster/Squad-IRL/tree/main/.squad/skills/history-hygiene/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Squad-IRL",
+      "path": ".squad/skills/squad-conventions/SKILL.md",
+      "github_url": "https://github.com/bradygaster/Squad-IRL/tree/main/.squad/skills/squad-conventions/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Squad-IRL",
+      "path": ".squad/skills/architectural-proposals/SKILL.md",
+      "github_url": "https://github.com/bradygaster/Squad-IRL/tree/main/.squad/skills/architectural-proposals/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Squad-IRL",
+      "path": ".squad/skills/dynamic-json-guardrails/SKILL.md",
+      "github_url": "https://github.com/bradygaster/Squad-IRL/tree/main/.squad/skills/dynamic-json-guardrails/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Squad-IRL",
+      "path": ".squad/skills/markdown-playlist-archive/SKILL.md",
+      "github_url": "https://github.com/bradygaster/Squad-IRL/tree/main/.squad/skills/markdown-playlist-archive/SKILL.md",
+      "description": ""
+    }
+  ],
   "source_url": "https://github.com/bradygaster/Squad-IRL",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-10T08:33:56Z"
+  "distributed_at": "2026-07-29T19:42:46Z"
 }
