@@ -1,0 +1,125 @@
+# esp-hal agent instructions
+
+Bare-metal `no_std` Rust HAL for Espressif SoCs. MSRV: **1.95.0** (source: `MSRV` env in `.github/workflows/ci.yml`).
+
+## Chip reference
+
+| Chip | Arch | Target | Toolchain flag |
+|------|------|--------|----------------|
+| esp32 | Xtensa | `xtensa-esp32-none-elf` | `--toolchain esp` |
+| esp32s2 | Xtensa | `xtensa-esp32s2-none-elf` | `--toolchain esp` |
+| esp32s3 | Xtensa | `xtensa-esp32s3-none-elf` | `--toolchain esp` |
+| esp32c2 | RISC-V | `riscv32imc-unknown-none-elf` | `--toolchain stable` |
+| esp32c3 | RISC-V | `riscv32imc-unknown-none-elf` | `--toolchain stable` |
+| esp32c5 | RISC-V | `riscv32imac-unknown-none-elf` | `--toolchain stable` |
+| esp32c6 | RISC-V | `riscv32imac-unknown-none-elf` | `--toolchain stable` |
+| esp32c61 | RISC-V | `riscv32imac-unknown-none-elf` | `--toolchain stable` |
+| esp32h2 | RISC-V | `riscv32imac-unknown-none-elf` | `--toolchain stable` |
+| esp32p4 | RISC-V | `riscv32imafc-unknown-none-elf` | `--toolchain stable` |
+
+## Commands
+
+All automation goes through `cargo xtask`. Use `--packages` and `--chips` to scope.
+
+| Task | Command | Notes |
+|------|---------|-------|
+| Format (required before PR) | `cargo xtask fmt-packages` | Fast |
+| Lint | `cargo xtask lint-packages [--chips X --packages Y]` | Always scope with `--chips`/`--packages` |
+| Host-side unit tests | `cargo xtask host-tests` | Fast, runs on host |
+| Validate metadata | `cargo xtask update-metadata --check` | Fast |
+| Validate changelog | `cargo xtask check-changelog` | Fast |
+| Build an example | `cargo xtask run example [name] --chip <chip>` | |
+| Build docs | `cargo xtask build documentation --chips <list>` | Slow — scope to affected chips |
+| HIL tests (needs hardware) | `cargo xtask run tests <chip> [--test name]` | Requires connected device |
+| Full CI check for one chip | `cargo xtask ci <chip>` | **Very slow** — use only as final check before opening a PR |
+
+**Prefer targeted commands** (`lint-packages --chips X --packages Y`, `run example ... --chip X`) during development. Only run `ci` as a final validation pass.
+
+## Test & example metadata
+
+Tests and examples use `//% KEY: value` comments to control xtask builds (full docs: `xtask/README.md`).
+
+| Annotation | Purpose | Example |
+|------------|---------|---------|
+| `//% CHIP_FILTER:` | Boolean expression selecting chips; prefer a capability cfg flag over a chip list; key-value cfg symbols support `==` / `!=` with quoted strings | `//% CHIP_FILTER: riscv && interrupt_controller != "clic"` |
+| `//% FEATURES:` | Enable cargo features | `//% FEATURES: unstable embassy` |
+| `//% ENV:` | Set environment variables | `//% ENV: ESP_HAL_CONFIG_STACK_GUARD_OFFSET=4` |
+| `//% CARGO-CONFIG:` | Cargo `--config` passthrough | `//% CARGO-CONFIG: ...` |
+
+Named configs build the same file with different settings:
+```
+//% CHIP_FILTER(wifi): esp32 || esp32c3 || esp32c6 || esp32s3
+//% CHIP_FILTER(ble_only): esp32h2
+//% FEATURES(wifi): esp-radio/wifi
+//% FEATURES(ble_only): esp-radio/ble
+```
+
+## The `unstable` feature
+
+- **Libraries** must never enable `unstable`. Use `requires-unstable` instead.
+- **Applications** (examples, tests) may enable `unstable` freely.
+- Mark new unstable APIs with `#[instability::unstable]`.
+- `unstable_module!` macro: makes a module `pub` when `unstable` is enabled, `pub(crate)` otherwise.
+- Features prefixed with `__` (e.g. `__bluetooth`) are private — never enable directly.
+
+## esp-config
+
+Build-time configuration defined in `esp_config.yml` per crate. Override via environment variables.
+
+```rust
+esp_config::esp_config_bool!("ESP_HAL_CONFIG_PLACE_SPI_MASTER_DRIVER_IN_RAM");
+esp_config::esp_config_int!(u32, "ESP_HAL_CONFIG_STACK_GUARD_OFFSET");
+esp_config::esp_config_str!("ESP_HAL_CONFIG_PSRAM_MODE");
+```
+
+Config options must not alter the public API surface.
+
+## Driver conventions
+
+From `documentation/DEVELOPER-GUIDELINES.md` (read it for full details):
+
+- **Pins**: `fn with_signal_name(self, pin: impl PeripheralInput) -> Self`
+- **Constructor**: takes `impl Instance + 'd`, returns `Result<Self, ConfigError>`
+- **Config**: `Config` struct with `procmacros::BuilderLite` derive + separate `ConfigError` enum
+- **Modes**: `DriverMode` type param; default `Blocking`; provide `into_async`/`into_blocking`
+- **Drop**: must reset peripheral to idle state
+- **Derives**: drivers: `Debug`; configs: `Default, Debug, PartialEq, Eq, Clone, Copy, Hash`
+- **Doc examples**: use `#[doc = crate::before_snippet!()]`, `no_run`, `?` operator (not unwrap)
+
+## Conditional compilation
+
+Chip properties come from `esp-metadata/devices/*.toml`, generated into `esp-metadata-generated/`.
+
+Key symbols: `riscv` / `xtensa`, `single_core` / `multi_core`, `soc_has_<peripheral>`, `<driver>_driver_supported`.
+
+Prefer these over `#[cfg(feature = "esp32c3")]` where possible.
+
+## Changelog & migration
+
+- Changelog entries go in the **PR description**, not in `CHANGELOG.md` (those files are generated at release time — never edit them directly).
+- Use a `# Changelog` section with H2 crate headings (e.g. `## esp-hal`). Each entry starts with a kind prefix: `Added`, `Changed`, `Fixed`, or `Removed` — e.g. `- Added: Support for the Foo peripheral.` Do not include a PR number.
+- If a touched crate needs no user-visible entry, add `- No changelog necessary.` as the sole item in its section.
+- Breaking changes: add a `# Migration guide` section with an H2 `## crate/area` heading (e.g. `## esp-hal/SPI driver`) and an H3 `### Title` per change, followed by migration steps.
+- Breaking changes to stable API require a `breaking-change-<crate-name>` PR label.
+- Validate with `cargo xtask check-pr-changelog` (pipe the body in, or pass `--pr <number>`).
+
+## PR checklist
+
+1. `cargo xtask fmt-packages`
+2. `cargo xtask lint-packages --chips <affected>` — fix all warnings
+3. `cargo xtask update-metadata --check` — if metadata changed
+4. `cargo xtask check-pr-changelog` — add changelog entries to the PR description if API changed
+5. Build affected examples/tests for relevant chips
+6. `cargo xtask host-tests` — if host-side code changed; when adding `#[test]` to a package for the first time, register it in `run_host_tests` (`xtask/src/lib.rs`)
+
+## Key references
+
+- `documentation/DEVELOPER-GUIDELINES.md` — full API design rules
+- `documentation/CONTRIBUTING.md` — contribution workflow
+- `xtask/README.md` — metadata annotations and xtask usage
+- `.github/workflows/ci.yml` — CI steps and MSRV
+- `esp-metadata/devices/*.toml` — per-chip peripheral definitions
+
+---
+> Source: [esp-rs/esp-hal](https://github.com/esp-rs/esp-hal) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-07-24 -->
