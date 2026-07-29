@@ -4,7 +4,7 @@
   "repo": "PrismSystem",
   "description": "White-label design system: fork it, feed it a brand, generate on-brand UI",
   "type": "config",
-  "source_format": ".cursor/rules/*.mdc",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/appariciojunior/PrismSystem",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-24T19:00:56Z"
+  "distributed_at": "2026-07-29T17:00:04Z"
 }
