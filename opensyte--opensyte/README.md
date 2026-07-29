@@ -1,19 +1,17 @@
 # opensyte
 
-> Source: [Opensyte/opensyte](https://github.com/Opensyte/opensyte) — distributed by [TomeVault](https://tomevault.io)
-
-An open source all-in-one business management software.
+> Source: [Opensyte/opensyte](https://github.com/Opensyte/opensyte). Graded, signed and kept in sync across platforms by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [Opensyte/opensyte](https://github.com/Opensyte/opensyte).
+Original source: `copilot-instructions.md` in [Opensyte/opensyte](https://github.com/Opensyte/opensyte).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
