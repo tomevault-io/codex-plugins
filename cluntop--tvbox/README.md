@@ -1,8 +1,6 @@
 # tvbox
 
-> Source: [cluntop/tvbox](https://github.com/cluntop/tvbox) — distributed by [TomeVault](https://tomevault.io)
-
-TVBox Interface / TVBox 接口
+> Source: [cluntop/tvbox](https://github.com/cluntop/tvbox). Graded, signed and kept in sync across platforms by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
@@ -17,7 +15,7 @@ Original source: `copilot-instructions.md` in [cluntop/tvbox](https://github.com
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/cluntop/tvbox](https://github.com/cluntop/tvbox)
+Graded against the Tome Standard, TomeVault's public ruleset for whether AI instructions load, read clearly and stay safe. Source: [github.com/cluntop/tvbox](https://github.com/cluntop/tvbox)
 
 ---
 
