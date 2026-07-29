@@ -1,6 +1,6 @@
 # AI instruction files for reactive-agents
 
-> Sourced from [jorge-menjivar/reactive-agents](https://github.com/jorge-menjivar/reactive-agents) and converted for every major platform by [TomeVault](https://tomevault.io)
+> Sourced from [jorge-menjivar/reactive-agents](https://github.com/jorge-menjivar/reactive-agents), graded against the public Tome Standard and kept consistent across every major platform by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
@@ -15,7 +15,7 @@ Original source: `.cursor/rules/*.mdc` in [jorge-menjivar/reactive-agents](https
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [jorge-menjivar/reactive-agents](https://github.com/jorge-menjivar/reactive-agents) — a repo with 0+ stars on GitHub.
+From [jorge-menjivar/reactive-agents](https://github.com/jorge-menjivar/reactive-agents) — a repo with 43+ stars on GitHub.
 
 ---
 
