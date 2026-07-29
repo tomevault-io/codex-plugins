@@ -1,82 +1,138 @@
-# Turn-Based Games Platform
 
-## Purpose
+# Writing GitHub Copilot Custom Instructions
 
-These instructions guide Copilot across all files in this monorepo. Language-specific and framework-specific rules are in separate instruction files under `.github/instructions/`.
+Follow these guidelines when creating or modifying Copilot instruction files.
 
-## Repository Structure
+## File Types and Their Purpose
 
-- `shared/` - Core game logic, types, and SQLite storage (TypeScript library)
-- `web/` - Next.js 15 frontend with API routes (React + TailwindCSS)
-- `mcp-server/` - Model Context Protocol server providing AI opponents (Node.js service)
+### Repository-Wide Instructions (`copilot-instructions.md`)
 
-## Code Standards
+Use for:
+- General project standards that apply to all files
+- Cross-cutting concerns (error handling philosophy, architecture patterns)
+- Build, test, and lint commands
+- Security requirements
+- Environment variable documentation
 
-### Required Before Each Commit
+Do NOT include:
+- Language-specific coding standards
+- Framework-specific patterns
+- Rules that only apply to certain file types
 
-- Run `npm run lint` to check for linting issues
-- Run `npm run test` to ensure all tests pass
-- Build shared package first when making cross-package changes
+### Path-Specific Instructions (`*.instructions.md`)
 
-### Development Flow
+Use for:
+- Language-specific coding standards (TypeScript, Python, etc.)
+- Framework-specific patterns (React, Next.js, etc.)
+- Technology-specific concerns (testing, API routes, etc.)
+- Different rules for different parts of the codebase
 
-- Build shared: `npm run build --workspace=shared` (always run first)
-- Dev web: `npm run dev --workspace=web` (starts Next.js on port 3000)
-- Dev MCP: `npm run dev --workspace=mcp-server` (starts MCP server via stdio)
-- Full test: `npm run test` (runs all workspace tests)
-- Full lint: `npm run lint` (runs all workspace linting)
-
-### Database
-
-- SQLite file location: `web/games.db` (default)
-- Controlled by `GAMES_DB_PATH` environment variable
-
-## Architecture Guidelines
-
-### Service Boundaries
-
-- MCP server communicates with web app via HTTP calls to `/api/games/*` endpoints
-- MCP server never accesses the database directly
-- Web app uses direct SQLite access via `shared/src/storage/sqlite-storage.ts`
-
-### Game Interface
-
-All games implement `Game<TGameState, TMove>` interface in `shared/src/types/game.ts`:
-
-```typescript
-// Required methods for all game implementations
-validateMove(state, move)   // Check if move is legal
-applyMove(state, move)      // Apply move and return new state
-checkGameEnd(state)         // Determine win/draw/continue
-getValidMoves(state)        // Get available moves
-getInitialState(config)     // Create starting game state
+Always include frontmatter:
+```yaml
+---
+applyTo: "glob/pattern/**/*.{ts,tsx}"
+description: Brief description of what these instructions cover
+---
 ```
 
-### API Routes Pattern
+## Writing Effective Instructions
 
-- Create/list games: `web/src/app/api/games/[game-type]/route.ts`
-- Make moves: `web/src/app/api/games/[game-type]/[id]/move/route.ts`
+### Structure and Formatting
 
-## Adding New Games
+- Use distinct headings to separate topics
+- Use bullet points for easy scanning
+- Write short, imperative directives (not narrative paragraphs)
+- Keep any single file under 1,000 lines
 
-1. Define types in `shared/src/types/games.ts`
-2. Implement game class in `shared/src/games/`
-3. Add API routes in `web/src/app/api/games/[new-game]/`
-4. Create AI implementation in `mcp-server/src/ai/`
-5. Add MCP tools in `mcp-server/src/server.ts`
-6. Build UI components in `web/src/components/games/`
+```markdown
+<!-- ❌ Avoid: Narrative style -->
+When you're reviewing code, it would be good if you could try to look
+for situations where developers might have accidentally left in
+sensitive information like passwords or API keys.
 
-## Environment Variables
+<!-- ✅ Prefer: Imperative bullet points -->
+## Security
+- Check for hardcoded secrets, API keys, or credentials
+- Validate all user inputs
+- Use parameterized queries to prevent SQL injection
+```
 
-- `WEB_API_BASE` - MCP server's web app URL (default: `http://localhost:3000`)
-- `GAMES_DB_PATH` - SQLite database location (default: `./games.db`)
+### Provide Concrete Examples
 
-## Security Considerations
+Include code snippets showing correct and incorrect patterns:
 
-- Never hardcode credentials or API keys
-- Validate all user inputs in API routes
-- Sanitize game IDs and player names before database operations
+```markdown
+## Naming Conventions
+
+```typescript
+// ❌ Avoid
+const d = new Date();
+const x = users.filter(u => u.active);
+
+// ✅ Prefer
+const currentDate = new Date();
+const activeUsers = users.filter(user => user.isActive);
+```
+```
+
+### Be Specific and Actionable
+
+```markdown
+<!-- ❌ Vague -->
+- Write good tests
+- Use proper error handling
+
+<!-- ✅ Specific -->
+- Test names should follow: "should [expected behavior] when [condition]"
+- Wrap async operations in try/catch and return appropriate error responses
+```
+
+## What NOT to Include
+
+Instructions that Copilot cannot follow:
+
+- Formatting changes: "Use bold text for critical issues"
+- External links: "Follow standards at https://example.com" (copy content instead)
+- Vague quality requests: "Be more accurate", "Don't miss any issues"
+- UI modifications: "Add emoji to comments"
+
+## Glob Pattern Examples
+
+```yaml
+# All TypeScript files
+applyTo: "**/*.{ts,tsx}"
+
+# Test files (both patterns)
+applyTo: "**/{*.test.{ts,tsx,js,jsx},__tests__/**/*.{ts,tsx,js,jsx}}"
+
+# Specific directory
+applyTo: "web/src/components/**/*.{tsx,ts}"
+
+# API routes
+applyTo: "web/src/app/api/**/*.{ts,js}"
+
+# Multiple specific paths
+applyTo: "{shared,mcp-server}/src/**/*.ts"
+```
+
+## Recommended Section Order
+
+1. **Purpose** - Brief statement of what the file covers
+2. **Naming Conventions** - How to name things
+3. **Code Style** - Formatting and structure rules
+4. **Patterns** - Common patterns to follow (with examples)
+5. **Error Handling** - How to handle errors
+6. **Security** - Security considerations
+7. **Testing** - Testing expectations
+8. **Performance** - Performance considerations
+
+## Iteration Process
+
+1. Start with 10-20 specific instructions
+2. Note which instructions are followed or missed
+3. Refine wording for missed instructions
+4. Add new instructions incrementally based on needs
 
 ---
 > Source: [github-samples/turn-based-game-mcp](https://github.com/github-samples/turn-based-game-mcp) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-05-13 -->
+<!-- tomevault:4.0:agents_md:2026-07-27 -->
