@@ -1,8 +1,6 @@
 # turn-based-game-mcp
 
-> Tome by [github-samples](https://github.com/github-samples/turn-based-game-mcp) — distributed by [TomeVault](https://tomevault.io)
-
-A turn-based games app built with Next.js and TypeScript that features Tic-Tac-Toe and Rock Paper Scissors games with AI opponents powered by the Model Context Protocol (MCP), offering three difficulty levels.
+> Tome by [github-samples](https://github.com/github-samples/turn-based-game-mcp), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
@@ -17,7 +15,7 @@ Original source: `copilot-instructions.md` in [github-samples/turn-based-game-mc
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/github-samples/turn-based-game-mcp](https://github.com/github-samples/turn-based-game-mcp)
+Graded against the Tome Standard, TomeVault's public ruleset for whether AI instructions load, read clearly and stay safe. Source: [github.com/github-samples/turn-based-game-mcp](https://github.com/github-samples/turn-based-game-mcp)
 
 ---
 
