@@ -1,11 +1,19 @@
-# Lively4 Coding Agent Instructions
+# Are there conventions?
 
-> **For comprehensive AI coding agent instructions, see [CLAUDE.md](../CLAUDE.md)**
+## Source Code
 
-> **For general project overview and documentation index, see [llms.txt](../llms.txt)**
+- We use 2 spaces instead of tabs for indention
 
-This file previously contained detailed coding patterns and architecture information for AI agents working with the Lively4 codebase. That content has been consolidated into CLAUDE.md to avoid duplication and ensure consistency.
+## File Names
+
+Currently, there is still a mix and multiple schemes when it comes to naming files and directories. But there are concetions
+
+- "my file.html": don't use spaces in filenames, just don't!
+- "my-dir" or my-file.html": when name our html templates and JavaScript files like this and use "-" in composita
+- "some_other_file.html": use "_" instead of space
+- "MyDir": don't use CamelCasein file names
+- There are exceptions, especially when we don't have control over filenames and source code in [/srv/external](../../src/external/).
 
 ---
 > Source: [LivelyKernel/lively4-core](https://github.com/LivelyKernel/lively4-core) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-24 -->
+<!-- tomevault:4.0:agents_md:2026-07-26 -->
