@@ -1,11 +1,31 @@
-# Instructions for GSD
+# GSD — Get Shit Done
 
-- Use the get-shit-done skill when the user asks for GSD or uses a `gsd-*` command.
-- Treat `/gsd-...` or `gsd-...` as command invocations and load the matching file from `.github/skills/gsd-*`.
-- When a command says to spawn a subagent, prefer a matching custom agent from `.github/agents`.
-- Do not apply GSD workflows unless the user explicitly asks for them.
-- After completing any `gsd-*` command (or any deliverable it triggers: feature, bug fix, tests, docs, etc.), ALWAYS: (1) offer the user the next step by prompting via `ask_user`; repeat this feedback loop until the user explicitly indicates they are done.
+## What This Project Is
+GSD is a structured AI development workflow system. It coordinates AI agents through planning phases, not direct code edits.
+
+## Core Rule: Never Edit Outside a GSD Workflow
+Do not make direct repo edits. All changes must go through a GSD workflow:
+- `/gsd:plan-phase` → plan the work
+- `/gsd:execute-phase` → build it
+- `/gsd:verify-work` → verify results
+
+## Architecture
+- `get-shit-done/bin/lib/` — Core Node.js library (CommonJS .cjs, no external deps)
+- `get-shit-done/workflows/` — Workflow definition files (.md)
+- `agents/` — Agent definition files (.md)
+- `commands/gsd/` — Slash command definitions (.md)
+- `tests/` — Test files (.test.cjs, node:test + node:assert)
+
+## Coding Standards
+- **CommonJS only** — use `require()`, never `import`
+- **No external dependencies in core** — only Node.js built-ins
+- **Test framework** — `node:test` and `node:assert` ONLY, never Jest/Mocha/Chai
+- **File extensions** — `.cjs` for all test and lib files
+
+## Safety
+- Use `execFileSync` (array args) not `execSync` (string interpolation)
+- Validate user-provided paths with `validatePath()` from `get-shit-done/bin/lib/security.cjs`
 
 ---
 > Source: [gsd-build/get-shit-done](https://github.com/gsd-build/get-shit-done) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-24 -->
+<!-- tomevault:4.0:agents_md:2026-07-27 -->
