@@ -1,174 +1,131 @@
-# GitHub Copilot Instructions — Helius TypeScript SDK
+# Helius TypeScript SDK
 
-<!-- Keep this file in sync with CLAUDE.md. Both describe the same codebase conventions; changes to one should be reflected in the other. -->
+TypeScript SDK for Helius APIs and Solana development. Built on @solana/kit with dual ESM/CJS output, lazy loading, and tree-shaking.
 
-TypeScript SDK for Helius APIs and Solana development. Built on `@solana/kit` with dual ESM/CJS output, lazy loading, and tree-shaking. For full contributor details see [CLAUDE.md](../CLAUDE.md).
+## Commands
 
-## Critical: Use `@solana/kit`, Not `@solana/web3.js`
-
-This SDK uses `@solana/kit` exclusively. Never import from `@solana/web3.js`. When writing Solana types, helpers, or transaction logic, always reach for `@solana/kit` equivalents.
-
-## Critical: No Top-Level Side Effects
-
-The SDK is marked `"sideEffects": false`. Never introduce runtime calls at module scope. Use type assertions instead:
-
-```typescript
-// Correct — no runtime call
-"ComputeBudget111111111111111111111111111111" as Address
-
-// Wrong — runtime call breaks tree-shaking
-address("ComputeBudget111111111111111111111111111111")
+```bash
+pnpm install              # Install dependencies
+pnpm build                # Build ESM & CJS via Rollup
+pnpm test                 # Run Jest tests (65%+ coverage required)
+pnpm test:coverage        # Run tests with coverage report
+pnpm format               # Format with Prettier
+pnpm format:check         # Check formatting (CI runs this)
+pnpm lint                 # Lint with ESLint
+pnpm check-bundle         # Build + verify tree-shakability + bundle sizes
+pnpm run docs:build       # Generate TypeDoc API docs to docs/ (gitignored)
+pnpm run docs:open        # Generate docs and open in browser via local HTTP server
 ```
 
-## Lazy Loading Pattern
+Before submitting a PR, run: `pnpm format && pnpm lint && pnpm typecheck && pnpm test && pnpm check-bundle`
 
-Every method and sub-client must use `defineLazyMethod` or `defineLazyNamespace` from `src/rpc/lazy.ts`. This is mandatory — never eagerly import method modules from `src/rpc/index.ts`.
-
-```typescript
-// In src/rpc/index.ts
-defineLazyMethod<HeliusClient, YourMethodFn>(client, "yourMethod", async () => {
-  const { makeYourMethod } = await import("./methods/yourMethod.js");
-  return makeYourMethod(call);
-});
-
-// Sub-clients use defineLazyNamespace
-defineLazyNamespace<HeliusClient, "ws">(client, "ws", async () => {
-  const { makeWsClient } = await import("../websockets/client.js");
-  return makeWsClient(options);
-});
-```
-
-## Factory Pattern
-
-Every method is a factory function that receives its dependencies and returns the method implementation. No classes. No default exports.
-
-```typescript
-// src/rpc/methods/yourMethod.ts
-export const makeYourMethod = (call: RpcCaller): YourMethodFn => async (params) => {
-  return call("yourMethod", params);
-};
-```
-
-- Name factories `make*` (e.g., `makeGetAsset`, `makeWsClient`)
-- Name the returned function type `*Fn` (e.g., `GetAssetFn`, `YourMethodFn`)
-- Add a JSDoc comment on all public methods
-
-## Code Style
-
-- **Quotes:** Double quotes everywhere — `"value"` not `'value'`
-- **Exports:** Named exports only — never `export default`
-- **Functions:** Arrow functions — `const fn = () => {}` not `function fn() {}`
-- **Variables:** `const` by default; `let` only when reassignment is required
-- **Async:** `async/await` with `try/catch`; never throw non-`Error` objects
-- **Imports:** Source files always use `.js` extensions — `import { foo } from "./bar.js"`. Tests (ts-jest) omit extensions.
-- **Types:** Strict — no implicit any, no unused locals or parameters
+CI runs formatting, linting, type checking, tests, build, tree-shake checks, and bundle size checks on every push and PR to `main`.
 
 ## Project Structure
 
 ```
 src/
   rpc/
-    index.ts                      # HeliusClient entry point - add lazy registrations here
-    lazy.ts                       # defineLazyMethod / defineLazyNamespace helpers
-    caller.ts                     # RpcCaller abstraction
-    wrapAutoSend.ts               # Auto-send transaction wrapper
-    heliusRpcApi.ts               # Helius-specific RPC API definition
-    methods/                      # One file per DAS/RPC method
-      getAsset.ts
-      getAssetBatch.ts
-      getTransactionsForAddress.ts
-      searchAssets.ts
-      ...                         # (one file per method)
-      tests/
-  transactions/
-    client.ts                     # makeTransactionsClient factory
-    sendSmartTransaction.ts
-    sendTransactionWithSender.ts
-    createSmartTransaction.ts
-    types.ts
-    tests/
-  webhooks/
-    client.ts                     # makeWebhooksClient factory
-    createWebhook.ts
-    getWebhook.ts
-    getAllWebhooks.ts
-    updateWebhook.ts
-    deleteWebhook.ts
-    tests/
-  websockets/
-    wsAsync.ts                    # makeWsClient factory
-  enhanced/
-    index.ts                      # makeEnhancedClient factory
-    lazy.ts                       # Lazy loader for enhanced methods
-    types.ts
-    tests/
-  staking/
-    client.ts                     # makeStakeClient factory
-    createStakeTransaction.ts
-    createUnstakeTransaction.ts
-    types.ts
-    tests/
-  zk/
-    client.ts                     # makeZkClient factory
-    types.ts
-    methods/                      # One file per ZK method (mirrors rpc/methods/)
-      getCompressedAccount.ts
-      getValidityProof.ts
-      ...
-      tests/
-  wallet/
-    client.ts                     # makeWalletClient factory
-    getBalances.ts
-    getHistory.ts
-    types.ts
-    tests/
-  auth/
-    client.ts                     # makeAuthClient — standalone import only
-    agenticSignup.ts
-    types.ts
-    tests/
+    index.ts              # Main HeliusClient with lazy-loaded methods
+    methods/              # Individual DAS & RPC methods (getAsset, searchAssets, etc.)
+    caller.ts             # RPC caller abstraction
+    lazy.ts               # defineLazyMethod / defineLazyNamespace helpers
+    wrapAutoSend.ts       # Auto-send transaction wrapper
+  transactions/           # Smart transactions & Helius Sender
+  webhooks/               # Webhook CRUD (create, get, update, delete)
+  enhanced/               # Enhanced transaction parsing
+  staking/                # Helius validator staking helpers
+  websockets/             # WebSocket subscriptions (logs, slots, accounts)
+  zk/                     # ZK Compression methods
+  wallet/                 # Wallet API (balances, history, transfers)
+  auth/                   # Agent authentication & signup
   types/
-    das.ts                        # DAS API types (Asset, GetAssetRequest, etc.)
-    enums.ts                      # Shared enums (Network, TransactionDetails, etc.)
-    webhooks.ts                   # Webhook types
-  http.ts                         # HTTP client with SDK User-Agent header
-  version.ts                      # Auto-generated at build time — do not edit
+    das.ts                # DAS API types (Asset, GetAssetRequest, etc.)
+    enums.ts              # Network, TransactionDetails, TokenAccountsFilter
+    webhooks.ts           # Webhook types
+  http.ts                 # HTTP client with SDK User-Agent header
+  version.ts              # Auto-generated at build time — do not edit
+examples/                 # Usage examples organized by namespace
+dist/                     # Generated output — do not edit or commit
 ```
 
-## Adding a New RPC Method
+## Architecture
 
-1. `src/rpc/methods/yourMethod.ts` — `make*` factory + `*Fn` type
-2. `src/rpc/index.ts` — `defineLazyMethod` registration
-3. `HeliusClient` interface — add the method with a JSDoc comment
-4. `src/rpc/methods/tests/yourMethod.test.ts` — Jest tests
-5. `examples/helius/yourMethod.ts` — usage example
+### Lazy Loading
 
-## Adding a New Namespace
-
-1. `src/yourNamespace/client.ts` — export `makeYourNamespaceClient` (entry point is `client.ts`, not `index.ts`)
-2. `src/rpc/index.ts` — `defineLazyNamespace` registration
-3. `HeliusClient` interface — add `yourNamespace: YourNamespaceClient` with a JSDoc comment
-4. `package.json` `"exports"` field — add the new entry path (required for tree-shaking and named imports)
-5. `src/yourNamespace/tests/` — Jest tests
-6. `examples/yourNamespace/` — usage examples
-
-## Tests
-
-Tests live next to source, not in a separate root-level directory:
-
-```
-src/rpc/methods/tests/yourMethod.test.ts   ✓
-src/websockets/tests/client.test.ts        ✓
-__tests__/yourMethod.test.ts               ✗
-```
-
-Use `jest.fn()` to mock the `RpcCaller`. Coverage threshold is 65% across branches, functions, lines, and statements.
+All methods and sub-clients load on first access via `defineLazyMethod` and `defineLazyNamespace` in `src/rpc/lazy.ts`. This reduces the initial bundle by 70%+. Every new method or namespace must use this pattern.
 
 ```typescript
+defineLazyMethod<HeliusClient, GetAssetFn>(client, "getAsset", async () => {
+  const { makeGetAsset } = await import("./methods/getAsset.js");
+  return makeGetAsset(call);
+});
+```
+
+### Factory Pattern
+
+Each method exports a `make*` factory that receives its dependencies:
+
+```typescript
+export const makeGetAsset = (call: RpcCaller): GetAssetFn => async (params) => {
+  return call("getAsset", params);
+};
+```
+
+### Sub-Clients
+
+Namespaced functionality lives in sub-clients accessed via the main `HeliusClient`:
+- `helius.enhanced.*` — Enhanced transaction parsing
+- `helius.tx.*` — Smart transactions & Sender
+- `helius.webhooks.*` — Webhook management
+- `helius.ws.*` — WebSocket subscriptions
+- `helius.stake.*` — Staking operations
+- `helius.zk.*` — ZK Compression
+- `helius.wallet.*` — Wallet API
+
+Standard Solana RPC methods (getBalance, getSlot, etc.) are available directly on `helius.*` via a Proxy to the underlying @solana/kit RPC client. DAS API methods are also available directly on `helius.*`.
+
+### Dual ESM/CJS
+
+Rollup builds both formats from a single source. ESM for modern bundlers, CJS for legacy Node.js and Jest. `preserveModules` is enabled for tree-shaking. Both outputs live under `dist/`.
+
+### No Side Effects
+
+The SDK is marked `"sideEffects": false`. Never introduce top-level runtime calls. Use type assertions instead:
+
+```typescript
+// Good: no side effect
+"ComputeBudget111111111111111111111111111111" as Address
+
+// Bad: runtime call at module level
+address("ComputeBudget111111111111111111111111111111")
+```
+
+### User-Agent Tracking
+
+All HTTP requests include `helius-node-sdk/<version> (node|browser|deno)` via `SDK_USER_AGENT` in `src/http.ts`. The version is injected at build time. Never manually modify the User-Agent.
+
+## Code Style
+
+- **Naming:** camelCase (functions/variables), PascalCase (types/interfaces), SCREAMING_SNAKE_CASE (constants)
+- **Strings:** Double quotes always
+- **Functions:** Arrow functions preferred, `const` by default
+- **Async:** async/await with try/catch; never throw non-Error objects
+- **Exports:** Named exports, no default exports
+- **Types:** Strict TypeScript (noImplicitAny, noUnusedLocals, noUnusedParameters)
+- **JSDoc:** Required on all public methods
+- **File naming:** camelCase or kebab-case, consistent with surrounding files
+
+## Testing
+
+Tests are colocated with source in `src/*/tests/` directories. Use Jest with `ts-jest`.
+
+```typescript
+// src/rpc/methods/tests/getAsset.test.ts
 import { makeGetAsset } from "../getAsset";
 
 describe("getAsset", () => {
-  it("fetches asset by id", async () => {
+  it("should fetch asset by id", async () => {
     const mockCaller = jest.fn().mockResolvedValue({ id: "asset1" });
     const getAsset = makeGetAsset(mockCaller);
     const result = await getAsset({ id: "asset1" });
@@ -177,29 +134,61 @@ describe("getAsset", () => {
 });
 ```
 
+Coverage threshold: 65% across branches, functions, lines, and statements.
+
+## Adding New Functionality
+
+### New RPC Method
+
+1. Create `src/rpc/methods/yourMethod.ts` with a `makeYourMethod` factory
+2. Define a `YourMethodFn` type (use overloads if return type varies by params)
+3. Add lazy loading in `src/rpc/index.ts` using `defineLazyMethod`
+4. Add to the `HeliusClient` type interface with a JSDoc comment
+5. Create `src/rpc/methods/tests/yourMethod.test.ts`
+6. Add `examples/helius/yourMethod.ts`
+
+### New Namespace
+
+1. Create `src/yourNamespace/` with `client.ts` exporting `makeYourNamespaceClient`
+2. Add lazy loading in `src/rpc/index.ts` using `defineLazyNamespace`
+3. Add to `HeliusClient` type: `yourNamespace: YourNamespaceClient`
+4. Add tests in `src/yourNamespace/tests/`
+5. Add examples in `examples/yourNamespace/`
+6. Add export path in `package.json` `"exports"` field
+
+### New Types
+
+- DAS types: `src/types/das.ts`
+- Enums: `src/types/enums.ts`
+- Namespace-specific: `src/yourNamespace/types.ts`
+- Always export types for external consumers
+
 ## Bundle Size Constraints
 
-- Individual method modules: `<2.5kb`
-- Entry points (e.g., `dist/esm/rpc/index.js`): `<2kb`
-- Run `pnpm check-bundle` to verify — never merge if this fails
+- Individual method modules: <2.5kb
+- Entry points (e.g., `dist/esm/rpc/index.js`): <2kb
+- Run `pnpm check-bundle` to verify; uses agadoo for tree-shake checks and bundlemon for size limits
 
-## API Docs
+## Git & PR Conventions
 
-TypeDoc generates the API reference from JSDoc comments and TypeScript types.
+- Branch from `main`
+- Branch naming: `feat/description` or `fix/description`
+- PR title format: `feat(namespace): Title` or `fix(namespace): Title`
+- Include `Co-Authored-By` for AI contributions
+- Reference issues: `Closes #123`
+- CI runs lint, test, and build jobs on pushes and PRs to `main`
 
-```bash
-pnpm run docs:build   # Generate docs to docs/ (gitignored)
-pnpm run docs:open    # Generate and open in browser
-```
+## Boundaries
 
-Docs are auto-deployed to GitHub Pages on every release via `publish.yml`. Do not commit the `docs/` directory — it is gitignored.
-
-## Do Not Edit
-
-- `src/version.ts` — auto-generated at build time
-- `dist/` — build output, never commit changes here
-- `docs/` — TypeDoc output, never commit changes here
+- **Never commit:** API keys, secrets, .env files, private keys, seed phrases
+- **Never break tree-shaking:** No top-level side effects, no barrel re-exports with side effects
+- **Don't edit generated files:** `src/version.ts`, `dist/`, and `docs/` are build artifacts
+- **Match Helius API specs:** See https://www.helius.dev/docs
+- **Maintain dual ESM/CJS:** Both formats must work
+- **Minimum Node.js 20:** Relies on native fetch
+- **Use @solana/kit:** Not @solana/web3.js (see MIGRATION.md for context)
+- **Externalize deps in Rollup:** @solana/kit, @solana-program/*, bs58
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/helius-labs) — claim your Tome and manage your conversions.
-<!-- tomevault:4.0:agents_md:2026-04-10 -->
+> Source: [helius-labs/helius-sdk](https://github.com/helius-labs/helius-sdk) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-07-23 -->
