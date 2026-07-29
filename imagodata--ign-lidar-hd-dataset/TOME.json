@@ -1,0 +1,44 @@
+{
+  "name": "IGN_LIDAR_HD_DATASET",
+  "owner": "imagodata",
+  "repo": "IGN_LIDAR_HD_DATASET",
+  "description": "\ud83c\udfd7\ufe0f Comprehensive Python library for processing IGN LiDAR HD data into machine learning-ready datasets for Building Level of Detail (LOD) classification. Features GPU/CPU processing, smart data management, and complete ML pipeline integration.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/imagodata/IGN_LIDAR_HD_DATASET",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-29T21:44:32Z"
+}
