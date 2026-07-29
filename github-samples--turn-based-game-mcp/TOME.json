@@ -2,7 +2,7 @@
   "name": "turn-based-game-mcp",
   "owner": "github-samples",
   "repo": "turn-based-game-mcp",
-  "description": "A turn-based games app built with Next.js and TypeScript that features Tic-Tac-Toe and Rock Paper Scissors games with AI opponents powered by the Model Context Protocol (MCP), offering three difficulty levels.",
+  "description": "",
   "type": "config",
   "source_format": "copilot-instructions.md",
   "formats": [
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/github-samples/turn-based-game-mcp",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-13T18:33:02Z"
+  "distributed_at": "2026-07-29T20:44:53Z"
 }
