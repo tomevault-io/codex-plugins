@@ -1,0 +1,44 @@
+{
+  "name": "OllamaHub",
+  "owner": "mingkuang-Chuyu",
+  "repo": "OllamaHub",
+  "description": "\u5c06\u591a\u4e2aAI\u6a21\u578b\u6302\u8f7d\u4e3a\u4e00\u4e2a\u865a\u62df\u7684\u672c\u5730Ollama\u670d\u52a1\uff0c\u65b9\u4fbfVistual Studio Copilot Chat\u63a5\u5165\u3002",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/mingkuang-Chuyu/OllamaHub",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-29T23:07:44Z"
+}
