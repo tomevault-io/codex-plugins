@@ -4,7 +4,7 @@
   "repo": "molpy",
   "description": "",
   "type": "config",
-  "source_format": "CLAUDE.md",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/MolCrafts/molpy",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-24T22:55:37Z"
+  "distributed_at": "2026-07-29T11:44:02Z"
 }
