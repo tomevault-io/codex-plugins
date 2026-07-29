@@ -4,7 +4,7 @@
   "repo": "shell-intune-samples",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/microsoft/shell-intune-samples",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-29T16:05:53Z"
+  "distributed_at": "2026-07-29T22:57:13Z"
 }
