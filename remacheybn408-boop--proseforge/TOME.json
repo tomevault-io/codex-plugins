@@ -1,0 +1,44 @@
+{
+  "name": "ProseForge",
+  "owner": "remacheybn408-boop",
+  "repo": "ProseForge",
+  "description": "AI\u957f\u7bc7\u5c0f\u8bf4\u5de5\u7a0b\u5316\u5199\u4f5c\u6d41\u6c34\u7ebf \u2014 SQLite\u8bb0\u5fc6\u300121\u9053Guard\u95e8\u7981\u3001Agent\u966a\u5ba1\u56e2\u3001\u9632\u5e7b\u89c9\u68c0\u67e5\u3001\u591a\u5c0f\u8bf4\u72ec\u7acb\u6570\u636e\u5e93\u3001\u4eba\u5de5\u5473\u8d28\u91cf\u5c42",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/remacheybn408-boop/ProseForge",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-29T23:57:49Z"
+}
