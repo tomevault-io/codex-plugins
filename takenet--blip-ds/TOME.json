@@ -4,7 +4,7 @@
   "repo": "blip-ds",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/takenet/blip-ds",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-26T23:57:29Z"
+  "distributed_at": "2026-07-30T09:49:47Z"
 }
