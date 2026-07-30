@@ -1,23 +1,22 @@
 # aks-labs
 
-> Source: [Azure-Samples/aks-labs](https://github.com/Azure-Samples/aks-labs) — distributed by [TomeVault](https://tomevault.io)
-
-Grab and go resources for hands-on learning about Azure Kubernetes Service (AKS)
+> Source: [Azure-Samples/aks-labs](https://github.com/Azure-Samples/aks-labs). Graded, signed and kept in sync across platforms by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [Azure-Samples/aks-labs](https://github.com/Azure-Samples/aks-labs).
+Original source: `` in [Azure-Samples/aks-labs](https://github.com/Azure-Samples/aks-labs).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [Azure-Samples/aks-labs](https://github.com/Azure-Samples/aks-labs) — a repo with 56+ stars on GitHub.
+From [Azure-Samples/aks-labs](https://github.com/Azure-Samples/aks-labs) — a repo with 58+ stars on GitHub.
 
 ---
 
