@@ -1,8 +1,6 @@
 # lavish-axi
 
-> Source: [kunchenguid/lavish-axi](https://github.com/kunchenguid/lavish-axi) — distributed by [TomeVault](https://tomevault.io)
-
-HTML is the new markdown. Lavish is the new editor for your HTML artifacts.
+> Source: [kunchenguid/lavish-axi](https://github.com/kunchenguid/lavish-axi). Graded, signed and kept in sync across platforms by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
@@ -17,7 +15,11 @@ Original source: `CLAUDE.md` in [kunchenguid/lavish-axi](https://github.com/kunc
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [kunchenguid/lavish-axi](https://github.com/kunchenguid/lavish-axi) — a repo with 7+ stars on GitHub.
+## Bundled Skills (1)
+
+- [gh-axi](https://github.com/kunchenguid/lavish-axi/tree/main/skills/gh-axi/SKILL.md)
+
+From [kunchenguid/lavish-axi](https://github.com/kunchenguid/lavish-axi) — a repo with 0+ stars on GitHub.
 
 ---
 
