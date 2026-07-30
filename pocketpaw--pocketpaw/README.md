@@ -1,8 +1,6 @@
 # pocketpaw
 
-> Tome by [pocketpaw](https://github.com/pocketpaw/pocketpaw) — distributed by [TomeVault](https://tomevault.io)
-
-Your AI agent in 30 seconds. Not 30 hours. Self-hosted, open-source personal AI with desktop installer, multi-agent Command Center(Deep Work), and 7-layer security. Anthropic, OpenAI, or Ollama.
+> Tome by [pocketpaw](https://github.com/pocketpaw/pocketpaw), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
