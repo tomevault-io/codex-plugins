@@ -4,7 +4,7 @@
   "repo": "hudi-rs",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/apache/hudi-rs",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-26T10:10:21Z"
+  "distributed_at": "2026-07-30T19:06:00Z"
 }
