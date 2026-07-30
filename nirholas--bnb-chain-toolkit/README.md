@@ -5,7 +5,7 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `` in [nirholas/bnb-chain-toolkit](https://github.com/nirholas/bnb-chain-toolkit).
+Original source: `.windsurf/rules/*.md` in [nirholas/bnb-chain-toolkit](https://github.com/nirholas/bnb-chain-toolkit).
 
 ## Also available for
 
@@ -14,7 +14,6 @@ Original source: `` in [nirholas/bnb-chain-toolkit](https://github.com/nirholas/
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
-- **Windsurf** — `project-config.md`
 
 ## Bundled Skills (1)
 
