@@ -2,9 +2,9 @@
   "name": "opilot",
   "owner": "selfagency",
   "repo": "opilot",
-  "description": "\ud83e\udd99 Opilot: Ollama for GitHub Copilot VS Code Extension \u2013 Run Ollama models locally and in the cloud within GitHub Copilot Chat",
+  "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/selfagency/opilot",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-09T08:33:31Z"
+  "distributed_at": "2026-07-30T09:43:21Z"
 }
