@@ -1,0 +1,87 @@
+{
+  "name": "herdr",
+  "owner": "ogulcancelik",
+  "repo": "herdr",
+  "description": "",
+  "type": "tome",
+  "source_format": "CLAUDE.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "herdr",
+      "path": "SKILL.md",
+      "github_url": "https://github.com/ogulcancelik/herdr/tree/main/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "herdr",
+      "path": ".codex/skills/triage/SKILL.md",
+      "github_url": "https://github.com/ogulcancelik/herdr/tree/main/.codex/skills/triage/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "herdr",
+      "path": ".codex/skills/herdr-pre-release-audit/SKILL.md",
+      "github_url": "https://github.com/ogulcancelik/herdr/tree/main/.codex/skills/herdr-pre-release-audit/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "herdr",
+      "path": "vendor/libghostty-vt/.agents/skills/writing-commit-messages/SKILL.md",
+      "github_url": "https://github.com/ogulcancelik/herdr/tree/main/vendor/libghostty-vt/.agents/skills/writing-commit-messages/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "herdr",
+      "path": ".agents/skills/triage/SKILL.md",
+      "github_url": "https://github.com/ogulcancelik/herdr/tree/main/.agents/skills/triage/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "herdr",
+      "path": ".agents/skills/herdr-throwaway-repro/SKILL.md",
+      "github_url": "https://github.com/ogulcancelik/herdr/tree/main/.agents/skills/herdr-throwaway-repro/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "herdr",
+      "path": ".agents/skills/herdr-pre-release-audit/SKILL.md",
+      "github_url": "https://github.com/ogulcancelik/herdr/tree/main/.agents/skills/herdr-pre-release-audit/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/ogulcancelik/herdr",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-07-30T20:18:19Z"
+}
