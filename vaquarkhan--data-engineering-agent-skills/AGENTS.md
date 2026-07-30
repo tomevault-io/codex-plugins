@@ -1,14 +1,12 @@
 
-# Data Engineering Agent Core
+# Spec First
 
-Use `AGENTS.md` and `skills/using-data-engineering-agent-skills/SKILL.md` to classify work before implementation.
+For new pipelines, schema changes, major modeling work, or operationally significant changes:
 
-Default rules:
-
-- prefer specification before changing pipeline behavior
-- keep contracts, grain, and ownership explicit
-- load one platform preset and only the minimum useful workflow skills
-- treat validation, replay, lineage, privacy, and publish safety as part of delivery
+- use `skills/data-specification/SKILL.md`
+- use `skills/pipeline-planning-and-task-breakdown/SKILL.md`
+- use templates from `templates/`
+- avoid coding until success criteria and open questions are explicit
 
 ---
 > Source: [vaquarkhan/data-engineering-agent-skills](https://github.com/vaquarkhan/data-engineering-agent-skills) — distributed by [TomeVault](https://tomevault.io).
