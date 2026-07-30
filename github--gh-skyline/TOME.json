@@ -2,9 +2,9 @@
   "name": "gh-skyline",
   "owner": "github",
   "repo": "gh-skyline",
-  "description": "A GitHub CLI extension to generate a 3D model of your GitHub contribution history",
+  "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/github/gh-skyline",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-31T19:36:46Z"
+  "distributed_at": "2026-07-30T22:35:01Z"
 }
