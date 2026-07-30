@@ -1,23 +1,22 @@
 # yoloai
 
-> Tome by [kstenerud](https://github.com/kstenerud/yoloai) — distributed by [TomeVault](https://tomevault.io)
-
-Permission fatigue is a real problem. Sandbox escape is a real problem. yoloAI solves it.
+> Tome by [kstenerud](https://github.com/kstenerud/yoloai), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [kstenerud/yoloai](https://github.com/kstenerud/yoloai).
+Original source: `` in [kstenerud/yoloai](https://github.com/kstenerud/yoloai).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/kstenerud/yoloai](https://github.com/kstenerud/yoloai)
+Graded against the Tome Standard, TomeVault's public ruleset for whether AI instructions load, read clearly and stay safe. Source: [github.com/kstenerud/yoloai](https://github.com/kstenerud/yoloai)
 
 ---
 
