@@ -2,9 +2,9 @@
   "name": "windrose-dedicated-server-docker",
   "owner": "UberDudePL",
   "repo": "windrose-dedicated-server-docker",
-  "description": "Windrose dedicated server for Linux using Docker, SteamCMD and Wine, with persistent saves, backups and self-hosted 24/7 setup.",
+  "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/UberDudePL/windrose-dedicated-server-docker",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-09T02:30:58Z"
+  "distributed_at": "2026-07-30T20:50:37Z"
 }
