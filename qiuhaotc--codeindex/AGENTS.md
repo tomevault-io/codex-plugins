@@ -1,93 +1,114 @@
-# CodeIndex Project Guidelines
 
-## Project Overview
+# C# Coding Conventions
 
-CodeIndex is a local code full-text search engine built on **Lucene.NET**, providing a Blazor Server Web UI and REST API. It supports multi-index management, real-time file monitoring, code highlight previews, and has a companion Visual Studio extension.
+## Naming Rules
 
-## Layer Architecture (dependencies flow downward only)
+- **Classes, methods, properties, events**: PascalCase (`CodeIndexBuilder`, `BuildIndexByBatch`)
+- **Private fields**: camelCase, no prefix, no underscore (`indexChangeCount`, `readerWriteLock`)
+- **Interfaces**: `I` prefix (`ILucenePool`, `IIndexMaintainer`)
+- **DTOs / configuration classes**: prefer C# `record` (`IndexConfig`, `SearchRequest`)
+- **Constants**: PascalCase (`HintWordMinLength`, `SplitChar`)
 
-```
-CodeIndex.Server          ← ASP.NET Core Blazor host + REST controllers
-CodeIndex.Search          ← Search facade, HTML highlight generation
-CodeIndex.MaintainIndex   ← Index lifecycle management, FileSystemWatcher scheduling
-CodeIndex.IndexBuilder    ← Lucene.NET index low-level CRUD
-CodeIndex.Files           ← File system reading and change preprocessing
-CodeIndex.Common          ← Shared DTOs, configuration, validation utilities
-```
+## Parameter Validation
 
-**Rule**: Lower-layer projects must not reference higher-layer projects. All cross-layer data transfer uses types from `CodeIndex.Common`.
+Use `ArgumentValidation` extension methods (in `CodeIndex.Common`) at the entry point of all public methods:
 
-## Tech Stack
-
-- **.NET 10 / C#** — target framework `net10.0`
-- **Lucene.NET 4.8.0-beta00016** — indexing and search engine
-- **ASP.NET Core Blazor Server** — Web UI
-- **NLog 6.x** — logging (injected via `ILogger<T>`)
-- **NUnit 4** — unit testing
-- **NSwag** — OpenAPI/Swagger documentation
-
-## Coding Conventions
-
-### Naming
-- Classes, methods, properties: PascalCase
-- Private fields: camelCase, no underscore prefix (e.g. `indexChangeCount`)
-- Interfaces: `I` prefix (e.g. `ILucenePool`)
-- DTOs / configuration classes: prefer C# `record` types (e.g. `IndexConfig`, `SearchRequest`)
-
-### Parameter Validation
-Always use `ArgumentValidation` extension methods at method entry points:
 ```csharp
-name.RequireNotNullOrEmpty(nameof(name));
-batchSize.RequireRange(nameof(batchSize), int.MaxValue, 50);
+using CodeIndex.Common;
+
+public void SomeMethod(string name, ILucenePool pool, int batchSize)
+{
+    name.RequireNotNullOrEmpty(nameof(name));
+    pool.RequireNotNull(nameof(pool));
+    batchSize.RequireRange(nameof(batchSize), int.MaxValue, 50);
+    // ...
+}
 ```
 
-### Error Handling and Return Values
-- API layer always returns `FetchResult<T>` containing `Status` (`Success` + `StatusDesc`)
-- Exceptions are caught at the Service/Controller layer and populated into `FetchResult`, never rethrown
-- Log messages must include the index name prefix: `$"{IndexConfig.IndexName}: <action>"`
+## Error Handling — FetchResult Pattern
 
-### Thread Safety
-- Classes involving `IndexWriter`/`IndexSearcher` must use `ReaderWriterLockSlim`
-- Wrap write operations with a write lock, read operations with a read lock, using the `EnterReaderWriterLock` helper
+The API layer never throws exceptions; always wrap results in `FetchResult<T>`:
 
-### Logging
-Inject `ILogger<T>` or `ILogger` via constructor; do not expose the logger outside the class.
-
-## Testing Conventions
-
-- Test classes inherit from `BaseTestLight` (lightweight) or `BaseTest` (includes `CodeIndexConfiguration`)
-- Each test runs in an isolated sandbox under `TEMP/CodeIndex.Test_{Guid}/`; `TearDown` cleans up automatically
-- Use `DummyLog` instead of a real `ILogger`
-- Test file structure mirrors source modules: `CodeIndex.Test/IndexBuilder/`, `CodeIndex.Test/Search/`, etc.
-
-## Build and Test Commands
-
-```bash
-dotnet build src/CodeIndex.sln
-dotnet test src/CodeIndex.Test/CodeIndex.Test.csproj
+```csharp
+FetchResult<IEnumerable<CodeSource>> result;
+try
+{
+    result = new FetchResult<IEnumerable<CodeSource>>
+    {
+        Result = SearchCodeSource(searchRequest),
+        Status = new Status { Success = true }
+    };
+}
+catch (Exception ex)
+{
+    result = new FetchResult<IEnumerable<CodeSource>>
+    {
+        Status = new Status { Success = false, StatusDesc = ex.ToString() }
+    };
+    log.LogError(ex, $"{indexConfig.IndexName}: SearchCodeSource failed");
+}
+return result;
 ```
 
-## Key Domain Concepts
+## Logging
 
-| Concept | Description |
-|---------|-------------|
-| `CodeSource` | An indexed file (`FilePath`, `Content`, `CodePK` (Guid), etc.) |
-| `IndexConfig` | Configuration for one index instance (`record`, contains monitor folder and filter rules) |
-| `ILucenePool` | Lucene operation abstraction (`BuildIndex`, `Search`, `DeleteIndex`) |
-| `LucenePoolLight` | `ILucenePool` implementation with lazy loading and read-write locks |
-| `CodeIndexBuilder` | High-level index builder managing both the code index and the hint HintIndex pools |
-| `IndexMaintainer` | Runtime index manager: initialization + file change monitoring |
-| `IndexManagement` | Registry of all indexes (Singleton, `ConcurrentDictionary`) |
-| `SearchService` | Search facade, wraps HTML highlights, returns `FetchResult<T>` |
-| `FetchResult<T>` | Unified response wrapper (`Status` + `Result`) |
+- Inject `ILogger<T>` or `ILogger` via constructor; name the field `log`
+- **Every log entry must include the index name prefix**: `$"{IndexConfig.IndexName}: <action description>"`
+- Log levels: `LogInformation` (normal flow), `LogError` (exceptions, include the Exception parameter), `LogDebug` (debug/search results)
 
-## REST API
+```csharp
+log.LogInformation($"{IndexConfig.IndexName}: Index initialized successfully");
+log.LogError(ex, $"{IndexConfig.IndexName}: Failed to build index for {filePath}");
+```
 
-- `api/Lucene/` — search endpoints, no authentication required
-- `api/Management/` — management endpoints, most require Cookie authentication (`[Authorize]`)
+## Thread Safety — ReaderWriterLockSlim
 
-Authentication: Cookie-based; login requires a CAPTCHA (stored in Session).
+Any class involving `IndexWriter`/`IndexSearcher` must be protected with a read-write lock:
+
+```csharp
+readonly ReaderWriterLockSlim readerWriteLock = new ReaderWriterLockSlim();
+
+// Write operation
+using var writeLock = new EnterReaderWriterLock(readerWriteLock, true);
+// ... write code
+
+// Read operation
+using var readLock = new EnterReaderWriterLock(readerWriteLock, false);
+// ... read code
+```
+
+When lazy-loading `IndexWriter`, use double-checked locking:
+
+```csharp
+readonly object syncLockForWriter = new object();
+IndexWriter indexWriter;
+
+IndexWriter GetWriter()
+{
+    if (indexWriter == null)
+    {
+        lock (syncLockForWriter)
+        {
+            indexWriter ??= CreateWriter();
+        }
+    }
+    return indexWriter;
+}
+```
+
+## Lazy-Initialized Properties (`??=`)
+
+```csharp
+QueryParser queryParserNormal;
+public QueryParser QueryParserNormal => queryParserNormal ??= LucenePoolLight.GetQueryParser();
+```
+
+## Dependency Injection
+
+- Inject dependencies via constructor; do not use Service Locator
+- Lower-layer projects (IndexBuilder, Files) must not reference higher-layer projects (Server, Search)
+- Use types from `CodeIndex.Common` for cross-layer data transfer
 
 ---
 > Source: [qiuhaotc/CodeIndex](https://github.com/qiuhaotc/CodeIndex) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-24 -->
+<!-- tomevault:4.0:agents_md:2026-07-27 -->
