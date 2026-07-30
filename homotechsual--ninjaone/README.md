@@ -1,16 +1,17 @@
 # NinjaOne
 
-> Source: [homotechsual/NinjaOne](https://github.com/homotechsual/NinjaOne) — distributed by [TomeVault](https://tomevault.io)
+> Source: [homotechsual/NinjaOne](https://github.com/homotechsual/NinjaOne). Graded, signed and kept in sync across platforms by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [homotechsual/NinjaOne](https://github.com/homotechsual/NinjaOne).
+Original source: `` in [homotechsual/NinjaOne](https://github.com/homotechsual/NinjaOne).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
