@@ -2,9 +2,9 @@
   "name": "cowel",
   "owner": "eisenwave",
   "repo": "cowel",
-  "description": "COWEL (Compact Web Language) is a markup language that provides easy access to HTML features while being much more convenient to write.",
+  "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/eisenwave/cowel",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-20T11:07:30Z"
+  "distributed_at": "2026-07-30T16:39:58Z"
 }
