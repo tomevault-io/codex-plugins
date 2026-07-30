@@ -1,102 +1,164 @@
-# KumikoUI — Copilot Instructions Index
 
-## What This Project Is
+# KumikoUI — Drawn Components & Editing
 
-**KumikoUI** is a high-performance, fully canvas-drawn DataGrid for .NET MAUI. Every visual
-element — cells, headers, editors, popups, scrollbars — is rendered directly on a SkiaSharp
-`SKCanvas`. There are **zero native UIKit / AppKit / WinUI controls**; everything is drawn
-in software, giving pixel-perfect, identical output across iOS, Android, macOS Catalyst, and
-Windows.
+## `DrawnComponent` — Canvas-drawn editors (no native controls)
 
----
+All inline cell editors inherit from `DrawnComponent` in `KumikoUI.Core.Components`.
+There are **zero native UIKit / WinUI / Android widgets** — everything is drawn on canvas.
 
-## Scoped Instruction Files
+### Minimum implementation
 
-Detailed instructions live in [`.github/instructions/`](.github/instructions/) and are
-automatically injected based on which files are open. When a task spans multiple areas,
-read the relevant files directly — each is self-contained.
+```csharp
+public class MyEditor : DrawnComponent
+{
+    public override void OnDraw(IDrawingContext ctx)
+    {
+        // Draw inside this.Bounds using IDrawingContext only.
+        ctx.FillRect(Bounds, new GridPaint { Color = new GridColor(255, 255, 255) });
+    }
+}
+```
 
----
+### Lifecycle overrides
 
-### [architecture.instructions.md](.github/instructions/architecture.instructions.md)
-**Applies to:** all files (`**`)
-
-Always-active baseline. Covers: three-layer project structure (`Core` → `SkiaSharp` → `Maui`),
-strict dependency rules, full namespace map, and repo-wide C# code style rules (nullable,
-`readonly struct`, no LINQ in hot paths, `GridColor` usage, `float` for coordinates).
-
----
-
-### [rendering.instructions.md](.github/instructions/rendering.instructions.md)
-**Applies to:** `src/KumikoUI.Core/Rendering/**`, `src/KumikoUI.SkiaSharp/**`, `src/KumikoUI.Core/DataGridRenderer.cs`
-
-Everything about drawing. Covers: all `IDrawingContext` methods, `GridPaint`/`GridColor`/`GridRect`
-usage, `ICellRenderer` interface + how to attach custom renderers to columns, `DataGridRenderer`
-render-loop structure and z-order, `PaintCache`, `SkiaDrawingContext` internals (per-frame
-paint/font cache, SkiaSharp 3.x API), `GridLayoutEngine` layout methods, and performance rules
-(no allocation, no LINQ, virtual scrolling).
-
----
-
-### [components-and-editing.instructions.md](.github/instructions/components-and-editing.instructions.md)
-**Applies to:** `src/KumikoUI.Core/Components/**`, `src/KumikoUI.Core/Editing/**`
-
-Everything about canvas-drawn editors. Covers: `DrawnComponent` lifecycle overrides, the three
-signals (`InvalidateVisual`, `RaiseValueChanged`, `RaiseEditCompleted`), the `ApplyTheme` pattern,
-`CellEditorFactory` wiring (three required cases per editor type), `EditorDescriptor` for XAML-
-declarable editor config, `EditSession` pipeline (begin → draw → commit/cancel), validation via
-`IDataErrorInfo` or delegate, and `InertialScroller` physics.
-
----
-
-### [models-and-data.instructions.md](.github/instructions/models-and-data.instructions.md)
-**Applies to:** `src/KumikoUI.Core/Models/**`
-
-Everything about the data layer. Covers: all `DataGridColumn` properties and column types,
-`DataGridSource` API (get/set values, bulk updates, sorting, filtering, grouping, summaries),
-`DataGridStyle` theming (built-in themes, `CellStyleResolver`, `RowStyleResolver`), `CellStyle`/
-`RowStyle` nullable merge semantics, and step-by-step recipes for adding a new style property
-or column type.
-
----
-
-### [maui-control.instructions.md](.github/instructions/maui-control.instructions.md)
-**Applies to:** `src/KumikoUI.Maui/**`, `samples/**`
-
-Everything about consuming the control. Covers: `MauiProgram.UseSkiaKumikoUI()` bootstrap,
-required XAML namespaces, all `DataGridView` bindable properties, XAML examples for every column
-type (Numeric, Text, ComboBox, Picker, Date, Boolean, Template with renderer, Template with
-`EditorDescriptor`), summary row XAML, and `DataGridView` internals (keyboard proxy, platform-
-specific gesture/IME handling, timer setup).
-
----
-
-### [testing.instructions.md](.github/instructions/testing.instructions.md)
-**Applies to:** `tests/**`
-
-Everything about writing tests. Covers: xUnit-only rules (no NUnit/MSTest), file/class naming
-convention, `[Fact]` and `[Theory]+[InlineData]` templates, a concrete `DataGridSource` sorting
-example, and the `FakeDrawingContext` no-op test double needed to test renderers and components
-without SkiaSharp.
-
----
-
-## Skill Prompts
-
-Reusable task prompts live in [`.github/prompts/`](.github/prompts/):
-
-| Prompt | Use when... |
+| Method | When called |
 |---|---|
-| [`add-cell-renderer.prompt.md`](.github/prompts/add-cell-renderer.prompt.md) | Creating a new `ICellRenderer` |
-| [`add-drawn-component.prompt.md`](.github/prompts/add-drawn-component.prompt.md) | Creating a new canvas-drawn inline editor |
-| [`add-column-type.prompt.md`](.github/prompts/add-column-type.prompt.md) | Adding a new `DataGridColumnType` end-to-end |
-| [`add-theme-property.prompt.md`](.github/prompts/add-theme-property.prompt.md) | Adding a new `DataGridStyle` visual property |
-| [`add-unit-test.prompt.md`](.github/prompts/add-unit-test.prompt.md) | Writing xUnit tests for Core classes |
-| [`configure-datagrid-features.prompt.md`](.github/prompts/configure-datagrid-features.prompt.md) | Wiring sorting, filtering, grouping, or summaries |
-| [`rendering-pipeline.prompt.md`](.github/prompts/rendering-pipeline.prompt.md) | Debugging or extending the render pipeline |
+| `OnDraw(IDrawingContext ctx)` | **Required.** Every repaint. |
+| `OnPointerDown(GridPointerEventArgs e)` | Touch / mouse press |
+| `OnPointerUp(GridPointerEventArgs e)` | Touch / mouse release |
+| `OnPointerMove(GridPointerEventArgs e)` | Touch / mouse drag |
+| `OnKeyDown(GridKeyEventArgs e)` | Key press (set `e.Handled = true` to consume) |
+| `OnKeyUp(GridKeyEventArgs e)` | Key release |
+| `OnGotFocus()` | Component gained keyboard focus |
+| `OnLostFocus()` | Component lost focus |
+| `OnBoundsChanged()` | `Bounds` property changed |
+
+### Signals
+
+```csharp
+InvalidateVisual();              // request repaint — call whenever visual state changes
+RaiseValueChanged(old, new);     // consumed by EditSession — call when value changes
+RaiseEditCompleted();            // grid commits + closes editor — call on confirm gesture
+```
+
+### Theming hook
+
+Add `public void ApplyTheme(DataGridStyle style)` — no interface required.
+`CellEditorFactory.ApplyThemeToEditor()` dispatches to it via `switch`.
+
+```csharp
+public void ApplyTheme(DataGridStyle style)
+{
+    _backgroundColor = style.EditorBackgroundColor;
+    _foregroundColor  = style.EditorTextColor;
+    _accentColor      = style.SelectionColor;
+    InvalidateVisual();
+}
+```
+
+### `CellEditorFactory` — three required cases per editor type
+
+```csharp
+// 1. CreateEditor:
+case DataGridColumnType.{NewType}:
+    return new MyEditor { Bounds = cellBounds, Value = ({T}?)currentValue ?? default };
+
+// 2. GetEditorValue:
+case MyEditor e:
+    return e.Value;
+
+// 3. ApplyThemeToEditor:
+case MyEditor e:
+    e.ApplyTheme(style);
+    break;
+```
 
 ---
+
+## `EditorDescriptor` — XAML-declarable editor configuration
+
+Subclass `EditorDescriptor` to let column authors configure the editor in XAML without code-behind.
+
+```csharp
+public class MyEditorDescriptor : EditorDescriptor
+{
+    public double Minimum { get; set; } = 0;
+    public double Maximum { get; set; } = 100;
+
+    public override DrawnComponent? CreateEditor(object? currentValue, GridRect cellBounds)
+        => new MyEditor { Bounds = cellBounds, Minimum = Minimum, Maximum = Maximum };
+}
+```
+
+XAML usage:
+```xml
+<core:DataGridColumn Header="Score" PropertyName="Score" ColumnType="Template" Width="120">
+    <core:DataGridColumn.EditorDescriptor>
+        <editing:MyEditorDescriptor Minimum="0" Maximum="10" />
+    </core:DataGridColumn.EditorDescriptor>
+</core:DataGridColumn>
+```
+
+Built-in descriptors: `NumericUpDownEditorDescriptor`, `TextEditorDescriptor`.
+
+---
+
+## `EditSession` — Cell editing pipeline
+
+```
+BeginEdit(row, col, column, dataSource, cellBounds, initialChar?)
+  → CellEditorFactory.CreateEditor(...)
+  → CellEditorFactory.ApplyThemeToEditor(...)
+  → EditSession.DrawEditor(ctx)        ← called each frame after main render
+  → CommitEdit(dataSource)             ← writes value back via DataGridSource.SetCellValue
+    or CancelEdit()
+```
+
+**Events:** `CellBeginEdit` (cancelable), `CellEndEdit`, `CellValueChanged`
+
+**Validation:**
+```csharp
+// Option A — implement on model:
+class Employee : IDataErrorInfo { ... }
+
+// Option B — delegate:
+editSession.CellValidator = (row, col, value) =>
+    value is int i && i >= 1 && i <= 5
+        ? CellValidationResult.Success
+        : CellValidationResult.Error("Value must be 1–5");
+```
+
+---
+
+## `InertialScroller`
+
+```csharp
+var scroller = new InertialScroller { Settings = new ScrollSettings { Friction = 0.92f } };
+
+scroller.TrackVelocity(dx, dy, timestampMs);   // during pan
+scroller.StartFling();                          // on pointer release
+
+if (scroller.IsActive)
+{
+    var (dx, dy) = scroller.Update(frameIntervalMs: 16f);
+    scroll.ScrollBy(-dx, -dy);
+    // trigger repaint
+}
+```
+
+---
+
+## Checklist: adding a new `DrawnComponent`
+
+- [ ] Class in `src/KumikoUI.Core/Components/`, named `Drawn{Name}.cs`
+- [ ] Inherits `DrawnComponent`
+- [ ] `OnDraw` uses only `IDrawingContext` + `GridColor`/`GridPaint`/`GridFont`/`GridRect`
+- [ ] `InvalidateVisual()` called on every state change
+- [ ] `RaiseValueChanged(old, new)` called when value changes
+- [ ] `RaiseEditCompleted()` called on confirm gesture
+- [ ] `ApplyTheme(DataGridStyle)` implemented
+- [ ] `CellEditorFactory` updated: `CreateEditor`, `GetEditorValue`, `ApplyThemeToEditor`
 
 ---
 > Source: [TheEightBot/KumikoUI](https://github.com/TheEightBot/KumikoUI) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-24 -->
+<!-- tomevault:4.0:agents_md:2026-07-27 -->
