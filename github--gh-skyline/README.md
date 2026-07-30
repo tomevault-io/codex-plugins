@@ -1,23 +1,22 @@
 # gh-skyline
 
-> Tome by [github](https://github.com/github/gh-skyline) — distributed by [TomeVault](https://tomevault.io)
-
-A GitHub CLI extension to generate a 3D model of your GitHub contribution history
+> Tome by [github](https://github.com/github/gh-skyline), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [github/gh-skyline](https://github.com/github/gh-skyline).
+Original source: `` in [github/gh-skyline](https://github.com/github/gh-skyline).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [github/gh-skyline](https://github.com/github/gh-skyline) — a repo with 1281+ stars on GitHub.
+From [github/gh-skyline](https://github.com/github/gh-skyline) — a repo with 1311+ stars on GitHub.
 
 ---
 
