@@ -1,49 +1,36 @@
-# Copilot / Coding Agent instructions (LootLocker Unity SDK)
 
-Follow these rules for any work in this repo:
+# Scoped instructions: `LootLockerSDKManager.cs` (public API surface)
 
-## Non-negotiables
-- Never commit directly to `dev` or `main`.
-- PRs must target `dev`.
-- Do not tag/publish/create releases.
-- Do not bump versions or edit release metadata (for example `package.json` version) unless explicitly asked.
-- Keep diffs minimal; do not move/rename files unless explicitly requested.
-- Search first to avoid duplicating helpers/utilities.
+- Treat this file as the primary, customer-facing API surface. Preserve backward compatibility.
+- Prefer additive changes (new methods/overloads) over breaking changes to existing signatures, default values, namespaces, or behavior.
+- Keep API methods thin: route work to existing request implementations under `Runtime/Game/Requests/` (or shared helpers) rather than duplicating endpoint/transport logic here.
+- Always place methods in this file in a `#region` block corresponding to their feature set (for example, Authentication, Inventory, etc.) and keep them organized with related methods.
+- XML docs are required for any `public` API you add or change. Match the existing doc style in this file, including clear `param` descriptions and any practical usage notes.
 
-## Architecture references
-- Repo structure + “where do I implement X?”: `.github/instructions/architecture.md`
-- Guardrails (agent operating rules): `.github/instructions/guardrails.md`
+## XML doc template (adjust as needed)
 
-## Verification (compile & test before PR)
-- How to verify changes (local + CI): `.github/instructions/verification.md`
-  - Cloud agent: push to work branch → wait for **Compile Check** workflow.
-  - Local: run `.github/scripts/verify-compilation.sh` (Linux/macOS) or `.github\scripts\verify-compilation.ps1` (Windows) after creating `unity-dev-settings.json` from the example:
-    ```json
-    {
-      "unity_executable": "<absolute path to Unity binary>",
-      "test_project_path": ""
-    }
-    ```
-
-## Conventions & style
-- Coding conventions & style guide: `.github/instructions/style-guide.md`
-- Patterns cookbook (templates): `.github/instructions/patterns.md`
-- Path-specific instructions:
-  - Public API surface (`Runtime/Game/LootLockerSDKManager.cs`): `.github/instructions/Runtime/Game/LootLockerSDKManager.cs.instructions.md`
-  - Request implementations (`Runtime/Game/Requests/**`): `.github/instructions/Runtime/Game/Requests.instructions.md`
-  - PlayMode tests (`Tests/LootLockerTests/PlayMode/**`): `.github/instructions/Tests/LootLockerTests/PlayMode.instructions.md`
-  - Test utilities (`Tests/LootLockerTestUtils/**`): `.github/instructions/Tests/LootLockerTestUtils.instructions.md`
-
-## Testing
-- How to write and run tests: `.github/instructions/testing.md`
-  - Local: `.github\scripts\run-tests.ps1 -TestCategory LootLockerCIFast`
-  - Cloud agent: **Actions → Run Tests → Run workflow** (supports `testCategory` and `testFilter` inputs).
-- How to use tests for debugging (temporary debug tests): `.github/instructions/debugging.md`
-  - Use `Category("LootLockerDebug")` for temporary debug tests; **always delete before committing**.
-
-## Issue Tracking & Lifecycle
-- Full lifecycle rules (status updates, PR linking, DoD): `.github/instructions/implementation-lifecycle.md`
+```csharp
+/// <summary>
+/// One-sentence description of what the method does.
+///
+/// Optional additional details or usage notes.
+/// </summary>
+/// <param name="forPlayerWithUlid"> Optional : Execute the request for the specified player. If not supplied, the default player will be used. </param>
+/// <param name="onComplete"> onComplete Action for handling the response </param>
+/// <returns>
+/// Return value semantics if this API returns a value. Otherwise omit this tag.
+/// </returns>
+public static void ExampleMethod(string forPlayerWithUlid, Action<LootLockerExampleResponse> onComplete)
+{
+	// Keep facade thin; validate input early; call onComplete once on all paths.
+}
+```
+- If a method takes a player selector, follow the existing `forPlayerWithUlid` convention (optional when appropriate; don’t invent new parameter names for the same concept).
+- For callback-based APIs, call `onComplete` exactly once on all code paths (including validation failures).
+- Do not log secrets or raw tokens from this layer. Use `LootLockerLogger` (not `Debug.Log`) and rely on log obfuscation (`LootLockerConfig.current.obfuscateLogs`).
+- Use the repo’s JSON wrapper (`LootLockerJson`) and existing response/error helpers; do not introduce new serialization/logging dependencies.
+- Keep diffs minimal and localized; avoid unrelated refactors in this large file.
 
 ---
 > Source: [lootlocker/unity-sdk](https://github.com/lootlocker/unity-sdk) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-24 -->
+<!-- tomevault:4.0:agents_md:2026-07-27 -->
