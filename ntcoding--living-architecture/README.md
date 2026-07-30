@@ -1,8 +1,6 @@
 # living-architecture
 
-> Source: [NTCoding/living-architecture](https://github.com/NTCoding/living-architecture) — distributed by [TomeVault](https://tomevault.io)
-
-Extra software architecture from your code as living documentation. AI-assisted.
+> Source: [NTCoding/living-architecture](https://github.com/NTCoding/living-architecture). Graded, signed and kept in sync across platforms by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
