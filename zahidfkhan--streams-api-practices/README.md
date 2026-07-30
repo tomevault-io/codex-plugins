@@ -5,12 +5,12 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [ZahidFKhan/Streams-API-Practices](https://github.com/ZahidFKhan/Streams-API-Practices).
+Original source: `CLAUDE.md` in [ZahidFKhan/Streams-API-Practices](https://github.com/ZahidFKhan/Streams-API-Practices).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
