@@ -2,9 +2,9 @@
   "name": "TaskSync",
   "owner": "4regab",
   "repo": "TaskSync",
-  "description": "Copilot chat sessions orchestrator. ",
+  "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/4regab/TaskSync",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-04T22:18:43Z"
+  "distributed_at": "2026-07-30T20:08:48Z"
 }
