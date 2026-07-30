@@ -1,6 +1,6 @@
 # dp_sdk_core
 
-> Source: [KaminDeng/dp_sdk_core](https://github.com/KaminDeng/dp_sdk_core) — distributed by [TomeVault](https://tomevault.io)
+> Source: [KaminDeng/dp_sdk_core](https://github.com/KaminDeng/dp_sdk_core). Graded, signed and kept in sync across platforms by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
@@ -15,7 +15,7 @@ Original source: `CLAUDE.md` in [KaminDeng/dp_sdk_core](https://github.com/Kamin
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/KaminDeng/dp_sdk_core](https://github.com/KaminDeng/dp_sdk_core)
+Graded against the Tome Standard, TomeVault's public ruleset for whether AI instructions load, read clearly and stay safe. Source: [github.com/KaminDeng/dp_sdk_core](https://github.com/KaminDeng/dp_sdk_core)
 
 ---
 
