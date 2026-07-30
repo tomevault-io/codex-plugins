@@ -1,18 +1,17 @@
 # praxis
 
-> Tome by [praxis-proxy](https://github.com/praxis-proxy/praxis) — distributed by [TomeVault](https://tomevault.io)
-
- AI and cloud-native proxy server and framework
+> Tome by [praxis-proxy](https://github.com/praxis-proxy/praxis), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [praxis-proxy/praxis](https://github.com/praxis-proxy/praxis).
+Original source: `` in [praxis-proxy/praxis](https://github.com/praxis-proxy/praxis).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
