@@ -4,7 +4,7 @@
   "repo": "SDKGenerator",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/PlayFab/SDKGenerator",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-29T14:41:26Z"
+  "distributed_at": "2026-07-30T13:33:09Z"
 }
