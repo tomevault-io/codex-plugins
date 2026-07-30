@@ -1,23 +1,21 @@
 # effect-query
 
-> Tome by [voidhashcom](https://github.com/voidhashcom/effect-query) — distributed by [TomeVault](https://tomevault.io)
-
-Effect-Query - The Tanstack Query integration with Effect.
+> Tome by [voidhashcom](https://github.com/voidhashcom/effect-query), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [voidhashcom/effect-query](https://github.com/voidhashcom/effect-query).
+Original source: `CLAUDE.md` in [voidhashcom/effect-query](https://github.com/voidhashcom/effect-query).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/voidhashcom/effect-query](https://github.com/voidhashcom/effect-query)
+Graded against the Tome Standard, TomeVault's public ruleset for whether AI instructions load, read clearly and stay safe. Source: [github.com/voidhashcom/effect-query](https://github.com/voidhashcom/effect-query)
 
 ---
 
