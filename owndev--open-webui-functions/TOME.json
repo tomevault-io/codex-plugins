@@ -2,9 +2,9 @@
   "name": "Open-WebUI-Functions",
   "owner": "owndev",
   "repo": "Open-WebUI-Functions",
-  "description": "Open-WebUI-Functions is a collection of custom pipelines, filters, and integrations designed to enhance Open WebUI. These functions enable seamless interactions with Azure AI, N8N, Google Gemini and other AI models, providing dynamic request handling, preprocessing, and automation.",
+  "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/owndev/Open-WebUI-Functions",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-18T16:06:14Z"
+  "distributed_at": "2026-07-30T18:34:09Z"
 }
