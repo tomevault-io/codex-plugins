@@ -1,102 +1,35 @@
-# Copilot Instructions for mcpls
 
-mcpls is a bridge between MCP (Model Context Protocol) and LSP (Language Server Protocol).
-AI clients speak MCP to mcpls; mcpls spawns and communicates with language servers over LSP.
+## Type safety and idiomatic config
 
-```
-AI Client ←→ [MCP/stdio] ←→ mcpls ←→ [LSP/stdio] ←→ language server
-```
+Config option enums must derive `Default` with `#[default]` on the intended default
+variant rather than implementing `Default` manually. This keeps the default co-located
+with the type definition and is less error-prone.
 
-Key crates: `mcpls-core/src/bridge/`, `lsp/`, `mcp/`, `config/`.
+Boolean config fields that represent a choice between more than two states should be
+`enum`, not `bool`. A `bool` cannot be extended without a breaking change; an enum can
+gain variants under `#[non_exhaustive]`.
 
-## Type safety
+New `#[serde(default)]` fields must have a test that deserialises a config with the
+field omitted and asserts the default value. Cover both JSON and TOML — parsers can
+behave differently on edge cases like empty strings and absent vs. null keys.
 
-Prefer newtypes over primitive aliases for domain values. A raw `u32` for a line number
-and a raw `u32` for a column are indistinguishable to the compiler; a `Line(u32)` and
-`Column(u32)` make transpositions a compile error.
+Enum config options must have a round-trip test for every variant. A typo in
+`#[serde(rename_all = "...")]` silently changes the on-disk format and breaks existing
+user configs without a compile error.
 
-Encode protocol state in the type system where possible. A document that has been opened
-and one that has not should ideally be different types, not the same type with a boolean
-field. Typestate prevents calling operations that are only valid on open documents.
+## MSRV and dependencies
 
-Avoid stringly-typed dispatch. Matching on `&str` method names to branch protocol
-behaviour should be replaced with a typed enum as soon as the set of methods is known
-and bounded.
+When introducing a new dependency, check whether the functionality is already available
+in `std` for the current MSRV. Prefer `std` over external crates to reduce
+compile time and supply-chain surface.
 
-`Option<T>` and `Result<T, E>` must not be unwrapped with `.unwrap()` or `.expect()` in
-production code paths. Use `?`, `if let`, `let-else`, or explicit error mapping.
+New crates require a license check in the same PR. Add the license to `deny.toml`
+before merging — `cargo deny check licenses` fails fast and blocks the pipeline.
 
-## Idiomatic Rust
-
-Prefer iterator adapters over manual loops. `map`, `filter`, `flat_map`, `collect`, and
-`fold` express intent more clearly and are easier to compose than `for` with a mutable
-accumulator.
-
-Avoid unnecessary heap allocation. Prefer `&str` over `String` in function signatures
-where ownership is not required. Prefer `Cow<str>` when a function sometimes borrows and
-sometimes owns.
-
-Use `let-else` (stabilised in Rust 1.65) to reduce nesting when early return on `None`
-or `Err` is needed:
-```rust
-// prefer
-let Some(value) = option else { return Err(...) };
-// over
-let value = match option { Some(v) => v, None => return Err(...) };
-```
-
-Derive `Clone`, `Debug`, `PartialEq` on data types unless there is a specific reason not
-to. Their absence makes testing harder and the omission is rarely intentional.
-
-## Architecture
-
-A component that bridges two protocols (MCP and LSP) must not let either protocol's
-failure mode affect the other. LSP request timeouts must not stall MCP response
-delivery, and LSP push notifications must not block MCP request handling.
-
-Shared mutable state must be scoped as narrowly as possible. A `Mutex` that guards a
-large composite struct is a concurrency bottleneck; prefer separate locks for
-independent sub-components (e.g. a cache and a client are independent).
-
-A `Mutex` guard must never be held across an `.await` point that involves I/O. Doing so
-holds the lock for the full duration of the network round-trip, blocking every other
-task that needs the lock. Extract the guarded value before the `.await` or restructure
-so the lock is released first.
-
-## Async
-
-Prefer `tokio::join!` or `tokio::try_join!` over sequential `.await` chains when
-operations are independent. Sequential awaits serialise work that could run concurrently.
-
-Blocking operations (`std::fs`, `std::thread::sleep`, CPU-heavy loops) must not run on
-the async executor. Use `tokio::fs`, `tokio::time::sleep`, or `tokio::task::spawn_blocking`
-for work that would block a task for more than a few microseconds.
-
-Use `tokio::sync::mpsc` for async-to-async channels. Use `std::sync::mpsc::sync_channel`
-only for bridging a synchronous context to async, and always with `try_send` when the
-intent is to drop events under backpressure — `send` blocks on a full channel.
-
-Prefer `tokio::select!` with a cancellation token over bare `loop { recv().await }`
-for background tasks that must shut down cleanly.
-
-## API currency and MSRV
-
-When reviewing code, check whether newer stable Rust APIs would simplify it. If a
-simpler or safer API was stabilised after the current `rust-version` in `Cargo.toml`,
-suggest bumping MSRV and using the new API. Document the bump in CHANGELOG under
-`### Changed`.
-
-Examples of APIs worth adopting when MSRV permits:
-- `let-else` expressions (1.65) — replace verbose `match`/`unwrap_or_else` for early return
-- `std::io::read_to_string` on a `File` handle (1.0, but pairing with `.metadata()` on the same
-  handle closes TOCTOU windows — prefer over separate `stat` + `open`)
-- `OnceLock` (1.70) — prefer over `lazy_static` or `once_cell` for static initialisation
-- `is_some_and` / `is_none_or` (1.70) — replace `map(|v| ...).unwrap_or(false)` patterns
-- `Iterator::array_chunks` (nightly → stable tracking) — watch stabilisation status
-
-When a dependency provides a feature already in `std`, prefer `std`. Fewer dependencies
-reduce supply-chain risk and compile time.
+If a new stable Rust API (e.g. `OnceLock` at 1.70 replacing `once_cell::sync::OnceCell`)
+makes an existing dependency redundant, suggest removing the dependency and bumping
+`rust-version` instead. Document the bump in CHANGELOG.
 
 ---
 > Source: [bug-ops/mcpls](https://github.com/bug-ops/mcpls) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-05-03 -->
+<!-- tomevault:4.0:agents_md:2026-07-27 -->
