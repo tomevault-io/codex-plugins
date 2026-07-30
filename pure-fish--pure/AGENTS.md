@@ -1,105 +1,74 @@
-# GitHub Copilot Code Review Instructions
 
-## Review Philosophy
-- Only comment when you have HIGH CONFIDENCE (>80%) that an issue exists
-- Be concise: one sentence per comment when possible
-- Focus on actionable feedback, not observations
-- When reviewing text, only comment on clarity issues if the text is genuinely confusing or could lead to errors. "Could be clearer" is not the same as "is confusing" - stay silent unless HIGH confidence it will cause problems
+# Shell Scripting Guidelines
 
-## Priority Areas (Review These)
+Instructions for writing clean, safe, and maintainable shell scripts for Fish shell
 
-### Security & Safety
-- Unsafe code blocks without justification
-- Command injection risks (shell commands, user input)
-- Path traversal vulnerabilities
-- Credential exposure or hardcoded secrets
-- Missing input validation on external data
-- Improper error handling that could leak sensitive info
+## General Principles
 
-### Correctness Issues
-- Logic errors that could cause panics or incorrect behavior
-- Race conditions in async code
-- Resource leaks (files, connections, memory)
-- Off-by-one errors or boundary conditions
-- Incorrect error propagation (using `unwrap()` inappropriately)
-- Optional types that don't need to be optional
-- Booleans that should default to false but are set as optional
-- Error context that doesn't add useful information (e.g., `.context("Failed to do X")` when error already says it failed)
-- Overly defensive code that adds unnecessary checks
-- Unnecessary comments that just restate what the code already shows (remove them)
+- Generate code that is clean, simple, and concise
+- Ensure scripts are easily readable and understandable
+- Add comments where helpful for understanding how the script works
+- Generate concise and simple echo outputs to provide execution status
+- Avoid unnecessary echo output and excessive logging
+- Use shellcheck for static analysis when available
+- Prefer safe expansions: double-quote variable references (`"$var"`), use `${var}` for clarity, and avoid `eval`
+- Choose reliable parsers for structured data instead of ad-hoc text processing
+- Use long-form options for commands to improve readability
+- use named variables instead of positional parameters where possible
 
-### Architecture & Patterns
-- Code that violates existing patterns in the codebase
-- Missing error handling (should use `anyhow::Result`)
-- Async/await misuse or blocking operations in async contexts
-- Improper trait implementations
+## Error Handling & Safety
 
+- Always enable `set -euo pipefail` to fail fast on errors, catch unset variables, and surface pipeline failures
+- Validate all required parameters before execution
+- Provide clear error messages with context
+- Use `trap` to clean up temporary resources or handle unexpected exits when the script terminates
+- Use `mktemp` to create temporary files or directories safely and ensure they are removed in your cleanup handler
 
+## Script Structure
 
-## Project-Specific Context
+- Each script should be encapsulated in a function in a dedicated file to leverage autoloading mechanism of Fish shell
+- Do no start with a clear shebang: `/bin/fish` unless specified otherwise
+- Include a `--description` option to function definition explaining the script's purpose
+- Define default values for all variables at the top
+- Use functions for reusable code blocks
+- Create reusable functions instead of repeating similar blocks of code
+- Keep the main execution flow clean and readable
 
-- This is a Rust project using cargo workspaces
-- Core crates: `goose` (agent logic), `goose-cli` (CLI), `goose-server` (backend), `goose-mcp` (MCP servers)
-- Error handling: Use `anyhow::Result`, not `unwrap()` in production code
-- Async runtime: tokio
-- See HOWTOAI.md for AI-assisted code standards
-- MCP protocol implementations require extra scrutiny
+## Working with JSON and YAML
 
-## CI Pipeline Context
+- Prefer dedicated parsers (`jq` for JSON, `yq` for YAML—or `jq` on JSON converted via `yq`) over ad-hoc text processing with `grep`, `awk`, or shell string splitting
+- When `jq`/`yq` are unavailable or not appropriate, choose the next most reliable parser available in your environment, and be explicit about how it should be used safely
+- Validate that required fields exist and handle missing/invalid data paths explicitly (e.g., by checking `jq` exit status or using `// empty`)
+- Quote jq/yq filters to prevent shell expansion and prefer `--raw-output` when you need plain strings
+- Treat parser errors as fatal: combine with `set -euo pipefail` or test command success before using results
+- Document parser dependencies at the top of the script and fail fast with a helpful message if `jq`/`yq` (or alternative tools) are required but not installed
 
-**Important**: You review PRs immediately, before CI completes. Do not flag issues that CI will catch.
+```fish
+# Example function following the guidelines above
+function example_git_status --description 'Display a formatted git status summary'
+    # Validate we're in a git repository
+    if not git rev-parse --git-dir >/dev/null 2>&1
+        echo "Error: Not a git repository" >&2
+        return 1
+    end
 
-### What Our CI Checks (`.github/workflows/ci.yml`)
+    # Get current branch name
+    set --local branch_name (git branch --show-current 2>/dev/null)
+    if test -z "$branch_name"
+        set branch_name "detached HEAD"
+    end
 
-**Rust checks:**
-- `cargo fmt --check` - Code formatting (rustfmt)
-- `cargo test --jobs 2` - All tests
-- `./scripts/clippy-lint.sh` - Linting (clippy)
-- `just check-openapi-schema` - OpenAPI schema validation
+    # Count modified and staged files
+    set --local modified_count (git diff --name-only | count)
+    set --local staged_count (git diff --cached --name-only | count)
 
-**Desktop app checks:**
-- `npm ci` - Fresh dependency install (in `ui/desktop/`)
-- `npm run lint:check` - ESLint + Prettier
-- `npm run test:run` - Vitest tests
-
-**Setup steps CI performs:**
-- Installs system dependencies (libdbus, gnome-keyring, libxcb)
-- Activates hermit environment (`source bin/activate-hermit`)
-- Caches Cargo and npm dependencies
-- Runs `npm ci` before any npm scripts (ensures all packages are installed)
-
-**Key insight**: Commands like `npx` check local `node_modules` first, which CI installs via `npm ci`. Don't flag these as broken unless you can explain why CI setup wouldn't handle it.
-
-## Skip These (Low Value)
-
-Do not comment on:
-- **Style/formatting** - CI handles this (rustfmt, prettier)
-- **Clippy warnings** - CI handles this (clippy-lint.sh)
-- **Test failures** - CI handles this (full test suite)
-- **Missing dependencies** - CI handles this (npm ci will fail)
-- **Minor naming suggestions** - unless truly confusing
-- **Suggestions to add comments** - for self-documenting code
-- **Refactoring suggestions** - unless there's a clear bug or maintainability issue
-- **Multiple issues in one comment** - choose the single most critical issue
-- **Logging suggestions** - unless for errors or security events (the codebase needs less logging, not more)
-- **Pedantic accuracy in text** - unless it would cause actual confusion or errors. No one likes a reply guy
-
-## Response Format
-
-When you identify an issue:
-1. **State the problem** (1 sentence)
-2. **Why it matters** (1 sentence, only if not obvious)
-3. **Suggested fix** (code snippet or specific action)
-
-Example:
+    # Display summary
+    echo "Branch: $branch_name"
+    echo "Modified: $modified_count"
+    echo "Staged: $staged_count"
+end
 ```
-This could panic if the vector is empty. Consider using `.get(0)` or add a length check.
-```
-
-## When to Stay Silent
-
-If you're uncertain whether something is an issue, don't comment. False positives create noise and reduce trust in the review process.
 
 ---
 > Source: [pure-fish/pure](https://github.com/pure-fish/pure) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-24 -->
+<!-- tomevault:4.0:agents_md:2026-07-27 -->
