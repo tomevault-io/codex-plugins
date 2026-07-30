@@ -2,7 +2,7 @@
   "name": "living-architecture",
   "owner": "NTCoding",
   "repo": "living-architecture",
-  "description": "Extra software architecture from your code as living documentation. AI-assisted.",
+  "description": "",
   "type": "config",
   "source_format": "CLAUDE.md",
   "formats": [
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/NTCoding/living-architecture",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-03T04:26:20Z"
+  "distributed_at": "2026-07-30T06:00:32Z"
 }
