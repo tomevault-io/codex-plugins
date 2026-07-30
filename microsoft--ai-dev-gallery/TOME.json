@@ -2,9 +2,9 @@
   "name": "ai-dev-gallery",
   "owner": "microsoft",
   "repo": "ai-dev-gallery",
-  "description": "An open-source project for Windows developers to learn how to add AI with local models and APIs to Windows apps.",
+  "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/microsoft/ai-dev-gallery",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-31T19:34:21Z"
+  "distributed_at": "2026-07-30T08:05:52Z"
 }
