@@ -1,73 +1,37 @@
-# MLflow OIDC Auth Plugin - AI Coding Agent Instructions
 
-## Architecture Overview
+# Python Coding Conventions
 
-Hybrid **FastAPI + Flask** plugin: FastAPI handles auth/permissions APIs, Flask provides MLflow compatibility via WSGI mount.
+## Functions and Types
 
-```
-FastAPI App → ProxyHeadersMiddleware → AuthMiddleware → SessionMiddleware
-    ├── /oidc/* routers (auth, permissions, UI, health)
-    └── AuthAwareWSGIMiddleware → Flask MLflow app (with before/after_request hooks)
-```
+- Require type hints on all function parameters and return values; use `typing` and `collections.abc` abstractions instead of concrete containers where possible.
+- Keep functions small and single-purpose; extract helpers when a block becomes hard to scan.
+- Provide PEP 257 docstrings with clear Parameters/Returns sections when intent is not obvious from the signature.
+- Favor pure functions where practical; minimize hidden mutation and global state.
 
-**Auth flow**: FastAPI authenticates → `request.state.mlflow_oidc_auth` → WSGI `environ['mlflow_oidc_auth.username']` → Flask hooks enforce permissions.
+## Comments and Documentation
 
-## Critical Rules
+- Comment for intent and edge cases, not for restating code; briefly explain non-trivial algorithms or design choices.
+- Document assumptions and expected invariants near the logic that depends on them.
+- When using external libraries, note why the library is needed or any important configuration choices.
 
-1. **Store singleton**: Always `from mlflow_oidc_auth.store import store` – never instantiate new stores
-2. **New APIs → FastAPI**: Add routers to [routers/](mlflow_oidc_auth/routers/), use `Depends()` for auth
-3. **Middleware order matters**: Proxy → Auth → Session (see [app.py](mlflow_oidc_auth/app.py))
-4. **Don't modify Flask hooks** unless necessary – they ensure MLflow UI/API compatibility
+## Style and Formatting
 
-## Permission System
+- Follow PEP 8 and Black with the project limit of 160 characters; use 4 spaces for indentation.
+- Place docstrings immediately after `def`/`class`; keep imports grouped by stdlib/third-party/local modules.
+- Prefer f-strings for string formatting; avoid implicit string concatenation across lines.
 
-4 levels: `READ` < `EDIT` < `MANAGE` < `NO_PERMISSIONS` (denial)
+## Error Handling
 
-Source order via `PERMISSION_SOURCE_ORDER=user,group,regex,group-regex` – first match wins, falls back to `DEFAULT_MLFLOW_PERMISSION`.
+- Validate inputs early and raise specific exceptions with actionable messages; avoid silent failures.
+- Log or attach context when catching exceptions, then re-raise or translate to a clearer error.
+- Do not swallow exceptions unless there is a deliberate fallback path that is documented.
 
-```python
-# Check permissions (supports experiment, registered_model, prompt, scorer)
-from mlflow_oidc_auth.utils.permissions import get_permission_for_experiment
-permission = get_permission_for_experiment(experiment_id, username)
-if not permission.can_update:
-    raise HTTPException(403, "Insufficient permissions")
-```
+## Testing and Edge Cases
 
-## Development
-
-```bash
-./scripts/run-dev-server.sh  # Starts backend + React UI with hot reload
-pytest mlflow_oidc_auth/tests/  # Unit tests
-pytest -m integration           # Integration tests (requires running server)
-```
-
-## Adding a Router
-
-1. Create `mlflow_oidc_auth/routers/my_feature.py` with `my_feature_router = APIRouter(tags=["my-feature"])`
-2. Add to `get_all_routers()` in [routers/__init__.py](mlflow_oidc_auth/routers/__init__.py)
-3. Use dependency injection for auth:
-
-```python
-from mlflow_oidc_auth.dependencies import check_admin_permission, get_username
-
-@router.post("/admin-only")
-async def endpoint(username: str = Depends(check_admin_permission)):
-    pass  # username already validated as admin
-```
-
-## Key Files
-
-- [app.py](mlflow_oidc_auth/app.py) – FastAPI factory, middleware setup, Flask mount
-- [store.py](mlflow_oidc_auth/store.py) – Database singleton (SqlAlchemy)
-- [middleware/auth_middleware.py](mlflow_oidc_auth/middleware/auth_middleware.py) – Basic/Bearer/Session auth
-- [utils/permissions.py](mlflow_oidc_auth/utils/permissions.py) – Permission resolution logic
-- [hooks/](mlflow_oidc_auth/hooks/) – Flask request hooks for MLflow API authorization
-
-## Style
-
-- **Python**: Black @ 160 chars, type hints required, PEP 257 docstrings (see [python.instructions.md](.github/instructions/python.instructions.md))
-- **React**: TypeScript + Tailwind in [web-react/](web-react/) (see [react.instructions.md](.github/instructions/react.instructions.md))
+- Add or update unit tests for new logic and critical paths; keep tests deterministic and isolated.
+- Cover edge cases such as empty inputs, invalid types, boundary values, and large datasets.
+- Use descriptive test names and docstrings to convey the scenario and expectation.
 
 ---
 > Source: [mlflow-oidc/mlflow-oidc-auth](https://github.com/mlflow-oidc/mlflow-oidc-auth) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-24 -->
+<!-- tomevault:4.0:agents_md:2026-07-27 -->
