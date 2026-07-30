@@ -1,22 +1,96 @@
-# GitHub Copilot Instructions — Apache Hudi-rs
 
-GitHub Copilot loads **both** this file and [`AGENTS.md`](../AGENTS.md). Treat `AGENTS.md` files
-as the source of truth — this file adds Copilot-specific notes only.
+# Code Review Instructions for Apache Hudi-rs
 
-Language-specific conventions live in sub-directory AGENTS.md files:
+## Multi-Round Review Behavior
 
-- [`crates/AGENTS.md`](../crates/AGENTS.md) — Rust
-- [`python/AGENTS.md`](../python/AGENTS.md) — Python / PyO3
-- [`cpp/AGENTS.md`](../cpp/AGENTS.md) — C++ / cxx
+When reviewing updated PRs:
 
-Path-scoped rules under [`./instructions/`](./instructions) reference the sub-directory AGENTS.md
-files and are loaded automatically when files match their `applyTo` glob.
+- Do NOT re-raise issues addressed by new commits
+- Focus on code added or modified in latest commits
+- Check if fixes introduced regressions elsewhere
+- Acknowledge progress while maintaining standards
 
-For code review behavior, see
-[`code-review.instructions.md`](./instructions/code-review.instructions.md).
+### Severity Classification
 
-For everything else — build commands, testing, PR rules — see [`AGENTS.md`](../AGENTS.md).
+- **🔴 Critical**: Must fix before merge (correctness, safety, breaking changes)
+- **🟠 Important**: Should fix before merge (error handling, testing, docs)
+- **🟡 Suggestion**: Nice to have, not blocking (style, optimization)
+- **💬 Question**: Clarification needed, not necessarily an issue
+
+## Apache Hudi-rs Specific Review Criteria
+
+### Hudi Semantics
+
+- Verify correct handling of Hudi timeline operations
+- Check proper partition pruning logic
+- Ensure file group/file slice handling is correct
+- Validate commit timestamp parsing and comparison
+
+### Arrow Integration
+
+- Verify schema compatibility between Hudi and Arrow types
+- Check proper memory management with RecordBatches
+- Ensure efficient use of Arrow compute kernels
+- Validate proper null handling
+
+### DataFusion Integration
+
+- Check TableProvider implementation correctness
+- Verify filter pushdown implementation
+- Ensure proper async execution patterns
+- Validate scan parallelization
+
+### Cloud Storage
+
+- Check object_store usage patterns
+- Verify proper credential handling (no hardcoded secrets)
+- Ensure retry logic for transient failures
+- Validate path handling across storage backends
+
+## Review Checklist
+
+### Before Approving, Verify:
+
+- [ ] All CI checks pass
+- [ ] Tests cover the changed functionality
+- [ ] Public APIs have documentation
+- [ ] Error handling uses Result, not panic
+- [ ] No `.unwrap()` in non-test code
+- [ ] Breaking changes are documented
+- [ ] PR diff is under 1000 lines (or justified)
+
+### For New Features:
+
+- [ ] Feature is behind appropriate configuration if experimental
+- [ ] Integration tests demonstrate the feature works end-to-end
+- [ ] Python bindings updated if applicable
+- [ ] README/docs updated if user-facing
+
+### For Bug Fixes:
+
+- [ ] Root cause is identified and explained
+- [ ] Test case added that would have caught the bug
+- [ ] Related areas checked for similar issues
+
+## Patterns to Flag
+
+- 🔴 `.unwrap()` / `.expect()` / `panic!()` in non-test code
+- 🔴 Blocking calls (`std::thread::sleep`, `std::fs`) in async context
+- 🔴 Hardcoded credentials or secrets
+- 🟠 Missing error context (bare `.map_err()` without message)
+- 🟠 Unnecessary `.clone()`, taking ownership when borrow suffices
+- 🟠 Missing doc comments on public items
+- 🟡 Imperative loops replaceable with iterator chains
+- 🟡 Nested `match` on `Result` replaceable with `and_then` or `?`
+
+## Cross-File Impact
+
+- **Core table changes** → check Python/C++ bindings
+- **Public API (`hudi` crate)** → check for breaking changes
+- **DataFusion integration** → verify compatibility
+- **Schema/type conversions** → check serialization paths
+- **Configuration structs** → verify backward compatibility
 
 ---
 > Source: [apache/hudi-rs](https://github.com/apache/hudi-rs) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-24 -->
+<!-- tomevault:4.0:agents_md:2026-07-27 -->
