@@ -4,7 +4,7 @@
   "repo": "CppAst.NET",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/xoofx/CppAst.NET",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-24T21:43:22Z"
+  "distributed_at": "2026-07-30T20:59:01Z"
 }
