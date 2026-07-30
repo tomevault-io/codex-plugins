@@ -1,0 +1,45 @@
+
+ベストプラクティスガイドのこの部分では、一般的な規約について説明します。
+
+## chart 名
+
+chart 名は英小文字と数字で構成する必要があります。単語はダッシュ（-）で区切ることが _できます_ 。
+
+例:
+
+```
+drupal
+nginx-lego
+aws-cluster-autoscaler
+```
+
+英大文字やアンダースコアは chart 名に使用できません。ドットも chart 名には使用しないでください。
+
+## バージョン番号
+
+Helm は可能な限り [SemVer 2](https://semver.org) を使用してバージョン番号を表現します。（Docker イメージタグは必ずしも SemVer に従わないため、この規則の例外と見なされています。）
+
+SemVer バージョンを Kubernetes ラベルに保存する場合、`+` 文字を `_` に置き換える慣習があります。ラベルの値として `+` 記号が許可されていないためです。
+
+## YAML のフォーマット
+
+YAML ファイルは _スペース 2 つ_ でインデントしてください（タブは使用しないでください）。
+
+## Helm と chart という用語の使い方
+
+_Helm_ および _helm_ という用語の使い方にはいくつかの規約があります。
+
+- _Helm_ はプロジェクト全体を指します
+- `helm` はクライアントサイドのコマンドを指します
+- `chart` という用語は固有名詞ではないため、大文字にする必要はありません
+- ただし、ファイル名は大文字小文字を区別するため、`Chart.yaml` は正確に記述する必要があります
+
+迷った場合は、_Helm_（大文字の「H」）を使用してください。
+
+## chart テンプレートと namespace
+
+chart テンプレートの `metadata` セクションで `namespace` プロパティを定義することは避けてください。レンダリングされたテンプレートを適用する namespace は、`--namespace` などのフラグを通じて Kubernetes クライアントへの呼び出し時に指定してください。Helm はテンプレートをそのままレンダリングして、Kubernetes クライアント（Helm 自身、kubectl、flux、spinnaker など）に送信します。
+
+---
+> Source: [helm/helm-www](https://github.com/helm/helm-www) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-07-26 -->
