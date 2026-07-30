@@ -5,14 +5,14 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [pdufour/browser-use-wasm](https://github.com/pdufour/browser-use-wasm).
+Original source: `.cursor/rules/*.mdc` in [pdufour/browser-use-wasm](https://github.com/pdufour/browser-use-wasm).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
-- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 From [pdufour/browser-use-wasm](https://github.com/pdufour/browser-use-wasm) — a repo with 15+ stars on GitHub.
