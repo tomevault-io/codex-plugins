@@ -1,74 +1,95 @@
-# Copilot Instructions for mcp-windows
+# mcp-windows Development Guidelines
 
-## Core Principles
+Auto-generated from all feature plans. Last updated: 2025-12-07
 
-The project follows these NON-NEGOTIABLE principles:
-- **Test-First Development** - Write tests before implementation
-- **MCP Protocol Compliance** - Follow MCP specification strictly
-- **Augmentation, Not Duplication** - Tools are "dumb actuators", no complex logic in tools
-- **Microsoft Libraries First** - Prefer official Microsoft libraries over third-party alternatives
-- **Security Best Practices** - No secrets in code, validate inputs, follow security guidelines
-- **Modern .NET & C#** - Use current .NET and C# language features
-- **xUnit Testing** - All .NET tests use xUnit framework
-- **LLM Integration Testing** - Use pytest-skill-engineering with GitHub Copilot SDK
-- **Token Optimization** - Optimize MCP responses for LLM token efficiency
-- **UI Automation First** - Semantic UI automation is the primary approach
+## Active Technologies
+- C# 12+ (.NET 8.0 LTS) + Microsoft.Extensions.Logging, Serilog, MCP SDK, System.CommandLine (002-keyboard-control)
+- N/A (stateless operations, held keys tracked in memory only) (002-keyboard-control)
+- C# 12+ / .NET 8.0 LTS + MCP C# SDK, Microsoft.Extensions.Logging, Serilog (003-window-management)
+- N/A (stateless window queries) (003-window-management)
+- TypeScript 5.9+ (extension), C# 12+ (.NET 8.0 for bundled server) + VS Code Extension API 1.106.0+, .NET Install Tool extension (006-vscode-extension)
+- C# 12+ (.NET 8.0 LTS) + Microsoft.Extensions.Logging, System.Drawing, existing MCP tools (mouse_control, keyboard_control, window_management, screenshot_control) (007-llm-integration-testing)
+- File-based (PNG images, JSON metadata, Markdown scenarios) (007-llm-integration-testing)
+- C# 12+ / .NET 8.0 LTS + Windows GDI+ (System.Drawing), existing ScreenshotService infrastructure (008-all-monitors-screenshot)
+- N/A (returns base64-encoded PNG via MCP) (008-all-monitors-screenshot)
+- C# 12 / .NET 8.0 + MCP C# SDK (latest), Microsoft.Extensions.*, System.Text.Json (010-code-quality)
+- N/A (stateless tool server) (010-code-quality)
+- C# 12+ / .NET 8.0 + System.Drawing (GDI+ for encoding/scaling), existing `Sbroenne.WindowsMcp.Capture` namespace (011-screenshot-llm-optimization)
+- File output to `System.IO.Path.GetTempPath()` with unique naming (011-screenshot-llm-optimization)
+- File output to `System.IO.Path.GetTempPath()` with timestamp naming (011-screenshot-llm-optimization)
+- N/A (stateless operations) (013-ui-automation-ocr)
+- C# 12+ / .NET 8.0 + System.Windows.Automation (UIAutomationClient.dll), Windows.Media.Ocr, Microsoft.Windows.AI.Imaging (optional NPU) (013-ui-automation-ocr)
+- C# 12 / .NET 10.0 + MCP C# SDK, Microsoft.Extensions.Compliance.Redaction, Microsoft.Extensions.Hosting (015-session-control)
+- In-memory (ConcurrentDictionary), no persistence (015-session-control)
+- Python (pytest-aitest test format) + pytest-aitest, GPT-5.5, Filesystem MCP Server (015-llm-tool-coverage)
+- Timestamped output folders under `tests/Sbroenne.WindowsMcp.LLM.Tests/output/` (gitignored) (015-llm-tool-coverage)
 
-## Automation Patterns Reference
+- C# 12+ (latest stable per Constitution XIII) (001-mouse-control)
 
-**ALWAYS consult FlaUI and pywinauto when adding automation code or debugging issues.**
+## Project Structure
 
-These are the reference implementations for Windows UI automation patterns:
+```text
+src/
+tests/
+```
 
-### Reference Repositories
-- **FlaUI**: https://github.com/FlaUI/FlaUI - C# UI Automation library
-- **pywinauto**: https://github.com/pywinauto/pywinauto - Python Windows automation
+## Commands
 
-### Key Patterns to Reference
+# Add commands for C# 12+ (latest stable per Constitution XIII)
 
-| Pattern | FlaUI Reference | pywinauto Reference |
-|---------|-----------------|---------------------|
-| Modal windows | `window.ModalWindows` with `Retry.WhileEmpty` (1s timeout) | `app.Dialog` / `app.SaveAs` as separate windows |
-| Save dialogs | `UtilityMethods.CloseWindowWithDontSave` | `app.SaveAs.Edit.set_edit_text()` + `.Save.click()` |
-| Wait patterns | `Wait.UntilInputIsProcessed()`, `Retry.While*` | `.wait('ready')`, `Timings.window_find_timeout` |
-| Click fallback | `element.Click()` → `Mouse.Click(element.GetClickablePoint())` | `ctrl.click_input()` → `ctrl.click()` |
+## Code Style
 
-### When to Check These Repos
+C# 12+ (latest stable per Constitution XIII): Follow standard conventions
 
-1. **Adding new UI automation features**: Search for similar functionality first
-2. **Debugging automation failures**: Check how they handle edge cases
-3. **Handling modal dialogs**: Always use FlaUI's ModalWindows pattern
-4. **Save/Open dialogs**: Reference pywinauto's dialog handling
-5. **Timing/wait issues**: Check their retry and wait strategies
+## Recent Changes
+- 015-llm-tool-coverage: Added Python (pytest-aitest test format) + pytest-aitest, GPT-5.5, Filesystem MCP Server
+- 015-session-control: Added C# 12 / .NET 10.0 + MCP C# SDK, Microsoft.Extensions.Compliance.Redaction, Microsoft.Extensions.Hosting
+- 013-ui-automation-ocr: Added C# 12+ / .NET 8.0 + System.Windows.Automation (UIAutomationClient.dll), Windows.Media.Ocr, Microsoft.Windows.AI.Imaging (optional NPU)
 
-## Testing
 
-**See [testing.instructions.md](.github/testing.instructions.md) for complete testing guidance.**
+<!-- MANUAL ADDITIONS START -->
 
-Quick reference:
-- **Unit tests**: `dotnet test --filter "FullyQualifiedName~Unit"`
-- **Integration tests**: `dotnet test --filter "FullyQualifiedName~Integration"` (ALL MUST PASS)
-- **LLM tests**: `cd tests/Sbroenne.WindowsMcp.LLM.Tests && uv run pytest -v` (expensive - only when requested)
+## Development Rules
 
-## LLM Test Authoring (CRITICAL)
+### Always Test Before Committing
+**CRITICAL**: Never commit code changes without running tests first.
 
-**NEVER put tool hints in LLM test prompts. This defeats the entire purpose of the test.**
+```powershell
+# Run unit tests (fast, excludes integration tests)
+dotnet test tests/Sbroenne.WindowsMcp.Tests --no-build --filter "Category!=Integration"
 
-LLM test prompts must be **task-focused, not tool-focused**:
+# Run all tests including integration
+dotnet test tests/Sbroenne.WindowsMcp.Tests --no-build
+```
 
-| ❌ WRONG (tool hints) | ✅ CORRECT (task-focused) |
-|----------------------|---------------------------|
-| "Use App-Tool to launch Notepad" | "Create a text file" |
-| "Call State-Tool to get coordinates" | "Check Windows Update" |
-| "Use ui_click with nameContains='Save'" | "Save the document" |
+Only commit after tests pass. This applies to:
+- Code changes
+- Test file changes  
+- Documentation that references code behavior
 
-**The test evaluates whether the LLM can discover the right tools from their descriptions.**
+## Feature: 008-all-monitors-screenshot (Implemented)
 
-If a test fails because the LLM can't figure out which tools to use:
-1. ✅ Improve the **tool descriptions** in the MCP server
-2. ✅ Improve the **system prompts** (WindowsAutomationPrompts.cs)
-3. ❌ **NEVER** add hints to test prompts - that's cheating
+**Purpose**: Capture entire virtual screen spanning all monitors in a single screenshot for LLM-based integration test verification.
+
+**Key Files**:
+- `src/Sbroenne.WindowsMcp/Models/CaptureTarget.cs` - Added `AllMonitors = 4` enum value
+- `src/Sbroenne.WindowsMcp/Models/VirtualScreenInfo.cs` - New record for virtual screen bounds
+- `src/Sbroenne.WindowsMcp/Capture/ScreenshotService.cs` - Added `CaptureAllMonitorsAsync()` method
+- `src/Sbroenne.WindowsMcp/Tools/ScreenshotControlTool.cs` - Added `"all_monitors"` target parsing
+- `tests/Sbroenne.WindowsMcp.Tests/Integration/ScreenshotAllMonitorsTests.cs` - 10 integration tests
+
+**Usage**:
+```json
+{ "action": "capture", "target": "all_monitors", "includeCursor": true }
+```
+
+**list_monitors now includes virtualScreen**:
+```json
+{ "virtualScreen": { "x": 0, "y": 0, "width": 4480, "height": 1440 } }
+```
+
+<!-- MANUAL ADDITIONS END -->
 
 ---
 > Source: [sbroenne/mcp-windows](https://github.com/sbroenne/mcp-windows) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-05-03 -->
+<!-- tomevault:4.0:agents_md:2026-07-24 -->
