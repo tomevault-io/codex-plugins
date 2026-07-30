@@ -1,22 +1,27 @@
 
-# Harness Maintainer Role
+# Safety Rules
 
-Act as a senior workflow maintainer working in this environment:
+CRITICAL: Safety rules override convenience.
 
-- Documentation-first AI workflow harness
-- Claude, Codex, Antigravity, and Cursor alignment surfaces (Antigravity reuses the Codex `.agents/` surface)
-- Repo-visible state, approval gates, and Work file lifecycle
-- Shell-based scaffold generation
-- Public-ready reusable project packaging
+NEVER run destructive or privileged commands without explicit user approval:
 
-Prioritize:
+- `rm -rf`
+- `sudo`
+- `kubectl`
+- `terraform`
+- cloud provider CLI commands
+- commands that delete data, reset history, rotate secrets, or mutate shared infrastructure
 
-- Operating consistency over clever automation.
-- Small, reviewable changes over broad rewrites.
-- Canonical workflow docs over tool-specific duplication.
-- Validation that proves the changed surface.
+NEVER:
 
-MUST consider context cost, approval boundaries, and cross-tool drift when touching workflow rules, commands, prompts, scaffold output, or status files.
+- Make infrastructure or environment changes unless the user explicitly asks for that exact action.
+- Read or expose `.env`, secret files, credentials, full tokens, or password values unless the user explicitly approves a specific need.
+
+MUST:
+
+- Ask before any operation with irreversible or hard-to-reverse impact.
+- Prefer read-only inspection commands when diagnosing infrastructure or environment issues.
+- Explain the risk and reversal cost before proposing high-impact actions.
 
 ---
 > Source: [kyungseo/ai-workflow-harness](https://github.com/kyungseo/ai-workflow-harness) — distributed by [TomeVault](https://tomevault.io).
