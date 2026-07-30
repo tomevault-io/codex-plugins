@@ -39,13 +39,13 @@
   ],
   "skills": [
     {
-      "name": "bnb-chain-toolkit",
-      "path": "erc8004-agents/SKILL.md",
-      "github_url": "https://github.com/nirholas/bnb-chain-toolkit/tree/main/erc8004-agents/SKILL.md",
+      "name": "atomic-grind",
+      "path": "skills/grind",
+      "github_url": "https://github.com/nirholas/bnb-chain-toolkit/tree/main/skills/grind",
       "description": ""
     }
   ],
   "source_url": "https://github.com/nirholas/bnb-chain-toolkit",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-23T01:38:47Z"
+  "distributed_at": "2026-07-30T21:58:38Z"
 }
