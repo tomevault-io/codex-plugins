@@ -2,9 +2,9 @@
   "name": "CelestialDocs",
   "owner": "HYP3R00T",
   "repo": "CelestialDocs",
-  "description": "CelestialDocs is a modern documentation platform and Astro template designed for scalable, developer-friendly knowledge systems. It combines structured navigation, hybrid content generation, MDX support, and customizable UI components to build fast, maintainable, and production-ready documentation sites.",
+  "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/HYP3R00T/CelestialDocs",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-06-03T17:31:43Z"
+  "distributed_at": "2026-07-30T10:18:20Z"
 }
