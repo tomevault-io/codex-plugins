@@ -4,7 +4,7 @@
   "repo": "airframe",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/wvlet/airframe",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-25T21:53:15Z"
+  "distributed_at": "2026-07-30T06:09:29Z"
 }
