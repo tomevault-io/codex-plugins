@@ -4,7 +4,7 @@
   "repo": "mail-parser",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/SpamScope/mail-parser",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-27T04:20:06Z"
+  "distributed_at": "2026-07-30T13:41:32Z"
 }
