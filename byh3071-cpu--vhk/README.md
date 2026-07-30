@@ -7,13 +7,13 @@ VHK — AI 코딩 세션을 목표·증거·기억·규칙으로 묶는 한국�
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [byh3071-cpu/vhk](https://github.com/byh3071-cpu/vhk).
+Original source: `.cursor/rules/*.mdc` in [byh3071-cpu/vhk](https://github.com/byh3071-cpu/vhk).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
