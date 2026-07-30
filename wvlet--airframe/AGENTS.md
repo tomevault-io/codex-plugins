@@ -1,61 +1,150 @@
-## Tech Stack
 
-- Primary Languages: Scala, Scala.js, Scala Native.
-- Scala Versions: Prioritize Scala 2.13 syntax for broad compatibility. Scala 2.12 compatible syntax is also acceptable.
-- Scala 3: Use Scala 3 specific syntax **only** within `src/{main,test}/scala3` directories.
-- Build Tool: sbt (Scala Build Tool).
-- Testing Framework: AirSpec.
+Generate test cases using the AirSpec testing framework (`wvlet.airspec.AirSpec`).
 
-## Project Structure and Modules
+## AirSpec Basic Syntax Explanation:
 
-- This is a multi-module sbt project. Most modules are cross-built for JVM, JS, and Native platforms.
-- Platform-specific code:
-    - JVM: `.jvm/src/main/scala`, `.jvm/src/test/scala`
-    - JS: `.js/src/main/scala`, `.js/src/test/scala`
-    - Native: `.native/src/main/scala`, `.native/src/test/scala`
-    - Shared code (common to all platforms) resides in `src/main/scala` and `src/test/scala`.
-- Core module `airframe-core` is designed for minimal dependencies. Avoid adding new library dependencies to `airframe-core` unless absolutely necessary. For other modules, carefully consider the impact of adding new dependencies.
+- AirSpec tests are typically defined within a Scala `object` or `class` that extends `wvlet.airspec.AirSpec`. 
+- AirSpec uses `test("...") { ... }` syntax for writing test cases. 
 
-## Coding style
+AirSpec provides a rich set of assertion syntaxes for verifying test expectations. Here are some common ones:
 
-- Before committing changes, run `./sbt scalafmtAll` to properly format the Scala code according to project guidelines. This ensures consistent code style across the codebase. For targeted formatting of specific modules, use `./sbt "(moduleNameJVM)/scalafmtAll` (replace moduleNameJVM with your target module).
-- case classes for configuration should have withXXX(...) methods for all fields and noXXX(...) methods for all optional fields.
-- In string interpolation, always enclose expr with bracket `${...}` for consistency.
-- Returning `Try[A]` is generally discouraged as it forces a monadic style on the caller. Consider using plain exceptions for unrecoverable errors, or domain-specific error types.
+### Assertion Syntax Table:
 
-## Dependencies
+| syntax                             | meaning                                                                           |
+|:-----------------------------------|:----------------------------------------------------------------------------------|
+| `assert(x == y)`                   | check x equals to y                                                               |
+| `assertEquals(a, b, delta)`        | check the equality of Float (or Double) values by allowing some delta difference  |
+| `intercept[E] { ... }`             | Catch an exception of type `E` to check an expected exception is thrown           |
+| `x shouldBe y`                     | check x == y. This supports matching collections like Seq, Array (with deepEqual) |
+| `x shouldNotBe y`                  | check x != y                                                                      |
+| `x shouldNotBe null`               | check x is not null                                                               |
+| `x shouldBe defined`               | check x.isDefined == true, when x is Option or Seq                                |
+| `x shouldBe empty`                 | check x.isEmpty == true, when x is Option or Seq                                  |
+| `x shouldBeTheSameInstanceAs y`    | check x eq y; x and y are the same object instance                                |
+| `x shouldNotBeTheSameInstanceAs y` | check x ne y; x and y should not be the same instance                             |
+| `x shouldMatch { case .. => }`     | check x matches given patterns                                                    |
+| `x shouldContain y`                | check x contains given value y                                                    |
+| `x shouldNotContain y`             | check x doesn't contain a given value y                                           |
+| `fail("reason")`                   | fail the test if this code path should not be reached                             |
+| `ignore("reason")`                 | ignore this test execution.                                                       |
+| `cancel("reason")`                 | cancel the test (e.g., due to set up failure)                                     |
+| `pending("reason")`                | pending the test execution (e.g., when hitting an unknown issue)                  |
+| `pendingUntil("reason")`           | pending until fixing some blocking issues                                         |
+| `skip("reason")`                   | Skipping unnecessary tests (e.g., tests that cannot be supported in Scala.js)     |
 
-- Check `libraryDependencies` in `build.sbt` for each module to understand its current dependencies.
-- When adding a dependency:
-    - Ensure it's available for all relevant platforms (JVM, JS, Native) if the module is cross-built.
-    - Prefer libraries already used in other modules if a similar functionality is needed.
-    - For `airframe-core`, new dependencies are highly discouraged.
+### Assertion Example:
 
-## Test code
+```scala
+import wvlet.airspec.AirSpec
 
-- Use `./sbt` command to open sbt shell.
-- Use `./sbt projectJVM/Test/compile` to compile the source and test code for JVM projects. Similarly, use `projectJS/Test/compile` for JS projects, and `projectNative/Test/compile` for Native projects. Replace `project` with the actual module name (e.g., `logJVM/Test/compile`).
-- To run a specific test class: `./sbt '(moduleName)(JVM|JS|Native)/testOnly *TestClassName'`.
-    - Example for a JVM test in `airframe-log` module: `./sbt 'logJVM/testOnly *MyLogTest'`
-    - Example for a JS test in `airframe-codec` module: `./sbt 'codecJS/testOnly fully.qualified.TestClassName'`
-- Use AirSpec testing framework. Key assertion syntaxes include `shouldBe`, `shouldNotBe`, `shouldMatch`.
-- Test names should be concise and descriptive, written in plain English.
-- Avoid using mock as it increases the maintenance cost.
-- Ensure tests cover new functionality and bug fixes. Aim for good test coverage.
-- When a test fails, carefully analyze the stack trace and assertion failures from the sbt output. The output will indicate the exact line of failure.
+class MyTest extends AirSpec
+{
+  test("assertion examples") {
+    // checking the value equality with shouldBe, shouldNotBe:
+    1 shouldBe 1
+    1 shouldNotBe 2
+    List().isEmpty shouldBe true
 
-## Git
+    // For optional values, shouldBe defined (or empty) can be used:
+    Option("hello") shouldBe defined
+    Option(null) shouldBe empty
+    None shouldNotBe defined
 
-- Use gh command for github operations.
-- For creating a new branch use, `git switch -c feature/$(date +"%Y%m%d_%H%M%S")-your-feature-description`
-- The format of commit messages is `feature: xxx` (for new features), `fix` (bug fixes), `internal` (non-user facing changes), or `doc` based on the code change contents. When describing commit messages, focus on `why` part of the change, not `what` or `how`.
-  - For example, `feature: Add XXX to improve user experience` is better than `feature: Add XXX class`
-- **Branching**: The branch naming convention `feature/$(date +"%Y%m%d_%H%M%S")` can be adapted for other types of changes (e.g., `fix/`, `doc/`, `internal/`) by replacing `feature/` with the appropriate prefix, optionally followed by a brief description: `fix/$(date +"%Y%m%d_%H%M%S")-correct-off-by-one-error`.
-- **Pull Requests (PRs)**:
-    - Use `gh pr create` for creating pull requests. Provide a clear title and a detailed body, linking to any relevant issues.
-    - Follow .github/pull_request_template.md format for PR descriptions.
-    - Prefer squashing commits via auto-merge with `gh pr merge --squash --auto` command when merging PRs to maintain a linear and clean history on the main branch.
+    // null check
+    val s: String = null
+    s shouldBe null
+    "s" shouldNotBe null
+
+    // For Arrays, shouldBe checks the equality with deep equals
+    Array(1, 2) shouldBe Array(1, 2)
+
+    // Collection checker
+    Seq(1) shouldBe defined
+    Seq(1) shouldNotBe empty
+    Seq(1, 2) shouldBe Seq(1, 2)
+    (1, 'a') shouldBe(1, 'a')
+
+    // Object equality checker
+    val a = List(1, 2)
+    val a1 = a
+    val b = List(1, 2)
+    a shouldBe a1
+    a shouldBeTheSameInstanceAs a1
+    a shouldBe b
+    a shouldNotBeTheSameInstanceAs b
+
+    // Patten matcher
+    Seq(1, 2) shouldMatch {
+      case Seq(1, _) => // ok
+    }
+
+    // Containment check
+    "hello world" shouldContain "world"
+    Seq(1, 2, 3) shouldContain 1
+
+    "hello world" shouldNotContain "!!"
+    Seq(1, 2, 3) shouldNotContain 4
+  }
+
+  // You can nest test cases
+  test("nested test examples") {
+    test("nested test") {
+      1 shouldBe 1
+    }
+
+    test("nested test with pending") {
+      pending("this test is pending")
+    }
+  }
+}
+```
+
+## Logging 
+
+To add debug messages, use `debug` and `trace` methods. 
+
+```scala
+test("my test") {
+  debug("debug message")
+  trace("trace message")
+}
+```
+
+Debug logging can be enabled by setting the log level in `testOnly` command in sbt with `-l debug` or `-l trace`:
+```scala
+> testOnly * -- -l debug
+```
+
+## DI Example
+
+To set up commonly used resources, use Airframe DI to bind instances. Test methods accept the bound instances as parameters:
+
+```scala
+import wvlet.airspec.AirSpec
+
+case class ServiceConfig(port:Int)
+class Service(val config:ServiceConfig)
+
+class ServiceSpec extends AirSpec
+{
+  initDesign { design =>
+    design
+            .bindInstance[ServiceConfig](ServiceConfig(port = 8080))
+            .bindSingleton[Service]
+            .onStart { x => info(s"Starting a server at ${x.config.port}") }
+            .onShutdown { x => info(s"Stopping the server at ${x.config.port}") }
+  }
+
+  test("test1") { (service: Service) =>
+    info(s"server id: ${service.hashCode}")
+  }
+
+  test("test2") { (service: Service) =>
+    info(s"server id: ${service.hashCode}")
+  }
+}
+```
 
 ---
 > Source: [wvlet/airframe](https://github.com/wvlet/airframe) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-24 -->
+<!-- tomevault:4.0:agents_md:2026-07-27 -->
