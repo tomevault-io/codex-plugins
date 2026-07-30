@@ -1,47 +1,138 @@
-# RAMPART — Repository Instructions
 
-RAMPART is a pytest-native safety testing framework for agentic AI applications.
+# Test Generation Instructions
 
-## Architecture
+When generating unit tests, follow these guidelines to ensure consistent, maintainable, and thorough test coverage.
 
-RAMPART is organized as a modular framework with these main components:
+## Relaxed Lint Rules for Tests
 
-- **Core** (`rampart/core/`) — Foundational types, protocols, and execution logic: `adapter`, `converter`, `evaluator`, `execution`, `injection`, `llm`, `manifest`, `persona`, `prompt_driver`, `result`, `types`.
-- **Probes** (`rampart/probes/`) — Test execution strategies (e.g., single-turn probes).
-- **Attacks** (`rampart/attacks/`) — Attack implementations (e.g., XPIA cross-prompt injection).
-- **Evaluators** (`rampart/evaluators/`) — Response evaluation: `response_contains`, `side_effect`, `tool_called`.
-- **Drivers** (`rampart/drivers/`) — Prompt delivery drivers (e.g., static driver).
-- **Converters** (`rampart/converters/`) — Prompt format converters (e.g., DOCX).
-- **Surfaces** (`rampart/surfaces/`) — Attack surface integrations (e.g., OneDrive).
-- **Payloads** (`rampart/payloads/`) — Payload generation, storage, and templating.
-- **Reporting** (`rampart/reporting/`) — Test result reporting (JSON file sink).
-- **Pytest Plugin** (`rampart/pytest_plugin/`) — Native pytest integration for test collection and session management.
-- **PyRIT Bridge** (`rampart/pyrit_bridge/`) — Isolated boundary for all PyRIT framework interaction (see coding standards for import rules).
+The project intentionally disables several lint rules for test files (configured in `pyproject.toml` under `[tool.ruff.lint.per-file-ignores]`). Do **not** enforce these in test code:
 
-## Instruction Files
+- **No docstrings required** — test classes and methods do not need docstrings
+- **No type annotations required** — parameters and return types may omit annotations
+- **Magic values allowed** — inline literals in assertions are fine (no need to extract constants)
+- **Private member access allowed** — tests may access `_private` members directly
+- **Unused arguments allowed** — fixture parameters and stubs may appear unused
+- **Local imports allowed** — imports inside test functions for isolation are acceptable
 
-BEFORE editing or code-reviewing any file, you MUST read the `.github/instructions/` files whose `applyTo` patterns match the files you are about to edit:
-- Editing/code-reviewing `**/*.py` → read `coding-standards.instructions.md`
-- Editing/code-reviewing `**/tests/**` → also read `unit-tests-standards.instructions.md`
+## Test Organization
 
-Follow every rule in the applicable instruction files. Do not skip this step.
+### File & Class Structure
+- Place tests in `tests/unit/[module]/test_[component].py` mirroring the source tree
+- Group related tests into classes with descriptive names starting with `Test`
+- Each test class should focus on a specific behavior or aspect of the component
+- Test methods MUST have return type annotation `-> None`
 
-## Code Review Guidelines
+```python
+class TestParseConfig:
+    def test_returns_defaults_when_empty(self) -> None:
+        result = parse_config({})
+        assert result.timeout == 30.0
 
-When performing a code review, be selective. Only leave comments for issues that genuinely matter:
+    def test_raises_on_missing_required_field(self) -> None:
+        with pytest.raises(ValueError, match="name is required"):
+            parse_config({"timeout": 10})
+```
 
-- Bugs, logic errors, or security concerns
-- Unclear code that would benefit from refactoring for readability
-- Violations of the critical coding conventions (async suffix, keyword-only args, type annotations)
+### Async Tests
+- Async test method names MUST end with `_async`
+- Use `AsyncMock` instead of `MagicMock` when mocking async methods
 
-Do NOT leave comments about:
-- Style nitpicks that ruff would catch automatically
-- Missing docstrings or comments — code should be self-explanatory
-- Suggestions to add inline comments, logging, or error handling that isn't clearly needed
-- Minor naming preferences or subjective "improvements"
+```python
+class TestProcessor:
+    async def test_process_returns_result_async(self) -> None:
+        processor = Processor(client=AsyncMock(return_value="ok"))
+        result = await processor.process_async(data="input")
+        assert result.status == Status.COMPLETE
+```
 
-Aim for fewer, higher-signal comments. A review with 2-3 important comments is better than 15 trivial ones.
+## Test Data Helpers
+
+### Module-Level Builder Functions
+- Define small private helper functions at the top of test files to build test data
+- Keep helpers minimal — only set the fields the tests care about
+- Prefer these over fixtures when no setup/teardown is needed
+
+```python
+def _make_context(text: str) -> Context:
+    """Build a minimal Context for testing."""
+    return Context(
+        items=[Item(id="test", content=text)],
+    )
+
+def _make_record(*, status: Status = Status.PENDING) -> Record:
+    """Build a Record with sensible defaults."""
+    return Record(id="r1", status=status, metadata={})
+```
+
+### When to Use Fixtures
+- Use fixtures for shared resources that need setup/teardown (temp files, mock servers)
+- Check `tests/fixtures.py` and any shared test utilities before creating new fixtures
+- Prefer helper functions over fixtures when no cleanup is required
+
+## What to Test
+
+### Initialization
+- Valid construction with required parameters only
+- Construction with all optional parameters
+- Invalid parameter combinations that should raise exceptions
+- Default value verification
+
+### Core Functionality
+For each public method:
+- Normal operation with valid inputs
+- Boundary conditions and edge cases
+- Return values and side effects
+- State changes after method calls
+
+### Error Handling
+- Invalid input raises the expected exception type
+- Use `pytest.raises` with `match` to verify error messages
+- Exception chaining is preserved (`raise ... from`)
+- Resources are cleaned up on failure
+
+```python
+def test_rejects_negative_timeout(self) -> None:
+    with pytest.raises(ValueError, match="timeout must be positive"):
+        Config(timeout=-1)
+```
+
+## Mocking Best Practices
+
+### Dependency Isolation
+- Mock all external dependencies (APIs, databases, file systems)
+- Mock at the boundary — don't mock internal implementation details
+- Use dependency injection to make mocking straightforward
+
+### Mock Configuration
+```python
+# Async method mock
+mock_client = AsyncMock()
+mock_client.fetch_async.return_value = Response(data="ok")
+
+# Sync method mock
+mock_store = MagicMock()
+mock_store.get.return_value = {"key": "value"}
+
+# Side effects for sequential calls
+mock_client.fetch_async.side_effect = [
+    Response(data="first"),
+    Response(data="second"),
+    ConnectionError("unavailable"),
+]
+```
+
+### Assertion Patterns
+- Use direct `assert` statements — not `self.assertEqual` or similar
+- Use `is` for identity checks (enums, singletons, `None`)
+- Use `==` for value equality
+- One logical assertion per test when practical
+
+```python
+assert result.status is Status.COMPLETE
+assert result.value == 42
+assert "expected substring" in result.message
+```
 
 ---
 > Source: [microsoft/RAMPART](https://github.com/microsoft/RAMPART) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-06-14 -->
+<!-- tomevault:4.0:agents_md:2026-07-27 -->
