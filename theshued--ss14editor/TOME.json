@@ -2,9 +2,9 @@
   "name": "SS14Editor",
   "owner": "TheShuEd",
   "repo": "SS14Editor",
-  "description": "A standalone prototype editor for any SS14 fork",
+  "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/TheShuEd/SS14Editor",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-26T16:31:48Z"
+  "distributed_at": "2026-07-30T15:43:35Z"
 }
