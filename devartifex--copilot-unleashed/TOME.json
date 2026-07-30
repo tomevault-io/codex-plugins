@@ -2,9 +2,9 @@
   "name": "copilot-unleashed",
   "owner": "devartifex",
   "repo": "copilot-unleashed",
-  "description": "A mobile first, self-hosted multi-model AI chat powered by the GitHub Copilot SDK. A modern alternative to ChatGPT, Claude, and Gemini.",
+  "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/devartifex/copilot-unleashed",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-21T18:02:14Z"
+  "distributed_at": "2026-07-30T05:52:21Z"
 }
