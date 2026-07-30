@@ -1,8 +1,6 @@
 # fusio
 
-> Source: [tonbo-io/fusio](https://github.com/tonbo-io/fusio) — distributed by [TomeVault](https://tomevault.io)
-
-Fusio provides file operations on multiple storages across various async runtimes.
+> Source: [tonbo-io/fusio](https://github.com/tonbo-io/fusio). Graded, signed and kept in sync across platforms by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
@@ -17,7 +15,7 @@ Original source: `CLAUDE.md` in [tonbo-io/fusio](https://github.com/tonbo-io/fus
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [tonbo-io/fusio](https://github.com/tonbo-io/fusio) — a repo with 393+ stars on GitHub.
+From [tonbo-io/fusio](https://github.com/tonbo-io/fusio) — a repo with 400+ stars on GitHub.
 
 ---
 
