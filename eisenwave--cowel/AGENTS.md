@@ -1,293 +1,226 @@
-# Copilot Cloud Agent Onboarding
 
-Trust this document first.
-Only search the repository when information here is missing or proves incorrect.
+# COWEL LSP Server: Debugging, Fixing, and Testing
 
-## COWEL Language Reference
+## LSP Server Architecture
 
-For a concise agent-friendly summary of COWEL syntax, types, directives, and content policies,
-see [`.github/lang-summary.md`](lang-summary.md).
+The LSP server lives in a single file: `bindings/lsp/lsp.cpp`.
+It is compiled to WASM and consumed by `bindings/node/src/lsp-wasm-runner.ts`.
+It implements a subset of the LSP protocol over JSON-RPC.
 
-Whenever a language change is made to the COWEL language
-(new syntax, changed semantics,
-new or removed builtin directives that are documented in these Markdown files,
-type system changes, etc.),
-both this file and `lang-summary.md` must be updated to reflect the change.
+### Key types and state in `Server_State`
 
-## Repository Summary
+| Field | Type | Purpose |
+|---|---|---|
+| `open_docs` | `String_Map<std::u8string>` | Maps URI → current text for all open documents |
+| `doc_includes` | `String_Map<std::vector<std::u8string>>` | Maps entry-point URI → transitive include closure (all URIs included during last validation) |
+| `client_capabilities` | `Client_Capabilities` | Negotiated at initialize |
 
-- `cowel` is a C++23 + Node.js project for **Compact Web Language (COWEL)**,
-  a TeX-like markup language that compiles to HTML.
-- The native product is a CLI (`cowel-cli`) and static library (`cowel`).
-- The npm product is a Node CLI backed by a WASM build (`cowel-npm` target, outputs to `build/npm`).
-- Main languages:
-  - C++ (core compiler)
-  - TypeScript/JavaScript (npm CLI/tests),
-  - COWEL documents (`.cow` or `.cowel`),
-  - Python build helpers
-- Approximate size: medium-large monorepo with embedded/third-party content
-  (`third_party/boost`, `ulight/`, generated build trees).
+### Key functions
 
-## Documentation Style
+- `validate_document(uri, content, context, included_uris_out)` —
+  Runs COWEL compilation on `content`.
+  If `included_uris_out` is non-null,
+  it is populated with the URI of every file in `validation_context.includes`
+  (the full transitive closure).
 
-- The project uses semantic line breaks for comments and documentation:
-  https://sembr.org/
-- When editing Markdown, prose comments, or long documentation strings,
-  write one semantic unit per line and reflow changed prose to this style.
-- Apply semantic line breaks as a transform,
-  not only for new text but also for touched surrounding prose.
+- `publish_diagnostics_for(doc_text, context)` —
+  Calls `validate_document`,
+  publishes `textDocument/publishDiagnostics`,
+  and stores the include closure into `doc_includes`.
 
-## High-Value Layout (Start Here)
+- `revalidate_includers(changed_uri, context)` —
+  Scans `doc_includes` for all open entry-point URIs V
+  such that `doc_includes[V]` contains `changed_uri` and V ≠ `changed_uri`.
+  Re-validates each such V by calling `publish_diagnostics_for`.
+  Must collect the list before iterating to avoid iterator invalidation.
 
-- Root build system: `CMakeLists.txt`
-- Bindings test/build reference: `bindings/README.md`
-- Core C++ headers: `engine/include/cowel/`
-- Core C++ sources: `engine/src/`
-- C++ tests: `engine/test/src/`
-- Native CLI wrapper: `bindings/native/src/`
-- Node wrapper TS sources: `bindings/node/src/`
-- Node wrapper TS tests: `bindings/node/test/`
-- Utility scripts: `tools/`
-  - includes `coverage-llvm.sh` for LLVM source-based coverage
-- Docs + golden sample I/O: `docs/index.cow` and `docs/index.html`
-- VS Code extension + TextMate grammar tests: `editor/vscode/`
-- CI workflows:
-  - `.github/workflows/cmake-multi-platform.yml`
-  - `.github/workflows/clang-format.yml`
-  - `.github/workflows/textmate-test.yml`
-  - `.github/workflows/coverage.yml` (LLVM coverage via clang-20, uploads to Codecov)
+### Config vs. no-config validation paths
 
-Important dependency facts not obvious from tree:
-- Native configure requires ICU (`find_package(ICU COMPONENTS data i18n uc REQUIRED)`).
-- Native configure requires Python 3 (`find_package(Python3 REQUIRED)`),
-  used to embed assets (`tools/file-to-array.py`).
-- If `third_party/boost` is missing, configure auto-clones Boost via `tools/boost-install.sh`.
-- `ulight` is a git submodule and is built as part of the top-level CMake project.
+- **Config case** (`.cowel_config.json` has an `"include"` key):
+  `find_config_entry_points(uri)` finds the same config for all files in the project.
+  Every `didChange` already re-validates all config entry points,
+  so includers are covered automatically.
 
-## Toolchain Versions Validated Locally
+- **No-config / standalone case** (`.cowel_config.json` is `{}` or absent):
+  Only the changed file itself was re-validated before issue #370 fix.
+  `revalidate_includers` is called in `handle_did_open` and `handle_did_change`
+  to cover this path.
 
-- Node.js `v20.19.6`
-- npm `10.8.2`
-- CMake/CTest `4.3.2`
-- Python `3.12.3`
-- GCC detected by CMake: `13.3.0`
+## Debugging Include-Chain Update Bugs
 
-CI also uses:
-- Node 20
-- gcc-13 and clang-20 variants
-- clang-format-20
-- Emscripten toolchain for WASM path
+When an includer document A shows stale diagnostics after included file B changes:
 
-## Always-Use Command Order (Native)
+1. Confirm it is the **no-config** case
+   (`.cowel_config.json` has no `"include"` array).
+2. Check whether `revalidate_includers` is called after `publish_diagnostics_for`
+   in `handle_did_change` (and `handle_did_open`).
+3. Verify that `doc_includes` is populated in `publish_diagnostics_for`:
+   the `included_uris_out` parameter must be passed and stored with `insert_or_assign`.
+4. Verify `revalidate_includers` correctly looks up `doc_includes` and finds A's entry.
+5. Use the integration test fixture `bindings/test/lsp/include_update_clears_error/`
+   as a regression test for this bug pattern.
 
-Run from repo root.
+## LSP Integration Test Structure
 
-1. Bootstrap/preconditions
+Each test suite lives in its own subdirectory under `bindings/test/lsp/`.
 
+### Required files
+
+| File | Purpose |
+|---|---|
+| `.cowel_config.json` | Project config; use `{}` for standalone (no-config) tests |
+| `input.json` | Ordered array of LSP request/notification messages to send |
+| `output.json` | Ordered array of expected LSP notification messages to receive |
+| ≥1 `.cow` file | COWEL source file(s) referenced by the messages |
+
+### Trailing newline rule
+
+**Every `.cow` and JSON file in a fixture MUST end with a newline (`\n`).**
+This applies to:
+- All `.cow` source files (`main.cow`, `lib.cow`, etc.)
+- `.cowel_config.json`
+- `input.json`
+- `output.json`
+
+Create all fixture files with a final `\n`.
+Verify with:
 ```bash
-git submodule update --init --recursive
-npm install --prefix bindings/node
+find bindings/test/lsp/<suite> -type f | while read f; do
+  [ "$(tail -c1 "$f" | wc -l)" -eq 0 ] && echo "MISSING: $f" || echo "OK: $f"
+done
 ```
 
-2. Configure clean native build
+### Placeholder syntax (substituted at test load time)
 
-```bash
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
+| Placeholder | Expands to |
+|---|---|
+| `{{ROOT_URI}}` | `file://` URI of the suite directory |
+| `{{ROOT_PATH}}` | Filesystem path of the suite directory |
+| `{{TEXT:filename}}` | Contents of `filename` in the suite directory |
+
+`{{TEXT:filename}}` is substituted **after** JSON parsing,
+so file contents with backslashes are safe inside JSON strings.
+
+### `input.json` format
+
+An array of JSON-RPC 2.0 notification/request objects.
+Common methods:
+
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "textDocument/didOpen",
+  "params": {
+    "textDocument": {
+      "uri": "{{ROOT_URI}}/main.cow",
+      "languageId": "cowel",
+      "version": 1,
+      "text": "{{TEXT:main.cow}}"
+    }
+  }
+}
 ```
 
-3. Build native targets
-
-```bash
-cmake --build build --config Debug -j4
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "textDocument/didChange",
+  "params": {
+    "textDocument": {
+      "uri": "{{ROOT_URI}}/lib.cow",
+      "version": 2
+    },
+    "contentChanges": [
+      { "text": "\\cowel_macro(\"m\"){Hello}" }
+    ]
+  }
+}
 ```
 
-4. Run C++ tests
+Note: use `\\` in JSON string literals to embed a literal backslash.
 
-```bash
-ctest --test-dir build --output-on-failure
+### `output.json` format
+
+An array of expected `textDocument/publishDiagnostics` notifications (in order):
+
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "textDocument/publishDiagnostics",
+  "params": {
+    "uri": "{{ROOT_URI}}/main.cow",
+    "diagnostics": [
+      {
+        "range": {
+          "start": { "line": 1, "character": 0 },
+          "end":   { "line": 1, "character": 2 }
+        },
+        "severity": 1,
+        "code": "directive-lookup.unresolved",
+        "source": "cowel",
+        "message": "No directive with the name \"m\" exists."
+      }
+    ]
+  }
+}
 ```
 
-5. Run CLI golden validation
+Use `"diagnostics": []` to assert that a file has no errors.
+
+### Output message ordering
+
+- Within a single `publish_diagnostics_for` call,
+  messages are emitted in URI order (sorted).
+- `revalidate_includers` appends its messages after the primary validation messages.
+- The order in `output.json` must match the actual emission order exactly.
+
+## Diagnostic Format Reference
+
+For unresolved directive names:
+
+| Field | Value |
+|---|---|
+| `severity` | `1` (error) |
+| `code` | `"directive-lookup.unresolved"` |
+| `source` | `"cowel"` |
+| `message` | `"No directive with the name \"NAME\" exists."` |
+
+**Span rule:** The diagnostic span for a directive invocation
+**includes the leading backslash**.
+For `\m` at line 1, column 0:
+- `start`: `{ "line": 1, "character": 0 }`
+- `end`:   `{ "line": 1, "character": 2 }` (1 for `\` + 1 for `m`)
+
+For `\foo` at line 0, column 3:
+- `start`: `{ "line": 0, "character": 3 }`
+- `end`:   `{ "line": 0, "character": 7 }` (1 for `\` + 3 for `foo`)
+
+## Building and Validating
+
+### Build the LSP WASM target
 
 ```bash
-./build/cowel-cli run docs/index.cow build/docs.actual.html
-diff -u docs/index.html build/docs.actual.html
+cmake --build build --config Debug -j4 --target cowel-lsp-wasm
 ```
 
-### Validated outcomes/timings
-
-- Building before configure fails fast
-  (`Error: .../build is not a directory`, ~0.14s).
-  Always configure first.
-- Configure succeeded (~11.8s).
-- Full native build succeeded (~57.8s).
-- Native tests succeeded: `332/332` passed
-  (~47.8s wall clock; CTest real ~45.8s).
-- CLI docs golden diff succeeded (no diff, ~0.27s).
-
-## Node/TypeScript Validation
-
-From `bindings/node/`:
+### Run all LSP integration tests (and other Node tests)
 
 ```bash
-npm ci
-npm run build
-npm run build:test
-npx eslint src --max-warnings=0 --color
-npm test
-```
-
-Validated outcomes/timings:
-- `npm run build` succeeded (~0.82s)
-- `npm run build:test` succeeded (~1.09s)
-- ESLint command succeeded (~2.06s)
-- `npm test` succeeded (`96` pass, `0` fail, ~0.30s)
-
-## VS Code Grammar Validation (CI Parity)
-
-From `editor/vscode/`:
-
-```bash
-npm install
-npm test
-```
-
-Validated outcomes/timings:
-- install succeeded (~3.55s)
-- tests succeeded
-  (`35` passed, `1` fixture marked "without expectations", ~1.17s)
-
-## Formatting Gate (CI Parity)
-
-CI command (run from repo root):
-
-```bash
-find engine/include engine/src bindings/native/src bindings/node/src/cpp \
-  \( -name '*.cpp' -o -name '*.c' -o -name '*.hpp' -o -name '*.h' \) |
-  xargs clang-format-20 --color=1 --dry-run --Werror
-```
-
-Validated outcome:
-- command succeeds when `clang-format-20` is available (~1.19s).
-
-## WASM/NPM CMake Path
-
-CI uses Emscripten and builds target `cowel-npm`.
-CI also builds target `cowel-lsp-wasm`.
-
-Expected sequence:
-1. Install and activate emsdk.
-2. Configure with Emscripten toolchain file.
-3. Build `cowel-npm` and `cowel-lsp-wasm` targets.
-4. Run `npm test` from `bindings/node` and a CLI smoke test using `build/npm/cowel.js`.
-
-Expected artifacts from `cowel-npm`:
-- `build/npm/cowel.wasm`
-- `build/npm/cowel.js`
-- transpiled Node tests under `build/test/`
-
-Expected artifacts from `cowel-lsp-wasm`:
-- `build/lsp-wasm/cowel-lsp.wasm`
-- `build/lsp-wasm/lsp-wasm-runner.js`
-
-This artifact set is a required contract for Node integration tests.
-If these files are missing,
-that indicates an incomplete WASM build setup and must be fixed,
-not treated as a baseline test failure.
-
-Observed failure when emsdk is absent or not sourced in the shell:
-- `Could not find toolchain file: .../emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake`
-- plus compiler/make-program detection failures
-- fails quickly (~0.14s)
-
-Mitigation:
-- always install/activate emsdk before wasm configure,
-  source `emsdk_env.sh` in configure/build steps,
-  and verify toolchain file path exists.
-- In Copilot cloud-agent sessions,
-  setup steps restore/install emsdk under `${GITHUB_WORKSPACE}/emsdk`.
-- When the emsdk cache hits,
-  the `Install Emscripten SDK` step is skipped,
-  so `$EMSDK` may be unset even though emsdk is present on disk.
-- In that case,
-  source `${GITHUB_WORKSPACE}/emsdk/emsdk_env.sh`
-  explicitly in each shell before running Emscripten/CMake commands.
-
-## Architecture Pointers For Fast Edits
-
-- CLI entrypoint: `bindings/native/src/cli.cpp`
-- Parse/lex pipeline: `engine/src/lex.cpp`, `engine/src/parse.cpp`, `engine/src/build_ast.cpp`
-- Directive implementations: `engine/src/directives/*.cpp`
-- Builtin directive wiring: `engine/src/builtin_directive_set.cpp`, `engine/include/cowel/builtin_directive_set.hpp`
-- Document generation: `engine/src/document_generation.cpp`
-- Services/settings/context: `engine/src/services.cpp`, `engine/include/cowel/settings.hpp`, `engine/include/cowel/context.hpp`
-- C++ tests focused by behavior: `engine/test/src/test_*.cpp`
-- Lexer and parser test fixture format: `test/README.md`
-
-## Pre-PR Validation Checklist (Replicate CI)
-
-Always run the smallest relevant subset first,
-then broaden:
-
-1. Build/test impacted native code:
-```bash
-cmake --build build --config Debug -j4
-ctest --test-dir build --output-on-failure
-```
-
-2. If TS/JS touched:
-```bash
-npm ci --prefix bindings/node
-npm run --prefix bindings/node build
-npm run --prefix bindings/node build:test
-npx --prefix bindings/node eslint src --max-warnings=0 --color
 npm test --prefix bindings/node
 ```
 
-3. If grammar/editor files touched:
+Expected output: all suites pass, including:
+```
+✔ lsp: include_update_clears_error
+```
+
+### Full validation sequence after editing `bindings/lsp/lsp.cpp`
+
 ```bash
-cd editor/vscode && npm test
+cmake --build build --config Debug -j4 --target cowel-lsp-wasm
+npm test --prefix bindings/node
 ```
-
-4. Before finalizing C++ changes:
-```bash
-find engine/include engine/src bindings/native/src bindings/node/src/cpp \
-  \( -name '*.cpp' -o -name '*.c' -o -name '*.hpp' -o -name '*.h' \) |
-  xargs clang-format-20 --color=1 --dry-run --Werror
-```
-
-## Root Inventory (Quick Reference)
-
-Top-level entries include:
-```
-.github
-.vscode
-assets
-bindings
-docs
-engine
-editor
-test
-third_party
-tools
-ulight
-CMakeLists.txt
-README.md
-CONTRIBUTING.md
-CHANGELOG.md
-```
-
-## Practical Guardrails
-
-- Always run `npm ci --prefix bindings/node` before JS/TS lint/test/build workflows.
-- Use `bindings/node` as the Node package root (`npm --prefix bindings/node ...`).
-- Always configure CMake before any `cmake --build` or `ctest` on a new build directory.
-- Prefer out-of-tree build dirs (for example `build/`) to avoid polluting tracked files.
-- For native parity with CI, keep warnings clean and run tests with `--output-on-failure`.
-- For WASM parity with CI, source `emsdk_env.sh` in any shell that runs Emscripten CMake configure/build commands.
-- Treat this file as primary operating guidance;
-  search only for missing details or when commands here no longer match repository reality.
 
 ---
 > Source: [eisenwave/cowel](https://github.com/eisenwave/cowel) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-05-20 -->
+<!-- tomevault:4.0:agents_md:2026-07-27 -->
