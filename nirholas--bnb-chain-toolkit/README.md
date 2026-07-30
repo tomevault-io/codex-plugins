@@ -17,9 +17,9 @@ Original source: `CLAUDE.md` in [nirholas/bnb-chain-toolkit](https://github.com/
 
 ## Bundled Skills (1)
 
-- [bnb-chain-toolkit](https://github.com/nirholas/bnb-chain-toolkit/tree/main/erc8004-agents/SKILL.md)
+- [atomic-grind](https://github.com/nirholas/bnb-chain-toolkit/tree/main/skills/grind)
 
-From [nirholas/bnb-chain-toolkit](https://github.com/nirholas/bnb-chain-toolkit) — a repo with 37+ stars on GitHub.
+From [nirholas/bnb-chain-toolkit](https://github.com/nirholas/bnb-chain-toolkit) — a repo with 0+ stars on GitHub.
 
 ---
 
