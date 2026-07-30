@@ -1,79 +1,86 @@
-# NetBox LibreNMS Plugin – AI Assistant Guide
 
-> **Note:** Additional context-specific instructions are in `.github/instructions/`:
-> - [testing.instructions.md](instructions/testing.instructions.md) – applies to `tests/**`
-> - [frontend.instructions.md](instructions/frontend.instructions.md) – applies to templates and static files
-> - [background-jobs.instructions.md](instructions/background-jobs.instructions.md) – applies to `jobs.py`, import views, and import utilities
-> - [sync.instructions.md](instructions/sync.instructions.md) – applies to sync views, base views, tables, and sync JS
+# Background Jobs & Import Workflow
 
-## Architecture & Key Modules
-- Plugin hooks into NetBox (Django 5) under `netbox_librenms_plugin/`; respect NetBox plugin APIs (`navigation.py`, `urls.py`, `api/`).
-- LibreNMS communication lives in `librenms_api.py`; reuse this client instead of new `requests` calls. It handles multi-server configs via `LibreNMSSettings` model and the `servers` plugin config, plus caching via Django cache + custom fields.
-- Views follow a three-layer structure:
-  - **Base views** (`views/base/`) — abstract views for each sync resource (`BaseInterfaceTableView`, `BaseCableTableView`, `BaseIPAddressTableView`, `BaseVLANTableView`).
-  - **Object sync views** (`views/object_sync/`) — concrete per-model views registered as tabs on NetBox's Device/VM detail pages via `@register_model_view(Device, ...)`. These wire base views to models.
-  - **Sync action views** (`views/sync/`) — POST-only views that apply changes (add/change/delete NetBox objects). Includes `interfaces.py`, `cables.py`, `ip_addresses.py`, `vlans.py`, `devices.py`, `device_fields.py`, `locations.py`.
-  - **Shared mixins** (`views/mixins.py`) — `LibreNMSPermissionMixin`, `NetBoxObjectPermissionMixin`, `LibreNMSAPIMixin`, `CacheMixin`, `VlanAssignmentMixin`.
-- All four sync resources (interfaces, cables, IP addresses, VLANs) follow the same three-layer pattern. VLAN sync additionally uses `VlanAssignmentMixin` for VLAN group scope resolution (Rack → Location → Site → SiteGroup → Region → Global).
-- New views should extend the closest base class and compose mixins.
-- Tables (`tables/*.py`) and templates (`templates/netbox_librenms_plugin/`) drive the UI. See `frontend.instructions.md` for HTMX, template, and styling conventions.
-- Forms (`forms.py`) include dynamic LibreNMS API-populated choices (location dropdowns, poller groups) and a split-form pattern for settings (server config form + import settings form).
-- `import_validation_helpers.py` centralizes validation state mutation during import (role/cluster/rack assignment, issue removal, status recalculation).
+## Job Architecture
+- Background jobs use NetBox's `JobRunner` base class (`netbox.jobs.JobRunner`) for long-running operations like device filtering with VC detection.
+- Jobs run via Redis Queue (RQ) in Redis, separate from the database Job model. Real-time status must be checked via RQ, not the database.
 
-## Data & Sync Conventions
-- Devices/VMs map to LibreNMS via the `librenms_id` custom field, then cached if absent. Always call `LibreNMSAPI.get_librenms_id` instead of touching the field directly.
-- Matching is intentionally **exact-only** for site, platform, device type, and role. See `utils.py` (`find_matching_site`, `match_librenms_hardware_to_device_type`, `find_matching_platform`). Do not add fuzzy matching.
-- Sync pipelines generally fetch LibreNMS data (`librenms_api.py`), cache it (`CacheMixin`), build comparison tables (`tables/`), and render HTMX fragments (`templates/netbox_librenms_plugin/htmx/`). Follow that flow for new resources.
-- Virtual chassis support uses `get_virtual_chassis_member()` for port-to-member mapping and `get_librenms_sync_device()` for VC priority-based device selection.
+## Critical Job Architecture Points
+- Job UUID (`job.job_id`) is used for RQ API endpoints: `/api/core/background-tasks/{uuid}/`
+- Job PK (`job.pk`) is used for database endpoints and result loading
+- RQ status values: `queued`, `started`, `finished`, `stopped`, `failed` (NOT `completed`)
+- Database Job status values: `pending`, `scheduled`, `running`, `completed`, `failed`, `errored` (NO `cancelled` status exists)
+- Check `rq_job.is_stopped` or `rq_job.is_failed` flags in Redis for cancellation detection, not database status
 
-## Developer Workflow
-- Prefer the devcontainer commands (`netbox-run`, `netbox-run-bg`, `netbox-reload`, `netbox-logs`) described in `.devcontainer/README.md`. They manage NetBox + plugin reloading.
-- Static assets belong in `static/netbox_librenms_plugin/`; run NetBox's `collectstatic` when bundling, but the devcontainer handles this automatically.
+## Job Cancellation Flow
+1. Call `/api/core/background-tasks/{uuid}/stop/` to stop RQ job
+2. Call plugin's sync endpoint `/api/plugins/librenms_plugin/jobs/{pk}/sync-status/` to update database
+3. Frontend polling detects status changes and redirects appropriately
 
-## Integration Touchpoints
-- REST endpoints for imports live in `views/imports/actions.py` (with the list view in `views/imports/list.py`) and surface via `urls.py`. They also emit HTMX fragments (`templates/netbox_librenms_plugin/htmx/device_import_row.html`, etc.). Keep server responses and HTMX targets in sync.
-- API serializers (`api/serializers.py`) mirror models for external consumption. Update serializers and `api/views.py` together to avoid contract drift.
-- Navigation and menu items are registered in `navigation.py`; extend there for new sections so NetBox renders links correctly.
+## Polling Implementation
+- Poll `/api/core/background-tasks/{uuid}/` for real-time RQ status
+- Update modal messages based on status: "Job queued...", "Processing...", "Job completed!"
+- Handle all RQ status values explicitly to avoid infinite polling
+- Use `cancelInProgress` flag to prevent polling interference during cancellation
 
-## Permission System
-- Uses two-tier permissions via `LibreNMSSettings` model: `view_librenmssettings` (read) and `change_librenmssettings` (write). See `docs/development/permissions.md`.
-- Permission constants in `constants.py`: `PERM_VIEW_PLUGIN` and `PERM_CHANGE_PLUGIN`.
+## Superuser Requirement for Background Jobs
+- NetBox's `/api/core/background-tasks/` endpoint requires **superuser** (`IsSuperuser` in `BaseRQViewSet`).
+- Non-superuser users cannot poll job status; they get 403 Forbidden.
+- The plugin automatically falls back to synchronous mode for non-superusers—see `should_use_background_job()` in `list.py` and `actions.py`.
+- This is a NetBox core design decision, not a plugin limitation. No amount of permissions (including `core.view_job`) bypasses it.
 
-### Plugin-Level Permissions
-- All views inherit `LibreNMSPermissionMixin` from `views/mixins.py`, which sets `permission_required = PERM_VIEW_PLUGIN` and provides:
-  - `has_write_permission()` — checks `PERM_CHANGE_PLUGIN`.
-  - `require_write_permission()` — returns error response (HTMX `HX-Redirect` or standard redirect) if denied.
-  - `require_write_permission_json()` — returns `JsonResponse(403)` if denied (for AJAX endpoints).
+## Import Jobs
+- **`FilterDevicesJob`** — background device filtering with VC detection. `job.data` keys: `device_ids`, `total_processed`, `filters`, `server_key`, `vc_detection_enabled`, `cache_timeout`, `cached_at`, `completed`. Devices are cached individually via shared cache keys from `get_validated_device_cache_key()`.
+- **`ImportDevicesJob`** — background device/VM import. Calls `bulk_import_devices_shared()` for devices and `bulk_import_vms()` for VMs. `job.data` keys: `imported_device_pks`, `imported_vm_pks`, `imported_libre_device_ids`, `imported_libre_vm_ids`, `server_key`, `total`, `success_count`, `failed_count`, `skipped_count`, `virtual_chassis_created`, `errors`, `completed`.
 
-### Object-Level Permissions
-- `NetBoxObjectPermissionMixin` adds a **second layer** of permission checking for NetBox model operations (add/change/delete on Device, Interface, VLAN, etc.).
-- Views declare `required_object_permissions` dict mapping HTTP methods to `[(action, Model)]` tuples, e.g.:
-  ```python
-  required_object_permissions = {"POST": [("add", VLAN), ("change", VLAN)]}
-  ```
-- Some views set `required_object_permissions` dynamically per-request (e.g., `SyncInterfacesView` switches between `Interface` and `VMInterface` based on object type).
-- Provides:
-  - `check_object_permissions(method)` → `(bool, missing_perms_list)`
-  - `require_object_permissions(method)` — redirect/HTMX on failure.
-  - `require_object_permissions_json(method)` — JSON 403 on failure.
-  - `require_all_permissions(method)` — combined plugin write + object perms check (redirect/HTMX).
-  - `require_all_permissions_json(method)` — combined check, JSON variant.
-- **Sync POST handlers** must call `require_all_permissions("POST")` (not just `require_write_permission()`) and return early if it returns a response. AJAX/JSON endpoints use `require_all_permissions_json("POST")`.
-- `_get_safe_redirect_url(request)` validates referrer URLs to prevent open-redirect attacks.
+## Shared Cache Key Pattern
+- Both synchronous and background modes use `get_validated_device_cache_key()` from `import_utils.py` to generate cache keys. This ensures `_load_job_results()` in the list view can retrieve devices regardless of which mode produced them.
+- `get_active_cached_searches()` manages multi-search cache to let users run and switch between searches.
+- Never hardcode cache key formats; always use the helper functions.
 
-### Permission Helpers for Background Jobs
-- Background jobs run outside view context and cannot use view mixins. Use standalone helpers from `import_utils.py` (`check_user_permissions`, `require_permissions`). See `background-jobs.instructions.md` for details.
+## Permission Checks in Jobs
+- Background jobs run outside view context, so they cannot use view mixins.
+- Use standalone helpers from `import_utils.py` for permission checks inside job code:
+  - `check_user_permissions(user, permissions)` → `(bool, missing_list)`
+  - `require_permissions(user, permissions, action_description)` — raises `PermissionDenied`.
 
-### API & Navigation Permissions
-- API endpoints use `LibreNMSPluginPermission` class in `api/views.py` (GET=view, others=change).
-- Navigation menu (`navigation.py`) has 3 groups: **Settings** (Plugin Settings, Interface Mappings), **Import** (LibreNMS Import), **Status Check** (Site & Location Sync, Device Status, VM Status). All items use `permissions=[PERM_VIEW_PLUGIN]`.
-- **Background job polling requires superuser** — non-superusers fall back to synchronous mode. See `background-jobs.instructions.md` for details.
+## Custom Sync Endpoint
+`api/views.py::sync_job_status()` syncs database Job status with RQ job status, needed because NetBox worker doesn't always update DB when jobs stop before processing starts.
 
-## When in Doubt
-- Check docs in `docs/development/` for structure, view inheritance, mixins, and template conventions before introducing new patterns.
-- Review the existing sync views (e.g., `views/sync/interfaces.py`) as reference implementations for data flow and caching patterns.
-- Coordinate any schema changes through Django migrations in `migrations/` and update `models.py` + admin/pydantic representations accordingly.
+## Import Page Flow
+The import page (`LibreNMSImportView` in `views/imports/list.py`) supports two modes:
+
+1. **Synchronous** — calls `process_device_filters()` directly, renders results inline.
+2. **Background** — enqueues `FilterDevicesJob`, returns `JsonResponse` with `job_id`/`job_pk`/`poll_url`. Frontend polls and redirects to `?job_id={pk}` on completion.
+
+Result loading: `_load_job_results(job_id)` reads `job.data["device_ids"]`, reconstructs devices from per-device cache using `get_validated_device_cache_key()`.
+
+Filter fields: `librenms_location`, `librenms_type`, `librenms_os`, `librenms_hostname`, `librenms_sysname`, `librenms_hardware`, `enable_vc_detection`, `show_disabled`, `exclude_existing`.
+
+## Import Action Views (`views/imports/actions.py`)
+- **`DeviceImportHelperMixin`** — provides `get_validated_device_with_selections()` and `render_device_row()` for HTMX row rendering. Shared by update views.
+- **`BulkImportConfirmView`** (POST) — renders confirmation modal with selected device list. Returns `htmx/bulk_import_confirm.html`.
+- **`BulkImportDevicesView`** (POST) — executes import. Background mode enqueues `ImportDevicesJob`; sync mode calls `bulk_import_devices()` + `bulk_import_vms()` and returns OOB row swaps with `HX-Trigger: closeModal`.
+- **`DeviceValidationDetailsView`** (GET) — renders expandable validation details via `htmx/device_validation_details.html`.
+- **`DeviceVCDetailsView`** (GET) — renders VC member details via `htmx/device_vc_details.html`.
+- **`DeviceRoleUpdateView`**, **`DeviceClusterUpdateView`**, **`DeviceRackUpdateView`** (POST) — per-device dropdown updates. Apply selection to validation state and return re-rendered row via `render_device_row()`.
+
+## Key Import Utilities (`import_utils/` package)
+`import_utils/` is a package; the `__init__.py` re-exports key functions so callers can still use `from import_utils import ...`.
+
+- `filters.py` — `process_device_filters(filters, ...)`, `fetch_device_with_cache(device_id, ...)`.
+- `device_operations.py` — `validate_device_for_import(device, ...)`, `bulk_import_devices_shared(devices, user, ...)`.
+- `vm_operations.py` — `bulk_import_vms(vm_imports, user, ...)`.
+- `cache.py` — `get_validated_device_cache_key()`, `get_cache_metadata_key()`, `get_active_cached_searches()`, `get_import_device_cache_key()`.
+- `permissions.py` — `check_user_permissions(user, permissions)`, `require_permissions(user, permissions, action_description)`.
+- `virtual_chassis.py` — `create_virtual_chassis_with_members()`, `_sync_module_bay_counter()`.
+
+## Validation Helpers (`import_validation_helpers.py`)
+Centralizes validation state mutation used by the role/cluster/rack update views:
+- `apply_role_to_validation()`, `apply_cluster_to_validation()`, `apply_rack_to_validation()` — update validation state when user selects a role/cluster/rack.
+- `remove_validation_issue()`, `recalculate_validation_status()` — maintain issue list and overall status.
+- `fetch_model_by_id()`, `extract_device_selections()` — helpers for reading form data.
 
 ---
 > Source: [bonzo81/netbox-librenms-plugin](https://github.com/bonzo81/netbox-librenms-plugin) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-06-03 -->
+<!-- tomevault:4.0:agents_md:2026-07-27 -->
