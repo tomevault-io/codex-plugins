@@ -1,102 +1,114 @@
-# License Manager X - Copilot Instructions
 
-## Project Overview
+# C# Development
 
-License Manager X is a .NET-based license management application for creating and validating software licenses. It consists of:
-- **LicenseManagerX**: WPF desktop application (main UI)
-- **LicenseManagerX.Console**: Command-line interface for license generation, designed to remain a lightweight shim that forwards command-line arguments to the main app.
-- **LicenseManager_12noon.Client**: NuGet package for license validation in client applications
-- **LicenseManagerX_Example**: Example application demonstrating license validation
-- **LicenseManagerX.UnitTests**: Unit test suite
+## C# Instructions
+- Always use the latest version C#, currently C# 14 features.
+- Write clear and concise comments for each function.
 
-The project uses the Standard.Licensing library for cryptographic license generation and validation.
+## General Instructions
+- Make only high confidence suggestions when reviewing code changes.
+- Write code with good maintainability practices, including comments on why certain design decisions were made.
+- Handle edge cases and write clear exception handling.
+- For libraries or external dependencies, mention their usage and purpose in comments.
 
-**Platform Requirements**: This project targets Windows (win-x64) due to WPF and Windows-specific components. Build and test commands require a Windows environment. However, prefer keeping the LicenseManager_12noon.Client package platform-neutral unless a Windows-specific target is technically required by the build or publish graph.
+## Naming Conventions
 
-## Build and Test Commands
+- Follow PascalCase for component names, method names, and public members.
+- Use camelCase for private fields and local variables.
+- Prefix interface names with "I" (e.g., IUserService).
 
-### Build
-```bash
-# Clean and restore
-dotnet clean --configuration Release --runtime win-x64
-dotnet nuget locals all --clear
+## Formatting
 
-# Build main application (requires the matching .NET SDK installed)
-dotnet build LicenseManagerX/LicenseManagerX.csproj --configuration Release --runtime win-x64
+- Apply code-formatting style defined in `.editorconfig`.
+- Prefer file-scoped namespace declarations and single-line using directives.
+- Place opening curly braces on their own line for any code block (Allman-style brace placement; e.g., after `if`, `for`, `while`, `foreach`, `using`, `try`, etc.).
+- Ensure that the final return statement of a method is on its own line.
+- Use pattern matching and switch expressions wherever possible.
+- Use `nameof` instead of string literals when referring to member names.
+- Ensure that XML doc comments are created for any public APIs. When applicable, include `<example>` and `<code>` documentation in the comments.
 
-# Build NuGet client library (multi-target: .NET 8, .NET 9, and .NET 10)
-dotnet build LicenseManager_12noon.Client/LicenseManager_12noon.Client.csproj --configuration Release --runtime win-x64 --framework net8.0
-dotnet build LicenseManager_12noon.Client/LicenseManager_12noon.Client.csproj --configuration Release --runtime win-x64 --framework net9.0
-dotnet build LicenseManager_12noon.Client/LicenseManager_12noon.Client.csproj --configuration Release --runtime win-x64 --framework net10.0
+## Project Setup and Structure
 
-# Build entire solution
-dotnet build LicenseManagerX.slnx --configuration Release --runtime win-x64
-```
+- Guide users through creating a new .NET project with the appropriate templates.
+- Explain the purpose of each generated file and folder to build understanding of the project structure.
+- Demonstrate how to organize code using feature folders or domain-driven design principles.
+- Show proper separation of concerns with models, services, and data access layers.
+- Explain the Program.cs and configuration system in ASP.NET Core 10 including environment-specific settings.
 
-### Test
-```bash
-# Run unit tests (both Release and Debug configurations)
-dotnet test --project LicenseManagerX.UnitTests/LicenseManagerX.UnitTests.csproj --no-ansi --no-progress --output Detailed --runtime win-x64 --configuration Release
-dotnet test --project LicenseManagerX.UnitTests/LicenseManagerX.UnitTests.csproj --no-ansi --no-progress --output Detailed --runtime win-x64 --configuration Debug
-```
+## Nullable Reference Types
 
-### Package
-```bash
-# Create NuGet package
-dotnet pack LicenseManager_12noon.Client/LicenseManager_12noon.Client.csproj --configuration Release --runtime win-x64 --no-restore --no-build --output ./release/
-```
+- Declare variables non-nullable, and check for `null` at entry points.
+- Always use `is null` or `is not null` instead of `== null` or `!= null`.
+- Trust the C# null annotations and don't add null checks when the type system says a value cannot be null.
 
-## Code Style and Conventions
+## Data Access Patterns
 
-### General Guidelines
-- Maintain existing code structure and organization.
-- Write unit tests for new functionality. Use table-driven unit tests when possible.
-- Document complex logic. Suggest changes to the `README.md` when appropriate.
-- Do not delete existing comments.
-- Use a consistent date parsing/formatting behavior across files, specifically using an explicit shared expiration-date format constant (`yyyy-MM-dd`) rather than mixed default parsing/formatting behavior.
-- Simplify date handling by using `DateOnly.FromDateTime(MyNow.Now())` instead of `DateOnly.FromDateTime(MyNow.Now().Date)`.
+- Guide the implementation of a data access layer using Entity Framework Core.
+- Explain different options (SQL Server, SQLite, In-Memory) for development and production.
+- Demonstrate repository pattern implementation and when it's beneficial.
+- Show how to implement database migrations and data seeding.
+- Explain efficient query patterns to avoid common performance issues.
 
-### C# Code Style
-- Prefer to use explicit type instead of var. Example: `string s = new();`
-- Prefer to assign `new()` or `[]` where possible.
-- Use tabs instead of spaces, even in XAML. A tab is equivalent to three spaces.
-- Use braces around single-line expressions.
-- Use parentheses around binary conditional expressions. Example: `if ((x > 0) && (y > 0))` but `if (x && y)`
-- Add a comma after the last item in an initializer list.
+## Authentication and Authorization
 
-### Project Configuration
-- Target frameworks: .NET 10 (main app), .NET 8/.NET 9/.NET 10 (NuGet client)
-- Platform: x64 (Windows)
-- Nullable reference types: Enabled
-- Implicit usings: Disabled (use explicit using statements)
+- Guide users through implementing authentication using JWT Bearer tokens.
+- Explain OAuth 2.0 and OpenID Connect concepts as they relate to ASP.NET Core.
+- Show how to implement role-based and policy-based authorization.
+- Demonstrate integration with Microsoft Entra ID (formerly Azure AD).
+- Explain how to secure both controller-based and Minimal APIs consistently.
 
-## Git and Version Control
+## Validation and Error Handling
 
-- Do not add build artifacts to git. Ignore directories such as `bin/` and `obj/`.
-- Version information is centralized in `Directory.Build.props`.
-- Follow semantic versioning for releases.
+- Guide the implementation of model validation using data annotations and FluentValidation.
+- Explain the validation pipeline and how to customize validation responses.
+- Demonstrate a global exception handling strategy using middleware.
+- Show how to create consistent error responses across the API.
+- Explain problem details (RFC 7807) implementation for standardized error responses.
 
-## Testing Guidelines
+## API Versioning and Documentation
 
-- Use MSTest framework for unit tests.
-- Place tests in the `LicenseManagerX.UnitTests` project.
-- Use table-driven tests where multiple test cases validate similar behavior.
-- Test both success and failure scenarios.
-- Validate edge cases (empty values, special characters, null handling).
+- Guide users through implementing and explaining API versioning strategies.
+- Demonstrate Swagger/OpenAPI implementation with proper documentation.
+- Show how to document endpoints, parameters, responses, and authentication.
+- Explain versioning in both controller-based and Minimal APIs.
+- Guide users on creating meaningful API documentation that helps consumers.
 
-## Architecture Notes
+## Logging and Monitoring
 
-- The application uses CommunityToolkit.Mvvm for MVVM pattern in the WPF application.
-- License files use XML format with digital signatures.
-- Public/private key pairs are generated using a passphrase.
-- Product ID and public key are used by client applications to validate licenses.
-- `.private` files contain sensitive keypair information and should never be committed to source control.
+- Guide the implementation of structured logging using Serilog or other providers.
+- Explain the logging levels and when to use each.
+- Demonstrate integration with Application Insights for telemetry collection.
+- Show how to implement custom telemetry and correlation IDs for request tracking.
+- Explain how to monitor API performance, errors, and usage patterns.
 
-## Command-Line Interface Guidelines
+## Testing
 
-- Override the root HelpOption intentionally for custom pre/post help text.
-- Add explicit HelpOption instances on subcommands to avoid using the overridden root help behavior.
+- Always include test cases for critical paths of the application.
+- Guide users through creating unit tests.
+- Do not emit "Act", "Arrange" or "Assert" comments.
+- Copy existing style in nearby files for test method names and capitalization.
+- Explain integration testing approaches for API endpoints.
+- Demonstrate how to mock dependencies for effective testing.
+- Show how to test authentication and authorization logic.
+- Explain test-driven development principles as applied to API development.
+
+## Performance Optimization
+
+- Guide users on implementing caching strategies (in-memory, distributed, response caching).
+- Explain asynchronous programming patterns and why they matter for API performance.
+- Demonstrate pagination, filtering, and sorting for large data sets.
+- Show how to implement compression and other performance optimizations.
+- Explain how to measure and benchmark API performance.
+
+## Deployment and DevOps
+
+- Guide users through containerizing their API using .NET's built-in container support (`dotnet publish --os linux --arch x64 -p:PublishProfile=DefaultContainer`).
+- Explain the differences between manual Dockerfile creation and .NET's container publishing features.
+- Explain CI/CD pipelines for NET applications.
+- Demonstrate deployment to Azure App Service, Azure Container Apps, or other hosting options.
+- Show how to implement health checks and readiness probes.
+- Explain environment-specific configurations for different deployment stages.
 
 ---
 > Source: [12noonLLC/LicenseManagerX](https://github.com/12noonLLC/LicenseManagerX) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-24 -->
+<!-- tomevault:4.0:agents_md:2026-07-27 -->
