@@ -1,14 +1,20 @@
-# Copilot Instructions
 
-## General Guidelines
+# Testing Instructions
 
-See `/AGENTS.md` for general guidelines on how to use Copilot effectively.
+## PHPUnit Mock – Invocation Count Matchers
 
-## Others
+Use `$this->` instead of `self::` for all count matchers.
 
-- Global Code Style: See `/.github/instructions/cs.instructions.md` for advanced code style instructions.
-- Testing Code Style: See `/.github/instructions/test.instructions.md` for testing-specific code style instructions.
+```php
+// Bad
+$mock->expects(self::once())->method('foo');
+
+// Good
+$mock->expects($this->once())->method('foo');
+```
+
+Applies to: `once()`, `never()`, `any()`, `exactly($n)`, `atLeastOnce()`, `atMost($n)`.
 
 ---
 > Source: [windwalker-io/framework](https://github.com/windwalker-io/framework) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-24 -->
+<!-- tomevault:4.0:agents_md:2026-07-27 -->
