@@ -1,88 +1,168 @@
-# yoloAI
+# `internal/cli/` conventions
 
-Sandboxed AI coding agent runner. Runs AI coding CLI agents (Claude Code, Gemini, Codex) inside disposable Docker containers with copy/diff/apply workflow. Additional agents (Aider, Goose, etc.) in future versions.
+Patterns Cobra command handlers in this package follow. These are written
+after each pattern earned its place — read this before writing a new
+command, but don't apply patterns where they don't fit.
 
-## Project Status
+## Construction: `withClient`, `systemClient`, and `newRuntime`
 
-Public beta. Breaking changes are allowed but must be tracked in `docs/BREAKING-CHANGES.md`.
+Two helpers in `helpers.go` give a command handler an orchestration
+entry point. Pick the one that matches the command's scope.
 
-## Key Files
+- **`withClient(cmd, backend, fn)`** — opens a `yoloai.Client` for one
+  backend, defers close. The canonical path for sandbox-scoped command
+  handlers: `Run`, `Stop`, `Destroy`, `List`, `Inspect`, `Diff`, `Apply`,
+  `Exec`, `Attach`, plus the MCP server's tool handlers. Use this for
+  every new command that operates on a single sandbox / single backend.
+- **`systemClient()`** — returns a `*yoloai.SystemClient` (no runtime
+  yet, no close needed). The canonical path for `yoloai system …`
+  handlers that aren't tied to a specific backend: `DiskUsage`, `Prune`,
+  `Build`, `Check`, `Setup`. SystemClient spins up runtimes per backend
+  internally for cross-backend operations.
 
-User-facing docs live in `docs/`:
+`withRuntime` and `withManager` have been removed (W-L10) — every
+command goes through `yoloai.Client` / `yoloai.SystemClient`. The
+underlying `newRuntime(ctx, backend)` factory still exists for the
+handful of commands that walk every registered backend for
+enumeration (`yoloai ls`, `yoloai sandbox <name> allow`,
+`yoloai system doctor`, `yoloai system info`) and for the
+backend-scoped `system tart` subtree. Don't add new direct calls —
+prefer Client/SystemClient for any new orchestration.
 
-- `docs/GUIDE.md` — Full usage reference: commands, flags, workdir modes, agents/models, configuration, sandbox state, security, development.
-- `docs/BREAKING-CHANGES.md` — Tracks breaking changes made during beta. Each entry documents previous behavior, new behavior, rationale, and migration steps. Include in release notes.
-- `docs/ROADMAP.md` — Future plans: agents, network isolation, profiles, overlayfs, etc.
+### Interactive wizards: prompts live in the CLI
 
-Design specs live in `docs/design/`:
+Q-F (W-L8b) — library Client/SystemClient methods never do interactive
+IO. `yoloai system setup` follows the established pattern:
 
-- `docs/design/README.md` — Goal, value prop, architecture, directory layout, prerequisites, resolved decisions.
-- `docs/design/commands.md` — Command table, agent definitions, all command specs.
-- `docs/design/config.md` — Docker images, config.yaml format, recipes, profiles.
-- `docs/design/setup.md` — First-run experience, tmux configuration.
-- `docs/design/security.md` — Credential management, security considerations.
+1. Call `SystemClient.SetupStatus(ctx)` to inspect the host (classify
+   `~/.tmux.conf`, enumerate available backends/agents).
+2. Render prompts and read user input in the CLI (`system_setup.go`'s
+   `wizardTmuxConf` / `wizardChoice`).
+3. Pass the resulting `SetupOptions` to `SystemClient.Setup(ctx, opts)`
+   for a pure config write.
 
-Development docs live in `docs/dev/`:
+If a new command needs interactive prompts, follow the same shape:
+library provides "what to ask" (status + available options) and "how
+to apply" (a non-interactive setter); CLI owns the conversation.
 
-- `docs/dev/ARCHITECTURE.md` — Code navigation guide: package map, file index, key types, command→code map, data flows, "where to change" recipes, testing. Keep in sync when architecture changes.
-- `docs/dev/CODING-STANDARD.md` — Code style: Go 1.22+, gofmt, golangci-lint, Cobra, project structure, naming, error handling, dependency policy.
-- `docs/dev/CLI-STANDARD.md` — CLI design conventions: argument ordering (options first), flag naming, exit codes, error messages, help text format.
-- `docs/dev/RESEARCH.md` — Index of research documents. Detailed research split into topic files in `docs/dev/research/`: competitors, agents, security, sandboxing, implementation.
-- `docs/dev/CRITIQUE.md` — Rolling critique document. After a critique pass, findings are applied to design docs and research files, then CRITIQUE.md is emptied for the next round.
-- `docs/dev/OPEN_QUESTIONS.md` — Questions encountered during design/implementation that need resolution.
-- `docs/dev/plans/TODO.md` — Consolidated list of designed-but-unimplemented features with design references.
-- `docs/dev/old/PLAN.md` — Historical implementation plan (phases, architecture decisions). Reference for how yoloAI was built.
-- `docs/dev/backend-idiosyncrasies.md` — **Read this before diagnosing any backend problem.** Catalogs observed behaviors that contradict official documentation, required non-obvious workarounds, or have caused bugs before. Includes a symptom index for fast lookup.
+### Attach: `Client.Attach` is now the canonical path
 
-## Architecture (from design docs)
+W-L8d added `yoloai.Client.Attach(ctx, name, IOStreams) error` and moved
+the readiness polling (`waitForTmux`) into `sandbox.WaitForAttachReady`.
+Every attach flow should ultimately go through `c.Attach`:
 
-- Go binary, no runtime deps — just the binary and Docker (or Tart for macOS VMs, or Seatbelt for lightweight macOS sandboxing).
-- Pluggable runtime backend via `runtime.Runtime` interface in `internal/runtime/`. Three backends: Docker (`internal/runtime/docker/`), Tart (`internal/runtime/tart/`), and Seatbelt (`internal/runtime/seatbelt/`). CLI dispatches via `newRuntime()` in `internal/cli/helpers.go`. No backend-specific types leak outside their packages.
-- Docker containers or Tart VMs with persistent state in `~/.yoloai/sandboxes/<name>/`.
-- Containers are ephemeral; state (work dirs, agent-state, logs, meta.json) lives on host. Credentials injected via file-based bind mount (not env vars).
-- Agent abstraction: per-agent definitions specify install, launch command, API key env vars, state directory, network allowlist, and prompt delivery mode. Ships Aider, Claude, Codex, Gemini, and OpenCode agents.
-- CLI separates workdir (primary project dir, positional) from aux dirs (`-d` flag). Directories mounted at mirrored host paths by default. Custom paths via `=<path>` override.
-- `:copy` directories use full directory copies with git for diff/apply.
-- `:overlay` directories use Linux overlayfs inside the container for instant setup with diff/apply workflow. Changes are captured in an upper layer; no file copying. Docker-only, requires CAP_SYS_ADMIN. Container must be running for diff/apply (git commands exec inside container).
-- `:rw` directories are live bind-mounts. Default (no suffix) is read-only.
-- Profile system: each profile is a directory in `~/.yoloai/profiles/<name>/` containing a `Dockerfile` and `config.yaml`. The base profile at `~/.yoloai/profiles/base/` is auto-created if missing and serves as the default. "base" is a reserved profile name.
-- Two config files: global config (`~/.yoloai/config.yaml`) for user preferences (tmux_conf, model_aliases) and profile config (`~/.yoloai/profiles/base/config.yaml`) for profile-overridable defaults (agent, model, backend, env, etc.). `IsGlobalKey()` routes config commands to the correct file. Operational state (`setup_complete`) lives in `~/.yoloai/state.yaml`.
+- The standalone `yoloai attach` command uses `withClient + c.Attach`
+  directly (see `attach.go`).
+- Lifecycle commands with an `--attach` branch (`clone` today;
+  `restart`/`reset`/`start`/`new` to be migrated) call the shared
+  `attachToSandboxByName(cmd, name)` helper in `helpers.go`, which
+  itself opens a Client and calls `c.Attach`.
+- The terminal-title machinery (`setTerminalTitle`) stays in the CLI —
+  it's UI, not orchestration. `Client.Attach` is library code and
+  doesn't touch the terminal beyond the PTY.
 
-## Code Quality Gate
+`IOStreams.In/Out/Err` are wired all the way through the runtime
+interface as of `runtime/iostreams.go`. Non-CLI embedders (HTTP, MCP,
+test harnesses) can pass their own streams to `Client.Attach` and
+have them reach the backend faithfully. For TTY=true the streams
+must be terminals (e.g. `*os.File` with a PTY fd); for TTY=false
+plain pipes work and stderr stays separate.
 
-**Before considering any code change complete, run `make check`.** This runs gofmt verification, golangci-lint, go mod tidy check, and all tests. All must pass before committing. If `make check` fails, fix the issues before proceeding. Subagents implementing code changes must include `make check` as a final step.
+### Legacy raw-runtime attach — RETIRED
 
-## Workflow Conventions
+`new.go`, `start.go`, `restart.go`, `reset.go` previously held their own
+`attachAfter<Verb>` helpers; all have been migrated to `c.Attach`. The
+`attachToSandbox` and `waitForTmux` CLI shims in `attach.go` are gone.
+The library `sandbox.WaitForAttachReady` is the single readiness
+implementation; `Client.Attach` is the single attach entry point. Do
+NOT add a `Client.Runtime()` escape hatch; it would defeat the
+layering.
 
-- **Critique cycle:** Write a critique in `docs/dev/CRITIQUE.md`, apply corrections to design docs and research files in `docs/dev/research/`, mark critique as done, empty CRITIQUE.md for the next round.
-- **Research before design changes:** When a design question comes up (e.g., "should we use overlayfs?"), research it first in the appropriate file under `docs/dev/research/` with verified facts, then update design docs based on findings.
-- **Factual accuracy matters:** Star counts, feature claims, and security assertions must be verified. Don't repeat marketing language or unverifiable numbers.
-- **Cross-platform awareness:** Always consider Linux, macOS (Docker Desktop + VirtioFS), and Windows/WSL. Note platform-specific tradeoffs explicitly.
-- **Commit granularity:** One commit per logical change. Research, design updates, and critique application get separate commits.
-- **Backend debugging:** Before diagnosing a backend problem (containerd, Kata, CNI, Docker, Podman, Tart, Seatbelt), read `docs/dev/backend-idiosyncrasies.md`. Use the symptom index to jump directly to the relevant entry. Do not repeat investigation that is already documented there.
-- **Recording new idiosyncrasies:** When you discover a backend behavior that contradicts documentation, required a surprising workaround, or could cause the same bug again — add an entry to `docs/dev/backend-idiosyncrasies.md`. Add a row to the symptom index. Keep entries concise: symptom, explanation, fix, code pointer. Do this before committing the fix.
+Still on raw runtime: `exec.go` (interactive non-attach exec — needs
+PTY-aware Exec on the runtime interface).
 
-## Critique Principles
+`list.go` does NOT need migration — it calls the library helper
+`sandbox.ListSandboxesMultiBackend` directly, which is the correct
+layered shape for multi-backend ops (single-backend Client by design;
+multi-backend dispatch is the embedder's concern).
 
-- **Research must be verified.** Agents can hallucinate and make mistakes. Don't trust claims without checking sources.
-- **Focus on what affects the design.** Small research inaccuracies (e.g., numbers off by 10%) aren't worth critiquing if they don't change any design decision.
-- **User sentiment is high-signal.** Community pain points and praise tell us where competitors succeed and fail. Learn from their examples.
-- **The design must be backed by research.** Assumptions are dangerous and difficult to back out of once implementation starts. If a design claim lacks research backing, flag it.
-- **Cross-reference both directions.** Check that design claims have research backing, and that research recommendations have been incorporated into the design.
-- **Platform-specific claims need platform-specific verification.** Something that works on Linux may not work on macOS Docker Desktop (e.g., `--storage-opt size=`). Always note which platforms a claim applies to.
-- **Security claims need the highest scrutiny.** A wrong security assumption (e.g., "env vars are safe for secrets") can undermine user trust and is hardest to fix after launch.
-- **Separate facts from tradeoffs.** Research establishes facts; the design makes tradeoff decisions based on those facts. A critique should distinguish "this fact is wrong" from "this tradeoff deserves discussion."
+`apply.go` does NOT need migration — operates entirely on disk, no
+runtime in the picture.
 
-## Design Principles
+## Path resolution: `cliLayout()`
 
-- Copy/diff/apply is the core differentiator — protect originals, review before landing.
-- `:copy` uses full copies; `:overlay` is an explicit opt-in for instant setup with overlayfs.
-- Safe defaults: read-only mounts, no implicit `agent_files` inheritance, name required (no auto-generation), dirty repo warning (not error).
-- CLI for one-offs, config for repeatability (same options in both).
-- Security requires dedicated research — don't finalize ad-hoc. `CAP_SYS_ADMIN` tradeoff is documented.
-- **Don't reinvent the wheel.** Before designing a feature, check if existing tools (git, docker, unix utilities) already provide a workflow that solves the problem. Leverage them rather than building a bespoke solution.
-- **Ecosystem ergonomics.** The tool should fit naturally within unix philosophy, git workflows, and the CLI ecosystem. Compose well with pipes, familiar tools, and established conventions. A tool that complements the ecosystem is far better than one that needs workarounds to fit user workflows.
+Every path under `~/.yoloai/` comes from `cliLayout()` (defined in
+`layout_bridge.go`) — that is the ONE place in the CLI that reads `$HOME`.
+A handler that constructs a `sandbox.NewEngine` directly must pass
+`sandbox.WithLayout(cliLayout())`; otherwise the Engine panics at
+construction. `withClient` handles this automatically.
+
+Never call `config.YoloaiDir()`, `config.SandboxesDir()`, etc. — those
+helpers were deleted in Q-W.6. Use the Layout methods instead
+(`cliLayout().SandboxesDir()`, `cliLayout().ProfileDir(name)`).
+
+## Backend selection
+
+Resolution priority for the `--backend` flag, in order:
+
+1. `--backend` flag (if set; not present on all commands).
+2. For lifecycle commands operating on a named sandbox
+   (`stop`/`start`/`destroy`/etc.): `resolveBackendForSandbox(name)`
+   reads the backend from the sandbox's `meta.json`.
+3. `resolveContainerBackendConfig()` for the config default.
+4. `runtime.SelectContainerBackend(ctx, cfg)` picks a platform default.
+
+Pattern: resolve the backend BEFORE calling `withClient`/`withRuntime` —
+the helpers take the resolved name as a string. The `stop.go` handler is
+the canonical example.
+
+## Name resolution: arg, env, `--all`
+
+Lifecycle commands accept one or more sandbox names with these
+precedences (every command supports the same set; share the helpers in
+`envname.go`):
+
+1. Positional args (validate each with `store.ValidateName`).
+2. `$YOLOAI_SANDBOX` (the env-name fallback for `cd`-style workflows).
+3. `--all` (mutually exclusive with positional args; returns a typed
+   `UsageError`).
+
+`resolveStopNames` in `stop.go` is the canonical name-resolution
+function. Other commands have parallel `resolve<Verb>Names`.
+
+## JSON output
+
+Every user-facing command supports `--json`. Pattern:
+
+```go
+if jsonEnabled(cmd) {
+    return writeJSON(cmd.OutOrStdout(), payload)
+}
+// human-readable output
+```
+
+JSON output is for scripting and integration; human output is the
+default. Empty results print "No <thing> to <verb>" in human mode and an
+empty array in JSON mode. JSON-incompatible flags (e.g. `--attach`)
+return a `UsageError` early.
+
+## Logging
+
+`slog.Info("verb sandbox", "event", "sandbox.verb", "sandbox", name)`
+is the standard structured-log shape. Pair every action log with a
+completion log: `"sandbox.verb.complete"`. Tests assert on these
+event keys; new ones should match `sandbox.<verb>(.<phase>)?`.
+
+## Errors
+
+- Validation/usage errors → `sandbox.NewUsageError(...)`. Maps to exit
+  code 2 in `errorExitCode`.
+- Wrapped runtime errors → `fmt.Errorf("connect to runtime: %w", err)`
+  pattern. Preserve sentinel errors with `%w` so `errors.Is/As` keeps
+  working at the call site.
+- For lifecycle commands, run errors through `sandboxErrorHint(name, err)`
+  to add the standard "did you mean..." hint.
 
 ---
 > Source: [kstenerud/yoloai](https://github.com/kstenerud/yoloai) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-04-22 -->
+<!-- tomevault:4.0:agents_md:2026-07-26 -->
