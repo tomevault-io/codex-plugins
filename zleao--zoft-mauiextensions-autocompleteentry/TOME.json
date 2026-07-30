@@ -4,7 +4,7 @@
   "repo": "zoft.MauiExtensions.AutoCompleteEntry",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/zleao/zoft.MauiExtensions.AutoCompleteEntry",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-06-30T03:12:18Z"
+  "distributed_at": "2026-07-30T20:03:42Z"
 }
