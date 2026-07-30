@@ -1,169 +1,46 @@
-# Copilot Coding Agent Instructions for jekyll-polyglot
 
-## Repository Overview
+# Patches and Core Class Extensions Instructions
 
-**jekyll-polyglot** is a fast, open-source internationalization (i18n) plugin for Jekyll static site generator blogs. It enables multi-language Jekyll sites with fallback support, automatic URL relativization, and SEO tools.
+## Overview
 
-- **Type**: Ruby gem / Jekyll plugin
-- **Size**: ~516 lines of source code across 11 files
-- **Primary Language**: Ruby 3.2.0+
-- **Framework Dependencies**: Jekyll >= 4.0
-- **Testing Framework**: RSpec with SimpleCov coverage
-- **Linting**: RuboCop with performance and RSpec plugins
-- **CI/CD**: CircleCI with Codecov for coverage tracking
+The `patches.rb` and `patches/` directory extend Jekyll core classes with i18n capabilities without modifying Jekyll's source.
 
-## Essential Commands
+## Design Principles for Patches
 
-Always run these commands in this order:
+- **Only add methods**: Never override or replace existing Jekyll methods
+- **Minimize changes**: Patches should be the smallest possible extension to achieve i18n
+- **Test thoroughly**: Patches modify core Jekyll classes; test against multiple Jekyll versions
+- **Document side effects**: Clearly note if patches change Jekyll's behavior in any way
 
-```bash
-# 1. Install dependencies (REQUIRED - always run first)
-bundle install
+## Patch Locations
 
-# 2. Run linting only (quick check, ~10 seconds)
-bundle exec rubocop
+- `lib/jekyll/polyglot/patches.rb` — Main patch file; requires and applies all patches
+- `lib/jekyll/polyglot/patches/jekyll/site.rb` — Extensions to Jekyll::Site class
+- Other `patches/jekyll/` files — Extensions to other Jekyll core classes
 
-# 3. Run tests with coverage (full validation, ~30 seconds)
-COVERAGE=true bundle exec rspec
+## When Modifying Patches
 
-# 4. Build gem and test example site (optional, for integration testing)
-bash make.sh
-```
+1. **Understand the patched class**: Read Jekyll documentation for the class you're modifying
+2. **Add the method, don't override**: Methods should extend functionality, not replace it
+3. **Test with sample Jekyll sites**: Use `spec/fixture/` to test against realistic Jekyll configurations
+4. **Document the new method**: Add comments explaining what the method does and why it's needed
+5. **Write comprehensive tests**: Patches affect core behavior; test extensively
 
-**Do not skip step 1.** Always run `bundle install` before running any other commands, even if you think dependencies are already installed.
+## Testing Patches
 
-## Build and Validation Checklist
+Patches are tested in `spec/jekyll/polyglot/` with integration tests against fixture Jekyll sites. When modifying a patch:
 
-Before opening a pull request, **always verify**:
-
-- [ ] Run `bundle install` (dependencies)
-- [ ] Run `bundle exec rubocop` (linting passes)
-- [ ] Run `COVERAGE=true bundle exec rspec` (all tests pass)
-- [ ] New code includes tests (aim for >90% coverage)
-- [ ] No test files added/modified unless code changes require it
-- [ ] Changes follow conventional commit format: `type(scope): description`
-
-Failing any of these will cause the PR to be rejected by CircleCI.
-
-## Project Structure
-
-```
-lib/
-  jekyll-polyglot.rb              # Gem entry point
-  jekyll/polyglot.rb              # Main plugin loader
-  jekyll/polyglot/
-    hooks.rb                      # Jekyll hook integration (post_init, etc.)
-    patches.rb                    # Jekyll core class patches
-    liquid.rb                     # Custom Liquid filters/tags
-    version.rb                    # Version constant (update for releases)
-    hooks/
-      coordinate.rb               # Document grouping by language
-      process.rb                  # Main hook orchestration
-      assets-toggle.rb            # Asset filtering per language
-    liquid/tags/
-      i18n_headers.rb            # SEO hreflang generation
-      static_href.rb             # URL relativization filter
-    patches/jekyll/
-      site.rb                    # Site class extensions
-      [other patch files]
-
-spec/
-  jekyll/polyglot/               # RSpec test suite (mirrors lib/ structure)
-  fixture/                       # Sample Jekyll sites for integration tests
-  spec_helper.rb                 # RSpec configuration
-
-site/                            # Example polyglot blog (multi-language demo)
-
-Configuration & Build:
-  .rubocop.yml                  # RuboCop linting rules (TargetRubyVersion: 3.2)
-  .rspec                        # RSpec configuration (outputs rspec.xml, rspec.json)
-  .circleci/config.yml          # CircleCI pipeline (Ruby 3.2 Docker image)
-  codecov.yml                   # Codecov coverage threshold (80% target)
-  jekyll-polyglot.gemspec       # Gem specification (version, dependencies, metadata)
-  Gemfile                       # Development dependencies
-```
-
-## CI/CD Pipeline Validation
-
-CircleCI automatically runs these steps on every PR:
-
-1. **Build job**: Runs on Ruby 3.2 Docker image, installs dependencies via `ruby/install-deps` orb
-2. **Test job**: Runs `./test.sh` which:
-   - Executes `bundle exec rubocop` (linting)
-   - Executes `COVERAGE=true bundle exec rspec` (tests + coverage)
-   - Generates `rspec.xml` and `rspec.json` for test reporting
-   - Uploads coverage to Codecov (requires `CODECOV_TOKEN` in CI environment)
-
-**If tests fail locally, they will fail in CircleCI.** Always validate locally before pushing.
-
-## Key Architecture Patterns
-
-### Document Coordination
-
-The plugin groups Jekyll documents by their permalink across languages:
-
-- Documents declare language via `lang` frontmatter property
-- Documents with identical permalinks are "coordinated" as translations
-- Optional `page_id` frontmatter (v1.7.0+) allows different URLs per language
-
-### Three Integration Points
-
-1. **Hooks** (`hooks.rb`): Intercept Jekyll build process at key points
-   - `post_init` hook: Sets up language mappings after Jekyll initializes
-   - Runs serially or parallel based on `parallel_localization` config
-
-2. **Patches** (`patches.rb`): Extend Jekyll core classes with i18n methods
-   - Add language detection, document grouping, URL relativization
-   - Only add methods; never override existing behavior
-
-3. **Liquid Filters and Tags** (`liquid.rb`): Template-level internationalization
-   - `static_href` tag: Relativizes URLs for multi-language sites
-   - `i18n_headers` tag: Generates SEO hreflang links
-
-## Coding Standards
-
-**RuboCop enforces all style rules.** Configuration in `.rubocop.yml` requires:
-
-- Ruby 3.2+ syntax
-- 2-space indentation
-- No line length limit (disabled in config)
-- Specific method indentation rules (see config file)
-
-Run `bundle exec rubocop` to check. The CI pipeline will fail if RuboCop finds issues.
-
-## Testing Requirements
-
-**All code changes must include tests.** Test structure mirrors `lib/`:
-
-- New code in `lib/jekyll/polyglot/hooks.rb` → add tests to `spec/jekyll/polyglot/hooks_spec.rb`
-- Tests use RSpec `describe`, `context`, and `it` blocks
-- Use fixture sites in `spec/fixture/` for integration testing against real Jekyll builds
-
-Coverage is tracked by Codecov. Target >90% for new code.
+1. Add/update tests in `spec/jekyll/polyglot/patches/` with clear names like `spec/jekyll/polyglot/patches/jekyll/site_spec.rb`
+2. Run patch tests: `bundle exec rspec spec/jekyll/polyglot/`
+3. Verify RuboCop compliance: `bundle exec rubocop lib/jekyll/polyglot/patches.rb`
+4. Test with `bash make.sh` to ensure the example site still builds correctly
 
 ## Common Pitfalls
 
-- **Don't skip `bundle install`**: Even if you think dependencies are installed, run it. Bundler manages the exact versions.
-- **Don't modify version.rb casually**: Only update `lib/jekyll/polyglot/version.rb` during releases.
-- **Don't patch Jekyll classes without testing**: Changes to `patches.rb` must be thoroughly tested across Jekyll versions.
-- **Don't hard-code secrets**: All configuration comes from `_config.yml`; never embed API keys.
-- **Don't assume RuboCop won't complain**: Run locally before committing; CircleCI will reject non-compliant code.
-
-## Debugging Tips
-
-- **If tests fail**: Check that you ran `bundle install` first. Then run `COVERAGE=true bundle exec rspec` with verbose output: `bundle exec rspec --format documentation`
-- **If RuboCop complains**: Run `bundle exec rubocop -A` to auto-fix fixable issues (but review changes)
-- **If build.sh fails**: Navigate to `site/` and run `jekyll build` directly to see detailed Jekyll output
-- **For integration testing**: The `spec/fixture/` directory contains sample Jekyll sites; run tests against these to catch real-world issues
-
-## Additional Resources
-
-Refer to [AGENTS.md](../AGENTS.md) for contributor guidelines and detailed documentation:
-
-- [ARCHITECTURE.md](../ai_docs/ARCHITECTURE.md) — In-depth plugin design and data model
-- [TESTING.md](../ai_docs/TESTING.md) — Detailed test writing patterns
-- [SECURITY.md](../ai_docs/SECURITY.md) — Security constraints and best practices
+- **Don't override existing methods**: This breaks Jekyll's expected behavior
+- **Don't assume Jekyll's internal structure**: Jekyll may change internals; test against different Jekyll versions
+- **Don't add heavy dependencies**: Patches should be lightweight extensions
 
 ---
 > Source: [untra/polyglot](https://github.com/untra/polyglot) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-06-29 -->
+<!-- tomevault:4.0:agents_md:2026-07-27 -->
