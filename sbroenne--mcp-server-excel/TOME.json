@@ -2,7 +2,7 @@
   "name": "mcp-server-excel",
   "owner": "sbroenne",
   "repo": "mcp-server-excel",
-  "description": "Excel MCP Server & CLI - 23 tools, 214 operations for AI-powered Excel automation via COM API",
+  "description": "",
   "type": "tome",
   "source_format": "copilot-instructions.md",
   "formats": [
@@ -49,9 +49,129 @@
       "path": "skills/excel-cli",
       "github_url": "https://github.com/sbroenne/mcp-server-excel/tree/main/skills/excel-cli",
       "description": ""
+    },
+    {
+      "name": "mcp-server-excel",
+      "path": ".squad/skill.md",
+      "github_url": "https://github.com/sbroenne/mcp-server-excel/tree/main/.squad/skill.md",
+      "description": ""
+    },
+    {
+      "name": "mcp-server-excel",
+      "path": "skills/excel-mcp/SKILL.md",
+      "github_url": "https://github.com/sbroenne/mcp-server-excel/tree/main/skills/excel-mcp/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "mcp-server-excel",
+      "path": "skills/excel-cli/SKILL.md",
+      "github_url": "https://github.com/sbroenne/mcp-server-excel/tree/main/skills/excel-cli/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "mcp-server-excel",
+      "path": ".squad/templates/skill.md",
+      "github_url": "https://github.com/sbroenne/mcp-server-excel/tree/main/.squad/templates/skill.md",
+      "description": ""
+    },
+    {
+      "name": "mcp-server-excel",
+      "path": ".squad/skills/project-conventions/SKILL.md",
+      "github_url": "https://github.com/sbroenne/mcp-server-excel/tree/main/.squad/skills/project-conventions/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "mcp-server-excel",
+      "path": ".squad/skills/dependency-validation/SKILL.md",
+      "github_url": "https://github.com/sbroenne/mcp-server-excel/tree/main/.squad/skills/dependency-validation/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "mcp-server-excel",
+      "path": ".squad/skills/mcp-cli-parity-triage/SKILL.md",
+      "github_url": "https://github.com/sbroenne/mcp-server-excel/tree/main/.squad/skills/mcp-cli-parity-triage/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "mcp-server-excel",
+      "path": ".squad/skills/publish-hardening-docs/SKILL.md",
+      "github_url": "https://github.com/sbroenne/mcp-server-excel/tree/main/.squad/skills/publish-hardening-docs/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "mcp-server-excel",
+      "path": ".squad/skills/plugin-surface-wording/SKILL.md",
+      "github_url": "https://github.com/sbroenne/mcp-server-excel/tree/main/.squad/skills/plugin-surface-wording/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "mcp-server-excel",
+      "path": ".squad/skills/node24-action-upgrades/SKILL.md",
+      "github_url": "https://github.com/sbroenne/mcp-server-excel/tree/main/.squad/skills/node24-action-upgrades/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "mcp-server-excel",
+      "path": ".squad/skills/precommit-release-gates/SKILL.md",
+      "github_url": "https://github.com/sbroenne/mcp-server-excel/tree/main/.squad/skills/precommit-release-gates/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "mcp-server-excel",
+      "path": ".squad/skills/error-transport-context/SKILL.md",
+      "github_url": "https://github.com/sbroenne/mcp-server-excel/tree/main/.squad/skills/error-transport-context/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "mcp-server-excel",
+      "path": ".squad/skills/plugin-overlay-bundling/SKILL.md",
+      "github_url": "https://github.com/sbroenne/mcp-server-excel/tree/main/.squad/skills/plugin-overlay-bundling/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "mcp-server-excel",
+      "path": ".squad/skills/mcp-schema-enum-regression/SKILL.md",
+      "github_url": "https://github.com/sbroenne/mcp-server-excel/tree/main/.squad/skills/mcp-schema-enum-regression/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "mcp-server-excel",
+      "path": ".squad/skills/workflow-run-tag-resolution/SKILL.md",
+      "github_url": "https://github.com/sbroenne/mcp-server-excel/tree/main/.squad/skills/workflow-run-tag-resolution/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "mcp-server-excel",
+      "path": ".squad/skills/dependabot-tooling-downgrade/SKILL.md",
+      "github_url": "https://github.com/sbroenne/mcp-server-excel/tree/main/.squad/skills/dependabot-tooling-downgrade/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "mcp-server-excel",
+      "path": ".squad/skills/cross-repo-release-preflight/SKILL.md",
+      "github_url": "https://github.com/sbroenne/mcp-server-excel/tree/main/.squad/skills/cross-repo-release-preflight/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "mcp-server-excel",
+      "path": ".squad/templates/skills/project-conventions/SKILL.md",
+      "github_url": "https://github.com/sbroenne/mcp-server-excel/tree/main/.squad/templates/skills/project-conventions/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "mcp-server-excel",
+      "path": ".squad/skills/plugin-build-smoke-regression/SKILL.md",
+      "github_url": "https://github.com/sbroenne/mcp-server-excel/tree/main/.squad/skills/plugin-build-smoke-regression/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "mcp-server-excel",
+      "path": ".squad/skills/retire-legacy-distribution-surface/SKILL.md",
+      "github_url": "https://github.com/sbroenne/mcp-server-excel/tree/main/.squad/skills/retire-legacy-distribution-surface/SKILL.md",
+      "description": ""
     }
   ],
   "source_url": "https://github.com/sbroenne/mcp-server-excel",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-03T22:44:13Z"
+  "distributed_at": "2026-07-30T19:59:16Z"
 }
