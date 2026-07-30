@@ -1,83 +1,123 @@
-# Component Organization
+# State Management with Jotai
 
-Follow this component architecture for consistent project structure:
+This project uses Jotai for state management with custom utilities and patterns.
 
-## Directory Structure
+## Core Setup
 
-**Base UI Components**: `src/components/ui/`
-- Reusable primitives (buttons, inputs, modals, etc.)
-- Generic components that can be used across any application
-- Based on Radix UI primitives with custom styling
-- Examples: `Button`, `Input`, `Select`, `Tooltip`, `Accordion`
-
-**Common Components**: `src/components/common/`
-- App-specific shared components
-- Components used across multiple features but specific to this app
-- Examples: `ErrorElement`, `Footer`, `LoadRemixAsyncComponent`, `NotFound`
-
-**Module Components**: `src/modules/`
-- Feature-specific components organized by domain
-- Business logic components that belong to specific features
-- Examples: `src/modules/feed/`, `src/modules/auth/`, `src/modules/user/`
-
-## Component Placement Rules
-
-**Universal Components** → `src/components/ui/`
-- If the component could be used in any React app
-- Pure UI components without business logic
-- Reusable across different domains
-
-**Feature Components** → `src/modules/{domain}/`
-- If the component is specific to a business domain/feature
-- Contains domain-specific logic or data handling
-- Examples: `FeedTimeline`, `UserProfile`, `AuthForm`
-
-**App-Specific Shared** → `src/components/common/`
-- If the component is used across features but specific to this app
-- Contains app-specific logic but used in multiple places
-
-## Path Aliases
-
-Use `~/` for `src/` imports (configured in tsconfig):
-
+**Global Store**: Use `jotaiStore` from `src/lib/jotai.ts`
 ```typescript
-// Good
-import { Button } from '~/components/ui/button'
-import { UserProfile } from '~/modules/user/UserProfile'
-
-// Avoid
-import { Button } from '../../../components/ui/button'
+import { jotaiStore } from '~/lib/jotai'
 ```
 
-## Component Examples
-
+**Custom Hook Utility**: Use `createAtomHooks` for consistent atom patterns
 ```typescript
-// Universal UI component - goes in src/components/ui/
-// File: src/components/ui/button/Button.tsx
-export function Button({ children, ...props }) {
-  return <button className="..." {...props}>{children}</button>
-}
+import { createAtomHooks } from '~/lib/jotai'
 
-// Feature component - goes in src/modules/
-// File: src/modules/feed/FeedTimeline.tsx
-export function FeedTimeline() {
-  // Feed-specific logic and UI
-}
+const [useMyAtom, useSetMyAtom, useMyAtomValue, myAtom] = createAtomHooks(atom(null))
+```
 
-// App-specific shared - goes in src/components/common/
-// File: src/components/common/AppHeader.tsx
-export function AppHeader() {
-  // App-specific header with navigation
+## Atom Organization
+
+**Atom Location**: Store atoms in `src/atoms/` directory
+```typescript
+// File: src/atoms/user.ts
+import { atom } from 'jotai'
+
+export const userAtom = atom(null)
+export const isLoggedInAtom = atom((get) => get(userAtom) !== null)
+```
+
+## Usage Patterns
+
+**Reading State**:
+```typescript
+import { useAtomValue } from 'jotai'
+import { userAtom } from '~/atoms/user'
+
+function UserProfile() {
+  const user = useAtomValue(userAtom)
+  return <div>{user?.name}</div>
 }
 ```
 
-## Module Architecture Principle
+**Writing State**:
+```typescript
+import { useSetAtom } from 'jotai'
+import { userAtom } from '~/atoms/user'
 
-**If a component is specific to a business domain/feature, place it in the corresponding module directory.**
+function LoginForm() {
+  const setUser = useSetAtom(userAtom)
+  
+  const handleLogin = (userData) => {
+    setUser(userData)
+  }
+}
+```
 
-This keeps the codebase organized and makes it easy to find domain-specific functionality.
+**Reading and Writing**:
+```typescript
+import { useAtom } from 'jotai'
+import { userAtom } from '~/atoms/user'
+
+function UserSettings() {
+  const [user, setUser] = useAtom(userAtom)
+  
+  const updateUser = (updates) => {
+    setUser({ ...user, ...updates })
+  }
+}
+```
+
+## Advanced Patterns
+
+**Derived Atoms**:
+```typescript
+import { atom } from 'jotai'
+
+const countAtom = atom(0)
+const doubledAtom = atom((get) => get(countAtom) * 2)
+```
+
+**Async Atoms**:
+```typescript
+const userIdAtom = atom(1)
+const userAtom = atom(async (get) => {
+  const userId = get(userIdAtom)
+  return fetchUser(userId)
+})
+```
+
+**Write-Only Atoms**:
+```typescript
+const writeOnlyAtom = atom(
+  null, // no read function
+  (get, set, newValue) => {
+    // write logic
+    set(someOtherAtom, newValue)
+  }
+)
+```
+
+## Provider Setup
+
+The global Jotai provider is configured in `src/providers/root-providers.tsx`:
+```typescript
+import { Provider } from 'jotai'
+import { jotaiStore } from '~/lib/jotai'
+
+<Provider store={jotaiStore}>
+  {/* app content */}
+</Provider>
+```
+
+## Best Practices
+
+1. **Atom Naming**: Use descriptive names ending with `Atom`
+2. **File Organization**: Group related atoms in the same file
+3. **Custom Hooks**: Use `createAtomHooks` for consistent patterns
+4. **Global Store**: Always use the configured `jotaiStore` instance
+5. **Async Handling**: Use Suspense boundaries for async atoms
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/innei-template)
-> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/innei-template)
-<!-- tomevault:4.0:agents_md:2026-04-09 -->
+> Source: [innei-template/smart-webapp-template](https://github.com/innei-template/smart-webapp-template) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-07-26 -->
