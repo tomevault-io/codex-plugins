@@ -4,7 +4,7 @@
   "repo": "postgresql",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/sous-chefs/postgresql",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-27T11:44:09Z"
+  "distributed_at": "2026-07-30T09:05:37Z"
 }
