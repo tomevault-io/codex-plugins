@@ -1,99 +1,152 @@
-# Copilot Instructions for Sous Chefs Cookbooks
+# Percona Cookbook - Project-Specific Instructions
 
-## Repository Overview
+## About This Cookbook
 
-**Chef cookbook** for managing software installation and configuration. Part of the Sous Chefs cookbook ecosystem.
+The **Percona cookbook** installs and configures Percona MySQL client and/or server components, with optional XtraBackup, Percona Toolkit, and XtraDB Cluster support. This is a **recipe-driven cookbook** that also provides custom resources for database and user management.
 
-**Key Facts:** Ruby-based, Chef >= 16 required, supports various OS platforms (check metadata.rb, kitchen.yml and .github/workflows/ci.yml for which platforms to specifically test)
+## Key Components
 
-## Project Structure
+### Recipes (Primary Interface)
 
-**Critical Paths:**
-- `recipes/` - Chef recipes for cookbook functionality (if this is a recipe-driven cookbook)
-- `resources/` - Custom Chef resources with properties and actions (if this is a resource-driven cookbook)
-- `spec/` - ChefSpec unit tests
-- `test/integration/` - InSpec integration tests (tests all platforms supported)
-- `test/cookbooks/` or `test/fixtures/` - Example cookbooks used during testing that show good examples of custom resource usage
-- `attributes/` - Configuration for recipe driven cookbooks (not applicable to resource cookbooks)
-- `libraries/` - Library helpers to assist with the cookbook. May contain multiple files depending on complexity of the cookbook.
-- `templates/` - ERB templates that may be used in the cookbook
-- `files/` - files that may be used in the cookbook
-- `metadata.rb`, `Berksfile` - Cookbook metadata and dependencies
+- `percona` (default) - Includes client recipe
+- `percona::client` - Installs Percona MySQL client libraries  
+- `percona::server` - Installs and configures Percona MySQL server
+- `percona::backup` - Installs Percona XtraBackup hot backup software
+- `percona::toolkit` - Installs Percona Toolkit command-line tools
+- `percona::cluster` - Sets up XtraDB Cluster for high availability
+- `percona::package_repo` - Sets up package repository
+- `percona::replication` - Configures MySQL replication
+- `percona::ssl` - Configures SSL certificates
 
-## Build and Test System
+### Custom Resources
 
-### Environment Setup
-**MANDATORY:** Install Chef Workstation first - provides chef, berks, cookstyle, kitchen tools.
+- `percona_mysql_database` - Manages MySQL databases
+- `percona_mysql_user` - Manages MySQL users and grants
 
-### Essential Commands (strict order)
-```bash
-berks install                   # Install dependencies (always first)
-cookstyle                       # Ruby/Chef linting
-yamllint .                      # YAML linting
-markdownlint-cli2 '**/*.md'     # Markdown linting
-chef exec rspec                 # Unit tests (ChefSpec)
-# Integration tests will be done via the ci.yml action. Do not run these. Only check the action logs for issues after CI is done running.
+### Supported Versions & Platforms
+
+**Percona MySQL Versions:** 8.0 (default), 5.7 (legacy support)
+**Platforms:** CentOS 7+, Debian 10+, Ubuntu 18.04+ LTS
+
+## Configuration Patterns
+
+### Version Selection
+
+```ruby
+# Set Percona version in attributes
+node['percona']['version'] = '8.0'  # Default
+node['percona']['version'] = '5.7'  # Legacy
 ```
 
-### Critical Testing Details
-- **Kitchen Matrix:** Multiple OS platforms × software versions (check kitchen.yml for specific combinations)
-- **Docker Required:** Integration tests use Dokken driver
-- **CI Environment:** Set `CHEF_LICENSE=accept-no-persist`
-- **Full CI Runtime:** 30+ minutes for complete matrix
+### Server Configuration
 
-### Common Issues and Solutions
-- **Always run `berks install` first** - most failures are dependency-related
-- **Docker must be running** for kitchen tests
-- **Chef Workstation required** - no workarounds, no alternatives
-- **Test data bags needed** (optional for some cookbooks) in `test/integration/data_bags/` for convergence
+```ruby
+# Key server attributes (platform-specific paths)
+node['percona']['server']['socket']               # MySQL socket path
+node['percona']['server']['default_storage_engine'] # InnoDB/innodb
+node['percona']['server']['includedir']           # Config include directory
+node['percona']['server']['pidfile']              # PID file location
+```
 
-## Development Workflow
+### Database & User Management
 
-### Making Changes
-1. Edit recipes/resources/attributes/templates/libraries
-2. Update corresponding ChefSpec tests in `spec/`
-3. Also update any InSpec tests under test/integration
-4. Ensure cookstyle and rspec passes at least. You may run `cookstyle -a` to automatically fix issues if needed.
-5. Also always update all documentation found in README.md and any files under documentation/*
-6. **Always update CHANGELOG.md** (required by Dangerfile) - Make sure this conforms with the Sous Chefs changelog standards.
+```ruby
+# Using custom resources
+percona_mysql_database 'example_db' do
+  connection mysql_connection_info
+  action :create
+end
 
-### Pull Request Requirements
-- **PR description >10 chars** (Danger enforced)
-- **CHANGELOG.md entry** for all code changes
-- **Version labels** (major/minor/patch) required
-- **All linters must pass** (cookstyle, yamllint, markdownlint)
-- **Test updates** needed for code changes >5 lines and parameter changes that affect the code logic
+percona_mysql_user 'app_user' do
+  connection mysql_connection_info 
+  password 'secure_password'
+  database_name 'example_db'
+  privileges [:all]
+  action :create
+end
+```
 
-## Chef Cookbook Patterns
+## Testing Structure
 
-### Resource Development
-- Custom resources in `resources/` with properties and actions
-- Include comprehensive ChefSpec tests for all actions
-- Follow Chef resource DSL patterns
+### Test Kitchen Suites
 
-### Recipe Conventions
-- Use `include_recipe` for modularity
-- Handle platforms with `platform_family?` conditionals
-- Use encrypted data bags for secrets (passwords, SSL certs)
-- Leverage attributes for configuration with defaults
+- `client-56` - Tests client installation with Percona 5.6
+- `server-56` - Tests server installation with Percona 5.6  
+- `server-80` - Tests server installation with Percona 8.0
+- `cluster` - Tests XtraDB Cluster setup
 
-### Testing Approach
-- **ChefSpec (Unit):** Mock dependencies, test recipe logic in `spec/`
-- **InSpec (Integration):** Verify actual system state in `test/integration/inspec/` - InSpec files should contain proper inspec.yml and controls directories so that it could be used by other suites more easily.
-- One test file per recipe, use standard Chef testing patterns
+### Test Fixtures
 
-## Trust These Instructions
+Located in `test/fixtures/cookbooks/test/` - demonstrates proper cookbook usage patterns including:
 
-These instructions are validated for Sous Chefs cookbooks. **Do not search for build instructions** unless information here fails.
+- Client-only installations
+- Server configurations
+- Cluster setups
+- Database and user management examples
 
-**Error Resolution Checklist:**
-1. Verify Chef Workstation installation
-2. Confirm `berks install` completed successfully
-3. Ensure Docker is running for integration tests
-4. Check for missing test data dependencies
+### Data Bags Required
 
-The CI system uses these exact commands - following them matches CI behavior precisely.
+Test data bags in `test/integration/data_bags/` for:
+
+- MySQL root passwords
+- Application database credentials
+- SSL certificate data
+
+## Platform-Specific Behavior
+
+### Debian/Ubuntu
+
+- Socket: `/var/run/mysqld/mysqld.sock`
+- PID: `/var/run/mysqld/mysqld.pid`
+- Include dir: `/etc/mysql/conf.d/`
+- Storage engine: `InnoDB` (capitalized)
+
+### RHEL/CentOS
+
+- Socket: `/var/lib/mysql/mysql.sock`  
+- PID: `/var/lib/mysql/mysqld.pid`
+- Include dir: `` (empty)
+- Storage engine: `innodb` (lowercase)
+
+## Dependencies
+
+### Required Cookbooks
+
+- `yum` - Package management for RHEL platforms
+- `yum-epel` - EPEL repository for additional packages
+- `line` - File editing utilities
+
+### External Dependencies
+
+- Percona APT/YUM repositories (managed by `package_repo` recipe)
+- Internet access for package downloads during convergence
+
+## Common Issues
+
+### Repository Setup
+
+Always include `percona::package_repo` before installing packages, or use dependency ordering in recipes.
+
+### SELinux
+
+Set `node['percona']['selinux_module_url']` if custom SELinux policies are needed for XtraDB Cluster.
+
+### Version Compatibility
+
+- Percona 8.0 requires different configuration patterns than 5.7
+- Test both versions when making changes to server recipes
+- XtraDB Cluster configuration varies significantly between versions
+
+## Development Notes
+
+When modifying this cookbook:
+
+1. **Version Support**: Test changes against both 5.7 and 8.0 versions
+2. **Platform Testing**: Verify on Debian, Ubuntu, and CentOS platforms  
+3. **Resource Testing**: Update both recipe and resource tests when changing database/user management
+4. **Security**: Use encrypted data bags for passwords and certificates
+5. **Clustering**: XtraDB Cluster changes require multi-node testing (handled by CI)
 
 ---
 > Source: [sous-chefs/percona](https://github.com/sous-chefs/percona) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-24 -->
+<!-- tomevault:4.0:agents_md:2026-07-27 -->
