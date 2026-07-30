@@ -1,0 +1,15 @@
+- You are working in a monorepo with the frontend located in `app` and backend located in `backend/golang`
+- You are building an app with the stack: Electron, Vite, shadcn, TailWind, tanstack router, Apollo (graphql), zustand.
+- When referencing components, use existing shadcn components (example: <Button> instead of <button>)
+- When packages in `pkg` directory relies on repository make sure to introduce repository per feature instead of augmenting ever increasing interface.
+- Do NOT add comments to explain every other line of your code. The code itself should be self-evident unless the code is exotic or solving a complex problem.
+- When writing code use `make build` to make sure that your proposed code still builds.
+- Don't add comment to explain every other line of your code. The code itself should self-sufficient unless where code is non-trivial.
+- When writing code use `make build` to make sure that your proposed code still builds.
+- Don't add comment to explain every other line of your code. The code itself should self-sufficient unless where code is non-trivial.
+- When modifying code, do not remove comments. comments are there for a reason.
+- You must never add comments for function definitions.
+
+---
+> Source: [EternisAI/enchanted-twin](https://github.com/EternisAI/enchanted-twin) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-07-26 -->
