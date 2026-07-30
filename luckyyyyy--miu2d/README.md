@@ -1,23 +1,22 @@
 # miu2d
 
-> Tome by [luckyyyyy](https://github.com/luckyyyyy/miu2d) — distributed by [TomeVault](https://tomevault.io)
-
-Miu2D is a 2D RPG game engine built with Rust + TypeScript + React + Canvas, designed for the Web platform. 剑侠情缘2/月影传说/新剑侠情缘网页复刻版
+> Tome by [luckyyyyy](https://github.com/luckyyyyy/miu2d), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [luckyyyyy/miu2d](https://github.com/luckyyyyy/miu2d).
+Original source: `` in [luckyyyyy/miu2d](https://github.com/luckyyyyy/miu2d).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/luckyyyyy/miu2d](https://github.com/luckyyyyy/miu2d)
+Graded against the Tome Standard, TomeVault's public ruleset for whether AI instructions load, read clearly and stay safe. Source: [github.com/luckyyyyy/miu2d](https://github.com/luckyyyyy/miu2d)
 
 ---
 
