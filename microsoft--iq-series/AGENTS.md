@@ -1,53 +1,91 @@
-# Copilot Instructions for The IQ Series
 
-## Project Overview
+# Cookbook Instructions
 
-This repository is **The IQ Series** — a hands-on learning series for Microsoft IQ, Microsoft's unified intelligence layer for the enterprise. It covers three intelligence services:
+## Environment Setup
 
-- **Foundry IQ**: A managed knowledge layer for enterprise data (Azure AI Search + Foundry Agent Service)
-- **Work IQ**: Intelligence layer for Microsoft 365 Copilot (coming soon)
-- **Fabric IQ**: Business semantics for intelligent agents and decisions (coming soon)
+Cookbooks load configuration from a `.env` file in the cookbook directory. Required variables:
 
-## Repository Structure
+```
+SEARCH_ENDPOINT=https://<your-search-service>.search.windows.net
+AOAI_ENDPOINT=https://<your-openai-resource>.openai.azure.com
+AOAI_EMBEDDING_MODEL=text-embedding-3-large
+AOAI_EMBEDDING_DEPLOYMENT=text-embedding-3-large
+AOAI_GPT_MODEL=gpt-4o-mini
+AOAI_GPT_DEPLOYMENT=gpt-4o-mini
+FOUNDRY_PROJECT_ENDPOINT=https://<your-ai-services>.services.ai.azure.com/api/projects/<your-project>
+FOUNDRY_MODEL_DEPLOYMENT_NAME=gpt-4o-mini
+AZURE_AI_SEARCH_CONNECTION_NAME=iq-series-search-connection
+```
 
-- `1-Foundry-IQ-Unlocking-Knowledge-for-Agents/` — Episode 1: Core concepts, knowledge sources, knowledge bases, agentic retrieval
-- `2-Foundry-IQ-Building-the-Data-Pipeline-with-Knowledge-Sources/` — Episode 2: Data pipelines, indexed/remote/web knowledge sources
-- `3-Foundry-IQ-Querying-the-Multi-Source-AI-Knowledge-Bases/` — Episode 3: Multi-source querying and knowledge base composition
-- `infra/` — Bicep and ARM templates for deploying all Azure resources
-- Each episode has a `cookbook/` folder with Jupyter notebooks
+## Authentication
 
-## Key Azure Services
+Always use `DefaultAzureCredential` from `azure-identity`. Never hardcode API keys or connection strings.
 
-- **Azure AI Search** — Provides the search index and agentic retrieval capabilities
-- **Azure OpenAI** — Hosts embedding (`text-embedding-3-large`) and chat (`gpt-4o-mini`) model deployments
-- **Azure AI Services (Foundry)** — The parent resource for Foundry projects
-- **Foundry Project** — Hosts agents and connections
-- **RBAC Roles** — Search Service Contributor, Search Index Data Contributor, Search Index Data Reader, Cognitive Services User
+## Key Packages
 
-## SDK & API Patterns
+- `azure-search-documents` (>=12.1.0b1) — Search index, knowledge source, knowledge base, and retrieval APIs
+- `azure-ai-projects` — Foundry Agent Service client (`AIProjectClient`, `MCPTool`)
+- `azure-identity` — `DefaultAzureCredential` for RBAC-based auth
+- `python-dotenv` — Load `.env` files
 
-- **Authentication**: Always use `DefaultAzureCredential` — never hardcode API keys
-- **Environment variables**: Loaded from `.env` files using `python-dotenv`
-- **Key packages**: `azure-search-documents`, `azure-ai-projects`, `azure-identity`
-- **Agentic retrieval**: Knowledge sources → Knowledge bases → `KnowledgeBaseRetrievalClient.retrieve()`
-- **Agent integration**: Knowledge bases expose an MCP endpoint at `{search_endpoint}/knowledgebases/{kb_name}/mcp`
-- **Agent creation**: Use `AIProjectClient` with `MCPTool` pointing to the knowledge base MCP endpoint
+## Common Patterns
 
-## Foundry IQ Concepts
+### Knowledge Source (pointer to a search index)
+```python
+from azure.search.documents.indexes.models import (
+    SearchIndexKnowledgeSource,
+    SearchIndexKnowledgeSourceParameters,
+    SearchIndexFieldReference,
+)
+knowledge_source = SearchIndexKnowledgeSource(
+    name="my-source",
+    search_index_parameters=SearchIndexKnowledgeSourceParameters(
+        search_index_name="my-index",
+        source_data_fields=[SearchIndexFieldReference(name="id")],
+    ),
+)
+index_client.create_or_update_knowledge_source(knowledge_source=knowledge_source)
+```
 
-- **Knowledge Source**: A pointer to a search index — tells Foundry IQ *where* to find data
-- **Knowledge Base**: Wraps knowledge sources with an LLM config — defines *how* queries are planned, executed, and synthesized
-- **Agentic Retrieval**: Query planning → parallel sub-queries → semantic reranking → answer synthesis with citations
-- **MCP Endpoint**: Each knowledge base exposes a Model Context Protocol endpoint for tool-based access by agents
+### Knowledge Base (retrieval + reasoning layer)
+```python
+from azure.search.documents.indexes.models import (
+    KnowledgeBase,
+    KnowledgeBaseAzureOpenAIModel,
+    KnowledgeSourceReference,
+)
+from azure.search.documents.knowledgebases.models import KnowledgeRetrievalOutputMode
+knowledge_base = KnowledgeBase(
+    name="my-kb",
+    models=[KnowledgeBaseAzureOpenAIModel(...)],
+    knowledge_sources=[KnowledgeSourceReference(name="my-source")],
+    output_mode=KnowledgeRetrievalOutputMode.ANSWER_SYNTHESIS,
+)
+index_client.create_or_update_knowledge_base(knowledge_base)
+```
 
-## Conventions
+### Agentic Retrieval (query the knowledge base)
+```python
+from azure.search.documents.knowledgebases import KnowledgeBaseRetrievalClient
+retrieval_client = KnowledgeBaseRetrievalClient(
+    endpoint=SEARCH_ENDPOINT,
+    knowledge_base_name="my-kb",
+    credential=credential,
+)
+result = retrieval_client.retrieve(retrieval_request=...)
+```
 
-- Markdown files use ATX-style headers (`#`, `##`, etc.)
-- Code examples use Python 3.10+
-- All Azure resource creation uses Bicep (not raw ARM templates)
-- The ARM template (`azuredeploy.json`) is generated from Bicep via `az bicep build`
-- Deploy to Azure button links use `https://aka.ms/iq-series/deploytoazure`
+### MCP Endpoint (for agent integration)
+```python
+mcp_endpoint = f"{SEARCH_ENDPOINT}/knowledgebases/{KB_NAME}/mcp?api-version=2025-11-01-Preview"
+```
+
+## Naming Conventions
+
+- Index names: lowercase with hyphens (e.g., `earth-at-night`)
+- Knowledge source/base names: lowercase with hyphens
+- Connection names: lowercase with hyphens
 
 ---
 > Source: [microsoft/iq-series](https://github.com/microsoft/iq-series) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-04-21 -->
+<!-- tomevault:4.0:agents_md:2026-07-27 -->
