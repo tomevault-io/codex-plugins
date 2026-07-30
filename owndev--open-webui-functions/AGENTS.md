@@ -1,47 +1,162 @@
-# Open-WebUI-Functions – Quickstart for AI Coding Agents
 
-This repo extends Open WebUI with pluggable Python pipelines and filters. If you’re adding or modifying code, follow these project-specific rules to be productive immediately.
+# Self-explanatory Code Commenting Instructions
 
-## Big picture
+## Core Principle
+**Write code that speaks for itself. Comment only when necessary to explain WHY, not WHAT.**
+We do not need comments most of the time.
 
-- Two building blocks:
-  - Pipelines in `pipelines/<provider>/` expose a `Pipe` with inner `Valves` (config via env). They list models with `pipes()` and execute requests in `pipe(...)` (streaming and non-streaming).
-  - Filters in `filters/` expose a `Filter` with `inlet(body)` and/or `outlet(body)` to mutate requests/responses.
-- Secrets are declared as `EncryptedStr` in valves and are auto-encrypted on assignment; decrypt only right before use. Requires `WEBUI_SECRET_KEY` in Open WebUI.
-- Status/events: emit via `__event_emitter__` using `{type:"status"|"chat:*", data:{...}}`. Always send a completion or error status.
+## Commenting Guidelines
 
-## Patterns that differ from “common” code
+### ❌ AVOID These Comment Types
 
-- Model IDs are normalized early to avoid provider mismatches:
-  - Azure: set header `x-ms-model-mesh-model-name` (or put model in body when `AZURE_AI_MODEL_IN_BODY=true`). `pipelines/azure/azure_ai_foundry.py` parses semicolon/comma/space model lists.
-  - Google Gemini: strip prefixes like `models/` and `publishers/google/models/` via `strip_prefix()` and `_prepare_model_id()`.
-- Streaming rules by provider:
-  - Azure and N8N stream with SSE (`StreamingResponse`); always close `aiohttp` `ClientSession`/response in `finally` (see `cleanup_response`).
-  - Gemini disables streaming for image-generation models; thinking is wrapped in `<details>` and emitted incrementally.
-- Cross-component integration:
-  - `filters/google_search_tool.py` converts `features.web_search` → `metadata.features.google_search_tool`; Gemini reads this to enable grounding tools.
-  - N8N non-streaming responses can append a tool-calls section built by `_format_tool_calls_section` with verbosity and truncation valves.
+**Obvious Comments**
+```javascript
+// Bad: States the obvious
+let counter = 0;  // Initialize counter to zero
+counter++;  // Increment counter by one
+```
 
-## Dev workflow (local)
+**Redundant Comments**
+```javascript
+// Bad: Comment repeats the code
+function getUserName() {
+    return user.name;  // Return the user's name
+}
+```
 
-- Use Pixi tasks for quality:
-  - Format: `pixi run format`
-  - Lint: `pixi run lint` (Ruff config in `ruff.toml`)
-- Fast manual test path: paste a single pipeline/filter into Open WebUI Admin → Functions, set required env (see each `Valves`), and call it from a chat. Encryption works once `WEBUI_SECRET_KEY` is set.
-- Useful references when implementing:
-  - Azure pipeline: citations handling and SSE in `pipelines/azure/azure_ai_foundry.py`
-  - Gemini pipeline: model caching, image optimization/upload, grounding in `pipelines/google/google_gemini.py`
-  - N8N pipeline: mixed stream parsing and tool display in `pipelines/n8n/n8n.py`
-  - Filters: `filters/time_token_tracker.py`, `filters/google_search_tool.py`
+**Outdated Comments**
+```javascript
+// Bad: Comment doesn't match the code
+// Calculate tax at 5% rate
+const tax = price * 0.08;  // Actually 8%
+```
 
-## What to keep consistent
+### ✅ WRITE These Comment Types
 
-- Validate and filter inputs (keep an explicit allow-list of request fields).
-- Emit status at start, on streaming start, and on completion/error.
-- Avoid blocking I/O in async paths; prefer `aiohttp`/`aiofiles`.
-- Close network resources when not streaming; set SSE headers in streaming responses.
-- Keep valve names stable; add new ones with backward-compatible defaults.
+**Complex Business Logic**
+```javascript
+// Good: Explains WHY this specific calculation
+// Apply progressive tax brackets: 10% up to 10k, 20% above
+const tax = calculateProgressiveTax(income, [0.10, 0.20], [10000]);
+```
+
+**Non-obvious Algorithms**
+```javascript
+// Good: Explains the algorithm choice
+// Using Floyd-Warshall for all-pairs shortest paths
+// because we need distances between all nodes
+for (let k = 0; k < vertices; k++) {
+    for (let i = 0; i < vertices; i++) {
+        for (let j = 0; j < vertices; j++) {
+            // ... implementation
+        }
+    }
+}
+```
+
+**Regex Patterns**
+```javascript
+// Good: Explains what the regex matches
+// Match email format: username@domain.extension
+const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+```
+
+**API Constraints or Gotchas**
+```javascript
+// Good: Explains external constraint
+// GitHub API rate limit: 5000 requests/hour for authenticated users
+await rateLimiter.wait();
+const response = await fetch(githubApiUrl);
+```
+
+## Decision Framework
+
+Before writing a comment, ask:
+1. **Is the code self-explanatory?** → No comment needed
+2. **Would a better variable/function name eliminate the need?** → Refactor instead
+3. **Does this explain WHY, not WHAT?** → Good comment
+4. **Will this help future maintainers?** → Good comment
+
+## Special Cases for Comments
+
+### Public APIs
+```javascript
+/**
+ * Calculate compound interest using the standard formula.
+ * 
+ * @param {number} principal - Initial amount invested
+ * @param {number} rate - Annual interest rate (as decimal, e.g., 0.05 for 5%)
+ * @param {number} time - Time period in years
+ * @param {number} compoundFrequency - How many times per year interest compounds (default: 1)
+ * @returns {number} Final amount after compound interest
+ */
+function calculateCompoundInterest(principal, rate, time, compoundFrequency = 1) {
+    // ... implementation
+}
+```
+
+### Configuration and Constants
+```javascript
+// Good: Explains the source or reasoning
+const MAX_RETRIES = 3;  // Based on network reliability studies
+const API_TIMEOUT = 5000;  // AWS Lambda timeout is 15s, leaving buffer
+```
+
+### Annotations
+```javascript
+// TODO: Replace with proper user authentication after security review
+// FIXME: Memory leak in production - investigate connection pooling
+// HACK: Workaround for bug in library v2.1.0 - remove after upgrade
+// NOTE: This implementation assumes UTC timezone for all calculations
+// WARNING: This function modifies the original array instead of creating a copy
+// PERF: Consider caching this result if called frequently in hot path
+// SECURITY: Validate input to prevent SQL injection before using in query
+// BUG: Edge case failure when array is empty - needs investigation
+// REFACTOR: Extract this logic into separate utility function for reusability
+// DEPRECATED: Use newApiFunction() instead - this will be removed in v3.0
+```
+
+## Anti-Patterns to Avoid
+
+### Dead Code Comments
+```javascript
+// Bad: Don't comment out code
+// const oldFunction = () => { ... };
+const newFunction = () => { ... };
+```
+
+### Changelog Comments
+```javascript
+// Bad: Don't maintain history in comments
+// Modified by John on 2023-01-15
+// Fixed bug reported by Sarah on 2023-02-03
+function processData() {
+    // ... implementation
+}
+```
+
+### Divider Comments
+```javascript
+// Bad: Don't use decorative comments
+//=====================================
+// UTILITY FUNCTIONS
+//=====================================
+```
+
+## Quality Checklist
+
+Before committing, ensure your comments:
+- [ ] Explain WHY, not WHAT
+- [ ] Are grammatically correct and clear
+- [ ] Will remain accurate as code evolves
+- [ ] Add genuine value to code understanding
+- [ ] Are placed appropriately (above the code they describe)
+- [ ] Use proper spelling and professional language
+
+## Summary
+
+Remember: **The best comment is the one you don't need to write because the code is self-documenting.**
 
 ---
 > Source: [owndev/Open-WebUI-Functions](https://github.com/owndev/Open-WebUI-Functions) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-05-18 -->
+<!-- tomevault:4.0:agents_md:2026-07-27 -->
