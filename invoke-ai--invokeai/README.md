@@ -1,0 +1,28 @@
+# InvokeAI
+
+> Tome by [invoke-ai](https://github.com/invoke-ai/InvokeAI), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [invoke-ai/InvokeAI](https://github.com/invoke-ai/InvokeAI).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+From [invoke-ai/InvokeAI](https://github.com/invoke-ai/InvokeAI) — a repo with 27651+ stars on GitHub.
+
+---
+
+Install this config instantly:
+```
+npx tomevault install invoke-ai/InvokeAI
+```
+Source: [github.com/invoke-ai/InvokeAI](https://github.com/invoke-ai/InvokeAI).
+
+<!-- genome:t-i-s -->
