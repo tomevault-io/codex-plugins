@@ -4,7 +4,7 @@
   "repo": "sail",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": ".cursor/rules/*.mdc",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/lakehq/sail",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-29T11:49:10Z"
+  "distributed_at": "2026-07-31T00:52:22Z"
 }
