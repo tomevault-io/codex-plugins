@@ -2,7 +2,7 @@
   "name": "agentic-harness-bootstrap",
   "owner": "synthnoosh",
   "repo": "agentic-harness-bootstrap",
-  "description": "Boundaries, structure, and feedback loops \u2014 from a single repo scan.",
+  "description": "",
   "type": "config",
   "source_format": "CLAUDE.md",
   "formats": [
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/synthnoosh/agentic-harness-bootstrap",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-07T02:10:04Z"
+  "distributed_at": "2026-07-31T02:00:17Z"
 }
