@@ -1,8 +1,6 @@
 # vibe-coding-tw
 
-> Source: [godmakereth/vibe-coding-tw](https://github.com/godmakereth/vibe-coding-tw) — distributed by [TomeVault](https://tomevault.io)
-
-🌏 Vibe Coding 至尊超級終極無敵指南 - 繁體中文版 | Traditional Chinese version based on https://github.com/tukuaiai/vibe-coding-cn
+> Source: [godmakereth/vibe-coding-tw](https://github.com/godmakereth/vibe-coding-tw). Graded, signed and kept in sync across platforms by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
