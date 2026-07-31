@@ -1,27 +1,14 @@
-# Copilot instructions for docs.github.com
 
-This repository powers the GitHub Docs site (docs.github.com). It contains both the Next.js application code (TypeScript) and the documentation content (Markdown).
+# Editing Copilot content instruction and agent files
 
-## Instruction files
+This applies when you add, edit, or remove a Copilot instruction or shared agent file that guides how **content** (articles, data files) is written. It does **not** apply to code instructions or agents owned by the engineering team (for example `code.instructions.md`).
 
-Read the relevant instruction files in `.github/instructions/` before making changes:
+When it applies, you **must** first read the instruction-architecture doc in full and follow it:
 
-* **`all.instructions.md`** — General project guidelines, PR conventions, and how to access docs.github.com content programmatically. Applies to all files.
-* **`code.instructions.md`** — TypeScript/JavaScript coding standards, test commands (per-suite with environment variables), and validation steps. Read this before any code change.
-* **`content.instructions.md`** — Markdown content conventions, Liquid variable usage, reusables, and linking with `[AUTOTITLE]`. Read this before any content change.
-* **`style-guide-summary.instructions.md`** — Condensed docs style guide covering voice, headers, lists, alerts, and formatting. Read this before any content change.
+https://github.com/github/docs-team/blob/main/contributing-to-docs/docs-work/copilot-instruction-architecture.md
 
-## Key rules
-
-* All new code must be TypeScript (not JavaScript).
-* Use `@/` absolute imports (e.g., `import getRedirect from '@/redirects/lib/get-redirect'`).
-* Do not run `npm test` without a path argument — always target a specific suite.
-* Run `npm run build` before running tests.
-* Do not commit to `main`. Create a branch and open a draft PR.
-* Use Liquid variables for product names — never hardcode them. Check `data/variables/`.
-* Use `[AUTOTITLE](/path/to/article)` for internal links — never hardcode article titles.
+Read the current version every time (from a local `github/docs-team` checkout if you have one, otherwise fetch the URL); do not rely on your memory of it, because it changes. If you cannot access it, say so and stop rather than guessing.
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/github)
-> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/github)
-<!-- tomevault:4.0:agents_md:2026-04-08 -->
+> Source: [github/docs](https://github.com/github/docs) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-07-27 -->
