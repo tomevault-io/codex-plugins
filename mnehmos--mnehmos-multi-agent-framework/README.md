@@ -5,12 +5,12 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [Mnehmos/mnehmos.multi-agent.framework](https://github.com/Mnehmos/mnehmos.multi-agent.framework).
+Original source: `CLAUDE.md` in [Mnehmos/mnehmos.multi-agent.framework](https://github.com/Mnehmos/mnehmos.multi-agent.framework).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
