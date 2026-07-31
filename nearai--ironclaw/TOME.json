@@ -2,7 +2,7 @@
   "name": "ironclaw",
   "owner": "nearai",
   "repo": "ironclaw",
-  "description": "IronClaw is OpenClaw inspired implementation in Rust focused on privacy and security",
+  "description": "",
   "type": "config",
   "source_format": "CLAUDE.md",
   "formats": [
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/nearai/ironclaw",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-29T11:55:21Z"
+  "distributed_at": "2026-07-31T21:22:31Z"
 }
