@@ -5,11 +5,10 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `` in [InnovatorLM/Innovator-VL](https://github.com/InnovatorLM/Innovator-VL).
+Original source: `CLAUDE.md` in [InnovatorLM/Innovator-VL](https://github.com/InnovatorLM/Innovator-VL).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
