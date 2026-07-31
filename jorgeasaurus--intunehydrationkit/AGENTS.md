@@ -1,215 +1,197 @@
-# IntuneHydrationKit - Copilot Instructions
 
-## Project Overview
+# PowerShell Pester v5 Testing Guidelines
 
-Intune Hydration Kit is a PowerShell 7 module that bootstraps Microsoft Intune tenants with best-practice baseline configurations. It uses `Invoke-MgGraphRequest` (only `Microsoft.Graph.Authentication` required) to import policies, groups, compliance baselines, enrollment profiles, conditional access, mobile apps, and device filters. If required Graph scopes are missing, instruct the user to grant the missing permissions and stop the operation.
+This guide provides PowerShell-specific instructions for creating automated tests using PowerShell Pester v5 module. Follow PowerShell cmdlet development guidelines in [powershell.instructions.md](./powershell.instructions.md) for general PowerShell scripting best practices.
 
-## Build, Test, and Lint
+## File Naming and Structure
 
-Use the InvokeBuild-based bootstrap script (installs dependencies automatically):
+- **File Convention:** Use `*.Tests.ps1` naming pattern
+- **Placement:** Place test files next to tested code or in dedicated test directories
+- **Import Pattern:** Use `BeforeAll { . $PSScriptRoot/FunctionName.ps1 }` to import tested functions
+- **No Direct Code:** Put ALL code inside Pester blocks (`BeforeAll`, `Describe`, `Context`, `It`, etc.)
+
+## Test Structure Hierarchy
 
 ```powershell
-# Full CI pipeline: Analyze + Test + Build
-./build.ps1 -Task CI
-
-# Run specific tasks
-./build.ps1 -Task Analyze          # PSScriptAnalyzer only
-./build.ps1 -Task Test             # Pester tests only
-./build.ps1 -Task Build            # Build module to build/IntuneHydrationKit/
-./build.ps1 -Task Clean            # Remove build artifacts
-
-# Direct commands (module must be imported first for tests)
-Import-Module ./IntuneHydrationKit.psd1 -Force
-Invoke-Pester -Path ./Tests/Private/Invoke-GraphBatchOperation.Tests.ps1 -Output Detailed
-Invoke-ScriptAnalyzer -Path ./Public/Orchestration/Invoke-IntuneHydration.ps1
+BeforeAll { # Import tested functions }
+Describe 'FunctionName' {
+    Context 'When condition' {
+        BeforeAll { # Setup for context }
+        It 'Should behavior' { # Individual test }
+        AfterAll { # Cleanup for context }
+    }
+}
 ```
 
-PSScriptAnalyzer excludes `PSUseShouldProcessForStateChangingFunctions` and `PSAvoidUsingConvertToSecureStringWithPlainText` (handled manually).
+## Core Keywords
 
-## High-Level Architecture
+- **`Describe`**: Top-level grouping, typically named after function being tested
+- **`Context`**: Sub-grouping within Describe for specific scenarios
+- **`It`**: Individual test cases, use descriptive names
+- **`Should`**: Assertion keyword for test validation
+- **`BeforeAll/AfterAll`**: Setup/teardown once per block
+- **`BeforeEach/AfterEach`**: Setup/teardown before/after each test
 
-### Module Structure
-- `IntuneHydrationKit.psm1` - Root module. Defines `$script:` state variables and dot-sources `Public/**/*.ps1` and `Private/**/*.ps1`.
-- `Public/` - 19 exported functions (one file per function). Main entry point: `Invoke-IntuneHydration`.
-- `Private/` - Internal helpers (batch operations, pagination, template loading, result formatting, auth).
-- `Templates/` - JSON templates organized by resource type (OpenIntuneBaseline, Compliance, Enrollment, DynamicGroups, StaticGroups, Filters, ConditionalAccess, AppProtection, MobileApps, Notifications).
+## Setup and Teardown
 
-### Execution Flow (`Invoke-IntuneHydration`)
-High-level flow: authenticate and validate prerequisites, process template-driven imports/deletes by resource type, then generate reports.
-Runs 12 sequential steps:
-1. Authenticate via `Connect-MgGraph`
-2. Pre-flight checks (`Test-IntunePrerequisites`) - Intune license, MDM authority
-3. Create/delete dynamic groups (`Invoke-GroupBatchImport`)
-3b. Create/delete static groups
-4. Import/delete device filters
-5. Import/delete OpenIntuneBaseline policies (routed by `@odata.type` or folder name)
-6. Import/delete compliance templates
-7. Import/delete notification templates
-8. Import/delete app protection policies (MAM)
-9. Import/delete enrollment profiles (Autopilot, ESP, DEP, Device Prep)
-10. Import/delete conditional access policies (always disabled on import)
-11. Import/delete mobile apps
-12. Generate summary report (`Reports/Hydration-Summary.md` + `.json`)
+- **`BeforeAll`**: Runs once at start of containing block, use for expensive operations
+- **`BeforeEach`**: Runs before every `It` in block, use for test-specific setup
+- **`AfterEach`**: Runs after every `It`, guaranteed even if test fails
+- **`AfterAll`**: Runs once at end of block, use for cleanup
+- **Variable Scoping**: `BeforeAll` variables available to child blocks (read-only), `BeforeEach/It/AfterEach` share same scope
 
-### State & Configuration
-- `$script:HydrationState` - connection status, tenant ID, results (Groups, Policies, Baselines, Profiles, ConditionalAccess, Errors, Warnings)
-- `$script:ImportPrefix = '[IHD] '` - prepended to most resource display names; mobile apps and WinGet apps append ` - [IHD]`
-- `$script:HydrationMarker` / `$script:HydrationMarkerAlt` - description marker for safe deletion
-- Settings file: `settings.json` (validated against `settings.schema.json`)
+## Assertions (Should)
 
-## Key Conventions
+- **Basic Comparisons**: `-Be`, `-BeExactly`, `-Not -Be`
+- **Collections**: `-Contain`, `-BeIn`, `-HaveCount`
+- **Numeric**: `-BeGreaterThan`, `-BeLessThan`, `-BeGreaterOrEqual`
+- **Strings**: `-Match`, `-Like`, `-BeNullOrEmpty`
+- **Types**: `-BeOfType`, `-BeTrue`, `-BeFalse`
+- **Files**: `-Exist`, `-FileContentMatch`
+- **Exceptions**: `-Throw`, `-Not -Throw`
 
-### One File Per Function
-Every function lives in its own `.ps1` file named exactly after the function. Public functions are exported in both the `.psd1` manifest and the `.psm1` `$publicFunctions` array. Keep them in sync.
+## Mocking
 
-### Graph API Batch Pattern
-All imports/deletions that touch Graph use `Invoke-GraphBatchOperation`:
-- Batches up to `$script:MaxBatchSize` (default 10) items per request
-- Retry with exponential backoff for 429 (throttle), 500+, 503
-- POST bodies are sent as raw JSON strings (not hashtables) to avoid PowerShell serialization issues
-- DELETE items need `Id`; POST items need `BodyJson`
-- Batch responses use string IDs (1-indexed) - always parse with `[int]::TryParse()`
+- **`Mock CommandName { ScriptBlock }`**: Replace command behavior
+- **`-ParameterFilter`**: Mock only when parameters match condition
+- **`-Verifiable`**: Mark mock as requiring verification
+- **`Should -Invoke`**: Verify mock was called specific number of times
+- **`Should -InvokeVerifiable`**: Verify all verifiable mocks were called
+- **Scope**: Mocks default to containing block scope
 
-### Idempotency & Dual-Lookup
-Importers check for both prefixed (`[IHD] Name`) and legacy unprefixed (`Name`) display names before creating, to prevent duplicates across runs.
-
-### Template-Scoped Deletion
-Delete operations only remove objects that have BOTH the hydration marker in their description AND a matching template name. If only one condition is met, the object is not deleted. This prevents accidental deletion of manually created resources.
-
-### Baseline Import Routing (`Import-IntuneBaseline`)
-Uses two routing strategies:
-- **IntuneManagement path** (`$intuneManagementFolders`): Routes by `@odata.type` via `$odataTypeToEndpoint` map. Used for `IntuneManagement/` and `AppProtection/` subfolders.
-- **Non-IntuneManagement path** (`$endpointMap`): Routes by folder name to Graph endpoint. Used for legacy folder structures.
-- **Delete path**: Platform-scoped `$deleteEndpoints` - shared endpoints always included, platform-specific endpoints (WUfB drivers, app protection) only when that platform is in scope.
-
-### Platform Filtering
-`-Platform` parameter (valid: Windows, macOS, iOS, Android, Linux, All) scopes both create and delete operations.
-Apply filtering in this order:
-1. `Folder` for OpenIntuneBaseline uppercase folders (`WINDOWS`, `MACOS`, `BYOD`)
-2. `Directory` for parent-directory scoped templates
-3. `Prefix` for filename prefixes (e.g., `Windows-*`, `macOS-*`)
-4. `Suffix` for filename suffixes (e.g., `*-iOS.json`)
-
-### Resource Naming
-- Most created resources: displayName prefixed with `[IHD] `
-- Mobile apps and WinGet apps: displayName suffixed with ` - [IHD]`
-- All created objects: description includes hydration marker for identification and safe deletion
-- Linux compliance policies use `name` property instead of `displayName`
-- `managedAppPolicies` is a read-only aggregation endpoint - app protection creates/deletes use type-specific endpoints (`androidManagedAppProtections`, `iosManagedAppProtections`)
-
-### Conditional Access
-All CA policies are imported with state forced to `disabled`. They must be manually reviewed and enabled in production.
-
-### WhatIf / Dry-Run Support
-`-WhatIf` validates settings and templates without writing to Graph. The orchestrator branches on `$PSCmdlet.ShouldProcess()` and manual `$WhatIfPreference` checks.
-
-### Error Handling Pattern
-- Advanced functions use `[CmdletBinding()]`
-- For non-terminating errors inside advanced functions, prefer `$PSCmdlet.WriteError()` over `Write-Error`
-- For terminating errors, prefer `$PSCmdlet.ThrowTerminatingError()` over `throw`
-- Always construct proper `ErrorRecord` objects with category, target, and exception details
-
-### Testing
-- Pester v5 with `BeforeAll`, `Describe`, `Context`, `It`
-- Test files mirror module structure: `Tests/Public/` and `Tests/Private/` (64 test files, 860+ tests)
-- Use `Mock` for external dependencies (e.g., `Invoke-MgGraphRequest`)
-- Import the module in test `BeforeAll` blocks with `Import-Module ./IntuneHydrationKit.psd1 -Force`
-- Run single test files directly with `Invoke-Pester -Path ./Tests/Public/Connect-IntuneHydration.Tests.ps1 -Output Detailed`
-
-## Additional Function Categories
-
-### Win32 / WinGet App Packaging (Private Functions)
-The module includes a full Win32 app packaging pipeline for creating `.intunewin` packages from bundled WinGet app templates:
-
-- `New-IntuneWinPackage` - Packages a source directory into `.intunewin` format (zipping, encryption, Detection.xml generation)
-- `New-IntuneWinPackagingContext` - Creates a packaging context with source, output, encryption key, paths
-- `Expand-IntuneWinPackageEncryptedContent` - Extracts encrypted content from `.intunewin` for upload
-- `Publish-IntuneWin32AppContent` - Orchestrates upload: create content version, chunked Azure Storage upload, commit with encryption metadata, mark `committedContentVersion`
-- `New-IntuneWin32AppPayload` - Converts a hashtable configuration into a `win32LobApp` Graph payload with detection/requirement rules, OS mapping, return codes, and icon embedding
-- `ConvertTo-IntuneWinDetectionRule` - Converts configuration rules to Graph detection rules (MSI, Registry, File, Script). Accepts `$Rule.ScriptFile` relative paths resolved against `$ScriptRootPath`
-- `ConvertTo-IntuneWinRequirementRule` - Converts configuration rules to Graph requirement rules (Registry, File, Script, MSI). Script content is Base64-encoded
-
-Key patterns:
-- Both detection and requirement converters use an internal `ConvertTo-BoolValue` helper that normalizes strings like `"true"`, `"1"`, `"yes"`/`"false"`, `"0"`, `"no"` to boolean
-- OS release codes (e.g. `W10_1607`, `W11_24H2`) are mapped to Graph values (`v10_1607`, `v10_21H1`) via a hardcoded `$releaseMap` in `New-IntuneWin32AppPayload`
-- Default return codes are always included: 0 (success), 1707 (success), 3010 (softReboot), 1641 (hardReboot), 1618 (retry)
-
-### CIS Baseline Import (`Import-CISBaseline`)
-Imports bundled CIS benchmark policies from `Templates/CISBaselines/`. Routes each policy to the correct Graph endpoint based on its `@odata.type` (Settings Catalog, Compliance, Device Configuration). Supports `SkipIfExists` import mode and template-scoped deletion.
-
-### WinGet App Import (`Import-IntuneWinGetApp`)
-- Reads templates from `Templates/MobileApps/Windows/WinGet/` (or Presets subfolder)
-- Uses bundled `resolvedPackage` metadata; live WinGet manifest resolution and custom WinGet app templates are not supported at import time
-- Generates wrapper PSADT/WinGet scripts, packages with `New-IntuneWinPackage`, creates the Win32 app via Graph, publishes content with `Publish-IntuneWin32AppContent`
-- Supports proactive remediation script generation (`-RemediationEnabled`)
-- Uses `$script:TemplatesPath` fallback chain when resolving paths
-
-### Graph Request Wrapper (`Invoke-HydrationGraphRequest`)
-- Wraps `Invoke-MgGraphRequest` with single-request retry logic (429, 500+)
-- `Resolve-GraphUri` strips the full `https://graph.microsoft.com` prefix if present
-- `Get-GraphUriForLogging` truncates query parameter values for safe debug logging
-- `Get-GraphBodySummary` describes payloads without leaking sensitive data (returns key counts and type names, not values)
-- `Resolve-GraphErrorRecord` drills into `$_.Exception.InnerException.ErrorRecord` to find the correct status code for retry decisions
-
-### Template Loading & Filtering
-- `Get-HydrationTemplates` - Loads all JSON files from a Templates subdirectory recursively
-- `Get-FilteredTemplates` - Applies platform filtering on top with four strategies (`Prefix`, `Suffix`, `Directory`, `Folder`)
-- `Get-TemplateDisplayNames` - Extracts displayNames from templates into a `HashSet[string]` for dual-lookup existence checks
-
-### Property & Object Helpers
-- `Remove-ReadOnlyGraphProperties` - Recursively strips `id`, `createdDateTime`, `lastModifiedDateTime`, `version`, `@odata.context`, `#*` metadata, and any additional properties passed. Handles circular references via `HashSet` with `ReferenceEqualityComparer`
-- `Copy-DeepObject` - Deep clone via `[Management.Automation.PSSerializer]::Serialize/Deserialize`
-- `New-HydrationDescription` - Appends hydration marker to descriptions with configurable separator (default ` - `, use `' '` for resources that reject special characters like Autopilot profiles)
-- `Get-HydrationMarkerSet` - Returns both primary and legacy markers for backward-compatible detection
-
-### Pagination Helper (`Get-GraphPagedResults`)
-Follows `@odata.nextLink` automatically. Has special workaround for `Invoke-MgGraphRequest` dictionary deserialization failures on duplicate keys (falls back to `-OutputType HttpResponseMessage` + `ConvertFrom-Json`, where PSCustomObject uses last-key-wins semantics).
-
-## CI/CD
-
-GitHub Actions workflow (`ci.yml`) runs on push/PR across Windows, macOS, and Ubuntu:
-1. `./build.ps1` (bootstrap)
-2. `./build.ps1 -Task Analyze`
-3. `./build.ps1 -Task Test`
-4. `./build.ps1 -Task Build`
-
-Publish to PSGallery + GitHub release on version tag push (`v*.*.*`). Tag version must match manifest version.
-
-### Group Import (`Invoke-GroupBatchImport`)
-- Two-phase batch creation: first phase batches existence checks across groups ([IHD] + legacy unprefixed names), second phase batches POST creates for non-existent groups
-- `ConvertTo-GroupBody` generates safe `mailNickname` values: alphanumeric-only, truncated to 64 chars, derived from displayName
-- Deletion is template-scoped via optional `KnownNames` HashSet: only deletes groups with hydration marker AND unprefixed name match
-
-### Logging (`Write-HydrationLog` / `Initialize-HydrationLogging`)
-- `Initialize-HydrationLogging` sets `$script:LogPath` and `$script:CurrentLogFile`
-- Log files and reports default to an OS temp path under `IntuneHydrationKit/`; `reporting.outputPath` or `-ReportOutputPath` can override report output
-- Use `Write-HydrationLog` with levels `Info`, `Warning`, `Error`, `Debug` for consistent output formatting
-
-### Graph Scopes
-Required scopes (returned by `Get-HydrationGraphScopes`):
-```
-DeviceManagementConfiguration.ReadWrite.All
-DeviceManagementServiceConfig.ReadWrite.All
-DeviceManagementManagedDevices.ReadWrite.All
-DeviceManagementScripts.ReadWrite.All
-DeviceManagementApps.ReadWrite.All
-Group.ReadWrite.All
-Policy.Read.All
-Policy.ReadWrite.ConditionalAccess
-Application.Read.All
-Directory.ReadWrite.All
-LicenseAssignment.Read.All
-Organization.Read.All
+```powershell
+Mock Get-Service { @{ Status = 'Running' } } -ParameterFilter { $Name -eq 'TestService' }
+Should -Invoke Get-Service -Exactly 1 -ParameterFilter { $Name -eq 'TestService' }
 ```
 
-## Important Notes
+## Test Cases (Data-Driven Tests)
 
-- Custom Windows compliance templates contain placeholders (`REPLACE_SCRIPT_ID`, `REPLACE_RULES_BASE64`) that must be replaced before use
-- OpenIntuneBaseline templates are bundled under `Templates/OpenIntuneBaseline/` (can also download dynamically via `Get-OpenIntuneBaseline`)
-- Uses beta Graph API endpoints for certain Intune resources
-- When running delete then create, always run DELETE first to clean up legacy resources
-- `scripts/` directory contains build helpers and dev utilities (not published to PSGallery)
+Use `-TestCases` or `-ForEach` for parameterized tests:
+
+```powershell
+It 'Should return <Expected> for <Input>' -TestCases @(
+    @{ Input = 'value1'; Expected = 'result1' }
+    @{ Input = 'value2'; Expected = 'result2' }
+) {
+    Get-Function $Input | Should -Be $Expected
+}
+```
+
+## Data-Driven Tests
+
+- **`-ForEach`**: Available on `Describe`, `Context`, and `It` for generating multiple tests from data
+- **`-TestCases`**: Alias for `-ForEach` on `It` blocks (backwards compatibility)
+- **Hashtable Data**: Each item defines variables available in test (e.g., `@{ Name = 'value'; Expected = 'result' }`)
+- **Array Data**: Uses `$_` variable for current item
+- **Templates**: Use `<variablename>` in test names for dynamic expansion
+
+```powershell
+# Hashtable approach
+It 'Returns <Expected> for <Name>' -ForEach @(
+    @{ Name = 'test1'; Expected = 'result1' }
+    @{ Name = 'test2'; Expected = 'result2' }
+) { Get-Function $Name | Should -Be $Expected }
+
+# Array approach
+It 'Contains <_>' -ForEach 'item1', 'item2' { Get-Collection | Should -Contain $_ }
+```
+
+## Tags
+
+- **Available on**: `Describe`, `Context`, and `It` blocks
+- **Filtering**: Use `-TagFilter` and `-ExcludeTagFilter` with `Invoke-Pester`
+- **Wildcards**: Tags support `-like` wildcards for flexible filtering
+
+```powershell
+Describe 'Function' -Tag 'Unit' {
+    It 'Should work' -Tag 'Fast', 'Stable' { }
+    It 'Should be slow' -Tag 'Slow', 'Integration' { }
+}
+
+# Run only fast unit tests
+Invoke-Pester -TagFilter 'Unit' -ExcludeTagFilter 'Slow'
+```
+
+## Skip
+
+- **`-Skip`**: Available on `Describe`, `Context`, and `It` to skip tests
+- **Conditional**: Use `-Skip:$condition` for dynamic skipping
+- **Runtime Skip**: Use `Set-ItResult -Skipped` during test execution (setup/teardown still run)
+
+```powershell
+It 'Should work on Windows' -Skip:(-not $IsWindows) { }
+Context 'Integration tests' -Skip { }
+```
+
+## Error Handling
+
+- **Continue on Failure**: Use `Should.ErrorAction = 'Continue'` to collect multiple failures
+- **Stop on Critical**: Use `-ErrorAction Stop` for pre-conditions
+- **Test Exceptions**: Use `{ Code } | Should -Throw` for exception testing
+
+## Best Practices
+
+- **Descriptive Names**: Use clear test descriptions that explain behavior
+- **AAA Pattern**: Arrange (setup), Act (execute), Assert (verify)
+- **Isolated Tests**: Each test should be independent
+- **Avoid Aliases**: Use full cmdlet names (`Where-Object` not `?`)
+- **Single Responsibility**: One assertion per test when possible
+- **Test File Organization**: Group related tests in Context blocks. Context blocks can be nested.
+
+## Example Test Pattern
+
+```powershell
+BeforeAll {
+    . $PSScriptRoot/Get-UserInfo.ps1
+}
+
+Describe 'Get-UserInfo' {
+    Context 'When user exists' {
+        BeforeAll {
+            Mock Get-ADUser { @{ Name = 'TestUser'; Enabled = $true } }
+        }
+
+        It 'Should return user object' {
+            $result = Get-UserInfo -Username 'TestUser'
+            $result | Should -Not -BeNullOrEmpty
+            $result.Name | Should -Be 'TestUser'
+        }
+
+        It 'Should call Get-ADUser once' {
+            Get-UserInfo -Username 'TestUser'
+            Should -Invoke Get-ADUser -Exactly 1
+        }
+    }
+
+    Context 'When user does not exist' {
+        BeforeAll {
+            Mock Get-ADUser { throw "User not found" }
+        }
+
+        It 'Should throw exception' {
+            { Get-UserInfo -Username 'NonExistent' } | Should -Throw "*not found*"
+        }
+    }
+}
+```
+
+## Configuration
+
+Configuration is defined **outside** test files when calling `Invoke-Pester` to control execution behavior.
+
+```powershell
+# Create configuration (Pester 5.2+)
+$config = New-PesterConfiguration
+$config.Run.Path = './Tests'
+$config.Output.Verbosity = 'Detailed'
+$config.TestResult.Enabled = $true
+$config.TestResult.OutputFormat = 'NUnitXml'
+$config.Should.ErrorAction = 'Continue'
+Invoke-Pester -Configuration $config
+```
+
+**Key Sections**: Run (Path, Exit), Filter (Tag, ExcludeTag), Output (Verbosity), TestResult (Enabled, OutputFormat), CodeCoverage (Enabled, Path), Should (ErrorAction), Debug
 
 ---
 > Source: [jorgeasaurus/IntuneHydrationKit](https://github.com/jorgeasaurus/IntuneHydrationKit) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-06-29 -->
+<!-- tomevault:4.0:agents_md:2026-07-27 -->
