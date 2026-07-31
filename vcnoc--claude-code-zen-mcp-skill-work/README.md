@@ -1,6 +1,6 @@
 # AI instruction files for Claude-Code-Zen-mcp-Skill-Work
 
-> Sourced from [VCnoC/Claude-Code-Zen-mcp-Skill-Work](https://github.com/VCnoC/Claude-Code-Zen-mcp-Skill-Work) and converted for every major platform by [TomeVault](https://tomevault.io)
+> Sourced from [VCnoC/Claude-Code-Zen-mcp-Skill-Work](https://github.com/VCnoC/Claude-Code-Zen-mcp-Skill-Work), graded against the public Tome Standard and kept consistent across every major platform by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
