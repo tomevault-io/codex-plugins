@@ -1,23 +1,22 @@
 # LittleCrawler
 
-> Tome by [pbeenigg](https://github.com/pbeenigg/LittleCrawler) — distributed by [TomeVault](https://tomevault.io)
-
-LittleCrawler（小爬虫），支持小红书（xhs）｜ 知乎（zh）|  闲鱼（xy）平台的公开信息抓取。
+> Tome by [pbeenigg](https://github.com/pbeenigg/LittleCrawler), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [pbeenigg/LittleCrawler](https://github.com/pbeenigg/LittleCrawler).
+Original source: `` in [pbeenigg/LittleCrawler](https://github.com/pbeenigg/LittleCrawler).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [pbeenigg/LittleCrawler](https://github.com/pbeenigg/LittleCrawler) — a repo with 692+ stars on GitHub.
+From [pbeenigg/LittleCrawler](https://github.com/pbeenigg/LittleCrawler) — a repo with 738+ stars on GitHub.
 
 ---
 
