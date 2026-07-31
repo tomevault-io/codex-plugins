@@ -4,7 +4,7 @@
   "repo": "mscclpp",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/microsoft/mscclpp",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-24T23:16:09Z"
+  "distributed_at": "2026-07-31T20:51:37Z"
 }
