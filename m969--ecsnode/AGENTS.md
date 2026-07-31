@@ -1,16 +1,16 @@
-# 永远用中文回答
-# 永远不要做兼容性的改动和保留
 
-# 工程概览
+模块程序设计文档：
 
-这个工程包是EcsNode的模块工程，用于实现可插入EcsNode框架的模块代码，使用C#语言编写，遵循EcsNode的开发规范和最佳实践。
+## 设计规范如下：
 
-EcsNode是基于ECS（Entity-Component-System）架构的Unity游戏开发框架，通过实体、组件和系统的组合方式实现高效、灵活的游戏逻辑。
+基于EcsNode框架，EcsNode是基于ECS（Entity-Component-System）架构的Unity游戏开发框架，通过实体、组件和系统的组合方式实现高效、灵活的游戏逻辑。
 
-## EcsNode核心库已有实体和组件（在ECS命名空间下）有：
+## EcsNode核心库已有的实体和组件（在ECS命名空间下）有：
 - 实体基类 EcsEntity，包含以下属性和接口：
-    - Id（long）属性。
+    - Id（long）属性，实体唯一id。
+    - ConfigId（long）属性，配置id。
     - Parent（EcsEntity）属性。
+    - EcsNode 所属Ecs域根节点。
     - Id2Children（存放子实体的字典）。
     - type2Component（存放实体的组件）。
     - GetComponent<T>()方法，用于获取实体的组件。
@@ -18,26 +18,20 @@ EcsNode是基于ECS（Entity-Component-System）架构的Unity游戏开发框架
     - RemoveComponent<T>()方法，用于移除组件。
     - AddChild<T>(beforeAwake)方法，用于添加子实体，beforeAwake委托用于在Awake生命周期前填充参数。
     - RemoveChild<T>()方法，用于移除子实体。
-    - Dispatch<T>((T system) => system.Handle(entity, a))方法，用于分发事件。
+    - Dispatch<T>((T system) => system.Handle(entity, a))方法，用于分发系统事件。
         - 例如：
             ```csharp
-            // 实体分发事件
             entity.Dispatch<IStartBuildHandler>((system) => system.OnStartBuildHandle(entity, count));
             ```
 
 - 组件基类 EcsComponent：
-    - Entity（EcsEntity）属性，用于关联所属实体。
-    - Dispatch<T>((T system) => system.Handle(component, a))方法，用于分发事件。
-        - 例如：
-            ```csharp
-            // 组件分发事件
-            component.Dispatch<IEnterHandler>((system) => system.OnEnterHandle(component, count));
-            ```
+    - 包含Entity（EcsEntity）属性，用于关联所属实体。
 
-## 通用开发规范
+## 系统类：
+- 只实现方法逻辑，不实现属性数据
 
 ### 命名空间
-所有模块代码命名空间为 `ECSGame.**Module`（**为模块名，忽略横杆下划线，大写开头）
+所有模块代码命名空间为 `ECSGame.**Module`（**为模块名，忽略横杆下划线，大写开头，以Module为后缀）
 
 ### 常用引用
 ```csharp
@@ -48,31 +42,45 @@ using System.Collections.Generic;
 ```
 
 ### 设计原则
-- 实体、组件和系统都无需实现构造函数
-- 实体包含简单基础属性
-- 组件承载可插拔的复杂功能
-- 同类型组件在实体中唯一
-- 实体创建只能通过AddChild<T>()方法添加到父实体（parent）下
-- 模块系统设计原则应遵循以下原则：
-    - 单一职责原则
-        单一职责原则指出，一个类应该只有一个改变的理由。这意味着一个类应该只负责一项任务或功能。如果一个类承担了过多的职责，它将变得复杂，难以维护和扩展。遵循这个原则有助于保持类的聚焦和高内聚，使得代码更加清晰和易于管理
-    - 开闭原则
-        开闭原则是面向对象设计的核心所在，它强调软件实体（如类、模块、函数等）应该对扩展开放，对修改关闭。这意味着设计时应该允许系统在不修改现有代码的情况下引入新功能。这可以通过使用接口和抽象类来实现，使得系统更容易扩展和维护
-    - 依赖倒置原则
-        依赖倒置原则要求高层模块不应依赖于低层模块，两者都应依赖于抽象。抽象不应依赖于细节，细节应依赖于抽象。这个原则鼓励我们面向接口编程，而不是面向实现编程，从而减少代码间的耦合，提高系统的灵活性和可维护性
+1. 实体包含简单基础属性
+2. 组件承载可插拔的复杂功能
+3. 同类型组件在实体中唯一
+4. 实体创建只能通过AddChild<T>()方法添加到父实体（parent）下
+5. 不提供配置实现，配置由开发者自行设计，所有功能数据都通过组件和实体实现
 
-## 文件夹结构
+## 文档模板
 
-- `/com.model.**`: 实体和组件脚本
-- `/com.system.**`: 系统脚本
-- `/com.view-model.**`: 视图实体和组件脚本
-- `/com.view-system.**`: 视图系统脚本
-- `/system.module-test`: 单元测试代码
-- `/docs/*-documentation.md`: 各类设计文档
-- `/docs/thirdparty-system-api-docs`: 依赖的第三方模块API文档文件夹
-- `/com.model.**/API_DOCS.md`: 数据模型层API文档
-- `/com.system.**/API_DOCS.md`: 系统逻辑层API文档
+- 实体设计（没有需求则留空）
+    - 实体A
+        - 实体A用途
+    	- 实体A字段设计
+
+    - 实体A系统设计（以 System 为后缀）
+        - 实体A系统功能接口设计
+
+- 组件设计（没有需求则留空）
+    - 实体A列表组件（EntityAListComponent） 用于存储和管理该实体
+        - Id2Entities 字典，Key为实体Id(long)，Value为实体对象
+        - ConfigId2Entities 字典，Key为配置Id(int)，Value为实体对象列表
+        - 其他
+        
+    - 实体A列表组件系统设计（命名省略 Component 并以 System 为后缀）
+        - 实体A列表组件系统功能接口设计
+
+    - 组件A
+    	- 组件A用途
+    	- 组件A字段设计
+
+    - 组件A系统设计（命名省略 Component 并以 System 为后缀）
+        - 组件A系统功能接口设计
+
+- 其他类型补充
+    - 流程节点派发接口补充（方便外部监听扩展，例如其他模块依赖或视图刷新，一个节点一个接口，方法命名以On开头，没有需求则留空）
+        - 为遵循开闭原则和依赖倒置原则，可扩展的系统功能应提供节点接口派发到外部由开发者自定义扩展逻辑
+        - 例如：ITaskActivatedHandler：void OnTaskActivatedHandle(int taskId)，节点派发接口继承 `IDispatch`
+    - 基础数据类型补充（没有需求则留空）
+    - 枚举补充（没有需求则留空）
 
 ---
 > Source: [m969/EcsNode](https://github.com/m969/EcsNode) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-06-29 -->
+<!-- tomevault:4.0:agents_md:2026-07-27 -->
