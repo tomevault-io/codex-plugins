@@ -1,460 +1,272 @@
 
-# General Instructions
+# Terraform Variable Consistency Manager Instructions
 
-Items in **HIGHEST PRIORITY** sections from attached instructions files override any conflicting guidance.
+## Description Standards
 
-## **HIGHEST PRIORITY**
+You MUST follow these project standards:
 
-**Breaking changes:** Do not add backward-compatibility layers or legacy support unless explicitly requested. Breaking changes are acceptable.
+- Single-line: You WILL use short, imperative style, capitalized first letter, no trailing period
+- Multi-line: You WILL use heredoc with consistent delimiter and indentation preserved
 
-**Artifacts:** Do not create or modify tests, scripts, or one-off markdown docs unless explicitly requested.
+## Canonical Variables (Single-line)
 
-**Comment policy:** Never include thought processes, step-by-step reasoning, or narrative comments in code.
+The table below is the authoritative source of canonical single-line descriptions. You MUST parse this table to build the canonical mapping.
 
-* Keep comments brief and factual; describe **behavior/intent, invariants, edge cases**.
-* Remove or update comments that contradict the current behavior. Do not restate obvious functionality.
-* Do NOT add temporal or plan-phase markers (e.g. "Phase 1 cleanup", "... after migration", dates, or task references) to code files. When editing or updating any code files, always remove or replace these types of comments.
+<!-- <canonical-variables-table> -->
 
-**Conventions and Styling:** Always follow conventions and styling in this codebase FIRST for all changes, edits, updates, and new files.
+| Variable                                  | Description                                                                                                                                                                          |
+|-------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| acr                                       | Azure Container Registry                                                                                                                                                             |
+| acr_sku                                   | SKU for the Azure Container Registry. Valid values: Basic, Standard, Premium. Default is "Premium" (Premium is required for private endpoints).                                      |
+| aio_dataflow_profile                      | The AIO dataflow profile                                                                                                                                                             |
+| aio_identity                              | Azure IoT Operations managed identity for workspace access                                                                                                                           |
+| aio_instance                              | The Azure IoT Operations instance                                                                                                                                                    |
+| arc_onboarding_identity                   | The Principal ID for the identity that will be used for onboarding the cluster to Arc                                                                                                |
+| arc_onboarding_principal_ids              | The Principal IDs for the identity or service principal that will be used for onboarding the cluster to Arc                                                                          |
+| asset_endpoint_profiles                   | List of asset endpoint profiles to create. Otherwise, an empty list.                                                                                                                 |
+| capacity_id                               | The capacity ID for the workspace                                                                                                                                                    |
+| cluster_a_name                            | The name identifier for Cluster A                                                                                                                                                    |
+| cluster_admin_oid                         | The Object ID that will be given cluster-admin permissions with the new cluster. (Otherwise, current logged in user Object ID if 'should_add_current_user_cluster_admin=true')       |
+| cluster_admin_upn                         | The User Principal Name that will be given cluster-admin permissions with the new cluster. (Otherwise, current logged in user UPN if 'should_add_current_user_cluster_admin=true')   |
+| cluster_b_name                            | The name identifier for Cluster B                                                                                                                                                    |
+| cluster_server_host_machine_username      | Username used for the host machines that will be given kube-config settings on setup.                                                                                                |
+| cluster_server_ip                         | The IP Address for the cluster server that the cluster nodes will use to connect.                                                                                                    |
+| cluster_server_token                      | The token that will be given to the server for the cluster or used by the agent nodes to connect them to the cluster. (ex. [K3s token documentation](https://docs.k3s.io/cli/token)) |
+| custom_location_id                        | The resource ID of the Custom Location                                                                                                                                               |
+| custom_locations_oid                      | The object id of the Custom Locations Entra ID application for your tenant.                                                                                                          |
+| data_lake_data_contributor_principal_id   | The Principal ID that will be assigned the 'Storage Blob Data Contributor' role at the Storage Account scope                                                                         |
+| data_lake_filesystem_name                 | Name of the Data Lake Gen2 filesystem to create                                                                                                                                      |
+| environment                               | Environment for all resources in this module: dev, test, or prod                                                                                                                     |
+| environment_config                        | Environment configuration settings for deployment                                                                                                                                    |
+| eventhouse_description                    | The description of the Microsoft Fabric eventhouse                                                                                                                                   |
+| eventhouse_workspace_id                   | The ID of the workspace where the eventhouse will be created                                                                                                                         |
+| eventhub                                  | Values for the existing Event Hub namespace and Event Hub.                                                                                                                           |
+| eventhub_endpoint                         | The Azure Eventhub endpoint to use as a source                                                                                                                                       |
+| eventstream_description                   | Description of the Microsoft event stream                                                                                                                                            |
+| extension_name                            | The name of the Arc machine extension                                                                                                                                                |
+| fabric_capacity_id                        | The ID of the premium capacity to assign to the workspace (Run ./scripts/select-fabric-capacity.sh to choose one)                                                                    |
+| fabric_eventhouse_name                    | The name of the Microsoft Fabric eventhouse. Otherwise, 'evh-{resource_prefix}-{environment}-{instance}'                                                                             |
+| fabric_eventstream_endpoint               | Fabric RTI connection details from EventStream. If provided, creates a Fabric RTI dataflow endpoint.                                                                                 |
+| fabric_workspace                          | Fabric workspace for RTI resources. Required when fabric_eventstream_endpoint is provided.                                                                                           |
+| fabric_workspace_name                     | The name of the Microsoft Fabric workspace. Otherwise, 'ws-{resource_prefix}-{environment}-{instance}'                                                                               |
+| file_share_name                           | Name of the file share to create                                                                                                                                                     |
+| file_share_quota_gb                       | Maximum size of the file share in GB                                                                                                                                                 |
+| host_machine_count                        | The number of host VMs to create if a multi-node cluster is needed                                                                                                                   |
+| instance                                  | Instance identifier for naming resources: 001, 002, etc                                                                                                                              |
+| k8s_bridge_principal_id                   | Optional. The principal ID of the K8 Bridge for Azure IoT Operations. Required only if enable_asset_discovery=true and automatic retrieval fails.                                    |
+| key_vault                                 | The Key Vault object containing id, name, and vault_uri properties                                                                                                                   |
+| key_vault_name                            | The name of the Key Vault to store secrets. If not provided, defaults to 'kv-{resource_prefix}-{environment}-{instance}'                                                             |
+| lakehouse_description                     | The description of the Microsoft Fabric lakehouse                                                                                                                                    |
+| lakehouse_workspace_id                    | The ID of the workspace where the lakehouse will be created                                                                                                                          |
+| location                                  | Azure region where all resources will be deployed                                                                                                                                    |
+| location_name                             | Location name for resources                                                                                                                                                          |
+| os_type                                   | Operating system type (only linux supported)                                                                                                                                         |
+| resource_group                            | Resource group object containing name and id where resources will be deployed                                                                                                        |
+| resource_group_name                       | Name of the resource group                                                                                                                                                           |
+| resource_prefix                           | Prefix for all resources in this module                                                                                                                                              |
+| resource_prefix_new                       | Resource prefix for new deployment                                                                                                                                                   |
+| resource_prefixes                         | Multiple resource prefixes                                                                                                                                                           |
+| scrape_interval                           | Interval to scrape metrics from the cluster, valid values are between 1m and 30m (PT1M and PT30M)                                                                                    |
+| should_create_anonymous_broker_listener   | Whether to enable an insecure anonymous AIO MQ Broker Listener. Should only be used for dev or test environments                                                                     |
+| should_create_azure_functions             | Whether to create the Azure Functions resources including App Service Plan                                                                                                           |
+| should_create_eventgrid_dataflows         | Whether to create EventGrid dataflows in the edge messaging component                                                                                                                |
+| should_create_eventhub_dataflows          | Whether to create EventHub dataflows in the edge messaging component                                                                                                                 |
+| should_deploy_resource_sync_rules         | Deploys resource sync rules if set to true                                                                                                                                           |
+| should_enable_opc_ua_simulator            | Whether to deploy the OPC UA Simulator to the cluster. Default is false                                                                                                              |
+| should_enable_otel_collector              | Whether to deploy the OpenTelemetry Collector and Azure Monitor ConfigMap                                                                                                            |
+| should_get_custom_locations_oid           | Whether to get Custom Locations Object ID using Terraform's azuread provider.                                                                                                        |
+| should_use_script_from_secrets_for_deploy | Whether to use the deploy-script-secrets.sh script to fetch and execute deployment scripts from Key Vault                                                                            |
+| subnet_id                                 | The ID of the subnet to deploy the VM host in                                                                                                                                        |
+| tags                                      | Tags to apply to all resources                                                                                                                                                       |
+| vm_sku_size                               | Size of the VM                                                                                                                                                                       |
+| vm_username                               | Username for the VM admin account                                                                                                                                                    |
+| workspace_description                     | The description of the Microsoft Fabric workspace                                                                                                                                    |
+| workspace_id                              | The ID of the workspace where the lakehouse will be created                                                                                                                          |
 
-* Conventions and styling are in instruction files and must be read in with the `read_file` tool if not already added as an `<attachment>`.
+<!-- </canonical-variables-table> -->
 
-**Proactive fixes:** Always fix problems and errors you encounter, even if unrelated to the original request. Prefer root-cause, constructive fixes over symptom-only patches.
+## Canonical Heredoc Descriptions (Multi-line)
 
-* Always correct conventions and styling and comments.
+The table below is the authoritative source for multi-line (heredoc) descriptions. For each variable, include the full multi-line description preserved as a code block in the table cell, and recommend a consistent delimiter (for example, EOF). You MUST parse this table to build the canonical mapping.
 
-**Deleting files and folders:** Use `rm` with the run_in_terminal tool when needing to delete files or folders.
+<!-- <canonical-heredoc-table> -->
 
-**Edit tools:** Never use `insert_edit_into_file` tool when other edit and file modification tools are available.
+| Variable                             | Heredoc Description                     | Delimiter | Notes                                                                           |
+|--------------------------------------|-----------------------------------------|-----------|---------------------------------------------------------------------------------|
+| cluster_server_host_machine_username | (uses multi-line canonical description) | EOF       | strip: true; source: src/100-edge/100-cncf-cluster/terraform/variables.tf       |
+| custom_locations_oid                 | (uses multi-line canonical description) | EOF       | strip: true; source: src/100-edge/100-cncf-cluster/terraform/variables.tf       |
+| eventhubs                            | (uses multi-line canonical description) | EOF       | strip: true; source: src/000-cloud/040-messaging/terraform/variables.tf         |
+| eventstream_template_file_path       | (uses multi-line canonical description) | EOT       | strip: true; source: src/000-cloud/032-fabric-rti/terraform/variables.tf        |
+| k8s_bridge_principal_id              | (uses multi-line canonical description) | EOT       | strip: false; source: src/100-edge/111-assets/terraform/variables.tf            |
+| onboard_identity_type                | (uses multi-line canonical description) | EOF       | strip: true; source: src/000-cloud/010-security-identity/terraform/variables.tf |
+| retention_days                       | (uses multi-line canonical description) | EOT       | strip: true; source: src/000-cloud/032-fabric-rti/terraform/variables.tf        |
+| should_get_custom_locations_oid      | (uses multi-line canonical description) | EOF       | strip: true                                                                     |
+| throughput_level                     | (uses multi-line canonical description) | EOT       | strip: true; source: src/000-cloud/032-fabric-rti/terraform/variables.tf        |
 
-## Repository Configuration
+<!-- </canonical-heredoc-table> -->
 
-* **Default branch**: `origin/dev` — use as the base for all new branches, comparisons, and PR targets unless explicitly overridden.
+## Table Maintenance Rules
 
-### CRITICAL - Required Prompts & Instruction Compliance
+CRITICAL: This document is the source of truth. You WILL update canonical values by editing the tables above.
+You MUST parse rows between the `canonical-variables-table` and `canonical-heredoc-table` markers at runtime.
+You WILL keep rows sorted by variable name for consistency.
+If a variable is missing, You WILL add a new row to the appropriate table with a compliant description and, for heredocs, delimiter/strip guidance.
+MANDATORY: During the variable consistency process, You MUST update these canonical tables whenever new variables are discovered or when variable descriptions are standardized to ensure the tables remain the authoritative source of truth.
 
-**Context-first:** Evaluate the current user prompt, any attachments, target folders, repo conventions, and files already read.
+## Canonical Table Parsing Instructions
 
-**Discover & match (do this BEFORE any edit):**
+You MUST build an in-memory canonical map by parsing both tables above. You WILL follow these rules strictly:
 
-* Run `<search-for-prompts-files>` using the rules below (see table).
-* For each matched prompts/instructions/copilot file:
-  * If it is NOT already provided as a full, non-summarized `<attachment>` in this conversation and NOT already fetched via `read_file`, then read it now.
-  * Use read_file to **page through the entire file**: read **2,000 lines per call**; make additional calls until EOF.
-  * If the file references other prompts/instructions/copilot files, **recursively read those** to completion under the same paging rule.
+### Marker Requirements
 
-**Apply instructions:** Treat the union of all matched files as **HIGHEST PRIORITY** for this task.
+- Single-line table: You MUST parse content between `<!-- <canonical-variables-table> -->` and `<!-- </canonical-variables-table> -->`
+- Heredoc table: You MUST parse content between `<!-- <canonical-heredoc-table> -->` and `<!-- </canonical-heredoc-table> -->`
 
-**Re-check cadence:** Re-run discovery and re-read all matched instruction files if missing **before each major editing phase**.
+### Column Contract Requirements
 
-<!-- <search-for-prompts-files> -->
-## Prompts Files Search Process
+- Single-line table columns (exact order): `Variable`, `Description`
+  - Variable: You WILL treat as string key (no quotes). You MUST trim surrounding whitespace.
+  - Description: You WILL use as canonical single-line description. You MUST preserve punctuation. You WILL trim surrounding whitespace only.
+- Heredoc table columns (exact order): `Variable`, `Heredoc Description`, `Delimiter`, `Notes`
+  - Variable: You WILL treat as string key. You MUST trim surrounding whitespace.
+  - Heredoc Description: If a fenced code block (``` ... ```), You WILL capture content BETWEEN fences EXACTLY; else You WILL capture the cell text as-is. You WILL NOT normalize line endings beyond removing a single trailing newline.
+  - Delimiter: You WILL default to `EOF` if empty. You MUST ensure UPPER_CASE alphanumeric (e.g., EOF, EOT). You WILL treat `<<-DELIM` variant as required when strip=true.
+  - Notes: You MAY use optional content, supports `strip: true|false` and optional `source: <path>` hints. You WILL parse `strip` flag if present; You WILL ignore unknown keys.
 
-When working with specific types of files or contexts, you must:
+### Precedence and Merge Rules
 
-1. Detect patterns and contexts that match the predefined rules
-2. Search for and read the corresponding prompts files
-3. Read a minimum of 2000 lines from these files before proceeding with any changes
+- If a variable appears in BOTH tables:
+  - You WILL prefer the heredoc entry for description text and delimiter/strip behavior (heredoc overrides single-line).
+  - You WILL keep the single-line entry as fallback for contexts demanding a single-line description.
+- If a variable appears in ONLY one table, You WILL use that definition as the canonical description for all fixes.
 
-### Matching Patterns and Files for Prompts
+### Style and Normalization Requirements
 
-| Pattern/Context                | Required Prompts Files                                 |
-|--------------------------------|--------------------------------------------------------|
-| Any deployment-related context | `./.github/prompts/deploy.prompt.md`                   |
-| Any getting started context    | `./.github/prompts/getting-started.prompt.md`          |
-| Any terraform context          | `./.github/instructions/terraform.instructions.md`     |
-| Any bicep context              | `./.github/instructions/bicep.instructions.md`         |
-| Any shell or bash context      | `./.github/instructions/shell.instructions.md`         |
-| Any bash in src context        | `./.github/instructions/bash.instructions.md`          |
-| Any python context             | `./.github/instructions/python-script.instructions.md` |
-| Any C# or csharp context       | `./.github/instructions/csharp.instructions.md`        |
+- Single-line descriptions: You WILL follow project style: capitalized first letter, no trailing period, 10-100 chars where practical. You WILL NOT auto-alter canonical text when building the map; style checks apply when proposing new entries.
+- For heredoc descriptions: You MUST preserve indentation and internal formatting exactly as authored.
 
-<!-- </search-for-prompts-files> -->
+### Safety Check Requirements
 
-<!-- <component-and-blueprint-structure> -->
-## Component and Blueprint Structure Understanding
+- You MUST detect and warn on duplicate variable names within the same table.
+- You WILL validate delimiter tokens: non-empty, UPPER_CASE. You WILL default to `EOF` if missing/invalid.
+- If `strip` not specified in Notes, You WILL default to `true` (use `<<-DELIM`).
 
-Components follow a decimal naming convention for deployment order and are organized into discrete, self-contained units with specific deployment patterns.
-Blueprints orchestrate multiple components to create complete infrastructure solutions.
+### Sorting and Stability Requirements
 
-### Grouping Organization
+- Tables in this document SHOULD remain sorted by `Variable`. You MUST NOT depend on sort order for parsing; You WILL rely only on headers and markers.
 
-Components are organized in deployment-ordered groupings:
+### Error Handling Requirements
 
-* **Template**: `**/src/{000}-{grouping_name}/**`
-* **Cloud Infrastructure**: `**/src/000-cloud/**` - Azure cloud resources (000-099 range)
-* **Edge Infrastructure**: `**/src/100-edge/**` - Edge cluster and IoT operations (100-199 range)
-* **Applications**: `**/src/500-***/**` - Application workloads (500-599 range)
-* **Utilities**: `**/src/900-***/**` - Tools and utilities (900-999 range)
+- If a marker block is missing, You MUST stop and report which block is absent. You WILL NEVER fall back to any external JSON.
+- If a row is malformed (wrong column count), You WILL skip and report the offending line.
 
-### Component Organization Structure Template
+## Safety and Edge Cases
 
-Each component follows this mandatory directory structure:
+You WILL handle these scenarios appropriately:
 
-```text
-{grouping}/{000}-{component_name}/
-├── README.md                    # Component documentation and usage
-├── {framework}/                 # Implementation (terraform, bicep, etc.)
-│   ├── README.md               # Generated document for component including variables and parameters (auto-generated, never edit)
-│   ├── modules/                # Internal modules (component-scoped only)
-│   └── tests/                  # Component tests
-└── ci/                         # Minimal deployment configurations
-    └── {framework}/            # CI-specific parameters
+- Empty/Null: You WILL skip variables with empty or whitespace-only descriptions; You WILL prompt to author a compliant one
+- Large/Slow: You WILL chunk file edits per module to avoid timeouts
+- Auth/Permissions: You WILL fail gracefully if files are read-only; You WILL present instructions
+- Concurrency: You WILL avoid overlapping writes; You WILL serialize edits per file
+- References: For renames, You MUST ensure no lingering `var.old` references remain; You WILL search within module and callers
+
+## Process Workflow
+
+Identify and fix all Terraform variable inconsistencies with the following workflow:
+
+1. **Verify Prerequisites**: Ensure terraform-docs and Python 3.x are available
+2. **Delete Existing Variable Tracking File**: Use list_dir on `.copilot-tracking/chore/`, if `tf-variable-check.md` exists then delete file without reading
+3. **Create Variable Tracking File**: Create the `.copilot-tracking/chore/tf-variable-check.md` file with an initial preamble
+4. **Execute Detection**: Run `python ./scripts/tf-vars-compliance-check.py`
+5. **Parse Results**: Handle detection results according to instruction file rules
+6. **Load Canonical Data**: Parse canonical tables from instruction file
+7. **Apply Remediation**: Use context-aware decision making per instruction file rules
+8. **Update Variables**: Apply fixes safely maintaining Terraform syntax
+9. **Verify Zero Inconsistencies**: Re-run `python ./scripts/tf-vars-compliance-check.py` to confirm all inconsistencies are resolved
+10. **Finalize Process**: Verify canonical tables are updated and summarize changes
+
+## Detailed Requirements
+
+### Prerequisites Verification
+
+You MUST verify these prerequisites before proceeding:
+
+- You WILL ensure `terraform-docs` is available in PATH
+- You WILL ensure Python 3.x is available to run the checker
+
+### Detection Process
+
+You WILL execute the detection process as follows:
+
+#### Step 1: Compliance Detection
+
+- You MUST execute `python ./scripts/tf-vars-compliance-check.py`
+- You WILL handle detection results according to these rules:
+  - If the script exits with code 0 and stdout is empty, You WILL report "no inconsistencies" and stop
+  - If the script exits with a non-zero code, You WILL surface the error (stderr/stdout) and stop
+  - Otherwise, You WILL parse JSON from stdout and proceed with fixes
+- CRITICAL: The JSON output contains a list of variable names that have inconsistent descriptions and the folders in which the inconsistencies exist. The folders have files in the format variable*.tf in which the variable is used, but has a description that is somehow different from the rest of the variable descriptions. The objective of the remediation is to match only the canonical description in each occurrence of the variable.
+
+#### Step 2: Targeted Checklist Creation
+
+- You WILL create a checklist file at `.copilot-tracking/chore/tf-variable-check.md`
+- You MUST populate the checklist with the paths to the files in the JSON output from Step 1 for each variable.
+- Use the following format for the checklist for each variable that has inconsistencies:
+
+```markdown
+# Terraform Variable Files Checklist
+
+## Files to Process (Files with inconsistencies requiring remediation)
+
+### Variable 1
+- [ ] path to file 1
+- [ ] path to file 2
+
+- [ ] path to file n
 ```
 
-**Supported Frameworks**: `terraform`, `bicep`, `kubernetes`, `scripts`
+#### Step 3: Individual File Processing
 
-### Blueprint Organization Structure Template
+- You WILL process each checklist item one-by-one in sequential order
+- For each file in the checklist:
+  - You WILL apply the remediation rules to that specific entry
+  - You MUST update the checklist by changing `- [ ]` to `- [x]` for the completed variable and folder combinations
+  - You WILL move to the next checklist item
+- You MUST continue until all checklist items are marked as completed `- [x]`
 
-Blueprints are Infrastructure as Code composition mechanisms that combine multiple components into end-to-end deployable solutions.
+### Canonical Data Loading
 
-```text
-blueprints/{solution_name}/
-├── README.md                    # Blueprint documentation and deployment instructions
-└── {framework}/                 # Framework-specific implementation
-    ├── README.md               # Generated document for blueprint including variables and parameters (auto-generated, never edit)
-    ├── main.{tf|bicep}         # Main orchestration file calling component modules
-    ├── variables.{tf}          # Input parameter definitions with validation (Terraform only)
-    ├── outputs.{tf|bicep}      # Blueprint-level outputs for integration
-    ├── types.core.{bicep}      # Core type definitions (Bicep only)
-    └── versions.tf             # Provider version constraints (Terraform only)
-```
+You MUST use the embedded tables above as the single source of truth for variable descriptions:
 
-### Blueprint Framework Patterns
+- You WILL parse the canonical variables table for single-line descriptions
+- You WILL parse the canonical heredoc table for multi-line descriptions
+- You WILL NEVER reference external JSON files or other data sources
 
-**Terraform Blueprints**:
+### Context and Remediation Rules
 
-* **Main Configuration**: Root module orchestrating component deployment with explicit dependency management
-* **Module References**: Direct component source references using relative paths to `/src` components
-* **State Management**: Local state by default, configurable for remote backends
-* **Dependency Control**: Uses `depends_on` meta-argument for explicit ordering
+You WILL apply these remediation rules based on context analysis:
 
-**Bicep Blueprints**:
+- If variable exists in canonical map and context/use matches → You WILL set canonical description
+- If same name is used for different semantics → You WILL rename variable to a context-aligned name, then set description
+- If variable missing from canonical map → You WILL create a canonical entry following description standards, You MUST update the appropriate canonical table (single-line or heredoc) with the new variable entry, then apply
 
-* **Main Configuration**: Orchestrates component modules with declarative dependency management
-* **Type Definitions**: Shared type definitions such as `types.core.bicep` (duplicated) or `../../../src/{grouping}/{component}/bicep/types.bicep` for parameter consistency
-* **Module References**: Component source references using relative paths to `/src` components
-* **Dependency Control**: Uses `dependsOn` property for module deployment ordering
+### Update Application Requirements
 
-### Blueprint Conventions and Standards
+You WILL apply updates safely following these rules:
 
-**Common Parameter Object Pattern**:
+- You MUST update description in variable blocks (`description = "..."` for single-line; heredoc for multi-line)
+- For renames: You MUST update `variable "name" {}`, all `var.name` references, and calling module argument names
+- You WILL preview diffs and confirm before writing
+- You MUST ensure all changes maintain Terraform syntax validity
 
-* **Terraform**: Standard variables (`environment`, `resource_prefix`, `location`, `instance`) passed to all components
-* **Bicep**: `Common` type object containing standardized properties for consistent resource naming (`environment`, `resource`, `location`, `instance`)
-* **Conventions**:
-  * Not all standard variables and parameters are required for each component and are then not required for each blueprint
-  * Variables and parameters from components must match `name`, `description`, `type`, and `validation` exactly when provided in a blueprint
-  * Sensible defaults should always be provided
+### Finalization Requirements
 
-**Blueprint Naming Convention**:
+You WILL complete the process by:
 
-* **Descriptive Names**: Clear indication of deployment scope and architecture pattern
-* **Hyphenated Format**: Use hyphens for multi-word blueprint names
-* **Scope Indicators**: Include deployment scope (`single-node`, `multi-node`, `cloud-only`, `edge-only`)
-* **Purpose Indicators**: Include deployment purpose (`full`, `minimum`, `partial`, `fabric-rti`)
-
-**Blueprint Categories**:
-
-* **Complete Deployments**: Full infrastructure solutions (`full-single-node-cluster`, `full-multi-node-cluster`)
-* **Partial Deployments**: Subset of components (`only-cloud-single-node-cluster`, `only-edge-iot-ops`)
-* **Specialized Solutions**: Domain-specific implementations (`fabric`, `fabric-rti`)
-* **Utility Blueprints**: Script generation and development tools (`only-output-cncf-cluster-script`)
-
-### Component Dependency Management
-
-**Explicit Dependencies**:
-
-* Terraform (*.tf): Use `depends_on` meta-argument when implicit dependencies are insufficient
-* Bicep (*.bicep): Use `dependsOn` property for modules requiring specific deployment ordering
-* **Resource Dependencies**: Components declare dependencies via input parameter requirements
-* **Output Dependencies**: Components expose required outputs for dependent component consumption
-
-**Inter-Component Communication Patterns**:
-
-1. **Module Output to Input**: Primary component outputs become input parameters for dependent components
-2. **Existing Resource**:
-   * Terraform (*.tf): `data` resources passed as-is into component modules as inputs
-   * Bicep (*.bicep): Resource name and scope used for `existing` Bicep resources, name passed to component modules for existing resources.
-3. **Resource Reference Passing**:
-   * Terraform (*.tf): Resource objects, IDs, and configurations passed via output references as objects, typically defined in variables.dep.tf as dependency variables
-   * Bicep (*.bicep): Resource name and scope. Always avoid passing resource ID
-
-**Component Dependency Analysis**:
-
-1. **Blueprint and CI Impact Analysis**: Use `grep_search` with `includePattern: "**/{blueprints,ci}/**/{framework}/**"` to find component references
-2. **Output Reference Analysis**: Use `grep_search` with `includePattern: "src/**"` to find output usage patterns
-
-### Decimal Naming Convention
-
-* **Purpose**: Establishes deployment order and logical grouping
-* **Format**: `{000}-{component_name}` where numbers indicate sequence
-* **Increment**: Use 10-number increments (010, 020, 030) to allow insertion of new components
-* **Examples**: `010-security-identity`, `020-observability`, `030-data`
-
-### Internal Modules Management
-
-**Module Isolation Rules**:
-
-1. **NEVER reference internal modules from outside their parent component**
-2. **ALWAYS use component outputs to share functionality with other components**
-3. **CREATE reusable functionality through component outputs, not direct module access**
-
-**Internal Module Organization**:
-
-* **Component-Scoped Modules**: Internal modules organized under `{component}/{framework}/modules/`
-* **Functionality Grouping**: Related functionality grouped into logical internal modules
-* **Output Abstraction**: Component main module abstracts internal module complexity via outputs
-* **Testing Isolation**: Internal module tests contained within component test suites
-
-### Blueprint Layering and Composition
-
-**Blueprint Layering Support**:
-
-* **Incremental Deployment**: Blueprints can be applied on top of existing infrastructure
-  * Terraform (*.tf): Use `data` resources to reference resources from previously deployed blueprints
-  * Bicep (*.bicep): Provide `name` parameters (and name of scope when needed) to reference resources from previously deployed blueprints
-* **Parameters and Variables**: Provide the same parameters and variables from previously deployed blueprints to layer a blueprint deployment
-
-**Composition Examples**:
-
-* **Base + Extension**: Deploy `full-single-node-cluster` then layer `fabric-rti` for additional capabilities
-* **Partial + Complete**: Start with `only-cloud-single-node-cluster` then add edge components
-* **Combine Blueprints**: Build new blueprints by copying from existing blueprints
-
-### Deployment Patterns
-
-**CI Deployment** (Minimal Configuration):
-
-* **Location**: `{component}/ci/{framework}/`
-* **Purpose**: Contains minimum required parameters and variables for component deployment, never add parameters or variables to `{component}/ci/{framework}/` deployments if they specify default values
-* **Usage**: For individual component testing and basic deployments
-
-**Blueprint Deployment** (Complete Solutions):
-
-* **Location**: `/blueprints/{solution_name}/{framework}/`
-* **Purpose**: Orchestrates multiple components for end-to-end solutions
-* **Usage**: For full or partial environment provisioning. Blueprints can be layered on top of each others (e.g. `blueprints/fabric-rti` can be applied after a `blueprints/full-single-node-cluster` with matching variables and parameters)
-* **Component Integration**: References component outputs as blueprint inputs
-
-### Component Modification Workflow
-
-When modifying any component, follow this validation sequence:
-
-**Component Impact Analysis**:
-
-* Search component references in blueprints with `includePattern: "blueprints/**"`
-* Search for output references in src components with `includePattern: "src/**"`
-
-**Component Variable Analysis**:
-
-* Search for same or similar named variables in blueprints and in src components
-* Ensure consistent descriptions, usages, and any validation
-* Internal Module variables should always be required and have no defaults
-
-**Update Validation Checklist**:
-
-* [ ] Component outputs are never required to be backward compatible - breaking changes must be fixed in other components and blueprints
-* [ ] Internal module changes can break component functionality as long as it is addressed and corrected in the component
-* [ ] Component README.md should reflect what the component itself does, not interface changes
-* [ ] Never update the framework README.md or internal module README.md instead use generation tasks or npm scripts
-* [ ] CI deployment are always updated with the minimal required variables to create the component
-* [ ] Blueprints and Components updated after any breaking changes, problems, or errors
-
-### Reference Components
-
-**Well-structured Examples**:
-
-* **Security Foundation**: `/src/000-cloud/010-security-identity/`
-* **Edge IoT Operations**: `/src/100-edge/110-iot-ops/`
-* **Complete Blueprint**: `/blueprints/full-single-node-cluster/`
-
-Use these as templates when creating new components or understanding expected patterns.
-<!-- </component-and-blueprint-structure> -->
-
-<!-- <terraform-operations> -->
-## Terraform Operations Requirements
-
-* Use `npm run tf-validate` for terraform validate and `npm run tflint-fix-fast` for terraform linting with tflint
-  * Avoid running tflint immediately after adding any **unused** variables, locals, or data resources, that will eventually be used in later edits
-  * tflint will remove all unused variables, locals, resources, and data resources if they have no usages
-* `terraform init`, `terraform validate`, `terraform test`, `terraform plan`, `terraform apply`, requires `source [workspaceFolder]/scripts/az-sub-init.sh` ran at least once before any `run_in_terminal` commands to set the `ARM_SUBSCRIPTION_ID` env variable for terraform
-  * If the user specifies their tenant then `source [workspaceFolder]/scripts/az-sub-init.sh --tenant <user-tenant-id>` or `source [workspaceFolder]/scripts/az-sub-init.sh --tenant <user-tenant-name>.onmicrosoft.com`
-* Run the "Terraform Build" task after completing changes to any terraform
-
-### Terraform Validation and Testing Steps
-
-Final steps for ONLY terraform changes:
-
-* Iterate with `npm run tf-validate` and `npm run tflint-fix-all` and fix all issues, continue to iterate until all issues are fixed
-* NEVER add any tests unless specifically asked to add tests from the user
-  * All tests must ONLY EVER be for `command = plan` tests
-
-<!-- </terraform-operations> -->
-
-<!-- <blueprint-structure-instructions> -->
-## Blueprint Structure Instructions
-
-Blueprints contain sets of components for deploying stamps of IaC:
-
-### Blueprint Organization
-
-* Template: `**/blueprints/{blueprint_name}/{framework}`
-* Example: `**/blueprints/full-single-node-cluster/terraform`
-
-### Blueprint Conventions
-
-* Follow existing patterns for a blueprint when working in a blueprint directory
-  * Reference: `**/blueprints/full-single-node-cluster`
-* Read component README.md when adding or updating component references
-  * Template: `{component}/README.md`
-* Use outputs from components as inputs to other components
-<!-- </blueprint-structure-instructions> -->
-
-<!-- <project-structure-instructions> -->
-## Project Structure Instructions
-
-This project is organized into discrete categories optimized for enterprise IaC deployments.
-
-### Component Organization Principles
-
-The source code follows deployment-ordered groupings:
-
-* **Cloud Infrastructure** (`000-cloud/`): Azure cloud resources (000-099 range)
-* **Edge Infrastructure** (`100-edge/`): Edge cluster and IoT operations (100-199 range)
-* **Applications** (`500-*/`): Application workloads (500-599 range)
-* **Utilities** (`900-*/`): Tools and utilities (900-999 range)
-
-Each numbered component uses decimal naming convention (010, 020, 030) to establish deployment order and allow insertion of new components between existing ones.
-
-### Root Configuration Files
-
-Configuration files that control project behavior, tooling, and metadata.
-
-```plaintext
-edge-ai/
-├── .checkov.yml                               # Security and compliance scanning configuration
-├── .cspell-dictionary.txt                     # Custom dictionary words for spell checking
-├── .cspell.json                               # Spell checker configuration
-├── .gitattributes                             # Git attributes configuration
-├── .gitignore                                 # Git ignore patterns
-├── .markdownlint.json                         # Markdown linting rules and configuration
-├── .npmrc                                     # NPM package manager configuration
-├── .terraform-docs.yml                        # Terraform documentation generation configuration
-├── .terrascan.toml                            # Infrastructure security scanning configuration
-├── bicepconfig.json                           # Bicep configuration for Azure Resource Manager templates
-├── Cargo.toml                                 # Rust workspace configuration
-├── package.json                               # NPM scripts for lint fixing, README.md (docs) generation, file formatting, validation
-├── package-lock.json                          # NPM dependency lock file
-├── PSScriptAnalyzerSettings.psd1              # PowerShell script analysis configuration
-└── requirements.txt                           # Python dependencies for tooling
-```
-
-### Development Environment & CI/CD
-
-Development containers, IDE settings, and continuous integration configurations.
-
-```plaintext
-edge-ai/
-├── .azdo/                                     # Azure DevOps pipeline configurations
-├── .azure/                                    # Azure CLI configuration and cached data
-├── .cargo/                                    # Rust package manager configuration
-├── .devcontainer/                             # VS Code development container configuration
-├── .github/                                   # GitHub Actions, issue templates, prompts, instructions
-├── .vscode/                                   # VS Code workspace settings and tasks
-│   └── tasks.json                             # Project tasks that run in the background (use `npm run` directly unless told otherwise)
-└── azure-pipelines.yml                        # Azure DevOps pipeline definition
-```
-
-### Documentation & Project Governance
-
-Project documentation, governance files, and community guidelines.
-
-```plaintext
-edge-ai/
-├── CODE_OF_CONDUCT.md                         # Community guidelines and behavioral expectations
-├── CONTRIBUTING.md                            # Guidelines for contributing to the project
-├── LICENSE                                    # Legal license terms
-├── README.md                                  # Main project documentation and getting started
-├── SECURITY.md                                # Security policy and vulnerability reporting
-├── SUPPORT.md                                 # Support resources and community assistance
-├── copilot/                                   # GitHub Copilot instruction files for different technologies
-├── docs/                                      # Comprehensive project documentation
-├── project-adrs/                              # Architecture Decision Records
-└── project-security-plans/                    # Security planning templates and examples
-```
-
-### Core Infrastructure Components (src/)
-
-Modular infrastructure components organized by deployment location and purpose.
-
-```plaintext
-src/
-├── README.md                                 # Overview of source components and patterns
-├── 000-cloud/                                # Cloud Infrastructure Components (000-099 range)
-│   ├── 000-resource-group/                   # Resource group provisioning
-│   ├── 010-security-identity/                # Identity, Key Vault, managed identities, RBAC
-│   ├── 020-observability/                    # Cloud monitoring and logging
-│   ├── 030-data/                             # Data storage and Schema Registry
-│   ├── 031-fabric/                           # Microsoft Fabric resources
-│   ├── 032-fabric-rti/                       # Microsoft Fabric Real-Time Intelligence
-│   ├── 040-messaging/                        # Event Grid, Event Hubs, Service Bus
-│   ├── 050-networking/                       # Virtual networks and security
-│   ├── 051-vm-host/                          # Virtual machine provisioning
-│   ├── 060-acr/                              # Azure Container Registry
-│   ├── 070-kubernetes/                       # Kubernetes cluster management
-│   └── 080-azureml/                          # Azure Machine Learning workspace
-├── 100-edge/                                 # Edge Infrastructure Components (100-199 range)
-│   ├── 100-cncf-cluster/                     # CNCF-compliant cluster (K3s) with Arc
-│   ├── 110-iot-ops/                          # Azure IoT Operations core infrastructure
-│   ├── 111-assets/                           # Asset management for IoT Operations
-│   ├── 120-observability/                    # Edge observability and monitoring
-│   ├── 130-messaging/                        # Edge messaging and data routing
-│   └── 140-azureml/                          # Edge Azure ML deployment and inference
-├── 500-application/                          # Application workloads (500-599 range)
-│   ├── 500-basic-inference/                  # Basic AI inference service
-│   ├── 501-rust-telemetry/                   # Rust telemetry collection service
-│   ├── 502-rust-http-connector/              # Rust HTTP connector service
-│   └── 503-media-capture-service/            # Media capture and processing
-├── 501-ci-cd/                                # CI/CD automation and deployment pipelines
-└── 900-tools-utilities/                      # Utility scripts and tools (900-999 range)
-    └── 900-mqtt-tools/                       # MQTT testing and diagnostic tools
-```
-
-### Deployment Blueprints
-
-End-to-end infrastructure deployments combining multiple components.
-
-```plaintext
-blueprints/
-├── README.md                                 # Blueprint overview and usage instructions
-├── azureml/                                  # Azure Machine Learning deployment blueprint
-├── dual-peered-single-node-cluster/          # Dual-peered single node cluster configuration
-├── fabric/                                   # Microsoft Fabric only deployment
-├── fabric-rti/                               # Microsoft Fabric Real-Time Intelligence only
-├── full-multi-node-cluster/                  # Complete multi-node cluster (option for Arc servers)
-├── full-single-node-cluster/                 # Complete single-node cluster (all non-Fabric)
-├── minimum-single-node-cluster/              # Minimal single-node cluster
-├── only-cloud-single-node-cluster/           # Cloud-only components
-├── only-edge-iot-ops/                        # Edge-only IoT Operations
-├── only-output-cncf-cluster-script/          # CNCF cluster script generation only
-└── partial-single-node-cluster/              # Partial cloud + edge CNCF cluster
-```
-
-### Automation & Supporting Tools
-
-Scripts, deployment automation, and supporting utilities.
-
-```plaintext
-edge-ai/
-├── deploy/                                   # Deployment automation for edge-ai project
-├── scripts/                                  # Utility scripts for automation and maintenance
-├── src/azure-resource-providers/             # Azure resource provider registration scripts
-├── src/operate-all-terraform.sh              # Terraform deployment automation (manual use only)
-└── src/starter-kit/                          # Sample implementations and quick-start templates
-```
-<!-- </project-structure-instructions> -->
+- You MUST verify that any new variables discovered during the process have been added to the appropriate canonical tables
+- You MUST summarize changes per file and variable
+- You WILL offer to commit on a new branch and open a PR
 
 ---
 > Source: [microsoft/edge-ai](https://github.com/microsoft/edge-ai) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-05-19 -->
+<!-- tomevault:4.0:agents_md:2026-07-27 -->
