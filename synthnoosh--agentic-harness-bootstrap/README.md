@@ -1,8 +1,6 @@
 # agentic-harness-bootstrap
 
-> Tome by [synthnoosh](https://github.com/synthnoosh/agentic-harness-bootstrap) — distributed by [TomeVault](https://tomevault.io)
-
-Boundaries, structure, and feedback loops — from a single repo scan.
+> Tome by [synthnoosh](https://github.com/synthnoosh/agentic-harness-bootstrap), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
