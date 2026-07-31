@@ -1,82 +1,23 @@
-# Tailspin Toys Crowd Funding Development Guidelines
 
-This is a crowdfunding platform for games with a developer theme. The application uses a Flask backend API with SQLAlchemy ORM for database interactions, and an Astro/Svelte frontend with Tailwind CSS for styling. Please follow these guidelines when contributing:
+# Astro + Starlight Wrapper
 
-## Agent notes
+`website/` is the Astro + Starlight project that publishes the workshop to GitHub Pages. It is **not** an application; it is a thin site shell. Lesson content lives in the repo-root `docs/` directory (sourced via the loader's `base: '../docs'`) — author there, not in the project files under `website/`.
 
-- Explore the project before beginning code generation
-- Create todo lists for long operations
-  - Before each step in a todo list, reread the instructions to ensure you always have the right directions
-- Always use instructions files when available, reviewing before generating code
-- Do not generate summary markdown files upon completion of a task
-- Always use absolute paths when running scripts and BASH commands
+## Site config
 
-## Code standards
+- Base path: `/copilot-workshops` (the repo's GitHub Pages slug).
+- Site URL: `https://github-samples.github.io/copilot-workshops/`.
+- **Sidebar: manually maintained** in `astro.config.mjs`. The `sidebar` array drives both the order learners see and which pages appear in navigation. New lessons must be added explicitly.
+- **Content collection** is sourced from the repo-root `docs/` directory via the custom `glob()` loader in `src/content.config.ts` (`base: '../docs'`). That loader excludes underscore-prefixed files and directories so support assets such as `_images/` don't get routed as pages. Folder landing pages are `README.md` files (so they render on github.com) rather than Starlight's default `index.md`; each carries a `slug:` in its frontmatter to reproduce the route it would otherwise get from an index file — `docs/README.md` → `slug: index` (site home `/`), `docs/<harness>/README.md` → `slug: <harness>`, and localized landings use the locale-prefixed slug (`docs/<locale>/README.md` → `slug: <locale>`, `docs/<locale>/<harness>/README.md` → `slug: <locale>/<harness>`).
 
-### Required Before Each Commit
+## Don't add app-style components
 
-- Run Python tests to ensure backend functionality
-- For frontend changes, run builds in the client directory to verify build success and the end-to-end tests, to ensure everything works correctly
-- When making API changes, update and run the corresponding tests to ensure everything works correctly
-- When updating models, ensure database migrations are included if needed
-- When adding new functionality, make sure you update the README
-- Make sure all guidance in the Copilot Instructions file is updated with any relevant changes, including to project structure and scripts, and programming guidance
+This is a docs wrapper. Don't add interactive framework islands (Svelte, React, etc.), Tailwind utility-class styling layers, custom routing, or other application-style code. Anything beyond Starlight defaults should be justified.
 
-### Code formatting requirements
+## Building and verifying
 
-- When writing Python, you must use type hints for return values and function parameters.
-
-### Python and Flask Patterns
-
-- Use SQLAlchemy models for database interactions
-- Use Flask blueprints for organizing routes
-- Follow RESTful API design principles
-
-### Svelte and Astro Patterns
-
-- **Svelte 5 Components**: Use runes-based reactivity (`$state`, `$derived`, `$effect`, `$props`) - see `svelte.instructions.md`
-- **Astro Pages**: Use Astro for routing, layouts, and static content - see `astro.instructions.md`
-- Create reusable Svelte components when functionality is used in multiple places
-- Use `client:only="svelte"` directive when embedding Svelte in Astro pages
-
-### Styling
-
-- Use Tailwind CSS utility classes exclusively - see `tailwindcss.instructions.md`
-- Dark theme colors: slate palette (`bg-slate-800`, `text-slate-100`, etc.)
-- Rounded corners and modern UI patterns
-- Follow modern UI/UX principles with clean, accessible interfaces
-
-### GitHub Actions workflows
-
-- Follow good security practices
-- Make sure to explicitly set the workflow permissions
-- Add comments to document what tasks are being performed
-
-## Scripts
-
-- Several scripts exist in the `scripts` folder
-- Always use available scripts to perform tasks rather than performing operations manually
-- Existing scripts:
-    - `scripts/setup-env.sh`: Performs installation of all Python and Node dependencies
-    - `scripts/run-server-tests.sh`: Calls setup-env, then runs all Python tests
-    - `scripts/start-app.sh`: Calls setup-env, then starts both backend and frontend servers
-
-## Repository Structure
-
-- `server/`: Flask backend code
-  - `models/`: SQLAlchemy ORM models
-  - `routes/`: API endpoints organized by resource
-  - `tests/`: Unit tests for the API
-  - `utils/`: Utility functions and helpers
-- `client/`: Astro/Svelte frontend code
-  - `src/components/`: Reusable Svelte components
-  - `src/layouts/`: Astro layout templates
-  - `src/pages/`: Astro page routes
-  - `src/styles/`: CSS and Tailwind configuration
-- `scripts/`: Development and deployment scripts
-- `data/`: Database files
-- `README.md`: Project documentation
+After changing `astro.config.mjs` or anything under `website/src/`, build and verify the site with the [`build-and-verify-docs`](../skills/build-and-verify-docs/SKILL.md) skill. Its page-count invariant is the tripwire for unexpected routed pages: Starlight emits each of the 36 workshop routes for the root language and five configured locales, then adds the legacy redirect, for 217 built `index.html` pages excluding the 404 page. If the count changes without a corresponding route or locale change, check the locale layout under `docs/` and the underscore-directory exclude in `src/content.config.ts`.
 
 ---
 > Source: [github-samples/agents-in-sdlc](https://github.com/github-samples/agents-in-sdlc) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-05-19 -->
+<!-- tomevault:4.0:agents_md:2026-07-27 -->
