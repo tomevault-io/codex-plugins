@@ -4,7 +4,7 @@
   "repo": "BuildXL",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/microsoft/BuildXL",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-29T11:11:45Z"
+  "distributed_at": "2026-07-31T23:09:20Z"
 }
