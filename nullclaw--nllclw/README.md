@@ -7,13 +7,13 @@ Tiny Zig 0.16 local AI assistant with OpenAI-compatible providers, memory, tools
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [nullclaw/nllclw](https://github.com/nullclaw/nllclw).
+Original source: `.cursor/rules/*.mdc` in [nullclaw/nllclw](https://github.com/nullclaw/nllclw).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
