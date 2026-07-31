@@ -72,4 +72,4 @@ npm run dev
 
 ---
 > Source: [dollspace-gay/concord](https://github.com/dollspace-gay/concord) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-05-02 -->
+<!-- tomevault:4.0:agents_md:2026-07-23 -->
