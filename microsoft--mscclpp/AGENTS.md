@@ -1,70 +1,24 @@
-# Project Contribution Guidelines
 
-This document outlines a few useful informations for contributing to this project.
+# Instructions for DSL API Documentation
 
-## C/C++ Headers Layout
-This project has two C/C++ header directories: `include/mscclpp/` and `src/include/`. Headers in `include/mscclpp/` are public headers that define the public API of the project. Headers in `src/include/` are internal headers used only within the project.
+## Overview
+The MSCCL++ DSL (Domain Specific Language) provides a Python API for defining distributed GPU communication patterns. All API functions should have comprehensive Google-style docstrings.
 
-When adding new headers, place them in the appropriate directory based on their intended usage (public API vs. internal use). To prevent confusion, do not have duplicate names for headers in these two directories.
+## Documentation Requirements
+- Add google-style docstrings to the DSL API functions in the `mscclpp.language` package.
+- Ensure that each function's docstring includes:
+  - A brief description of what the function does.
+  - Parameters with their types and descriptions.
+  - Return type and description.
+  - Any exceptions raised by the function, if applicable.
+  - Usage examples where appropriate.
 
-Symbols declared in public headers must be properly documented using Doxygen-style comments, except forward declarations and private class members. In a few cases, we may need to add declarations in public headers that are not intended for public use. In such cases, declare them under `mscclpp::detail` namespace, where we do not necessarily document every symbol.
-
-## License Header
-A license header must be included at the top of each source code file in the project.
-
-For Python source code:
-```python
-# Copyright (c) Microsoft Corporation.
-# Licensed under the MIT License.
-```
-
-For C/C++/CUDA source code:
-```cpp
-// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
-```
-
-## Formatting
-If you have modified any code in the project, run `./tools/lint.sh` to automatically format the entire source code before finishing iterations. Note that this script formats only files that are tracked by git, so if you have added new files, make sure to `git add` them first.
-
-## Building and Testing
-The following commands are commonly used for building and testing the project. See `docs/quickstart.md` for more detailed instructions.
-
-For building libraries and tests:
-```bash
-mkdir -p build && cd build
-cmake -DCMAKE_BUILD_TYPE=Release ..
-make -j$(nproc)
-cd ..
-```
-
-For testing after successful build:
-```bash
-# To run tests with two GPUs - two is enough for most tests
-mpirun -np 2 ./build/bin/mp_unit_tests
-# To run tests excluding IB-related ones (when IB is not available)
-mpirun -np 2 ./build/bin/mp_unit_tests --filter=-*Ib*
-```
-
-For building a Python package:
-```bash
-python3 -m pip install -e .
-```
-
-For Python tests after building the package:
-```bash
-# Run tests with 8 GPUs - adjust the number as needed
-mpirun -np 8 python3 -m pytest ./python/test/test_mscclpp.py -vx
-```
-
-For building documentation (see dependencies in `docs/requirements.txt`):
-```bash
-cd docs
-doxygen
-make html
-cd ..
-```
+## Implementation Steps
+1. Open each Python file in the `python.mscclpp.language` folder, exclude `__init__.py` and internal folders.
+2. For each function in the file, add a Google-style docstring that follows the documentation requirements outlined above.
+3. Ensure that the docstrings are clear, concise, and accurately describe the function's behavior.
+4. Review the docstrings for consistency in style and formatting.
 
 ---
 > Source: [microsoft/mscclpp](https://github.com/microsoft/mscclpp) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-24 -->
+<!-- tomevault:4.0:agents_md:2026-07-27 -->
