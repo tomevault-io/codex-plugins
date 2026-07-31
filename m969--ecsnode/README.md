@@ -1,16 +1,17 @@
 # EcsNode
 
-> Source: [m969/EcsNode](https://github.com/m969/EcsNode) — distributed by [TomeVault](https://tomevault.io)
+> Source: [m969/EcsNode](https://github.com/m969/EcsNode). Graded, signed and kept in sync across platforms by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [m969/EcsNode](https://github.com/m969/EcsNode).
+Original source: `` in [m969/EcsNode](https://github.com/m969/EcsNode).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
