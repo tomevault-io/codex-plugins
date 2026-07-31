@@ -1,8 +1,6 @@
 # ironclaw
 
-> Tome by [nearai](https://github.com/nearai/ironclaw) — distributed by [TomeVault](https://tomevault.io)
-
-IronClaw is OpenClaw inspired implementation in Rust focused on privacy and security
+> Tome by [nearai](https://github.com/nearai/ironclaw), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
@@ -17,7 +15,7 @@ Original source: `CLAUDE.md` in [nearai/ironclaw](https://github.com/nearai/iron
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/nearai/ironclaw](https://github.com/nearai/ironclaw)
+Graded against the Tome Standard, TomeVault's public ruleset for whether AI instructions load, read clearly and stay safe. Source: [github.com/nearai/ironclaw](https://github.com/nearai/ironclaw)
 
 ---
 
