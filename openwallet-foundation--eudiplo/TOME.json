@@ -2,9 +2,9 @@
   "name": "eudiplo",
   "owner": "openwallet-foundation",
   "repo": "eudiplo",
-  "description": "Your diplomatic layer for EUDI Wallet integration",
+  "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/openwallet-foundation/eudiplo",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-19T19:01:58Z"
+  "distributed_at": "2026-07-31T21:16:49Z"
 }
