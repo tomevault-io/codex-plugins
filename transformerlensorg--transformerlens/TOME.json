@@ -4,7 +4,7 @@
   "repo": "TransformerLens",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": ".cursor/rules/*.mdc",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/TransformerLensOrg/TransformerLens",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-29T07:22:42Z"
+  "distributed_at": "2026-07-31T04:56:05Z"
 }
