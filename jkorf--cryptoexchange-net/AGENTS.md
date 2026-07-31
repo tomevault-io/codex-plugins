@@ -1,56 +1,76 @@
-# Copilot Instructions for CryptoExchange.Net
 
-This repository is **CryptoExchange.Net** — the base library powering 28+ cryptocurrency exchange wrappers in C#/.NET (Binance.Net, Bybit.Net, OKX.Net, Kraken.Net, Coinbase.Net, etc.).
+# CryptoExchange.Net Conventions
 
-When generating code in this ecosystem, follow these conventions:
+This codebase uses **CryptoExchange.Net** abstractions for multi-exchange access. Each exchange has its own library (Binance.Net, Bybit.Net, OKX.Net, ...). Use `CryptoExchange.Net.SharedApis` for code that should work across exchanges.
 
-## You don't install CryptoExchange.Net directly
-
-Install the exchange-specific library you need (`Binance.Net`, `JK.OKX.Net`, `Bybit.Net`, ...) or `CryptoClients.Net` for the bundle. CryptoExchange.Net is pulled in as a dependency.
-
-## Multi-exchange code uses SharedApis
-
-For code that must work against multiple exchanges, use `CryptoExchange.Net.SharedApis` interfaces accessed via `.SharedClient` properties on each exchange's API surface:
+## Multi-exchange pattern
 
 ```csharp
+using Binance.Net.Clients;
+using OKX.Net.Clients;
 using CryptoExchange.Net.SharedApis;
 
 ISpotTickerRestClient binance = new BinanceRestClient().SpotApi.SharedClient;
 ISpotTickerRestClient okx     = new OKXRestClient().UnifiedApi.SharedClient;
 
 var symbol = new SharedSymbol(TradingMode.Spot, "BTC", "USDT");
+
 var ticker = await binance.GetSpotTickerAsync(new GetTickerRequest(symbol));
+// ticker.Data.LastPrice — same model regardless of exchange
 ```
 
-Same code works on every exchange that implements the interface. Use `Task.WhenAll` for concurrent multi-exchange calls.
+## Symbol normalization
 
-## Single-exchange code uses the exchange's own client
+`SharedSymbol(TradingMode.Spot, "BTC", "USDT")` is portable. Each library translates to its native format internally. Don't pass raw strings like `"BTCUSDT"` to shared methods.
 
-For Binance-only code, use `BinanceRestClient` directly (see Binance.Net repo `AGENTS.md`). SharedApis is for portability — use it when you need that.
+## Symbol metadata and catalogs
+
+In 12.2.0, `SharedSpotSymbol` and `SharedFuturesSymbol` include `DisplayName` and base/quote asset classification through `SharedAssetType` (`Crypto`, `Fiat`, `TradFi`) and `SharedAssetSubType` (`StableCoin`, `Equity`, `Commodity`). Pass the matching base/quote filters to `GetSymbolsRequest` when discovery should return only a class of markets.
+
+After calling `GetSpotSymbolsAsync`, `ISpotSymbolRestClient.SpotSymbolCatalog` maps asset and symbol names to shared metadata. `IFuturesSymbolRestClient.FuturesSymbolCatalog` works the same way after `GetFuturesSymbolsAsync`. Treat either property as unavailable before its corresponding request has populated the cache.
+
+When implementing an exchange library, use `LibraryHelpers.IsStableCoin`, `IsCommodity`, and `IsEquity` only as best-effort classifiers and supply exchange-specific additions where needed.
 
 ## Result pattern
 
-REST methods return `HttpResult<T>` and websocket subscription methods return `WebSocketResult<UpdateSubscription>`. Check `.Success` before `.Data`. `.Error` has structured info. `.Exchange` on shared clients identifies which exchange responded.
+REST methods return `HttpResult<T>` and websocket subscription methods return `WebSocketResult<UpdateSubscription>`. Always check `.Success`. `.Exchange` property identifies which exchange responded — useful for logging.
 
 ## Available shared interfaces
 
-REST: tickers, symbols, orderbook, klines, trades, orders (spot/futures, trigger, TP-SL), balances, positions, fees, deposits/withdrawals, transfers.
-WebSocket: tickers, book tickers, orderbook, trades, klines, user data.
+- REST tickers/symbols/orderbook/klines/trades, orders (spot/futures, regular/trigger/TP-SL), balances, positions, fees, deposits/withdrawals, transfers
+- WebSocket tickers, book tickers, order book, trades, klines, user data
 
-Each exchange library implements a subset. Check exchange docs for support matrix.
+Each exchange documents which it implements. Not every exchange supports every operation.
 
-## Avoid
+## Multi-exchange aggregation
 
-- Installing `CryptoExchange.Net` alone and trying to call exchange APIs (need exchange-specific packages)
-- Mixing exchange-native models in cross-exchange code (use Shared* types)
-- Synchronous `.Result` / `.Wait()` (use `await`)
-- Instantiating clients per-request (use DI, reuse instances)
-- Sequential per-exchange calls when parallel is fine (`Task.WhenAll`)
+Run requests across exchanges concurrently via `Task.WhenAll` — the library is async-safe and concurrent requests are the norm.
+
+```csharp
+var clients = new ISpotTickerRestClient[] { binance, okx, bybit };
+var tasks   = clients.Select(c => c.GetSpotTickerAsync(new GetTickerRequest(symbol)));
+var results = await Task.WhenAll(tasks);
+```
+
+## Hard rules
+
+- ❌ Never install `CryptoExchange.Net` alone and expect to call exchanges — it's a base library; you need exchange-specific packages
+- ❌ Never mix exchange-specific models in cross-exchange code (use `SharedSymbol`, `SharedSpotTicker`, etc.)
+- ❌ Never use `.Result` / `.Wait()` — async-only
+- ❌ Never iterate sequentially when concurrency is fine — `Task.WhenAll` is your friend
+- ❌ Never instantiate clients per-request — reuse via DI
+- ✅ Always use `.SharedClient` for cross-exchange code
+- ✅ Always check `.Success` before reading `.Data`
+- ✅ Always log with `.Exchange` so multi-exchange logs are decipherable
+- ✅ Always handle "not supported on this exchange" errors gracefully
 
 ## Reference
 
-For detailed patterns see `AGENTS.md` and `llms.txt` in repo root, `examples/ai-friendly/` for compilable examples.
+- `AGENTS.md` in repo root has fuller examples
+- `llms.txt` for AI context
+- `Examples/ai-friendly/` for compilable examples
+- For single-exchange code, see that exchange's library (e.g., Binance.Net `AGENTS.md`)
 
 ---
 > Source: [JKorf/CryptoExchange.Net](https://github.com/JKorf/CryptoExchange.Net) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-06-29 -->
+<!-- tomevault:4.0:agents_md:2026-07-27 -->
