@@ -4,7 +4,7 @@
   "repo": "Levelup-for-Dynamics-CRM",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/rajyraman/Levelup-for-Dynamics-CRM",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-28T01:03:45Z"
+  "distributed_at": "2026-07-31T05:07:42Z"
 }
