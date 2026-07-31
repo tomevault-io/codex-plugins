@@ -1,120 +1,151 @@
-# VosDroits MCP Server - GitHub Copilot Instructions
 
-This is a Model Context Protocol (MCP) server written in Go that provides search and retrieval capabilities for French public service information from service-public.gouv.fr.
+# Documentation Standards
 
-## Project Overview
+## Code Documentation
 
-- **Language**: Go 1.23+
-- **Framework**: MCP Go SDK (`github.com/modelcontextprotocol/go-sdk`)
-- **Purpose**: MCP server for searching French public service procedures and articles
-- **Deployment**: Docker container published to GitHub Packages
-- **CI/CD**: GitHub Actions workflows
+### General Principles
 
-Always use Context7 to use the latest best practices and versions.
-Generated Git Copilot Commit messages should follow conventional commits format (short 1 liner but explicit).
-Documentation should be clear and concise and in the docs/ folder (as subfolders as needed).
+- Prioritize self-documenting code through clear naming
+- Document all exported symbols (types, functions, methods, constants)
+- Start documentation with the symbol name
+- Write documentation in English
+- Write complete sentences
 
-## Core Functionality
+### Package Documentation
 
-The server provides three main tools:
-1. `search_procedures` - Search for procedures on service-public.gouv.fr
-2. `get_article` - Retrieve detailed information from a specific article URL
-3. `list_categories` - List available categories of public service information
+- Add package comment at the top of one file in the package
+- Start with "Package [name]"
+- Explain the package's purpose and main functionality
+- Include usage examples when helpful
 
-## Development Principles
-
-### Code Quality
-- Write idiomatic Go code following [Effective Go](https://go.dev/doc/effective_go)
-- Use the official MCP Go SDK patterns and best practices
-- Prioritize type safety with struct-based inputs/outputs
-- Handle errors explicitly and provide informative error messages
-- Use JSON schema tags for comprehensive API documentation
-
-### Architecture
-- Keep the codebase simple and maintainable
-- Separate concerns: HTTP client, MCP tools, main server logic
-- Use dependency injection for testability
-- Follow standard Go project layout conventions
-
-### Testing
-- Write unit tests for all tool handlers
-- Use table-driven tests for multiple scenarios
-- Test both success and error paths
-- Ensure context cancellation is properly handled
-
-### Docker & Deployment
-- Use multi-stage Docker builds for minimal image size
-- Build statically-linked binaries for scratch-based images
-- Tag Docker images appropriately for versioning
-- Publish to GitHub Container Registry (ghcr.io)
-
-### Security
-- Validate all external inputs
-- Use HTTPS for external API calls
-- Handle rate limiting gracefully
-- Sanitize user-provided URLs and queries
-
-## File Organization
-
-```
-mcp-vosdroits/
-├── .github/
-│   ├── copilot-instructions.md          # This file
-│   ├── instructions/                     # Language-specific guidelines
-│   ├── prompts/                          # Reusable prompts
-│   ├── chatmodes/                        # Specialized chat modes
-│   └── workflows/                        # GitHub Actions workflows
-├── cmd/
-│   └── server/
-│       └── main.go                       # Server entry point
-├── internal/
-│   ├── tools/                            # MCP tool implementations
-│   ├── client/                           # HTTP client for service-public.gouv.fr
-│   └── config/                           # Configuration management
-├── Dockerfile                            # Multi-stage Docker build
-├── go.mod                                # Go module definition
-├── go.sum                                # Go dependencies checksum
-└── README.md                             # Project documentation
+Example:
+```go
+// Package tools provides MCP tool implementations for searching
+// French public service information from service-public.gouv.fr.
+package tools
 ```
 
-## Related Instructions
+### Function Documentation
 
-- [Go Development Guidelines](instructions/go.instructions.md)
-- [Go MCP Server Best Practices](instructions/go-mcp-server.instructions.md)
-- [Testing Standards](instructions/testing.instructions.md)
-- [Docker Guidelines](instructions/docker.instructions.md)
-- [Security Best Practices](instructions/security.instructions.md)
-- [Documentation Standards](instructions/documentation.instructions.md)
+- Document what the function does, not how it does it
+- Include parameter descriptions when not obvious
+- Document return values, especially errors
+- Mention any side effects or special behavior
 
-## Environment Variables
-
-- `SERVER_NAME`: Name of the MCP server (default: "vosdroits")
-- `SERVER_VERSION`: Server version (default: "v1.0.0")
-- `LOG_LEVEL`: Logging level (debug, info, warn, error)
-- `HTTP_TIMEOUT`: Timeout for HTTP requests to external services
-
-## Quick Start Commands
-
-```bash
-# Install dependencies
-go mod download
-
-# Run tests
-go test ./...
-
-# Build locally
-go build -o bin/mcp-vosdroits ./cmd/server
-
-# Build Docker image
-docker build -t mcp-vosdroits .
-
-# Run with stdio transport
-./bin/mcp-vosdroits
-
-# Run with HTTP transport
-HTTP_PORT=8080 ./bin/mcp-vosdroits
+Example:
+```go
+// SearchProcedures searches for procedures on service-public.gouv.fr
+// matching the given query. It returns up to limit results.
+// Returns an error if the HTTP request fails or the response is invalid.
+func SearchProcedures(ctx context.Context, query string, limit int) ([]Result, error)
 ```
+
+### Type Documentation
+
+- Document the purpose of the type
+- Explain important fields if not obvious
+- Document JSON/JSONSCHEMA tags meaning when complex
+
+### Constant Documentation
+
+- Document groups of related constants
+- Explain the purpose and valid values
+
+## README Documentation
+
+### Required Sections
+
+1. **Project Title and Description**
+   - Clear, concise description of what the project does
+   
+2. **Installation**
+   - How to install/build the project
+   - Prerequisites and dependencies
+   
+3. **Usage**
+   - Quick start guide
+   - Basic examples
+   - Common use cases
+   
+4. **Configuration**
+   - Environment variables
+   - Configuration file format
+   - Default values
+   
+5. **API/Tool Documentation**
+   - List of available MCP tools
+   - Input/output schemas
+   - Example requests/responses
+
+6. **Development**
+   - How to set up development environment
+   - How to run tests
+   - How to contribute
+
+7. **Docker**
+   - How to build the Docker image
+   - How to run the container
+   - Available tags
+
+8. **License**
+   - License information
+
+### Code Examples
+
+- Include working code examples
+- Show both successful and error handling cases
+- Use realistic data in examples
+- Keep examples concise but complete
+
+## Inline Comments
+
+### When to Comment
+
+- Explain complex algorithms or logic
+- Clarify non-obvious business rules
+- Document workarounds or temporary solutions
+- Explain why, not what (code should be self-explanatory)
+
+### When Not to Comment
+
+- Don't comment obvious code
+- Don't leave commented-out code
+- Don't write comments that duplicate the code
+- Avoid TODO comments in production code
+
+## API Documentation
+
+### JSON Schema Documentation
+
+Use comprehensive `jsonschema` tags:
+- `description` - Explain the field's purpose
+- `required` - Mark required fields
+- `example` - Provide example values when helpful
+- Document constraints (min, max, format)
+
+Example:
+```go
+type SearchInput struct {
+    Query string `json:"query" jsonschema:"required,description=Search query for procedures,example=carte d'identité"`
+    Limit int    `json:"limit,omitempty" jsonschema:"minimum=1,maximum=100,description=Maximum number of results,default=10"`
+}
+```
+
+## Changelog
+
+- Maintain a CHANGELOG.md file
+- Follow [Keep a Changelog](https://keepachangelog.com/) format
+- Document all notable changes
+- Group changes by version
+- Use semantic versioning
+
+## Error Messages
+
+- Write clear, actionable error messages
+- Include context about what failed
+- Suggest how to fix the problem when possible
+- Use proper grammar and punctuation
 
 ---
 > Source: [guigui42/mcp-vosdroits](https://github.com/guigui42/mcp-vosdroits) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-05-03 -->
+<!-- tomevault:4.0:agents_md:2026-07-27 -->
