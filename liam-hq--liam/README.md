@@ -1,8 +1,6 @@
 # AI instruction files for liam
 
-> Sourced from [liam-hq/liam](https://github.com/liam-hq/liam) and converted for every major platform by [TomeVault](https://tomevault.io)
-
-Automatically generates beautiful and easy-to-read ER diagrams from your database.
+> Sourced from [liam-hq/liam](https://github.com/liam-hq/liam), graded against the public Tome Standard and kept consistent across every major platform by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
@@ -17,7 +15,7 @@ Original source: `CLAUDE.md` in [liam-hq/liam](https://github.com/liam-hq/liam).
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/liam-hq/liam](https://github.com/liam-hq/liam)
+Graded against the Tome Standard, TomeVault's public ruleset for whether AI instructions load, read clearly and stay safe. Source: [github.com/liam-hq/liam](https://github.com/liam-hq/liam)
 
 ---
 
