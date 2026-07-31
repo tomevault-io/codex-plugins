@@ -1,92 +1,121 @@
-# Copilot Instructions for vscode-ojs
 
-This repo is a VS Code extension that brings Observable notebooks and Observable Notebook Kit 2.0 to VS Code. It includes: classic OJS/OMD authoring and preview, a custom notebook controller/renderer, and Notebook Kit HTML workflows.
+# Observable Notebook Kit 2.0 Subsystem
 
-## Architecture (big picture)
+This document describes the **implemented** Observable Notebook Kit 2.0 support in the extension
+(`src/notebook-kit/*`). It is the open, HTML-based notebook format that lives alongside the legacy
+custom `.ojsnb` format (`src/notebook/*`). When working in this subsystem, follow the structure and
+patterns described here.
 
-- Entry point: `src/extension.ts`
-  - Activates three subsystems: `ojs` (classic OJS/OMD), `notebook` (OJS `.ojsnb`), and `notebook-kit` (Observable Notebook Kit 2.0 HTML flow). Also activates telemetry. The HTML notebook detector lives inside the `notebook-kit` subsystem.
-- Classic OJS/OMD (`src/ojs/*`)
-  - `command.ts`: registers commands like preview, import, export. Converts API responses to `.ojs` or `.omd` content. Uses `@hpcc-js/observablehq-compiler` to compile notebooks.
-  - `preview.ts`: hosts an interactive webview that loads `dist/webview.js`; posts messages for evaluate/values/alerts.
-  - `diagnostic.ts`, `meta.ts`: collect and surface runtime metadata/diagnostics.
-- Notebook (.ojsnb) (`src/notebook/*`)
-  - `controller/*`: serializer and notebook controller for the native VS Code notebook experience.
-  - `renderers/*`: webview-based renderers bundled to `dist/` via esbuild (`ojsRenderer.ts`, `renderer.css`).
-- Notebook Kit 2.0 (`src/notebook-kit/*`)
-  - Registers two notebook types: `notebook-kit-default` (`*.observable.html`, `*.observable.js`) and `notebook-kit-option` (`*.html`, `*.js`, opened on demand via the file decoration/detector).
-  - `controller/*`: `serializer.ts` and `controller.ts`. `commands.ts`: `observable-kit.*` commands (build, createNotebook, convertFromLegacy, export, switch HTML/notebook views, set title/theme/read-only, cell pin/hide/mode, etc.).
-  - `compiler/*`: notebook ↔ JS conversion (`notebook2js`, `jsSerializer.ts`). `common/notebook-detector.ts`: detects Observable HTML notebooks. `renderers/renderer.ts` bundles to `dist/observable-kit-renderer.js`.
-  - HTML/notebook conversion uses `html2notebook` / `notebook2html` from `@hpcc-js/observablehq-compiler`.
-- Webview runtime (`src/webview.ts`)
-  - Browser-side logic used by OJS/OMD preview. Runs Observable runtime with `@observablehq/runtime`, `@observablehq/stdlib` (Library), `@observablehq/inspector` and compiler CSS from `@hpcc-js/observablehq-compiler/src/index.css`.
+## Background
 
-## Build, watch, test
+### Observable Notebook Kit 2.0
 
-- Bundling is driven by `esbuild.mjs` and targets:
-  - Node: `src/extension.ts` → `dist/extension.js` (cjs)
-  - Browser: `src/notebook/renderers/ojsRenderer.ts` (esm), `src/notebook-kit/renderers/renderer.ts` (esm), and `src/webview.ts` (iife)
-- Type generation:
-  - Node types: `npm run gen-node-types` (tsconfig.json; declarationOnly)
-  - Webview types: `npm run gen-webview-types` (tsconfig.webview.json; declarationOnly)
-- Common scripts:
-  - `npm run build` → `run-p gen-types build-ts`
-  - `npm run build-ts` → `node esbuild.mjs --production`
-  - `npm run build-ts-watch` → `node esbuild.mjs --watch --development`
-  - `npm run watch` → parallel type generation watch + esbuild watch
-  - `npm run lint` → uses flat config `eslint.config.mjs` (ESLint v10); `npm run lint-fix` to auto-fix
-  - `npm run unit-test` → Vitest (`vitest run`), specs in `tests/**/*.spec.ts`
-  - `npm run integration-test` → compiles `tests/integration` then runs the VS Code test host
-  - `npm test` → `run-s lint build unit-test integration-test package`
-- Debugging: use “Run Extension” (Extension Host). Webview assets are served from `dist/` and referenced via `asWebviewUri` in `preview.ts`.
+Observable's **Notebook Kit 2.0** introduces an open notebook format:
 
-## ESLint & code style
+- **Open file format**: HTML-based, human-readable, and git-friendly.
+- **Vanilla JavaScript**: Standard JS (`type="module"`) plus a backwards-compatible Observable JS mode.
+- **Static site generation**: Notebooks can be built into static sites.
 
-- Flat config at `eslint.config.mjs` using `@eslint/js`, `typescript-eslint` flat presets, and `eslint-plugin-react-hooks`.
-- Project-specific rules mirror legacy behavior; notable customizations:
-  - `no-inner-declarations: off`, `semi: always`, `quotes: "double"`, and permissive TS rules for this codebase.
-- Generated sources ignored: `src/grammar/**/*`.
+References:
+- GitHub: https://github.com/observablehq/notebook-kit (vendored under `refs/notebook-kit/` for reference)
+- Docs: https://observablehq.com/notebook-kit/
+- System guide: https://observablehq.com/notebook-kit/system-guide
+- npm: `@observablehq/notebook-kit` (a dependency of this repo)
+- VS Code Notebook API: https://code.visualstudio.com/api/extension-guides/notebook
 
-## Project conventions & patterns
+### File format
 
-- Module resolution:
-  - Runtime-only browser code imports Observable packages directly; `Library` comes from `@observablehq/stdlib`, `Runtime` from `@observablehq/runtime`, `Inspector` from `@observablehq/inspector`.
-  - Compiler stylesheet: import `@hpcc-js/observablehq-compiler/src/index.css` in `src/webview.ts`.
-- Messaging between extension and webview:
-  - Types for messages live in `src/webview.ts` (e.g., `LoadedMessage`, `ValueMessage`).
-  - `src/ojs/preview.ts` posts messages `{ command, content, callbackID }` and resolves promises on replies.
-- HTML preview shell is built in `getHtmlForWebview` (`src/ojs/preview.ts`) and injects `dist/webview.js` via `asWebviewUri`.
-- Telemetry: `src/telemetry/index.ts` uses `@vscode/extension-telemetry` v1 API. Instantiate `new TelemetryReporter(connectionString)` and make sure to dispose on deactivate.
+The format is HTML with a root `<notebook>` element:
 
-## External dependencies of note
+```html
+<!doctype html>
+<notebook theme="air">
+  <title>Notebook Title</title>
+  <script id="1" type="text/markdown">
+    # Markdown Content
+  </script>
+  <script id="2" type="module" pinned>
+    const data = [1, 2, 3];
+    display(data);
+  </script>
+  <script id="3" type="observablejs">
+    oldStyleCell = "legacy syntax"
+  </script>
+</notebook>
+```
 
-- Observable stack: `@observablehq/runtime`, `@observablehq/inspector`, `@observablehq/stdlib`.
-- Compiler: `@hpcc-js/observablehq-compiler` (also provides CSS).
-- Rendering & bundling: `esbuild`, `@hpcc-js/esbuild-plugins` (`problemMatcher`).
-- Node-fetch for network calls in the extension process.
+- Optional `<title>` element and `theme` attribute on `<notebook>`.
+- Each cell is a `<script>` with a unique `id` and a `type` (cell mode).
+- Optional `pinned` attribute controls source visibility.
 
-## Gotchas / tips for agents
+## Implemented architecture (`src/notebook-kit/*`)
 
-- Don’t import `Library` or `Inspector` from `@observablehq/runtime`; use `@observablehq/stdlib` and `@observablehq/inspector` respectively.
-- Webview bundle is IIFE; avoid Node-only modules there. Use browser-safe APIs.
-- When editing message contracts, update both ends: `src/webview.ts` and `src/ojs/preview.ts`.
-- tsconfig targets:
-  - Extension (Node): `module: nodenext`, `target: ES2022`.
-  - Webview: `module: NodeNext`, `target: ESNext`, `lib: [esnext, dom]`.
-- If you add renderer/webview files, wire them into `esbuild.mjs` entryPoints and adjust `localResourceRoots` if needed.
+- `index.ts` — `activate(ctx)` registers everything:
+  - Two notebook types via `workspace.registerNotebookSerializer` + `NotebookKitController`:
+    - `notebook-kit-default` — default for `*.observable.html` and `*.observable.js`.
+    - `notebook-kit-option` — opt-in for plain `*.html` / `*.js`, surfaced on demand through a
+      `FileDecorationProvider` (`HTMLNotebookDetector`).
+  - `Commands.attach(ctx)` registers all `observable-kit.*` commands.
+- `controller/serializer.ts` — `NotebookKitSerializer` (singleton via `attach()`):
+  - `deserializeNotebook` detects JS vs HTML (`isObservableJSNotebook`) and records the source kind in
+    `metadata.type` (`"javascript"` or `"html"`); `serializeNotebook` branches on that metadata.
+  - HTML ↔ notebook uses `html2notebook` / `notebook2html`; JS ↔ notebook uses `notebook2js` / `js2notebook`
+    from `../compiler`.
+- `controller/controller.ts` — `NotebookKitController` executes cells using the Observable runtime.
+- `commands.ts` — `Commands` class registering `observable-kit.*` commands, e.g.:
+  `build`, `createNotebook`, `convertFromLegacy`, `setupWorkspace`, `export`, `openHtmlAsNotebook`,
+  `switchToNotebookView`, `switchToTextView`, `notebook.setTitle`, `notebook.setTheme`,
+  `notebook.setReadOnly` / `setReadWrite`, `cell.pin` / `cell.unpin`, `cell.hide` / `cell.show`,
+  `cell.setNodeMode` / `cell.setJsMode`. Also owns the title/theme status bar items and cell-context updates.
+- `compiler/` — `index.ts` (`notebook2js`, `js2notebook`, `DECL`), `jsSerializer.ts`, and `index.css`.
+- `common/notebook-detector.ts` — detection helpers (`isObservableNotebook`, `isObservableHTMLNotebook`,
+  `isObservableJSNotebook`, `isNotebookKitType`) and the `HTMLNotebookDetector` decoration provider.
+- `common/types.ts` — `OBSERVABLE_KIT_MIME`, cell-mode maps (`vscode2observable` / `observable2vscode`),
+  `NotebookCell` interface, and `NOTEBOOK_THEMES` / `NotebookTheme`.
+- `renderers/renderer.ts` — output renderer, bundled by esbuild to `dist/observable-kit-renderer.js`
+  (registered in `package.json` as renderer id `observable-kit-renderer`). `renderers/renderer.css` is
+  inlined via the esbuild `inline-css` plugin.
 
-## Examples in-repo
+### Cell mode mapping
 
-- Webview runtime entry: `src/webview.ts` shows how to compile and run a notebook, stream values back, and apply Inspector to DOM nodes.
-- Export template: `src/ojs/command.ts#exportTpl` shows a static export wiring Runtime + Inspector with compiler.
+Cell modes map between Observable Kit and VS Code languages via `common/types.ts`. Update both
+`vscode2observable` and `observable2vscode` together when adding a mode:
 
-## CI/Release
+| Observable mode | VS Code language |
+| --------------- | ---------------- |
+| `md`            | `markdown`       |
+| `js`            | `javascript`     |
+| `ojs`           | `ojs`            |
+| `html`          | `html`           |
+| `tex`           | `tex`            |
+| `sql`           | `sql`            |
+| `dot`           | `dot`            |
+| `node`          | `javascript` (deserialized as `javascript`) |
+| `python`        | `python`         |
+| `ts`            | `typescript`     |
+| `r`             | `r`              |
 
-- `vscode:prepublish` runs `clean` then `build` before packaging.
-- Packaging: `npm run package` outputs `observable-js.vsix`.
+## Conventions for this subsystem
 
-Feedback: If any of the above feels off or you have different local workflows, tell me what to adjust and I’ll refine these instructions.
+- Conversion between formats goes through `@hpcc-js/observablehq-compiler` (`html2notebook`,
+  `notebook2html`) and the local `compiler/` module (`notebook2js`, `js2notebook`) — do not hand-roll
+  HTML parsing.
+- Keep the serializer's `metadata.type` (`"html"` vs `"javascript"`) authoritative for round-tripping;
+  serialize back to the same on-disk format the document was opened as.
+- Register new commands under the `observable-kit.*` namespace, wire them in `commands.ts`, and add the
+  matching `contributes.commands` / menu `when`-clauses in `package.json`
+  (`notebookType == notebook-kit-default || notebookType == notebook-kit-option`).
+- The renderer is browser/ESM and bundled separately; keep it browser-safe (no Node-only modules) and
+  add new renderer entry points to `esbuild.mjs` if needed.
+- Themes must come from `NOTEBOOK_THEMES`; don't introduce free-form theme strings.
+
+## Testing & build
+
+- Unit specs: Vitest, `tests/**/*.spec.ts` (`npm run unit-test`).
+- Integration: VS Code test host (`npm run integration-test`).
+- Build: `npm run build` (esbuild + type generation). The renderer bundle output is
+  `dist/observable-kit-renderer.js`.
 
 ---
 > Source: [GordonSmith/vscode-ojs](https://github.com/GordonSmith/vscode-ojs) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-24 -->
+<!-- tomevault:4.0:agents_md:2026-07-27 -->
