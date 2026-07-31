@@ -4,7 +4,7 @@
   "repo": "netcorepal-cloud-template",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/netcorepal/netcorepal-cloud-template",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-27T22:03:20Z"
+  "distributed_at": "2026-07-31T03:45:28Z"
 }
