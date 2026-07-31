@@ -5,11 +5,10 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `` in [redplanetlabs/agent-o-rama](https://github.com/redplanetlabs/agent-o-rama).
+Original source: `CLAUDE.md` in [redplanetlabs/agent-o-rama](https://github.com/redplanetlabs/agent-o-rama).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
