@@ -1,23 +1,22 @@
 # AI instruction files for agents-in-sdlc
 
-> Sourced from [github-samples/agents-in-sdlc](https://github.com/github-samples/agents-in-sdlc) and converted for every major platform by [TomeVault](https://tomevault.io)
-
-Lab Walkthrough and Demo for the "Collaborating with agents in your software development workflow" workshop
+> Sourced from [github-samples/agents-in-sdlc](https://github.com/github-samples/agents-in-sdlc), graded against the public Tome Standard and kept consistent across every major platform by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [github-samples/agents-in-sdlc](https://github.com/github-samples/agents-in-sdlc).
+Original source: `` in [github-samples/agents-in-sdlc](https://github.com/github-samples/agents-in-sdlc).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/github-samples/agents-in-sdlc](https://github.com/github-samples/agents-in-sdlc)
+Graded against the Tome Standard, TomeVault's public ruleset for whether AI instructions load, read clearly and stay safe. Source: [github.com/github-samples/agents-in-sdlc](https://github.com/github-samples/agents-in-sdlc)
 
 ---
 
