@@ -5,17 +5,18 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [aregtech/areg-sdk](https://github.com/aregtech/areg-sdk).
+Original source: `` in [aregtech/areg-sdk](https://github.com/aregtech/areg-sdk).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [aregtech/areg-sdk](https://github.com/aregtech/areg-sdk) — a repo with 357+ stars on GitHub.
+From [aregtech/areg-sdk](https://github.com/aregtech/areg-sdk) — a repo with 358+ stars on GitHub.
 
 ---
 
