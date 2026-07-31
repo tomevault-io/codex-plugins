@@ -1,26 +1,25 @@
 # eudiplo
 
-> Source: [openwallet-foundation/eudiplo](https://github.com/openwallet-foundation/eudiplo) — distributed by [TomeVault](https://tomevault.io)
-
-Your diplomatic layer for EUDI Wallet integration
+> Source: [openwallet-foundation/eudiplo](https://github.com/openwallet-foundation/eudiplo). Graded, signed and kept current as the models change by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [openwallet-foundation/eudiplo](https://github.com/openwallet-foundation/eudiplo).
+Original source: `` in [openwallet-foundation/eudiplo](https://github.com/openwallet-foundation/eudiplo).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/openwallet-foundation/eudiplo](https://github.com/openwallet-foundation/eudiplo)
+Graded against the Tome Standard, TomeVault's public ruleset for whether AI instructions load, read clearly and stay safe. Source: [github.com/openwallet-foundation/eudiplo](https://github.com/openwallet-foundation/eudiplo)
 
 ---
 
-Explore more instruction files on [TomeVault](https://tomevault.io) — the open index of AI config files for every platform.
+Explore more instruction files on [TomeVault](https://tomevault.io), the platform that grades AI instruction files and catches silent drift across every major tool.
 
 <!-- genome:d-e-q -->
