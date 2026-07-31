@@ -1,161 +1,110 @@
-# GitHub Copilot Instructions
 
-## Repository Overview
+# Catalog Instructions
 
-This repository contains the documentation website source code for **ast-grep**, a lightning-fast and user-friendly tool for code searching, linting, and rewriting at large scale. The website is built using VitePress and serves as the comprehensive documentation hub for the ast-grep project.
+These instructions apply specifically to markdown files in the `website/catalog/` directory and help with creating and managing ast-grep rule examples.
 
-## Documentation Only Changes
+## Rule Creation Workflow
 
-If your change is only related to markdown, do NOT try building the whole project. Go ahead and change the markdown without wasting time on building and setting up the project.
+When creating or modifying catalog rules, follow this structured approach:
 
-## Technology Stack
+### 1. Determine Example Language
+- Identify the programming language for the rule example
+- Ensure the language folder exists in `website/catalog/` (e.g., `typescript/`, `python/`, `rust/`)
+- If the language folder doesn't exist, create it with an `index.md` file
 
-- **Frontend Framework**: VitePress (static site generator based on Vue.js)
-- **Programming Languages**:
-  - TypeScript/JavaScript (website functionality)
-  - Rust (WASM compilation for in-browser ast-grep functionality)
-- **Package Manager**: **pnpm** (NOT npm - this is important!)
-- **Build Tools**:
-  - wasm-pack (for Rust to WASM compilation)
-  - Vite (bundling and development server)
-  - Vue TypeScript compiler (vue-tsc)
-- **Linting/Formatting**:
-  - oxlint (JavaScript/TypeScript linting)
-  - dprint (code formatting)
+### 2. Determine Rule Format
+Choose between two formats:
+- **Pattern**: Use ast-grep's pattern syntax for simple rules
+- **YAML**: Use YAML configuration for complex rules with multiple conditions
 
-## Important: Package Manager Usage
+### 3. Use Rule Template
+- Base new rules on `website/catalog/rule-template.md`
+- Include all required sections:
+  - Title with optional `<Badge type="tip" text="Has Fix" />` if rule has a fix
+  - Playground link
+  - Description
+  - Pattern OR YAML section (delete unused section)
+  - Example code with highlighted lines
+  - Diff section (if rule has a fix)
+  - Contributed by section
 
-**⚠️ This repository uses pnpm instead of npm!**
+### 4. Include Rule in Language Index
+- Add the new rule to the language folder's `index.md` using the include syntax:
+  ```markdown
+  <!--@include: ./rule-filename.md-->
+  ```
+- Place includes in appropriate order within the index file
 
-Always use `pnpm` commands:
-- `pnpm install` (not `npm install`)
-- `pnpm run dev` (not `npm run dev`)
-- `pnpm run build` (not `npm run build`)
+### 5. Required Components
+Ensure every rule has:
+- **Example code**: Realistic code that demonstrates the pattern
+- **Rule/Pattern**: Either a pattern or YAML configuration
+- **Playground link**: URL to test the rule in the ast-grep playground
+- **Clear description**: Concise explanation of what the rule does and why it's useful
 
-The project has a `pnpm-lock.yaml` file and is configured to work specifically with pnpm.
+### 6. Content Guidelines
+- **Descriptions**: Keep them clear, short, and explain the purpose
+- **Examples**: Use realistic code that developers would encounter
+- **Highlighting**: Use `{lineNum}` syntax to highlight matched lines in examples
+- **Diff annotations**: Use `// [!code --]` and `// [!code ++]` for before/after code
+- **Badges**: Add `<Badge type="tip" text="Has Fix" />` to rule titles that include fixes
 
-## Development Setup
+### 7. Fix Rules
+If the rule includes a fix/rewrite capability:
+- Add the "Has Fix" badge to the title
+- Include a "Diff" section showing before/after code
+- Ensure the fix is demonstrated in the playground link
 
-1. **Prerequisites**:
-   - Install Rust toolchain
-   - Install wasm-pack: `cargo install wasm-pack`
-   - Install pnpm: `npm install -g pnpm`
+## File Naming
+- Use kebab-case for rule filenames (e.g., `no-await-in-promise-all.md`)
+- Make filenames descriptive of the rule's purpose
+- Keep filenames concise but clear
 
-2. **Initial Setup**:
-   ```bash
-   # Build WASM package
-   wasm-pack build --target web
+## Language-Specific Notes
+- **TypeScript vs TSX**: These are different parsers - TSX allows JSX elements
+- **Include syntax**: Always use `<!--@include: ./filename.md-->` format
+- **Language folders**: Each language should have its own folder with an `index.md`
 
-   # Install dependencies
-   pnpm install
+## Quality Standards
+- Test rules in the playground before submitting
+- Ensure examples are syntactically correct
+- Verify playground links work correctly
+- Use consistent formatting across all rules
+- Provide proper attribution in "Contributed by" section
 
-   # Start development server
-   pnpm dev
-   ```
+## Example Structure
+```markdown
+## Rule Name <Badge type="tip" text="Has Fix" />
 
-3. **Development Workflow**:
-   - For WASM changes: Rebuild with `wasm-pack build --target web`
-   - For website changes: Use `pnpm dev` for hot reloading
-   - Visit `localhost:5173` for development preview
+* [Playground Link](/playground.html#...)
 
-## Project Structure
+### Description
+Clear explanation of what the rule does and why it's useful.
 
+### YAML
+```yaml
+id: rule-id
+language: typescript
+rule:
+  pattern: pattern here
+fix: fix pattern
 ```
-├── src/                    # Rust source code for WASM bindings
-├── website/                # VitePress website source
-│   ├── .vitepress/        # VitePress configuration
-│   ├── guide/             # User guide documentation
-│   ├── reference/         # API and CLI reference
-│   ├── catalog/           # Rule examples by language
-│   ├── playground.md      # Interactive playground page
-│   └── index.md           # Homepage
-├── pkg/                   # Generated WASM package (git-ignored)
-├── Cargo.toml            # Rust dependencies
-├── package.json          # Node.js dependencies and scripts
-└── pnpm-lock.yaml        # pnpm lockfile
+
+### Example
+```ts {1,3}
+// Example code with highlighted lines
 ```
 
-## Available Scripts
+### Diff
+```ts
+old code // [!code --]
+new code // [!code ++]
+```
 
-- `pnpm dev`: Start development server with hot reloading
-- `pnpm build`: Build production website
-- `pnpm serve`: Preview production build locally
-- `pnpm lint`: Run linting (oxlint + dprint)
-- `pnpm lint:fix`: Fix linting issues automatically
-
-## Coding Guidelines
-
-### For TypeScript/JavaScript:
-- Use TypeScript for type safety
-- Follow Vue 3 Composition API patterns
-- Prefer `async/await` over promises
-- Use `const` over `let` when possible
-- Follow existing code style (enforced by oxlint and dprint)
-
-### For Rust:
-- Focus on WASM bindings and web-compatible APIs
-- Use `wasm-bindgen` for JavaScript interop
-- Keep WASM bundle size optimized
-- Handle errors gracefully for web environment
-
-### For Documentation:
-- Use clear, concise language
-- Include code examples for concepts
-- Test examples in the playground when possible
-- Maintain consistent formatting across pages
-
-## WASM Integration
-
-The repository includes Rust code that compiles to WebAssembly to provide ast-grep functionality in the browser:
-
-- Rust source in `src/`
-- Compiled to `pkg/` directory (git-ignored)
-- Imported as optional dependency: `"ast-grep-wasm": "file:./pkg/"`
-- Used in playground and interactive features
-
-## Common Tasks
-
-### Adding New Documentation:
-1. Create markdown files in appropriate `website/` subdirectory
-2. Update navigation in `website/.vitepress/config.ts`
-3. Test locally with `pnpm dev`
-
-### Updating WASM Functionality:
-1. Modify Rust code in `src/`
-2. Rebuild with `wasm-pack build --target web`
-3. Test integration in browser features
-
-### Adding Dependencies:
-- Use `pnpm add <package>` for runtime dependencies
-- Use `pnpm add -D <package>` for development dependencies
-- Update Rust dependencies in `Cargo.toml` if needed
-
-## Build and Deployment
-
-The website is automatically deployed via GitHub Actions:
-1. Builds WASM package with `wasm-pack`
-2. Installs dependencies with `pnpm`
-3. Builds website with `pnpm build`
-4. Deploys to GitHub Pages
-
-## Best Practices
-
-1. **Always use pnpm** instead of npm
-2. Test WASM changes thoroughly in browser
-3. Maintain documentation quality and accuracy
-4. Follow existing naming conventions
-5. Update navigation when adding new pages
-6. Ensure examples work in the playground
-7. Keep build times reasonable by optimizing WASM size
-8. Use TypeScript types for better developer experience
-
-## Troubleshooting
-
-- **WASM not loading**: Rebuild with `wasm-pack build --target web`
-- **Dependencies issues**: Delete `node_modules` and run `pnpm install`
-- **Build failures**: Check that wasm-pack and pnpm are properly installed
-- **Playground not working**: Ensure tree-sitter WASM files are in `website/public/`
+### Contributed by
+[Author Name](https://link)
+```
 
 ---
 > Source: [ast-grep/ast-grep.github.io](https://github.com/ast-grep/ast-grep.github.io) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-24 -->
+<!-- tomevault:4.0:agents_md:2026-07-27 -->
