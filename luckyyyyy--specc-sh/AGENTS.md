@@ -1,69 +1,124 @@
-# Project Overview
 
-TypeScript monorepo (pnpm workspaces): Hono backend, React frontend, shared types.
+# Adding a New Feature
 
-## Packages
-
-| Package | Purpose |
-|---------|---------|
-| `packages/server` | Hono + tRPC + Prisma ORM + PostgreSQL 18 |
-| `packages/web` | React 19 + Vite 8 + TailwindCSS 4 + TanStack Query v5 |
-| `packages/types` | Shared Zod v4 schemas + TypeScript types |
-| `packages/components` | Reusable UI components (no business logic) |
-| `packages/i18n` | i18n locale resources |
-
-## Commands
-
-| Command | What it does |
-|---------|-------------|
-| `make lint` | Biome lint check |
-| `make tsc` | TypeScript type check across all packages |
-
-### Database
-
-```sh
-pnpm --filter @specc/server db:push      # sync schema to DB (dev, no migration files)
-pnpm --filter @specc/server db:migrate   # create migration files + apply (production)
-pnpm --filter @specc/server db:generate  # regenerate Prisma client after schema change
-```
-
-#### Query local DB (one-liner)
-
-```sh
-docker exec -it ai-stack-postgres psql -U postgres -d specc -c "SELECT * FROM users LIMIT 10;"
-```
-
-## Critical Rules
-
-- **After every change: run `make lint && make tsc`** — only fix errors _you_ introduced, ignore pre-existing ones
-- No antd, no @ant-design/icons — TailwindCSS 4 only
-- **Zod v4** only (not v3 — API differs)
-- Biome for lint/format (not Prettier/ESLint)
-- Single file ≤ 500 lines
-- Every tRPC procedure must have `.input()` + `.output()` Zod schemas
-- Never expose Prisma entities directly — transform via `toXxxOutput()` helpers
-
-## Storage / File URL 规则
-
-**后端只存文件 key，前端负责拼接完整 URL。**
-
-- 数据库（`UserSettings.avatarKey` 等）**仅存储文件 key**，例如 `userId/1234.jpg`
-- `StorageProvider.uploadFile()` 返回 `void`（不再返回 URL）；接口不提供 `getPublicUrl` 或 `extractKey`
-- 后端 API（上传接口、tRPC）响应中返回 `key`，而非完整 URL
-- **前端**通过 `VITE_STORAGE_PUBLIC_URL`（env）+ key 自行拼接完整 URL
-- 工具函数：`resolveAvatarUrl(key)` 位于 `packages/web/src/lib/avatar.ts`
+## 1. Types & Schemas (`packages/types/src/[feature].ts`)
 
 ```typescript
-// 前端拼接示例
-import { resolveAvatarUrl } from "@/lib/avatar";
-<Avatar url={resolveAvatarUrl(user.settings?.avatarKey)} />
+import { z } from "zod";
+
+export const FeatureSchema = z.object({
+  id: z.string(),
+  workspaceId: z.string(),
+  name: z.string(),
+  createdAt: z.string()
+});
+export const CreateFeatureInputSchema = z.object({
+  workspaceId: z.string(),
+  name: z.string().min(1)
+});
+export type Feature = z.infer<typeof FeatureSchema>;
+export type CreateFeatureInput = z.infer<typeof CreateFeatureInputSchema>;
 ```
 
-```env
-# packages/web/.env
-VITE_STORAGE_PUBLIC_URL=http://localhost:9000/avatars
+Re-export from `packages/types/src/index.ts`.
+
+## 2. Prisma Model (`packages/server/prisma/schema.prisma`)
+
+```prisma
+model Feature {
+  id          String    @id @default(uuid())
+  workspaceId String
+  name        String
+  createdAt   DateTime  @default(now())
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+}
 ```
+
+After adding the model:
+```sh
+pnpm --filter @specc/server db:push      # push schema to DB
+pnpm --filter @specc/server db:generate  # regenerate Prisma client
+```
+
+## 3. Mapper (`modules/[feature]/[feature].mapper.ts`)
+
+```typescript
+import type { Feature } from "@/generated/prisma/client/client";
+
+export const toFeatureOutput = (row: Feature) => ({
+  id: row.id,
+  workspaceId: row.workspaceId,
+  name: row.name,
+  createdAt: row.createdAt.toISOString()
+});
+```
+
+## 4. Service (`modules/[feature]/[feature].service.ts`)
+
+```typescript
+import { db } from "@/db/client";
+
+export class FeatureService {
+  async list(workspaceId: string) {
+    return db.feature.findMany({ where: { workspaceId } });
+  }
+}
+export const featureService = new FeatureService();
+```
+
+## 5. Router (`modules/[feature]/[feature].router.ts`)
+
+```typescript
+import { FeatureSchema, CreateFeatureInputSchema } from "@specc/types";
+import { z } from "zod";
+import { protectedProcedure, router } from "@/trpc/init";
+import { toFeatureOutput } from "./feature.mapper";
+import { featureService } from "./feature.service";
+
+export const featureRouter = router({
+  list: protectedProcedure
+    .input(z.object({ workspaceId: z.string() }))
+    .output(z.array(FeatureSchema))
+    .query(async ({ input }) => {
+      const rows = await featureService.list(input.workspaceId);
+      return rows.map(toFeatureOutput);
+    }),
+});
+```
+
+## 6. Module Index + Register Router
+
+```typescript
+// modules/[feature]/index.ts
+export { toFeatureOutput } from "./feature.mapper";
+export { featureRouter } from "./feature.router";
+export { featureService } from "./feature.service";
+```
+
+```typescript
+// trpc/router.ts
+export const appRouter = router({
+  feature: featureRouter, // add here
+});
+export type AppRouter = typeof appRouter;
+```
+
+## 7. Frontend Usage
+
+```typescript
+const { data, isLoading } = trpc.feature.list.useQuery({ workspaceId });
+```
+
+## Checklist
+
+- [ ] Types/schemas in `packages/types`, exported from `index.ts`
+- [ ] Prisma model added, `db:push` + `db:generate` run
+- [ ] Mapper (`xxx.mapper.ts`) with `toXxxOutput(row: PrismaType)` — import type from `@/generated/prisma/client/client`
+- [ ] Service (`xxx.service.ts`) with business logic; imports mapper functions as needed
+- [ ] Router with `.input()` + `.output()` on all procedures, `protectedProcedure` for auth
+- [ ] Module `index.ts` exports mapper + router + service; router added to `appRouter`
+- [ ] `make lint && make tsc` passes
 
 ---
 > Source: [luckyyyyy/specc.sh](https://github.com/luckyyyyy/specc.sh) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-05-09 -->
+<!-- tomevault:4.0:agents_md:2026-07-27 -->
