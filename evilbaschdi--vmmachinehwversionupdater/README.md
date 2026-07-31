@@ -5,7 +5,7 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [evilbaschdi/VmMachineHwVersionUpdater](https://github.com/evilbaschdi/VmMachineHwVersionUpdater).
+Original source: `` in [evilbaschdi/VmMachineHwVersionUpdater](https://github.com/evilbaschdi/VmMachineHwVersionUpdater).
 
 ## Also available for
 
@@ -13,6 +13,7 @@ Original source: `GEMINI.md` in [evilbaschdi/VmMachineHwVersionUpdater](https://
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/evilbaschdi/VmMachineHwVersionUpdater](https://github.com/evilbaschdi/VmMachineHwVersionUpdater)
