@@ -2,9 +2,9 @@
   "name": "edge-ai",
   "owner": "microsoft",
   "repo": "edge-ai",
-  "description": "Production-ready Infrastructure as Code, applications, pluggable components, and PlatformOps toolchains that empower organizations to achieve more with cloud and edge AI-powered solutions. Built by friendly geeks, for every team that needs edge solutions to achieve real production results.",
+  "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/microsoft/edge-ai",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-20T00:34:19Z"
+  "distributed_at": "2026-07-31T16:01:20Z"
 }
