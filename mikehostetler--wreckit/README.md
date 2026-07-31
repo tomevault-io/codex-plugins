@@ -1,8 +1,6 @@
 # wreckit
 
-> Source: [mikehostetler/wreckit](https://github.com/mikehostetler/wreckit) — distributed by [TomeVault](https://tomevault.io)
-
-Wreck it Ralph Wiggum - My code is in danger!
+> Source: [mikehostetler/wreckit](https://github.com/mikehostetler/wreckit). Graded, signed and kept in sync across platforms by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
