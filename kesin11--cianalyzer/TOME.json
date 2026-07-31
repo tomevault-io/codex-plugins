@@ -4,7 +4,7 @@
   "repo": "CIAnalyzer",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "",
   "formats": [
     {
       "format": "claude_md",
@@ -38,7 +38,7 @@
     }
   ],
   "skills": [],
-  "claim_url": "https://tomevault.io/claim/Kesin11",
+  "source_url": "https://github.com/Kesin11/CIAnalyzer",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-11T20:42:03Z"
+  "distributed_at": "2026-07-31T18:39:03Z"
 }
