@@ -2,9 +2,9 @@
   "name": "mcp-vosdroits",
   "owner": "guigui42",
   "repo": "mcp-vosdroits",
-  "description": "Serveur MCP pour Service Public Vos Droits",
+  "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/guigui42/mcp-vosdroits",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-03T23:56:35Z"
+  "distributed_at": "2026-07-31T05:09:42Z"
 }
