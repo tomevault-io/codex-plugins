@@ -1,16 +1,38 @@
 
-# Building OsaurusCore
+# Testing Workflow
 
-The xcode workspace has pre-existing build failures in external dependencies (`mlx-swift-lm`, `IkigaJSON`). Never use `xcodebuild` to verify changes — it will always fail on those deps and waste tokens.
+The full unit suite (`make test`, ~5000 tests) takes about 30 minutes. Do NOT
+run it during normal development iterations.
 
-Instead, compile only the OsaurusCore package sources (no linking) to verify your changes:
+## During development
+
+- Run only targeted tests scoped to what you changed, using `--filter`:
 
 ```bash
-cd /Users/tpae/dev/osaurus/Packages/OsaurusCore && swift build 2>&1 | grep -E "error:" | grep -v "IkigaJSON"
+OSAURUS_DISABLE_KEYCHAIN_FOR_TESTS=1 \
+OSAURUS_TEST_ROOT=/tmp/osaurus-test \
+OSU_MODELS_DIR=/tmp/osaurus-test-models \
+swift test --package-path Packages/OsaurusCore --filter "SuiteOrTestName"
 ```
 
-If the filtered output is empty, your code compiles cleanly.
+- A plain `swift build --package-path Packages/OsaurusCore` is enough to
+  verify compilation after edits.
+
+## Before submitting a PR
+
+- Run the full suite exactly once, right before the PR is created:
+
+```bash
+OSAURUS_DISABLE_KEYCHAIN_FOR_TESTS=1 \
+OSAURUS_TEST_ROOT=/tmp/osaurus-test \
+OSU_MODELS_DIR=/tmp/osaurus-test-models \
+make test
+```
+
+- Keychain-gated suites (e.g. `PluginAgentScopingTests`) fail by design under
+  `OSAURUS_DISABLE_KEYCHAIN_FOR_TESTS=1`; run those without the flag when
+  their area was touched.
 
 ---
 > Source: [osaurus-ai/osaurus](https://github.com/osaurus-ai/osaurus) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-05-04 -->
+<!-- tomevault:4.0:agents_md:2026-07-27 -->
