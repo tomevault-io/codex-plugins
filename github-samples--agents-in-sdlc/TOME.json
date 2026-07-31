@@ -2,9 +2,9 @@
   "name": "agents-in-sdlc",
   "owner": "github-samples",
   "repo": "agents-in-sdlc",
-  "description": "Lab Walkthrough and Demo for the \"Collaborating with agents in your software development workflow\" workshop",
+  "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/github-samples/agents-in-sdlc",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-19T18:43:08Z"
+  "distributed_at": "2026-07-31T03:43:41Z"
 }
