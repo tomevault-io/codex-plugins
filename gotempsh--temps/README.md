@@ -1,8 +1,6 @@
 # AI instruction files for temps
 
-> Sourced from [gotempsh/temps](https://github.com/gotempsh/temps) and converted for every major platform by [TomeVault](https://tomevault.io)
-
-Self host your own Vercel
+> Sourced from [gotempsh/temps](https://github.com/gotempsh/temps), graded against the public Tome Standard and kept consistent across every major platform by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
@@ -17,11 +15,7 @@ Original source: `CLAUDE.md` in [gotempsh/temps](https://github.com/gotempsh/tem
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-## Bundled Skills (1)
-
-- [add-error-tracking](https://github.com/gotempsh/temps/tree/main/skills/add-error-tracking)
-
-From [gotempsh/temps](https://github.com/gotempsh/temps) — a repo with 415+ stars on GitHub.
+From [gotempsh/temps](https://github.com/gotempsh/temps) — a repo with 554+ stars on GitHub.
 
 ---
 
