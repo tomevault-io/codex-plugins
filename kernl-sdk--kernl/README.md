@@ -5,11 +5,10 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `` in [kernl-sdk/kernl](https://github.com/kernl-sdk/kernl).
+Original source: `CLAUDE.md` in [kernl-sdk/kernl](https://github.com/kernl-sdk/kernl).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
