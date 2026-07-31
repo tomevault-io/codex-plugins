@@ -1,4 +1,3 @@
-# CLAUDE.md
 
 ato is a declarative DSL to design electronics (PCBs) with.
 It is part of the atopile project.
@@ -709,4 +708,4 @@ module App:
 
 ---
 > Source: [atopile/nonos](https://github.com/atopile/nonos) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-06-02 -->
+<!-- tomevault:4.0:agents_md:2026-07-27 -->
