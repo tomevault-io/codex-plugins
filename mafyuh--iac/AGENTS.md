@@ -104,4 +104,4 @@ The Flux resource `spec` represents the desired state and should be the main foc
 
 ---
 > Source: [Mafyuh/iac](https://github.com/Mafyuh/iac) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-06-01 -->
+<!-- tomevault:4.0:agents_md:2026-07-27 -->
