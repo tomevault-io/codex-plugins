@@ -5,17 +5,18 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [koel/koel](https://github.com/koel/koel).
+Original source: `` in [koel/koel](https://github.com/koel/koel).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [koel/koel](https://github.com/koel/koel) — a repo with 17196+ stars on GitHub.
+From [koel/koel](https://github.com/koel/koel) — a repo with 17197+ stars on GitHub.
 
 ---
 
