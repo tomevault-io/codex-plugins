@@ -1,16 +1,16 @@
 # ioBroker.lovelace
 
-> Source: [ioBroker/ioBroker.lovelace](https://github.com/ioBroker/ioBroker.lovelace). Graded, signed and kept in sync across platforms by [TomeVault](https://tomevault.io)
+> Source: [ioBroker/ioBroker.lovelace](https://github.com/ioBroker/ioBroker.lovelace). Graded, signed and kept current as the models change by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [ioBroker/ioBroker.lovelace](https://github.com/ioBroker/ioBroker.lovelace).
+Original source: `CLAUDE.md` in [ioBroker/ioBroker.lovelace](https://github.com/ioBroker/ioBroker.lovelace).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
