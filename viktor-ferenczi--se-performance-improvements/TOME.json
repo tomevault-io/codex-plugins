@@ -4,7 +4,7 @@
   "repo": "se-performance-improvements",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "",
   "formats": [
     {
       "format": "claude_md",
@@ -38,7 +38,7 @@
     }
   ],
   "skills": [],
-  "claim_url": "https://tomevault.io/claim/viktor-ferenczi",
+  "source_url": "https://github.com/viktor-ferenczi/se-performance-improvements",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-11T19:47:33Z"
+  "distributed_at": "2026-08-01T08:32:41Z"
 }
