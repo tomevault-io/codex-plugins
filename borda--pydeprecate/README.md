@@ -1,23 +1,28 @@
-# pyDeprecate
+# AI instruction files for pyDeprecate
 
-> Config by [Borda](https://github.com/Borda/pyDeprecate) — distributed by [TomeVault](https://tomevault.io/claim/Borda)
+> Sourced from [Borda/pyDeprecate](https://github.com/Borda/pyDeprecate), graded against the public Tome Standard and kept consistent across every major platform by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [Borda/pyDeprecate](https://github.com/Borda/pyDeprecate).
+Original source: `CLAUDE.md` in [Borda/pyDeprecate](https://github.com/Borda/pyDeprecate).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Browse all formats: [https://tomevault.io/claim/Borda](https://tomevault.io/claim/Borda)
+From [Borda/pyDeprecate](https://github.com/Borda/pyDeprecate) — a repo with 59+ stars on GitHub.
 
 ---
 
-Converted and distributed by [TomeVault](https://tomevault.io) — AI instruction files for every platform.
-Is this your repo? [Claim it](https://tomevault.io/claim/Borda) to manage distribution.
+Install this config instantly:
+```
+npx tomevault install Borda/pyDeprecate
+```
+Source: [github.com/Borda/pyDeprecate](https://github.com/Borda/pyDeprecate).
+
+<!-- genome:a-i-s -->
