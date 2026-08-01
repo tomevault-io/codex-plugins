@@ -116,4 +116,4 @@ REMEMBER: After every memory reset, I begin completely fresh. The Memory Bank is
 
 ---
 > Source: [femto/minion-agent](https://github.com/femto/minion-agent) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-05-17 -->
+<!-- tomevault:4.0:agents_md:2026-07-27 -->
