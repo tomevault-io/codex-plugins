@@ -1,15 +1,14 @@
 # P.808
 
-> Source: [microsoft/P.808](https://github.com/microsoft/P.808). Graded, signed and kept in sync across platforms by [TomeVault](https://tomevault.io)
+> Source: [microsoft/P.808](https://github.com/microsoft/P.808). Graded, signed and kept current as the models change by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `` in [microsoft/P.808](https://github.com/microsoft/P.808).
+Original source: `CLAUDE.md` in [microsoft/P.808](https://github.com/microsoft/P.808).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
