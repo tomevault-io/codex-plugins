@@ -1,24 +1,25 @@
-# se-performance-improvements — distributed by TomeVault
+# se-performance-improvements
 
-> Originally from [viktor-ferenczi/se-performance-improvements](https://github.com/viktor-ferenczi/se-performance-improvements). Converted and distributed by [TomeVault](https://tomevault.io)
+> Source: [viktor-ferenczi/se-performance-improvements](https://github.com/viktor-ferenczi/se-performance-improvements). Graded, signed and kept current as the models change by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [viktor-ferenczi/se-performance-improvements](https://github.com/viktor-ferenczi/se-performance-improvements).
+Original source: `` in [viktor-ferenczi/se-performance-improvements](https://github.com/viktor-ferenczi/se-performance-improvements).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. [Browse all formats](https://tomevault.io/claim/viktor-ferenczi)
+Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/viktor-ferenczi/se-performance-improvements](https://github.com/viktor-ferenczi/se-performance-improvements)
 
 ---
 
-Is this your repo? [Claim it](https://tomevault.io/claim/viktor-ferenczi) to manage distribution and track installs.
+Own this repo? Install the TomeVault Relay to keep every platform's copy in sync on every push: [https://tomevault.io/install](https://tomevault.io/install).
 
 <!-- genome:d-c-p -->
