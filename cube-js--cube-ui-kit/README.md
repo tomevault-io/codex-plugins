@@ -5,10 +5,11 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [cube-js/cube-ui-kit](https://github.com/cube-js/cube-ui-kit).
+Original source: `` in [cube-js/cube-ui-kit](https://github.com/cube-js/cube-ui-kit).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
