@@ -1,6 +1,13 @@
-# GitHub Copilot Development Guidelines for NES Emulator
+# Junie Development Guidelines for NES Emulator
 
 This document provides guidelines for AI-assisted development of this NES (Nintendo Entertainment System) emulator written in PHP.
+
+## Agent Document Source of Truth
+
+- `AGENTS.md` is the master agentic development document for this repository.
+- If this document disagrees with `AGENTS.md`, follow `AGENTS.md`.
+- Keep this document and all other agentic development documents in sync with `AGENTS.md`, including `.cursorrules`, `CLAUDE.md`, and `.github/copilot-instructions.md`.
+- When changing agent guidance, update `AGENTS.md` first, then update the corresponding Cursor, Claude, Copilot, Junie, and contributor-facing documentation in the same change.
 
 ## Project Overview
 
@@ -198,7 +205,7 @@ final class SystemIntegrationTest extends IntegrationTestCase
         
         $this::assertNotFalse($renderingData);
         $frameBuffer = $renderer->render($renderingData);
-        $this::assertCount(256 * 256 * 4, $frameBuffer);
+        $this::assertCount(256 * 224 * 4, $frameBuffer);
     }
 }
 ```
@@ -212,7 +219,7 @@ final class SystemIntegrationTest extends IntegrationTestCase
 - Error conditions must be tested with appropriate `expectException()`
 
 **Current Coverage:**
-- 234 tests with 266,452+ assertions
+- 258 tests with 233,000+ assertions
 - Unit tests for all components
 - Integration tests for system interactions
 - ROM loading and parsing tests
@@ -350,6 +357,9 @@ vendor/bin/phpstan analyze
 # Format code
 vendor/bin/pint
 
+# Run headless benchmark
+composer benchmark -- path/to/homebrew-or-test-rom.nes
+
 # Run emulator with ROM
 php bin/start.php path/to/rom.nes
 ```
@@ -372,8 +382,8 @@ php bin/start.php path/to/rom.nes
 
 ---
 
-*Last updated: December 4, 2025*
+*Last updated: May 29, 2026*
 
 ---
 > Source: [oliverearl/nes-php-glfw](https://github.com/oliverearl/nes-php-glfw) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-05-04 -->
+<!-- tomevault:4.0:agents_md:2026-07-27 -->
