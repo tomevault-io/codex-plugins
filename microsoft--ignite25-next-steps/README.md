@@ -1,0 +1,29 @@
+# AI instruction files for ignite25-next-steps
+
+> Sourced from [microsoft/ignite25-next-steps](https://github.com/microsoft/ignite25-next-steps), graded against the public Tome Standard and kept consistent across every major platform by [TomeVault](https://tomevault.io)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `` in [microsoft/ignite25-next-steps](https://github.com/microsoft/ignite25-next-steps).
+
+## Also available for
+
+- **Claude Code** — `CLAUDE.md`
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+From [microsoft/ignite25-next-steps](https://github.com/microsoft/ignite25-next-steps) — a repo with 97+ stars on GitHub.
+
+---
+
+Install this config instantly:
+```
+npx tomevault install microsoft/ignite25-next-steps
+```
+Source: [github.com/microsoft/ignite25-next-steps](https://github.com/microsoft/ignite25-next-steps).
+
+<!-- genome:a-i-s -->
