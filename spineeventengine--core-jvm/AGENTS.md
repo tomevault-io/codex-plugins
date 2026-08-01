@@ -1,49 +1,25 @@
-# GitHub Copilot Instructions
+# Guidelines for Junie and AI Agent from JetBrains
 
-## Repository context
+Read the `../.agents/guidelines/_TOC.md` file to understand:
+ - the agent responsibilities,
+ - project overview,
+ - coding guidelines,
+ - other relevant topics.
 
-This repository is part of the Spine SDK organisation (~40 repos).
+Also follow the Junie-specific rules described below.
 
-Universal agent instructions are in [`AGENTS.md`](../AGENTS.md) at the
-repository root — read it first.
+## Junie Assistance Tips
 
-If `.agents/project.md` exists, read it before reviewing. It provides the
-language, architecture, role, and code review checklist for this specific repo.
+When working with Junie AI on the Spine family of projects:
 
-Additional guidelines are in `.agents/guidelines/` — see
-`.agents/guidelines/_TOC.md` for the index.
-
-## Do not review
-
-Never review `gradlew` or `gradlew.bat` in any repository, including `config`.
-These files are provided by Gradle and are not edited manually.
-
-If the current repository is `config`, review its files normally unless noted
-above: they are authoritative there. In other repositories, the following files are managed by
-the `config` submodule and must be reviewed in the `config` repository, not
-here. In those consumer repositories, skip them without comment:
-
-- `AGENTS.md`, `CLAUDE.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`
-- `.agents/**` (except `.agents/project.md`)
-- `.claude/**`, `.idea/**`, `.junie/**`
-- `.github/copilot-instructions.md`
-- `buildSrc/**` (except `buildSrc/src/main/kotlin/module.gradle.kts`)
-- `gradle/`, `gradlew`, `gradlew.bat`
-- `.codecov.yml`, `.gitignore`, `gradle.properties`, `lychee.toml`
-- `.github/workflows/` — unless the workflow was introduced by this repo
-
-## Universal rules
-
-**Do not suggest:**
-- Any git history operation — `git commit`, `git push`, `git tag`,
-  `git rebase`, `git merge`, `git cherry-pick`, `gh pr merge`, or any other
-  command that writes to history — leave these to the developer.
-- Auto-updating dependency versions outside a dedicated update task.
-- Feature flags, backwards-compatibility shims, or fallbacks for scenarios
-  that cannot occur in the current codebase.
-- Analytics, telemetry, or tracking code.
-- Reflection or unsafe code without explicit approval.
+1. **Project Navigation**: Use `search_project` to find relevant files and code segments.
+2. **Code Understanding**: Request file structure with `get_file_structure` before editing.
+3. **Code Editing**: Make minimal changes with `search_replace` to maintain project consistency.
+4. **Testing**: Verify changes with `run_test` on relevant test files.
+5. **Documentation**: Follow KDoc style for documentation.
+6. **Kotlin Idioms**: Prefer Kotlin-style solutions over Java-style approaches.
+7. **Version Updates**: Remember to update `version.gradle.kts` for PRs.
 
 ---
 > Source: [SpineEventEngine/core-jvm](https://github.com/SpineEventEngine/core-jvm) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-24 -->
+<!-- tomevault:4.0:agents_md:2026-07-27 -->
