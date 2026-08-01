@@ -1,23 +1,22 @@
 # toolbox
 
-> Source: [BitSpireGmbH/toolbox](https://github.com/BitSpireGmbH/toolbox) — distributed by [TomeVault](https://tomevault.io)
-
-Swiss Army Knife for .NET developers
+> Source: [BitSpireGmbH/toolbox](https://github.com/BitSpireGmbH/toolbox). Graded, signed and kept current as the models change by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [BitSpireGmbH/toolbox](https://github.com/BitSpireGmbH/toolbox).
+Original source: `` in [BitSpireGmbH/toolbox](https://github.com/BitSpireGmbH/toolbox).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/BitSpireGmbH/toolbox](https://github.com/BitSpireGmbH/toolbox)
+Graded against the Tome Standard, TomeVault's public ruleset for whether AI instructions load, read clearly and stay safe. Source: [github.com/BitSpireGmbH/toolbox](https://github.com/BitSpireGmbH/toolbox)
 
 ---
 
