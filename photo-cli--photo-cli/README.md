@@ -1,21 +1,21 @@
 # photo-cli
 
-> Source: [photo-cli/photo-cli](https://github.com/photo-cli/photo-cli). Graded, signed and kept in sync across platforms by [TomeVault](https://tomevault.io)
+> Source: [photo-cli/photo-cli](https://github.com/photo-cli/photo-cli). Graded, signed and kept current as the models change by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [photo-cli/photo-cli](https://github.com/photo-cli/photo-cli).
+Original source: `CLAUDE.md` in [photo-cli/photo-cli](https://github.com/photo-cli/photo-cli).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [photo-cli/photo-cli](https://github.com/photo-cli/photo-cli) — a repo with 73+ stars on GitHub.
+From [photo-cli/photo-cli](https://github.com/photo-cli/photo-cli) — a repo with 72+ stars on GitHub.
 
 ---
 
