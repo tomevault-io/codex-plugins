@@ -1,0 +1,8 @@
+
+When a code change in the addon needs to be tested or viewed in the browser, rebuild and rerun the addon first, then refresh the browser to see the changes. Hot reload does not work reliably for components or code used inside the addon.
+
+Alternatively, create Storybook stories for the components and test them in Storybook. Hot reload works there and it is faster for iterating on changes.
+
+---
+> Source: [ccpu/storybook-addon-playwright](https://github.com/ccpu/storybook-addon-playwright) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-07-26 -->
