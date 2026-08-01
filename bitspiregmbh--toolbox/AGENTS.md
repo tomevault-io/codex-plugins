@@ -57,4 +57,4 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 
 ---
 > Source: [BitSpireGmbH/toolbox](https://github.com/BitSpireGmbH/toolbox) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-05-02 -->
+<!-- tomevault:4.0:agents_md:2026-07-27 -->
