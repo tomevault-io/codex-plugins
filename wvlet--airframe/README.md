@@ -1,15 +1,14 @@
 # airframe
 
-> Source: [wvlet/airframe](https://github.com/wvlet/airframe). Graded, signed and kept in sync across platforms by [TomeVault](https://tomevault.io)
+> Source: [wvlet/airframe](https://github.com/wvlet/airframe). Graded, signed and kept current as the models change by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `` in [wvlet/airframe](https://github.com/wvlet/airframe).
+Original source: `CLAUDE.md` in [wvlet/airframe](https://github.com/wvlet/airframe).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
