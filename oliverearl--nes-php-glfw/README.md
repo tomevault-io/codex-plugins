@@ -1,16 +1,15 @@
 # nes-php-glfw
 
-> Tome by [oliverearl](https://github.com/oliverearl/nes-php-glfw) — distributed by [TomeVault](https://tomevault.io)
-
-An NES emulator written in PHP 8.5 using the OpenGL GLFW extension.
+> Tome by [oliverearl](https://github.com/oliverearl/nes-php-glfw), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [oliverearl/nes-php-glfw](https://github.com/oliverearl/nes-php-glfw).
+Original source: `` in [oliverearl/nes-php-glfw](https://github.com/oliverearl/nes-php-glfw).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
@@ -21,6 +20,6 @@ Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Sou
 
 ---
 
-Explore more instruction files on [TomeVault](https://tomevault.io) — the open index of AI config files for every platform.
+Explore more instruction files on [TomeVault](https://tomevault.io), the platform that grades AI instruction files and catches silent drift across every major tool.
 
 <!-- genome:t-e-p -->
