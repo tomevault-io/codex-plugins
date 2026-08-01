@@ -1,4 +1,3 @@
-
 # VFS Development Standards
 
 All development on this repository MUST follow the comprehensive guidelines documented in `AGENTS.md` at the repository root.
@@ -21,5 +20,5 @@ See AGENTS.md for complete details on:
 - Module management for monorepo structure
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/C2FO) — claim your Tome and manage your conversions.
-<!-- tomevault:4.0:agents_md:2026-04-13 -->
+> Source: [C2FO/vfs](https://github.com/C2FO/vfs) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-07-23 -->
