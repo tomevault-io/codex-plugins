@@ -5,14 +5,14 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [MiguelAxcar/ai-rpi-protocol](https://github.com/MiguelAxcar/ai-rpi-protocol).
+Original source: `CLAUDE.md` in [MiguelAxcar/ai-rpi-protocol](https://github.com/MiguelAxcar/ai-rpi-protocol).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/MiguelAxcar/ai-rpi-protocol](https://github.com/MiguelAxcar/ai-rpi-protocol)
