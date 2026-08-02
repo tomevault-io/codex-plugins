@@ -1,8 +1,6 @@
 # durable
 
-> Tome by [wavezync](https://github.com/wavezync/durable) — distributed by [TomeVault](https://tomevault.io)
-
-A durable workflow execution engine for Elixir 
+> Tome by [wavezync](https://github.com/wavezync/durable), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
