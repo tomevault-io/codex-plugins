@@ -1,8 +1,6 @@
 # AI instruction files for Code-Index-MCP
 
-> Sourced from [ViperJuice/Code-Index-MCP](https://github.com/ViperJuice/Code-Index-MCP) and converted for every major platform by [TomeVault](https://tomevault.io)
-
-Code indexing MCP server to provide context to coding agents. 
+> Sourced from [ViperJuice/Code-Index-MCP](https://github.com/ViperJuice/Code-Index-MCP), graded against the public Tome Standard and kept consistent across every major platform by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
