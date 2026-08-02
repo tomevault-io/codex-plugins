@@ -1,8 +1,6 @@
 # elfmem
 
-> Source: [emson/elfmem](https://github.com/emson/elfmem) — distributed by [TomeVault](https://tomevault.io)
-
-sELF improving agent memory system
+> Source: [emson/elfmem](https://github.com/emson/elfmem). Graded, signed and kept current as the models change by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
@@ -17,7 +15,7 @@ Original source: `CLAUDE.md` in [emson/elfmem](https://github.com/emson/elfmem).
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/emson/elfmem](https://github.com/emson/elfmem)
+Graded against the Tome Standard, TomeVault's public ruleset for whether AI instructions load, read clearly and stay safe. Source: [github.com/emson/elfmem](https://github.com/emson/elfmem)
 
 ---
 
