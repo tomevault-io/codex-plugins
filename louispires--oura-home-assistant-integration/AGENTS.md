@@ -1,67 +1,75 @@
-﻿# Project Guidelines
+# CLAUDE.md
 
-Home Assistant custom integration for Oura Ring (v2 API, OAuth2). Domain: `oura`.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## What this is
+
+Home Assistant custom integration for Oura Ring (v2 API, OAuth2). Domain: `oura`. Distributed via HACS. Single component lives at `custom_components/oura/`.
+
+## Build / Test
+
+Tests run inside the Home Assistant container — the local `.venv` does not have HA test deps. Always use Docker for verification.
+
+```bash
+# Full test suite (authoritative)
+docker compose -f docker-compose.test.yml run --rm test
+
+# Single test file
+docker compose -f docker-compose.test.yml run --rm test pytest tests/test_sensor.py -v
+
+# Single test
+docker compose -f docker-compose.test.yml run --rm test pytest tests/test_sensor.py::TestName::test_case -v
+```
+
+Test image pinned to `homeassistant/home-assistant:2026.6`. Async throughout (`asyncio_mode = "auto"` in `pyproject.toml`).
+
+No lint/format command is configured in this repo.
 
 ## Architecture
 
 ```
 custom_components/oura/
-├── __init__.py          # Entry setup: OAuth2 session → API client → Coordinator → platforms
-├── api.py               # OuraApiClient: 16 endpoints fetched in parallel via asyncio.gather
-├── coordinator.py       # OuraDataUpdateCoordinator: modular _process_* methods per data category
-├── sensor.py            # OuraSensor: CoordinatorEntity, config-driven from SENSOR_TYPES
-├── binary_sensor.py     # OuraRestModeBinarySensor: single rest-mode entity
-├── statistics.py        # Historical data import as HA long-term statistics
-├── config_flow.py       # OAuth2 flow + options flow (update interval, historical months)
-├── const.py             # All sensor definitions, API URLs, scopes, defaults
-├── application_credentials.py  # OAuth2 credential provider
-└── strings.json         # Translation source (en); translations/ has de, es, fr
+├── __init__.py                  # Setup: OAuth2 session → OuraApiClient → Coordinator → forward platforms
+├── api.py                       # OuraApiClient: 16 endpoints fetched in parallel via asyncio.gather
+├── coordinator.py               # OuraDataUpdateCoordinator: modular _process_* methods per data category
+├── sensor.py                    # OuraSensor: CoordinatorEntity, driven by SENSOR_TYPES dict
+├── binary_sensor.py             # Rest mode + ring charging binary sensors
+├── statistics.py                # Historical import as HA long-term statistics
+├── config_flow.py               # OAuth2 + options flow (update interval, historical months)
+├── const.py                     # SENSOR_TYPES (single source of truth), API URLs, scopes, defaults
+├── application_credentials.py   # OAuth2 credential provider
+├── strings.json                 # en source; translations/ has de, es, fr
 ```
 
-**Data flow**: `api.py` fetches all endpoints → `coordinator.py` processes raw data via `_process_*` methods → entities read from `coordinator.data[key]`.
+**Data flow**: `api.py` fetches all Oura endpoints in parallel → `coordinator.py` `_process_*` methods normalize each category into `coordinator.data[key]` → entities read by key.
 
-**Key pattern**: Sensors are **configuration-driven** — defined in `SENSOR_TYPES` dict in `const.py` (name, icon, unit, device_class, state_class, entity_category, data_category). Adding a sensor means adding an entry there + a processing method in the coordinator.
+**Sensors are config-driven.** `SENSOR_TYPES` in `const.py` is the single source of truth (name, icon, unit, device_class, state_class, entity_category, data_category). To add a sensor:
+1. Add entry to `SENSOR_TYPES` in `const.py`
+2. Add matching translation key in `strings.json` (+ `translations/*.json`)
+3. Ensure coordinator `_process_*` populates `coordinator.data[key]`
 
-## Build and Test
-
-```bash
-# Run tests (authoritative — use Docker, not bare Python)
-docker compose -f docker-compose.test.yml run --rm test
-
-# Run a single test file
-docker compose -f docker-compose.test.yml run --rm test pytest tests/test_sensor.py -v
-```
-
-Test image: `homeassistant/home-assistant:2025.11`. Tests use `pytest` + `pytest-asyncio` (async throughout).
+To add an API endpoint: add to `API_ENDPOINTS` dict in `api.py`, add `_async_get_*` method, include in the `asyncio.gather` call, add a `_process_*` step in coordinator.
 
 ## Conventions
 
-- **Config entry only** — no YAML configuration support
-- **All entities** use `CoordinatorEntity`, `_attr_has_entity_name = True`, `_attr_translation_key`
-- **Device info**: shared device per config entry (`Oura Ring` / `Oura` / `SERVICE`)
-- **Availability**: entity is available only when coordinator has data AND the sensor key exists AND value is not None
-- **API resilience**: 401s on optional endpoints (Gen3-only, subscription-limited) return empty data, not errors. Transient failures preserve existing data.
-- **Entity categories**: diagnostic sensors use `EntityCategory.DIAGNOSTIC` (see `const.py`)
-- **Translation keys**: every sensor has a translation key matching its `const.py` key; update `strings.json` + `translations/` when adding sensors
-- **Historical import**: one-time import tracked via `CONF_HISTORICAL_DATA_IMPORTED` persistent flag in config entry
-- **Heart rate batching**: API limits to 30-day chunks; `api.py` auto-batches
+- **Config entry only** — no YAML configuration (`config_entry_only_config_schema`)
+- All entities use `CoordinatorEntity`, `_attr_has_entity_name = True`, `_attr_translation_key`
+- One shared device per config entry (`Oura Ring` / `Oura` / `SERVICE`)
+- Availability gate: coordinator has data AND key exists AND value is not None
+- 401s on optional/Gen3/subscription-limited endpoints → empty data, not errors. Transient failures preserve last known data.
+- Diagnostic sensors get `EntityCategory.DIAGNOSTIC` in `const.py`
+- One-time historical import gated by `CONF_HISTORICAL_DATA_IMPORTED` flag in entry options — survives restarts
+- Heart rate API is 30-day-chunked; `api.py` auto-batches longer ranges
+- OAuth token refresh handled by HA's `OAuth2Session` — never refresh manually
+- Multi-account supported via entry-scoped unique IDs
 
-## Pitfalls
+## Reference docs in repo
 
-- Local Python env lacks HA test deps — always verify via Docker test harness
-- `SENSOR_TYPES` in `const.py` is the single source of truth for sensor metadata; don't define sensor attributes in `sensor.py`
-- OAuth token refresh is handled by HA's `OAuth2Session` — don't manage tokens manually
-- When adding API endpoints: add to `API_ENDPOINTS` dict, add `_async_get_*` method, include in `asyncio.gather` call, add `_process_*` in coordinator
-
-## Documentation
-
-See [docs/](../docs/) for detailed guides:
-- [INSTALLATION.md](../docs/INSTALLATION.md) — setup and prerequisites
-- [TROUBLESHOOTING.md](../docs/TROUBLESHOOTING.md) — common issues
-- [CONTRIBUTING.md](../docs/CONTRIBUTING.md) — contribution workflow
-- [PROJECT_SUMMARY.md](../docs/PROJECT_SUMMARY.md) — component overview
-- [Oura API specs](../docs/Oura%20API/) — OpenAPI 1.27/1.28 schemas
+- `.github/copilot-instructions.md` — same scope as this file, kept in sync
+- `docs/INSTALLATION.md`, `docs/TROUBLESHOOTING.md`, `docs/CONTRIBUTING.md`, `docs/PROJECT_SUMMARY.md`
+- `docs/Oura API/` — OpenAPI 1.27/1.28/1.29 schemas
+- `plans/` — phase-completion notes from past modernization passes (historical context, not active TODOs)
 
 ---
 > Source: [louispires/Oura-Home-Assistant-Integration](https://github.com/louispires/Oura-Home-Assistant-Integration) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-05-04 -->
+<!-- tomevault:4.0:agents_md:2026-07-24 -->
