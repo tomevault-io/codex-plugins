@@ -5,11 +5,10 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `` in [datafolklabs/cement](https://github.com/datafolklabs/cement).
+Original source: `CLAUDE.md` in [datafolklabs/cement](https://github.com/datafolklabs/cement).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
