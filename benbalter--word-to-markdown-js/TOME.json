@@ -4,7 +4,7 @@
   "repo": "word-to-markdown-js",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/benbalter/word-to-markdown-js",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-06-30T07:06:50Z"
+  "distributed_at": "2026-08-03T04:35:34Z"
 }
