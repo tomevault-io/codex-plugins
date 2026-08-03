@@ -1,0 +1,5 @@
+See [AGENTS.md](./AGENTS.md) for guidance on working in this repository.
+
+---
+> Source: [wingrunr21/hassio-xcel-itron-mqtt](https://github.com/wingrunr21/hassio-xcel-itron-mqtt) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-07-25 -->
