@@ -1,22 +1,21 @@
 # hackagent
 
-> Source: [AISecurityLab/hackagent](https://github.com/AISecurityLab/hackagent). Graded, signed and kept in sync across platforms by [TomeVault](https://tomevault.io)
+> Source: [AISecurityLab/hackagent](https://github.com/AISecurityLab/hackagent). Graded, signed and kept current as the models change by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `` in [AISecurityLab/hackagent](https://github.com/AISecurityLab/hackagent).
+Original source: `CLAUDE.md` in [AISecurityLab/hackagent](https://github.com/AISecurityLab/hackagent).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [AISecurityLab/hackagent](https://github.com/AISecurityLab/hackagent) — a repo with 336+ stars on GitHub.
+From [AISecurityLab/hackagent](https://github.com/AISecurityLab/hackagent) — a repo with 333+ stars on GitHub.
 
 ---
 
