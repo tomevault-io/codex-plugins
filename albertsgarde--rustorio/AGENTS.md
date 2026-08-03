@@ -307,11 +307,6 @@ When adding dependencies to the project, specify a specific version in
 `Cargo.toml`, and ensure that it is the newest stable version. The best way to
 do this is to use the `cargo add` command.
 
-# Checking
-
-To check your code for errors, run `just check --strict`. It will run clippy,
-fmt, doc and nextest.
-
 ---
 > Source: [albertsgarde/rustorio](https://github.com/albertsgarde/rustorio) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-05-04 -->
+<!-- tomevault:4.0:agents_md:2026-07-24 -->
