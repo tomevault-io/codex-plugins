@@ -1,18 +1,16 @@
 # documentation
 
-> Tome by [nginx](https://github.com/nginx/documentation) — distributed by [TomeVault](https://tomevault.io)
-
-Public source for docs.nginx.com
+> Tome by [nginx](https://github.com/nginx/documentation), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [nginx/documentation](https://github.com/nginx/documentation).
+Original source: `CLAUDE.md` in [nginx/documentation](https://github.com/nginx/documentation).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
