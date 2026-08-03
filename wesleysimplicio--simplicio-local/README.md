@@ -7,12 +7,12 @@ Ultra-fast 100% on-device Universal State Runtime for LLMs on Apple Silicon (M1�
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [wesleysimplicio/simplicio-local](https://github.com/wesleysimplicio/simplicio-local).
+Original source: `CLAUDE.md` in [wesleysimplicio/simplicio-local](https://github.com/wesleysimplicio/simplicio-local).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
