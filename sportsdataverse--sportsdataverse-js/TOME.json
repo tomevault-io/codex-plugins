@@ -4,7 +4,7 @@
   "repo": "sportsdataverse-js",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/sportsdataverse/sportsdataverse-js",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-29T15:10:52Z"
+  "distributed_at": "2026-08-03T03:01:05Z"
 }
