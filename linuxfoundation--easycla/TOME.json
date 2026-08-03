@@ -4,7 +4,7 @@
   "repo": "easycla",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -38,7 +38,7 @@
     }
   ],
   "skills": [],
-  "claim_url": "https://tomevault.io/claim/linuxfoundation",
+  "source_url": "https://github.com/linuxfoundation/easycla",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-15T06:58:10Z"
+  "distributed_at": "2026-08-03T15:35:55Z"
 }
