@@ -1,24 +1,24 @@
 # easycla
 
-> Tome by [linuxfoundation](https://github.com/linuxfoundation/easycla) — distributed by [TomeVault](https://tomevault.io/claim/linuxfoundation)
+> Tome by [linuxfoundation](https://github.com/linuxfoundation/easycla), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [linuxfoundation/easycla](https://github.com/linuxfoundation/easycla).
+Original source: `CLAUDE.md` in [linuxfoundation/easycla](https://github.com/linuxfoundation/easycla).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Quality verified by TomeVault's automated analysis pipeline. [View quality report](https://tomevault.io/claim/linuxfoundation#quality)
+Graded against the Tome Standard, TomeVault's public ruleset for whether AI instructions load, read clearly and stay safe. Source: [github.com/linuxfoundation/easycla](https://github.com/linuxfoundation/easycla)
 
 ---
 
-Is this your repo? [Claim it](https://tomevault.io/claim/linuxfoundation) to manage distribution and track installs.
+Own this repo? Install the TomeVault Relay to keep every platform's copy in sync on every push: [https://tomevault.io/install](https://tomevault.io/install).
 
 <!-- genome:t-c-q -->
