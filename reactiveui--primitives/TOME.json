@@ -4,7 +4,7 @@
   "repo": "Primitives",
   "description": "A compact, high-performance reactive library for .NET applications",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/reactiveui/Primitives",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-29T20:56:43Z"
+  "distributed_at": "2026-08-03T19:46:58Z"
 }
