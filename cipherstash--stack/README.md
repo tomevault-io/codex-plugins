@@ -1,23 +1,21 @@
 # stack
 
-> Source: [cipherstash/stack](https://github.com/cipherstash/stack) — distributed by [TomeVault](https://tomevault.io)
-
-Data level access controls via field level searchable encryption SDK for JavaScript/TypeScript
+> Source: [cipherstash/stack](https://github.com/cipherstash/stack). Graded, signed and kept current as the models change by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [cipherstash/stack](https://github.com/cipherstash/stack).
+Original source: `CLAUDE.md` in [cipherstash/stack](https://github.com/cipherstash/stack).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [cipherstash/stack](https://github.com/cipherstash/stack) — a repo with 142+ stars on GitHub.
+From [cipherstash/stack](https://github.com/cipherstash/stack) — a repo with 148+ stars on GitHub.
 
 ---
 
