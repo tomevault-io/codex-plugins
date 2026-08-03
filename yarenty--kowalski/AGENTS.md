@@ -1,10 +1,14 @@
+# CLAUDE.md
 
-# This repository (Kowalski)
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-- Follow **root `AGENTS.md`** for philosophy, **SOLID** (see `tools/solid_principles_quick_reference.md`), **Rule 0** (read the **component `AGENTS.md`** before editing that crate), **Rule 7** (docs with behavior/API changes), and error/logging protocols.
-- For planned work, sany examples / ingest / federation: open **`task_plan.md`**, respect numbered phases and “pending vs complete”; when a phase completes or scope shifts, update **`progress.md`** and non-obvious decisions in **`findings.md`**.
-- **Architecture**: ingest and URL bundling live in **`kowalski-core`** (`source_bundle`, `tools::internal::*`). **`kowalski-cli`** and **`ui/`** stay **thin**—no horde-specific fetch or domain orchestration in CLI beyond invoking core / APIs.
+Claude Code loads `CLAUDE.md` automatically, but not `AGENTS.md`. This file imports
+the shared, tool-agnostic agent documentation so Claude reads the same source of
+truth as Gemini, Cursor, and other agents. Keep durable guidance in `AGENTS.md`;
+add Claude-specific-only notes below the import.
+
+@AGENTS.md
 
 ---
 > Source: [yarenty/kowalski](https://github.com/yarenty/kowalski) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-05-20 -->
+<!-- tomevault:4.0:agents_md:2026-07-26 -->
