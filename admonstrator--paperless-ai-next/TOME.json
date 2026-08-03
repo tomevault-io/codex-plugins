@@ -2,9 +2,9 @@
   "name": "paperless-ai-next",
   "owner": "admonstrator",
   "repo": "paperless-ai-next",
-  "description": "Next-generation fork of Paperless-AI for Paperless-ngx, improving AI/OCR reliability with an OCR rescue queue (Mistral), a permanent-failure queue, and ignore filters. Adds history + one-click rescan, MFA, better setup, restore-original-metadata, and Date/Boolean custom fields support.",
+  "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/admonstrator/paperless-ai-next",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-22T05:47:53Z"
+  "distributed_at": "2026-08-03T05:34:26Z"
 }
