@@ -4,7 +4,7 @@
   "repo": "Castwright",
   "description": "A local, multi-voice audiobook generator: an LLM casts every character in its own voice, kept consistent across a whole series \u2014 with voice design, per-line emotion, seven languages, and M4B / Audiobookshelf export. Runs on your own machine; you own the files. Kokoro \u00b7 Qwen3-TTS.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/dudarenok-maker/Castwright",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-29T21:25:45Z"
+  "distributed_at": "2026-08-03T23:59:42Z"
 }
