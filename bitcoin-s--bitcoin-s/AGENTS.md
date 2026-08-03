@@ -1,175 +1,139 @@
-# Copilot Instructions for bitcoin-s
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Project Overview
 
-Bitcoin-S is a feature-rich toolkit for building Bitcoin and Lightning applications on the JVM. The project is written
-in Scala and uses SBT (Scala Build Tool) as its build system. It provides modular libraries for Bitcoin protocol
-implementation, wallet functionality, blockchain operations, Lightning Network integration, and DLC (Discreet Log
-Contract) support.
+Bitcoin-S is a Scala toolkit for building Bitcoin and Lightning applications on the JVM: protocol
+primitives, a Neutrino light client node, wallet, chain/filter management, DLC (Discreet Log Contract)
+support, an oracle server, and RPC clients for bitcoind/eclair/lnd/c-lightning. Package namespace is
+`org.bitcoins.*`.
 
-## Technology Stack
+## Build & Test Commands
 
-- **Language**: Scala 2.13 with Scala 3 source compatibility
-- **Build System**: SBT (Scala Build Tool)
-- **Testing Framework**: ScalaTest 3.2.x with ScalaCheck for property-based testing
-- **Code Formatting**: Scalafmt (configured via `.scalafmt.conf`)
-- **JVM**: Java 25 (Zulu distribution)
-- **Database**: PostgreSQL, SQLite with Slick for database access
-- **Platforms**: JVM and JavaScript (using Scala.js for cross-platform modules)
+Build system is SBT. Modules follow the pattern `<module>` (main code) / `<module>-test` (tests) on
+disk — e.g. `core` / `core-test`, `wallet` / `wallet-test` — but **sbt project IDs on the command line
+are always the camelCase form with no hyphens**, derived from the directory name: `core-test` on disk is
+`coreTest`/`coreTestJVM` as an sbt id, `wallet-test` is `walletTest`, `dlc-wallet-test` is
+`dlcWalletTest`, `bitcoind-rpc-test` is `bitcoindRpcTest`, etc. A hyphenated id like `core-test/test` is
+never valid sbt syntax — check `build.sbt` for the exact `lazy val <id> = ...` if unsure.
 
-## Project Structure
-
-The project follows a modular architecture with clear separation of concerns:
-
-- **core/**: Core Bitcoin protocol implementations
-- **crypto/**: Cryptographic primitives and utilities
-- **chain/**: Blockchain data structures and chain management
-- **wallet/**: Wallet implementation and key management
-- **node/**: Bitcoin node implementation
-- **dlc-*/**: Discreet Log Contract implementations
-- **bitcoind-rpc/**, **eclair-rpc/**, **lnd-rpc/**, **clightning-rpc/**: RPC client implementations
-- **app/**, **app-commons/**: Application server implementations
-- **testkit/**, **testkit-core/**: Testing utilities and fixtures
-- **docs/**: Documentation markdown files
-- **website/**: Docusaurus-based documentation website
-
-Test modules follow the naming convention `*-test` (e.g., `core-test`, `wallet-test`).
-
-## Building and Testing
-
-### Build Commands
-
-- `sbt compile` - Compile the project
-- `sbt test:compile` - Compile test sources
-- `sbt test` - Run all tests
-- `sbt <module>/test` - Run tests for a specific module (e.g., `sbt core/test`)
-- `sbt scalafmtCheckAll` - Check code formatting
-- `sbt scalafmtAll` - Format all code
-- `sbt +test:compile` - Cross-compile for all configured Scala versions
-
-### Testing Approach
-
-- **Test Framework**: ScalaTest with async test support
-- **Property-Based Testing**: ScalaCheck for generating test cases
-- **Test Organization**: Tests extend from base test classes like `ChainDbUnitTest`, `BitcoinSUnitTest`, etc.
-- **Async Tests**: Many tests use `FutureOutcome` for async operations
-- **Test Naming**: Test files end with `Test.scala` (e.g., `ChainCallbacksTest.scala`)
-
-### Running Specific Tests
+A few modules (`crypto`, `core`, `testkit-core`, `async-utils`) build for both JVM and JS via
+`crossProject`, and **this applies to their test modules too**: there is no plain `coreTest` or
+`cryptoTest` project you can run tasks against directly — only the JVM/JS instances exist as real sbt
+projects, so it's always `coreTestJVM`/`coreTestJS`, `cryptoTestJVM`/`cryptoTestJS`,
+`asyncUtilsTestJVM`/`asyncUtilsTestJS`. (`testkit-core` itself has no separate test module — it's a
+fixtures library other tests depend on — so only `testkitCoreJVM`/`testkitCoreJS` exist, for compiling
+it.) Every other domain/RPC/app module (`wallet`, `chain`, `node`, `dlc-wallet`, `bitcoind-rpc`, `cli`,
+etc.) is a plain single-platform `project`, so `<module>Test` alone is correct for those — no JVM/JS
+suffix, and no such suffix exists to add.
 
 ```bash
-sbt "testOnly *TestClassName"
-sbt "testOnly *TestClassName -- -z test name pattern"
+sbt compile                       # compile main sources
+sbt Test/compile                  # compile test sources
+sbt <module>Test/test             # run all tests in a single-platform module, e.g. sbt walletTest/test
+sbt "<module>Test/testOnly *TestClassName"
+sbt "<module>Test/testOnly *TestClassName -- -z \"test name pattern\""
+sbt scalafmtCheckAll               # check formatting (CI-enforced)
+sbt scalafmtAll                    # auto-format everything — run before committing
+sbt coreTestJVM/test               # cross-platform module test invocation (JVM side) — NOT coreTest or core-test
+sbt cryptoTestJVM/test             # same for crypto
+sbt cryptoTestJS/test              # cross-platform module test invocation (JS side)
 ```
 
-## Code Style and Conventions
+### Prefer the sbt thin client for repeated commands
 
-### Formatting
+This is a large multi-module build (8G heap per `.jvmopts`) — plain `sbt <command>` pays full JVM
+startup plus build-definition loading on every invocation. When running more than one sbt command in a
+session, use `sbt --client` instead so they share one persistent background sbt server:
 
-- Use Scalafmt for code formatting - always run `sbt scalafmtAll` before committing
-- Configuration is in `.scalafmt.conf` with scala213source3 dialect
-- Align openParenCallSite but not openParenDefnSite
-- No dangling parentheses for call sites or definition sites
+```bash
+sbt --client compile
+sbt --client walletTest/test
+sbt --client "coreTestJVM/testOnly *SomeSpec"
+```
 
-### Scala Conventions
+The first `--client` call boots the background server (slow, one-time per checkout); every subsequent
+call reuses it, skipping JVM/classpath reinitialization. Restart it with `sbt --client shutdown` after
+editing `build.sbt` or files under `project/` (the running server won't pick those up otherwise).
 
-- Use immutable data structures by default
-- Prefer `Option` over `null`
-- Use `Future` for asynchronous operations
-- Follow functional programming principles
-- Use explicit types for public APIs
-- Package names follow `org.bitcoins.*` pattern
+Notes:
+- Tests use ScalaTest (with `FutureOutcome` for async fixtures) and ScalaCheck for property-based tests.
+  Test classes extend base fixtures from `testkit`/`testkit-core` (e.g. `BitcoinSUnitTest`,
+  `ChainDbUnitTest`).
+- CI is split across many workflows by module group (see `.github/workflows/Linux_2.13_*.yml`,
+  `Mac_2.13_*.yml`) because the full suite is too large for one job — mirror that grouping if running
+  broad test sweeps locally.
+- `secp256k1jni` provides native JNI bindings to libsecp256k1; native loading goes through
+  `NativeLoader`. Set `DISABLE_SECP256K1=true` to fall back to pure-JVM crypto when the native lib is
+  unavailable.
+- Scala version is 2.13 (see `inThisBuild.sbt`) with `scala213source3` dialect for Scala 3 source
+  compatibility; formatting rules live in `.scalafmt.conf`.
+- `sbt docs/mdoc` compiles the Markdown docs in `docs/` with live code examples (Docusaurus site lives
+  in `website/`).
 
-### Testing Conventions
+## Architecture
 
-- Test classes extend appropriate base test classes from testkit modules
-- Use descriptive test names with "must" or "should" style
-- Use `FutureOutcome` for async test fixtures
-- Organize tests with proper setup/teardown in fixtures
-- Use property-based testing (ScalaCheck) for protocol-level code
+### Module dependency layers
 
-## Common Development Tasks
+Dependencies flow strictly downward; higher layers depend on lower ones (never the reverse):
 
-### Adding a New Module
+1. **`crypto`** — elliptic curve primitives, hashing, signature schemes (secp256k1-backed, with a
+   pure-JVM/JS fallback). Depends on `secp256k1jni` on the JVM side.
+2. **`core`** — Bitcoin protocol data structures (transactions, scripts, blocks, addresses, PSBT, DLC
+   messages), serialization, script interpreter. No I/O, no actor system — pure protocol logic. Depends
+   only on `crypto`.
+3. **`async-utils`, `testkit-core`** — small cross-platform helpers/fixtures built on `core`.
+4. **`app-commons`** — shared server/CLI concerns: `AppConfig`/`AppConfigFactory` (the config-loading
+   base class every module-specific config extends), JSON models shared between server and CLI.
+5. **`db-commons`, `key-manager`** — Slick-based DB access layer and BIP32/39 key management, each
+   depending on `core` + `app-commons`.
+6. **Domain modules** — `chain`, `wallet`, `node`, `dlc-oracle`, `dlc-wallet`, `dlc-node`, `fee-provider`,
+   `esplora`, `tor`, `zmq`: the actual protocol/business logic, each with its own DB schema
+   (Flyway-migrated, see below), its own `AppConfig` subclass, and (mostly) its own callback trait for
+   observing internal events (e.g. `NodeCallbacks`, wallet callbacks).
+7. **RPC clients** — `bitcoind-rpc`, `eclair-rpc`, `lnd-rpc`, `clightning-rpc`: JSON-RPC wrappers with
+   strongly-typed request/response models, used both standalone and by tests as a "ground truth" Bitcoin
+   node/Lightning node to test against.
+8. **`app/`** — deployables: `server` (the main app server, aggregates chain+wallet+node+dlc-wallet
+   etc. behind an HTTP JSON-RPC API), `oracle-server` (serves `dlc-oracle`), `cli`/`cli-grpc` (command
+   line clients hitting the server's API, see `ConsoleCli.scala`), `server-grpc`, `gui`, `bundle`.
+9. **`testkit`** — full-stack test fixtures (spins up real chain/wallet/node instances, bitcoind regtest,
+   etc.) used by the `*-test` modules of domain packages; **`testkit-core`** is the lighter
+   cross-platform subset used by `crypto`/`core` tests.
 
-Modules are defined in `build.sbt`. Each module typically has:
+When changing a low-level module (`crypto`, `core`), assume ripple effects through the whole dependency
+graph and check `build.sbt` for exact `.dependsOn(...)` edges before assuming a module is isolated.
 
-- A main source directory: `<module>/src/main/scala`
-- A test module: `<module>-test/src/test/scala`
-- Dependencies defined in `project/Deps.scala`
+### Node module (Neutrino light client)
 
-### Working with Databases
+`node/` implements a Neutrino (BIP157/158 compact filter) light client: `PeerManager`/`PeerFinder`
+manage P2P connections, `NeutrinoNode`/`Node` drive sync state (`NodeState`), and `NodeCallbacks` notify
+subscribers (e.g. the wallet) of new blocks/filters/transactions. This is the primary way bitcoin-s
+tracks chain state without a full node — `bitcoind-rpc` is used instead when talking to an actual
+Bitcoin Core instance (e.g. in tests, or when the user configures a full-node backend).
 
-- Database schemas use Flyway migrations (configured in `flyway.conf`)
-- Database access is through Slick
-- Separate modules for SQLite and PostgreSQL support
-- Test databases use in-memory configurations when possible
+### Config system
 
-### Working with Documentation
+Every long-running module has an `AppConfig` subclass (base in
+`app-commons/src/main/scala/org/bitcoins/commons/config/AppConfig.scala`) built from HOCON
+(`reference.conf` per module, e.g. `db-commons/src/main/resources/reference.conf`,
+`app/server/src/main/resources/reference.conf`), user-overridable via `bitcoin-s.conf`. DB-backed
+modules run Flyway migrations on startup (`flyway.conf`), with separate migration paths for SQLite vs
+PostgreSQL.
 
-- Documentation is in `docs/` directory as Markdown files
-- Website uses Docusaurus (configured in `website/`)
-- API documentation is generated via Scaladoc
-- Use `sbt docs/mdoc` to compile documentation with code examples
+### Concurrency
 
-### Working with RPC Clients
+Built on Apache Pekko (the Akka fork — `org.apache.pekko` artifacts; code and docs still often say
+"akka" from the pre-fork history). Async operations use `scala.concurrent.Future` throughout; streaming
+data (peer connections, chain sync) uses Pekko Streams.
 
-Each RPC client (bitcoind, eclair, lnd, c-lightning) has its own module with:
+### DLC support
 
-- JSON-RPC implementations
-- Strongly-typed request/response models
-- Async API using Futures
-
-## Important Notes
-
-### Memory Configuration
-
-- JVM options are in `.jvmopts`: `-Xms512M -Xmx4G -Xss2M`
-- These settings are required for building and testing the project
-
-### CI/CD
-
-- Multiple CI workflows for different test suites and platforms
-- Tests are split across Linux, macOS, and Windows
-- Separate workflows for different module groups to parallelize testing
-- Docker images are built and published automatically
-
-### Git Workflow for Copilot/LLMs
-
-- When incorporating new changes from `master` into a Copilot-maintained branch, always use a rebase workflow.
-- Do **not** merge `master` into the branch (avoid merge commits for sync-only updates).
-- Keep branch history linear so PR diffs stay clean and easy to review.
-- Preferred sequence: `git fetch origin` then `git rebase origin/master` (resolve conflicts, then continue rebase).
-
-### Native Libraries
-
-- `secp256k1jni` provides JNI bindings to Bitcoin's secp256k1 library
-- Can be disabled with `DISABLE_SECP256K1=true` environment variable
-- Native library loading uses `NativeLoader`
-
-### Cross-Platform Modules
-
-- Some modules (crypto, core) support both JVM and JavaScript platforms
-- Use `crossProject` in build.sbt for platform-agnostic code
-- Platform-specific dependencies in `.jvmSettings` and `.jsSettings`
-- Testing is also cross-platform where applicable (i.e. `cryptoTestJVM/test` and `cryptoTestJS/test`)
-- Cross-platform modules cannot be tested with the normal syntax (i.e. `cryptoTest/test`)
-
-## Troubleshooting
-
-- If compilation is slow, check JVM memory settings in `.jvmopts`
-- For test failures, ensure database migrations are up to date
-- For formatting issues, run `sbt scalafmtAll`
-- Clean build with `sbt clean` if encountering compilation caching issues
-
-## Resources
-
-- Main website: https://bitcoin-s.org
-- Documentation: https://bitcoin-s.org/docs/getting-setup
-- Contributing guide: https://bitcoin-s.org/docs/contributing
-- GitHub repository: https://github.com/bitcoin-s/bitcoin-s
-- Gitter chat: https://gitter.im/bitcoin-s-core
+Discreet Log Contracts span three modules: `dlc-oracle` (attestation signing, depends on `key-manager`),
+`dlc-wallet` (contract negotiation/execution, extends `wallet`), and `dlc-node` (peer-to-peer DLC message
+routing, depends on `tor`). `dlc-commons` holds shared message/state types.
 
 ---
 > Source: [bitcoin-s/bitcoin-s](https://github.com/bitcoin-s/bitcoin-s) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-24 -->
+<!-- tomevault:4.0:agents_md:2026-07-26 -->
