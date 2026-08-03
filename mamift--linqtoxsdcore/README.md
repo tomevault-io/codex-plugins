@@ -1,16 +1,16 @@
 # LinqToXsdCore
 
-> Source: [mamift/LinqToXsdCore](https://github.com/mamift/LinqToXsdCore). Graded, signed and kept in sync across platforms by [TomeVault](https://tomevault.io)
+> Source: [mamift/LinqToXsdCore](https://github.com/mamift/LinqToXsdCore). Graded, signed and kept current as the models change by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [mamift/LinqToXsdCore](https://github.com/mamift/LinqToXsdCore).
+Original source: `CLAUDE.md` in [mamift/LinqToXsdCore](https://github.com/mamift/LinqToXsdCore).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
