@@ -1,184 +1,70 @@
-# Copilot Instructions for word-to-markdown-js
+# CLAUDE.md
 
-## Project Overview
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-This is a TypeScript/JavaScript project that converts Word documents to beautiful Markdown. It's a complete rewrite of the original [word-to-markdown](https://github.com/benbalter/word-to-markdown) Ruby gem, now using modern JavaScript tools and libraries.
+## Commands
 
-### Core Conversion Process
-
-The project uses a three-step conversion pipeline:
-
-1. **Mammoth.js** - Converts Word documents (.docx) to HTML
-2. **Turndown** - Converts HTML to Markdown with GitHub-flavored Markdown support
-3. **Markdownlint** - Cleans up and standardizes the generated Markdown
-
-## Project Structure
-
-```
-src/
-├── main.ts           # Core conversion logic and pipeline
-├── cli.ts           # Command-line interface (w2m command)
-├── server.ts        # HTTP API server
-├── index.ts         # Web interface frontend
-└── __tests__/       # Jest test files with .docx fixtures
+```bash
+npm run dev          # Astro dev server for the site
+npm run build        # Full build: tsc (build:js) then Astro (build:site)
+npm run build:js     # Compile the Node library + CLI to build/ (tsc)
+npm run build:site   # Type-check (.astro) + build the static site to dist/
+npm run preview      # Preview the production site build
+npm test             # Jest unit/integration tests with coverage
+npm run test:e2e     # Playwright end-to-end tests (builds + serves the site)
+npm run lint         # eslint + prettier --check
+npm run fix          # eslint --fix + prettier --write
+npm run all          # fix + test + build + check-builds (run before pushing)
+npm run check-builds # Fail if committed build/ output is stale (see below)
 ```
 
-### Key Files
+Run a single unit test: `NODE_OPTIONS=--experimental-vm-modules npx jest src/__tests__/smart-quotes.test.ts`
+Run a single e2e spec: `npx playwright test src/__tests__/e2e/i18n.spec.ts`
 
-- `src/main.ts` - The heart of the conversion process with `convert()` function
-- `src/cli.ts` - Command-line tool using Commander.js
-- `src/server.ts` - Express.js HTTP API server
-- `src/index.ts` - Browser-based file upload interface
-- `package.json` - Contains npm scripts and dependencies
+Node 22.13.0 is pinned (`.nvmrc`, `.tool-versions`, Volta). The `--experimental-vm-modules` flag is required because the project is pure ESM and Jest runs the TS sources via `ts-jest` ESM preset.
 
-## Development Environment
+## Architecture
 
-### Requirements
+One repo produces **three artifacts** from two source directories, and the two directories are owned by two different build tools that must never collide:
 
-- **Node.js**: 20.x (specified in engines and volta)
-- **TypeScript**: ~5.3 (compiles to JavaScript)
-- **Testing**: Jest with ts-jest for TypeScript support
-- **Linting**: ESLint with TypeScript support
-- **Building**: TypeScript compiler + Vite for web bundle
+- **`src/`** — owned exclusively by `tsc`. Compiles to `build/` (the Node library `build/main.js` and the CLI `build/w2m` → `build/cli.js`). `src/index.ts` is the _browser_ entry and is **excluded from tsc** (see `tsconfig.json`) because Astro/Vite bundles it instead; `astro check` type-checks it.
+- **`web/`** — owned exclusively by Astro (`srcDir: ./web`). Builds the static site to `dist/`. Astro's `publicDir` is `./public`.
 
-### Available npm Scripts
+This split is deliberate so the two tool-chains don't fight over the same files. When adding code, put converter/CLI logic in `src/` and site/UI in `web/`.
 
-- `npm test` - Run Jest tests with coverage
-- `npm run lint` - Run ESLint on TypeScript files
-- `npm run build` - Compile TypeScript to JavaScript
-- `npm run build:web` - Build web bundle with Vite
-- `npm run server:web` - Start development web server
-- `npm run server` - Start HTTP API server
-- `npm run all` - Run lint, test, and build (CI pipeline)
-- `npm run fix` - Auto-fix ESLint and Prettier issues
+### Conversion pipeline (`src/main.ts`)
 
-### Testing
+The core converter is environment-agnostic (accepts a file path string in Node, or an `ArrayBuffer` in the browser). The pipeline:
 
-- Uses Jest with TypeScript support (`ts-jest`)
-- Test files in `src/__tests__/` directory
-- Fixtures are Word documents in `src/__fixtures__/`
-- Tests verify conversion output matches expected Markdown
-- Run `npm test` for tests with coverage report
+1. **mammoth** — `.docx` → HTML
+2. `processHtml` — single-pass DOM fixups: promote a table's first row to `<th>` (Turndown needs a header row), strip Unicode bullets from `<li>`
+3. **Turndown** (`@joplin/turndown` + gfm plugin) — HTML → Markdown
+4. `convertNumberedListsToBullets` → `normalizeText` (strip non-breaking spaces, smart quotes → ASCII)
+5. **markdownlint** `applyFixes` → **prettier** (markdown parser)
 
-## Key Dependencies
+`convert()` returns just the markdown string; `convertWithWarnings()` additionally calls `extractDocumentProperties()` (reads the `.docx` zip via JSZip to detect encryption, MIP/sensitivity labels, confidentiality markers, document protection) and returns `{ markdown, warnings }`. The CLI and web UI both use `convertWithWarnings`. Typed error classes (`UnsupportedFileError`, `FileNotFoundError`, `InvalidFileError`, `FilePermissionError`, `ConversionError`) are thrown for user-facing messaging — preserve them when refactoring.
 
-### Core Libraries
+### Browser entry (`src/index.ts`)
 
-- `mammoth` - Converts .docx files to HTML
-- `@joplin/turndown` + `@joplin/turndown-plugin-gfm` - HTML to Markdown conversion
-- `markdownlint` + `markdownlint-rule-helpers` - Markdown cleanup and standardization
-- `node-html-parser` - HTML manipulation for table headers
+Privacy is a core constraint: **all conversion happens client-side; nothing is uploaded.** The heavy deps (mammoth, turndown, jszip, unified/remark/rehype, prettier, markdownlint ~400KB gzipped) are **dynamically `import()`ed** on first file use so the landing page paints without them, and speculatively prefetched on user intent / browser idle. Keep these imports lazy.
 
-### CLI & Server
+### i18n
 
-- `commander` - CLI argument parsing
-- `express` - HTTP server framework
-- `multer` - File upload handling
-- `helmet` - Security middleware
+English lives at the root (`prefixDefaultLocale: false`); other locales under a prefix (`/de/`, `/es/`, …). Each `web/pages/<locale>/index.astro` is a one-liner that renders the shared `web/components/Home.astro` with a `lang` prop. UI strings are per-locale JSON in `web/i18n/`, typed by `web/i18n/types.ts`.
 
-### Frontend
+**The locale list is duplicated in four places that MUST stay in sync** when adding a language: the top-level `i18n` block in `astro.config.mjs`, the `sitemap` `i18n` block in the same file, `locales` in `web/i18n/index.ts`, and `SUPPORTED_LOCALES` in `worker/index.js`. `src/__tests__/i18n-completeness.test.ts` enforces that every locale has every key (astro check can't see missing JSON keys).
 
-- `bootstrap` - UI styling
-- `clipboard` - Copy-to-clipboard functionality
-- Unified/remark/rehype pipeline for Markdown preview
+### Deployment
 
-## Code Style & Conventions
+The site deploys **two ways** from the same `dist/`:
 
-### TypeScript Guidelines
+- **GitHub Pages** via `.github/workflows/static.yml` (runs `build:site`).
+- **Cloudflare Workers (Static Assets)** via `wrangler deploy` (`wrangler.jsonc`). `worker/index.js` runs **only on `/`** (`run_worker_first: ["/"]`) and 302-redirects first-time visitors to the best `Accept-Language` locale, setting a `lang` cookie so it fires at most once. The Worker is inert on GitHub Pages. Every other path is served straight from assets.
 
-- Use strict TypeScript configuration
-- Define interfaces for options objects (e.g., `convertOptions`, `turndownOptions`)
-- Prefer `async/await` over Promises for readability
-- Use ES modules (`import/export`) syntax
-- Type function parameters and return values
+### Build artifacts (`build/`, `dist/`)
 
-### Code Organization
-
-- Keep conversion logic pure and testable in `main.ts`
-- Separate concerns: CLI, server, and web interface in different files
-- Use meaningful function names that describe the transformation
-- Add JSDoc comments for complex conversion functions
-
-### Error Handling
-
-- Use async/await with proper error handling
-- Provide meaningful error messages for file processing issues
-- Handle both file path and ArrayBuffer inputs in convert function
-
-## Testing Guidelines
-
-### Writing Tests
-
-- Add test cases to `src/__tests__/main.test.ts`
-- Create Word document fixtures in `src/__fixtures__/` for new features
-- Test both successful conversions and edge cases
-- Use descriptive test names: `should convert the "feature-name" fixture to Markdown`
-
-### Test Structure
-
-```typescript
-describe('main', () => {
-  it('should convert feature X to Markdown', async () => {
-    const path = `src/__fixtures__/feature-x.docx`;
-    const md = await convert(path);
-    expect(md).toEqual(expectedMarkdown);
-  });
-});
-```
-
-## Build & Deployment
-
-### CI/CD Pipeline (`.github/workflows/ci.yml`)
-
-1. Install dependencies (`npm install`)
-2. Run tests (`npm run test`)
-3. Run linting (`npm run lint`)
-4. Build TypeScript (`npm run build`)
-5. Build web bundle (`npm run build:web`)
-
-### Output Directories
-
-- `build/` - Compiled TypeScript files for Node.js
-- `dist/` - Vite bundle for web deployment
-- Both directories are in `.gitignore` but needed for deployment
-
-## Common Development Tasks
-
-### Adding New Conversion Features
-
-1. Modify conversion logic in `src/main.ts`
-2. Add test fixture Word document to `src/__fixtures__/`
-3. Add test case to `src/__tests__/main.test.ts`
-4. Run tests to verify: `npm test`
-
-### Debugging Conversion Issues
-
-- Check intermediate HTML output from Mammoth.js
-- Verify Turndown options for Markdown generation
-- Use markdownlint to understand cleanup rules
-- Test with various Word document structures
-
-### Performance Considerations
-
-- The conversion is CPU-intensive for large documents
-- File processing happens in memory (no disk I/O for content)
-- Web interface processes files client-side for privacy
-
-## Security Notes
-
-- Files are processed locally (no data sent to external services)
-- Web interface uses `rehype-sanitize` for safe HTML rendering
-- HTTP server uses `helmet` middleware for security headers
-- File uploads are limited by `multer` configuration
-
-## Contributing Guidelines
-
-- Follow existing code style and TypeScript conventions
-- Add tests for new features using Word document fixtures
-- Ensure all npm scripts pass: `npm run all`
-- Keep PRs focused on single features or bug fixes
-- Update documentation for new conversion capabilities
+Both `build/` (the tsc library + CLI output) and `dist/` (the site) are **gitignored** — neither is committed. CI rebuilds them: the `build` job runs `npm run check-builds` (a full `npm run build`) before `npm run test`, so `build/cli.js` exists when the tests run, and the e2e job builds `dist/` before Playwright serves it. Because `build/` is ignored, `check-builds` effectively only catches a build _failure_, not staleness (its `git status --porcelain build/` diff is always empty). Tests that need the built CLI (`src/__tests__/cli.test.ts`) build it on demand if it's absent, so a fresh `npm test` works without a prior `npm run build`.
 
 ---
 > Source: [benbalter/word-to-markdown-js](https://github.com/benbalter/word-to-markdown-js) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-06-29 -->
+<!-- tomevault:4.0:agents_md:2026-07-25 -->
