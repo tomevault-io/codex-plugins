@@ -1,23 +1,21 @@
 # kowalski
 
-> Tome by [yarenty](https://github.com/yarenty/kowalski) — distributed by [TomeVault](https://tomevault.io)
-
-High performance Rust based AI Agent.
+> Tome by [yarenty](https://github.com/yarenty/kowalski), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [yarenty/kowalski](https://github.com/yarenty/kowalski).
+Original source: `CLAUDE.md` in [yarenty/kowalski](https://github.com/yarenty/kowalski).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [yarenty/kowalski](https://github.com/yarenty/kowalski) — a repo with 59+ stars on GitHub.
+From [yarenty/kowalski](https://github.com/yarenty/kowalski) — a repo with 63+ stars on GitHub.
 
 ---
 
