@@ -1,69 +1,106 @@
-# Copilot Instructions for nog-cli
+# CLAUDE.md
 
-You are a **Senior TypeScript Developer** and **Open Source Maintainer** working on `nog-cli`, an enterprise-grade CLI tool that generates NestJS SDKs from OpenAPI specifications.
+Operational instructions for AI assistants working in this repository. Keep it short, keep it actionable. If you are a human contributor, see [CONTRIBUTING.md](./CONTRIBUTING.md) and [docs/DOCUMENTATION.md](./docs/DOCUMENTATION.md).
 
-## 1. Project Philosophy & Architecture
+## What is nog-cli
 
-- **Goal:** Generate strict, type-safe, and clean code.
-- **Architecture:** Follows a strict 3-stage pipeline:
-  1. **Parser:** Reads OpenAPI (JSON/YAML) -> `OpenAPIV3.Document`.
-  2. **IR (Internal Representation):** Converts OpenAPI to a framework-agnostic IR (`IrModel`, `IrService`, `IrOperation`). **Business logic lives here.**
-  3. **Generator (Writers):** Uses `ts-morph` to emit TypeScript files. **No string concatenation for code generation.**
-- **Output:** Generated code must use `class-validator` for DTOs and provide **Dual-Method Support** (`Observable` & `Promise`) for every service endpoint.
+A CLI that generates a strict, type-safe NestJS SDK from an OpenAPI v3 specification. Output: DTO classes annotated with `class-validator`, NestJS service classes with dual-method endpoints (Observable by default, Promise variant via `Async` suffix), an `ApiModule` with `forRoot` / `forRootAsync`, and barrel `index.ts` files.
 
-## 2. Code Quality & Style
+## Pipeline
 
-- **Strict TypeScript:**
-  - **NO `any` type.** Use `unknown` or specific interfaces.
-  - **NO unused variables.** Prefix unused args with `_` (e.g., `_sourceFile`) only if required by signature.
-  - **Strict Null Checks:** Handle `undefined` and `null` explicitly.
-- **Code Hygiene:**
-  - **NO commented-out code** (Dead code).
-  - **NO `TODO`s without context** (Must explain _why_ it is pending).
-  - **NO debug `console.log` statements.**
-- **Logging:** Use `src/utils/logger`. **Never** use `console.log/error` directly in feature code.
-- **Dependencies:**
-  - Zero runtime dependencies for the generator logic where possible.
-  - Use **Dependency Injection** (DI) for all Writers/Helpers to ensure testability.
+`OpenAPI doc -> Parser -> IR -> Generator (writers + writers/core builders) -> Prettier`.
 
-## 3. Documentation & JSDoc
+- **Parser** (`src/core/parser/`): loads + bundles the spec via `swagger-parser`.
+- **IR** (`src/core/ir/`): the framework-agnostic intermediate representation. **Business logic lives here**, not in the generator or the parser.
+- **Generator** (`src/core/generator/`): orchestrator (`engine.ts`) calls each `*.writer.ts`, which composes AST nodes through the reusable builders in `writers/core/*` and finally serialises via `ts.Printer` + Prettier.
 
-- **Meaningful Comments Only:**
-  - ❌ Bad: `// constructor` before `constructor() {}`
-  - ✅ Good: Explain **WHY** something is done or architectural decisions.
-- **Tone:** Professional, Technical, Enterprise.
-- **Forbidden:** **NO EMOJIS** in code comments, commit messages, or documentation files.
-- **Format:** JSDoc for all public methods (use `@param`, `@returns`).
+See [docs/DOCUMENTATION.md](./docs/DOCUMENTATION.md) for the architectural deep dive.
 
-## 4. Testing Standards
+## Development commands
 
-- **Framework:** `vitest`.
-- **Requirement:** 100% Critical Path Coverage.
-- **Structure:**
-  - `test/units/`: Isolated unit tests. Mock dependencies using strict naming (e.g., `projectMock`, `dtoWriterMock` - camelCase).
-  - `test/e2e/`: Real generation tests using fixtures (`cyclos.json`, `complex.json`).
-  - **Syntax Check:** E2E tests must validate generated code syntax using `ts-morph` (not just file existence).
+| Command                     | What it does                                                                                         |
+| --------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `npm run build`             | TS production build (`tsc -p tsconfig.build.json`).                                                  |
+| `npm test`                  | Vitest unit suite (`test/units`).                                                                    |
+| `npm run test:e2e`          | E2E generation suite (real-world + complex fixtures, validates AST via the TypeScript Compiler API). |
+| `npm run test:all`          | Units + E2E in one run.                                                                              |
+| `npm run test:coverage`     | Coverage report.                                                                                     |
+| `npm run lint` / `lint:fix` | ESLint.                                                                                              |
+| `npm run format`            | Prettier over `src/` and `test/`.                                                                    |
+| `npm run deps:check`        | Run before adding any new import to avoid stale dependencies.                                        |
+| `npm run docs`              | TypeDoc developer docs into `dist-docs/`.                                                            |
 
-## 5. Workflow & Governance (STRICT)
+Husky hooks: `pre-commit` runs `lint-staged`, `commit-msg` runs `commitlint`. Never bypass them (`--no-verify` is forbidden).
 
-- **Commit Messages:** MUST follow **Conventional Commits** standard to pass `commitlint`.
-  - ✅ `feat: add support for oneOf`
-  - ✅ `fix: resolve windows path issue`
-  - ✅ `chore: update dependencies`
-  - ❌ `added support`, `fixed bug` (Rejected).
-- **Pre-Commit Hooks:** The repo uses **Husky** and **lint-staged**. Do NOT suggest using `--no-verify`.
-- **Dependency Management:** Run `npm run deps:check` before adding new imports.
+## Hard constraints
 
-## 6. Security
+These rules are non-negotiable.
 
-- **Reporting:** Do not modify instructions in `SECURITY.md`. Direct users to **Private Vulnerability Reporting** (GitHub Security Tab).
+- **AST over strings.** All generated code MUST flow through `ts.factory.create*` and the builders in `src/core/generator/writers/core/*` (`DecoratorBuilder`, `PropertyBuilder`, `TypeBuilder`, etc.). Never use string concatenation or template literals to assemble TypeScript source.
+- **DI for writers.** Every writer receives its builders through the constructor. Keep them stateless and testable; new dependencies go in via DI, never as module-level singletons.
+- **No `any`.** Use `unknown` plus narrowing, or define a specific interface. Prefix legitimately unused parameters with `_`.
+- **No `console.*`** in feature code. Use the static `Logger` in `src/utils/logger.ts`.
+- **English-only** comments, docs, commit messages, and runtime output.
+- **No emoji** in comments, commit messages, generated code, runtime output, or documentation.
+- **Conventional Commits** (`feat:`, `fix:`, `chore:`, `refactor:`, `test:`, `docs:`). `commitlint` will reject anything else.
+- **Never `--no-verify`** on `git commit` / `git push`. If a hook fails, fix the underlying issue.
+- **Meaningful comments only.** Explain _why_, not _what_. Delete a comment if removing it would not confuse a future reader.
 
-## 7. Specific Generator Rules
+## Where things live
 
-- **Modules:** Generated module files must be named `api.module.ts`.
-- **Headers:** All generated files must include the header with the CLI version and Spec version.
+```
+src/
+  cli/                                   # commander wiring, CLI entry point
+    commands/                            #   generate command, etc.
+  config/                                # config.loader, CLI flags merge
+  core/
+    parser/                              # OpenAPI -> Document
+    ir/                                  # IR types, analyzer, converter (business logic)
+      interfaces/models.ts               #   IR type definitions
+      analyzer/                          #   type/validator mappers, schema merger
+      openapi.converter.ts               #   OpenAPI -> IR transformer
+    generator/
+      engine.ts                          # writer orchestrator (filesystem writes)
+      helpers/type.helper.ts             # shared naming / type-name utilities
+      writers/                           # one *.writer.ts per generated file type
+        core/                            #   reusable AST builders (12 of them)
+  utils/                                 # Logger, naming, FS helpers
+test/
+  units/                                 # Vitest, mock dependencies, camelCase mocks
+  e2e/                                   # Vitest, fixture-driven, validates AST via ts.createSourceFile
+  fixtures/                              # OpenAPI spec fixtures (standard, real-world, edge-case)
+```
+
+## Testing strategy
+
+- **Unit tests** (`test/units/`) mock dependencies with strict camelCase naming (e.g. `decoratorBuilderMock`, `dtoWriterMock`). Isolate the unit under test; do not reach into other writers.
+- **E2E tests** (`test/e2e/`) generate real code from fixtures and validate the result structurally with `ts.createSourceFile` + visitor traversal, not by file existence. When you add a writer feature, add a structural assertion that proves the new AST shape lands in the output.
+- Coverage target: greater than 90% line coverage overall, 100% on critical paths.
+
+## Non-obvious gotchas
+
+These are the things that are easy to break and not obvious from the code:
+
+- **Dual service methods.** Every endpoint produces two overloads from a single IR operation: an Observable (default) and a Promise variant (with `Async` suffix). Keep both in sync in `ServiceWriter`; never emit only one.
+- **Dynamic `class-validator` imports.** The DTO writer tracks which validator decorators it actually emits and only adds them to the import statement. Adding a new validator means extending `VALIDATOR_DECORATOR_MAP` _and_ making sure the writer adds the name to the import set.
+- **`oneOf` shapes.** A schema with only `oneOf` becomes a pure union type alias; `oneOf` combined with sibling properties becomes an intersection with a base class. See the IR analyzer.
+- **Headers vs query parameters** are currently collapsed in the IR; the open TODOs in `parameter-builder.ts` and `service.writer.ts` describe the planned split. If you touch parameter generation, read those TODOs first.
+- **File uploads.** `ServiceWriter` flips a `serviceUsesFileUploads` marker that drives the import of multipart utilities. Do not bypass it.
+- **Generated module name** is always `api.module.ts`. Header generation (`HeaderGenerator`) stamps every generated file with CLI version + spec version — keep both in sync if you change the header.
+
+## Documentation surface
+
+The `docs/` folder is versioned and shipped to users:
+
+- [docs/DOCUMENTATION.md](./docs/DOCUMENTATION.md) is the canonical architectural reference and is consumed by TypeDoc as the developer-guide landing page.
+- [docs/USAGE.md](./docs/USAGE.md) is end-user documentation rendered into generated SDKs.
+
+When you change architecture, update `docs/DOCUMENTATION.md`. When you change the CLI surface, update [README.md](./README.md). When you change contributor workflow, update [CONTRIBUTING.md](./CONTRIBUTING.md).
+
+## Security
+
+Vulnerabilities go through GitHub's Private Vulnerability Reporting (Security tab). Do not edit [SECURITY.md](./SECURITY.md) without review.
 
 ---
-> Converted and distributed by [TomeVault](https://tomevault.io/claim/geckozr)
-> Context snippets also available to append to your CLAUDE.md, GEMINI.md, and copilot-instructions.md — [download at TomeVault](https://tomevault.io/claim/geckozr)
-<!-- tomevault:4.0:agents_md:2026-04-08 -->
+> Source: [geckozr/nog-cli](https://github.com/geckozr/nog-cli) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-07-30 -->
