@@ -1,0 +1,51 @@
+{
+  "name": "blacktrigram",
+  "owner": "Hack23",
+  "repo": "blacktrigram",
+  "description": "Black Trigram is a realistic combat simulator that teaches authentic Korean martial arts through precise anatomical targeting. Master traditional vital point techniques through modern 3D combat mechanics across 5 distinct fighter archetypes.\ud83e\udd4b Black Trigram (\ud751\uad18) \uc5b4\ub460\uc758 \ubb34\uc608\ub85c \uc644\ubcbd\ud55c \uc77c\uaca9\uc744 \ucd94\uad6c\ud558\ub77c \"Master the dark arts through the pursuit of the perfect strike\"",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "documentation-standards",
+      "path": ".github/skills/documentation-standards",
+      "github_url": "https://github.com/Hack23/blacktrigram/tree/main/.github/skills/documentation-standards",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/Hack23/blacktrigram",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-08-04T09:31:23Z"
+}
