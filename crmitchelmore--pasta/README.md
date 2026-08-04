@@ -7,12 +7,12 @@ A blazing-fast, local-first clipboard history manager for macOS
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [crmitchelmore/pasta](https://github.com/crmitchelmore/pasta).
+Original source: `CLAUDE.md` in [crmitchelmore/pasta](https://github.com/crmitchelmore/pasta).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
