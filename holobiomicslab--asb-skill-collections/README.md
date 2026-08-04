@@ -7,12 +7,12 @@ Curated, evidence-grounded skill and software-tool collections for scientific AI
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [HolobiomicsLab/asb-skill-collections](https://github.com/HolobiomicsLab/asb-skill-collections).
+Original source: `CLAUDE.md` in [HolobiomicsLab/asb-skill-collections](https://github.com/HolobiomicsLab/asb-skill-collections).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
