@@ -2,9 +2,9 @@
   "name": "nog-cli",
   "owner": "geckozr",
   "repo": "nog-cli",
-  "description": "",
+  "description": "nog-cli - NestJS OpenAPI Generator CLI: Generate NestJS services, interfaces and modules from OpenAPI specifications",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -38,7 +38,7 @@
     }
   ],
   "skills": [],
-  "claim_url": "https://tomevault.io/claim/geckozr",
+  "source_url": "https://github.com/geckozr/nog-cli",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-10T07:06:15Z"
+  "distributed_at": "2026-08-04T19:43:46Z"
 }
