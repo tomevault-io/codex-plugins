@@ -4,7 +4,7 @@
   "repo": "OminiRoute",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/pablolira-1982/OminiRoute",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-30T00:43:05Z"
+  "distributed_at": "2026-08-04T13:56:03Z"
 }
