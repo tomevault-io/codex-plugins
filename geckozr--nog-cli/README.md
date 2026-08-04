@@ -1,23 +1,30 @@
 # nog-cli
 
-> Config by [geckozr](https://github.com/geckozr/nog-cli) — distributed by [TomeVault](https://tomevault.io/claim/geckozr)
+> Source: [geckozr/nog-cli](https://github.com/geckozr/nog-cli). Graded, signed and kept current as the models change by [TomeVault](https://tomevault.io)
+
+nog-cli - NestJS OpenAPI Generator CLI: Generate NestJS services, interfaces and modules from OpenAPI specifications
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [geckozr/nog-cli](https://github.com/geckozr/nog-cli).
+Original source: `CLAUDE.md` in [geckozr/nog-cli](https://github.com/geckozr/nog-cli).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Browse all formats: [https://tomevault.io/claim/geckozr](https://tomevault.io/claim/geckozr)
+Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/geckozr/nog-cli](https://github.com/geckozr/nog-cli)
 
 ---
 
-Converted and distributed by [TomeVault](https://tomevault.io) — AI instruction files for every platform.
-Is this your repo? [Claim it](https://tomevault.io/claim/geckozr) to manage distribution.
+Install this config instantly:
+```
+npx tomevault install geckozr/nog-cli
+```
+Source: [github.com/geckozr/nog-cli](https://github.com/geckozr/nog-cli).
+
+<!-- genome:d-i-p -->
