@@ -4,7 +4,7 @@
   "repo": "semantic-deer-flow",
   "description": "Unofficial DeerFlow downstream for governed SaaS semantic queries and controlled actions",
   "type": "config",
-  "source_format": "CLAUDE.md",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/CamiProject/semantic-deer-flow",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-08-05T02:31:33Z"
+  "distributed_at": "2026-08-05T02:32:16Z"
 }
