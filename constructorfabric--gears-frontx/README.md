@@ -7,13 +7,13 @@ Cyber Ware FrontX - UI development kit for modern SaaS applications
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [constructorfabric/gears-frontx](https://github.com/constructorfabric/gears-frontx).
+Original source: `.cursor/rules/*.mdc` in [constructorfabric/gears-frontx](https://github.com/constructorfabric/gears-frontx).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
