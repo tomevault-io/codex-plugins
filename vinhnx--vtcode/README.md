@@ -1,11 +1,11 @@
-# AI instruction files for VTCode
+# AI instruction files for vtcode
 
-> Sourced from [vinhnx/VTCode](https://github.com/vinhnx/VTCode) and converted for every major platform by [TomeVault](https://tomevault.io)
+> Sourced from [vinhnx/vtcode](https://github.com/vinhnx/vtcode), graded against the public Tome Standard and kept consistent across every major platform by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [vinhnx/VTCode](https://github.com/vinhnx/VTCode).
+Original source: `copilot-instructions.md` in [vinhnx/vtcode](https://github.com/vinhnx/vtcode).
 
 ## Also available for
 
@@ -15,14 +15,14 @@ Original source: `copilot-instructions.md` in [vinhnx/VTCode](https://github.com
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. [Browse all formats](https://tomevault.io/claim/vinhnx)
+## Bundled Skills (1)
+
+- [vtchat](https://github.com/vinhnx/vtcode/tree/main/.opencode/skills/codemod/SKILL.md)
+
+From [vinhnx/vtcode](https://github.com/vinhnx/vtcode) — a repo with 0+ stars on GitHub.
 
 ---
 
-Install this config instantly:
-```
-npx tomevault install vinhnx/VTCode
-```
-Or browse all formats at [https://tomevault.io/claim/vinhnx](https://tomevault.io/claim/vinhnx).
+Explore more instruction files on [TomeVault](https://tomevault.io), the platform that grades AI instruction files and catches silent drift across every major tool.
 
-<!-- genome:a-i-p -->
+<!-- genome:a-e-s -->
