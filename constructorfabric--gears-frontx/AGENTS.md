@@ -1,6 +1,5 @@
 
-
-ALWAYS open and follow `{cypilot_path}/.core/skills/cypilot/SKILL.md`
+Use `.ai/GUIDELINES.md` as the single source of truth for HAI3 development guidelines.
 
 ---
 > Source: [constructorfabric/gears-frontx](https://github.com/constructorfabric/gears-frontx) — distributed by [TomeVault](https://tomevault.io).
