@@ -1,21 +1,21 @@
 # styleseed
 
-> Source: [bitjaru/styleseed](https://github.com/bitjaru/styleseed). Graded, signed and kept in sync across platforms by [TomeVault](https://tomevault.io)
+> Source: [bitjaru/styleseed](https://github.com/bitjaru/styleseed). Graded, signed and kept current as the models change by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [bitjaru/styleseed](https://github.com/bitjaru/styleseed).
+Original source: `.cursor/rules/*.mdc` in [bitjaru/styleseed](https://github.com/bitjaru/styleseed).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
-- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-## Bundled Skills (15)
+## Bundled Skills (21)
 
 - [styleseed](https://github.com/bitjaru/styleseed/tree/main/engine/.claude/skills/ss-lint/SKILL.md)
 - [styleseed](https://github.com/bitjaru/styleseed/tree/main/engine/.claude/skills/ss-copy/SKILL.md)
@@ -32,6 +32,12 @@ Original source: `CLAUDE.md` in [bitjaru/styleseed](https://github.com/bitjaru/s
 - [styleseed](https://github.com/bitjaru/styleseed/tree/main/engine/.claude/skills/ss-pattern/SKILL.md)
 - [styleseed](https://github.com/bitjaru/styleseed/tree/main/engine/.claude/skills/ss-feedback/SKILL.md)
 - [styleseed](https://github.com/bitjaru/styleseed/tree/main/engine/.claude/skills/ss-component/SKILL.md)
+- [styleseed](https://github.com/bitjaru/styleseed/tree/main/skills/styleseed-design-review/SKILL.md)
+- [styleseed](https://github.com/bitjaru/styleseed/tree/main/engine/.claude/skills/ss-dial/SKILL.md)
+- [styleseed](https://github.com/bitjaru/styleseed/tree/main/engine/.claude/skills/ss-build/SKILL.md)
+- [styleseed](https://github.com/bitjaru/styleseed/tree/main/engine/.claude/skills/ss-verify/SKILL.md)
+- [styleseed](https://github.com/bitjaru/styleseed/tree/main/engine/.claude/skills/ss-restyle/SKILL.md)
+- [styleseed](https://github.com/bitjaru/styleseed/tree/main/engine/.claude/skills/ss-reference/SKILL.md)
 
 Graded against the Tome Standard, TomeVault's public ruleset for whether AI instructions load, read clearly and stay safe. Source: [github.com/bitjaru/styleseed](https://github.com/bitjaru/styleseed)
 
