@@ -4,7 +4,7 @@
   "repo": "skills",
   "description": "\ud83c\udf93 Personal conventions I would otherwise repeat in every project, written once and installed wherever I need them.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/wellwelwel/skills",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-08-05T01:32:43Z"
+  "distributed_at": "2026-08-05T02:17:59Z"
 }
