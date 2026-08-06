@@ -4,7 +4,7 @@
   "repo": "auth0-operator",
   "description": "Kubernetes Operator for Managing Auth0 Tenants, Clients, etc",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/alethic/auth0-operator",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-08-06T14:32:08Z"
+  "distributed_at": "2026-08-06T14:34:43Z"
 }
