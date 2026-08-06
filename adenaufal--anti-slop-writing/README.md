@@ -1,0 +1,33 @@
+# anti-slop-writing
+
+> Tome by [adenaufal](https://github.com/adenaufal/anti-slop-writing), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `GEMINI.md` in [adenaufal/anti-slop-writing](https://github.com/adenaufal/anti-slop-writing).
+
+## Also available for
+
+- **Claude Code** — `CLAUDE.md`
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Windsurf** — `project-config.md`
+
+## Bundled Skills (2)
+
+- [anti-slop-writing](https://github.com/adenaufal/anti-slop-writing/tree/main/english/SKILL.md)
+- [anti-slop-writing](https://github.com/adenaufal/anti-slop-writing/tree/main/indonesian/SKILL.md)
+
+From [adenaufal/anti-slop-writing](https://github.com/adenaufal/anti-slop-writing) — a repo with 0+ stars on GitHub.
+
+---
+
+Install this config instantly:
+```
+npx tomevault install adenaufal/anti-slop-writing
+```
+Source: [github.com/adenaufal/anti-slop-writing](https://github.com/adenaufal/anti-slop-writing).
+
+<!-- genome:t-i-s -->
