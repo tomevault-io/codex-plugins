@@ -7,13 +7,13 @@ Think first, then code. Where Claude Code and Codex jump straight to writing, th
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [Pythoughts-labs/pythinker-cli](https://github.com/Pythoughts-labs/pythinker-cli).
+Original source: `.cursor/rules/*.mdc` in [Pythoughts-labs/pythinker-cli](https://github.com/Pythoughts-labs/pythinker-cli).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
-- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
