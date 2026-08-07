@@ -1,7 +1,6 @@
+# AGENTS.md
 
-# Geohot behavioral guidelines
-
-Radical-simplicity guidelines distilled from George Hotz's public philosophy. The reflex: **complexity is the enemy — remove before you add.** Merge with project-specific instructions as needed.
+Radical-simplicity coding guidelines distilled from George Hotz's public philosophy. The reflex: **complexity is the enemy — remove before you add.** Merge with project-specific instructions as needed.
 
 **Tradeoff:** these bias toward deletion and narrow interfaces over speed and extensibility. For trivial tasks, use judgment. Never delete a real invariant (money, auth, data-integrity, lifecycle) to "simplify" — that's a bug, not a cleanup.
 
