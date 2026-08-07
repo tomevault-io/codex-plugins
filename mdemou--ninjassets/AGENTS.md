@@ -1,5 +1,5 @@
 
-**Read `backend/docs/backend-layering.md` before doing anything — it contains all patterns, conventions, and examples for this rule.**
+**Read `backend/docs/database-migrations.md` before doing anything — it contains all patterns, conventions, and examples for this rule.**
 
 ---
 > Source: [mdemou/ninjassets](https://github.com/mdemou/ninjassets) — distributed by [TomeVault](https://tomevault.io).
