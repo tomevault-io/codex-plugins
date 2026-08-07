@@ -7,12 +7,12 @@ Offline, open-source AWS CloudTrail DFIR & threat hunting platform — 120+ buil
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [Yamato-Security/senrigan](https://github.com/Yamato-Security/senrigan).
+Original source: `CLAUDE.md` in [Yamato-Security/senrigan](https://github.com/Yamato-Security/senrigan).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
