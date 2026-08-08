@@ -4,7 +4,7 @@
   "repo": "outl",
   "description": "Local-first outliner. Markdown is the source of truth. Sync that doesn't corrupt your tree when two devices edit offline",
   "type": "config",
-  "source_format": "CLAUDE.md",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/outlmd/outl",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-08-08T04:32:22Z"
+  "distributed_at": "2026-08-08T04:33:05Z"
 }
