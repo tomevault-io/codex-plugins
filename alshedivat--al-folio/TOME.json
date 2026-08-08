@@ -4,7 +4,7 @@
   "repo": "al-folio",
   "description": "",
   "type": "tome",
-  "source_format": "copilot-instructions.md",
+  "source_format": "",
   "formats": [
     {
       "format": "claude_md",
@@ -53,5 +53,5 @@
   ],
   "source_url": "https://github.com/alshedivat/al-folio",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-08-08T06:29:07Z"
+  "distributed_at": "2026-08-08T06:29:38Z"
 }
