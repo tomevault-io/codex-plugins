@@ -7,12 +7,12 @@ Modified fork of MrRSS with custom local translation and AI reliability fixes
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [RocM301/MrRSS](https://github.com/RocM301/MrRSS).
+Original source: `copilot-instructions.md` in [RocM301/MrRSS](https://github.com/RocM301/MrRSS).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
