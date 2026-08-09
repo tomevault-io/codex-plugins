@@ -4,7 +4,7 @@
   "repo": "react-native-paper",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/callstack/react-native-paper",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-08-09T16:32:17Z"
+  "distributed_at": "2026-08-09T19:11:25Z"
 }
