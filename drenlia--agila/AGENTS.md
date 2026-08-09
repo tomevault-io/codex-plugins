@@ -1,16 +1,24 @@
 
-# Confirmation dialogs
+# Date handling (Agila)
 
-When building confirmation boxes / overlays (delete forever, empty trash, destructive confirms, etc.):
+## PostgreSQL → browser (API / `sqlManager`)
 
-1. **Cancel** button dismisses without confirming.
-2. **Escape** dismisses the same as Cancel.
-3. **Click / pointer outside** the confirmation surface dismisses the same as Cancel.
-4. Defer outside-click listeners until after the opening click (e.g. `setTimeout(0)`), so the click that opened the dialog does not immediately close it.
-5. Prefer `role="dialog"` (and `aria-modal` when appropriate) on the confirmation surface.
-6. Do not rely on `window.confirm` for app chrome confirmations unless there is a strong existing reason.
+- **`node-pg` often returns JavaScript `Date` for `DATE` columns.** `res.json()` serializes them as ISO strings like `2026-03-02T00:00:00.000Z`.
+- **`<input type="date">` only accepts `YYYY-MM-DD`.** ISO datetimes are ignored, so forms look empty and saves appear to fail.
+- **Prefer casting in SQL** for fields sent to the client: `start_date::text AS start_date`, `end_date::text AS end_date` (see `server/utils/sqlManager/sprints.js` and the same pattern for any similar `DATE`/`TIMESTAMP` exposed to JSON).
+- Keep **snake_case** in JSON for tenant entities when the UI expects it (`start_date`, `end_date`, `is_active`), not camelCase aliases, unless the whole stack is migrated consistently.
 
-Apply this to both modal-style and inline/popover confirms (e.g. trash bulk purge, per-card purge).
+## Frontend
+
+- **Normalize API strings before binding to `type="date"`:** take the first `YYYY-MM-DD` from the value (e.g. match `^(\d{4}-\d{2}-\d{2})`) so ISO datetimes still work. Example: `toDateInputValue` in `src/components/admin/AdminSprintSettingsTab.tsx`.
+- **Display calendar days without UTC shift:** parse `YYYY-MM-DD` as local components (`split('-')` then `new Date(year, month - 1, day)`), not `new Date(isoString)` alone, when showing “human” dates for task/sprint-style fields.
+- Reuse **`parseLocalDate` / helpers in `src/utils/dateUtils.ts`** where appropriate instead of ad-hoc parsing.
+
+## Quick checklist for new date fields
+
+1. DB column type and migration (SQLite vs PostgreSQL) aligned?
+2. API JSON: plain date strings for forms, or explicit `::text` / `to_char` from Postgres?
+3. UI: `type="date"` gets `YYYY-MM-DD`; tables and tooltips use local-date parsing when needed?
 
 ---
 > Source: [drenlia/agila](https://github.com/drenlia/agila) — distributed by [TomeVault](https://tomevault.io).
