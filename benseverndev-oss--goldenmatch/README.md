@@ -5,10 +5,11 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [benseverndev-oss/goldenmatch](https://github.com/benseverndev-oss/goldenmatch).
+Original source: `` in [benseverndev-oss/goldenmatch](https://github.com/benseverndev-oss/goldenmatch).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
