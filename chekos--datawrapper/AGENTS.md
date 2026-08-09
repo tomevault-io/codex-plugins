@@ -1,0 +1,368 @@
+# Datawrapper Python Library
+
+This is a Python library for interacting with the Datawrapper API to create and manage charts.
+
+## IMPORTANT: Prefer Object-Oriented API Over Legacy Methods
+
+**For AI Agents and Developers:** This library provides two ways to interact with Datawrapper:
+
+1. **Object-Oriented API (RECOMMENDED)** - Use chart-specific classes like `BarChart`, `LineChart`, `ColumnChart`, etc.
+2. **Legacy Lower-Level API (DEPRECATED)** - Direct methods on the `Datawrapper` class like `create_chart()`, `update_chart()`, etc.
+
+### Why Use the Object-Oriented API?
+
+- **Type Safety**: Full type hints and IDE autocomplete support
+- **Better Developer Experience**: Intuitive, Pythonic interface with method chaining
+- **Rich Features**: Access to enums, validation, and chart-specific configuration options
+- **Modern Design**: Follows current Python best practices and design patterns
+- **Future-Proof**: The legacy API is deprecated and will be removed in a future version
+
+### Migration Examples
+
+**Legacy API (DEPRECATED - AVOID IN NEW CODE):**
+```python
+from datawrapper import Datawrapper
+
+dw = Datawrapper(access_token="your_token")
+chart_id = dw.create_chart(title="My Chart", chart_type="d3-bars")
+dw.add_data(chart_id=chart_id, data=df)
+dw.update_chart(chart_id=chart_id, title="Updated Title")
+dw.publish_chart(chart_id=chart_id)
+```
+
+**Object-Oriented API (RECOMMENDED - USE THIS):**
+```python
+from datawrapper.charts import BarChart
+
+# Method chaining approach
+chart = BarChart(
+    title="My Chart",
+    data=df
+).create().publish()
+
+# Or step-by-step
+chart = BarChart(title="My Chart", data=df)
+chart.create()
+chart.title = "Updated Title"
+chart.update().publish()
+```
+
+### Available Chart Classes
+
+All chart classes are in `datawrapper.charts`:
+- `AreaChart` - Area charts
+- `ArrowChart` - Arrow/slope charts
+- `BarChart` - Horizontal bar charts
+- `ColumnChart` - Vertical column charts
+- `LineChart` - Line charts
+- `MultipleColumnChart` - Grouped column charts
+- `ScatterPlot` - Scatter plots
+- `StackedBarChart` - Stacked bar charts
+
+### Key Features of Object-Oriented API
+
+1. **Type-Safe Enums**: Use semantic enums instead of magic strings
+   ```python
+   from datawrapper.charts import BarChart, NumberFormat, GridDisplay
+
+   chart = BarChart(
+       title="Sales Report",
+       axis_label_format=NumberFormat.THOUSANDS_SEPARATOR,
+       y_grid_display=GridDisplay.ON
+   )
+   ```
+
+2. **Method Chaining**: Fluent interface for concise workflows
+   ```python
+   chart = BarChart(title="Sales").create().update().publish()
+   ```
+
+3. **Rich Configuration**: Chart-specific options with validation
+   ```python
+   from datawrapper.charts import LineChart, Line, LineWidth, LineDash
+
+   chart = LineChart(
+       title="Temperature Trends",
+       lines=[
+           Line(column="temp", width=LineWidth.THICK, dash=LineDash.DASHED)
+       ]
+   )
+   ```
+
+4. **Easy Retrieval**: Get existing charts with full type safety
+   ```python
+   chart = BarChart.get(chart_id="abc123")
+   chart.title = "New Title"
+   chart.update()
+   ```
+
+### Deprecation Warnings
+
+The legacy API methods in `datawrapper/__main__.py` now emit `DeprecationWarning` messages:
+- `create_chart()` - Use chart classes instead (e.g., `BarChart().create()`)
+- `update_chart()` - Use `chart.update()` on chart instances
+- `publish_chart()` - Use `chart.publish()` on chart instances
+- `delete_chart()` - Use `chart.delete()` on chart instances
+- `copy_chart()` - Use `chart.duplicate()` on chart instances
+- `fork_chart()` - Use `chart.fork()` on chart instances
+- `add_data()` - Pass data to chart constructor or set `chart.data = df`
+
+These warnings will be visible to both human developers and AI agents, signaling that the object-oriented API should be used instead.
+
+## Project Structure
+
+- `datawrapper/` - Main package directory
+  - `__main__.py` - Main Datawrapper API client
+  - `charts/` - Chart-specific implementations
+    - `base.py` - BaseChart class with common functionality
+    - `models/` - Pydantic models for API metadata structures
+      - `mixins.py` - Reusable mixins for shared chart functionality
+      - `api_sections.py` - Models for API metadata sections
+      - `text_annotations.py` - Text annotation models
+      - `range_annotations.py` - Range annotation models
+      - `transforms.py` - Data transformation models
+    - `enums/` - Enum classes for type-safe configuration (organized by category)
+      - `number_divisor.py` - NumberDivisor enum
+      - `number_format.py` - NumberFormat enum
+      - `date_format.py` - DateFormat enum
+      - `line_width.py` - LineWidth enum
+      - `line_dash.py` - LineDash enum
+      - `grid_display.py` - GridDisplay enum
+      - `grid_label.py` - GridLabelPosition, GridLabelAlign enums
+      - `plot_height.py` - PlotHeightMode enum
+      - `value_label.py` - ValueLabelDisplay, ValueLabelPlacement, ValueLabelAlignment, ValueLabelMode enums
+      - `replace_flags.py` - ReplaceFlagsType enum
+      - `interpolation.py` - LineInterpolation enum
+      - `annos.py` - ConnectorLineType, StrokeWidth, ArrowHead enums
+      - `symbol_shape.py` - SymbolShape, SymbolStyle, SymbolDisplay enums
+      - `scatter_shape.py` - ScatterShape, ScatterSize, ScatterAxisPosition, ScatterGridLines, RegressionMethod enums
+    - `serializers/` - Utility classes for serialization/deserialization
+      - `base.py` - Base serializer class
+      - `color_category.py` - ColorCategory serializer
+      - `custom_range.py` - CustomRange serializer
+      - `custom_ticks.py` - CustomTicks serializer
+      - `model_list.py` - ModelListSerializer for lists of Pydantic models
+      - `negative_color.py` - NegativeColor serializer
+      - `plot_height.py` - PlotHeight serializer
+      - `replace_flags.py` - ReplaceFlags serializer
+      - `value_labels.py` - ValueLabels serializer
+    - Individual chart type files: `area.py`, `bar.py`, `column.py`, `line.py`, `multiple_column.py`, `scatter.py`, `stacked_bar.py`, `arrow.py`
+- `tests/` - Test suite
+  - `unit/` - Unit tests
+  - `integration/` - Integration tests
+  - `functional/` - Functional tests
+    - Most tests use mocked API calls (no API token required)
+    - `test_datawrapper.py` - Fully mocked tests for basic Datawrapper operations (get_charts, get_folders, fork, copy, usage)
+    - `test_basemaps.py` - Fully mocked tests for basemap operations (get_basemaps, get_basemap, get_basemap_key)
+    - `test_login_tokens.py` - Fully mocked tests for login token operations (create, get, delete)
+    - Some tests may still require API tokens for end-to-end testing
+
+## Key Patterns
+
+### AnnotationsMixin Pattern
+
+The `AnnotationsMixin` class in `datawrapper/charts/models/mixins.py` provides a reusable pattern for handling text and range annotations across all chart types.
+
+**Location:** `datawrapper/charts/models/mixins.py`
+
+**Purpose:**
+- Provides shared `text_annotations` and `range_annotations` fields for all chart classes
+- Implements consistent serialization/deserialization logic for annotations
+- Supports custom annotation subclasses (e.g., MultipleColumnTextAnnotation)
+- Eliminates code duplication across chart types
+
+**Key Features:**
+
+1. **Shared Fields:**
+   ```python
+   class AnnotationsMixin(BaseModel):
+       text_annotations: list[TextAnnotation | dict[Any, Any]] = Field(
+           default_factory=list,
+           alias="text-annotations",
+           description="A list of text annotations to display on the chart",
+       )
+       range_annotations: list[RangeAnnotation | dict[Any, Any]] = Field(
+           default_factory=list,
+           alias="range-annotations",
+           description="A list of range annotations to display on the chart",
+       )
+   ```
+
+2. **Serialization Method:**
+   ```python
+   def _serialize_annotations(
+       self,
+       text_annotation_class: type[TextAnnotation] = TextAnnotation,
+       range_annotation_class: type[RangeAnnotation] = RangeAnnotation,
+   ) -> dict:
+       """Serialize annotations to API format using ModelListSerializer.
+
+       This method uses ModelListSerializer.serialize() which:
+       - Validates dict items using model_class.model_validate()
+       - Calls serialize_model() on each object
+       - Does NOT generate IDs (Datawrapper handles this server-side)
+       """
+       result = {}
+       if self.text_annotations:
+           result["text-annotations"] = ModelListSerializer.serialize(
+               self.text_annotations, text_annotation_class
+           )
+       if self.range_annotations:
+           result["range-annotations"] = ModelListSerializer.serialize(
+               self.range_annotations, range_annotation_class
+           )
+       return result
+   ```
+
+3. **Deserialization Method:**
+   ```python
+   @classmethod
+   def _deserialize_annotations(
+       cls,
+       visualize: dict,
+       text_annotation_class: type[TextAnnotation] = TextAnnotation,
+       range_annotation_class: type[RangeAnnotation] = RangeAnnotation,
+   ) -> dict:
+       """Deserialize annotations from API format."""
+       result = {}
+       if "text-annotations" in visualize:
+           result["text_annotations"] = [
+               text_annotation_class.deserialize_model(anno)
+               for anno in visualize["text-annotations"]
+           ]
+       if "range-annotations" in visualize:
+           result["range_annotations"] = [
+               range_annotation_class.deserialize_model(anno)
+               for anno in visualize["range-annotations"]
+           ]
+       return result
+   ```
+
+**Usage in Chart Classes:**
+
+All chart classes inherit from AnnotationsMixin and use its methods:
+
+```python
+from datawrapper.charts.models.mixins import AnnotationsMixin
+
+class AreaChart(BaseChart, AnnotationsMixin):
+    # Chart-specific fields...
+
+    def serialize_model(self) -> dict:
+        # Serialize chart-specific fields...
+        visualize.update(self._serialize_annotations())
+        return result
+
+    @classmethod
+    def deserialize_model(cls, api_response: dict) -> "AreaChart":
+        # Deserialize chart-specific fields...
+        init_data.update(cls._deserialize_annotations(visualize))
+        return cls(**init_data)
+```
+
+**Custom Annotation Subclasses:**
+
+Some chart types (like MultipleColumnChart) use custom annotation subclasses with additional fields:
+
+```python
+class MultipleColumnChart(BaseChart, AnnotationsMixin):
+    # Override field types for Pydantic validation
+    text_annotations: list[MultipleColumnTextAnnotation | dict[Any, Any]] = Field(
+        default_factory=list,
+        alias="text-annotations",
+        description="A list of text annotations to display on the chart",
+    )
+    range_annotations: list[MultipleColumnRangeAnnotation | dict[Any, Any]] = Field(
+        default_factory=list,
+        alias="range-annotations",
+        description="A list of range annotations to display on the chart",
+    )
+
+    def serialize_model(self) -> dict:
+        # Pass custom classes to serialization
+        visualize.update(
+            self._serialize_annotations(
+                text_annotation_class=MultipleColumnTextAnnotation,
+                range_annotation_class=MultipleColumnRangeAnnotation,
+            )
+        )
+        return result
+
+    @classmethod
+    def deserialize_model(cls, api_response: dict) -> "MultipleColumnChart":
+        # Pass custom classes to deserialization
+        init_data.update(
+            cls._deserialize_annotations(
+                visualize,
+                text_annotation_class=MultipleColumnTextAnnotation,
+                range_annotation_class=MultipleColumnRangeAnnotation,
+            )
+        )
+        return cls(**init_data)
+```
+
+**Important Notes:**
+
+1. **No ID Generation:** The mixin uses `ModelListSerializer.serialize()` which does NOT generate IDs for annotations. Datawrapper handles ID generation server-side.
+
+2. **Field Overrides:** Chart classes that use custom annotation subclasses must override the field type hints to ensure Pydantic validates dict annotations correctly.
+
+3. **ModelListSerializer:** The serialization relies on `ModelListSerializer.serialize()` from `datawrapper/charts/serializers/model_list.py`, which:
+   - Validates dict items using `model_class.model_validate(item)`
+   - Calls `serialize_model()` on each object
+   - Returns a list of serialized objects (not a dict with UUID keys)
+
+**Benefits:**
+- Eliminates code duplication across 6+ chart classes
+- Consistent annotation handling across all chart types
+- Easy to extend with custom annotation subclasses
+- Leverages existing ModelListSerializer utility
+- Server-side ID generation (no client-side UUID management)
+
+### Serialization/Deserialization
+
+The library uses a consistent pattern for converting between Python objects and Datawrapper API JSON:
+
+1. **Serialization** (Python → API): Chart classes have a `serialize()` method that converts Python objects to the API's expected JSON format
+2. **Deserialization** (API → Python): Chart classes have a `deserialize_model()` classmethod that converts API JSON responses back to Python objects
+
+### Pydantic Defaults Pattern
+
+All chart classes follow a consistent pattern for deserialization that leverages Pydantic's built-in default handling:
+
+**Pattern:**
+```python
+# Only include fields in init_data if they exist in the API response
+if "field-name" in visualize:
+    init_data["field_name"] = visualize["field-name"]
+# Pydantic applies Field defaults if not present
+```
+
+**Benefits:**
+- Defaults defined once in Field definitions (not duplicated in deserialization)
+- Easier maintenance - changing a default only requires updating the Field definition
+- More Pydantic-idiomatic - leverages Pydantic's built-in default handling
+- Clearer code - deserialization logic focuses on parsing, not default management
+
+**Applied to all chart types:**
+- LineChart, AreaChart, ColumnChart, BarChart (fully refactored)
+- MultipleColumnChart, ScatterPlot, StackedBarChart, ArrowChart (fully refactored)
+
+### Custom Ticks Utility
+
+The `CustomTicks` class in `models.py` provides utilities for handling custom tick marks on chart axes:
+
+- `CustomTicks.serialize(ticks: list[Any]) -> str`: Converts a list of tick values to a comma-separated string for the API
+- `CustomTicks.deserialize(ticks_str: str) -> list[Any]`: Parses a comma-separated string from the API back to a list of tick values
+  - Automatically converts numeric strings to numbers (int or float)
+  - Preserves non-numeric strings as-is (e.g., date strings like "2020-01-01")
+
+This utility is used by AreaChart, ColumnChart, LineChart, and MultipleColumnChart to handle the `custom-ticks-x` and `custom-ticks-y` fields.
+
+### Custom Range Utility
+
+The `
+
+---
+> Source: [chekos/Datawrapper](https://github.com/chekos/Datawrapper) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-08-09 -->
