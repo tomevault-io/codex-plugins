@@ -1,0 +1,69 @@
+{
+  "name": "MicroHack",
+  "owner": "microsoft",
+  "repo": "MicroHack",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "MicroHack",
+      "path": "03-Azure/01-01-App Innovation/03_GHCPAppModernization/templates/skills/java-upgrade/SKILL.md",
+      "github_url": "https://github.com/microsoft/MicroHack/tree/main/03-Azure/01-01-App Innovation/03_GHCPAppModernization/templates/skills/java-upgrade/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "MicroHack",
+      "path": "03-Azure/01-01-App Innovation/03_GHCPAppModernization/templates/skills/dotnet-upgrade/SKILL.md",
+      "github_url": "https://github.com/microsoft/MicroHack/tree/main/03-Azure/01-01-App Innovation/03_GHCPAppModernization/templates/skills/dotnet-upgrade/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "MicroHack",
+      "path": "03-Azure/01-01-App Innovation/03_GHCPAppModernization/templates/skills/modernization-skill/SKILL.md",
+      "github_url": "https://github.com/microsoft/MicroHack/tree/main/03-Azure/01-01-App Innovation/03_GHCPAppModernization/templates/skills/modernization-skill/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "MicroHack",
+      "path": "03-Azure/01-04-AI/01_Agentic_SDLC/.github/skills/frontend-design/SKILL.md",
+      "github_url": "https://github.com/microsoft/MicroHack/tree/main/03-Azure/01-04-AI/01_Agentic_SDLC/.github/skills/frontend-design/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/microsoft/MicroHack",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-08-09T15:54:49Z"
+}
