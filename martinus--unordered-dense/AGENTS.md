@@ -1,307 +1,171 @@
-# Copilot Coding Agent Instructions for unordered_dense
+# CLAUDE.md
 
-## Project Overview
+Guidance for working on `unordered_dense` — a single-header C++17 dense open-addressing hash map/set (`ankerl::unordered_dense::{map, set}`).
 
-**unordered_dense** is a header-only C++17/20/23 library providing fast and densely stored hashmap and hashset implementations (`ankerl::unordered_dense::{map, set}`) based on robin-hood backward shift deletion. It is designed as a high-performance alternative to `std::unordered_map` and `std::unordered_set`.
+The entire implementation lives in `include/ankerl/unordered_dense.h`. Tests and benchmarks are in `test/` and build into a single doctest executable `udm-test`.
 
-- **Type**: Header-only C++ library
-- **Languages**: C++17, C++20, C++23
-- **Build Systems**: Meson (primary), CMake (for installation)
-- **Size**: Small to medium (single main header: `include/ankerl/unordered_dense.h`)
-- **Main Header**: `include/ankerl/unordered_dense.h`
-- **Test Framework**: doctest
-- **Benchmarking**: nanobench (custom framework)
+## Build (meson)
 
-## Build System & Commands
+Meson and ninja are required (`pip install -r requirements.txt` if missing). Dependencies (doctest, fmt) are fetched automatically as meson subprojects via `subprojects/*.wrap`.
 
-### Build System: Meson (Primary)
+```sh
+# one-time setup of a release build (required for benchmarking; also sets -DNDEBUG)
+CXX="ccache clang++" meson setup --buildtype release builddir/clang_release
 
-**CRITICAL**: This project uses **Meson** as its primary build system. Always use Meson commands for building and testing.
-
-#### Prerequisites
-```bash
-pip install meson ninja  # Install from requirements.txt
+# compile (incremental, run after every change)
+ninja -C builddir/clang_release
 ```
 
-#### Setup Build Directory
+A debug build for development: `CXX="ccache clang++" meson setup builddir/clang_debug`.
 
-**ALWAYS** set up a build directory before building or testing. Common configurations:
+Warnings are errors (`werror=true`, `warning_level=3`, plus `-Wconversion`, `-Wold-style-cast`, …), so code must compile clean.
 
-```bash
-# Debug build (C++17, default)
-meson setup builddir/gcc_cpp17_debug
+## Benchmarking
 
-# Release build (C++17)
-meson setup --buildtype=release builddir/gcc_cpp17_release
+The main performance metric is `bench_quick_overall_udm`. It runs six nanobench benchmarks covering the most important primitives — iterate-while-modifying, random insert/erase, and random find (50% hit rate) — each for both `map<uint64_t, size_t>` and `map<std::string, size_t>`, then prints the geometric mean of the median elapsed times:
 
-# C++20 build
-meson setup -Dcpp_std=c++20 builddir/gcc_cpp20_debug
-
-# C++23 build
-meson setup -Dcpp_std=c++23 builddir/gcc_cpp23_debug
-
-# 32-bit build
-meson setup -Dcpp_args=-m32 -Dcpp_link_args=-m32 builddir/gcc_cpp17_debug_32
-
-# Sanitizer builds
-meson setup -Db_sanitize=address builddir/gcc_sanitize_address
-meson setup -Db_sanitize=thread builddir/gcc_sanitize_thread
-meson setup -Db_sanitize=undefined builddir/gcc_sanitize_undefined
+```sh
+# benchmarks are marked doctest::skip(), so -ns (no-skip) is required
+./builddir/clang_release/test/udm-test -ns -tc=bench_quick_overall_udm
 ```
 
-**IMPORTANT**: The build directory name convention is `<compiler>_<standard>_<buildtype>` (e.g., `gcc_cpp17_release`).
-
-#### Build Commands
-
-```bash
-# Compile (from project root)
-meson compile -C builddir/gcc_cpp17_release
-
-# Clean before build
-meson compile --clean -C builddir/gcc_cpp17_release
-meson compile -C builddir/gcc_cpp17_release
-```
-
-#### Test Commands
-
-**ALWAYS run tests after making changes**. Tests are run with Meson:
-
-```bash
-# Run all tests (with error logs)
-meson test -C builddir/gcc_cpp17_release -v
-
-# Run tests quietly
-meson test -C builddir/gcc_cpp17_release -q --print-errorlogs
-
-# Run without rebuilding
-meson test -C builddir/gcc_cpp17_release --no-rebuild -v
-```
-
-**Test location**: Test logs are written to `builddir/<config>/meson-logs/testlog.txt`
-
-### CMake (Installation Only)
-
-CMake is **only** used for installing the library, not for testing:
-
-```bash
-mkdir build && cd build
-cmake ..
-cmake --build . --target install
-```
-
-**Do NOT use CMake for building tests or running the test suite.**
-
-## Linting & Code Quality
-
-### Lint Scripts (MUST PASS)
-
-All lint scripts are in `scripts/lint/`. They MUST pass before submitting changes:
-
-```bash
-# Run ALL linters (recommended)
-./scripts/lint/all.py
-
-# Individual linters
-./scripts/lint/lint-version.py        # Check version consistency across files
-./scripts/lint/lint-clang-tidy.py     # Run clang-tidy on main header
-./scripts/lint/lint-clang-format.py   # Check code formatting
-```
-
-### Code Formatting
-
-- **Tool**: clang-format
-- **Config**: `.clang-format` (LLVM-based, 127 column limit)
-- **Standard**: C++17
-- **Style**: snake_case for all identifiers (classes, functions, variables)
-- **Indentation**: 4 spaces, no tabs
-
-**Key formatting rules**:
-- Column limit: 127
-- Pointer alignment: Left (`Type* ptr`)
-- Break before commas in constructor initializers
-- No short lambdas on single line
-
-### Clang-Tidy
-
-- **Config**: `.clang-tidy`
-- **Header filter**: Only checks `unordered_dense.h`
-- **Naming**: snake_case for everything, UPPER_CASE for macros
-- **Command**: `./scripts/lint/lint-clang-tidy.py`
-
-## CI/CD Pipeline (GitHub Actions)
-
-**Workflow**: `.github/workflows/main.yml` runs on all pushes and PRs.
-
-### CI Jobs
-
-1. **lint** (Ubuntu): Runs `lint-version.py` and `lint-clang-tidy.py`
-2. **mingw** (Windows): MinGW 32-bit and 64-bit builds
-3. **windows** (Windows): MSVC 32-bit and 64-bit builds
-4. **macos** (macOS): clang builds
-5. **linux** (Ubuntu): gcc/clang × C++17/23 × 32/64-bit matrix
-6. **linux-sanitizers** (Ubuntu): address/thread/undefined sanitizers
-
-**CRITICAL**: All these jobs must pass. If you make changes:
-- Ensure they work on gcc AND clang
-- Test both C++17 and C++23 when relevant
-- Consider 32-bit compatibility (avoid 64-bit assumptions)
-- Sanitizers must pass (especially address/undefined)
-
-### Common CI Failures & Fixes
-
-1. **Linting failures**: Run `./scripts/lint/all.py` locally first
-2. **32-bit failures**: Don't use `size_t` in hashes without consideration
-3. **Sanitizer failures**: Check for undefined behavior, use-after-free, data races
-4. **Windows/MSVC**: Check for MSVC-specific warnings (see `test/meson.build`)
-
-## Project Structure
-
-### Directory Layout
+The last line of output is the score, e.g.:
 
 ```
-unordered_dense/
-├── include/ankerl/unordered_dense.h   # Main header (ALL implementation)
-├── src/ankerl.unordered_dense.cpp     # C++20 modules support
-├── test/
-│   ├── unit/          # Unit tests (doctest)
-│   ├── bench/         # Benchmarks (nanobench)
-│   ├── fuzz/          # Fuzz testing
-│   ├── app/           # Test application code
-│   └── meson.build    # Test build configuration
-├── scripts/
-│   ├── build.py       # Multi-configuration build script
-│   └── lint/          # Linting scripts
-├── .github/workflows/main.yml  # CI configuration
-├── meson.build        # Main build file
-├── CMakeLists.txt     # Installation only
-├── .clang-format      # Format configuration
-└── .clang-tidy        # Linter configuration
+0.0767 bench_quick_overall_map_udm
 ```
 
-### Key Files to Know
+**Lower is better.** This single number is what to optimize.
 
-- **`include/ankerl/unordered_dense.h`**: The entire library (header-only)
-- **`test/unit/`**: All unit tests (named by feature, e.g., `insert.cpp`, `erase.cpp`)
-- **`test/bench/`**: Performance benchmarks
-- **`test/meson.build`**: Test compilation settings, dependencies, warning flags
-- **`scripts/build.py`**: Local multi-configuration build/test script
+Benchmarking practices:
 
-### Configuration Files
+- Always benchmark a `--buildtype release` build (never debug).
+- Record a baseline score on the unmodified code first, then compare after each change. Run each measurement 2–3 times; treat differences within run-to-run noise (~1–2%) as no change.
+- On noisy/shared machines, don't compare runs made at different times — the machine can drift by >10% over minutes. Instead keep a baseline binary around (copy `udm-test` elsewhere before rebuilding) and run baseline and candidate **interleaved** (A B A B A B), then compare paired runs. A change is real when it wins in (almost) every pair.
+- Beware code-layout luck: any edit (even to never-executed code) can shift alignment and move individual sub-benchmarks by ±3%. Judge micro-optimizations by mechanism plus a focused microbenchmark, and confirm on the paired geomean, not on a single sub-benchmark delta.
+- nanobench prints per-benchmark `err%`; rerun if it's high (> ~3%). A warning about CPU governor/turbo is normal on non-tuned machines — it just means more noise.
+- Other useful benchmarks in `test/bench/` (e.g. `bench_copy`, `bench_game_of_life`, find variants) can be run the same way via `-tc=<name>`; run all with `-ns -ts=bench`. List all test cases with `-ltc`.
 
-- **`.clang-format`**: Code formatting rules (use with clang-format)
-- **`.clang-tidy`**: Static analysis rules
-- **`.gitignore`**: Excludes builddir, .cache, .vscode, compile_commands.json
-- **`requirements.txt`**: Python dependencies (meson, ninja)
+## Optimization dead ends (verified with interleaved A/B runs; re-test before assuming they still hold)
 
-## Development Workflow
+Measured on a shared x86-64 VM with clang 18, default `-march` (baseline x86-64, so no BMI2/AVX2 in generated code). The `bench_quick_overall_udm` hot paths are close to machine limits: a lookup is hash + two dependent cache accesses (~10 ns map-side), and hashing the 200-byte string keys (~42 cycles each) is ~45% of the wall time of the string sub-benchmarks. Ideas that consistently **regressed** and were reverted:
 
-### Making Changes
+- Force-inlining `wyhash::hash` into the map (icache/register pressure outweighs saved call overhead).
+- A branchless `do_find` fast path for scalar keys (unconditional key compare + conditional-move result): the speculative value load doubles cache misses on the ~50% miss lookups.
+- Explicit `__builtin_prefetch` of `m_values[bucket->m_value_idx]` in `do_find`, and computing the moved element's hash early + prefetching its home bucket in `do_erase`: out-of-order execution already hides these latencies.
+- Replacing wyhash with rapidhash (v3, 2025): the wyhash implementation here is *faster* for inputs ≥ 24 bytes in both latency and throughput; rapidhash only won at ≤ 16 bytes, and that trick (two plain 8-byte reads instead of building `a`/`b` from four 4-byte reads) has been adopted.
 
-1. **Setup**: Ensure you have a build directory set up
-   ```bash
-   meson setup builddir/gcc_cpp17_debug
-   ```
+## Testing
 
-2. **Edit**: Make changes to `include/ankerl/unordered_dense.h` or test files
+Any change to `include/ankerl/unordered_dense.h` must pass the unit tests:
 
-3. **Build**: Compile the tests
-   ```bash
-   meson compile -C builddir/gcc_cpp17_debug
-   ```
+```sh
+meson test -C builddir/clang_release unit --verbose
+# or directly (runs all non-skipped tests):
+./builddir/clang_release/test/udm-test
+```
 
-4. **Test**: Run all tests
-   ```bash
-   meson test -C builddir/gcc_cpp17_debug -v
-   ```
+## Fuzzing
 
-5. **Lint**: Verify all linters pass
-   ```bash
-   ./scripts/lint/all.py
-   ```
+The `fuzz` test suite replays the committed corpora in `data/fuzz/<target>` on every test run, which
+only ever re-finds what has already been found. The libFuzzer targets are what go looking. They are
+clang only and not built by default:
 
-6. **Multi-config** (optional): Test across configurations
-   ```bash
-   python scripts/build.py  # Builds and tests many configurations
-   ```
+```sh
+CXX=clang++ meson setup builddir/fuzz
+ninja -C builddir/fuzz test/fuzz_api          # or fuzz_insert_erase, fuzz_replace_map, fuzz_string
+./builddir/fuzz/test/fuzz_api -max_total_time=60 scratch-dir data/fuzz/fuzz_api
+```
 
-### Common Tasks
+libFuzzer writes new inputs into the *first* corpus directory it is given, so keep `data/fuzz/...`
+second and it stays read-only. Passing it alone — `./test/fuzz_api data/fuzz/fuzz_api` — quietly
+fills the committed corpus with hundreds of generated files; to just replay it, run the `fuzz` test
+suite (`./builddir/dev/test/udm-test -ts=fuzz`), which is what CI does. `scripts/fuzz_run.sh <target>` drives one across all cores, and
+`scripts/fuzz_merge.sh <target>` merges a scratch corpus back down to the inputs that add coverage.
+One body serves both modes: `FUZZ_TEST_CASE` in `test/fuzz/run.h` expands to the doctest replay case
+normally, and to libFuzzer's entry point under `-DFUZZ`.
 
-#### Adding a New Feature
-1. Implement in `include/ankerl/unordered_dense.h`
-2. Add unit test in `test/unit/<feature>.cpp`
-3. Update `test/meson.build` to include new test file
-4. Build and test
-5. Run linters
+The same body also builds under AFL++, because `afl-clang-fast++` accepts `-fsanitize=fuzzer` and
+links its own driver over `LLVMFuzzerTestOneInput`. Ask for the target by name — a bare `ninja`
+fails, since AFL defines `FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION` itself and that is what
+`fuzz/run.h` reads as "honggfuzz is driving":
 
-#### Fixing a Bug
-1. Add a failing test case in appropriate `test/unit/*.cpp` file
-2. Fix the bug in `include/ankerl/unordered_dense.h`
-3. Verify test passes
-4. Run full test suite and linters
+```sh
+CXX=afl-clang-fast++ meson setup builddir/afl
+ninja -C builddir/afl test/fuzz_api
+afl-fuzz -i data/fuzz/fuzz_api -o out -- ./builddir/afl/test/fuzz_api   # -i is never written to
+```
 
-#### Updating Version
-- Version must be updated in 4 places (checked by `lint-version.py`):
-  - `meson.build` (version: 'X.Y.Z')
-  - `CMakeLists.txt` (VERSION X.Y.Z)
-  - `include/ankerl/unordered_dense.h` (ANKERL_UNORDERED_DENSE_VERSION_*)
-  - `test/unit/namespace.cpp` (unordered_dense::vX_Y_Z)
+`scripts/fuzz_afl.py` does all of that for you, which is worth using because the steps above are
+easy to get subtly wrong:
 
-## Dependencies
+```sh
+scripts/fuzz_afl.py run              # every core, all four targets, until Ctrl-C
+scripts/fuzz_afl.py run fuzz_api     # every core on one target
+scripts/fuzz_afl.py sweep            # each target in turn, moving on when it goes quiet
+scripts/fuzz_afl.py sweep --idle 15m # ... giving each one longer to prove it is done
+scripts/fuzz_afl.py minimize         # fold the findings into data/fuzz, shrunk, with coverage
+```
 
-### Build Dependencies
-- **meson** (1.7.2+): Build system
-- **ninja**: Build backend
-- **C++17 compiler**: gcc or clang (C++20/23 for advanced features)
+It builds what it needs, gives the first target's main instance the terminal so there is a status
+screen to watch (the rest log to `fuzz-findings/<target>/afl-*.log`), resumes rather than restarting,
+and stops everything on Ctrl-C. Committing what it produces is left to you.
 
-### Test Dependencies (auto-fetched by Meson)
-- **doctest** (2.4.11+): Unit testing framework
-- **fmt** (11.2.0+): Formatting library
-- **boost** (optional): For custom container tests
+`run` fuzzes every target at once, splitting the cores between them. `sweep` is for leaving alone:
+it gives one target every core and moves on once that target has gone `--idle` without a new find,
+which defaults to 5 minutes. The main instance keeps the terminal and its status screen, the same
+as `run` — its `last new find` counter is what the moving on is based on. The deciding is done off
+the queue directories rather than from `fuzzer_stats`, because afl-fuzz rewrites that file on its
+own schedule and both `last_find` and `corpus_count` in it can sit unchanged for a minute at a
+time -- long enough to call a target done while it is still finding things.
 
-### Optional Dependencies
-- **clang-tidy**: For static analysis
-- **clang-format**: For code formatting
-- **ccache**: For faster rebuilds (recommended)
+"Every core" means every *physical* core: the script reads `thread_siblings_list` and starts one
+instance per core, pinned to it with `afl-fuzz -b`. Hyperthread siblings share a core's execution
+units, so a second instance there mostly slows down the one already on it while afl-fuzz counts
+both cores as busy. Which sibling represents a core is not guessable from the numbering — whether
+core 0's siblings are `0,1` or `0,n/2` differs between machines — which is why it comes from the
+kernel rather than from arithmetic. Where the topology cannot be read (macOS), it falls back to
+`os.cpu_count()` and lets afl-fuzz place the instances itself.
 
-## Important Notes & Gotchas
+Pinning with `-b` skips the scan afl-fuzz otherwise does for an unused core, so on a machine that
+is already busy it shares rather than refusing to start.
 
-### Build System
-- **NEVER** use CMake for testing - it's only for installation
-- **ALWAYS** use Meson for building and testing
-- Build directories follow naming: `<compiler>_<standard>_<type>`
-- Tests output to `builddir/<config>/meson-logs/testlog.txt`
+Minimizing a corpus takes both tools, because neither subsumes the other: `afl-cmin` covers the same
+AFL edges with far fewer files but is blind to libFuzzer's finer features, and `-merge=1` onto its
+output adds back exactly the files carrying a feature it dropped. Note the `@@` — `afl-cmin` pipes
+stdin by default, which this driver reports no coverage for.
 
-### Code Style
-- This is a **header-only** library - all code in `unordered_dense.h`
-- Use **snake_case** for everything (enforced by clang-tidy)
-- No magic numbers (use named constants)
-- Maintain C++17 compatibility unless explicitly C++20/23 features
+```sh
+afl-cmin -i data/fuzz/fuzz_api -o corpus-cmin -- ./builddir/afl/test/fuzz_api @@
+cp -r corpus-cmin corpus-min && ./builddir/fuzz/test/fuzz_api -merge=1 corpus-min data/fuzz/fuzz_api
+```
 
-### Testing
-- **ALWAYS** run `meson test` after changes
-- Tests use doctest with `[ts=...]` tags for categorization
-- Benchmarks are also tests (run with `-ts=bench`)
-- Fuzz tests exist but aren't run in standard test suite
+`.github/workflows/fuzz.yml` runs every target nightly, uploads any crash, and uploads the
+coverage-increasing inputs it found. Its `minimize` dispatch input runs the two-step shrink above
+instead of fuzzing. Committing what either produces stays a human decision.
 
-### Platform Considerations
-- Code must work on Windows (MSVC), Linux (gcc/clang), macOS (clang)
-- Support both 32-bit and 64-bit architectures
-- Be careful with integer sizes (use appropriate types)
-- Sanitizers must pass (especially address and undefined behavior)
+## CI
 
-### Version Control
-- Versions are checked across 4 files - update all or lint will fail
-- CI runs on every push/PR - ensure it passes locally first
+`.github/workflows/main.yml` builds every leg the same way, so any of them reproduces locally:
 
-## Trust These Instructions
+```sh
+meson setup builddir --force-fallback-for=fmt -Dcpp_std=c++17 <matrix setup_args>
+meson test -C builddir --print-errorlogs
+```
 
-**IMPORTANT**: These instructions are comprehensive and tested. Trust them and follow the documented commands. Only explore or search for alternatives if:
-- A documented command fails with an unexpected error
-- You need information not covered here
-- The repository structure has changed significantly
+`--force-fallback-for=fmt` is what makes every runner build against the vendored fmt instead of
+whatever the machine happens to have installed.
 
-When in doubt, run `./scripts/lint/all.py` and `meson test -C builddir/<config> -v` to verify your changes.
+Linters (`scripts/lint/lint-*.py`, all of them via `scripts/lint/all.py`) run in the `lint` job.
+Two of them pin their tool, because both tools gain checks or change their output between
+releases: `clang-tidy-18` and `clang-format` 21 (`pip install clang-format==21.1.8`).
+`lint-clang-format.py` *skips* rather than fails when it cannot find version 21, so a local run
+with a different clang-format says so instead of reporting the tree as broken.
+
+## Notes for sandboxed / offline environments
+
+If meson cannot download the wrap subprojects (e.g. GitHub release tarballs blocked), fetch the doctest and fmt sources manually into `subprojects/doctest-2.4.12/` and `subprojects/fmt-11.2.0/` (matching the `directory` field of the `.wrap` files) with a minimal `meson.build` in each that declares `doctest_dep` (header-only, include dir `doctest/`) and `fmt_dep` (include dir `include/`, sources `src/format.cc`, `src/os.cc`) and calls `meson.override_dependency()`. Meson skips the download when the subproject directory already exists. These directories are gitignored — do not commit them.
 
 ---
 > Source: [martinus/unordered_dense](https://github.com/martinus/unordered_dense) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-06-29 -->
+<!-- tomevault:4.0:agents_md:2026-08-09 -->
