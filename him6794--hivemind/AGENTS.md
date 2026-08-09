@@ -1,43 +1,168 @@
-# HiveMind：AI coding agent 指引（針對本 repo）
+# CLAUDE.md
 
-## Big picture（先懂控制面/資料面）
-- **NodePool（控制面）**：`node_pool/`，gRPC server 入口 `node_pool/node_pool_server.py`，管理使用者、worker 註冊/狀態、任務上傳/停止/結果下載；狀態主要落在 **Redis**（節點 `node:<id>`、任務 `task:<id>`），任務 ZIP/結果 ZIP 由 `TASK_STORAGE_PATH` 寫檔（參考 `node_pool/master_node_service.py`）。
-- **Worker（資料面）**：`worker/src/hivemind_worker/`，同時是
-  - gRPC **server**：提供 `WorkerNodeService.ExecuteTask`（`grpc_servicer.py`）接收任務
-  - gRPC **client**：呼叫 NodePool 的 `UserService/NodeManagerService/MasterNodeService/WorkerNodeService` 回報 output/result/usage（`grpc_client.py`）
-  - 任務實際執行與打包集中在 `task_executor.py: execute_task()`（Docker 優先，fallback venv）。
-- **Master UI**：`master/hivemind_master/src/hivemind_master/master_node.py`（Flask UI + NodePool gRPC client），負責上傳 zip、查任務、停任務、下載結果。
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## gRPC / proto（修改契約要同步三邊）
-- 單一 proto：`node_pool/nodepool.proto`，產物 `nodepool_pb2*.py` 在 **NodePool / Worker / Master** 都各自有一份。
-- VS Code tasks（Windows）可產生 pb：`protoc-generate-node-pool` / `protoc-generate-worker` / `protoc-generate-master`。
-- 注意「語意陷阱」：`WorkerNodeService` 在 **worker 與 nodepool 兩側都實作**但用途不同（參考 `docs/developer-architecture.md`、`docs/rpc-contract-notes.md`）。
+## What is Hivemind?
 
-## 常用開發流程（本 repo 的慣例）
-- 啟動順序（最小可跑）：
-  1) Redis
-  2) NodePool gRPC：`node_pool/node_pool_server.py`（預設 50051）
-  3) Worker：`worker/src/hivemind_worker/__main__.py` 或 `worker/main.py`（會連 `NODEPOOL_ADDRESS`）
-  4) Master UI（可選）：`master_node.py`（預設 5002）
-  
-## 任務 ZIP 格式與執行規則（很常踩坑）
-- 任務 ZIP 建議包含：`main.py`（或 `app.py/run.py/start.py`）+ 可選 `requirements.txt`（見 `master/.../templates_master/master_upload.html` 與 `task_executor._find_executable_script()`）。
-- Worker 執行路徑：解壓到 temp workspace（`task_executor._safe_extract_zip()` 有 ZipSlip 防護）。
-- Docker 不可用時走 venv：`task_executor._create_task_venv()`（Windows 優先 `runtime\Scripts\virtualenv.exe`）。
+Hivemind is a distributed compute runtime for public-network workers. Users submit batch tasks as ZIP packages; the system schedules them across a pool of worker nodes and returns results. The backend is a single Rust binary (`hivemind-bin`) that can run as `master`, `nodepool`, `worker`, or `all` (colocated). Frontends are React SPAs.
 
-## 設定與環境變數（先查設定檔再改 code）
-- Worker：`worker/src/hivemind_worker/config.py`
-  - 特別是 `NODEPOOL_ADDRESS`（預設值可能與 docs 不一致，遇到連線問題先看這裡與環境變數覆寫）。
-- Master：`master_node.py` 使用 `GRPC_SERVER_ADDRESS`。
+## Common Commands
 
-## 測試位置與寫法（以 worker 為主）
-- Worker 單元測試在：`worker/src/hivemind_worker/tests/`（pytest）。
-- 若修改任務執行/venv/python resolution，請同步更新對應測試（例如 `test_task_executor_uses_bundled_python_and_cleans.py`）。
+### Backend (Rust)
 
-## 變更建議（避免踩雷）
-- 任何 proto 變更：務必更新三邊生成檔 + 相關呼叫端（node_pool/worker/master），否則會出現 runtime gRPC 序列化/欄位缺失問題。
-- 請先讀 `docs/developer-runbook.md`（啟動與故障定位）與 `docs/rpc-contract-notes.md`（已知語意陷阱）。
+All Rust commands run from `hivemind-rs/`:
+
+```bash
+make build              # cargo build --release
+make build-debug        # cargo build (debug)
+make test               # cargo test
+make test-verbose       # cargo test -- --nocapture
+make lint               # cargo clippy -- -D warnings
+make fmt                # cargo fmt
+make dev                # build + start redis/postgres + cargo run --bin hivemind-bin -- all
+make proto              # regenerate protobuf (cargo build -p hivemind-proto)
+```
+
+Run a single test:
+```bash
+cd hivemind-rs && cargo test <test_name>
+```
+
+### Frontend
+
+Three separate frontend surfaces, each with its own `package.json`:
+
+```bash
+make build-frontend     # builds all three via scripts/build-release-frontends.ps1
+make smoke-frontend     # smoke-test release artifacts
+```
+
+Individual frontends:
+```bash
+cd frontend && npm install && npm run build          # Official site (Next.js)
+cd frontend/master-ui && npm install && npm run build # Master UI (Vite + React 18)
+cd frontend/worker-ui && npm install && npm run build # Worker UI (Vite + React 18)
+```
+
+Dev servers:
+```bash
+cd frontend && npm run dev            # port 3000
+cd frontend/master-ui && npm run dev  # port 3000
+cd frontend/worker-ui && npm run dev  # port 3001
+```
+
+### Docker
+
+```bash
+make docker-up          # start full stack
+make docker-down        # stop
+make docker-logs        # tail logs
+make docker-build       # build images
+make db-reset           # destroy and recreate postgres + redis volumes
+```
+
+### Python build helper
+
+```bash
+python scripts/build_local.py --all          # build backend + frontends without Docker
+python scripts/build_local.py --debug        # debug mode, skip release optimizations
+```
+
+## Architecture
+
+### Runtime Topology
+
+```
+Client / UI
+  → Master HTTP API (8082)      — HTTP-to-gRPC proxy, no direct DB access
+    → Nodepool gRPC (50051)     — owns DB, auth, scheduling, node management
+  → Worker gRPC (50053)         — task execution, result reporting
+  → Worker Control HTTP (18080) — local worker status/config endpoint
+```
+
+`hivemind-bin` runs one or more of these roles based on the CLI argument (`master`, `nodepool`, `worker`, `all`). In `all` mode everything is colocated in one process.
+
+### Crate Layout (`hivemind-rs/crates/`)
+
+| Crate | Responsibility |
+|---|---|
+| `hivemind-bin` | Entry point, CLI parsing, service wiring |
+| `config` | `HivemindConfig` — loads from env vars or JSON file (`HIVEMIND_CONFIG`) |
+| `proto` | Generated gRPC code from `proto/hivemind.proto` |
+| `models` | Shared domain types |
+| `database` | PostgreSQL (sqlx) + Redis (deadpool-redis) access, migrations |
+| `auth` | JWT service, registration, login, bcrypt password handling |
+| `node-manager` | Worker registration, heartbeat tracking, trust/liveness state |
+| `task-scheduler` | Task dispatch, redispatch, timeout loops |
+| `master-api` | Axum HTTP handlers, proxies to nodepool gRPC |
+| `worker-executor` | Sandboxed task execution, resource tracking, worker control API |
+| `vpn-service` | Headscale-based VPN peer management |
+| `torrent-service` | ZIP-to-torrent metainfo, artifact distribution |
+| `common` | Tracing init, shared error types, helpers |
+
+### Frontend Structure (`frontend/`)
+
+| Directory | Tech | Purpose |
+|---|---|---|
+| `frontend/` (root) | Next.js 16, React 19, Tailwind v4 | Official site, account center, docs |
+| `frontend/master-ui/` | Vite, React 18 | Task submission, API keys, dashboard |
+| `frontend/worker-ui/` | Vite, React 18 | Worker node status, task queue, earnings |
+
+### Key Data Flow
+
+1. User submits a task (HTTP POST or CLI `submit`) → Master API → Nodepool gRPC
+2. Nodepool persists task to Postgres, dispatches to an available worker via gRPC
+3. Worker downloads the task package (torrent or HTTP), executes in sandbox
+4. Worker reports results back via gRPC → Nodepool marks task complete
+5. Frontend polls Master API for task status/results
+
+### Configuration
+
+`HivemindConfig` (in `crates/config`) loads from:
+1. JSON file if `HIVEMIND_CONFIG` env var points to one
+2. Otherwise, individual env vars (see `.env.example` for the full list)
+
+Key env vars: `DATABASE_URL`, `REDIS_URL`, `JWT_SECRET`, `NODEPOOL_GRPC_ADDR`, `MASTER_HTTP_ADDR`, `WORKER_GRPC_ADDR`, `WORKER_CONTROL_HTTP_ADDR`
+
+`JWT_SECRET` must not be the default `CHANGE_ME_IN_PRODUCTION` — the binary refuses to start with that value.
+
+### Proto Contracts
+
+- `proto/hivemind.proto` — main gRPC surface (user, node, master, batch-runtime, VPN, worker services)
+- `proto/vpn.proto` — VPN-specific messages
+- Generated code is included via `tonic::include_proto!("nodepool")` in `crates/proto/src/lib.rs`
+- Regenerate with `make proto`
+
+### Testing
+
+- Rust tests: `make test` (runs `cargo test` across the workspace)
+- Frontend tests: `cd frontend/master-ui && npm test` or `cd frontend/worker-ui && npm test`
+- Test config uses `HivemindConfig::for_test()` which defaults to `hivemind_test` database
+- Set `HIVEMIND_TEST_DATABASE_URL` to override the test database connection string
+
+## Trust Model (from AGENT.md — load-bearing)
+
+- **Nodepool** is the only trusted authority. It owns account state, balances, task state, worker registration, scheduling, and billing.
+- **Master** and **Worker** nodes are user-deployed and therefore untrusted. Nodepool identifies callers solely by validating tokens it issued itself.
+- Worker results, resource usage, and billing figures are *claims*, not facts — nodepool verifies them server-side.
+- The official website must not become a task/worker operations console. Task submission and worker control belong in Master UI and Worker UI respectively.
+- The website backend calls nodepool server-side via `WEBSITE_NODEPOOL_GRPC_ADDR`; nodepool must never be exposed directly to browsers.
+
+See `AGENT.md` for the full trust model, deployment model, and product boundary rules.
+
+## Workflow Conventions
+
+- Commit per feature, not in bulk. Run tests before committing.
+- Commit to local repo only — do not push unless explicitly asked.
+- Use Conventional Commits: `feat(scope):`, `fix(scope):`, `docs(scope):`, `test(scope):`, `refactor(scope):`, etc.
+- Keep commits focused enough to revert individually.
+
+## Platform Notes
+
+- Primary development is on Windows (PowerShell); Makefile targets use `powershell -NoProfile -ExecutionPolicy Bypass` for frontend build scripts
+- Docker Compose runs the full production-like stack
+- The `scripts/build_local.py` helper works on both Windows and Linux for building without Docker
 
 ---
 > Source: [him6794/hivemind](https://github.com/him6794/hivemind) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-25 -->
+<!-- tomevault:4.0:agents_md:2026-08-09 -->
