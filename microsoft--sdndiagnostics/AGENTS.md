@@ -1,117 +1,35 @@
-# GitHub Copilot Instructions for SdnDiagnostics
 
-## Project Overview
-SdnDiagnostics is a PowerShell module for diagnosing and troubleshooting Software Defined Networking (SDN) infrastructure in Microsoft environments, including Azure Stack HCI and Windows Server deployments.
+# Code Review: Pester Test Coverage
 
-## Code Style and Conventions
+When reviewing changes to PowerShell source files in `src/`, check that corresponding Pester tests exist.
 
-### PowerShell Standards
-- Follow PowerShell best practices and the [PowerShell Practice and Style Guide](https://poshcode.gitbook.io/powershell-practice-and-style)
-- Use approved verbs for function names (Get-, Set-, New-, Remove-, etc.)
-- Use PascalCase for function names and parameters
-- Use camelCase for local variables
-- Include comprehensive comment-based help for all exported functions
+## Rules
 
-### Function Structure
-- Always include `[CmdletBinding()]` attribute for advanced functions
-- Use parameter sets when functions have mutually exclusive parameters
-- Include proper parameter validation attributes (`Mandatory`, `ValidateSet`, `ValidateScript`, etc.)
-- Use `ShouldProcess` pattern for functions that make changes (with `-Confirm` and `-WhatIf` support)
-- Always include proper error handling with try/catch blocks
+1. **New exported functions MUST have tests.** If a new function is added to any `.psm1` file, there should be a corresponding test in `tests/offline/<ModuleName>.Tests.ps1`. Flag if missing.
 
-### Error Handling
-- Use `Trace-Output` for logging instead of `Write-Host` or `Write-Verbose`
-- Pipe exceptions to `Trace-Exception` in catch blocks
-- Always include both `Trace-Exception` and `Write-Error` in catch blocks
-- Return meaningful error messages to users
+2. **Modified function signatures should update tests.** If parameters are added, renamed, or removed, existing tests should reflect the change.
 
-Example:
-```powershell
-try {
-    # Function logic
-}
-catch {
-    $_ | Trace-Exception
-    $_ | Write-Error
-}
-```
+3. **Bug fixes should add a regression test.** If the PR fixes a bug, there should be a test that would have caught it.
 
-## Logging and Tracing
-- Use Trace-Output function for all logging with appropriate -Level parameter
-  - **Level:Verbose** for detailed debug information
-  - **Level:Information** for general information (default)
-  - **Level:Warning** for warnings
-  - **Level:Error** for errors
-  - **Level:Exception** for exceptions (handled by Trace-Exception)
-  - **Level:Success** for successful operations
+## What to check
 
-## Module Organization
-Place role-specific functions in appropriate module files:
-- `SdnDiag.Common.psm1` - Functions common to all roles
-- `SdnDiag.Gateway.psm1` - Gateway-specific functions
-- `SdnDiag.LoadBalancerMux.psm1` - Load balancer MUX functions
-- `SdnDiag.NetworkController.psm1` - Network Controller functions
-- `SdnDiag.Server.psm1` - Server/host-specific functions
-- `SdnDiag.Utilities.psm1` - Utility helper functions
+- Look for new `function <Verb>-Sdn<Noun>` definitions in the diff
+- **Verify the function is exported:** Check `src/SdnDiagnostics.psd1` `FunctionsToExport` — only exported functions require tests
+- Verify a `Describe '<Module> - <FunctionName>'` block exists in the corresponding test file
+- If no test file exists for the module yet, flag that one should be created
 
-## Remote Execution
-- Use `New-PSRemotingSession` for creating remote sessions
-- Use `Invoke-PSRemoteCommand` for executing commands remotely. This function should handle session management and error handling.
-- Always pass `$Credential` parameter for remote operations
+## How to flag
 
-## REST API Interactions
-- Use `Invoke-RestMethodWithRetry` or `Invoke-WebRequestWithRetry` for Network Controller REST API calls
-- Support both certificate and credential-based authentication
-- Always include parameter sets for `RestCertificate` and `RestCredential`
-- Use `@ncRestParams` splatting pattern for REST parameters
+If tests are missing, comment:
 
-## Data Collection
-- Use `Initialize-DataCollection` to prepare output directories and validate disk space
-- Use `Export-ObjectToFile` to save results with consistent formatting
-- Support `-OutputDirectory` parameter for all data collection functions
-- Include time range parameters (`-FromDate`, `-ToDate`) where applicable
+> This PR adds/modifies `<FunctionName>` but no corresponding Pester test was found in `tests/offline/`. Please add offline tests following the patterns in `tests/CONTRIBUTING_TESTS.md`.
 
-## Credential Handling
-- Use `[System.Management.Automation.PSCredential]` type
-- Default to `[System.Management.Automation.PSCredential]::Empty`
-- Include `[System.Management.Automation.Credential()]` attribute
+## Exceptions (do not flag)
 
-Example:
-```powershell
-[Parameter(Mandatory = $false)]
-[System.Management.Automation.PSCredential]
-[System.Management.Automation.Credential()]
-$Credential = [System.Management.Automation.PSCredential]::Empty
-```
-
-## Documentation
-- Include synopsis, description, parameter descriptions, and examples
-- Use proper markdown formatting in comment-based help
-- Document any prerequisites or dependencies
-- Include related links where applicable
-
-## Common Patterns
-### Network Controller REST Parameter Pattern
-```powershell
-$ncRestParams = @{
-    NcUri = $NcUri
-    ErrorAction = 'Stop'
-}
-
-switch ($PSCmdlet.ParameterSetName) {
-    'RestCertificate' { $ncRestParams.Add('NcRestCertificate', $NcRestCertificate) }
-    'RestCredential' { $ncRestParams.Add('NcRestCredential', $NcRestCredential) }
-}
-
-$result = Get-SdnResource @ncRestParams -ResourceRef $resourceRef
-```
-
-## Security Best Practices
-- Never log credentials or secrets
-- Use SecureString for password parameters
-- Validate user input with appropriate attributes
-- Check for admin privileges when required using `Confirm-IsAdmin`
+- Private helper functions (not exported, names without `Sdn` prefix)
+- Changes to build scripts, manifests, or documentation only
+- Trivial parameter alias additions
 
 ---
 > Source: [microsoft/SdnDiagnostics](https://github.com/microsoft/SdnDiagnostics) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-24 -->
+<!-- tomevault:4.0:agents_md:2026-08-09 -->
