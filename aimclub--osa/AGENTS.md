@@ -1,7 +1,7 @@
-# Repo Analysis Agent
+# Finalizer Agent
 
-::: osa_tool.osa_agent.agents.repo_analysis.agent
+::: osa_tool.osa_agent.agents.finalizer.agent
 
 ---
 > Source: [aimclub/OSA](https://github.com/aimclub/OSA) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-26 -->
+<!-- tomevault:4.0:agents_md:2026-08-09 -->
