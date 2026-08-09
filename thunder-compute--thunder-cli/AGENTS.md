@@ -11,10 +11,8 @@ Add to your MCP configuration:
 {
   "mcpServers": {
     "thunder-compute": {
-      "serverUrl": "https://www.thundercompute.com/mcp",
-      "headers": {
-        "Content-Type": "application/json"
-      }
+      "type": "http",
+      "url": "https://www.thundercompute.com/mcp"
     }
   }
 }
@@ -29,4 +27,4 @@ Documentation: https://www.thundercompute.com/docs
 
 ---
 > Source: [Thunder-Compute/thunder-cli](https://github.com/Thunder-Compute/thunder-cli) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-26 -->
+<!-- tomevault:4.0:agents_md:2026-08-09 -->
