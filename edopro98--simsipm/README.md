@@ -5,11 +5,10 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `` in [EdoPro98/SimSiPM](https://github.com/EdoPro98/SimSiPM).
+Original source: `CLAUDE.md` in [EdoPro98/SimSiPM](https://github.com/EdoPro98/SimSiPM).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
