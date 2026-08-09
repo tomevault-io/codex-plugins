@@ -4,7 +4,7 @@
   "repo": "quartznet",
   "description": "",
   "type": "tome",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -53,5 +53,5 @@
   ],
   "source_url": "https://github.com/quartznet/quartznet",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-24T16:30:50Z"
+  "distributed_at": "2026-08-09T13:40:25Z"
 }
