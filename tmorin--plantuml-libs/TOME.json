@@ -4,7 +4,7 @@
   "repo": "plantuml-libs",
   "description": "",
   "type": "tome",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -85,9 +85,57 @@
       "path": ".github/skills/fontawesome-package-upgrading/SKILL.md",
       "github_url": "https://github.com/tmorin/plantuml-libs/tree/main/.github/skills/fontawesome-package-upgrading/SKILL.md",
       "description": ""
+    },
+    {
+      "name": "plantuml-libs",
+      "path": ".claude/skills/aws-package-upgrading/SKILL.md",
+      "github_url": "https://github.com/tmorin/plantuml-libs/tree/main/.claude/skills/aws-package-upgrading/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "plantuml-libs",
+      "path": ".claude/skills/gcp-package-upgrading/SKILL.md",
+      "github_url": "https://github.com/tmorin/plantuml-libs/tree/main/.claude/skills/gcp-package-upgrading/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "plantuml-libs",
+      "path": ".claude/skills/eip-package-upgrading/SKILL.md",
+      "github_url": "https://github.com/tmorin/plantuml-libs/tree/main/.claude/skills/eip-package-upgrading/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "plantuml-libs",
+      "path": ".claude/skills/azure-package-upgrading/SKILL.md",
+      "github_url": "https://github.com/tmorin/plantuml-libs/tree/main/.claude/skills/azure-package-upgrading/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "plantuml-libs",
+      "path": ".claude/skills/npm-dependency-management/SKILL.md",
+      "github_url": "https://github.com/tmorin/plantuml-libs/tree/main/.claude/skills/npm-dependency-management/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "plantuml-libs",
+      "path": ".claude/skills/material-package-upgrading/SKILL.md",
+      "github_url": "https://github.com/tmorin/plantuml-libs/tree/main/.claude/skills/material-package-upgrading/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "plantuml-libs",
+      "path": ".claude/skills/simpleicons-package-upgrading/SKILL.md",
+      "github_url": "https://github.com/tmorin/plantuml-libs/tree/main/.claude/skills/simpleicons-package-upgrading/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "plantuml-libs",
+      "path": ".claude/skills/fontawesome-package-upgrading/SKILL.md",
+      "github_url": "https://github.com/tmorin/plantuml-libs/tree/main/.claude/skills/fontawesome-package-upgrading/SKILL.md",
+      "description": ""
     }
   ],
   "source_url": "https://github.com/tmorin/plantuml-libs",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-24T11:50:31Z"
+  "distributed_at": "2026-08-09T15:38:13Z"
 }
