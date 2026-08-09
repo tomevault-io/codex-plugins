@@ -1,0 +1,56 @@
+# Copilot instructions — landing-ai/ade-typescript
+
+## Repository context
+
+This is the LandingAI ADE TypeScript SDK. `client.v2` is a **hand-maintained ergonomic
+layer** (unified `Job` polling, dual-host routing, schema coercion) that is intentionally
+**not** described by the OpenAPI spec. Generated reference types live under
+`specs/_generated/` (e.g. `specs/_generated/v2-aide.d.ts`); the shipped, more-ergonomic
+surface lives under `src/resources/`. When reviewing, do not report the shipped V2 surface
+as "diverging from the spec" when the divergence is this deliberate ergonomic layer.
+
+## Reviewing automated spec-sync PRs
+
+PRs authored by `spec-sync[bot]` on branch `spec-sync/v2` arrive as **up to two commits,
+in this order**:
+
+1. **Mechanical snapshot** — `chore(spec-sync): update V2 spec snapshot + regenerated
+reference types`. Touches `specs/v2-aide.json` and `specs/_generated/` **only**. By
+   design it does **not** wire the client: no new resources, methods, public types,
+   exports, tests, or docs. This is expected and correct.
+2. **AI wiring** — `feat(spec-sync): wire client.v2 to spec diff (AI)`. Adds the client
+   resources / methods / types / exports / tests / docs for the spec diff. This commit
+   **may be absent**: workflow-only drift and AI no-ops legitimately produce a
+   mechanical-only PR.
+
+When performing a code review on these PRs:
+
+- Review the PR **in its current state, as a whole**. If only the mechanical snapshot
+  commit is present, do **not** report the absence of client wiring (missing resources,
+  methods, public types, exports, tests, or docs) as an issue — a follow-up wiring commit
+  handles it, or the drift is intentionally mechanical-only. Treat the un-wired snapshot as
+  complete for now, and do not enumerate the wiring a later commit is expected to add.
+- Once the wiring commit is present, focus the review on whether the wired surface matches
+  the spec diff: routes, parameter names, request/response fields, required-vs-optional,
+  and sync/async (job) surface consistency.
+- Do **not** review the spec snapshot files at all — `specs/v2-aide.json`, `specs/v1-ade.json`,
+  and everything under `specs/_generated/` (e.g. `specs/_generated/v2-aide.d.ts`). Skip them
+  entirely and post **no** comments on their diffs: not on wording, structure, `$ref`s, missing or
+  updated schemas, typing, or anything else. They are a verbatim mirror of the upstream OpenAPI spec
+  (fetched live from staging and regenerated on every sync), so they cannot be edited in this repo —
+  any spec issue must be fixed upstream, not here. Everything else the PR touches stays in review
+  scope — the hand-maintained client code and tests under `src/` / `tests/`, plus the
+  regenerated-but-reviewable surface docs `api.md` and `README.md` (the spec-sync wiring commit
+  updates these, and they should be reviewed).
+
+## Known-intentional SDK conventions (do not report)
+
+- `saveTo` directory-mode filenames are intentionally `{method}_output.json` when no single
+  input file or URL can be derived. Methods whose inputs are arrays or absent — e.g.
+  `client.v2.buildSchema` (`markdowns` / `markdown_urls`) and `client.v2.ground` — pass
+  `_getInputFilename(null, null)` on purpose, mirroring the shared V1/V2 helper. This is
+  deliberate and consistent; do not report it as lost input-derived naming.
+
+---
+> Source: [landing-ai/ade-typescript](https://github.com/landing-ai/ade-typescript) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-08-09 -->
