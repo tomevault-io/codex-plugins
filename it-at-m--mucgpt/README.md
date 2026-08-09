@@ -5,12 +5,12 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [it-at-m/mucgpt](https://github.com/it-at-m/mucgpt).
+Original source: `CLAUDE.md` in [it-at-m/mucgpt](https://github.com/it-at-m/mucgpt).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
@@ -35,7 +35,7 @@ Original source: `copilot-instructions.md` in [it-at-m/mucgpt](https://github.co
 - [mucgpt](https://github.com/it-at-m/mucgpt/tree/main/.agents/skills/langchain-fundamentals/SKILL.md)
 - [mucgpt](https://github.com/it-at-m/mucgpt/tree/main/.claude/skills/langchain-fundamentals/SKILL.md)
 
-From [it-at-m/mucgpt](https://github.com/it-at-m/mucgpt) — a repo with 54+ stars on GitHub.
+From [it-at-m/mucgpt](https://github.com/it-at-m/mucgpt) — a repo with 56+ stars on GitHub.
 
 ---
 
