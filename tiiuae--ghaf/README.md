@@ -1,25 +1,32 @@
 # ghaf
 
-> Source: [tiiuae/ghaf](https://github.com/tiiuae/ghaf). Graded, signed and kept in sync across platforms by [TomeVault](https://tomevault.io)
+> Source: [tiiuae/ghaf](https://github.com/tiiuae/ghaf). Graded, signed and kept current as the models change by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [tiiuae/ghaf](https://github.com/tiiuae/ghaf).
+Original source: `CLAUDE.md` in [tiiuae/ghaf](https://github.com/tiiuae/ghaf).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-## Bundled Skills (1)
+## Bundled Skills (8)
 
 - [ghaf](https://github.com/tiiuae/ghaf/tree/main/.github/skills/ghaf-hw-test/SKILL.md)
+- [ghaf](https://github.com/tiiuae/ghaf/tree/main/.claude/skills/ghaf-test/SKILL.md)
+- [ghaf](https://github.com/tiiuae/ghaf/tree/main/.claude/skills/ghaf-logs/SKILL.md)
+- [ghaf](https://github.com/tiiuae/ghaf/tree/main/.claude/skills/ghaf-build/SKILL.md)
+- [ghaf](https://github.com/tiiuae/ghaf/tree/main/.claude/skills/ghaf-target/SKILL.md)
+- [ghaf](https://github.com/tiiuae/ghaf/tree/main/.claude/skills/ghaf-deploy/SKILL.md)
+- [ghaf](https://github.com/tiiuae/ghaf/tree/main/.claude/skills/ghaf-connect/SKILL.md)
+- [ghaf](https://github.com/tiiuae/ghaf/tree/main/.claude/skills/ghaf-dev-loop/SKILL.md)
 
-From [tiiuae/ghaf](https://github.com/tiiuae/ghaf) — a repo with 83+ stars on GitHub.
+From [tiiuae/ghaf](https://github.com/tiiuae/ghaf) — a repo with 84+ stars on GitHub.
 
 ---
 
