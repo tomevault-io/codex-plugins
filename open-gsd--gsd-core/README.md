@@ -16,7 +16,7 @@ Original source: `` in [open-gsd/gsd-core](https://github.com/open-gsd/gsd-core)
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [open-gsd/gsd-core](https://github.com/open-gsd/gsd-core) — a repo with 7230+ stars on GitHub.
+From [open-gsd/gsd-core](https://github.com/open-gsd/gsd-core) — a repo with 7950+ stars on GitHub.
 
 ---
 
