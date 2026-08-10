@@ -7,12 +7,12 @@ AI-powered video production pipeline for Claude Code, Github Copilot, Codex, Cur
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [nebrass/hve-video-director](https://github.com/nebrass/hve-video-director).
+Original source: `CLAUDE.md` in [nebrass/hve-video-director](https://github.com/nebrass/hve-video-director).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
