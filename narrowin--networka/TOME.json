@@ -2,9 +2,9 @@
   "name": "networka",
   "owner": "narrowin",
   "repo": "networka",
-  "description": "",
+  "description": "simple and fast way to interact with your network devices",
   "type": "config",
-  "source_format": "CLAUDE.md",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/narrowin/networka",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-20T12:49:39Z"
+  "distributed_at": "2026-08-11T08:32:30Z"
 }
