@@ -1,0 +1,44 @@
+{
+  "name": "lithium-pack-designer",
+  "owner": "raushanraja",
+  "repo": "lithium-pack-designer",
+  "description": "Interactive 3D battery pack calculator and visualizer with STL export for 3D printing. Calculate optimal 18650/21700 configurations and generate printable holders.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/raushanraja/lithium-pack-designer",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-08-11T08:34:30Z"
+}
