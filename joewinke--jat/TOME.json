@@ -2,7 +2,7 @@
   "name": "jat",
   "owner": "joewinke",
   "repo": "jat",
-  "description": "  The World's First Agentic IDE. Visual dashboard: live sessions, task management, code editor, terminal. Epic Swarm parallel workflows. Auto-proceed rules. Automation patterns. Beads + Agent Mail + 50 bash tools. Supervise 20+ agents from one UI.",
+  "description": "",
   "type": "tome",
   "source_format": "CLAUDE.md",
   "formats": [
@@ -55,9 +55,171 @@
       "path": "skills/jat-verify",
       "github_url": "https://github.com/joewinke/jat/tree/main/skills/jat-verify",
       "description": ""
+    },
+    {
+      "name": "jat",
+      "path": "skills/jat-start/SKILL.md",
+      "github_url": "https://github.com/joewinke/jat/tree/main/skills/jat-start/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "jat",
+      "path": "skills/jat-verify/SKILL.md",
+      "github_url": "https://github.com/joewinke/jat/tree/main/skills/jat-verify/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "jat",
+      "path": "skills/jat-onboard/SKILL.md",
+      "github_url": "https://github.com/joewinke/jat/tree/main/skills/jat-onboard/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "jat",
+      "path": "skills/jat-complete/SKILL.md",
+      "github_url": "https://github.com/joewinke/jat/tree/main/skills/jat-complete/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "jat",
+      "path": ".agents/skills/adapt/SKILL.md",
+      "github_url": "https://github.com/joewinke/jat/tree/main/.agents/skills/adapt/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "jat",
+      "path": ".agents/skills/audit/SKILL.md",
+      "github_url": "https://github.com/joewinke/jat/tree/main/.agents/skills/audit/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "jat",
+      "path": ".agents/skills/polish/SKILL.md",
+      "github_url": "https://github.com/joewinke/jat/tree/main/.agents/skills/polish/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "jat",
+      "path": ".agents/skills/bolder/SKILL.md",
+      "github_url": "https://github.com/joewinke/jat/tree/main/.agents/skills/bolder/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "jat",
+      "path": ".agents/skills/harden/SKILL.md",
+      "github_url": "https://github.com/joewinke/jat/tree/main/.agents/skills/harden/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "jat",
+      "path": ".agents/skills/onboard/SKILL.md",
+      "github_url": "https://github.com/joewinke/jat/tree/main/.agents/skills/onboard/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "jat",
+      "path": ".agents/skills/delight/SKILL.md",
+      "github_url": "https://github.com/joewinke/jat/tree/main/.agents/skills/delight/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "jat",
+      "path": ".agents/skills/animate/SKILL.md",
+      "github_url": "https://github.com/joewinke/jat/tree/main/.agents/skills/animate/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "jat",
+      "path": ".agents/skills/clarify/SKILL.md",
+      "github_url": "https://github.com/joewinke/jat/tree/main/.agents/skills/clarify/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "jat",
+      "path": ".agents/skills/distill/SKILL.md",
+      "github_url": "https://github.com/joewinke/jat/tree/main/.agents/skills/distill/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "jat",
+      "path": ".agents/skills/arrange/SKILL.md",
+      "github_url": "https://github.com/joewinke/jat/tree/main/.agents/skills/arrange/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "jat",
+      "path": ".agents/skills/quieter/SKILL.md",
+      "github_url": "https://github.com/joewinke/jat/tree/main/.agents/skills/quieter/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "jat",
+      "path": ".agents/skills/typeset/SKILL.md",
+      "github_url": "https://github.com/joewinke/jat/tree/main/.agents/skills/typeset/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "jat",
+      "path": ".agents/skills/extract/SKILL.md",
+      "github_url": "https://github.com/joewinke/jat/tree/main/.agents/skills/extract/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "jat",
+      "path": ".agents/skills/critique/SKILL.md",
+      "github_url": "https://github.com/joewinke/jat/tree/main/.agents/skills/critique/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "jat",
+      "path": ".agents/skills/colorize/SKILL.md",
+      "github_url": "https://github.com/joewinke/jat/tree/main/.agents/skills/colorize/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "jat",
+      "path": ".agents/skills/optimize/SKILL.md",
+      "github_url": "https://github.com/joewinke/jat/tree/main/.agents/skills/optimize/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "jat",
+      "path": ".agents/skills/overdrive/SKILL.md",
+      "github_url": "https://github.com/joewinke/jat/tree/main/.agents/skills/overdrive/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "jat",
+      "path": ".agents/skills/normalize/SKILL.md",
+      "github_url": "https://github.com/joewinke/jat/tree/main/.agents/skills/normalize/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "jat",
+      "path": ".agents/skills/route-makeover/SKILL.md",
+      "github_url": "https://github.com/joewinke/jat/tree/main/.agents/skills/route-makeover/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "jat",
+      "path": ".agents/skills/frontend-design/SKILL.md",
+      "github_url": "https://github.com/joewinke/jat/tree/main/.agents/skills/frontend-design/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "jat",
+      "path": ".agents/skills/teach-impeccable/SKILL.md",
+      "github_url": "https://github.com/joewinke/jat/tree/main/.agents/skills/teach-impeccable/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "jat",
+      "path": ".agents/skills/impeccable/SKILL.md",
+      "github_url": "https://github.com/joewinke/jat/tree/main/.agents/skills/impeccable/SKILL.md",
+      "description": ""
     }
   ],
   "source_url": "https://github.com/joewinke/jat",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-04-20T19:33:30Z"
+  "distributed_at": "2026-08-11T02:58:39Z"
 }
