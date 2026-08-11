@@ -1,0 +1,44 @@
+{
+  "name": "figma-mcp-free",
+  "owner": "karthikyaddana",
+  "repo": "figma-mcp-free",
+  "description": "MCP server + Figma plugin that streams live design data to AI coding tools \u2014 no API rate limits",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/karthikyaddana/figma-mcp-free",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-08-11T22:56:34Z"
+}
