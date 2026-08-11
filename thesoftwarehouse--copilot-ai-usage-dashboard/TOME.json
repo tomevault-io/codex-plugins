@@ -1,0 +1,44 @@
+{
+  "name": "copilot-ai-usage-dashboard",
+  "owner": "TheSoftwareHouse",
+  "repo": "copilot-ai-usage-dashboard",
+  "description": "Analytics dashboard for GitHub Copilot usage \u2014 track seats, teams, spending, and premium requests across your organization to optimize adoption and control costs.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/TheSoftwareHouse/copilot-ai-usage-dashboard",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-08-11T20:46:46Z"
+}
