@@ -7,12 +7,12 @@ Turn domain experts into production AI agents.
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [Artesiana/agent2](https://github.com/Artesiana/agent2).
+Original source: `CLAUDE.md` in [Artesiana/agent2](https://github.com/Artesiana/agent2).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
