@@ -4,7 +4,7 @@
   "repo": ".cursor",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": ".cursor/rules/*.mdc",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/hutchic/.cursor",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-08-12T18:43:39Z"
+  "distributed_at": "2026-08-12T19:16:30Z"
 }
