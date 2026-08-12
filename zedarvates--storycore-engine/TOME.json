@@ -1,0 +1,44 @@
+{
+  "name": "StoryCore-Engine",
+  "owner": "zedarvates",
+  "repo": "StoryCore-Engine",
+  "description": "A local\u2011first AI pipeline that generates coherent images, videos, stories, dialogues, and spatial audio from an augmented storyboard. It structures prompts, ensures narrative continuity, automates sound spatialization, and provides a reproducible workflow for fast, high\u2011quality multimedia creation.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/zedarvates/StoryCore-Engine",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-08-12T14:35:42Z"
+}
