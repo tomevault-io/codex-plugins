@@ -7,13 +7,13 @@ Multi-frontend agent relay: run Claude Code, Codex, local, and AG-UI agents from
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [ebibibi/ebi-agent-chat-relay](https://github.com/ebibibi/ebi-agent-chat-relay).
+Original source: `copilot-instructions.md` in [ebibibi/ebi-agent-chat-relay](https://github.com/ebibibi/ebi-agent-chat-relay).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
