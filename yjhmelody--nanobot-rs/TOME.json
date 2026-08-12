@@ -4,7 +4,7 @@
   "repo": "nanobot-rs",
   "description": "The minimal openclaw-like ai agent",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/yjhmelody/nanobot-rs",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-08-11T22:46:48Z"
+  "distributed_at": "2026-08-12T05:14:03Z"
 }
