@@ -7,13 +7,13 @@ A stateful AI operating system for serious, long-horizon work.
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [Sidiora-Labs/centra-llm-agents](https://github.com/Sidiora-Labs/centra-llm-agents).
+Original source: `.cursor/rules/*.mdc` in [Sidiora-Labs/centra-llm-agents](https://github.com/Sidiora-Labs/centra-llm-agents).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
