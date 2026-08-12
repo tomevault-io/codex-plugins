@@ -4,7 +4,7 @@
   "repo": "sungrow-hass",
   "description": "Home assistant integration for the Sungrow API",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/KRoperUK/sungrow-hass",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-08-12T12:46:57Z"
+  "distributed_at": "2026-08-12T23:16:52Z"
 }
