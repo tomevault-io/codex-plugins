@@ -7,13 +7,13 @@ Software Design Frameworks | A curated collection for engineers, architects, and
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [Caldis/frameworks](https://github.com/Caldis/frameworks).
+Original source: `copilot-instructions.md` in [Caldis/frameworks](https://github.com/Caldis/frameworks).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
