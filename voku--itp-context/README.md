@@ -7,14 +7,14 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [voku/itp-context](https://github.com/voku/itp-context).
+Original source: `copilot-instructions.md` in [voku/itp-context](https://github.com/voku/itp-context).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 From [voku/itp-context](https://github.com/voku/itp-context) — a repo with 9+ stars on GitHub.
