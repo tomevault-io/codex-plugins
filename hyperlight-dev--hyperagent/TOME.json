@@ -4,7 +4,7 @@
   "repo": "hyperagent",
   "description": "An AI agent with sandboxed JavaScript execution, powered by Hyperlight micro-VMs and the GitHub Copilot SDK. Ask it to compute things \u2014 it writes and runs JS in hardware-isolated VMs with no filesystem, no network, no escape.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/hyperlight-dev/hyperagent",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-08-11T20:56:48Z"
+  "distributed_at": "2026-08-12T01:35:58Z"
 }
