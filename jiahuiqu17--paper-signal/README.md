@@ -7,14 +7,14 @@ Subject-aware minimal-zine image production for Agent Skills: art direction, gen
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [jiahuiqu17/paper-signal](https://github.com/jiahuiqu17/paper-signal).
+Original source: `CLAUDE.md` in [jiahuiqu17/paper-signal](https://github.com/jiahuiqu17/paper-signal).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 From [jiahuiqu17/paper-signal](https://github.com/jiahuiqu17/paper-signal) — a repo with 9+ stars on GitHub.
