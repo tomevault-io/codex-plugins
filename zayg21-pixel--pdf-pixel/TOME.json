@@ -4,7 +4,7 @@
   "repo": "pdf-pixel",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/zayg21-pixel/pdf-pixel",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-08-12T12:39:12Z"
+  "distributed_at": "2026-08-12T23:12:14Z"
 }
