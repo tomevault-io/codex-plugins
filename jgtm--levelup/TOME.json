@@ -4,7 +4,7 @@
   "repo": "LevelUp",
   "description": "Halo 5 & Halo Infinite stats dashboard: match history, rends, medals & commendations, medias, sessions & teammates. Powered by Go, DuckDB, React, and ECharts. Supports friends groups, multi-language (FR/EN so far) and includes internal TrueSkill2 rating.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/JGtm/LevelUp",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-08-12T12:50:23Z"
+  "distributed_at": "2026-08-12T23:27:19Z"
 }
