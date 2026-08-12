@@ -7,14 +7,14 @@ Markdown-first multi-model AI orchestration in one tmux session. A single coordi
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [mtarcure/claude-vibe-squad](https://github.com/mtarcure/claude-vibe-squad).
+Original source: `CLAUDE.md` in [mtarcure/claude-vibe-squad](https://github.com/mtarcure/claude-vibe-squad).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 From [mtarcure/claude-vibe-squad](https://github.com/mtarcure/claude-vibe-squad) — a repo with 9+ stars on GitHub.
