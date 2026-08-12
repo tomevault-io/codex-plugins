@@ -1,0 +1,44 @@
+{
+  "name": "test_ast_fastapi",
+  "owner": "shaggitza",
+  "repo": "test_ast_fastapi",
+  "description": "This repo explores the posibility of having a automation pipeline that identified changes in python code and how they relate to the endpoints that we have in a fastapi project",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/shaggitza/test_ast_fastapi",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-08-12T18:50:55Z"
+}
