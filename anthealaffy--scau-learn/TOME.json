@@ -1,0 +1,44 @@
+{
+  "name": "SCAU-learn",
+  "owner": "AntheaLaffy",
+  "repo": "SCAU-learn",
+  "description": "\u534e\u5357\u519c\u4e1a\u5927\u5b66\u671f\u4e2d\u8bd5\u5377 / \u671f\u672b\u8bd5\u5377\u6536\u5f55 ~ \u4e13\u4e1a\u4e0d\u9650",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/AntheaLaffy/SCAU-learn",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-08-12T18:34:42Z"
+}
