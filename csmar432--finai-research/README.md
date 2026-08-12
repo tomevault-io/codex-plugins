@@ -7,13 +7,13 @@ Evidence-first AI workflow for economic and financial research: literature → i
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [csmar432/finai-research](https://github.com/csmar432/finai-research).
+Original source: `CLAUDE.md` in [csmar432/finai-research](https://github.com/csmar432/finai-research).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
