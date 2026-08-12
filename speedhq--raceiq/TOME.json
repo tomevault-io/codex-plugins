@@ -4,7 +4,7 @@
   "repo": "RaceIQ",
   "description": "Free open-source sim racing telemetry & lap analysis for Forza Motorsport, F1 25, Assetto Corsa Competizione & Evo \u2014 live dashboard, AI coaching, lap comparison, tune catalog.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/SpeedHQ/RaceIQ",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-08-11T20:51:29Z"
+  "distributed_at": "2026-08-12T01:20:31Z"
 }
