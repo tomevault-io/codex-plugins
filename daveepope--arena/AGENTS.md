@@ -1,4 +1,3 @@
-
 # Arena — agent instructions
 
 ## General Programing Workflows
