@@ -7,12 +7,12 @@ Fast, CLI-first static analysis tool for JVM class and JAR files. Designed for c
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [KengoTODA/inspequte](https://github.com/KengoTODA/inspequte).
+Original source: `CLAUDE.md` in [KengoTODA/inspequte](https://github.com/KengoTODA/inspequte).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
