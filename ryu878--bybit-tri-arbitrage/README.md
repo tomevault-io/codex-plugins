@@ -7,13 +7,13 @@ Bybit Triangle Arbitrage
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [ryu878/Bybit_tri_Arbitrage](https://github.com/ryu878/Bybit_tri_Arbitrage).
+Original source: `CLAUDE.md` in [ryu878/Bybit_tri_Arbitrage](https://github.com/ryu878/Bybit_tri_Arbitrage).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
