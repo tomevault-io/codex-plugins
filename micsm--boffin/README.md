@@ -7,13 +7,13 @@ Staff-engineer layer for AI coding agents: routes per-edit architectural constra
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [MicSm/boffin](https://github.com/MicSm/boffin).
+Original source: `.cursor/rules/*.mdc` in [MicSm/boffin](https://github.com/MicSm/boffin).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
