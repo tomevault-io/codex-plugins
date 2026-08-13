@@ -7,12 +7,12 @@ Desktop app that automates apartment applications on ImmobilienScout24 — polls
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [B1Z0N/homelander](https://github.com/B1Z0N/homelander).
+Original source: `CLAUDE.md` in [B1Z0N/homelander](https://github.com/B1Z0N/homelander).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
