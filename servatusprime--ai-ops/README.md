@@ -7,12 +7,12 @@ AI Governance Layer for Human-AI Collaboration. Artifact-first execution, author
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [servatusprime/ai_ops](https://github.com/servatusprime/ai_ops).
+Original source: `CLAUDE.md` in [servatusprime/ai_ops](https://github.com/servatusprime/ai_ops).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
