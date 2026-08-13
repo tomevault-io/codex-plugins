@@ -4,7 +4,7 @@
   "repo": "aix",
   "description": "Like package.json for your agent configuration",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/a1st-dev/aix",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-08-12T22:44:40Z"
+  "distributed_at": "2026-08-13T21:08:32Z"
 }
