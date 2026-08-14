@@ -1,0 +1,44 @@
+{
+  "name": "GreLines",
+  "owner": "antquu",
+  "repo": "GreLines",
+  "description": "Application web React pour visualiser les arr\u00eats de transport en commun de Grenoble sur une carte interactive (MapLibre/MapTiler), avec horaires en temps r\u00e9el (API MTAG), s\u00e9lection d\u2019arr\u00eat, et overlay sidebar anim\u00e9. Responsive mobile-first, animations soign\u00e9es, filtre de lignes/trafic, et navigation fluide. D\u00e9velopp\u00e9e avec Vite, TypeScript, Tailwin",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/antquu/GreLines",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-08-14T14:34:23Z"
+}
