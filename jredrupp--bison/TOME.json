@@ -4,7 +4,7 @@
   "repo": "bison",
   "description": "A Mojo DataFrame library with a pandas-compatible API",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/JRedrupp/bison",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-08-13T08:36:30Z"
+  "distributed_at": "2026-08-14T08:53:41Z"
 }
