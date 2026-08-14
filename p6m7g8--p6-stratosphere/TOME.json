@@ -1,0 +1,44 @@
+{
+  "name": "p6-stratosphere",
+  "owner": "p6m7g8",
+  "repo": "p6-stratosphere",
+  "description": "P6M7G8: AWS Opinionated Convince Functions tied to p6-lz",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/p6m7g8/p6-stratosphere",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-08-14T20:34:42Z"
+}
