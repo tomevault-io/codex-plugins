@@ -7,12 +7,12 @@ ruvn — AI research harness that turns a question into a graded, cited evidence
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [ruvnet/ruvn](https://github.com/ruvnet/ruvn).
+Original source: `CLAUDE.md` in [ruvnet/ruvn](https://github.com/ruvnet/ruvn).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
