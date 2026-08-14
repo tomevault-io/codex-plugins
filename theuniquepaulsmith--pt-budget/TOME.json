@@ -4,7 +4,7 @@
   "repo": "pt-budget",
   "description": "PT Budget App",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/TheUniquePaulSmith/pt-budget",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-08-13T20:38:25Z"
+  "distributed_at": "2026-08-14T11:36:06Z"
 }
