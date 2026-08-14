@@ -7,12 +7,12 @@ Capture Kubernetes cluster state to a portable archive and replay it through a m
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [phenixblue/k8shark](https://github.com/phenixblue/k8shark).
+Original source: `CLAUDE.md` in [phenixblue/k8shark](https://github.com/phenixblue/k8shark).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
