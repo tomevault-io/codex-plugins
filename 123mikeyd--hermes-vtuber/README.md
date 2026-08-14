@@ -7,13 +7,13 @@ Hermes Agent integration for Open-LLM-VTuber
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [123mikeyd/hermes-vtuber](https://github.com/123mikeyd/hermes-vtuber).
+Original source: `.cursor/rules/*.mdc` in [123mikeyd/hermes-vtuber](https://github.com/123mikeyd/hermes-vtuber).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
