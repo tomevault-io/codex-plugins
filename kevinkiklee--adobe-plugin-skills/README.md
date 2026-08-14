@@ -1,22 +1,23 @@
 # adobe-plugin-skills
 
-> Tome by [kevinkiklee](https://github.com/kevinkiklee/adobe-plugin-skills) — distributed by [TomeVault](https://tomevault.io)
+> Tome by [kevinkiklee](https://github.com/kevinkiklee/adobe-plugin-skills), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
+
+AI coding agent skill for building Adobe Photoshop UXP and Lightroom Classic plugins
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `` in [kevinkiklee/adobe-plugin-skills](https://github.com/kevinkiklee/adobe-plugin-skills).
+Original source: `CLAUDE.md` in [kevinkiklee/adobe-plugin-skills](https://github.com/kevinkiklee/adobe-plugin-skills).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [kevinkiklee/adobe-plugin-skills](https://github.com/kevinkiklee/adobe-plugin-skills) — a repo with 6+ stars on GitHub.
+From [kevinkiklee/adobe-plugin-skills](https://github.com/kevinkiklee/adobe-plugin-skills) — a repo with 11+ stars on GitHub.
 
 ---
 
