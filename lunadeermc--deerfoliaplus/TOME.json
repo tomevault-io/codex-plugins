@@ -1,0 +1,44 @@
+{
+  "name": "DeerFoliaPlus",
+  "owner": "LunaDeerMC",
+  "repo": "DeerFoliaPlus",
+  "description": "DeerFoliaPlus \u76f8\u6bd4\u4e8e DeerFolia \u5f15\u5165\u4e86\u66f4\u591a\u989d\u5916\u529f\u80fd\uff0c\u8fd9\u4e9b\u529f\u80fd\u5e76\u975e\u6027\u80fd\u4f18\u5316\u65b9\u9762\u7684\u6539\u52a8\uff0c\u800c\u662f\u589e\u5f3a\u4e86\u670d\u52a1\u5668\u7684\u529f\u80fd\u6027\u3002",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/LunaDeerMC/DeerFoliaPlus",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-08-14T01:01:28Z"
+}
