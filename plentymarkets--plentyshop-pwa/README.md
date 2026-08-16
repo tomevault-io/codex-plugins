@@ -5,21 +5,23 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [plentymarkets/plentyshop-pwa](https://github.com/plentymarkets/plentyshop-pwa).
+Original source: `CLAUDE.md` in [plentymarkets/plentyshop-pwa](https://github.com/plentymarkets/plentyshop-pwa).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-## Bundled Skills (3)
+## Bundled Skills (5)
 
 - [documentation](https://github.com/plentymarkets/plentyshop-pwa/tree/main/.github/skills/documentation)
 - [plentyshop-pwa](https://github.com/plentymarkets/plentyshop-pwa/tree/main/.github/skills/documentation/SKILL.md)
 - [plentyshop-pwa](https://github.com/plentymarkets/plentyshop-pwa/tree/main/.github/skills/code-generation/SKILL.md)
+- [plentyshop-pwa](https://github.com/plentymarkets/plentyshop-pwa/tree/main/.claude/skills/documentation/SKILL.md)
+- [plentyshop-pwa](https://github.com/plentymarkets/plentyshop-pwa/tree/main/.claude/skills/code-generation/SKILL.md)
 
 Graded against the Tome Standard, TomeVault's public ruleset for whether AI instructions load, read clearly and stay safe. Source: [github.com/plentymarkets/plentyshop-pwa](https://github.com/plentymarkets/plentyshop-pwa)
 
