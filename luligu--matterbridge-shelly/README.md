@@ -1,6 +1,6 @@
 # matterbridge-shelly
 
-> Source: [Luligu/matterbridge-shelly](https://github.com/Luligu/matterbridge-shelly). Graded, signed and kept in sync across platforms by [TomeVault](https://tomevault.io)
+> Source: [Luligu/matterbridge-shelly](https://github.com/Luligu/matterbridge-shelly). Graded, signed and kept current as the models change by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
@@ -16,7 +16,7 @@ Original source: `` in [Luligu/matterbridge-shelly](https://github.com/Luligu/ma
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [Luligu/matterbridge-shelly](https://github.com/Luligu/matterbridge-shelly) — a repo with 138+ stars on GitHub.
+From [Luligu/matterbridge-shelly](https://github.com/Luligu/matterbridge-shelly) — a repo with 139+ stars on GitHub.
 
 ---
 
