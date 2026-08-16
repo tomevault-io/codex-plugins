@@ -1,311 +1,86 @@
-# Coderrr AI Agent Instructions
+# CLAUDE.md
 
-## Architecture Overview
+## 1. Git Restrictions
 
-**Coderrr** is a dual-architecture AI coding agent with a Python FastAPI backend and Node.js CLI frontend.
+- **Do NOT run write-based git commands.** This includes (but is not limited to): `git push`, `git pull`, `git commit`, `git add`, `git merge`, `git rebase`, `git reset`, `git checkout` (when it modifies state), `git stash`, `git tag`, `git branch -d/-D`, and any other command that alters repository state.
+- **Read-only git commands are allowed.** For example: `git status`, `git log`, `git diff`, `git show`, `git branch` (list), `git remote -v`, `git blame`.
+- If a task seems to require a write-based git command, **stop and ask me** to run it myself or to explicitly approve it.
 
-### System Components
+## 2. Workflow: Plan First, Spec Second, Code Only on Approval
 
-1. **Backend** (`main.py`): FastAPI server that interfaces with Mistral AI/GitHub Models
-   - Runs on port **5000** (not 8000)
-   - Returns structured JSON plans with `explanation` and `plan[]` array
-   - System prompt in `SYSTEM_INSTRUCTIONS` enforces strict JSON response schema
+- **Always plan before acting.** For any task, first present a clear plan describing what you intend to do and how — grounded in whatever specs you read per Section 3, not the raw codebase alone.
+- **Do NOT write, edit, or execute code** until I explicitly give a green light (e.g. "go ahead", "execute", "proceed", "do it"). Presenting a plan is not permission to implement it.
+- If any part of the task is ambiguous or has unknown variables, **ask me before proceeding** rather than assuming.
+- **Substantial tasks** — new features, architecture changes, non-trivial bug fixes, refactors — get a spec (Section 3).
+- **Trivial tasks** — typo fixes, one-line config tweaks, formatting — don't need one. Say so explicitly ("this is trivial, skipping the spec") so I can override if I disagree.
 
-2. **CLI Frontend** (Node.js):
-   - **New CLI** (`bin/coderrr.js`): Modern commander-based interface with inquirer prompts
-   - **Legacy TUI** (`bin/coderrr-cli.js`): Blessed-based terminal UI (kept for compatibility)
-   - Default backend: reads from `CODERRR_BACKEND` env variable
+## 3. Spec System (`project_spec/`)
 
-3. **Core Modules** (`src/`):
-   - `agent.js`: Orchestrates backend communication, plan execution, and auto-testing
-   - `fileOps.js`: CRUD operations with automatic directory creation
-   - `executor.js`: Command execution with **mandatory user permission prompts**
-   - `todoManager.js`: Parses plans into visual TODO lists with progress tracking
-   - `ui.js`: Chalk/Ora-based interface (spinners, colors, prompts)
-   - `codebaseScanner.js`: **NEW** - Scans project structure to prevent filename mismatches
+### 3.1 First time in a project
+If `project_spec/` doesn't exist yet, stop and ask me before doing anything else: should we backfill specs describing the current state of the codebase first, or start the spec trail fresh from this point forward? Don't assume either way — it depends on how much of the existing code is still in flux.
 
-### Critical Data Flow
+### 3.2 Read specs before reading the codebase
+Whenever a task requires understanding existing code, check `project_spec/` first — before opening source files. This is how you avoid re-reading the whole codebase every turn.
+
+- Always start with `project_spec/INDEX.md` — a one-line-per-spec table of contents. It's small; read it every time specs exist.
+- **Glance (default mode):** for work scoped to a known module, read only the spec(s) `INDEX.md` marks `current` for that module. Skip everything else.
+- **History mode (only when the task calls for it):** trigger this when I ask how something evolved, ask for an audit/onboarding writeup, or a change is big enough that understanding *why* past decisions were made actually matters. In that case, read every spec for the affected module(s), in numeric order — `current` and `superseded` alike.
+- If code has no matching spec, say so explicitly instead of guessing intent from the code alone.
+
+### 3.3 Creating and updating a spec (substantial tasks only)
+Once I approve the plan:
+
+1. Before touching code, create `project_spec/NNN-slug.md` (next sequential number, 3-digit zero-padded, e.g. `007-rate-limit-middleware.md`) using the template below. Status starts as `draft`.
+2. Implement the approved plan. Keep code comments minimal — see Section 4.
+3. After I've reviewed the implementation, update the spec: fill in the real "Files touched" pointers and set status to `current`. If this spec replaces an earlier one for the same module, set that older spec's status to `superseded` — leave its content untouched, it's part of the history now.
+4. Add or update its row in `project_spec/INDEX.md`.
+
+**`INDEX.md` format:**
+
+| # | File | Module | Status | Summary |
+|---|------|--------|--------|---------|
+| 001 | 001-auth-jwt.md | auth | superseded | Initial JWT auth flow |
+| 004 | 004-auth-refresh.md | auth | current | Refresh-token rotation, replaces 001 |
+
+Rows are append-only. Only the `Status` column of a past row ever changes.
+
+**Spec template:**
 
 ```
-User Input → Agent.process() → [CodebaseScanner.scan() on first request]
-→ Backend /chat (with codebase context) → AI Model → JSON Response
-→ parseJsonResponse() → TodoManager.parseTodos() → executePlan()
-→ [FileOps.execute() | Executor.execute() with permission] → Auto-test detection
+---
+spec: NNN
+date: YYYY-MM-DD
+module: <area/module name>
+status: draft
+supersedes: <spec # or none>
+---
+
+## Objective
+What this change is for — one paragraph.
+
+## Context
+Why now: the problem, request, or prior spec behind this.
+
+## Decisions
+Key design/architecture decisions and the reasoning behind them. This is the
+"why" that code comments no longer need to carry.
+
+## Files touched
+- `path/to/file` — one-line purpose
+
+## Open questions / follow-ups
+Anything deferred or still uncertain.
 ```
 
-## Development Workflow
+## 4. Code Comments
 
-### Starting the System
-
-**Backend (Terminal 1):**
-```powershell
-.\env\Scripts\Activate.ps1
-python -m uvicorn main:app --reload --port 5000
-```
-Or use: `.\start-backend.ps1`
-
-**CLI (Terminal 2):**
-```bash
-npm link              # One-time global install
-coderrr               # Interactive mode
-coderrr exec "task"   # Single command mode
-```
-
-### Backend Port Mismatch Fix
-
-The backend runs on **5000**, not 8000. Backend URL is configured via `CODERRR_BACKEND` environment variable:
-- `.env`: `CODERRR_BACKEND=http://localhost:8000`
-- All code reads from `process.env.CODERRR_BACKEND`
-
-### Python Virtual Environment
-
-The backend has a **clever fallback** in `_import_mistralai_with_fallback()`:
-- Tries importing `mistralai` from system
-- If that fails, dynamically adds `env/Lib/site-packages` to `sys.path`
-- Enables running without activating venv (not recommended for production)
-
-## Key Conventions
-
-### JSON Response Schema (Backend)
-
-The AI **must** return this exact structure (enforced by `SYSTEM_INSTRUCTIONS`):
-
-```json
-{
-  "explanation": "Brief summary of what will be done",
-  "plan": [
-    {
-      "action": "create_file|update_file|patch_file|delete_file|read_file|run_command",
-      "path": "relative/path/file.py",
-      "content": "full file content",
-      "command": "shell command",
-      "summary": "one-line description"
-    }
-  ]
-}
-```
-
-**Critical:** Plans are parsed by `Agent.parseJsonResponse()` which handles:
-1. Direct JSON parse
-2. Markdown code blocks: `` ```json ... ``` ``
-3. Fallback: Extracts first `{...}` object
-
-### File Operations
-
-**All paths are relative** to `workingDir` (default: `process.cwd()`):
-- `fileOps.resolvePath()` converts relative → absolute
-- `createFile()` auto-creates parent directories via `ensureDir()`
-- `patchFile()` uses simple string replacement (not diff-based)
-
-**Codebase Scanner Integration:**
-- `codebaseScanner.js` automatically scans project on first request
-- Provides AI with list of all existing files and directories
-- Prevents filename mismatches (e.g., looking for "chatbot.py" when it's "chat.py")
-- Caches results for 1 minute to avoid re-scanning
-- Agent includes codebase context in prompts sent to backend
-
-**Example:**
-```javascript
-// Input: "src/models/user.py"
-// Resolves to: "E:/Projects/Coderrr/src/models/user.py"
-// Creates: "E:/Projects/Coderrr/src/models/" if needed
-```
-
-### Command Execution Safety
-
-**ALL commands require user permission** (like GitHub Copilot):
-
-```javascript
-executor.execute(command, { 
-  requirePermission: true,  // Always true by default
-  cwd: workingDir,
-  shell: 'powershell.exe'   // Windows default
-})
-```
-
-Flow: `ui.displayCommand()` → `ui.confirm()` → Execute → Live stdout/stderr
-
-### Auto-Testing
-
-After successful plan execution, `Agent.runTests()` auto-detects:
-- `package.json` → `npm test`
-- `pytest.ini` or `tests/` → `pytest`
-- `go.mod` → `go test ./...`
-- `Cargo.toml` → `cargo test`
-
-Detection happens in `runTests()` by checking file existence.
-
-### Codebase Scanner
-
-**Purpose:** Give AI awareness of project structure to prevent filename mismatches
-
-**How it works:**
-1. On first `Agent.process()` call, `scanner.scan()` runs automatically
-2. Scans all source files (ignoring `node_modules`, `env`, `__pycache__`, etc.)
-3. Builds structure: `{ directories: [...], files: [{path, name, size}], summary: {...} }`
-4. Caches for 1 minute (60000ms)
-5. Context appended to AI prompt before backend request
-
-**Key methods:**
-- `scanner.scan(forceRefresh)` - Scan codebase (uses cache unless forced)
-- `scanner.getSummaryForAI()` - Get concise summary for AI context
-- `scanner.findFiles(searchTerm)` - Search for files by name
-- `scanner.clearCache()` - Clear cached scan results
-- `agent.refreshCodebase()` - Manually rescan with UI feedback
-
-**Ignored patterns:**
-- Dirs: `node_modules`, `env`, `venv`, `__pycache__`, `.git`, `dist`, `build`, `coverage`
-- Files: `.DS_Store`, `package-lock.json`, `yarn.lock`, `.env`, `.gitignore`
-- Extensions: Includes `.js`, `.py`, `.ts`, `.go`, `.rs`, `.java`, `.md`, `.json`, etc.
-- Size limit: 500KB max per file
-
-**AI Context Enhancement:**
-Agent.chat() now sends:
-```
-{prompt}
-
-EXISTING PROJECT STRUCTURE:
-Working Directory: E:/Projects/Coderrr
-Total Files: 25
-Total Directories: 4
-
-DIRECTORIES:
-src
-bin
-test
-...
-
-EXISTING FILES:
-- src/agent.js (31KB)
-- src/fileOps.js (8KB)
-...
-
-When editing existing files, use EXACT filenames from the list above.
-```
-
-## Project-Specific Patterns
-
-### Error Handling Pattern
-
-```javascript
-try {
-  // Operation
-} catch (error) {
-  if (error.code === 'ECONNREFUSED') {
-    // Specific handling with helpful message
-  } else {
-    ui.error(`Generic error: ${error.message}`);
-  }
-  throw error;  // Always re-throw for upper handlers
-}
-```
-
-### TODO State Transitions
-
-TodoManager uses visual indicators:
-- `○` pending (not started)
-- `⋯` in-progress (currently executing)
-- `✓` completed
-
-State flow: `setInProgress(index)` → Execute → `complete(index)`
-
-### UI Conventions
-
-- Use `ui.section()` for major phase headers
-- Use `ui.spinner()` for long operations (stop before next output)
-- Use `ui.displayFileOp(action, path, status)` for file operations
-- Use `ui.displayCommand(cmd)` before permission prompts
-
-## Integration Points
-
-### Backend API Contract
-
-**Endpoint:** `POST /chat`
-**Request:**
-```json
-{
-  "prompt": "user request",
-  "temperature": 0.2,
-  "max_tokens": 2000,
-  "top_p": 1.0
-}
-```
-
-**Response:**
-```json
-{
-  "response": "raw AI text (may contain JSON)"
-}
-```
-
-**Error Response:**
-```json
-{
-  "error": "error type",
-  "details": "error details"
-}
-```
-
-### Environment Variables
-
-Critical vars (`.env`):
-- `GITHUB_TOKEN` or `MISTRAL_API_KEY`: API authentication
-- `MISTRAL_ENDPOINT`: API endpoint (default: GitHub Models)
-- `MISTRAL_MODEL`: Model name
-- `CODERRR_BACKEND`: CLI → Backend connection URL
-
-## Testing & Debugging
-
-### Quick Connection Test
-```bash
-node test-connection.js  # Tests backend connectivity
-```
-
-### Manual Backend Test
-```bash
-curl http://localhost:8000
-# Should return: {"message":"Coderrr backend is running 🚀",...}
-```
-
-### Common Issues
-
-1. **ECONNREFUSED**: Backend not running or wrong port in CODERRR_BACKEND
-   - Check: `ps aux | grep uvicorn` (or Task Manager on Windows)
-   - Fix: Set CODERRR_BACKEND=http://localhost:8000 in .env
-
-2. **JSON Parse Errors**: AI didn't return proper JSON
-   - Backend logs show raw AI response
-   - Check `SYSTEM_INSTRUCTIONS` prompt
-
-3. **Import Errors** (`mistralai` not found):
-   - Activate venv: `.\env\Scripts\Activate.ps1`
-   - Or rely on fallback (adds `env/Lib/site-packages` to path)
-
-## When Modifying Code
-
-- **Backend URL changes**: Update `CODERRR_BACKEND` in `.env` and `.env.example`
-- **New file operations**: Add to `FileOperations.execute()` switch statement
-- **New test frameworks**: Add detection in `Agent.runTests()` testCommands array
-- **UI changes**: Modify `src/ui.js`, never inline UI logic in other modules
-- **Permission bypass**: Only for trusted operations, set `requirePermission: false`
-
-## Architecture Decisions
-
-**Why Two CLIs?**
-- `coderrr-cli.js`: Original blessed TUI (rich terminal UI)
-- `coderrr.js`: New commander CLI (simpler, better for scripting)
-- Both use same backend and executor modules
-
-**Why Separate Backend?**
-- Decouples AI logic from CLI
-- Enables multiple frontends (CLI, web, API)
-- Easier to swap AI providers (just change backend)
-
-**Why Permission Prompts?**
-- Safety: Prevents accidental destructive operations
-- Transparency: User sees exact commands before execution
-- Trust: Like GitHub Copilot's model
+- No block comments explaining what a function or module does, or why it's designed a certain way — that reasoning lives in its spec, not inline.
+- Every file created or meaningfully changed under an active spec gets exactly one pointer line near the top, in the language's comment syntax:
+  `// Spec: project_spec/NNN-slug.md`
+- Inline comments are fine only for genuinely non-obvious one-liners — a regex, a workaround for a library quirk, the source of a magic number. One line, no more.
+- No commented-out code left behind.
+- If you're already editing a file that has legacy long comments and it has (or is getting) a spec, trim the comment down to a pointer as part of that edit — don't leave stale bloat sitting next to the new one. Don't go hunting for other files to clean up unprompted; if you notice more, propose it as its own task instead of doing it silently.
 
 ---
 > Source: [Akash-nath29/Coderrr](https://github.com/Akash-nath29/Coderrr) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-04-22 -->
+<!-- tomevault:4.0:agents_md:2026-08-16 -->
