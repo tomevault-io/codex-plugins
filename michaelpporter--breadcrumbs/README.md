@@ -1,6 +1,6 @@
 # breadcrumbs
 
-> Source: [michaelpporter/breadcrumbs](https://github.com/michaelpporter/breadcrumbs). Graded, signed and kept in sync across platforms by [TomeVault](https://tomevault.io)
+> Source: [michaelpporter/breadcrumbs](https://github.com/michaelpporter/breadcrumbs). Graded, signed and kept current as the models change by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
