@@ -1,23 +1,21 @@
 # Coderrr
 
-> Tome by [Akash-nath29](https://github.com/Akash-nath29/Coderrr) — distributed by [TomeVault](https://tomevault.io)
-
-Your friendly neighbourhood Open Source Coding Agent
+> Tome by [Akash-nath29](https://github.com/Akash-nath29/Coderrr), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [Akash-nath29/Coderrr](https://github.com/Akash-nath29/Coderrr).
+Original source: `CLAUDE.md` in [Akash-nath29/Coderrr](https://github.com/Akash-nath29/Coderrr).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [Akash-nath29/Coderrr](https://github.com/Akash-nath29/Coderrr) — a repo with 66+ stars on GitHub.
+From [Akash-nath29/Coderrr](https://github.com/Akash-nath29/Coderrr) — a repo with 71+ stars on GitHub.
 
 ---
 
