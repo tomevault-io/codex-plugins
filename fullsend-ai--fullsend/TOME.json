@@ -2,9 +2,9 @@
   "name": "fullsend",
   "owner": "fullsend-ai",
   "repo": "fullsend",
-  "description": "Vision for fully autonomous agentic engineering",
+  "description": "",
   "type": "config",
-  "source_format": "CLAUDE.md",
+  "source_format": "",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/fullsend-ai/fullsend",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-12T05:21:18Z"
+  "distributed_at": "2026-08-16T13:27:03Z"
 }
