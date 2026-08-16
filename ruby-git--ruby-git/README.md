@@ -5,17 +5,17 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [ruby-git/ruby-git](https://github.com/ruby-git/ruby-git).
+Original source: `CLAUDE.md` in [ruby-git/ruby-git](https://github.com/ruby-git/ruby-git).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-## Bundled Skills (27)
+## Bundled Skills (32)
 
 - [ci-cd-troubleshooting](https://github.com/ruby-git/ruby-git/tree/main/.github/skills/ci-cd-troubleshooting)
 - [ruby-git](https://github.com/ruby-git/ruby-git/tree/main/.github/skills/test-debugging/SKILL.md)
@@ -44,6 +44,11 @@ Original source: `copilot-instructions.md` in [ruby-git/ruby-git](https://github
 - [ruby-git](https://github.com/ruby-git/ruby-git/tree/main/.github/skills/review-backward-compatibility/SKILL.md)
 - [ruby-git](https://github.com/ruby-git/ruby-git/tree/main/.github/skills/review-cross-command-consistency/SKILL.md)
 - [ruby-git](https://github.com/ruby-git/ruby-git/tree/main/.github/skills/refactor-command-to-commandlineresult/SKILL.md)
+- [ruby-git](https://github.com/ruby-git/ruby-git/tree/main/.github/skills/rebase/SKILL.md)
+- [ruby-git](https://github.com/ruby-git/ruby-git/tree/main/.github/skills/resolve-feedback/SKILL.md)
+- [ruby-git](https://github.com/ruby-git/ruby-git/tree/main/.github/skills-deprecated/extract-command-from-lib/SKILL.md)
+- [ruby-git](https://github.com/ruby-git/ruby-git/tree/main/.github/skills-deprecated/extract-facade-from-base-lib/SKILL.md)
+- [ruby-git](https://github.com/ruby-git/ruby-git/tree/main/.github/skills-deprecated/review-backward-compatibility/SKILL.md)
 
 Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/ruby-git/ruby-git](https://github.com/ruby-git/ruby-git)
 
