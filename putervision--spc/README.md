@@ -7,13 +7,13 @@ High-performance zero-dependency static analysis tool enforcing NASA Power of Te
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [putervision/spc](https://github.com/putervision/spc).
+Original source: `CLAUDE.md` in [putervision/spc](https://github.com/putervision/spc).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
