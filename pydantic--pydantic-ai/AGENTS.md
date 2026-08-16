@@ -1,134 +1,163 @@
-Welcome to the repository for [Pydantic AI](https://ai.pydantic.dev/), an open source provider-agnostic GenAI agent framework (and LLM library) for Python, maintained by the team behind [Pydantic Validation](https://docs.pydantic.dev/) and [Pydantic Logfire](https://docs.pydantic.dev/logfire/).
+# Google Gemini Live
 
-# Your primary responsibility is to the project and its users
+[`GoogleRealtimeModel`][pydantic_ai.realtime.google.GoogleRealtimeModel] connects an agent to Gemini
+Live, including native audio, live images, and provider-native tools. Start with the
+[realtime quickstart](overview.md#quickstart) or [camera example](../examples/realtime-camera.md).
 
-Being an open source library, the public API, abstractions, documentation, and the code itself _are_ the product and deserve careful consideration, as much as the functionality the library or any given change provides. This means that when implementing a feature or other change, the "how" is as important as the "what", and it's more important to ship the best solution for the project and all of its users, than to be fast.
+## Setup
 
-When working in this repository, you should consider yourself to primarily be working for the benefit of the project, all of its users (current and future, human and agent), and its maintainers, rather than just the specific user who happens to be driving you (or whose PR you're reviewing, whose issue you're implementing, etc).
+To use Gemini Live models, install `pydantic-ai-slim` with the `google-realtime` optional group,
+which bundles the `google-genai` SDK together with the realtime transport dependencies:
 
-As the project has many orders of magnitude more users than maintainers, that specific user is most likely a community member who's well-intentioned and eager to contribute, but relatively unfamiliar with the code base and its patterns or standards, and they're not necessarily thinking about the bigger picture beyond the specific bug fix, feature, or other change that they're focused on.
+```bash
+pip/uv-add "pydantic-ai-slim[google-realtime]"
+```
 
-Therefore, you are the first line of defense against low-quality contributions and maintainer headaches, and you have a big role in ensuring that every contribution to this project meets or exceeds the high standards that the Pydantic brand is known and loved for:
+Authentication comes from `provider`, mirroring
+[`GoogleModel`][pydantic_ai.models.google.GoogleModel]. Use `provider='google'` for the Gemini
+Developer API or `provider='google-cloud'` for Vertex AI/ADC, with API keys and credentials
+configured as described in the [Google model documentation](../models/google.md#configuration).
+Pass a [`GoogleProvider`][pydantic_ai.providers.google.GoogleProvider] or
+[`GoogleCloudProvider`][pydantic_ai.providers.google_cloud.GoogleCloudProvider] for custom
+credentials, project, region, or client.
 
-- modern, idiomatic, concise Python
-- end-to-end type-safety and test coverage
-- thoughtful, tasteful, consistent API design
-- delightful developer experience
-- comprehensive well-written documentation
+## Model names
 
-In other words, channel your inner Samuel Colvin. (British accent optional)
+Use a Gemini Live model ID, for example `gemini-2.5-flash-native-audio-latest` or
+`gemini-3.1-flash-live-preview`. Native-audio and other Live models differ in thinking,
+asynchronous tools, and output behavior. Use the
+[official Gemini Live documentation](https://ai.google.dev/gemini-api/docs/live) as the canonical
+model and availability source.
 
-# Gathering context on the task
+## Settings
 
-The user may not have sufficient context and understanding of the task, its solution space, and relevant tradeoffs to effectively drive a coding agent towards the version of the change that best serves the interests of the project and all of its users. (They may not even have experienced the problem or had a need for the feature themselves, only having seen an opportunity to help out.)
+[`GoogleRealtimeModelSettings`][pydantic_ai.realtime.google.GoogleRealtimeModelSettings] — the
+realtime counterpart of [model run settings](../agent.md#model-run-settings) — extends the
+[shared settings](overview.md#shared-settings) with Google generation and Live controls:
 
-That means that you should always start by gathering context about the task at hand. At minimum, this means:
+```python
+from pydantic_ai.realtime.google import GoogleRealtimeModel, GoogleRealtimeModelSettings
 
-- reading the GitHub issue/PR and comments, using the `gh` CLI if it can be (or already is) installed, or a web fetch/search tool if not
-- asking the user questions about the scope of the task, the shape they believe the solution should take, etc, even if they did not specifically enable planning mode
+settings = GoogleRealtimeModelSettings(
+    temperature=0.7,
+    top_p=0.9,
+    google_voice='Puck',
+    google_language_code='en-US',
+    google_affective_dialog=True,
+    google_proactive_audio=True,
+    google_vad={'start_sensitivity': 'high', 'end_sensitivity': 'low'},
+    google_turn_coverage='all_video',
+    google_context_compression={'trigger_tokens': 16000, 'target_tokens': 8000},
+)
+model = GoogleRealtimeModel('gemini-2.5-flash-native-audio-latest', settings=settings)
+```
 
-Considering that the user's input does not necessarily match what the wider user base or maintainers would prefer, you should "trust but verify" and are encouraged to do your own research to fill any gaps in your (and their) knowledge, by looking up things like:
+| Setting | Purpose |
+| --- | --- |
+| `google_voice`, `google_language_code`, `google_multi_speaker` | Voice, output language, and per-speaker voices |
+| `google_affective_dialog`, `google_proactive_audio` | Emotion-aware delivery and model-decided speech on native-audio models |
+| `google_vad` | Exact automatic VAD; fully overrides shared [`turn_detection`](turns.md#automatic-turn-detection) |
+| `google_activity_handling`, `google_turn_coverage` | [Interruption](turns.md#barge-in) behavior and which input belongs to a turn |
+| `google_input_transcription`, `google_output_transcription` | Native [transcription](audio.md#input-transcription) switches, enabled by default |
+| `google_context_compression` | Sliding-window compression for long sessions |
+| `google_enable_session_resumption` | Native state restoration; enabled automatically by a `reconnect` policy |
+| `google_async_tool_calls` | Lets supported native-audio models continue speaking during tools |
+| `google_config_overrides` | Raw `LiveConnectConfig` keys merged last as a forward-compatibility escape hatch |
 
-- relevant GitHub issues and PRs, especially if cross-linked from the main issue/PR
-- LLM provider API docs and SDK type definitions
-- other LLM/agent libraries' solutions to similar problems
-- Pydantic AI documentation on related features and established API patterns
-    - In particular, the docs on [agents](docs/agent.md), [dependency injection](docs/dependencies.md), [tools](docs/tools.md), [output](docs/output.md), and [message history](docs/message-history.md) are going to be relevant to many tasks.
+`google_voice` is the provider voice setting. `google_thinking_config` takes precedence over the
+shared [`thinking`](../capabilities/thinking.md) setting when a token budget or other
+Gemini-specific control is needed.
 
-# Ensuring the task is ready for implementation
+!!! warning "Keep automatic VAD enabled"
+    Pydantic AI does not expose Gemini activity markers or manual turn verbs. Do not set
+    `google_vad={'disabled': True}`; shared `turn_detection=False` is rejected for the same reason.
 
-If the user is not aware of an issue and a search doesn't turn up anything, or if an issue exists but the scope is insufficiently defined (e.g. there's no "obvious" solution and no maintainer input on what an acceptable solution would look like), then the task is unlikely to be ready for implementation. Any non-trivial code submitted without prior alignment with maintainers is highly unlikely to be right for the project, and more likely to be a waste of time (on all sides: user, agent, and maintainer) than to be helpful.
+### Asynchronous tool calls
 
-In this case, unless the user appears to be uniquely well-suited to build a feature from scratch and submit it without (much) prior discussion (e.g. they are a maintainer or a partner submitting an integration), the most useful thing you can do to steer the user towards a good outcome for the project is to work with them on:
+Gemini normally pauses generation while a function tool is outstanding. Set
+`google_async_tool_calls=True` on supported native-audio models to let it continue speaking. This is
+best for slow tools; a fast result can interrupt speech that barely started and leave an empty
+interrupted turn in history. Other Live models ignore the setting.
 
-- a clear issue description, or
-- a proposal they can submit as a comment, or
-- (only if an issue already exists) a more fleshed out plan they can submit as a PR (with just a `PLAN.md` file that can be deleted afterwards) that other users and maintainers can weigh in on ahead of implementation
+### Native tools
 
-(Of course it's fair game for a user to generate code to gain a better understanding of the problem or experiment with different solutions, as long as the intent is not to just submit that code without first having aligned with maintainers on the approach.)
+Gemini Live maps [`WebSearch`][pydantic_ai.capabilities.WebSearch] to Google Search grounding, the
+only native tool it supports — no Live model runs native code execution or URL context, so neither
+[`CodeExecutionTool`][pydantic_ai.native_tools.CodeExecutionTool] nor
+[`WebFetch`][pydantic_ai.capabilities.WebFetch] is advertised in `supported_native_tools`. Give
+those a [`local=` fallback](tools.md#native-tools) and the session runs the local tool instead:
+`CodeExecutionTool(local=...)`, or `WebFetch(native=False, local=True)`, which requires the
+`web-fetch` optional group (`pip/uv-add "pydantic-ai-slim[google-realtime,web-fetch]"`).
 
-(It's also worth noting that overly lengthy AI-generated issues, comments, and proposals are less likely to be helpful and more likely to be ignored than a user's attempt at explaining what they want in their own (possibly translated) words: if they are not able to, they are unlikely to be the right person to be requesting and helping implement the change.)
+Gemini 2.5 also cannot combine native Google Search grounding with function tools; choose native
+grounding or local function-tool fallbacks unless using a model that supports the combination.
 
-# Philosophy
+### Specialist streaming models
 
-Pydantic AI is meant to be a light-weight library that any Python developer who wants to work with LLMs and agents (whether simple or complex) should feel no hesitation to pull into their project. It's not meant to be everything to everyone, but it should enable people to build just about anything.
+The built-in profile describes the speech-to-speech Live models. Gemini also serves specialist
+streaming models on the same endpoint that behave differently — `gemini-robotics-er-2-streaming-preview`,
+for instance, is text-only and rejects audio output. Point a session at one of those and correct the
+facts with [`profile=`](overview.md#provider-support), which resolves like a
+[standard model profile](../models/overview.md#inspecting-a-models-profile), e.g.
+`GoogleRealtimeModel('gemini-robotics-er-2-streaming-preview', profile={'supports_text_output': True})`.
 
-As such, we prefer strong primitives, powerful abstractions, and general solutions and extension points that enable people to build things that we hadn't even thought of, over narrow solutions for specific use cases, opinionated solutions that push a particular approach to agent design that hasn't yet stood the test of time, or generally "every single possible battery included" solutions that make the library unnecessarily bloated.
+## Feature support and limitations
 
-# Requirements of all contributions
+| Feature | Support | Notes |
+| --- | --- | --- |
+| Audio format | Full feature support | Mono PCM16, 16 kHz input and 24 kHz output |
+| Text output | Unsupported | Every speech-to-speech Live model rejects a `TEXT` response modality, so `output_modality='text'` raises. Read the answer from the transcript on the `SpeechPart` |
+| Image/live video input | Full feature support | [Images](audio.md#images); `google_turn_coverage='all_video'` keeps streamed frames in context |
+| Manual turns | Unsupported | [Automatic turn detection](turns.md#automatic-turn-detection) is required |
+| Explicit interruption/truncation | Unsupported | Gemini [interrupts server-side](turns.md#barge-in) and emits `RealtimeResponseInterruptedEvent` |
+| Input transcription | Full feature support | Native [transcription](audio.md#input-transcription), enabled by default; no separate model ID |
+| Native tools | Limited parameter support | Google Search grounding only; URL context and code execution fall back to a [`local=` tool](tools.md#native-tools) (see above) |
+| Usage | Full feature support | Token and modality breakdowns; function-call usage may arrive on a later turn |
+| State-restoring reconnect | Full feature support | Requires [session resumption](#session-resumption) plus a reconnect policy |
 
-All changes need to:
+See [Audio, images, and transcripts](audio.md), [Turns and interruptions](turns.md),
+[Tools](tools.md), and [Connection lifecycle](lifecycle.md) for the provider-agnostic workflows.
 
-- be thoughtful and deliberate about new abstractions, public APIs, and behaviors, as every wrong-in-retrospect choice (made in a rush or with insufficient context) makes life harder for hundreds of thousands of users (and agents), and is much more difficult to change later than to do right the first time
-- be backward compatible as laid out in the [version policy](docs/version-policy.md), so that users can upgrade with confidence
-- be fully type-safe (both internally and in public API) without unnecessary `cast`s or `Any`s, so that users don't need `isinstance` checks and can trust that code that typechecks will work at runtime
-- have comprehensive tests covering 100% of code paths, favoring integration tests and real requests (using recordings and snapshots -- see below) over unit tests and mocking
-- update/add all relevant documentation, following the existing voice and patterns
-- update the relevant agent skills when introducing a new feature or when a skill needs to reflect the correct mechanics; Pydantic AI skills belong in [pydantic_ai_slim/pydantic_ai/.agents/skills/building-pydantic-ai-agents/](pydantic_ai_slim/pydantic_ai/.agents/skills/building-pydantic-ai-agents/), while repository workflow skills live under [.claude/skills/](.claude/skills/)
+## Gateway
 
-When you submit a PR, make sure you include the [PR template](.github/pull_request_template.md) and fill in the issue number that should be closed when the PR is merged. The "AI generated code" checkbox should always be checked manually by the user in the UI, not by the agent.
+To route through the [Pydantic AI Gateway](../gateway.md), use a `gateway/`-prefixed model string:
 
-PR titles feed directly into the release changelog — wrap code identifiers (class names, keyword arguments, module paths, CLI flags, env vars) in backticks, matching the style of recent release notes (e.g. `git log main --oneline -10`).
+```python
+from pydantic_ai import Agent
 
-Never add yourself (Claude) as a co-author on commits. Commits should be authored as the user only, with no `Co-Authored-By` trailer referencing Claude.
+agent = Agent(instructions='You are a helpful voice assistant.')
+realtime = agent.realtime('gateway/google:gemini-live-2.5-flash')
+```
 
-## Repository structure
+The gateway proxies Gemini Live through the Vertex upstream, so configure a region that supports
+the Live API. `gateway/google-cloud` is an alias. See
+[Gateway trace propagation](observability.md#gateway-trace-propagation).
 
-The repo contains a `uv` workspace defining multiple Python packages:
+## Session resumption
 
-- `pydantic-ai-slim` in `pydantic_ai_slim/`: the [agent framework](docs/agent.md), including the `Agent` class and `Model` classes for each model provider/API
-    - This is a slim package with minimal dependencies and optional dependency groups for each model provider (e.g. `openai`, `anthropic`, `google`) or integration (e.g. `logfire`, `mcp`, `temporal`).
-- `pydantic-graph` in `pydantic_graph/`: the type-hint based [graph library](docs/graph.md) that powers the agent loop
-- `pydantic-evals` in `pydantic_evals/`: the [evaluation framework](docs/evals.md) for evaluating the arbitrary stochastic functions including LLMs and agents
-- `clai` in `clai/`: a [CLI](docs/cli.md) (with an optional [web UI](docs/web.md)) to chat with Pydantic AI agents
-- `pydantic-ai` defined in `pyproject.toml` at the root, bringing in the packages above as well the optional dependency groups for all model providers and select integrations.
+For [state-restoring reconnects](lifecycle.md#state-restoration), set the `reconnect` setting to a
+[`ReconnectPolicy`][pydantic_ai.realtime.ReconnectPolicy]; session resumption is enabled
+automatically alongside it (`google_enable_session_resumption` can still request handles without a
+policy, and explicitly setting it to `False` next to a policy raises
+[`UserError`][pydantic_ai.exceptions.UserError] rather than silently losing the conversation).
+Reconnection uses the latest in-memory server handle and emits `state_restored=True`.
 
-## Development workflow
+!!! note "The connection cap can briefly interrupt a turn"
+    Gemini sends `GoAway` shortly before its provider-defined connection cap. Pydantic AI reconnects
+    after the drop rather than proactively on `GoAway`, so a long call can briefly drop mid-turn.
+    This is tracked in [#6643](https://github.com/pydantic/pydantic-ai/issues/6643).
 
-The project uses:
+## Provider-specific quirks
 
-- [`uv`](https://docs.astral.sh/uv/getting-started/installation/), supporting Python 3.10 through 3.13
-    - Install all dependencies with `make install`
-- `pre-commit`, can be installed with `uv tool install pre-commit`
-- `ruff` via `make lint` and `make format`
-- `pyright` via `make typecheck`
-- `pytest` in `tests/`, via `make test`, with:
-    - `inline-snapshot` for inline assertions
-    - `pytest-recording` and `vcrpy` for recording and playing back requests to model APIs
-- `mkdocs` in `docs/`, via `make docs` and `make docs-serve`, served at <https://ai.pydantic.dev>, with:
-    - `mkdocstrings-python` to generate API docs from docstrings and types
-    - `mkdocs-material` to theme the docs
-    - `tests/test_examples.py` to test all code examples in the docs (including docstrings)
-- [`logfire`](docs/logfire.md) for OTel instrumentation of Pydantic AI and `httpx`
-    - If you have access to the Logfire MCP server, you can use it to inspect agent runs, tool calls, and model requests
-
-## When to verify
-
-Pre-commit runs `make lint`, `make format`, and `make typecheck` automatically on every commit; CI additionally runs the full test suite. While iterating, only run targeted checks on the files/tests you have a specific reason to suspect:
-
-- typecheck a single file: `PYRIGHT_PYTHON_IGNORE_WARNINGS=1 uv run pyright path/to/file.py`
-- run a single test: `uv run pytest path/to/test.py::test_name`
-
-Avoid `make typecheck` and `make test` between edits — both are slow and the pre-commit/CI gates cover them at the right time.
-
-# Coding Guidelines
-
-When generating or reviewing code anywhere in this repo, always read [agent_docs/index.md](agent_docs/index.md) and follow/enforce those guidelines. Don't forget to read the linked "topic guides" when appropriate.
-
-Additionally, always read the directory-specific instructions when working in those directories:
-
-- [docs/AGENTS.md](docs/AGENTS.md)
-- [pydantic_ai_slim/pydantic_ai/AGENTS.md](pydantic_ai_slim/pydantic_ai/AGENTS.md)
-- [pydantic_ai_slim/pydantic_ai/capabilities/AGENTS.md](pydantic_ai_slim/pydantic_ai/capabilities/AGENTS.md)
-- [pydantic_ai_slim/pydantic_ai/durable_exec/AGENTS.md](pydantic_ai_slim/pydantic_ai/durable_exec/AGENTS.md)
-- [pydantic_ai_slim/pydantic_ai/models/AGENTS.md](pydantic_ai_slim/pydantic_ai/models/AGENTS.md)
-- [pydantic_ai_slim/pydantic_ai/native_tools/AGENTS.md](pydantic_ai_slim/pydantic_ai/native_tools/AGENTS.md)
-- [pydantic_ai_slim/pydantic_ai/profiles/AGENTS.md](pydantic_ai_slim/pydantic_ai/profiles/AGENTS.md)
-- [pydantic_ai_slim/pydantic_ai/providers/AGENTS.md](pydantic_ai_slim/pydantic_ai/providers/AGENTS.md)
-- [pydantic_ai_slim/pydantic_ai/toolsets/AGENTS.md](pydantic_ai_slim/pydantic_ai/toolsets/AGENTS.md)
-- [pydantic_ai_slim/pydantic_ai/ui/AGENTS.md](pydantic_ai_slim/pydantic_ai/ui/AGENTS.md)
-- [tests/AGENTS.md](tests/AGENTS.md)
+- Gemini reports response interruption but not user speech-start/end events, so local playback is
+  flushed on `RealtimeResponseInterruptedEvent`, and Gemini sessions record no `user speech` span (see
+  [Logfire instrumentation](observability.md#logfire-instrumentation)).
+- [Seeded](history.md#seeding-a-session) function calls/results are represented as readable text
+  because Live cannot accept function parts in seeded turns.
+- Native transcription can produce only a completed sentence on some models.
+  [Caption UIs](audio.md#live-captions) should replace text from `TranscriptUpdate.transcript`
+  rather than assume incremental deltas.
 
 ---
 > Source: [pydantic/pydantic-ai](https://github.com/pydantic/pydantic-ai) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-06-01 -->
+<!-- tomevault:4.0:agents_md:2026-08-16 -->
