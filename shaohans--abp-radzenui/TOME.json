@@ -2,9 +2,9 @@
   "name": "Abp.RadzenUI",
   "owner": "ShaoHans",
   "repo": "Abp.RadzenUI",
-  "description": "\ud83d\udca1Abp RadzenUI is a UI theme built on the Abp framework and developed using the Radzen Blazor component",
+  "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/ShaoHans/Abp.RadzenUI",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-06-02T23:34:03Z"
+  "distributed_at": "2026-08-16T18:38:48Z"
 }
