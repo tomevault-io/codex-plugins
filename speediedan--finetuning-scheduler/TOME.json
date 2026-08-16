@@ -4,7 +4,7 @@
   "repo": "finetuning-scheduler",
   "description": "",
   "type": "tome",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -49,9 +49,27 @@
       "path": ".github/skills/fts-development-branch-version-upgrade/SKILL.md",
       "github_url": "https://github.com/speediedan/finetuning-scheduler/tree/main/.github/skills/fts-development-branch-version-upgrade/SKILL.md",
       "description": ""
+    },
+    {
+      "name": "finetuning-scheduler",
+      "path": ".claude/skills/gpu-lease/SKILL.md",
+      "github_url": "https://github.com/speediedan/finetuning-scheduler/tree/main/.claude/skills/gpu-lease/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "finetuning-scheduler",
+      "path": ".claude/skills/debug-remote-ci-failures/SKILL.md",
+      "github_url": "https://github.com/speediedan/finetuning-scheduler/tree/main/.claude/skills/debug-remote-ci-failures/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "finetuning-scheduler",
+      "path": ".claude/skills/fts-development-branch-version-upgrade/SKILL.md",
+      "github_url": "https://github.com/speediedan/finetuning-scheduler/tree/main/.claude/skills/fts-development-branch-version-upgrade/SKILL.md",
+      "description": ""
     }
   ],
   "source_url": "https://github.com/speediedan/finetuning-scheduler",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-24T14:15:13Z"
+  "distributed_at": "2026-08-16T12:47:33Z"
 }
