@@ -1,468 +1,211 @@
-# Copilot Instructions for Fine-Tuning Scheduler
+# CLAUDE.md
 
-## Repository Overview
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-**Fine-Tuning Scheduler (FTS)** is a PyTorch Lightning callback that enables flexible, multi-phase fine-tuning schedules. It allows users to define custom parameter unfreezing and optimizer configuration schedules through YAML configuration files.
+Fine-Tuning Scheduler (FTS) is a PyTorch Lightning callback for multi-phase, scheduled fine-tuning.
 
-**Key Technologies:**
+## Environment
 
-- Python 3.9+ (CI tests on 3.10 and 3.13)
-- PyTorch 2.7.0+ with PyTorch Lightning ecosystem
-- Core deps: pytorch-lightning (standalone) or lightning (unified package), transformers
-
-**Repository Size:** ~100 files, primarily Python, with YAML configs and shell scripts
-
-## Lightning Package Support
-
-FTS supports both standalone and unified Lightning packages:
-
-- **Unified (default):** `lightning` package with `lightning.pytorch`
-- **Standalone:** `pytorch_lightning` package
-
-**USE_CI_COMMIT_PIN Environment Variable:**
-
-- When set, installs Lightning from a git commit (specified in `requirements/ci/overrides.txt`)
-- Default in dev/CI builds for consistent testing against latest Lightning changes
-- Can be disabled with `--no-commit-pin` flag in build scripts
-
-## Code Standards
-
-### Required Before Each Commit
-
-- Run tests in your local environment and ensure all tests are passing:
-
-```bash
-cd /home/speediedan/repos/finetuning-scheduler && python -m pytest src/finetuning_scheduler tests -v
-```
-
-- Ensure all pre-commit hooks pass.
-- If the copilot session is still failing despite trying to get tests and pre-commit hooks passing for some time, it's okay to commit your intermediate work with a comment about the present challenge to be dealt with in a subsequent session.
-
-### Requirement for Each Pull Request
-
-- All pull requests must pass the CI checks.
-- Ensure that the code is well-documented, with docstrings for all public functions and classes.
-- Write unit tests for new functionality and ensure existing tests pass.
-- Ensure the cpu coverage reported by our `ci_test-full.yml` workflow is >= the existing coverage.
-
-## Build and Validation Commands
-
-### Environment Setup
-
-Development environment uses `uv` for fast, reliable dependency management:
-
-Set environment context variables (developer-specific paths):
-
-```bash
-export FTS_VENV_BASE=/mnt/cache/${USER}/.venvs
-export FTS_TARGET_VENV=fts_latest
-export FTS_REPO_DIR=${HOME}/repos/finetuning-scheduler  # Example: adjust to your local repo path
-```
-
-```bash
-# Install uv (one-time setup)
-curl -LsSf https://astral.sh/uv/install.sh | sh
-
-# Create development environment (creates traditional venv)
-# The build script handles Lightning commit pinning and optional PyTorch nightly automatically
-./scripts/build_fts_env.sh --repo-home=${PWD} --target-env-name=fts_latest
-
-# Activate the environment
-cd ${FTS_REPO_DIR} && \
-source ${FTS_VENV_BASE}/${FTS_TARGET_VENV}/bin/activate
-
-# Run commands directly (no need for 'uv run')
-python --version
-python -m pytest tests/
-```
-
-**Manual installation (without build script):**
-
-```bash
-cd ${FTS_REPO_DIR}
-
-# For manual installs, set UV_OVERRIDE to use the pinned Lightning commit
-export UV_OVERRIDE=${PWD}/requirements/ci/overrides.txt
-uv pip install -e ".[all]"
-```
-
-**Manual installation with a PyTorch prerelease (nightly/test):**
-
-```bash
-cd ${FTS_REPO_DIR}
-
-# Install a PyTorch prerelease first (adjust version and CUDA target as needed; see configuration in requirements/ci/torch-pre.txt)
-# Example (nightly):
-uv pip install --prerelease=allow torch==2.11.0.dev20260121 --index-url https://download.pytorch.org/whl/nightly/cu130
-
-# Then install FTS with Lightning commit pin
-export UV_OVERRIDE=${PWD}/requirements/ci/overrides.txt
-uv pip install -e ".[all]"
-```
-
-# To configure PyTorch prerelease used by the build scripts and azure pipelines, edit `requirements/ci/torch-pre.txt`:
-
-# Line 1: torch version (e.g., 2.11.0 for test/RC or 2.11.0.dev20260121 for nightly)
-
-# Line 2: CUDA target for local builds (e.g., cu130) — CI uses cpu
-
-# Line 3: channel type: "test" or "nightly"
-
-### Development Environment Scripts
-
-Use the provided build script for automated setup:
-
-```bash
-# Standard development build (uses FTS_VENV_BASE or default ~/.venvs)
-./scripts/build_fts_env.sh --repo-home=${PWD} --target-env-name=fts_latest
-
-# Build with explicit venv directory (recommended for hardlink performance)
-./scripts/build_fts_env.sh --repo-home=${HOME}/repos/finetuning-scheduler --target-env-name=fts_latest --venv-dir=/mnt/cache/${USER}/.venvs
-
-# Build without Lightning commit pinning (use PyPI release)
-./scripts/build_fts_env.sh --repo-home=${PWD} --target-env-name=fts_latest --no-commit-pin
-
-# Build with specific PyTorch nightly version
-./scripts/build_fts_env.sh --repo-home=${PWD} --target-env-name=fts_latest --torch_dev_ver=dev20240201
-
-# Build with PyTorch test channel
-./scripts/build_fts_env.sh --repo-home=${PWD} --target-env-name=fts_latest --torch_test_channel
-
-# Build from Lightning source
-./scripts/build_fts_env.sh --repo-home=${HOME}/repos/finetuning-scheduler --target-env-name=fts_latest --from-source="lightning:${HOME}/repos/lightning"
-
-# Build with oldest compatible dependencies (Python 3.10, mirrors CI oldest matrix)
-./scripts/build_fts_env.sh --repo-home=${HOME}/repos/finetuning-scheduler --target-env-name=fts_oldest --oldest
-```
-
-**Venv Location Options:**
-
-- **OPTION 1 (Recommended):** Use `--venv-dir` to set the base directory
-- **OPTION 2:** Use `FTS_VENV_BASE` environment variable
-- **OPTION 3:** Use default (`~/.venvs/<target_env_name>`)
-
-**Why placement matters:** UV uses hardlinks for fast installs, but hardlinks only work within the same filesystem. Placing venv on same filesystem as UV cache ensures fast installs and no warnings.
-
-### Linting and Code Quality
-
-**Always run linting before committing (assumes activated venv):**
-
-```bash
-# Activate your environment first
-cd ${FTS_REPO_DIR} && \
-source ${FTS_VENV_BASE}/${FTS_TARGET_VENV}/bin/activate
-
-# Run pre-commit hooks (includes ruff, docformatter, yaml checks)
-pre-commit run --all-files
-
-# Run ruff linting directly (configured in pyproject.toml)
-pre-commit run ruff-check --all-files
-pre-commit run ruff-format --all-files
-```
-
-### Testing
-
-**Test command (needs activated venv):**
-
-```bash
-# Activate your environment first
-cd ${FTS_REPO_DIR} && \
-source ${FTS_VENV_BASE}/${FTS_TARGET_VENV}/bin/activate
-
-# Basic test run
-python -m pytest src/finetuning_scheduler tests -v
-
-# With coverage
-python -m coverage run --source src/finetuning_scheduler -m pytest src/finetuning_scheduler tests -v
-python -m coverage report
-
-# Test collection only (to check test discovery)
-pytest --collect-only
-```
-
-**Test timing:** Most tests run quickly (\<30s), but some integration tests may take 1-2 minutes.
-
-### Running Special Tests (Standalone and Experimental)
-
-Some tests require special environment setup and are marked with `@pytest.mark.standalone` or require experimental patches.
-
-**Using the test harness:**
-
-```bash
-# Run all standalone tests (default mark_type is 'standalone')
-./tests/special_tests.sh
-
-# Run standalone tests following a pattern
-./tests/special_tests.sh --mark_type=standalone --filter_pattern='test_f'
-
-# Run experimental patch tests with a patch mask
-./tests/special_tests.sh --mark_type=exp_patch --filter_pattern='test_f' --experiment_patch_mask="1 0 0 1"
-```
-
-**Manual execution:**
-
-```bash
-cd ${FTS_REPO_DIR} && \
-source ${FTS_VENV_BASE}/${FTS_TARGET_VENV}/bin/activate
-# Run specific standalone test
-PL_RUN_STANDALONE_TESTS=1 python -m pytest tests/test_specific.py::test_function -v
-```
-
-### Building Documentation
-
-**Documentation build commands (needs activated venv):**
-
-```bash
-export FTS_VENV_BASE=/mnt/cache/${USER}/.venvs
-export FTS_TARGET_VENV=fts_latest
-export FTS_REPO_DIR=${HOME}/repos/finetuning-scheduler  # Example: adjust to your local repo path
-# Activate your environment first
-cd ${FTS_REPO_DIR} && \
-source ${FTS_VENV_BASE}/${FTS_TARGET_VENV}/bin/activate
-
-# Clean previous builds
-cd docs && make clean
-
-# Build HTML documentation with warnings as errors
-make html --debug SPHINXOPTS="-W --keep-going"
-
-# Run linkcheck to verify all links
-make linkcheck SPHINXOPTS="-W --keep-going"
-
-# Check for errors in linkcheck output
-grep -i "error\|broken" build/linkcheck/output.txt || echo "No errors found in linkcheck"
-```
-
-**Documentation requirements:**
-
-- All documentation must build without warnings when using `-W` flag
-- All internal and external links must be valid (verified by linkcheck)
-- RST cross-references should use appropriate directives:
-  - `:class:` for class references
-  - `:meth:` for method references
-  - `:func:` for function references
-  - `:doc:` for document references
-  - `:ref:` for section references (requires explicit label like `.. _label_name:`)
-- Sphinx autosummary generates API documentation from docstrings
-
-## Project Layout and Architecture
-
-### Source Code Structure
-
-```
-src/finetuning_scheduler/     # Main package
-├── __init__.py               # Package init with callback exports
-├── _callback.py              # Main FinetuningScheduler callback
-├── fts.py                    # Core scheduling logic
-├── fts_supporters.py         # Supporting classes and utilities
-├── strategy_adapters/        # Strategy-specific adapters
-│   ├── fsdp.py               # FSDP strategy adapter
-│   └── ddp.py                # DDP strategy adapter
-└── setup_tools.py            # Package setup utilities
-
-src/fts_examples/             # Example experiments
-├── stable/                   # Stable examples
-│   ├── fts_superglue.py      # SuperGLUE fine-tuning example
-│   └── config/               # YAML configuration files
-└── ipynb/                    # Jupyter notebook examples
-```
-
-### Configuration Files
-
-- `pyproject.toml` - Main project config, dependencies, ruff/pytest settings
-- `setup.py` - Dynamic dependency handling for Lightning packages
-- `.pre-commit-config.yaml` - Code quality hooks
-- `requirements/` - Dependency files (CI and docs only)
-  - `docs.txt` - Documentation dependencies (Sphinx, etc.)
-  - `ci/overrides.txt` - Dependency overrides for dev/CI (Lightning commit pin)
-  - `ci/requirements.txt` - Locked CI requirements
-  - `ci/requirements-oldest.txt` - Locked oldest compatible versions
-
-### Key Entry Points
-
-- Main callback: `finetuning_scheduler.FinetuningScheduler`
-- Example script: `src/fts_examples/stable/fts_superglue.py`
-
-## CI and Validation Pipeline
-
-### GitHub Actions Workflow
-
-**File:** `.github/workflows/ci_test-full.yml`
-
-**Triggers:** Push/PR to main, changes to source/test files
-**Platforms:** Ubuntu 22.04, Windows 2022, macOS 14 (Python 3.10, 3.13)
-**Timeout:** 90 minutes
-
-**Matrix Strategy:**
-
-- `requires: ["oldest", "latest"]` - Tests oldest and newest compatible versions
-- Uses `assistant.py replace_oldest_ver` to set minimum versions for oldest tests
-
-**CI Process:**
-
-1. Use composite action `.github/actions/install-ci-dependencies`
-1. Install FTS in editable mode with dependencies
-1. Run pytest with coverage
-1. Upload coverage to Codecov
-
-**CI Installation Flow:**
-
-```bash
-# Uses astral-sh/setup-uv@v7 action
-# Generates Lightning override file for commit pinning
-# Installs FTS with uv pip install -e ".[all]"
-```
-
-**Environment Variables for CI:**
-
-- `USE_CI_COMMIT_PIN` - When set, uses Lightning from git commit pin
-- `DISABLE_MPS` - Set to "1" on macOS to disable MPS tests
-
-### Manual Validation Steps
-
-Set environment context variables (developer-specific paths):
+Development uses **traditional venvs built by a repo script**, not `uv venv` or `uv run` directly.
+Activate the venv and invoke `python`/`pytest` normally.
 
 ```bash
 export FTS_VENV_BASE=/mnt/cache/${USER}/.venvs
 export FTS_TARGET_VENV=fts_latest
 export FTS_REPO_DIR=${HOME}/repos/finetuning-scheduler
 
-cd ${FTS_REPO_DIR} && \
+./scripts/build_fts_env.sh --repo-home=${PWD} --target-env-name=fts_latest --venv-dir=${FTS_VENV_BASE}
 source ${FTS_VENV_BASE}/${FTS_TARGET_VENV}/bin/activate
-
-# Run pre-commit hooks
-pre-commit run --all-files
-
-# Run tests
-python -m pytest src/finetuning_scheduler tests -v
 ```
 
-### Coverage Collection
+Key `build_fts_env.sh` flags: `--oldest`, `--no-commit-pin`, `--venv-dir`, `--torch-backend`,
+`--from-source="lightning:${HOME}/repos/lightning:pytorch"`, `--uv-install-flags`, `--dry-run`.
 
-Use the `manage_standalone_processes.sh` harness with `--use-nohup` to run coverage collection in an isolated process. Output is written to `/tmp/gen_fts_coverage_<env>_<timestamp>.log`.
+Venv placement matters: uv hardlinks only work within the same filesystem as the uv cache, hence
+`--venv-dir=/mnt/cache/${USER}/.venvs` rather than a home-directory venv.
 
-**Monitoring progress:**
+Manual install into an existing env:
 
 ```bash
-# Tail the most recent coverage log
-tail -f `ls -rt /tmp/gen_fts_coverage_fts_* | tail -1`
+export UV_OVERRIDE=${PWD}/requirements/ci/overrides.txt
+uv pip install -e ".[all]"
 ```
 
-**Common coverage commands:**
+`requirements/` holds CI and docs pins only — there is no top-level `requirements.txt`.
+`requirements/ci/requirements.txt` and `requirements-oldest.txt` are **generated**; regenerate with
+`./requirements/utils/lock_ci_requirements.sh`, never hand-edit.
+
+## Testing
 
 ```bash
-# Note: Both --repo-home and --repo_home work (backward compatible)
-
-# Generate coverage with rebuild (fts_latest with stable PyTorch)
-~/repos/finetuning-scheduler/scripts/manage_standalone_processes.sh --use-nohup \
-  ~/repos/finetuning-scheduler/scripts/gen_fts_coverage.sh \
-  --repo-home=${HOME}/repos/finetuning-scheduler \
-  --target-env-name=fts_latest \
-  --venv-dir=/mnt/cache/${USER}/.venvs
-
-# Generate coverage without rebuild
-~/repos/finetuning-scheduler/scripts/manage_standalone_processes.sh --use-nohup \
-  ~/repos/finetuning-scheduler/scripts/gen_fts_coverage.sh \
-  --repo-home=${HOME}/repos/finetuning-scheduler \
-  --target-env-name=fts_latest \
-  --venv-dir=/mnt/cache/${USER}/.venvs \
-  --no-rebuild-base
-
-# Include experimental patch tests
-~/repos/finetuning-scheduler/scripts/manage_standalone_processes.sh --use-nohup \
-  ~/repos/finetuning-scheduler/scripts/gen_fts_coverage.sh \
-  --repo-home=${HOME}/repos/finetuning-scheduler \
-  --target-env-name=fts_latest \
-  --venv-dir=/mnt/cache/${USER}/.venvs \
-  --include-experimental
-
-# Run all example tests (comprehensive validation)
-~/repos/finetuning-scheduler/scripts/manage_standalone_processes.sh --use-nohup \
-  ~/repos/finetuning-scheduler/scripts/gen_fts_coverage.sh \
-  --repo-home=${HOME}/repos/finetuning-scheduler \
-  --target-env-name=fts_latest \
-  --venv-dir=/mnt/cache/${USER}/.venvs \
-  --no-rebuild-base \
-  --run-all-and-examples
-
-# Generate coverage with oldest dependencies (Python 3.10, mirrors CI oldest matrix)
-~/repos/finetuning-scheduler/scripts/manage_standalone_processes.sh --use-nohup \
-  ~/repos/finetuning-scheduler/scripts/gen_fts_coverage.sh \
-  --repo-home=${HOME}/repos/finetuning-scheduler \
-  --target-env-name=fts_oldest \
-  --venv-dir=/mnt/cache/${USER}/.venvs \
-  --oldest
-
-# Generate coverage with oldest deps, skip special tests (faster CI-like run)
-~/repos/finetuning-scheduler/scripts/manage_standalone_processes.sh --use-nohup \
-  ~/repos/finetuning-scheduler/scripts/gen_fts_coverage.sh \
-  --repo-home=${HOME}/repos/finetuning-scheduler \
-  --target-env-name=fts_oldest \
-  --venv-dir=/mnt/cache/${USER}/.venvs \
-  --oldest \
-  --no-special
+python -m pytest src/finetuning_scheduler tests -v          # src/ IS a test target (--doctest-modules)
+python -m pytest tests/test_fsdp.py::test_name -v --capture=no
+python -m coverage run --source src/finetuning_scheduler -m pytest src/finetuning_scheduler tests -v
 ```
 
-**Flags:**
+`src/finetuning_scheduler` must be passed alongside `tests` — `--doctest-modules` is in `addopts`, so
+docstring examples run as tests.
 
-- `--oldest`: Uses Python 3.10 and `requirements/ci/requirements-oldest.txt` (mirrors CI oldest matrix)
-- `--no-special`: Skips `special_tests.sh` standalone and experimental patch tests (faster iteration)
-- `--run-all-and-examples`: Runs all example tests (both non-standalone and standalone marked)
-- `--allow-failures`: Continues test execution after failures (useful for validation workflows)
-- `--venv-dir`: Base directory for venvs (recommended: `/mnt/cache/${USER}/.venvs` for hardlink performance)
+**Plain pytest does not run the standalone or experimental-patch tests.** Those need
+`tests/special_tests.sh`, which selects on `@RunIf(...)`-generated `skipif` marker kwargs (there are no
+custom pytest markers despite `--strict-markers`):
 
-## Special Dependencies and Known Issues
+```bash
+./tests/special_tests.sh                                                   # defaults to --mark_type=standalone
+./tests/special_tests.sh --mark_type=standalone --filter_pattern='test_f'
+./tests/special_tests.sh --mark_type=standalone --collect_dir='src/fts_examples' --filter_pattern='model_parallel_examples'
+./tests/special_tests.sh --mark_type=exp_patch --filter_pattern='test_f' --experiment_patch_mask="1 0 0 1"
+```
 
-### Lightning Dependency
+Other flags: `--log_file`, `--log-dir`, `--experiments_list`, `--allow-failures`. The
+`--experiment_patch_mask` bit order follows `tests/.experiments`. To run one standalone test directly:
+`PL_RUN_STANDALONE_TESTS=1 python -m pytest tests/test_x.py::test_y -v`.
 
-**Dynamic Versioning:** FTS supports both unified (`lightning`) and standalone (`pytorch_lightning`) packages. The `setup.py` uses `dynamic_versioning_utils.py` to:
+`RunIf` conditions live in `tests/helpers/runif.py` (`min_cuda_gpus`, `standalone`, `bf16_cuda`,
+`exp_patch`; aliases `alone`, `bf16_alone`). CUDA-marked tests gate on `PL_RUN_CUDA_TESTS=1`.
 
-- Determine correct package name based on `PACKAGE_NAME` env var
-- Handle commit pinning via `USE_CI_COMMIT_PIN` env var
-- Toggle imports between package formats
+When torch or Lightning leaks a new env var, add it to the allowlist in the `restore_env_variables`
+autouse fixture in `tests/conftest.py` rather than working around the failure.
 
-### Dependency Constraints
+Full local coverage (~30 min) is orchestrated by `scripts/gen_fts_coverage.sh`; wrap long multi-GPU runs
+in `scripts/manage_standalone_processes.sh --use-nohup` (VS Code kills plain nohup jobs).
 
-- **torch** requires 2.7.0+ (oldest tested)
-- **pytorch-lightning** / **lightning** requires compatible version
+## Serializing GPU work on a shared host
 
-### Import Dependencies
+A multi-GPU host is often shared by more consumers than it looks: several interactive/agent sessions in
+this repo, sessions in a sibling project (`interpretune` shares this project's host and self-hosted CI
+agent), and the self-hosted Azure Pipelines agent, which can dispatch a GPU job as soon as one is approved.
+Two GPU suites at once contend **silently** — OOM, flaky timing, or mutual slowdown rather than an obvious
+error — so it is easily misdiagnosed as a real test failure.
 
-- Lightning imports are conditional based on installed package
-- Use `toggle_lightning_imports()` utility for package switching
+`scripts/gpu_lease_wrap.sh` provides an **opt-in** `flock`-based lease. It is a **complete no-op unless
+`GPU_LEASE_CMD` points at a lease implementation**, so contributors and hosted CI are unaffected and nothing
+here is required to work on this project.
 
-## Development Guidelines
+```bash
+export GPU_LEASE_CMD=/path/to/gpu_lease.sh        # opt in for this shell
+./tests/special_tests.sh --mark_type=standalone   # now serialized
+```
 
-### Code Style
+`tests/special_tests.sh` and `scripts/gen_fts_coverage.sh` self re-exec under the lease, so one acquisition covers a
+whole suite. The Azure GPU pipeline participates too, by bind-mounting the lease directory into the job
+container (`flock` works on the inode, so container and host processes interlock).
 
-- **Line length:** 120 characters (configured in ruff)
-- **Import style:** Sort within sections, first-party packages listed
-- **Type hints:** Use modern syntax with `from __future__ import annotations`
-- **Docstrings:** Google-style format
+Two things worth knowing up front:
 
-### Testing Guidelines
+- **Waiting is normal, not a failure.** A run may sit at `'gpu' lease is held; waiting...` for as long as
+  whatever holds it (a CI job is ~37 min). Let it queue — do not disable the lease or kill the holder.
+- **Notebooks and other interactive GPU work are not lease-aware**, by design: a Jupyter kernel lives for
+  hours, so holding the lease for its lifetime would starve CI. Check `--status` before starting one, and
+  for a long session reserve deliberately with `--hold` / `--release`. The lease warns whoever acquires it
+  next that unleased processes are on the GPUs.
 
-- Test files mirror `src/` structure in `tests/`
-- Use pytest fixtures from `conftest.py`
-- Add coverage for new functionality
-- Standalone tests require `PL_RUN_STANDALONE_TESTS=1` env var
+**For planning, notebook guidance, and recovery from stuck or stale leases, use the `gpu-lease` skill.**
+It also carries the one hard rule: **never force-reset a lease held by a CI job** — cancel the pipeline run
+instead.
 
-### Adding New Features
+## Checks required before a change is done
 
-1. Implement feature in appropriate module
-1. Add tests in `tests/`
-1. Update docstrings and type hints
-1. Run pre-commit and tests
-1. Update CHANGELOG.md if applicable
+1. `pre-commit run --all-files`
+1. `pyright -p pyproject.toml` — the type checker (mypy was removed). Covers `src/finetuning_scheduler` only.
+1. A `CHANGELOG.md` entry under the unreleased section for anything non-trivial.
+1. `./tests/special_tests.sh` for changes touching FSDP, model-parallel, or strategy adapters.
+1. `python scripts/verify_version_consistency.py` for any change touching a torch/CUDA/Lightning/Python
+   version declaration — those live in six or seven files that must agree (Dockerfiles, both
+   `dockers/docker_images_*.sh`, the Azure image tag, the `release-docker.yml` matrix). It exits
+   non-zero and flags the outlier with `!`. A `<not found>` probe means a file was restructured and the
+   probe needs updating — treat that as a failure, not noise.
 
-### Configuration
+CPU coverage reported by `ci_test-full.yml` must be >= existing coverage.
 
-- YAML configs in `src/fts_examples/stable/config/`
-- Use LightningCLI for configuration parsing
-- Support jsonargparse CLI integration
+The only ruff pre-commit hook id is `ruff` (with `--fix`) — `pre-commit run ruff-check` and
+`pre-commit run ruff-format` do not exist. There is no `ruff format` in the pipeline; formatting comes
+from `docformatter`, `pyupgrade`, `blacken-docs`, `mdformat`, and the pre-commit-hooks set.
 
-**Trust these instructions** - only search for additional information if these instructions are incomplete or incorrect for your specific task. The repository structure and build process follow established patterns, but following these guidelines will minimize exploration and failed commands.
+## Code style
+
+- Line length 120. Docstrings wrap at `--wrap-summaries=115 --wrap-descriptions=120` (docformatter).
+- Ruff lint selects `E`, `W`, `F` only; ignores `E731`; `max-complexity = 10`.
+- isort is configured (`known-first-party`, `force-sort-within-sections = false`, `order-by-type = false`)
+  but ruff's `I` rules are **not** enabled, so it is inert — don't reorder imports to satisfy it.
+- Google-style docstrings (Sphinx Napoleon).
+- Every source file carries the 11-line Apache-2.0 header. Copy it into new files.
+- Builtin generics (3.10+) are the convention, but `from __future__ import annotations` is **not** —
+  only one file uses it. Some `typing.Dict` uses are deliberate (runtime `isinstance()` checks).
+
+## Architecture gotchas
+
+**Dual Lightning package support.** The default build targets the unified `lightning` package
+(`lightning.pytorch`); `PACKAGE_NAME=pytorch` targets standalone `pytorch_lightning`. `setup.py` rewrites
+import statements in `src/`, `tests/`, and `requirements/` **in place** via `use_standalone_pl()` /
+`use_unified_pl()` in `src/finetuning_scheduler/dynamic_versioning/utils.py`. The `toggle-lightning-mode`
+console script exposes this post-install. `EXCLUDE_FILES_FROM_CONVERSION` guards self-modification.
+
+**Dependencies are dynamic.** `pyproject.toml` does not declare them; `setup.py` reads
+`BASE_DEPENDENCIES` from `dynamic_versioning/utils.py`. `[tool.fts.min-versions]` in `pyproject.toml` is
+explicitly **informational only** — changing it changes nothing at install time.
+
+**Lightning is pinned to a git commit** for dev/CI in `requirements/ci/overrides.txt`, applied via
+`UV_OVERRIDE`. `USE_CI_COMMIT_PIN=1` enables it in CI; `--no-commit-pin` disables it locally. This pin
+must be **unset** for release builds or the git URL leaks into `Requires-Dist` and PyPI rejects the upload.
+
+**PyTorch prerelease channel is data, not a flag.** `requirements/ci/torch-pre.txt` is three lines:
+version, CUDA target, then `test` or `nightly`. All commented out means stable. Both the CI action and the
+build scripts parse it; there is no `--torch_dev_ver` or `--torch_test_channel` flag.
+
+**Versioning policy** (`docs/source/versioning.rst`): since 2.9 FTS aligns to **PyTorch** minor versions
+(not Lightning), supporting the latest 4. The compatibility table must be updated each release.
+
+Adding a new YAML config directory under `fts_examples` requires extending `package-data` in
+`pyproject.toml` by hand.
+
+## Docs
+
+```bash
+cd docs && make clean
+make html --debug SPHINXOPTS="-W --keep-going"
+make linkcheck SPHINXOPTS="-W --keep-going"
+grep -i "error\|broken" build/linkcheck/output.txt || echo "No errors found in linkcheck"
+```
+
+`-W` means warnings are errors, both locally and on Read the Docs (`fail_on_warning: true`). Any new
+cross-reference target needs an explicit label (`.. _label_name:`). `docs/source/api`,
+`docs/source/generated`, and `docs/source/*/generated` are generated and gitignored.
+
+The docs theme is a fork pinned by commit SHA in `requirements/docs.txt`.
+
+## Repo etiquette
+
+- Branches: `<type>/<issue-id>_<short-name>`, where type is `bugfix`, `feature`, `docs`, or `tests`.
+  Release branches are `release/X.Y.x`.
+- Commit messages: lowercase, imperative, descriptive. **Not** Conventional Commits.
+- `CHANGELOG.md` follows Keep a Changelog (`Added`/`Fixed`/`Changed`/`Deprecated`). Separate each entry
+  with a blank line to reduce merge collisions, and link the PR or commit.
+- PRs use `.github/PULL_REQUEST_TEMPLATE.md`; title tags `[wip]` and `[blocked by #N]` are in use.
+
+## Worktrees
+
+- `~/repos/finetuning-scheduler` — `main`, development.
+- `~/repos/fts-release` — the current `release/X.Y.x` branch.
+
+Fixes land on `main` first and are cherry-picked forward chronologically (`--no-merges`).
+
+## CI
+
+- `ci_test-full.yml` ("Test full") — CPU matrix: `{ubuntu-22.04, windows-2022, macOS-14}` x
+  `{3.10, 3.13}` x `{oldest, latest}`, excluding 3.13+oldest. Installs via the composite action
+  `.github/actions/install-ci-dependencies`. Sets `DISABLE_MPS=1` on macOS. The `oldest` leg resolves
+  through `requirements/ci/requirements-oldest.txt`.
+- `code-checks.yml` ("Type Checks") — `pyright -p pyproject.toml`.
+- `.azure-pipelines/gpu-tests.yml` — self-hosted, asserts `>= 2` CUDA GPUs. Runs the standard suite,
+  standalone multi-GPU, examples, and multi-GPU examples as separate steps.
+
+## Known stale references
+
+`.actions/` no longer exists, but dead references remain in `pyproject.toml` addopts
+(`--ignore='.actions/assistant.py'`) and in workflow path filters. `.github/copilot-instructions.md` is
+superseded by this file and contains numerous stale paths and commands; prefer this file.
 
 ---
 > Source: [speediedan/finetuning-scheduler](https://github.com/speediedan/finetuning-scheduler) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-24 -->
+<!-- tomevault:4.0:agents_md:2026-08-16 -->
