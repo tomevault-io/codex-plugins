@@ -4,7 +4,7 @@
   "repo": "ruby-git",
   "description": "",
   "type": "tome",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -199,9 +199,39 @@
       "path": ".github/skills/refactor-command-to-commandlineresult/SKILL.md",
       "github_url": "https://github.com/ruby-git/ruby-git/tree/main/.github/skills/refactor-command-to-commandlineresult/SKILL.md",
       "description": ""
+    },
+    {
+      "name": "ruby-git",
+      "path": ".github/skills/rebase/SKILL.md",
+      "github_url": "https://github.com/ruby-git/ruby-git/tree/main/.github/skills/rebase/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "ruby-git",
+      "path": ".github/skills/resolve-feedback/SKILL.md",
+      "github_url": "https://github.com/ruby-git/ruby-git/tree/main/.github/skills/resolve-feedback/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "ruby-git",
+      "path": ".github/skills-deprecated/extract-command-from-lib/SKILL.md",
+      "github_url": "https://github.com/ruby-git/ruby-git/tree/main/.github/skills-deprecated/extract-command-from-lib/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "ruby-git",
+      "path": ".github/skills-deprecated/extract-facade-from-base-lib/SKILL.md",
+      "github_url": "https://github.com/ruby-git/ruby-git/tree/main/.github/skills-deprecated/extract-facade-from-base-lib/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "ruby-git",
+      "path": ".github/skills-deprecated/review-backward-compatibility/SKILL.md",
+      "github_url": "https://github.com/ruby-git/ruby-git/tree/main/.github/skills-deprecated/review-backward-compatibility/SKILL.md",
+      "description": ""
     }
   ],
   "source_url": "https://github.com/ruby-git/ruby-git",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-24T11:35:52Z"
+  "distributed_at": "2026-08-16T12:32:51Z"
 }
