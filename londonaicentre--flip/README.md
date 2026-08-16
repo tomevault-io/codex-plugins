@@ -1,6 +1,6 @@
 # FLIP
 
-> Source: [londonaicentre/FLIP](https://github.com/londonaicentre/FLIP). Graded, signed and kept in sync across platforms by [TomeVault](https://tomevault.io)
+> Source: [londonaicentre/FLIP](https://github.com/londonaicentre/FLIP). Graded, signed and kept current as the models change by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
