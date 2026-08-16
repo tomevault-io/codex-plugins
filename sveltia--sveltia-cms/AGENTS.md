@@ -1,181 +1,83 @@
-# Copilot Instructions: Sveltia CMS
+# Sveltia CMS
 
-## Repository Overview
+Modern, Git-based headless CMS, drop-in replacement for Netlify/Decap CMS. Svelte 5 (runes) with JavaScript, Vite 8, Vitest 4. ~710 source files, 255 test files, 7,200+ tests. Ships as a browser bundle (IIFE + ES module), loaded via CDN or npm.
 
-**Sveltia CMS** is a modern, Git-based headless content management system built as a drop-in replacement for Netlify/Decap CMS. The project is written in Svelte 5 with JavaScript, using Vite 8 as the build tool and Vitest 4 for testing.
+## Setup
 
-**Key Details:**
+- **pnpm only** — npm will not work correctly with this project.
+- Node v26 (see `.nvmrc`).
+- Run `pnpm install` first, and again after any `package.json` change.
 
-- **Size**: ~800 source files, 225+ test files, 6,200+ tests
-- **Languages**: TypeScript-flavoured JavaScript (ES2024/JSDoc), Svelte 5, SCSS/CSS, HTML
-- **Target Runtime**: Browser (IIFE and ES modules)
-- **Package Manager**: **pnpm only** (npm will cause issues)
-- **Node Version**: v25 (see `.nvmrc`)
-- **Bundle Output**: Distributable CMS that loads in browsers via CDN or npm
-
-## Build & Development Commands
-
-### Prerequisites
-
-**CRITICAL**: Always use `pnpm` - `npm` will not work correctly with this project.
+## Commands
 
 ```bash
-# Install pnpm if not available
-npm install -g pnpm@latest
-
-# Install dependencies (always run first)
-pnpm install
-```
-
-### Core Development Commands
-
-```bash
-# Development server with hot reload
-pnpm dev
-
-# Production build (creates package/dist/ directory)
-pnpm build
-
-# Watch build for development
+pnpm dev              # dev server with hot reload
+pnpm build            # production build -> package/dist/
 pnpm build:watch
-
-# Preview production build
 pnpm preview
+
+pnpm check            # run all checks below — do this before committing
+pnpm check:eslint
+pnpm check:prettier
+pnpm check:stylelint
+pnpm check:svelte
+pnpm check:oxlint
+pnpm check:cspell
+pnpm check:imports    # custom script, more accurate than standard unused-import tools
+pnpm check:audit
+
+pnpm test
+pnpm test:coverage
+
+pnpm format           # auto-fix Prettier formatting
 ```
 
-### Quality Assurance Commands
-
-```bash
-# Run ALL checks (recommended before committing)
-pnpm check
-
-# Individual checks
-pnpm check:eslint    # ESLint (JavaScript/Svelte linting)
-pnpm check:prettier  # Code formatting
-pnpm check:stylelint # CSS/SCSS linting
-pnpm check:svelte    # Svelte compiler checks
-pnpm check:oxlint    # Additional fast linting
-pnpm check:cspell    # Spell checking
-pnpm check:imports   # Unused import detection
-pnpm check:audit     # Security audit
-
-# Testing
-pnpm test                # Run all tests
-pnpm test:coverage       # Test coverage report
-
-# Code formatting
-pnpm format          # Auto-fix Prettier formatting
-```
-
-### Common Issues & Solutions
-
-**pnpm not found**: Install with `npm install -g pnpm@latest`
-
-**Build failures**: Always run `pnpm install` first after any `package.json` changes
-
-**Import errors**: Use the custom `find-unused-imports.js` script via `pnpm check:imports` - it’s more accurate than standard tools for this project
-
-**Svelte 5 compatibility**: This project uses Svelte 5 with runes - ensure any Svelte code follows the new syntax patterns
-
-## Project Architecture & Layout
-
-### Source Structure
+## Architecture
 
 ```
 src/lib/
-├── components/          # Svelte UI components
-│   ├── app.svelte      # Main app component
-│   ├── assets/         # Asset management UI
-│   ├── contents/       # Content editing UI
-│   └── ...
-├── services/           # Business logic & data services
-│   ├── app/           # Core app services
-│   ├── assets/        # Asset management
-│   ├── backends/      # Git backend integrations (GitHub, GitLab, Gitea)
-│   ├── config/        # CMS configuration handling
-│   ├── contents/      # Content & collection management
-│   ├── integrations/  # External service integrations
-│   ├── user/          # User authentication & preferences
-│   └── utils/         # Utility functions
-├── types/             # JavaScript and TypeScript type definitions
-├── locales/           # Internationalization files
-└── main.js            # Entry point
+├── components/        # Svelte UI (app.svelte is the root component)
+│   ├── assets/        # asset management UI
+│   └── contents/      # content editing UI
+├── services/          # business logic & data
+│   ├── app/           # core app services
+│   ├── assets/
+│   ├── api/           # api client wrappers
+│   ├── backends/      # GitHub/GitLab/Gitea integrations
+│   ├── config/        # CMS config handling
+│   ├── contents/      # content & collection management
+│   ├── integrations/  # external services
+│   ├── search/        # content search
+│   ├── user/          # auth & preferences
+│   └── utils/
+├── types/             # JSDoc/TS type definitions
+├── locales/           # i18n
+└── main.js            # entry point
 ```
 
-### Key Configuration Files
+Key config: `vite.config.js`, `svelte.config.js` (runes enabled), `jsconfig.json` (`$lib/*` alias), `eslint.config.js` (flat config, Airbnb + Svelte), `.prettierrc.yaml`, `.stylelintrc.yaml`.
 
-- `vite.config.js`: Build configuration with custom plugins
-- `svelte.config.js`: Svelte 5 with runes enabled
-- `jsconfig.json`: JavaScript & path mapping (`$lib/*`)
-- `eslint.config.js`: Comprehensive ESLint rules with Svelte plugin (flat config format)
-- `.prettierrc.yaml`: Code formatting (single quotes, trailing commas)
-- `.stylelintrc.yaml`: SCSS/CSS linting rules
-- `package.json`: Scripts and dependencies
-- `.nvmrc`: Node v25 requirement
+Build output: `package/dist/sveltia-cms.js` (IIFE), `package/dist/sveltia-cms.mjs` (ESM), full npm package in `package/`.
 
-### Build Output
+## CI
 
-- `package/dist/sveltia-cms.js`: IIFE bundle for browser `<script>` tag
-- `package/dist/sveltia-cms.mjs`: ES module for npm consumers
-- `package/`: Complete npm package directory with types
+`.github/workflows/tests.yml` runs on every push: Check, Test, Build in parallel, using `.nvmrc` Node version and pnpm. A PR must pass ESLint, Prettier, all tests, Svelte compiler checks, the production build, and the unused-imports check.
 
-## GitHub CI/CD Pipeline
+## Conventions
 
-**Workflow**: `.github/workflows/tests.yml`
-
-- **Triggers**: Every push to any branch
-- **Jobs**: Check, Test, Build (run in parallel matrix)
-- **Node**: Uses `.nvmrc` version (v25)
-- **Package Manager**: pnpm with cache
-- **Steps**: checkout → setup → install → run task
-
-**Validation Steps for PRs:**
-
-1. All ESLint rules pass (strict Airbnb config + Svelte rules + some customizations)
-2. Prettier formatting enforced
-3. All 6000+ tests pass
-4. Svelte compiler checks pass
-5. Production build succeeds
-6. No unused imports (custom script validation)
-
-## Development Guidelines
-
-### Coding Standards
-
-- **Guidelines**: Follow Airbnb JavaScript style guide with project-specific overrides (see `eslint.config.js`)
-- **Quotes**: Single quotes for JavaScript, double for YAML/CSS (see `.prettierrc.yaml`)
-- **Line Length**: 100 characters max
-- **Trailing Commas**: Always use
-- **Import Sorting**: Automatic via ESLint (builtin → external → internal → $lib)
-- **Type Annotations**: Use [TypeScript-flavoured JavaScript (JSDoc)](https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html) comments for all functions and complex types (centralized in `src/types/*.js` and imported as needed using the `@import` tag)
-
-### Writing Style
-
-- **Language**: Canadian English in Markdown, American English in code/comments
-- **Quotes**: Qurly quotes for prose, straight quotes for source code, backticks for inline code
-- **Tone**: Professional but approachable, clear and concise
-
-### Testing
-
-- **Framework**: Vitest 4 with coverage reporting
-- **Location**: Co-located `*.test.js` files
-- **Coverage**: Focuses on `src/lib/{components,services}/**/*.js`
-- **Standards**: 6,200+ tests must continue passing with 100% coverage
-
-### File Patterns
-
-- **Components**: `*.svelte` files in `src/lib/components/`
-- **Services**: `*.js` files in `src/lib/services/`
-- **Tests**: `*.test.js` files alongside source
-
-### Import Path Conventions
+- Style: Airbnb JS guide + project overrides in `eslint.config.js`. Single quotes in JS, double quotes in YAML/CSS. 100-char line length. Trailing commas always. Import order (builtin → external → internal → `$lib`) is enforced by ESLint.
+- Types: JSDoc comments (TypeScript-flavoured), centralized in `src/types/*.js`, imported via `@import`.
+- Svelte 5: runes syntax only — no legacy Svelte patterns. Use the Svelte MCP server / `svelte-file-editor` agent for any `.svelte` or `.svelte.js`/`.svelte.ts` work.
+- Prose: Canadian English in Markdown, American English in code/comments. Curly quotes in prose, straight quotes in source, backticks for inline code.
+- Tests: Vitest, co-located `*.test.js` files. Coverage tracked for `src/lib/{components,services}/**/*.js`; keep it at 100%. Use `sed` to spot uncovered lines in coverage reports.
+- Bundle size: stay under 2 MB. Current build is ~1.96 MB — close to the ceiling, so watch new dependencies carefully.
+- Target: modern browsers (ES2025).
 
 ```javascript
-// External packages
-import { get } from 'svelte/store';
+// import order
+import { get } from 'svelte/store'; // external
 
-// Internal with $lib alias
-import { cmsConfig } from '$lib/services/config';
+import { cmsConfig } from '$lib/services/config'; // internal, $lib alias
 import Button from '$lib/components/common/button.svelte';
 
 /**
@@ -183,24 +85,6 @@ import Button from '$lib/components/common/button.svelte';
  */
 ```
 
-### Making Changes
-
-1. **Always run `pnpm install` first**
-2. **Use `pnpm check` before committing** - fixes many issues automatically
-3. **Run tests frequently**: `pnpm test` and `pnpm test:coverage` to ensure no regressions
-4. **Follow existing patterns** - this codebase has consistent conventions
-5. **Test in browser**: Use `pnpm dev` to verify UI changes work correctly
-
-### Special Notes
-
-- **Svelte 5**: Uses new runes syntax - avoid legacy Svelte patterns; use the [MCP server](https://mcp.svelte.dev/mcp) if needed
-- **Bundle size**: Watch for large dependencies - final bundle should stay under 2 MB
-- **Browser support**: Targets modern browsers (ES2025)
-- **CMS Domain**: Understanding of headless CMS concepts helpful for meaningful contributions
-- **Test coverage**: Use `sed` to find uncovered lines in reports
-
-**Trust these instructions** - they are validated against the current codebase. Only search for additional information if these instructions are incomplete or incorrect.
-
 ---
 > Source: [sveltia/sveltia-cms](https://github.com/sveltia/sveltia-cms) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-24 -->
+<!-- tomevault:4.0:agents_md:2026-08-16 -->
