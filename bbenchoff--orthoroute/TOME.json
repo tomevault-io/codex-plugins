@@ -4,7 +4,7 @@
   "repo": "OrthoRoute",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/bbenchoff/OrthoRoute",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-08-16T04:32:06Z"
+  "distributed_at": "2026-08-16T04:33:50Z"
 }
