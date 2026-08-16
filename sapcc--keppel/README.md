@@ -15,7 +15,7 @@ Original source: `CLAUDE.md` in [sapcc/keppel](https://github.com/sapcc/keppel).
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [sapcc/keppel](https://github.com/sapcc/keppel) — a repo with 122+ stars on GitHub.
+From [sapcc/keppel](https://github.com/sapcc/keppel) — a repo with 123+ stars on GitHub.
 
 ---
 
