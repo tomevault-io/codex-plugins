@@ -1,6 +1,4 @@
 
-# claude prune
-
 Removes stale entries from Claude config (`~/.claude.json`) that point to
 deleted worktree directories. When you run Claude Code in worktrees, it stores
 per-worktree settings in that file. Over time, as worktrees are merged or
@@ -41,4 +39,4 @@ workmux claude prune
 
 ---
 > Source: [raine/workmux](https://github.com/raine/workmux) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-23 -->
+<!-- tomevault:4.0:agents_md:2026-08-16 -->
