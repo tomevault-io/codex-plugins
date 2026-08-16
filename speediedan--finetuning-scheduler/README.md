@@ -5,22 +5,25 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [speediedan/finetuning-scheduler](https://github.com/speediedan/finetuning-scheduler).
+Original source: `CLAUDE.md` in [speediedan/finetuning-scheduler](https://github.com/speediedan/finetuning-scheduler).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-## Bundled Skills (2)
+## Bundled Skills (5)
 
 - [fts-development-branch-version-upgrade](https://github.com/speediedan/finetuning-scheduler/tree/main/.github/skills/fts-development-branch-version-upgrade)
 - [finetuning-scheduler](https://github.com/speediedan/finetuning-scheduler/tree/main/.github/skills/fts-development-branch-version-upgrade/SKILL.md)
+- [finetuning-scheduler](https://github.com/speediedan/finetuning-scheduler/tree/main/.claude/skills/gpu-lease/SKILL.md)
+- [finetuning-scheduler](https://github.com/speediedan/finetuning-scheduler/tree/main/.claude/skills/debug-remote-ci-failures/SKILL.md)
+- [finetuning-scheduler](https://github.com/speediedan/finetuning-scheduler/tree/main/.claude/skills/fts-development-branch-version-upgrade/SKILL.md)
 
-From [speediedan/finetuning-scheduler](https://github.com/speediedan/finetuning-scheduler) — a repo with 69+ stars on GitHub.
+From [speediedan/finetuning-scheduler](https://github.com/speediedan/finetuning-scheduler) — a repo with 70+ stars on GitHub.
 
 ---
 
