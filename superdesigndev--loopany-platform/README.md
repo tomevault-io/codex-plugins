@@ -1,0 +1,30 @@
+# loopany-platform
+
+> Tome by [superdesigndev](https://github.com/superdesigndev/loopany-platform), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
+
+Run your company in loops, Loop Anything
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [superdesigndev/loopany-platform](https://github.com/superdesigndev/loopany-platform).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/superdesigndev/loopany-platform](https://github.com/superdesigndev/loopany-platform)
+
+---
+
+Install this config instantly:
+```
+npx tomevault install superdesigndev/loopany-platform
+```
+Source: [github.com/superdesigndev/loopany-platform](https://github.com/superdesigndev/loopany-platform).
+
+<!-- genome:t-i-p -->
