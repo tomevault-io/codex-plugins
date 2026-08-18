@@ -1,0 +1,26 @@
+# coffilot
+
+> Source: [jdubois/coffilot](https://github.com/jdubois/coffilot). Graded, signed and kept current as the models change by [TomeVault](https://tomevault.io)
+
+Java extension for GitHub Copilot - build/test/run/fix your Java apps with your AI agent, includes Spring Boot support
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `copilot-instructions.md` in [jdubois/coffilot](https://github.com/jdubois/coffilot).
+
+## Also available for
+
+- **Claude Code** — `CLAUDE.md`
+- **Codex** — `AGENTS.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Graded against the Tome Standard, TomeVault's public ruleset for whether AI instructions load, read clearly and stay safe. Source: [github.com/jdubois/coffilot](https://github.com/jdubois/coffilot)
+
+---
+
+Explore more instruction files on [TomeVault](https://tomevault.io), the platform that grades AI instruction files and catches silent drift across every major tool.
+
+<!-- genome:d-e-q -->
