@@ -1,32 +1,36 @@
 
-# Post-merge: sync canonical `macprovider-poc` `main`
+# Trust contracts: SPEC before code
 
-Feature work happens in **sibling worktrees**, not on canonical `/Users/augstar/macprovider-poc`. Squash-merges advance `origin/main` while local `main` stays parked — that is why the checkout drifts “behind N”.
+Incident reference: Phase 3 live MDA (#1033) shipped `attestation_tier=hardware`
+as an observe sketch; eight Codex audit rounds reverse-engineered the binding /
+durability / rate-limit / invalidation invariant under fire (2026-08-17).
 
-## Mandatory after each PR merge or docs direct-push
+## Rule
 
-From the canonical checkout (or any shell):
+For any change that **mints, upgrades, downgrades, or buyer-exposes a trust
+tier or attestation strength label** (including `attestation_tier`,
+`require_attestation` flips, MDA/`hardware` paths, or gateway trust disclosure):
 
-```bash
-git -C /Users/augstar/macprovider-poc fetch origin
-git -C /Users/augstar/macprovider-poc checkout main
-git -C /Users/augstar/macprovider-poc reset --hard origin/main
-```
+1. **Write or extend the normative SPEC first** (usually SPEC-008) with the
+   trust predicate: who may bind, one path that may set the label, what must
+   be true at publish time, what invalidates it, durability, rate limits, and
+   observe vs enforce boundary.
+2. **Short SPEC audit** (honesty/completeness) before implementation.
+3. **Then** implement and conformance-check code ↔ SPEC.
+4. Do **not** treat runbook checkboxes or “observe prototype” as a substitute
+   for that contract when the code publishes a public trust label.
 
-Also delete the merged feature branch / remove its worktree when done.
+## Allowed without a new SPEC pass
 
-## Do not
+- Bugfixes that restore behavior already required by an existing SPEC clause
+- Pure observability that cannot change tier/status/routing/disclosure
+- Docs/runbooks that do not change normative trust semantics
 
-- Leave a half-finished `git merge origin/main` on canonical `main` (causes `UU` conflicts + “behind N”)
-- Treat worktree feature tips as a substitute for syncing canonical `main`
-- Force-push `main` to “catch up”
+## Not sufficient
 
-## Verify
-
-```bash
-git -C /Users/augstar/macprovider-poc status -sb
-# expect: ## main...origin/main   (0 ahead / 0 behind)
-```
+- “We’ll SPEC it after the audit loop”
+- Shipping `hardware` (or equivalent) from best-effort MDM/probe code and
+  discovering binding/durability rules only in review
 
 ---
 > Source: [Augustas11/macprovider](https://github.com/Augustas11/macprovider) — distributed by [TomeVault](https://tomevault.io).
