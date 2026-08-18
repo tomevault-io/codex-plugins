@@ -7,13 +7,13 @@ nomifun ai workstation. desc:A no-holds-barred, fully open-source, local-first s
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [nomifun/nomifun-desktop](https://github.com/nomifun/nomifun-desktop).
+Original source: `.cursor/rules/*.mdc` in [nomifun/nomifun-desktop](https://github.com/nomifun/nomifun-desktop).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
