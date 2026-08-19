@@ -1,0 +1,30 @@
+# AI instruction files for creed
+
+> Sourced from [hpbrn/creed](https://github.com/hpbrn/creed), graded against the public Tome Standard and kept consistent across every major platform by [TomeVault](https://tomevault.io)
+
+Personal context for your agents.
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `.cursor/rules/*.mdc` in [hpbrn/creed](https://github.com/hpbrn/creed).
+
+## Also available for
+
+- **Claude Code** — `CLAUDE.md`
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Graded against the Tome Standard, TomeVault's public ruleset for whether AI instructions load, read clearly and stay safe. Source: [github.com/hpbrn/creed](https://github.com/hpbrn/creed)
+
+---
+
+Install this config instantly:
+```
+npx tomevault install hpbrn/creed
+```
+Source: [github.com/hpbrn/creed](https://github.com/hpbrn/creed).
+
+<!-- genome:a-i-q -->
