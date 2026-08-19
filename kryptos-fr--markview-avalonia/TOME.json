@@ -4,7 +4,7 @@
   "repo": "MarkView.Avalonia",
   "description": "Markdown viewer control for Avalonia",
   "type": "config",
-  "source_format": "CLAUDE.md",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/Kryptos-FR/MarkView.Avalonia",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-08-19T04:31:36Z"
+  "distributed_at": "2026-08-19T04:32:23Z"
 }
