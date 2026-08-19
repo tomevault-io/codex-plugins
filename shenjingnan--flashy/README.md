@@ -7,12 +7,12 @@ A simple browser-based ESP firmware flasher powered by Web Serial.
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [shenjingnan/flashy](https://github.com/shenjingnan/flashy).
+Original source: `CLAUDE.md` in [shenjingnan/flashy](https://github.com/shenjingnan/flashy).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
