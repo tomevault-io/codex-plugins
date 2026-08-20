@@ -1,0 +1,44 @@
+{
+  "name": "project-me",
+  "owner": "AmreetKumarkhuntia",
+  "repo": "project-me",
+  "description": "Project-Me \ud83c\udfae\ud83c\udfb5 \u2013 An interactive portfolio that goes beyond the basics. Explore my gaming adventures, favorite music, personal insights, and creative projects all in one place. It\u2019s a glimpse into my passions, experiences, and stories that make me who I am. Whether you're here to connect or just curious, dive in and discover what makes this journey",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/AmreetKumarkhuntia/project-me",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-08-20T08:33:14Z"
+}
