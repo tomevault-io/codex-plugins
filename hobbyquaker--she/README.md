@@ -1,0 +1,30 @@
+# she
+
+> Source: [hobbyquaker/she](https://github.com/hobbyquaker/she). Graded, signed and kept current as the models change by [TomeVault](https://tomevault.io)
+
+she - scriptable smart home automation engine with AI assistance
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `copilot-instructions.md` in [hobbyquaker/she](https://github.com/hobbyquaker/she).
+
+## Also available for
+
+- **Claude Code** — `CLAUDE.md`
+- **Codex** — `AGENTS.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/hobbyquaker/she](https://github.com/hobbyquaker/she)
+
+---
+
+Install this config instantly:
+```
+npx tomevault install hobbyquaker/she
+```
+Source: [github.com/hobbyquaker/she](https://github.com/hobbyquaker/she).
+
+<!-- genome:d-i-p -->
