@@ -1,5 +1,5 @@
 
-Run or ask to run `node .vibekit/scripts/agentshield-probe.mjs .` before merging agent-surface changes. Do not run untrusted hooks, MCP servers, deploys, migrations, or remote installers during review. Use `path-sensitive-shell-safety` before changing shell/deploy/installer/repair logic that builds paths from variables or can delete, move, copy, replace, clean, or reset files.
+Before repeated experiments, read `backbone.yml`; if it is uninitialized, complete the first-time init approval flow before experiment edits. Define goal, metric command, direction, editable paths, protected paths, budget, and timeout. Run a logged baseline before edits. Keep only improvements or safe simplifications. Run the AgentShield probe before the final report when kept changes touch agent surfaces.
 
 ---
 > Source: [giang6283623/minimal-vibe-coding-kit](https://github.com/giang6283623/minimal-vibe-coding-kit) — distributed by [TomeVault](https://tomevault.io).
