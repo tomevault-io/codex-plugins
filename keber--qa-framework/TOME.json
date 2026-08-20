@@ -1,0 +1,44 @@
+{
+  "name": "qa-framework",
+  "owner": "keber",
+  "repo": "qa-framework",
+  "description": "Reusable, installable, agent-oriented QA framework for spec-driven automated testing. It provides a standarized qa/ directory , a 6 stages human-in-the-loop workflow for discovering and writing down test target's specs, analyzing and generating test cases, implementing them in playwright and integrate in CI/CD pipeline.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/keber/qa-framework",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-08-20T18:39:18Z"
+}
