@@ -7,13 +7,13 @@ Small squads. Big bridges. A privacy-first platform for cross-border dialogue an
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [brass4698-coder/squadridge-v1](https://github.com/brass4698-coder/squadridge-v1).
+Original source: `.cursor/rules/*.mdc` in [brass4698-coder/squadridge-v1](https://github.com/brass4698-coder/squadridge-v1).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
