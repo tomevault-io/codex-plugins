@@ -7,12 +7,12 @@ MCP server + agent skills for AI tooling to discover, drive, observe, and test M
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [meshtastic/meshtastic-mcp](https://github.com/meshtastic/meshtastic-mcp).
+Original source: `CLAUDE.md` in [meshtastic/meshtastic-mcp](https://github.com/meshtastic/meshtastic-mcp).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
