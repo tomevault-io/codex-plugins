@@ -1,0 +1,44 @@
+{
+  "name": "tunerpro-xdf-bin-cli-map-editor",
+  "owner": "KingAiCodeForge",
+  "repo": "tunerpro-xdf-bin-cli-map-editor",
+  "description": "CLI tool for editing ECU calibration data (BIN files) via XDF definitions. AI agent mode \u2014 deterministic commands, logged changes, original files preserved. Supports BMW MS42/MS43, Holden VY V6, and any TunerPro XDF.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/KingAiCodeForge/tunerpro-xdf-bin-cli-map-editor",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-08-21T06:31:47Z"
+}
