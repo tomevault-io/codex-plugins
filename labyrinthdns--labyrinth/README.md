@@ -7,12 +7,12 @@ Pure Go Recursive DNS Resolver with Web Dashboard
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [labyrinthdns/labyrinth](https://github.com/labyrinthdns/labyrinth).
+Original source: `CLAUDE.md` in [labyrinthdns/labyrinth](https://github.com/labyrinthdns/labyrinth).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
