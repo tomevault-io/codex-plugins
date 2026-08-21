@@ -1,69 +1,60 @@
 
-# Go Coding Standards
+# Hexagonal Architecture
 
-## Error Handling
+## Layer Rules
 
-Always wrap errors with context; never silently discard them.
+| Layer | Package | Rule |
+|---|---|---|
+| **Domain** | `internal/domain` | Pure Go types and constants. **Zero external imports.** No business logic. |
+| **Ports** | `internal/port` | Interfaces only. One file per abstraction group (`broker.go`, `store.go`, …). |
+| **Adapters** | `internal/adapter/<system>/` | Implements a port. Imports the port interface, not sibling adapters. |
+| **App** | `internal/app` | Composition root only. Wires ports to adapters. No business logic here. |
+| **Domain logic** | `internal/risk`, `internal/execution`, `internal/strategy`, `internal/agent` | Depends on domain + ports; never on adapters. |
+
+## Dependency Direction
+
+```
+cmd → cli → app → [domain, port, risk, execution, strategy, agent]
+                        ↑
+                    adapter (implements port)
+```
+
+Adapters **must not** import each other. If two adapters need shared behaviour, extract it into a `pkg/` utility.
+
+## Adding a New Port
+
+1. Define the interface in `internal/port/`.
+2. Write the adapter in `internal/adapter/<system>/`.
+3. Register it in `internal/app/runtime.go` — no other file should do wiring.
 
 ```go
-// ❌ BAD
-result, _ := doThing()
-if err != nil { return err }
-
-// ✅ GOOD
-result, err := doThing()
-if err != nil {
-    return fmt.Errorf("doThing: %w", err)
+// internal/port/notifier.go
+type Notifier interface {
+    Notify(ctx context.Context, msg domain.Alert) error
 }
+
+// internal/adapter/telegram/notifier.go
+type Notifier struct { bot *tgbotapi.BotAPI; chatID int64 }
+func (n *Notifier) Notify(ctx context.Context, msg domain.Alert) error { … }
 ```
 
-Sentinel errors live in the same package as the function that produces them, prefixed `Err`:
-```go
-var ErrOrderRejected = errors.New("order rejected by risk gate")
-```
+## Domain Types
 
-## Logging
+- Enums are **typed string constants**, not `iota`:
+  ```go
+  type Side string
+  const (
+      SideBuy  Side = "BUY"
+      SideSell Side = "SELL"
+  )
+  ```
+- All monetary values use `decimal.Decimal`.
+- IDs use `uuid.UUID`.
 
-Use `log/slog` (stdlib structured logging). Always pass context and structured key-value pairs:
+## What Doesn't Belong Where
 
-```go
-slog.InfoContext(ctx, "order submitted", "symbol", symbol, "qty", qty, "side", side)
-slog.ErrorContext(ctx, "broker unavailable", "err", err, "attempt", attempt)
-```
-
-Never use `fmt.Println` or `log.Printf` in production paths.
-
-## Context
-
-- Every function in a hot path must accept `ctx context.Context` as the **first parameter**.
-- Respect cancellation: check `ctx.Err()` inside loops and before I/O.
-- Never store a context in a struct field.
-
-## Concurrency
-
-- Use `errgroup.WithContext` (from `golang.org/x/sync/errgroup`) for goroutine fan-out.
-- Protect shared state with a `sync.Mutex` or channel — document which pattern and why.
-- Goroutines must respect context cancellation to allow clean shutdown.
-
-## Money / Decimal
-
-**Never use `float64` for prices, quantities, or PnL.** Always use `github.com/shopspring/decimal`:
-
-```go
-// ❌ BAD
-price := 42000.5 * 0.01
-
-// ✅ GOOD
-price := decimal.NewFromFloat(42000.5)
-fee := price.Mul(decimal.NewFromFloat(0.01))
-```
-
-## General
-
-- Prefer table-driven tests with `t.Run`.
-- Unexported helpers over large exported APIs.
-- Build tags for optional features: `//go:build metrics`.
-- `golangci-lint` must pass with zero warnings before merging.
+- No `pgx` / Redis imports inside `internal/domain`, `internal/port`, or any strategy/risk/execution package.
+- No business decisions inside adapters — they translate, not decide.
 
 ---
 > Source: [AzzBAN/cerebro](https://github.com/AzzBAN/cerebro) — distributed by [TomeVault](https://tomevault.io).
