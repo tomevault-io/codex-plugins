@@ -47,4 +47,4 @@ The following guidelines are not strict rules but should be followed when practi
 
 ---
 > Source: [KIHestad/Ctrl-MC](https://github.com/KIHestad/Ctrl-MC) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-24 -->
+<!-- tomevault:4.0:agents_md:2026-08-23 -->
