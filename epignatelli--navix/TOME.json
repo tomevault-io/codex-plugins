@@ -4,7 +4,7 @@
   "repo": "navix",
   "description": "",
   "type": "config",
-  "source_format": "CLAUDE.md",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/epignatelli/navix",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-08-16T05:05:17Z"
+  "distributed_at": "2026-08-24T21:59:00Z"
 }
