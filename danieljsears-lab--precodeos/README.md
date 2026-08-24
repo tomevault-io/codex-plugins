@@ -7,14 +7,14 @@ Repo-native anti-drift control layer for solos building software using AI-coding
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [danieljsears-lab/PrecodeOS](https://github.com/danieljsears-lab/PrecodeOS).
+Original source: `copilot-instructions.md` in [danieljsears-lab/PrecodeOS](https://github.com/danieljsears-lab/PrecodeOS).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 From [danieljsears-lab/PrecodeOS](https://github.com/danieljsears-lab/PrecodeOS) — a repo with 10+ stars on GitHub.
