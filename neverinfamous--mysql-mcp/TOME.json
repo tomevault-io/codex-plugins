@@ -1,0 +1,44 @@
+{
+  "name": "mysql-mcp",
+  "owner": "neverinfamous",
+  "repo": "mysql-mcp",
+  "description": "Secure MySQL Administration & Observability Featuring Code Mode\u2014 One Tool Replacing All 242 Specialized Tools for up to 90% Token Savings. Includes Connection Pooling, HTTP/SSE, OAuth 2.1, Deterministic Error Handling, Advanced Encryption, Integrated Observability, and Full Support for ProxySQL, MySQL Router & MySQL Shell.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/neverinfamous/mysql-mcp",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-08-24T15:41:54Z"
+}
