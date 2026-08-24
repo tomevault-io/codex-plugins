@@ -16,7 +16,7 @@ Original source: `` in [jupyter-naas/abi](https://github.com/jupyter-naas/abi).
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [jupyter-naas/abi](https://github.com/jupyter-naas/abi) — a repo with 141+ stars on GitHub.
+From [jupyter-naas/abi](https://github.com/jupyter-naas/abi) — a repo with 150+ stars on GitHub.
 
 ---
 
