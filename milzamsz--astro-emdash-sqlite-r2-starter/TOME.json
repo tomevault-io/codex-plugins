@@ -4,7 +4,7 @@
   "repo": "astro-emdash-sqlite-r2-starter",
   "description": "Self-hostable Astro marketing + blog + docs starter powered by the EmDash CMS (SQLite + Cloudflare R2). Typed pages, full-text docs search, SEO, and 100/100 Lighthouse.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": ".cursor/rules/*.mdc",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/milzamsz/astro-emdash-sqlite-r2-starter",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-08-24T19:32:00Z"
+  "distributed_at": "2026-08-24T23:56:44Z"
 }
