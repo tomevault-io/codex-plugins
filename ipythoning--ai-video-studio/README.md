@@ -7,14 +7,14 @@ AI Video Studio — OpenClaw skill for AI video generation (Seedance 2.0) + edit
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [iPythoning/ai-video-studio](https://github.com/iPythoning/ai-video-studio).
+Original source: `GEMINI.md` in [iPythoning/ai-video-studio](https://github.com/iPythoning/ai-video-studio).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
-- **Gemini CLI** — `GEMINI.md`
+- **Cursor** — `project-config.mdc`
 - **Windsurf** — `project-config.md`
 
 From [iPythoning/ai-video-studio](https://github.com/iPythoning/ai-video-studio) — a repo with 9+ stars on GitHub.
