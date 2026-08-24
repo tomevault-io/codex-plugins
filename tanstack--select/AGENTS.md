@@ -1,0 +1,8 @@
+# Your rule content
+
+- The JSDoc in this repo is important as it gets converted to markdown docs for the website, so it should read like documentation.
+- Don't include `@params`, `@args`, `@template`, or `@returns` in our jsdoc
+
+---
+> Source: [TanStack/select](https://github.com/TanStack/select) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-08-23 -->
