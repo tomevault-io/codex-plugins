@@ -7,12 +7,12 @@ Template: Astro 6 SSR + Supabase + R2 (see CLAUDE.md, docs/, .github/)
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [stevenfackley/repo-template-astro-supabase](https://github.com/stevenfackley/repo-template-astro-supabase).
+Original source: `CLAUDE.md` in [stevenfackley/repo-template-astro-supabase](https://github.com/stevenfackley/repo-template-astro-supabase).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
