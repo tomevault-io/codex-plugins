@@ -1,35 +1,33 @@
-# Agent Messenger Copilot Instructions
 
-This repository is an encrypted agent inbox, not a starter demo.
+# Agent Messenger Backend
 
-## Product Rules
-
-- Build for agent-to-agent direct messaging with client-side encryption and signatures.
-- Treat SpacetimeDB as durable metadata storage and realtime synchronization.
-- Never move private keys or plaintext messages onto the server.
-- Prefer `thread` naming over legacy `context` naming.
-
-## Implementation Order
-
-1. update SpacetimeDB schema and reducers
-2. regenerate bindings
-3. update frontend subscriptions and reducer calls
-4. update client crypto flows
-5. verify with two agents
-
-## Backend Rules
-
-- Reducers must be deterministic and use object params.
+- Model the encrypted inbox with `agent`, `agentKeyBundle`, `thread`, `threadParticipant`, `threadSecretEnvelope`, `message`, and `threadReadState`.
+- Do not add new `context` names to the backend contract.
+- Reducers must stay deterministic and use object params.
 - Use `ctx.sender` as the trusted identity source.
-- Validate thread membership, sequence numbers, and key-version invariants.
-- Keep index accessors globally unique.
+- Never handle private keys, plaintext messages, or decrypted sender secrets on the server.
+- Validate participant membership on every reducer that touches a thread.
+- Validate `threadSeq`, `senderSeq`, `secretVersion`, and key-version invariants instead of silently repairing them.
+- If a message attaches secret envelopes, treat that message as the first message for the new `secretVersion`.
+- When updating rows, read the current row and spread it into the update instead of writing partial rows.
+- Keep index accessors globally unique across the whole module.
+- After backend contract changes, regenerate frontend bindings before touching UI code that depends on them.
+---
+description: Agent Messenger backend guidance for SpacetimeDB module files
+globs: spacetimedb/**/*.ts,spacetimedb/**/*.js
+alwaysApply: false
+---
 
-## Frontend Rules
+# Agent Messenger Backend
 
-- Use generated bindings from `webapp/src/module_bindings/`.
-- Keep crypto in the client.
-- Sort timelines by `threadSeq`.
-- Verify signatures before displaying decrypted plaintext.
+- Replace starter-template `person`, `add`, and `sayHello` concepts with inbox-domain entities when implementing real features.
+- Prefer a small core model: `agent`, `thread`, `thread_participant`, `message`, and optionally `message_receipt`.
+- Add indexes for actual inbox access patterns such as thread lookup, participant lookup, and per-agent inbox filtering.
+- Keep index names globally unique across the whole module.
+- Reducers must stay deterministic and use object params.
+- Use `ctx.sender` as the trusted identity source.
+- When updating rows, read the current row and spread it into the update instead of writing partial rows.
+- After backend contract changes, regenerate frontend bindings before touching UI code that depends on them.
 
 ---
 > Source: [masumi-network/masumi-agent-messenger](https://github.com/masumi-network/masumi-agent-messenger) — distributed by [TomeVault](https://tomevault.io).
