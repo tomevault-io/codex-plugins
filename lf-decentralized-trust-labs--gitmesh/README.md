@@ -5,17 +5,17 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [LF-Decentralized-Trust-labs/gitmesh](https://github.com/LF-Decentralized-Trust-labs/gitmesh).
+Original source: `GEMINI.md` in [LF-Decentralized-Trust-labs/gitmesh](https://github.com/LF-Decentralized-Trust-labs/gitmesh).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
-- **Gemini CLI** — `GEMINI.md`
+- **Cursor** — `project-config.mdc`
 - **Windsurf** — `project-config.md`
 
-From [LF-Decentralized-Trust-labs/gitmesh](https://github.com/LF-Decentralized-Trust-labs/gitmesh) — a repo with 143+ stars on GitHub.
+From [LF-Decentralized-Trust-labs/gitmesh](https://github.com/LF-Decentralized-Trust-labs/gitmesh) — a repo with 144+ stars on GitHub.
 
 ---
 
