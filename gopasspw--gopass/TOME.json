@@ -4,7 +4,7 @@
   "repo": "gopass",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/gopasspw/gopass",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-29T07:40:12Z"
+  "distributed_at": "2026-08-24T18:27:22Z"
 }
