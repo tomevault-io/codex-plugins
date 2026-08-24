@@ -5,12 +5,12 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [Shin-woocheol/Shin-woocheol.github.io](https://github.com/Shin-woocheol/Shin-woocheol.github.io).
+Original source: `CLAUDE.md` in [Shin-woocheol/Shin-woocheol.github.io](https://github.com/Shin-woocheol/Shin-woocheol.github.io).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
