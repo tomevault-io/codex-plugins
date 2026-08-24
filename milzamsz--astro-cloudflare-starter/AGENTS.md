@@ -1,32 +1,25 @@
-# Copilot instructions
 
-This project is an AI-operable Astro starter. Follow the canonical conventions —
-do not improvise design or architecture.
+# Architecture & invariants
 
-## Read first
+**Three tiers:** Components (`src/components/ui/**`) → Sections
+(`src/components/sections/**`) → Pages (`src/pages/**`). Compose pages from
+sections; compose sections from components. Register new sections in
+`src/components/sections/index.ts` and `src/registry.json`.
 
-- `system/globals/` — design knowledge base (colors, typography, spacing,
-  interaction, imagery, effects, responsiveness, accessibility, components,
-  patterns). `components.md` catalogs the library; `patterns.md` has the reusable
-  composition recipes.
-- `src/registry.json` — components/sections/pages catalog.
+**i18n:** English is the default locale (no prefix); Indonesian is under `/id/`.
+Every route must exist in **both** `src/pages/x.astro` and
+`src/pages/[locale]/x.astro`. Use `t(locale, key)` and `resolveRoute(locale, path)`.
 
-## Rules
+**Preserve (never break):** Git-based Markdown content collections, Cloudflare
+Pages (+ optional R2), SEO (OG images, JSON-LD, sitemap, RSS, robots, llms.txt),
+Pagefind search, Starlight docs.
 
-- **Design tokens only.** No hardcoded hex/rgb; no Tailwind palette classes
-  (`bg-blue-500`). Use semantic tokens (`bg-primary`, `text-foreground`,
-  `var(--muted-foreground)`). Palette is monochrome OKLCH.
-- **Dark mode** uses the `.dark` class; never hand-invert colors.
-- **Three tiers:** Components → Sections (`src/components/sections`) → Pages.
-- **i18n:** English default + Indonesian `/id/`; add every route in both
-  `src/pages/x.astro` and `src/pages/[locale]/x.astro`.
-- **Preserve:** Git-based Markdown content, Cloudflare Pages, SEO/OG/RSS/
-  sitemap/llms.txt, Pagefind, Starlight docs.
+**Rendering:** static Astro by default; React islands only where interaction truly
+requires it (e.g. `FeatureTabs`), hydrated with the narrowest directive
+(`client:visible` over `client:load` when possible).
 
-## Verify
-
-Run `pnpm lint` (includes `pnpm check:kpis`) and `pnpm build` before finishing.
-`check:kpis` is the source of truth and fails on off-system edits.
+**Verify:** `pnpm build` and `pnpm lint` (includes `check:kpis`) must pass; add both
+locales when adding routes; check accessibility (`system/globals/accessibility.md`).
 
 ---
 > Source: [milzamsz/astro-cloudflare-starter](https://github.com/milzamsz/astro-cloudflare-starter) — distributed by [TomeVault](https://tomevault.io).
