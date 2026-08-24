@@ -1,163 +1,85 @@
-# Microsoft 365 Copilot Extensibility Documentation
 
-This repository contains the source for Microsoft 365 Copilot extensibility documentation published to [Microsoft Learn](https://learn.microsoft.com/m365copilot/extensibility). This is a documentation-only repository that uses the OpenPublishing system with DocFX for building and publishing.
+# Interactive demo integration
 
-Always reference these instructions first and fallback to search or bash commands only when you encounter unexpected information that does not match the info here.
+The [Interactive Demo for Copilot Extensibility Products](https://interactivedemo.microsoft.com/) turns Microsoft 365 Copilot documentation examples into preconfigured, inspectable experiences. Treat an applicable interactive demo link as part of the documentation task, not as optional follow-up work.
 
-## Working Effectively
+## When to evaluate a link
 
-### Bootstrap the environment
+Evaluate every new or substantially revised:
 
-* Verify PowerShell Core is available: `pwsh --version`
-* Verify Node.js is available: `node --version && npm --version`
-* Install required validation tools: `npm install -g markdownlint-cli cspell`
+- Copilot API overview.
+- API method request example.
+- Work IQ overview, quickstart, or protocol example.
+- MCP tool overview or request example.
+- Article that explains a product represented in the interactive demo.
 
-### Essential validation workflow
+Add a link only when the interactive demo covers the same product and reader task. If no matching experience exists, note the opportunity in the PR instead of linking to a generic or unrelated page.
 
-* Run markdown linting: `markdownlint docs --config .markdownlint.json --ignore **\node_modules\**` — takes ~3 seconds. Always fix lint errors before committing.
-* Run spell checking: `cspell --config cspell.json "docs/**/*.md"` — takes ~3 seconds. Add unknown but valid words to cspell.json.
-* Clean unused images: `pwsh scripts/CleanupUnusedImages.ps1` — takes ~45-50 seconds. NEVER CANCEL this operation.
-* ALWAYS run all validation steps before creating a pull request.
+## Choose the link type
 
-### Content authoring
+| Documentation context | Link type |
+|---|---|
+| Product or API overview | Explorer landing link with the relevant product selected |
+| API method or MCP tool request | Example-specific link with the documented inputs restored |
+| Quickstart or protocol walkthrough | Scenario link placed after the matching setup or request |
+| Informational-only product page | **Explore** link, not **Try** or **Run** |
 
-* Use Visual Studio Code with the Learn Authoring Pack extension for real-time validation
-* Follow the [Microsoft Writing Style Guide](https://learn.microsoft.com/style-guide/welcome/)
-* All content files use YAML front matter with required metadata fields
-* Use dashes (-) for unordered lists, not asterisks (*) to avoid MD004 lint errors
+When an interactive demo link covers the same request as a Graph Explorer link, use the interactive demo link and remove the equivalent Graph Explorer call to action. Keep Graph Explorer links for examples the interactive demo doesn't reproduce.
 
-## Validation
+## Create the link
 
-### Required validation before every commit
+1. Open the matching experience at `https://interactivedemo.microsoft.com/`.
+1. Configure the product, mode, tool, scenario, arguments, and visible panels to match the documentation.
+1. Use **Share this page** to generate the deep link whenever the experience supports it.
+1. Change the origin to `https://aka.ms/copilot.dev` while preserving the complete query string.
+1. Use the generated canonical route. Don't invent route aliases or query parameters.
 
-1. `markdownlint docs --config .markdownlint.json` — must pass with zero errors
-2. `cspell --config cspell.json "docs/**/*.md"` — fix spelling or add words to cspell.json
-3. `pwsh scripts/CleanupUnusedImages.ps1` — verify no unused images
-4. Visual Studio Code should show no problems in the Problems window
+Common application routes and their `aka.ms` page encodings include:
 
-### Content quality requirements
+| Experience | Application route | `aka.ms` query |
+|---|---|---|
+| Copilot Chat API | `/copilot/chat-api` | `?page=%2Fcopilot%2Fchat-api` |
+| Copilot Search and Retrieval APIs | `/copilot/search-and-retrieval-api` | `?page=%2Fcopilot%2Fsearch-and-retrieval-api` |
+| Work IQ REST API | `/work-iq/rest-api` | `?page=%2Fwork-iq%2Frest-api` |
+| Work IQ A2A | `/work-iq/a2a` | `?page=%2Fwork-iq%2Fa2a` |
+| Work IQ MCP | `/work-iq/mcp` | `?page=%2Fwork-iq%2Fmcp` |
 
-* OpenPublishing build must succeed (runs automatically in CI)
-* No hard tabs (use spaces for indentation)
-* Files must end with a single newline character
-* No trailing whitespace
-* Proper heading hierarchy (no skipped heading levels)
+Don't append an application route to the `aka.ms/copilot.dev` path. Encode it in the `page` query parameter as generated by **Share this page**.
 
-### Common lint fixes
+## Verify before committing
 
-* MD047: Add single newline at end of file
-* MD009: Remove trailing spaces
-* MD004: Use dash (-) instead of asterisk (*) for unordered lists
-* MD033: Avoid inline HTML unless specifically allowed in .markdownlint.json
-* MD032: Add blank lines around lists
+Verify an interactive demo link against the production site before adding it.
 
-## Repository Structure
+1. Run `node scripts/validate-interactive-demo-links.mjs <changed-markdown-files>`.
+1. Open the visible `aka.ms/copilot.dev` link.
+1. Confirm the final host is `interactivedemo.microsoft.com`.
+1. Confirm the expected page, product, mode, tool or scenario, arguments, and requested panels are restored.
+1. Confirm the link doesn't invoke the final action automatically.
+1. For authenticated experiences, reaching the expected sign-in entry point is sufficient; don't use private tenant data as PR evidence.
 
-### Key directories
+The script verifies redirect availability, final host, HTTP status, and query preservation. It can't verify state inside the single-page application. The browser checks are the required proof that the product, mode, tool, scenario, arguments, and panels are correct.
 
-* `docs/` — Main documentation content (Markdown files)
-* `docs/includes/` — Reusable content snippets and shared manifests
-* `docs/assets/images/` — All documentation images
-* `docs/assets/scripts/` — PowerShell utility scripts
-* `docs/api/` — API documentation with zone pivots
-* `.github/workflows/` — GitHub Actions (EOL blocker validation)
-* `scripts/` — Repository maintenance scripts
+If the required production experience isn't deployed, keep the documentation PR blocked on deployment instead of merging an unverified link.
 
-### Important configuration files
+## Link copy and placement
 
-* `.markdownlint.json` — Markdown linting rules and exceptions
-* `cspell.json` — Spell checking dictionary and configuration
-* `docs/docfx.json` — DocFX build configuration
-* `.openpublishing.publish.config.json` — OpenPublishing build settings
-* `docs/TOC.yml` — Table of contents structure
+- Use concise text such as **Explore in the Interactive Demo**, **Try it in the Interactive Demo**, **See it in action**, or **Set up with the Interactive Demo**, according to the reader task.
+- Place an example-specific link immediately before its request.
+- Don't add repetitive explanations about simulated responses or tenant-data access.
+- Don't revise surrounding API documentation merely to accommodate the link.
 
-### Content types in this repository
+## PR verification table
 
-* **Conceptual articles** — Overview and guidance content
-* **How-to guides** — Step-by-step tutorials
-* **API reference** — Generated and hand-authored API documentation
-* **Sample manifests** — JSON examples in `docs/includes/sample-manifests/`
-* **Includes** — Reusable content snippets
-* **Assets** — Images, scripts, and supporting files
+For a PR that adds interactive demo links, include this table in the PR description:
 
-## Common Tasks
+| Page title | Section | Why link added | Visible link href |
+|---|---|---|---|
 
-### Adding new documentation
-
-1. Create Markdown file in appropriate `docs/` subdirectory
-2. Add required YAML front matter (title, description, author, ms.author, ms.topic, ms.localizationpriority, ms.date)
-3. Update `docs/TOC.yml` to include new file in navigation
-4. Add any new images to `docs/assets/images/` with descriptive names
-5. Run validation: `markdownlint docs --config .markdownlint.json && cspell --config cspell.json "docs/**/*.md"`
-
-### Updating existing documentation
-
-1. When updating technical information in articles, update the `ms.date` value in YAML front matter to the current date
-2. This helps track when content was last revised and ensures accurate metadata
-3. Use the format: `ms.date: MM/dd/yyyy` (e.g., `ms.date: 01/15/2024`)
-4. Run validation after updates: `markdownlint docs --config .markdownlint.json && cspell --config cspell.json "docs/**/*.md"`
-
-### Updating sample manifests
-
-1. Edit JSON files in `docs/includes/sample-manifests/`
-2. Ensure JSON is valid and properly formatted
-3. Update corresponding documentation that references the manifest
-4. Test validation workflow
-
-### Managing images
-
-1. Add images to `docs/assets/images/` with descriptive names
-2. Reference images using relative paths: `![Alt text](assets/images/filename.png)`
-3. Run cleanup script periodically: `pwsh scripts/CleanupUnusedImages.ps1`
-4. Ensure all images are used and properly referenced
-
-### Handling spell check issues
-
-1. Check any unknown words for spelling errors. If the word is spelled incorrectly, correct it
-2. If the word is spelled correctly but is unknown, add the word to the "words" array in `cspell.json`
-3. Commit cspell.json changes with your content updates
-
-### Working with includes
-
-1. Create reusable content in `docs/includes/`
-2. Reference includes using: `[!INCLUDE [include-name](includes/filename.md)]`
-3. Keep includes focused and atomic
-4. Update include files when content needs to change across multiple articles
-
-## Expected Timing and Tolerances
-
-* **markdownlint validation**: 2-3 seconds for full repository. NEVER CANCEL.
-* **cspell validation**: 3-4 seconds for full repository. NEVER CANCEL.
-* **Image cleanup script**: 45-50 seconds for 142 images. NEVER CANCEL.
-* **VS Code Learn Authoring Pack**: Real-time validation, no waiting required.
-* **OpenPublishing build**: Runs in CI, typically 5-10 minutes. Cannot be run locally.
-
-## Troubleshooting
-
-### Common issues and solutions
-
-* **"Unknown word" in cspell**: Add to cspell.json or fix spelling
-* **MD004 lint error**: Use dash (-) instead of asterisk (*) for lists
-* **Missing newline**: Add single blank line at end of file
-* **Hard tabs detected**: Replace tabs with spaces (VS Code: View -> Command Palette -> "Convert Indentation to Spaces")
-* **OpenPublishing build failure**: Check error messages in PR status checks
-
-### When validation fails
-
-1. Read error messages carefully
-2. Fix issues one at a time
-3. Re-run validation after each fix
-4. Check VS Code Problems window for real-time feedback
-5. Use Learn Authoring Pack features for automated fixes where available
-
-## Working with GitHub Copilot in this repository
-
-* Always run validation commands after making any content changes
-* Focus on content quality and adherence to Microsoft style guidelines
-* Use the repository structure to understand where to place new content
-* Leverage includes for reusable content across multiple articles
-* Remember this is documentation-only - no application code to build or run
+- Link **Page title** and **Section** to the branch-specific `review.learn.microsoft.com` preview.
+- Make **Visible link href** clickable and point it to the exact URL shown in the article.
+- Include every interactive demo link added by the PR exactly once.
+- If an agent reviews changes before a PR exists, it must produce the completed table as ready-to-paste output for the PR author.
 
 ---
 > Source: [MicrosoftDocs/m365copilot-docs](https://github.com/MicrosoftDocs/m365copilot-docs) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-24 -->
+<!-- tomevault:4.0:agents_md:2026-08-23 -->
