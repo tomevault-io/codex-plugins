@@ -1,6 +1,6 @@
 # Ctrl-MC
 
-> Source: [KIHestad/Ctrl-MC](https://github.com/KIHestad/Ctrl-MC). Graded, signed and kept in sync across platforms by [TomeVault](https://tomevault.io)
+> Source: [KIHestad/Ctrl-MC](https://github.com/KIHestad/Ctrl-MC). Graded, signed and kept current as the models change by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
