@@ -7,12 +7,12 @@ Your AI coding agent starts every session knowing your repos, your clients, and 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [bks-lab/open-bridge](https://github.com/bks-lab/open-bridge).
+Original source: `CLAUDE.md` in [bks-lab/open-bridge](https://github.com/bks-lab/open-bridge).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
