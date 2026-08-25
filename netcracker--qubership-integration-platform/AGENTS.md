@@ -1,7 +1,6 @@
 
-When editing React components under `ui/src/components/`, especially tables,
-modals, forms, notifications, labels, permissions, or icons,
-apply the `ui-component-patterns` skill.
+When editing files in `ui/` for feature work, refactoring, bug fixes, or tests,
+apply the `ui-core-development` skill.
 
 ---
 > Source: [Netcracker/qubership-integration-platform](https://github.com/Netcracker/qubership-integration-platform) — distributed by [TomeVault](https://tomevault.io).
