@@ -5,13 +5,13 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [masumi-network/masumi-agent-messenger](https://github.com/masumi-network/masumi-agent-messenger).
+Original source: `CLAUDE.md` in [masumi-network/masumi-agent-messenger](https://github.com/masumi-network/masumi-agent-messenger).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
