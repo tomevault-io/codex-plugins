@@ -4,7 +4,7 @@
   "repo": "cone",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/jondgoodwin/cone",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-08-24T20:24:10Z"
+  "distributed_at": "2026-08-25T10:27:54Z"
 }
