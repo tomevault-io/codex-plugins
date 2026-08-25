@@ -7,13 +7,13 @@ Lumio is a modern, high-performance Astro 6 & Tailwind CSS theme crafted for IT 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [getastrothemes/lumio-lite-astro](https://github.com/getastrothemes/lumio-lite-astro).
+Original source: `CLAUDE.md` in [getastrothemes/lumio-lite-astro](https://github.com/getastrothemes/lumio-lite-astro).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
