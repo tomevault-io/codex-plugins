@@ -4,7 +4,7 @@
   "repo": "threadmill",
   "description": "Durable high-performance backend for Django's task framework.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/codingjoe/threadmill",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-08-24T17:46:17Z"
+  "distributed_at": "2026-08-25T04:32:57Z"
 }
