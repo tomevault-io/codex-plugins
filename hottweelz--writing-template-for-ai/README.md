@@ -7,12 +7,12 @@ Write a book from first idea to a finished EPUB/PDF with AI — one cross-tool s
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [hottweelz/writing-template-for-ai](https://github.com/hottweelz/writing-template-for-ai).
+Original source: `CLAUDE.md` in [hottweelz/writing-template-for-ai](https://github.com/hottweelz/writing-template-for-ai).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
