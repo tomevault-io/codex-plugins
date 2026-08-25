@@ -1,6 +1,6 @@
 
-When editing files in `ui/` for feature work, refactoring, bug fixes, or tests,
-apply the `ui-core-development` skill.
+When implementing or changing UI styling, color logic, icon rendering, or
+theme-dependent behavior in `ui/`, apply the `ui-theme-and-vscode-webview` skill.
 
 ---
 > Source: [Netcracker/qubership-integration-platform](https://github.com/Netcracker/qubership-integration-platform) — distributed by [TomeVault](https://tomevault.io).
