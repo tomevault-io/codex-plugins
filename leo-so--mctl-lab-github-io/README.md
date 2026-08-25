@@ -7,12 +7,12 @@ The Music and Culture Technology Lab was founded in 2017.  We devote ourselves t
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [leo-so/mctl-lab.github.io](https://github.com/leo-so/mctl-lab.github.io).
+Original source: `CLAUDE.md` in [leo-so/mctl-lab.github.io](https://github.com/leo-so/mctl-lab.github.io).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
