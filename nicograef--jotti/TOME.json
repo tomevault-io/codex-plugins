@@ -4,7 +4,7 @@
   "repo": "jotti",
   "description": "Ein kostenloses, quelloffenes Gastronomie-Kassensystem (mPOS) f\u00fcr Vereine und gemeinn\u00fctzige Organisationen",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/nicograef/jotti",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-08-26T12:38:19Z"
+  "distributed_at": "2026-08-26T12:42:32Z"
 }
