@@ -1,0 +1,34 @@
+
+# Agent Config — Test Mutation Confirmation
+
+## Rule
+
+You **MUST** double-check and get **explicit confirmation** from the user before:
+
+1. **Creating new tests** that mutate active agent configs (e.g., workflow config, agent prompts, LLM provider settings).
+2. **Running existing tests** that mutate active agent configs.
+
+## What Counts as Mutating Agent Configs
+
+- Writing to or modifying workflow configuration files
+- Changing agent prompts, presets, or prompt versions
+- Altering LLM provider/model settings used by the running system
+- Tests that call APIs or services that persist config changes to the active environment
+
+## Required Behavior
+
+- **Before** proposing or implementing such tests: state that they will mutate agent configs and ask for explicit approval.
+- **Before** running such tests: confirm with the user that they approve the run.
+- Do **not** assume approval from "go", "implement", or "run tests" unless the user has explicitly confirmed they approve config-mutating tests.
+
+## Example
+
+```
+⚠️ These tests will modify active workflow/agent config. Do you approve running them?
+```
+
+Wait for explicit "yes" or equivalent before proceeding.
+
+---
+> Source: [dfirtnt/Huntable-CTI-Studio](https://github.com/dfirtnt/Huntable-CTI-Studio) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-08-26 -->
