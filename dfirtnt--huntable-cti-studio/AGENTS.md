@@ -1,13 +1,26 @@
 
-# Modal UX Contract
+# Pytest — run_tests.py Integration
 
-**Authoritative source:** `docs/contracts/ui-designer.md` Section 6. This file is a condensed mirror kept only so Cursor auto-attaches it when `modal-manager.js` or templates are open -- edit the canonical doc first, then sync this excerpt; don't let them diverge.
+## Rule
 
-Quick reference (see Section 6 for full rules): Escape closes the topmost modal only, restoring the previous stack entry or the base page; click-away behaves the same via `elementFromPoint` + `closeModal(modalId, clickedElement)`; opening pushes onto the stack via `ModalManager.register`/`ModalManager.open(id, hidePrevious)`; any modal with inputs MUST support Ctrl+Enter/Cmd+Enter for its primary action (plain Enter in textareas must not submit).
+All pytest tests built for **ongoing use** in this project **MUST** be integrated into the `./run_tests.py` wrapper. Tests must be discoverable and executable via one of the runner’s categories or markers—not only via raw `pytest` invocations.
 
-**Implementation reference:** `src/web/static/js/modal-manager.js` (header and `closeModal` / `setupClickAwayHandler` / `setupKeyboardShortcuts`).
+## What “integrated” means
 
-**Tests:** `tests/ui/test_modal_interactions.py` — extend to cover stack restoration, click-away target, and Cmd/Ctrl+Enter where missing.
+- **Discovery:** Tests live under `tests/` and are selected by an existing `run_tests.py` category (e.g. `smoke`, `unit`, `api`, `integration`, `ui`) or by a marker category (e.g. `regression`, `contract`, `security`, `a11y`) that `run_tests.py` already supports.
+- **Execution:** A full run of the relevant category (e.g. `python3 run_tests.py unit` or `python3 run_tests.py regression --paths tests/quality/...`) includes the new tests.
+- **No orphan tests:** Do not add pytest files that are only meant to be run manually with `pytest path/to/file.py` or custom one-off commands, unless they are explicitly one-off/throwaway (e.g. spike scripts). Ongoing tests belong in the wrapper.
+
+## When adding new tests
+
+1. Place tests under `tests/` in the appropriate subtree (e.g. `tests/api/`, `tests/unit/`, `tests/quality/`).
+2. Use the markers/paths already used by `run_tests.py` so the new tests are included when that category is run (path-based discovery is the norm; only add `run_tests.py` changes if a new category or marker is required).
+3. If introducing a **new category or marker**, update `run_tests.py` (e.g. `RunTestType`, `_build_pytest_command`, subparser) so the new tests are runnable via e.g. `python3 run_tests.py <category>`.
+
+## Summary
+
+- **Ongoing pytest tests → must be runnable via `run_tests.py`.**
+- One-off / spike scripts may stay outside the wrapper if clearly marked as such.
 
 ---
 > Source: [dfirtnt/Huntable-CTI-Studio](https://github.com/dfirtnt/Huntable-CTI-Studio) — distributed by [TomeVault](https://tomevault.io).
