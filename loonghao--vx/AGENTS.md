@@ -1,40 +1,49 @@
 
-# VX Project Rules
+# VX Testing Rules
 
-vx is a universal development tool manager (v0.8.20, Rust, 138 providers, Starlark DSL).
-Users prefix commands with `vx` (e.g., `vx node --version`) and tools auto-install on first use.
+## Test File Location
 
-## Commands
+Tests go in `crates/<name>/tests/` directories — NEVER inline `#[cfg(test)]` modules in source files.
 
-- Always use `vx` prefix: `vx npm install`, `vx cargo build`, `vx go run main.go`
-- Never suggest manual tool installation — vx handles it automatically
-- Task runner: `vx just <task>` (see `justfile`)
-- Pre-commit: `vx just quick` (format → lint → test → build)
+```
+crates/vx-resolver/tests/
+├── resolver_tests.rs
+├── executor_tests.rs
+└── spec_tests.rs
+```
 
-## Terminology (enforced)
+## Framework
 
-- **Runtime** (not Tool, not VxTool)
-- **Provider** (not Plugin, not Bundle)
-- **provider.star** (not provider config)
-- **ProviderRegistry** (not BundleRegistry)
+Use `rstest` for parameterized tests:
 
-## Code Style
+```rust
+use rstest::rstest;
 
-- Rust edition 2024, MSRV 1.93+
-- Logging: `tracing::info!`, `tracing::debug!` — never `println!` or `eprintln!`
-- Error handling: `anyhow::Result` (app), `thiserror` (lib)
-- Import order: stdlib → external → internal, separated by blank lines
-- File size: Keep under 500 lines
-- Commits: Conventional Commits (`feat:`, `fix:`, `docs:`, `chore:`, `refactor:`, `test:`)
+#[rstest]
+#[case("node", Ecosystem::NodeJs)]
+#[case("npm", Ecosystem::NodeJs)]
+#[case("go", Ecosystem::Go)]
+fn test_ecosystem_detection(#[case] name: &str, #[case] expected: Ecosystem) {
+    let spec = RuntimeSpec::new(name);
+    assert_eq!(spec.ecosystem, expected);
+}
+```
 
-## Architecture (layers go downward only)
+## Naming Convention
 
-1. **CLI**: `vx-cli`
-2. **Orchestration**: `vx-resolver`, `vx-setup`, `vx-project-analyzer`
-3. **Service**: `vx-runtime`, `vx-starlark`, `vx-installer`, `vx-config`, `vx-console`
-4. **Foundation**: `vx-core`, `vx-paths`, `vx-cache`, `vx-versions`, `vx-manifest`
-5. **Providers**: `vx-providers/*` (138 Starlark DSL definitions)
+```rust
+#[test]
+fn test_<function_name>_<scenario>() { }
+
+#[tokio::test]
+async fn test_<function_name>_<scenario>() { }
+```
+
+## Mock Usage
+
+- Mock network calls in unit tests — never use real HTTP
+- Use `vx-runtime::testing` mock utilities when available
 
 ---
 > Source: [loonghao/vx](https://github.com/loonghao/vx) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-06-15 -->
+<!-- tomevault:4.0:agents_md:2026-05-06 -->
