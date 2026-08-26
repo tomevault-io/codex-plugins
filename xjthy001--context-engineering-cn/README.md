@@ -7,14 +7,14 @@ Context Engineering完整中文教程：RAG系统、记忆架构、多智能体�
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [xjthy001/Context-Engineering-CN](https://github.com/xjthy001/Context-Engineering-CN).
+Original source: `CLAUDE.md` in [xjthy001/Context-Engineering-CN](https://github.com/xjthy001/Context-Engineering-CN).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 From [xjthy001/Context-Engineering-CN](https://github.com/xjthy001/Context-Engineering-CN) — a repo with 9+ stars on GitHub.
