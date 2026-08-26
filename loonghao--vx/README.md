@@ -5,7 +5,7 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.windsurf/rules/*.md` in [loonghao/vx](https://github.com/loonghao/vx).
+Original source: `` in [loonghao/vx](https://github.com/loonghao/vx).
 
 ## Also available for
 
@@ -14,6 +14,7 @@ Original source: `.windsurf/rules/*.md` in [loonghao/vx](https://github.com/loon
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
 
 ## Bundled Skills (52)
 
