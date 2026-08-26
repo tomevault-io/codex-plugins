@@ -1,4 +1,3 @@
-
 # TSRX Project Guide for AI Agents
 
 TSRX (TypeScript Render Extensions) is a framework-neutral language for authoring
