@@ -4,7 +4,7 @@
   "repo": "vscode-read-only-indicator",
   "description": "",
   "type": "tome",
-  "source_format": "copilot-instructions.md",
+  "source_format": "",
   "formats": [
     {
       "format": "claude_md",
@@ -53,5 +53,5 @@
   ],
   "source_url": "https://github.com/alefragnani/vscode-read-only-indicator",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-08-27T16:05:03Z"
+  "distributed_at": "2026-08-27T16:08:29Z"
 }
