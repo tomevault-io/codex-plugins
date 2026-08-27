@@ -1,12 +1,7 @@
 
-# Security
+# Comments
 
-Read `docs/SECURITY.md`.
-
-- No hardcoded secrets or JWTs in source.
-- Cognito IDs via env / CI / DefinePlugin only.
-- Do not log full tokens.
-- Auth failures must deny (throw `Unauthorized`).
+Follow `docs/COMMENTS.md`: why-not-what; spacing rules; no commented-out code or contradictory notes.
 
 ---
 > Source: [jessemull/100-letters-project-authorizer](https://github.com/jessemull/100-letters-project-authorizer) — distributed by [TomeVault](https://tomevault.io).
