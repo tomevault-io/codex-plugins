@@ -1,364 +1,840 @@
-# General Project Guidelines
+# Personal Assistant UI Guidelines
 
 ## Project Overview
-This project is a personal assistant AI agent. It's designed to conduct research, help write emails, documents, and other content. It's also designed to be extensible via MCP to support integrations with external services to enable additional agent capabilities. 
+The Personal Assistant UI is built with Angular and follows modern best practices for scalable frontend applications. It interfaces with the Personal Assistant API to provide a user-friendly interface for content creation and management.
 
 ## Project Structure
-The project follows standard Go project layout conventions:
-- `cmd/` - Main applications for this project
-  - `api-server/` - Backend API server for the personal assistant
-- `internal/` - Library code that can be used by other applications
-  - `datastore/` - Database access layer using Ent ORM
-  - `models/` - Data structures shared across the application
-  - `server/` - Main startup logic for API server
-  - `handlers/` - API endpoint handlers for API server
-  - `database/` - Database connection and configuration utilities
-- `ent/` - Auto-generated Ent ORM code for database entities
 
-## Development Best Practices
+```
+src/
+├── app/
+│   ├── core/                   # Core modules, services, and components
+│   │   ├── components/         # Shared components (navbar, layout)
+│   │   ├── guards/             # Route guards
+│   │   ├── interceptors/       # HTTP interceptors
+│   │   ├── models/             # Data models
+│   │   └── services/           # Core services
+│   ├── features/               # Feature modules
+│   │   ├── auth/               # Authentication feature
+│   │   │   └── components/     # Login, register, profile components
+│   │   └── dashboard/          # Dashboard feature
+│   ├── app.ts                  # Root component
+│   ├── app.html                # Root component template
+│   ├── app.scss                # Root component styles
+│   ├── app.routes.ts           # Application routes
+│   └── app.config.ts           # Application configuration
+├── assets/                     # Static assets
+└── environments/               # Environment configuration
+```
 
-### Go Coding Standards
-1. **Idiomatic Go**: Follow the Go proverbs and standard conventions
-   - Use proper error handling (no panics in production code)
-   - Embrace interfaces for dependency inversion
-   - Prefer composition over inheritance
-   - Use meaningful variable names (`i` for indexes, `err` for errors)
+## Code Organization Guidelines
 
-2. **Code Organization**:
-   - Keep functions small and focused on a single responsibility
-   - Group related functions in packages with clear boundaries
-   - Use interfaces to define behavior at package boundaries
-   - Extract complex logic into well-named helper functions immediately
-   - Avoid deeply nested loops and conditionals (aim for cyclomatic complexity < 10)
-   - Use early returns to reduce nesting levels
+### Component Structure
+Components must be split into separate files for TypeScript, HTML, and SCSS:
 
-3. **Error Handling**:
-   - Always check errors, never use `_` to ignore errors without justification
-   - Return errors rather than using panic
-   - Use custom error types or error wrapping for context
-   - Use `fmt.Errorf()` with `%w` for wrapping errors
+```
+component-name/
+├── component-name.component.ts
+├── component-name.component.html
+├── component-name.component.scss
+└── component-name.component.spec.ts
+```
 
-4. **Concurrency**:
-   - Use channels and goroutines appropriately
-   - Always ensure proper goroutine termination
-   - Use context for cancellation and timeouts
-   - Use sync primitives (Mutex, WaitGroup) when appropriate
+### Component Definition
+All components should be standalone and use the following structure:
 
-5. **Function Design and Complexity Management**:
-   - Write small, focused functions from the start (avoid large monolithic functions)
-   - When a function grows beyond ~50 lines, consider extracting helper functions
-   - Use helper functions to make code self-documenting through clear naming
-   - Avoid nesting more than 3 levels deep - extract nested logic into separate functions
-   - Use early returns to reduce nesting and improve readability
-   - Replace complex `if-else` chains with `switch` statements or lookup tables
-   
-   ```go
-   // Good: Clear, focused functions with minimal nesting
-   func handleRequest(req Request) error {
-       if !req.Valid {
-           return ErrInvalidRequest
-       }
-       
-       for _, item := range req.Items {
-           if err := processItem(item); err != nil {
-               return err
-           }
-       }
-       return nil
-   }
-   
-   func processItem(item Item) error {
-       switch item.Type {
-       case "A":
-           return processTypeA(item)
-       case "B":
-           return processTypeB(item)
-       default:
-           return ErrUnknownType
-       }
-   }
-   ```
+```typescript
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
-6. **Data Structure Design for Maintainability**:
-   - Design structures that are self-contained and capture all needed data at creation
-   - Avoid parallel arrays or slices that must stay synchronized by index
-   - When processing data, capture all context needed for downstream operations
-   - Prefer structures that eliminate the need for data merging or complex lookups
-   
-   ```go
-   // Good: Self-contained structure with all needed data
-   type ProcessingResult struct {
-       ID        string  // Captured at creation
-       ToolName  string  // Captured at creation
-       ToolInput string  // Captured at creation
-       Output    string
-       Error     error
-   }
-   
-   func executeAndCapture(toolCall ToolCall) ProcessingResult {
-       var result string
-       var err error
-       // ... execution logic ...
-       
-       return ProcessingResult{
-           ID:        toolCall.ID,
-           ToolName:  toolCall.Name,
-           ToolInput: toolCall.Arguments,
-           Output:    result,
-           Error:     err,
-       }
-   }
-   
-   // No merging needed - all data is in one place
-   func convertToModels(results []ProcessingResult) []*Model {
-       models := make([]*Model, len(results))
-       for i, result := range results {
-           models[i] = &Model{
-               Name:   result.ToolName,
-               Input:  result.ToolInput,
-               Output: result.Output,
-               Error:  result.Error,
-           }
-       }
-       return models
-   }
-   ```
+@Component({
+  selector: 'app-example',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './example.component.html',
+  styleUrls: ['./example.component.scss']
+})
+export class ExampleComponent implements OnInit {
+  // Component properties
+  
+  constructor() {}
+  
+  ngOnInit(): void {
+    // Initialization logic
+  }
+  
+  // Component methods
+}
+```
 
-7. **Designing for Testability**:
-   - Avoid tight coupling to third-party SDK types that are difficult to construct in tests
-   - Create intermediate data structures that capture only the data you need
-   - Design pure functions that take simple inputs and produce outputs without side effects
-   - Separate business logic from SDK/API interaction code
-   - Make data structures easy to construct with simple field assignments
-   
-   ```go
-   // Good: Business logic separated from SDK types
-   type ToolCallData struct {
-       ID        string
-       Name      string
-       Arguments string
-   }
-   
-   // Easy to test - takes simple struct, returns simple struct
-   func validateToolCall(data ToolCallData) error {
-       if data.Name == "" {
-           return ErrEmptyName
-       }
-       if data.Arguments == "" {
-           return ErrEmptyArguments
-       }
-       return nil
-   }
-   
-   // SDK interaction isolated in adapter function
-   func executeToolCall(sdkToolCall sdk.ToolCall) (ToolCallData, error) {
-       data := ToolCallData{
-           ID:        sdkToolCall.ID,
-           Name:      sdkToolCall.Name,
-           Arguments: sdkToolCall.Arguments,
-       }
-       
-       if err := validateToolCall(data); err != nil {
-           return ToolCallData{}, err
-       }
-       
-       return data, nil
-   }
-   ```
+### File Naming Conventions
+- Use kebab-case for file names: `user-profile.component.ts`
+- Use camelCase for TypeScript variables, properties, and methods
+- Use PascalCase for class names: `UserProfileComponent`
+- Use kebab-case for selectors: `<app-user-profile>`
 
-8. **Explicit Error Handling and Nil Safety**:
-   - Always return errors explicitly - never return `nil` silently on failure
-   - Add `nil` checks immediately after function calls that can return `nil` pointers
-   - Use `(value, error)` return pattern for functions that produce values
-   - Validate that expected non-nil values are actually non-nil before using them
-   
-   ```go
-   // Good: Explicit error returns and nil checks
-   func getResponse(ctx context.Context) (*Response, error) {
-       resp, err := callAPI(ctx)
-       if err != nil {
-           return nil, fmt.Errorf("failed to call API: %w", err)
-       }
-       
-       if resp == nil {
-           return nil, fmt.Errorf("API returned nil response")
-       }
-       
-       return resp, nil
-   }
-   
-   // Caller handles errors and checks for nil
-   func processRequest(ctx context.Context) error {
-       resp, err := getResponse(ctx)
-       if err != nil {
-           return fmt.Errorf("failed to get response: %w", err)
-       }
-       
-       if resp == nil {
-           return fmt.Errorf("unexpected nil response")
-       }
-       
-       return processResponse(resp)
-   }
-   ```
+## Styling Guidelines
 
-### Documentation
-1. **Go Doc Comments**:
-   - Every exported function, type, and package must have a doc comment
-   - Begin with the name of the element being documented
-   - Use complete sentences with proper punctuation
-   - Document parameters and return values
-   ```go
-   // UserService provides methods to manage users in the system.
-   // It handles authentication, authorization, and user profile management.
-   type UserService struct {
-       // ...
-   }
-   
-   // CreateUser creates a new user in the system with the provided details.
-   // It validates the input and returns an error if validation fails.
-   // Returns the created user's ID on success.
-   func (s *UserService) CreateUser(ctx context.Context, user *models.User) (int64, error) {
-       // ...
-   }
-   ```
+### SCSS Structure
+- Use SCSS for all styling
+- Component-specific styles should be in the component's `.scss` file
+- Global styles should be in `src/styles.scss`
+- Use Tailwind CSS utility classes for common styling needs
+- Use the `:host` selector to style the component's host element
+- Use BEM methodology for custom CSS classes
 
-2. **README Files**:
-   - Each major component should have a README.md explaining its purpose
-   - Include setup instructions, usage examples, and design decisions
+### Tailwind CSS
+Tailwind CSS is used for utility-first styling. Flowbite components are available for more complex UI elements.
 
-### Testing
+Example:
+```html
+<div class="flex items-center justify-between p-4 bg-white rounded-md shadow-sm">
+  <h2 class="text-lg font-semibold text-gray-800">Title</h2>
+  <button class="px-4 py-2 text-white bg-indigo-600 rounded-md hover:bg-indigo-700">
+    Action
+  </button>
+</div>
+```
 
-1. **Unit Testing Principles**:
-   - Write tests for all new code
-   - Use table-driven tests for functions with multiple cases
-   - Keep tests independent of each other
-   - Tests should be fast and deterministic
+## Service Guidelines
 
-2. **Test Structure**:
-   - Use descriptive test names (`TestCreateUser_ValidInput_Success`)
-   - Follow Arrange-Act-Assert (AAA) pattern
-   - Use subtests for multiple test cases
-   ```go
-   func TestCreateUser(t *testing.T) {
-       tests := []struct {
-           name        string
-           input       models.User
-           expectedID  int64
-           expectError bool
-       }{
-           // test cases here
-       }
-       
-       for _, tc := range tests {
-           t.Run(tc.name, func(t *testing.T) {
-               // Arrange
-               svc := NewUserService(mockRepo)
-               
-               // Act
-               id, err := svc.CreateUser(context.Background(), &tc.input)
-               
-               // Assert
-               if tc.expectError {
-                   require.Error(t, err)
-               } else {
-                   require.NoError(t, err)
-                   require.Equal(t, tc.expectedID, id)
-               }
-           })
-       }
-   }
-   ```
+### Service Structure
+Services should be organized in the appropriate directory based on their scope:
+- Core services in `src/app/core/services/`
+- Feature-specific services in `src/app/features/[feature]/services/`
 
-3. **Dependency Inversion**:
-   - Use interfaces for dependencies to enable mocking
-   - Inject dependencies rather than creating them inside functions
-   - Write code to be testable from the beginning
+### Service Definition
+```typescript
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { environment } from '@environments/environment';
 
-4. **Mocking**:
-   - Use interfaces and dependency injection to enable mocking
-   - Consider gomock or testify/mock for generating mocks
-   - Keep mocks simple and focused on the behavior needed for tests
+@Injectable({
+  providedIn: 'root'
+})
+export class ExampleService {
+  private http = inject(HttpClient);
+  private apiUrl = `${environment.apiUrl}/examples`;
+  
+  getAll(): Observable<Example[]> {
+    return this.http.get<Example[]>(this.apiUrl);
+  }
+  
+  getById(id: string): Observable<Example> {
+    return this.http.get<Example>(`${this.apiUrl}/${id}`);
+  }
+  
+  create(example: Example): Observable<Example> {
+    return this.http.post<Example>(this.apiUrl, example);
+  }
+  
+  update(id: string, example: Example): Observable<Example> {
+    return this.http.put<Example>(`${this.apiUrl}/${id}`, example);
+  }
+  
+  delete(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+}
+```
 
-5. **Integration Testing**:
-   - Write integration tests for critical paths
-   - Use test containers or embedded databases for integration tests
-   - Clearly separate unit tests from integration tests
+## Model Guidelines
 
-### Development Workflow
+### Model Definition
+Models should be defined as TypeScript interfaces in `src/app/core/models/` or in feature-specific `models` directories.
 
-1. **Incremental Changes**:
-   - Work in small, focused changes
-   - Commit frequently with descriptive commit messages
-   - Run tests after each significant change
-   - Avoid large PRs that are difficult to review
+```typescript
+export interface User {
+  id: string;
+  username: string;
+  email: string;
+  first_name?: string;
+  last_name?: string;
+  created_at: string;
+  updated_at: string;
+}
+```
 
-2. **Test-Driven Development**:
-   - Write tests before implementation when appropriate
-   - Follow Red-Green-Refactor cycle:
-     - Red: Write a failing test
-     - Green: Implement the minimum code to make the test pass
-     - Refactor: Clean up the code while keeping tests green
+## Routing Guidelines
 
-3. **Documentation Updates**:
-   - Update README files whenever functionality changes
-   - Keep documentation in sync with code changes
-   - Document new features, configuration options, and API changes
-   - Update examples to reflect current usage patterns
-   - Treat documentation updates as part of the definition of "done" for any task
+### Route Definition
+Routes should be defined in `app.routes.ts` for main routes and in feature-specific modules for feature routes.
 
-4. **Code Review**:
-   - Review your own code before submitting for review
-   - Keep PRs small and focused on a single concern
-   - Respond to feedback constructively
-   - Look for edge cases and error handling during review
+```typescript
+import { Routes } from '@angular/router';
+import { authGuard } from './core/guards/auth.guard';
 
-### Scope Management
+export const routes: Routes = [
+  {
+    path: '',
+    redirectTo: 'dashboard',
+    pathMatch: 'full'
+  },
+  {
+    path: 'auth',
+    component: AuthLayoutComponent,
+    children: [
+      {
+        path: 'login',
+        loadComponent: () => import('./features/auth/components/login/login.component')
+          .then(m => m.LoginComponent)
+      }
+    ]
+  },
+  {
+    path: '',
+    component: AppLayoutComponent,
+    canActivate: [authGuard],
+    children: [
+      {
+        path: 'dashboard',
+        loadComponent: () => import('./features/dashboard/dashboard.component')
+          .then(m => m.DashboardComponent)
+      }
+    ]
+  }
+];
+```
 
-1. **Stay Focused**:
-   - Implement only what is explicitly requested
-   - Do not extend scope by adding "nice-to-have" features without discussion
-   - Do not refactor unrelated code while implementing a feature
+## Authentication & Authorization
 
-2. **Technical Debt Management**:
-   - Document technical debt with TODO comments (include ticket numbers if applicable)
-   - Address technical debt in dedicated refactoring tasks
-   - Prioritize critical technical debt that affects reliability or security
+### Auth Guard
+Route guards should be used to protect routes that require authentication:
 
-### Error and Test Failure Handling
+```typescript
+import { CanActivateFn, Router } from '@angular/router';
+import { inject } from '@angular/core';
+import { AuthService } from '../services/auth.service';
 
-1. **Test Failures**:
-   - Never remove tests just to make them pass
-   - Never add code that detects test scenarios to behave differently
-   - Address the root cause of test failures
-   - If a test is outdated, update the test to reflect new requirements
+export const authGuard: CanActivateFn = (route, state) => {
+  const authService = inject(AuthService);
+  const router = inject(Router);
+  
+  if (authService.isLoggedIn) {
+    return true;
+  }
+  
+  router.navigate(['/auth/login'], { queryParams: { returnUrl: state.url } });
+  return false;
+};
+```
 
-2. **Production Error Handling**:
-   - Log errors with appropriate context
-   - Return meaningful error messages
-   - Use structured logging with fields for context
-   - Don't expose internal errors to users
+### HTTP Interceptor
+HTTP interceptors should be used to add authentication tokens to requests:
 
-### Performance and Security
+```typescript
+import { HttpInterceptorFn } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { AuthService } from '../services/auth.service';
 
-1. **Performance Considerations**:
-   - Write efficient code but prioritize readability
-   - Profile before optimizing
-   - Document performance requirements and considerations
-   - Use benchmarks to validate performance improvements
+export const authInterceptor: HttpInterceptorFn = (req, next) => {
+  const authService = inject(AuthService);
+  const accessToken = authService.getAccessToken();
+  
+  if (accessToken) {
+    const authReq = req.clone({
+      headers: req.headers.set('Authorization', `Bearer ${accessToken}`)
+    });
+    return next(authReq);
+  }
+  
+  return next(req);
+};
+```
 
-2. **Security Best Practices**:
-   - Validate all user input
-   - Use prepared statements for database queries
-   - Follow the principle of least privilege
-   - Keep dependencies updated and scan for vulnerabilities
+## Error Handling
 
-## Continuous Integration
+### HTTP Error Handling
+HTTP errors should be handled using RxJS operators:
 
-1. **CI Practices**:
-   - All code must pass tests before merging
-   - Run linters and static analysis tools in CI
-   - Maintain test coverage metrics
+```typescript
+import { catchError, throwError } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
+
+getResource(): Observable<Resource> {
+  return this.http.get<Resource>(`${this.apiUrl}/resources`)
+    .pipe(
+      catchError(this.handleError)
+    );
+}
+
+private handleError(error: HttpErrorResponse) {
+  let errorMessage = 'An error occurred';
+  
+  if (error.error instanceof ErrorEvent) {
+    // Client-side error
+    errorMessage = `Error: ${error.error.message}`;
+  } else {
+    // Server-side error
+    errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+  }
+  
+  console.error(errorMessage);
+  return throwError(() => new Error(errorMessage));
+}
+```
+
+## Environment Configuration
+
+### Environment Files
+Environment-specific configuration should be defined in environment files:
+
+```typescript
+// environment.ts (development)
+export const environment = {
+  production: false,
+  apiUrl: 'http://localhost:8080/api'
+};
+```
+
+## Unit Testing Guidelines
+
+### Component Testing
+Components should be tested using Angular's testing utilities:
+
+```typescript
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { Component } from './component';
+
+describe('Component', () => {
+  let component: Component;
+  let fixture: ComponentFixture<Component>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [
+        RouterTestingModule,
+        Component
+      ]
+    }).compileComponents();
+    
+    fixture = TestBed.createComponent(Component);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+  
+  it('should render title', () => {
+    const title = 'Test Title';
+    component.title = title;
+    fixture.detectChanges();
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.querySelector('h1')?.textContent).toContain(title);
+  });
+});
+```
+
+### Service Testing
+Services should be tested using Angular's testing utilities and HttpClientTestingModule:
+
+```typescript
+import { TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { ExampleService } from './example.service';
+import { Example } from '../models/example.model';
+
+describe('ExampleService', () => {
+  let service: ExampleService;
+  let httpMock: HttpTestingController;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
+      providers: [ExampleService]
+    });
+    
+    service = TestBed.inject(ExampleService);
+    httpMock = TestBed.inject(HttpTestingController);
+  });
+
+  afterEach(() => {
+    httpMock.verify();
+  });
+
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
+  
+  it('should return examples', () => {
+    const mockExamples: Example[] = [
+      { id: '1', name: 'Example 1' },
+      { id: '2', name: 'Example 2' }
+    ];
+    
+    service.getAll().subscribe(examples => {
+      expect(examples.length).toBe(2);
+      expect(examples).toEqual(mockExamples);
+    });
+    
+    const req = httpMock.expectOne(`${service['apiUrl']}`);
+    expect(req.request.method).toBe('GET');
+    req.flush(mockExamples);
+  });
+});
+```
+
+## Performance Guidelines
+
+### Change Detection
+Use OnPush change detection strategy for improved performance:
+
+```typescript
+@Component({
+  selector: 'app-example',
+  templateUrl: './example.component.html',
+  styleUrls: ['./example.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
+})
+```
+
+### Lazy Loading
+Use lazy loading for feature modules to reduce initial load time:
+
+```typescript
+{
+  path: 'feature',
+  loadChildren: () => import('./features/feature/feature.routes')
+    .then(m => m.FEATURE_ROUTES)
+}
+```
+
+### Memoization
+Use the `@memoize` decorator or RxJS `shareReplay` for expensive computations:
+
+```typescript
+import { shareReplay } from 'rxjs/operators';
+
+getData(): Observable<Data[]> {
+  return this.http.get<Data[]>(this.apiUrl).pipe(
+    shareReplay(1)
+  );
+}
+```
+
+## Accessibility Guidelines
+
+### ARIA Attributes
+Use ARIA attributes to improve accessibility:
+
+```html
+<button 
+  aria-label="Close menu" 
+  [attr.aria-expanded]="isMenuOpen"
+>
+  <span class="sr-only">Close</span>
+  <svg>...</svg>
+</button>
+```
+
+### Keyboard Navigation
+Ensure keyboard navigation works for all interactive elements:
+
+```html
+<div 
+  role="button"
+  tabindex="0"
+  (click)="onClick()"
+  (keydown.enter)="onClick()"
+  (keydown.space)="onClick()"
+>
+  Click me
+</div>
+```
+
+## Internationalization (i18n)
+
+### Text Extraction
+Use Angular's i18n markers for text extraction:
+
+```html
+<h1 i18n="@@homeTitle">Welcome Back!</h1>
+<p i18n="@@homeDescription">Your personal assistant AI agent</p>
+```
+
+## Deployment Guidelines
+
+### Build Commands
+Use the appropriate build command for the target environment:
+
+```bash
+# Development
+npm run build
+
+# Test
+npm run build:test
+
+# Production
+npm run build:prod
+```
+
+## Security Guidelines
+
+### Content Security Policy
+Implement a strict Content Security Policy:
+
+```typescript
+// In app.config.ts
+{
+  providers: [
+    {
+      provide: APP_INITIALIZER,
+      useFactory: () => {
+        // Set CSP headers
+      },
+      multi: true
+    }
+  ]
+}
+```
+
+### XSS Prevention
+Use Angular's built-in sanitization for user-generated content:
+
+```html
+<div [innerHTML]="sanitizer.bypassSecurityTrustHtml(userContent)"></div>
+```
+
+### CSRF Protection
+Implement CSRF protection for forms:
+
+```typescript
+// In app.config.ts
+{
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: CsrfInterceptor,
+      multi: true
+    }
+  ]
+}
+```
+
+## Additional Resources
+
+- [Angular Documentation](mdc:https:/angular.dev)
+- [Tailwind CSS Documentation](mdc:https:/tailwindcss.com/docs)
+- [Flowbite Documentation](mdc:https:/flowbite.com/docs/getting-started/introduction)
+- [RxJS Documentation](mdc:https:/rxjs.dev/guide/overview)
+
+## Flowbite Component Guidelines
+
+Flowbite provides pre-built components based on Tailwind CSS. This section covers how to use these components effectively in our Angular application.
+
+### Component Integration
+
+Initialize Flowbite in the root component to ensure proper JavaScript functionality:
+
+```typescript
+// app.ts
+import { Component, OnInit } from '@angular/core';
+import { initFlowbite } from 'flowbite';
+
+@Component({
+  // ...
+})
+export class AppComponent implements OnInit {
+  ngOnInit(): void {
+    initFlowbite();
+  }
+}
+```
+
+### Common Components and Usage Examples
+
+#### Navbar
+
+Use the Flowbite navbar component for application navigation:
+
+```html
+<!-- Example navbar implementation -->
+<nav class="bg-white border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800">
+  <div class="flex flex-wrap justify-between items-center">
+    <div class="flex items-center">
+      <a href="/" class="flex items-center">
+        <img src="assets/logo.svg" class="mr-3 h-6 sm:h-9" alt="Personal Assistant Logo" />
+        <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">Personal Assistant</span>
+      </a>
+    </div>
+    
+    <!-- Mobile menu button -->
+    <button (click)="toggleMobileMenu()" type="button" class="inline-flex items-center p-2 ml-1 text-sm text-gray-500 rounded-lg lg:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" [attr.aria-expanded]="isMobileMenuOpen()">
+      <span class="sr-only">Open main menu</span>
+      <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+        <path *ngIf="!isMobileMenuOpen()" fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path>
+        <path *ngIf="isMobileMenuOpen()" fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+      </svg>
+    </button>
+    
+    <!-- Menu items -->
+    <div class="hidden lg:flex w-full lg:w-auto lg:order-1" [ngClass]="{'hidden': !isMobileMenuOpen(), 'block': isMobileMenuOpen()}" id="mobile-menu">
+      <ul class="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
+        <li>
+          <a routerLink="/dashboard" routerLinkActive="text-primary-700" class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700">Dashboard</a>
+        </li>
+        <!-- Add more menu items here -->
+      </ul>
+    </div>
+  </div>
+</nav>
+```
+
+#### Modal
+
+Use modals for displaying forms or information without navigating away:
+
+```html
+<!-- Modal trigger button -->
+<button (click)="openModal()" class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
+  Open Modal
+</button>
+
+<!-- Modal -->
+<div [ngClass]="{'hidden': !isModalOpen, 'flex': isModalOpen}" class="fixed top-0 left-0 right-0 z-50 w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full justify-center items-center">
+  <div class="relative w-full max-w-2xl max-h-full">
+    <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+      <!-- Modal header -->
+      <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+        <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+          Modal Title
+        </h3>
+        <button (click)="closeModal()" type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
+          <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+          </svg>
+          <span class="sr-only">Close modal</span>
+        </button>
+      </div>
+      <!-- Modal body -->
+      <div class="p-6 space-y-6">
+        <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+          Modal content goes here
+        </p>
+      </div>
+      <!-- Modal footer -->
+      <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
+        <button (click)="saveChanges()" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Save changes</button>
+        <button (click)="closeModal()" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal backdrop -->
+<div *ngIf="isModalOpen" class="bg-gray-900 bg-opacity-50 dark:bg-opacity-80 fixed inset-0 z-40"></div>
+```
+
+```typescript
+// Component class
+export class ExampleModalComponent {
+  isModalOpen = false;
+
+  openModal(): void {
+    this.isModalOpen = true;
+    document.body.classList.add('overflow-hidden');
+  }
+
+  closeModal(): void {
+    this.isModalOpen = false;
+    document.body.classList.remove('overflow-hidden');
+  }
+
+  saveChanges(): void {
+    // Handle save logic
+    this.closeModal();
+  }
+}
+```
+
+#### Forms
+
+Use Flowbite form components for consistent styling:
+
+```html
+<form (ngSubmit)="onSubmit()" [formGroup]="exampleForm" class="space-y-6">
+  <div>
+    <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
+    <input type="email" id="email" formControlName="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@example.com" required>
+    <div *ngIf="exampleForm.get('email')?.invalid && exampleForm.get('email')?.touched" class="mt-2 text-sm text-red-600 dark:text-red-500">
+      <span *ngIf="exampleForm.get('email')?.hasError('required')">Email is required</span>
+      <span *ngIf="exampleForm.get('email')?.hasError('email')">Please enter a valid email address</span>
+    </div>
+  </div>
+  <div>
+    <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
+    <input type="password" id="password" formControlName="password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+    <div *ngIf="exampleForm.get('password')?.invalid && exampleForm.get('password')?.touched" class="mt-2 text-sm text-red-600 dark:text-red-500">
+      <span *ngIf="exampleForm.get('password')?.hasError('required')">Password is required</span>
+      <span *ngIf="exampleForm.get('password')?.hasError('minlength')">Password must be at least 8 characters</span>
+    </div>
+  </div>
+  <div class="flex items-start">
+    <div class="flex items-center h-5">
+      <input id="remember" type="checkbox" formControlName="remember" class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800">
+    </div>
+    <label for="remember" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Remember me</label>
+  </div>
+  <button type="submit" [disabled]="exampleForm.invalid" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" [ngClass]="{'opacity-50 cursor-not-allowed': exampleForm.invalid}">Submit</button>
+</form>
+```
+
+```typescript
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
+@Component({
+  // ...
+})
+export class ExampleFormComponent {
+  exampleForm: FormGroup;
+
+  constructor(private fb: FormBuilder) {
+    this.exampleForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
+      remember: [false]
+    });
+  }
+
+  onSubmit(): void {
+    if (this.exampleForm.valid) {
+      // Process form submission
+    }
+  }
+}
+```
+
+#### Alerts
+
+Use alerts to provide feedback to users:
+
+```html
+<!-- Success alert -->
+<div id="alert-success" class="flex items-center p-4 mb-4 text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
+  <svg class="flex-shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
+  </svg>
+  <span class="sr-only">Success</span>
+  <div class="ml-3 text-sm font-medium">
+    Operation completed successfully.
+  </div>
+  <button (click)="closeAlert('alert-success')" type="button" class="ml-auto -mx-1.5 -my-1.5 bg-green-50 text-green-500 rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 hover:bg-green-200 inline-flex items-center justify-center h-8 w-8 dark:bg-gray-800 dark:text-green-400 dark:hover:bg-gray-700">
+    <span class="sr-only">Close</span>
+    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+    </svg>
+  </button>
+</div>
+
+<!-- Error alert -->
+<div id="alert-error" class="flex items-center p-4 mb-4 text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+  <svg class="flex-shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM10 15a1 1 0 1 1 0-2 1 1 0 0 1 0 2Zm1-4a1 1 0 0 1-2 0V6a1 1 0 0 1 2 0v5Z"/>
+  </svg>
+  <span class="sr-only">Error</span>
+  <div class="ml-3 text-sm font-medium">
+    An error occurred while processing your request.
+  </div>
+  <button (click)="closeAlert('alert-error')" type="button" class="ml-auto -mx-1.5 -my-1.5 bg-red-50 text-red-500 rounded-lg focus:ring-2 focus:ring-red-400 p-1.5 hover:bg-red-200 inline-flex items-center justify-center h-8 w-8 dark:bg-gray-800 dark:text-red-400 dark:hover:bg-gray-700">
+    <span class="sr-only">Close</span>
+    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+    </svg>
+  </button>
+</div>
+```
+
+```typescript
+export class AlertsComponent {
+  closeAlert(alertId: string): void {
+    const alert = document.getElementById(alertId);
+    if (alert) {
+      alert.classList.add('hidden');
+    }
+  }
+}
+```
+
+#### Card
+
+Use cards to display content in a clean, organized manner:
+
+```html
+<div class="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+  <a href="#">
+    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Content Title</h5>
+  </a>
+  <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Card content description goes here...</p>
+  <a href="#" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+    Read more
+    <svg class="w-3.5 h-3.5 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+    </svg>
+  </a>
+</div>
+```
+
+### Dynamic Component Initialization
+
+For components that require JavaScript initialization, make sure to call `initFlowbite()` after dynamic content is added:
+
+```typescript
+import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { initFlowbite } from 'flowbite';
+
+@Component({
+  // ...
+})
+export class DynamicComponent implements OnInit, AfterViewInit {
+  dynamicContent: boolean = false;
+
+  ngOnInit(): void {
+    // Initial setup
+  }
+
+  ngAfterViewInit(): void {
+    // Initialize Flowbite components
+    initFlowbite();
+  }
+
+  loadDynamicContent(): void {
+    this.dynamicContent = true;
+    
+    // Re-initialize Flowbite after content is loaded
+    setTimeout(() => {
+      initFlowbite();
+    }, 0);
+  }
+}
+```
+
+### Best Practices for Flowbite Components
+
+1. **Consistent Styling**:
+   - Maintain a consistent color scheme by using Tailwind's color classes
+   - Create a shared component for common UI elements like buttons, inputs, etc.
+
+2. **Accessibility**:
+   - Ensure all Flowbite components have proper ARIA attributes
+   - Include focus states for keyboard navigation
+   - Use semantic HTML elements when implementing Flowbite components
+
+3. **Responsive Design**:
+   - Test all Flowbite components on different screen sizes
+   - Use Tailwind's responsive prefixes (`sm:`, `md:`, `lg:`, etc.) consistently
+
+4. **Dark Mode Support**:
+   - Include dark mode classes (`dark:bg-gray-800`, etc.) for all components
+   - Test components in both light and dark modes
+
+5. **Component Composition**:
+   - Break down complex Flowbite components into smaller Angular components
+   - Use Angular's `@Input()` and `@Output()` decorators for component communication
 
 ---
 > Source: [theimaginaryfoundation/what-iff](https://github.com/theimaginaryfoundation/what-iff) — distributed by [TomeVault](https://tomevault.io).
