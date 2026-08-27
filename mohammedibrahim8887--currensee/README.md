@@ -5,13 +5,13 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [MohammedIbrahim8887/currensee](https://github.com/MohammedIbrahim8887/currensee).
+Original source: `CLAUDE.md` in [MohammedIbrahim8887/currensee](https://github.com/MohammedIbrahim8887/currensee).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
