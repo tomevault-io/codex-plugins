@@ -4,7 +4,7 @@
   "repo": "vscode-language-rtf",
   "description": "",
   "type": "tome",
-  "source_format": "copilot-instructions.md",
+  "source_format": "",
   "formats": [
     {
       "format": "claude_md",
@@ -53,5 +53,5 @@
   ],
   "source_url": "https://github.com/alefragnani/vscode-language-rtf",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-08-27T16:04:19Z"
+  "distributed_at": "2026-08-27T16:07:11Z"
 }
