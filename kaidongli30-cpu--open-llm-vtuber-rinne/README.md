@@ -7,13 +7,13 @@ Rinne desktop companion based on Open-LLM-VTuber, with long-term memory and GPT-
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [kaidongli30-cpu/Open-LLM-VTuber-Rinne](https://github.com/kaidongli30-cpu/Open-LLM-VTuber-Rinne).
+Original source: `.cursor/rules/*.mdc` in [kaidongli30-cpu/Open-LLM-VTuber-Rinne](https://github.com/kaidongli30-cpu/Open-LLM-VTuber-Rinne).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
