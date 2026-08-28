@@ -7,14 +7,14 @@ Official collection of production-ready Flutter and Dart packages maintained by 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [dhc-tech/flutter-packages](https://github.com/dhc-tech/flutter-packages).
+Original source: `copilot-instructions.md` in [dhc-tech/flutter-packages](https://github.com/dhc-tech/flutter-packages).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 From [dhc-tech/flutter-packages](https://github.com/dhc-tech/flutter-packages) — a repo with 3+ stars on GitHub.
