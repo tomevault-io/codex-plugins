@@ -7,13 +7,13 @@ Governance-as-code for AI coding agents: author a policy once, enforce it on eve
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [open-coder-ai/chock](https://github.com/open-coder-ai/chock).
+Original source: `.cursor/rules/*.mdc` in [open-coder-ai/chock](https://github.com/open-coder-ai/chock).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
