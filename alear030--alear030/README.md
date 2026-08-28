@@ -7,13 +7,13 @@ A from-scratch Python agent harness: tool orchestration, multi-agent routing, se
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [Alear030/Alear030](https://github.com/Alear030/Alear030).
+Original source: `CLAUDE.md` in [Alear030/Alear030](https://github.com/Alear030/Alear030).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
