@@ -1,0 +1,180 @@
+# AozoraEpub3 – Copilot Project Instructions
+
+These instructions tailor Copilot to this repository so it can generate correct, maintainable changes and avoid common pitfalls.
+
+## Project Overview
+- Purpose: Convert Aozora-style text into EPUB 3.3 (backward compatible with EPUB 3.2), supporting Ruby, vertical writing, images, and device presets.
+- Language/Build: Java 21 baseline (Java 25 compatible), Gradle 9.6.1, JUnit 4.13 tests.
+- Templates: Apache Velocity templates under `template/` control most XHTML/CSS generation.
+- CLI: `AozoraEpub3` (main class) orchestrates parsing, conversion, and packaging.
+
+## Key Paths
+- Java sources: `src/`
+- Tests: `test/`
+- Templates: `template/` (e.g., `template/OPS/css/vertical_text.vm`)
+- Presets (INI): `presets/*.ini`
+- Test data: `test_data/`
+- Distribution scripts: `build/scripts/`
+
+## Build & Run
+
+### Important: Build Tasks (to avoid confusion)
+This project uses custom build tasks:
+
+1. **Build FAT JAR** (single runnable JAR)
+  - Command: `./gradlew jar` (Windows: `gradlew.bat jar`)
+  - Output: `build/libs/AozoraEpub3.jar`
+  - Purpose: Single JAR including all dependencies
+
+2. **Build distribution package** (ZIP/TAR)
+  - Command: `./gradlew dist` (Windows: `gradlew.bat dist`)
+  - Output:
+     - `build/distributions/AozoraEpub3-<version>.zip`
+     - `build/distributions/AozoraEpub3-<version>.tar.gz`
+  - Contents: JAR + launcher scripts + docs + templates
+  - Note: `distZip` is disabled. Use `dist`.
+
+3. **Run tests**
+  - Command: `./gradlew test` (Windows: `gradlew.bat test`)
+
+### How to run
+- Run CLI: `java -jar build/libs/AozoraEpub3.jar [options] input.txt`
+- Sample conversion (UTF-8): `java -jar build/libs/AozoraEpub3.jar -of -d out input.txt`
+- Launch GUI: run with no arguments `java -jar build/libs/AozoraEpub3.jar`
+
+## CI & Validation
+- GitHub Actions workflow builds, runs tests, generates sample EPUBs, and runs `epubcheck`.
+- Basic checks for EPUB 3.3 and industry guide compliance are included as shell assertions.
+- When adding tests, prefer small, deterministic unit tests over end-to-end unless necessary.
+
+### IndexNow (docs delivery / search engine notification)
+- When docs are updated, IndexNow submissions assume `docs/sitemap.xml` includes new/updated pages (the workflow auto-collects URLs from the sitemap).
+- Host verification key: `docs/fad6fa3a81974f6aa0740a0861fbaefe.txt` (single-line key). Do not move this file when adding pages.
+- Actions Variables: configure `INDEXNOW_HOST` and `INDEXNOW_BASE_URL` as needed. If unset, the workflow auto-detects from the first sitemap URL, but prioritize variable consistency when migrating hosts.
+- Submission timing: on push (docs/** changes), manual runs (workflow_dispatch), and a daily schedule at 03:00 UTC (12:00 JST).
+- In workflow logs, confirm “Discovered N URL(s)”, the first 20 samples, and that `urlList` in the request body contains all URLs. If not, review sitemap generation/published pages.
+
+## Coding Guidelines
+- Keep changes minimal and focused; align with existing style.
+- Avoid introducing global state. If needed (e.g., Velocity), allow dependency injection.
+- Favor small helpers over large monolith methods; keep public APIs stable.
+- Validate inputs and fail fast with clear messages.
+- Don’t add license headers unless explicitly requested.
+- **Git Commits**: All commit messages **must be in Japanese**. Format should clearly describe the what/why of changes.
+
+## Templates (Velocity) – Important
+- Velocity resources live under `template/`. Use relative paths consistently from a configurable `templatePath`.
+- Do NOT hard-code absolute paths. Tests and CI may run with different working directories.
+- Avoid calling `Velocity.init()` unconditionally inside constructors. Prefer:
+  - Accepting a `VelocityEngine` instance, or
+  - Initializing only if not already configured.
+- Keep placeholders and conditionals simple. Avoid mixing presentation with business logic.
+
+## Presets / INI to CSS
+- Device presets and INI values map to CSS via Velocity templates.
+- Add or adjust CSS variables by threading values through the model/context used by templates.
+- When adding new INI keys, update:
+  - Parsing/validation logic
+  - `Epub3Writer`/converter context population
+  - Corresponding `.vm` templates
+  - Unit tests covering both parsing and emitted CSS
+
+## Testing
+- Use JUnit 4 (`org.junit.Test`).
+- Put fixtures under `test_data/` and avoid relying on the process working directory.
+- Prefer unit tests for:
+  - Parsing (INI, Aozora text features)
+  - Small rendering functions
+  - EPUB packaging helpers
+- End-to-end tests calling the CLI can be flaky in Gradle workers due to path/resource differences. If unavoidable, run in a temporary directory and assert on produced `.epub` contents.
+- Use `epubcheck` in CI for final validation; no network calls in tests.
+
+## narou.rb Integration – Observed Behavior
+
+This section records the **actual runtime settings** that narou.rb applies when calling AozoraEpub3, verified by comparing narou.rb-generated EPUBs against Java CLI output under controlled conditions (cross-validated via a .NET port of this tool that achieves byte-identical EPUB output for the same inputs).
+
+### Settings narou.rb uses by default
+
+| Setting | Value | Notes |
+|---------|-------|-------|
+| `vertical` | `true` | 縦書き（right-to-left spine） |
+| `insertTocPage` | `true` | TOC xhtml page inserted |
+| `titlePageType` | `TITLE_HORIZONTAL` | Horizontal title page layout |
+| `dakutenType` | `2` (font mode) | Dakuten rendered via per-glyph TTF fonts (not CSS span overlay) |
+| `spaceHyphenation` | `1` | Single-space hyphenation enabled |
+
+### dakuten/gaiji font mode (dakutenType=2)
+
+When `dakutenType=2` (the narou.rb default), AozoraEpub3 embeds per-character TTF fonts from `gaiji/dakuten/` to render combined kana+dakuten glyphs (e.g., あ゛→ `<span class="glyph u3042-u3099">あ</span>`).
+
+Key points for Copilot:
+- The `gaiji/dakuten/` directory ships **222 TTF files** (naming: `u{codepoint}-u{dakuten}.ttf`, e.g. `u3042-u3099.ttf`).
+- `Epub3Writer.addGaijiFont(className, file)` collects fonts used during a conversion; `getGaijiFontPath()` resolves the base directory.
+- The Velocity template `template/OPS/css/vertical_text.vm` generates `@font-face` + `.className` rules for each collected font.
+- `template/OPS/package.vm` emits `<item>` manifest entries for each font file under `OPS/gaiji/`.
+- If `dakutenType != 2` or the `gaiji/dakuten/` directory is absent, the tool silently falls back to `<span class="dakuten">` overlay — **no error is thrown**. This fallback produces different EPUB output than narou.rb.
+- When writing tests that compare against narou.rb-generated EPUBs, set `dakutenType=2` and ensure `gaiji/dakuten/` is on the font path.
+
+### Aozora Bunko zip URL patterns
+
+When downloading source texts from `www.aozora.gr.jp`, both URL patterns exist:
+- Standard: `files/{id1}_{id2}.zip` (e.g., `1567_14913.zip`)
+- Ruby-annotated: `files/{id1}_ruby_{id2}.zip` (e.g., `1567_ruby_4948.zip`)
+
+Any code or script that scrapes the catalog page for a `.zip` link must match both forms. A regex like `href="([^"]*\d+[^"]*\.zip)"` is sufficient; `href="([^"]*\d+_\d+\.zip)"` will miss the `_ruby_` variant.
+
+### setting_narourb.ini
+
+`setting_narourb.ini` (project root) is applied when AozoraEpub3 downloads directly (not via narou.rb). When narou.rb calls AozoraEpub3, **narou.rb's own `setting.ini` takes precedence** — `setting_narourb.ini` is not read in that path. Keep this file as documentation of the expected defaults, but do not rely on it being read during narou.rb-driven conversions.
+
+### EPUB compatibility test reference
+
+The .NET port (https://github.com/AozoraEpub3-JDK21/aozoraepub3-dotnet, maintained in parallel) runs byte-identical comparison tests against Java-generated EPUBs. Test cases and their confirmed-passing status as of 2026-03-04:
+
+| Test case | Encoding | Notes |
+|-----------|----------|-------|
+| n9623lp (小説家になろう) | UTF-8 | PASS – full byte match |
+| n8005ls (小説家になろう) | UTF-8 | PASS – full byte match |
+| n0063lr (小説家になろう) | UTF-8 | PASS – full byte match |
+| kakuyomu_822139840468926025 | UTF-8 | PASS – requires dakutenType=2 + gaiji fonts |
+| aozora_1567_14913 (走れメロス) | MS932 | PASS – Aozora Bunko Shift-JIS input |
+
+If Java output changes (template edits, new INI keys, format changes), re-running the .NET comparison tests is a reliable way to detect regressions in EPUB structure.
+
+## Common Pitfalls
+- Velocity resource resolution failing under tests: configure a FileResourceLoader pointing to `template/` and avoid double-initializing Velocity.
+- Referencing files like `chuki_latin.txt` relative to the working directory: prefer resolving via project root or classpath resources.
+- Windows path separators: prefer forward slashes or `Paths` APIs.
+- Zip packaging: ensure the `mimetype` file is stored uncompressed and first, per EPUB spec.
+
+## PR Checklist (for Copilot)
+- Build passes locally: `gradlew test`.
+- New logic covered by tests in `test/`.
+- Templates compile and render with expected context keys.
+- CI workflow unaffected or updated if needed.
+- Sample EPUBs pass `epubcheck` (verified by CI).
+
+## Helpful Snippets
+- Configure Velocity (tests):
+  ```java
+  Properties p = new Properties();
+  p.setProperty("resource.loaders", "file");
+  p.setProperty("resource.loader.file.class", "org.apache.velocity.runtime.resource.loader.FileResourceLoader");
+  p.setProperty("resource.loader.file.path", projectRoot.resolve("template").toString());
+  Velocity.init(p);
+  ```
+- Read a file from `test_data/`:
+  ```java
+  Path data = Paths.get("test_data", "test_title.txt");
+  String s = Files.readString(data, StandardCharsets.UTF_8);
+  ```
+
+## When Unsure
+- Prefer asking for the intended device/preset (e.g., Kobo, Kindle).
+- Confirm whether a change belongs in Java code or the Velocity templates.
+- If a Velocity context key is missing, check writer/converter population and tests.
+- When adding or updating docs pages, confirm they are reflected in `docs/sitemap.xml`, since the IndexNow workflow relies on the sitemap (no need to list URLs manually).
+
+---
+> Source: [AozoraEpub3-JDK21/AozoraEpub3-JDK21](https://github.com/AozoraEpub3-JDK21/AozoraEpub3-JDK21) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-08-28 -->
