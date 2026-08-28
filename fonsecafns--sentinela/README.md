@@ -7,14 +7,14 @@ Um auditor de segurança que vive dentro do seu agente de IA. Varre o projeto in
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [fonsecafns/sentinela](https://github.com/fonsecafns/sentinela).
+Original source: `GEMINI.md` in [fonsecafns/sentinela](https://github.com/fonsecafns/sentinela).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
-- **Gemini CLI** — `GEMINI.md`
+- **Cursor** — `project-config.mdc`
 - **Windsurf** — `project-config.md`
 
 From [fonsecafns/sentinela](https://github.com/fonsecafns/sentinela) — a repo with 5+ stars on GitHub.
