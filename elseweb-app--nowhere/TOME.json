@@ -4,7 +4,7 @@
   "repo": "nowhere",
   "description": "Elseweb lives here. Which is nowhere.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/elseweb-app/nowhere",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-08-28T08:38:49Z"
+  "distributed_at": "2026-08-28T13:45:17Z"
 }
