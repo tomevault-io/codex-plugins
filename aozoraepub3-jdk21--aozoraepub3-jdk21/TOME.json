@@ -1,0 +1,44 @@
+{
+  "name": "AozoraEpub3-JDK21",
+  "owner": "AozoraEpub3-JDK21",
+  "repo": "AozoraEpub3-JDK21",
+  "description": "Java 21 \u5bfe\u5fdc\u7248 AozoraEpub3 - \u9752\u7a7a\u6587\u5eab\u30c6\u30ad\u30b9\u30c8\u3092 EPUB 3 \u306b\u5909\u63db",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/AozoraEpub3-JDK21/AozoraEpub3-JDK21",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-08-28T08:35:27Z"
+}
