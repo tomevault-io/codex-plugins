@@ -4,7 +4,7 @@
   "repo": "community",
   "description": "Requirements board, specs, and agent skills for Linux Engineering Tools",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/linux-engineering-tools/community",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-08-28T04:46:34Z"
+  "distributed_at": "2026-08-28T10:33:53Z"
 }
