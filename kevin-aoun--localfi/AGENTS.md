@@ -1,5 +1,5 @@
 
-Follow the canonical rule in @.claude/rules/financial-domain.md.
+Follow the canonical rule in @.claude/rules/frontend.md.
 
 ---
 > Source: [kevin-aoun/LocalFi](https://github.com/kevin-aoun/LocalFi) — distributed by [TomeVault](https://tomevault.io).
