@@ -4,7 +4,7 @@
   "repo": "okf-generator",
   "description": "OKF v0.1 knowledge bundle generator \u2014 Claude skill + OpenCode integration",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/UmairBaig8/okf-generator",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-08-29T00:40:48Z"
+  "distributed_at": "2026-08-29T00:56:59Z"
 }
