@@ -7,12 +7,12 @@ Easy setup and updating of ReShade on Linux for games using Wine or Proton.
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [asafelobotomy/reshadelinux](https://github.com/asafelobotomy/reshadelinux).
+Original source: `CLAUDE.md` in [asafelobotomy/reshadelinux](https://github.com/asafelobotomy/reshadelinux).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
