@@ -1,68 +1,22 @@
-# ⛓️ GOLDEN CHAIN - GITHUB COPILOT INSTRUCTIONS
 
-## ⛔ FORBIDDEN TO CREATE:
-- *.html (except runtime/runtime.html)
-- *.css
-- *.js  
-- *.ts
-- *.jsx
-- *.tsx
-- *.zig in var/trinity/output/ (GENERATED ONLY!)
-- *.py (GENERATED ONLY!)
+# Author attribution lock
 
-## ✅ THE ONLY WAY TO WRITE CODE:
+**Canonical maintainer and author string:** **Dmitrii Vasilev** / GitHub **@gHashTag**.
 
-1. Create .vibee specification in specs/tri/
-2. Run: ./bin/vibee gen specs/tri/feature.vibee
-3. Test: zig test var/trinity/output/feature.zig
-4. Write TOXIC VERDICT (self-criticism)
-5. Propose 3 options from TECH TREE
+## Rules for agents and editors
 
-## 📝 .vibee FORMAT:
+1. **Do not** replace this name or handle with placeholders (`Trinity Research Group`, `Abbie`, generic “Trinity Project”, etc.) in locked paths.
+2. **Do not** edit `tools/config/author_attribution_guard.manifest` to remove paths **unless** the corresponding file is deleted or ownership is explicitly changed by the repository owner.
+3. **Do not** weaken or delete `src/tri/author_attribution_guard.zig` or its `build.zig` `test_step` dependency without explicit human approval.
 
-```yaml
-name: module_name
-version: "1.0.0"
-language: zig
-module: module_name
+## Enforcement
 
-types:
-  TypeName:
-    fields:
-      field1: String
-      field2: Int
+- `zig build test` runs `src/tri/author_attribution_guard.zig` and fails if any listed file is missing **Dmitrii Vasilev** and **gHashTag**, or still contains **Trinity Research Group** / **Trinity Research Team**.
+- To add a new document that must carry the same attribution, append its repo-relative path to `tools/config/author_attribution_guard.manifest`.
 
-behaviors:
-  - name: function_name
-    given: Precondition
-    when: Action
-    then: Result
-```
+## When changes are allowed
 
-## 🔥 AFTER EVERY TASK:
-
-### TOXIC VERDICT (mandatory!):
-- What was done
-- What failed  
-- Metrics (before/after)
-- Harsh self-criticism
-- Score X/10
-
-### TECH TREE SELECT (mandatory!):
-Propose 3 options for next research:
-- [A] Name, complexity ★☆☆☆☆, potential +X%
-- [B] Name, complexity ★★☆☆☆, potential +X%
-- [C] Name, complexity ★★★☆☆, potential +X%
-- Recommendation: [A/B/C] because...
-
-## 🚫 NEVER DO:
-- Don't write .zig code directly
-- Don't edit var/trinity/output/*
-- Don't create legacy files
-- Don't skip toxic verdict
-- Don't skip tech tree select
-
-## φ² + 1/φ² = 3
+Only when the **human maintainer** explicitly requests a different attribution or adds co-authors. Then update the manifest, the guard constants if needed, and the tests in the same change.
 
 ---
 > Source: [gHashTag/trinity](https://github.com/gHashTag/trinity) — distributed by [TomeVault](https://tomevault.io).
