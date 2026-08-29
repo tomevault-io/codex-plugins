@@ -1,3 +1,5 @@
+# Agent Instructions
+
 Behavioral guidelines for reliable scientific writing and LaTeX editing.
 
 **Tradeoff:** These guidelines prioritize scientific accuracy, author intent, and minimal changes over speed or stylistic ambition. For trivial edits, use judgment.
