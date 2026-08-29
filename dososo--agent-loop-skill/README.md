@@ -7,13 +7,13 @@ A skill for long-running AI agent loops with contracts, traces, restarts, scorin
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [dososo/agent-loop-skill](https://github.com/dososo/agent-loop-skill).
+Original source: `CLAUDE.md` in [dososo/agent-loop-skill](https://github.com/dososo/agent-loop-skill).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
