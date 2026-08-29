@@ -4,7 +4,7 @@
   "repo": "chiplab",
   "description": "Give agents access to virtual hardware.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": ".cursor/rules/*.mdc",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/veecle/chiplab",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-08-29T00:46:27Z"
+  "distributed_at": "2026-08-29T00:55:52Z"
 }
