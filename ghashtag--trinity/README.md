@@ -7,13 +7,13 @@ The Trinity ternary compute stack — tri CLI · BitNet LLM · VSA · GF16
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [gHashTag/trinity](https://github.com/gHashTag/trinity).
+Original source: `.cursor/rules/*.mdc` in [gHashTag/trinity](https://github.com/gHashTag/trinity).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
