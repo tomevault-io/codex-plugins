@@ -7,14 +7,14 @@ Durable, repo-native project memory for coding agents—without context bloat.
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [waittim/MemoryCustodian](https://github.com/waittim/MemoryCustodian).
+Original source: `CLAUDE.md` in [waittim/MemoryCustodian](https://github.com/waittim/MemoryCustodian).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 From [waittim/MemoryCustodian](https://github.com/waittim/MemoryCustodian) — a repo with 20+ stars on GitHub.
