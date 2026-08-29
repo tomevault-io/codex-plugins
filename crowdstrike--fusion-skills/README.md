@@ -7,12 +7,12 @@ AI coding assistant skills for building CrowdStrike Falcon Fusion workflows: act
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [CrowdStrike/fusion-skills](https://github.com/CrowdStrike/fusion-skills).
+Original source: `CLAUDE.md` in [CrowdStrike/fusion-skills](https://github.com/CrowdStrike/fusion-skills).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
