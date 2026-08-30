@@ -1,6 +1,6 @@
 # dataportals-registry
 
-> Source: [commondataio/dataportals-registry](https://github.com/commondataio/dataportals-registry). Graded, signed and kept in sync across platforms by [TomeVault](https://tomevault.io)
+> Source: [commondataio/dataportals-registry](https://github.com/commondataio/dataportals-registry). Graded, signed and kept current as the models change by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
