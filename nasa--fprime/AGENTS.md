@@ -1,27 +1,6 @@
-# F Prime Copilot Instructions
-
-When reviewing a pull request, invoke the F Prime multi-agent PR
-review flow at
-[`.github/agents/review-orchestrator.agent.md`](agents/review-orchestrator.agent.md).
-
-The orchestrator's behavior is governed by the shared review
-contract
-([`.github/agents/_shared/review-contract.md`](agents/_shared/review-contract.md))
-and the agent registry
-([`.github/agents/_shared/agent-registry.yml`](agents/_shared/agent-registry.yml)),
-which lists the seven reviewer agents (security, supply chain / runner
-safety, F Prime C/C++ design, stale documentation, design,
-architecture, test quality) and the summary aggregator.
-
-## Writing unit tests
-
-When writing or modifying F Prime component unit tests, follow the
-procedure in
-[`.github/agents/_shared/skills/fprime-unit-testing.skill.md`](agents/_shared/skills/fprime-unit-testing.skill.md).
-It covers scaffold generation (`fprime-util impl --ut`), the
-Tester / GTestBase pattern, helper-function design, rules-based
-testing with STest, and `CMakeLists.txt` registration.
+See [`AGENTS.md`](AGENTS.md) for F Prime agent guidance. Subdirectories with
+their own guidance carry a local `AGENTS.md` (currently `docs/` and `cmake/`).
 
 ---
 > Source: [nasa/fprime](https://github.com/nasa/fprime) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-24 -->
+<!-- tomevault:4.0:agents_md:2026-08-30 -->
