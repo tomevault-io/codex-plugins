@@ -1,12 +1,20 @@
 
-# Application Layer
+# Blazor UI
 
-- Request record + handler in **same file**; constructor injection with `private readonly` fields
-- Queries: always `AsNoTracking()`
-- FluentValidation in `{Name}CommandValidator.cs`; pipeline throws `ValidationException`
-- Throw `NotFoundException`, `ForbiddenAccessException` - no error codes or `Result<T>`
-- Use `IApplicationDbContext` for DB; `ISender` for cross-feature dispatch
-- Domain events: raise in entity, handle in `Features/{Feature}/EventHandlers/`
+Triad: `.razor` + `.razor.cs` (partial class) + optional `.razor.css`.
+
+- Pages -> `Clients/Shared/UI/Pages/`
+- Layouts -> `Clients/Shared/UI/Layout/`
+- Components -> `Clients/Shared/UI/Components/` (or `Dialogs/`, `Players/`)
+- Services -> `Clients/Shared/Services/`; MAUI-only -> `Clients/MAUI/`
+
+Use K7 component library - no third-party UI in pages. Theme via CSS variables (`ThemeService`), never hardcoded colors. Scoped CSS preferred, no inline styles.
+
+New or changed shared components: also update **DesignSystem** (`src/Clients/DesignSystem`) - demo section, `demoed` set, sidebar link, mocks if needed. See `docs/dev/developing.md#designsystem`.
+
+**Mandatory localization**: every user-facing string via `IStringLocalizer` + `.resx` - no hardcoded text.
+
+**French accents in `.resx`**: default locale files (`*.resx`, not `*.en.resx`) are French. Write user-facing strings with proper diacritics (`é`, `è`, `ê`, `à`, `ù`, `ç`, etc.). ASCII-only rule applies to C# code and comments, not to French UI strings. Always add keys to both `MyComponent.resx` (fr) and `MyComponent.en.resx` (en). Resource keys stay ASCII (`name="Federation"`, never accented).
 
 ---
 > Source: [kaybi-gh/K7](https://github.com/kaybi-gh/K7) — distributed by [TomeVault](https://tomevault.io).
