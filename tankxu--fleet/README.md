@@ -1,0 +1,26 @@
+# fleet
+
+> Tome by [tankxu](https://github.com/tankxu/fleet), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
+
+Fleet — a native macOS terminal workspace with a fleet canvas board. Derived from cmux (GPL-3.0-or-later).
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `.cursor/rules/*.mdc` in [tankxu/fleet](https://github.com/tankxu/fleet).
+
+## Also available for
+
+- **Claude Code** — `CLAUDE.md`
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+From [tankxu/fleet](https://github.com/tankxu/fleet) — a repo with 10+ stars on GitHub.
+
+---
+
+Own this repo? Install the TomeVault Relay to keep every platform's copy in sync on every push: [https://tomevault.io/install](https://tomevault.io/install).
+
+<!-- genome:t-c-s -->
