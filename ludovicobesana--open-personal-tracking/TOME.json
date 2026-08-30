@@ -1,0 +1,44 @@
+{
+  "name": "open-personal-tracking",
+  "owner": "ludovicobesana",
+  "repo": "open-personal-tracking",
+  "description": "Open-source, local-first personal tracking platform for movies, TV shows, books, manga, games, music, places and more. No lock-in, no mandatory cloud. Your history stays yours.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/ludovicobesana/open-personal-tracking",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-08-30T02:31:45Z"
+}
