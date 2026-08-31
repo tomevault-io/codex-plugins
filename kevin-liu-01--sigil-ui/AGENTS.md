@@ -1,101 +1,79 @@
-# Interface Micro-Polish
+# React Conventions
 
-> Imported from Kevin's wiki (`wiki/design/interface-micro-polish.md`).
-> Great interfaces improve because lots of tiny choices stop being wrong at the same time.
+> Imported from Kevin's wiki (`wiki/style/react.md`).
+> Cross-reference: `sigil-conventions.mdc` (component rules), `sigil-design-system.mdc` (token consumption), `css-ui-enforcement.mdc` (styling stack).
 
-## Text Wrapping
+## Styling
 
-- `text-wrap: balance` for short headings, badges, marketing copy. Reduces orphaned words.
-- `text-wrap: pretty` for longer prose only when browser cost is acceptable.
-- Manual line breaks for hero headlines when composition matters most.
+All UI via `className={cn(...)}` and Tailwind utilities. No CSS modules or co-located `.css` for normal components. Raw CSS belongs almost only in `globals.css`. Do not combine `style={{ ... }}` with Tailwind on the same node. See `css-ui-enforcement.mdc`.
 
-## Concentric Border Radius
+## Rules of Hooks
 
-Nested surfaces must be mathematically related: **outer radius = inner radius + padding**.
+Hooks are identified by position in an array. Call order must be identical on every render.
 
-Example: outer 20px, padding 8px, inner 12px. Define radius pairs as tokens when nesting happens often. Check: cards with headers, inset panels, grouped buttons, avatars in frames.
+- Hooks at the top level of a component or custom hook only.
+- Before any conditional logic.
+- No hooks inside conditions, loops, event handlers, callbacks passed to `useMemo`/`useReducer`/`useEffect`, or after early returns.
+- Most common violation: early return before hooks. Move hooks above the conditional.
 
-## Crispy Text Rendering
+## Custom Hooks
 
-Apply `antialiased` globally at the layout level (`<body className="font-sans antialiased">`). Do not use as a bandage for wrong font weight.
+Name the hook after what it returns, not what it does internally. `useOrgData` > `useFetchAndCacheOrgDataWithLoading`.
 
-## Tabular Numbers
+## Exhaustive Dependencies
 
-Any changing or comparative numeric UI: `font-variant-numeric: tabular-nums` (Tailwind: `tabular-nums`). Apply to counters, timers, KPIs, dashboard metrics, prices, dates that update. Prevents twitching when digits change.
+`useEffect`, `useMemo`, `useCallback` dependency arrays must include every referenced value. Missing dependencies cause stale closures. If adding a dependency causes an infinite loop, restructure (extract to ref, memoize the dependency, move to event handler) — do not suppress the warning.
 
-## Optical Alignment
+## setState in Effects
 
-Pure geometry often looks wrong. Adjust icon padding slightly when needed. Fix the SVG itself when possible instead of stacking utility margins. Treat visual center as a perception problem, not box-model.
+The React compiler flags synchronous `setState` inside effect bodies. Canonical alternative: `useSyncExternalStore`. Migrate incrementally.
 
-## Shadows Instead of Borders
+## Linting Rules (Ultracite/oxlint)
 
-When you want depth, subtle layered shadows beat hard borders:
+| Rule | Severity | Notes |
+|------|----------|-------|
+| `react-hooks/rules-of-hooks` | error | Non-negotiable, never disable |
+| `react-hooks/exhaustive-deps` | warn | Fix stale closures, do not suppress |
+| `react/self-closing-comp` | error | `<Foo />` not `<Foo></Foo>` |
+| `react/jsx-curly-brace-presence` | error | No `{"text"}` when `text` suffices |
 
-```css
-box-shadow:
-  0 0 0 1px rgb(0 0 0 / 0.06),
-  0 1px 2px -1px rgb(0 0 0 / 0.06),
-  0 2px 4px 0 rgb(0 0 0 / 0.04);
-```
+## Architecture-Policy Rules
 
-Transition `box-shadow` only on small components. Brutalist designs may still prefer borders.
+Custom ESLint rules for repo-specific patterns that oxlint cannot express:
 
-## Dark UI Card Shadows (The 1px Rule)
+| Rule | What it catches |
+|------|-----------------|
+| `no-derived-state-in-effect` | `useEffect` computing derived state — use `useMemo` or inline render logic |
+| `no-fetch-in-effect` | `fetch()`/`axios.*()` inside `useEffect` — use TanStack Query or server-side |
+| `no-query-client-in-component` | `new QueryClient()` in component body — creates a new client per render |
+| `no-void-query-fn` | `queryFn` returning void — calling `setState` instead of returning data |
+| `no-unstable-query-result-deps` | Destructured query results in dep arrays — new refs every render |
+| `query-key-deps` | `queryKey` missing variables used by `queryFn` — stale cache hits |
 
-The difference between good dark UI and great dark UI:
+## Vercel React Best Practices (69 Rules Reference)
 
-```css
-box-shadow:
-  inset 0 1px 0 0 rgba(255, 255, 255, 0.02),  /* top edge catch-light */
-  0 0px 0 0 rgba(0, 0, 0, 0.25);               /* grounding shadow */
-```
+Prioritized performance rules from Vercel. Auto-loads via `vercel-react-best-practices` skill.
 
-- **Inner shadow:** white at 2% opacity, Y offset 1px, inset. Simulates light hitting the top edge. Invisible at a glance, but the card reads as physical.
-- **Drop shadow:** black at 25% opacity, Y offset 0px. Grounds the card symmetrically.
+| Priority | Category | Impact | Key Rules |
+|----------|----------|--------|-----------|
+| 1 | Eliminating Waterfalls | CRITICAL | `Promise.all()` for independent ops, defer await into branches, Suspense boundaries |
+| 2 | Bundle Size | CRITICAL | Direct imports (avoid barrel files), `next/dynamic` for heavy components, defer analytics |
+| 3 | Server-Side | HIGH | `React.cache()` dedup, LRU cross-request cache, minimize data to client, `after()` for non-blocking |
+| 4 | Client Data Fetching | MEDIUM-HIGH | SWR for dedup, deduplicate event listeners, passive scroll listeners |
+| 5 | Re-render | MEDIUM | Extract expensive work into memoized components, derive state during render, functional setState, `startTransition` |
+| 6 | Rendering | MEDIUM | `content-visibility` for long lists, hoist static JSX, Activity component for show/hide |
+| 7 | JS Performance | LOW-MEDIUM | Map for repeated lookups, combine filter/map, Set for O(1) lookups |
+| 8 | Advanced | LOW | Store event handlers in refs, initialize once per app load |
 
-Apply to every card, panel, and elevated surface in dark mode. Safe to keep in both themes (invisible on light backgrounds).
+## RSC Safety
 
-## Image and Media Outlines
+- Default to Server Components. Global state only in Client Components.
+- Interactive UI (Motion, magnetic hover, perpetual animations) → isolated `"use client"` leaf components.
+- Server Components render static layouts only.
 
-Low-opacity edge so media sits confidently:
+## React Hygiene
 
-```css
-outline: 1px solid rgb(0 0 0 / 0.1);
-outline-offset: -1px;
-```
-
-Invert for dark mode. Apply to screenshots, product images, video frames, avatars on noisy backgrounds.
-
-## Contextual Icon Animation
-
-When icons swap based on state (copy/check, mute/unmute, open/close), animate with opacity, scale, and slight blur. Keep amplitude small. Responsive, not theatrical.
-
-## Interruptible Animations
-
-- **Transitions** for interactive state changes (dropdowns, popovers, drawers, toggles, hover) — they retarget cleanly.
-- **Keyframes** for staged one-shot sequences and decorative choreography.
-
-If a user reverses direction midway and the old animation keeps playing, it feels broken.
-
-## Staggered Enters
-
-Split large groups into semantic chunks. Stagger title, description, buttons. 60-100ms between sections. Tighter stagger for words than containers. Keep blur small and short-lived.
-
-## Softer Exits
-
-Exits have reduced travel distance compared to enters. Keep directional hint but soften it. Enter may use `calc(-100% - 4px)`; exit may use `-12px`. Asymmetry makes the interface feel calmer.
-
-## Quick Checklist
-
-- [ ] Headings use balanced wrapping
-- [ ] Numbers that update are tabular
-- [ ] Nested radii are concentric
-- [ ] Icons are optically aligned
-- [ ] Images have subtle edges when needed
-- [ ] Interactive animations can be interrupted
-- [ ] Enters are chunked and staggered
-- [ ] Exits are softer than enters
-- [ ] Dark mode cards have 1px inner shadow (white 2%) + drop shadow (black 25%)
+Run `npx react-doctor@latest` after major agent-authored UI refactors or before release branches. Complements Ultracite/oxlint with React-specific diagnostics.
 
 ---
 > Source: [Kevin-Liu-01/Sigil-UI](https://github.com/Kevin-Liu-01/Sigil-UI) — distributed by [TomeVault](https://tomevault.io).
