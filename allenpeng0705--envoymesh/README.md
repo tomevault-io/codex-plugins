@@ -7,13 +7,13 @@ Decentralized P2P mesh for autonomous AI agents — self-sovereign identity, pee
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [allenpeng0705/EnvoyMesh](https://github.com/allenpeng0705/EnvoyMesh).
+Original source: `.cursor/rules/*.mdc` in [allenpeng0705/EnvoyMesh](https://github.com/allenpeng0705/EnvoyMesh).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
-- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
