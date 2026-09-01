@@ -1,57 +1,36 @@
 
-# Claude Code Hooks
 
-## Development Guidelines
+# matching-engine-algorithms
 
-- Only modify code directly relevant to the specific request. Avoid changing unrelated functionality.
-- Never replace code with placeholders like `# ... rest of the processing ...`. Always include complete code.
-- Break problems into smaller steps. Think through each step separately before implementing.
-- Always provide a complete PLAN with REASONING based on evidence from code and logs before making changes.
-- Explain your OBSERVATIONS clearly, then provide REASONING to identify the exact issue. Add console logs when needed to gather more information.
+The skill activation system implements two parallel matching mechanisms to detect when organizational skills should be triggered:
 
+## Keyword Matching
+- Direct text comparison against predefined skill keywords
+- Keywords are organized by skill priority levels (critical, high, medium, low)
+- Multiple keywords can be associated with a single skill
 
-## Skill Activation System
+## Intent Pattern Matching
+- Regex-based pattern recognition for complex activation conditions
+- Supports flexible matching across different prompt formulations
+- Patterns are evaluated hierarchically by skill priority
 
-A hierarchical skill management system that evaluates user prompts to determine required organizational capabilities and enforcement levels.
+## Rule Integration Logic
+- Both matching mechanisms are evaluated in parallel for each skill
+- A skill is triggered if either matching condition is satisfied
+- Results are grouped by priority level for final activation decision
 
-Key Components:
+## Domain Classification
+- Skills are classified as either:
+  - Domain skills (business functionality)
+  - Guardrail skills (enforcement policies)
+- Classification affects matching precedence and enforcement type
 
-1. Priority-Based Skill Classification
-- Critical priority skills
-- High priority skills
-- Medium priority skills 
-- Low priority skills
+## Enforcement Types
+- Block: Prevent execution if skill conditions not met
+- Suggest: Recommend skill activation to user
+- Warn: Display warning but allow continuation
 
-2. Enforcement Policy Framework
-- Blocking enforcement: Prevents actions without required skills
-- Suggestion based: Recommends skill acquisition
-- Warning based: Notifies about missing skills
-
-3. Skill Categorization
-- Domain Skills: Core organizational capabilities
-- Guardrail Skills: Protective/compliance requirements
-
-4. Rule Evaluation Engine
-- Keyword matching against prompt content
-- Intent pattern recognition using regex
-- Multi-source rule evaluation with precedence ordering
-
-## Business Workflow
-
-1. Input Processing
-- Analyzes user prompts for skill requirements
-- Matches against predefined skill patterns
-- Evaluates both explicit keywords and intent patterns
-
-2. Skill Resolution
-- Groups matched skills by priority level
-- Applies business-specific enforcement rules
-- Generates prioritized skill recommendations
-
-3. Enforcement Output
-- Formats skill activation notifications
-- Applies organization-specific messaging
-- Delivers appropriate enforcement actions
+File: hooks/skill-activation-prompt.ts
 
 ---
 > Source: [maxkelley23/claude-code-hooks](https://github.com/maxkelley23/claude-code-hooks) — distributed by [TomeVault](https://tomevault.io).
