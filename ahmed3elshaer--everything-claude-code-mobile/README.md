@@ -109,7 +109,7 @@ Original source: `CLAUDE.md` in [ahmed3elshaer/everything-claude-code-mobile](ht
 - [everything-claude-code-mobile](https://github.com/ahmed3elshaer/everything-claude-code-mobile/tree/main/.opencode/skills/continuous-learning/SKILL.md)
 - [everything-claude-code-mobile](https://github.com/ahmed3elshaer/everything-claude-code-mobile/tree/main/.opencode/skills/continuous-learning-v2/SKILL.md)
 
-From [ahmed3elshaer/everything-claude-code-mobile](https://github.com/ahmed3elshaer/everything-claude-code-mobile) — a repo with 59+ stars on GitHub.
+From [ahmed3elshaer/everything-claude-code-mobile](https://github.com/ahmed3elshaer/everything-claude-code-mobile) — a repo with 0+ stars on GitHub.
 
 ---
 
