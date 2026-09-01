@@ -1,0 +1,30 @@
+# rust-oauth2-server
+
+> Tome by [ianlintner](https://github.com/ianlintner/rust-oauth2-server), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
+
+Rust OAuth2 Server with Social Logins with observability. Typesafe and Actor System.
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `copilot-instructions.md` in [ianlintner/rust-oauth2-server](https://github.com/ianlintner/rust-oauth2-server).
+
+## Also available for
+
+- **Claude Code** — `CLAUDE.md`
+- **Codex** — `AGENTS.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+From [ianlintner/rust-oauth2-server](https://github.com/ianlintner/rust-oauth2-server) — a repo with 9+ stars on GitHub.
+
+---
+
+Install this config instantly:
+```
+npx tomevault install ianlintner/rust-oauth2-server
+```
+Source: [github.com/ianlintner/rust-oauth2-server](https://github.com/ianlintner/rust-oauth2-server).
+
+<!-- genome:t-i-s -->
