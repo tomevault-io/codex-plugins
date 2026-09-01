@@ -7,14 +7,14 @@ On-device AI framework inspired by LangChain, purpose-built for mobile. Build, c
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [hyodotdev/locanara](https://github.com/hyodotdev/locanara).
+Original source: `CLAUDE.md` in [hyodotdev/locanara](https://github.com/hyodotdev/locanara).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 From [hyodotdev/locanara](https://github.com/hyodotdev/locanara) — a repo with 9+ stars on GitHub.
