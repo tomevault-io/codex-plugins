@@ -1,0 +1,44 @@
+{
+  "name": "mambo-studio",
+  "owner": "Marisalice114",
+  "repo": "mambo-studio",
+  "description": "MamboStudio \u662f\u4e00\u4e2a\u57fa\u4e8e **Spring Boot 3 + LangChain4j + Vue 3** \u6784\u5efa\u7684\u4f01\u4e1a\u7ea7 AI \u4ee3\u7801\u751f\u6210\u5e73\u53f0\u3002\u901a\u8fc7\u81ea\u7136\u8bed\u8a00\u63cf\u8ff0\uff0cAI \u53ef\u4ee5\u81ea\u52a8\u751f\u6210\u5b8c\u6574\u7684 Web \u5e94\u7528\uff0c\u540c\u65f6\u5b9e\u73b0\"\u70b9\u54ea\u513f\u6539\u54ea\u513f\"\u7684\u589e\u91cf\u5f0f\u4fee\u6539\u529f\u80fd\u3002",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/Marisalice114/mambo-studio",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-09-02T15:32:21Z"
+}
