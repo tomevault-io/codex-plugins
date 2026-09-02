@@ -4,7 +4,7 @@
   "repo": "agent-context",
   "description": "A framework for Ruby Gems to expose LLM context.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": ".cursor/rules/*.mdc",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/socketry/agent-context",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-09-02T23:31:41Z"
+  "distributed_at": "2026-09-02T23:32:22Z"
 }
