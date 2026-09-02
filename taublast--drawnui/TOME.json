@@ -4,7 +4,7 @@
   "repo": "DrawnUi",
   "description": "",
   "type": "tome",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -83,5 +83,5 @@
   ],
   "source_url": "https://github.com/taublast/DrawnUi",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-09-02T22:42:02Z"
+  "distributed_at": "2026-09-02T22:42:23Z"
 }
