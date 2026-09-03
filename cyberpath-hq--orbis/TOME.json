@@ -1,0 +1,44 @@
+{
+  "name": "orbis",
+  "owner": "cyberpath-HQ",
+  "repo": "orbis",
+  "description": "Plugin-driven desktop app platform built with Rust + React with a schema-driven UI (35+ components), WASM-sandboxed plugins built on top of a Tauri backend. Standalone or client-server mode.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/cyberpath-HQ/orbis",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-09-03T16:33:26Z"
+}
