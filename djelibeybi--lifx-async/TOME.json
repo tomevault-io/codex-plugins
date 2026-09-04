@@ -3,7 +3,7 @@
   "owner": "Djelibeybi",
   "repo": "lifx-async",
   "description": "",
-  "type": "tome",
+  "type": "config",
   "source_format": "CLAUDE.md",
   "formats": [
     {
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/Djelibeybi/lifx-async",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-09-04T13:30:12Z"
+  "distributed_at": "2026-09-04T13:31:53Z"
 }
