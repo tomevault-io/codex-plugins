@@ -1,0 +1,44 @@
+{
+  "name": "robotics-systems-course",
+  "owner": "uwislab",
+  "repo": "robotics-systems-course",
+  "description": "\u672c\u9879\u76ee\u662f\u300a\u673a\u5668\u4eba\u7cfb\u7edf\u300b\u8bfe\u7a0b\u4ea4\u4e92\u5f0f\u5b66\u4e60\u5e73\u53f0\uff0c\u6574\u5408\u8bfe\u4ef6\u3001\u4eff\u771f\u4e0e\u5b9e\u8df5\u8d44\u6e90\uff0c\u652f\u6301\u8de8\u8bbe\u5907\u8bbf\u95ee\u4e0e\u5b9e\u65f6\u53cd\u9988\uff0c\u52a9\u529b\u5b66\u751f\u9ad8\u6548\u5f00\u5c55\u6c89\u6d78\u5f0f\u5b66\u4e60\u3002",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/uwislab/robotics-systems-course",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-09-04T22:36:18Z"
+}
