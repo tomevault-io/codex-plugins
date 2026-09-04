@@ -4,7 +4,7 @@
   "repo": "eagle-eye",
   "description": "A Dart CLI tool designed to enforce architectural rules in your flutter/dart project.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": ".cursor/rules/*.mdc",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/CodandoTV/eagle-eye",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-09-04T16:31:45Z"
+  "distributed_at": "2026-09-04T16:32:28Z"
 }
