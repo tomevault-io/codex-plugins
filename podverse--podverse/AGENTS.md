@@ -1,10 +1,26 @@
 
-# Architecture tier dependencies
+# Avoid re-export wrapper files
 
-Lower tiers cannot depend on higher tiers in the monorepo package graph.
+Keep the monorepo lean: **do not** add a file whose only job is to re-export something already exported from a workspace package.
 
-Full tier table, directory layout, and app descriptions:
-[.llm/context/architecture.md](/.llm/context/architecture.md) (contributor reference).
+## Do not
+
+```typescript
+// apps/api/src/lib/foo.ts — unnecessary
+export { createThing, type CreateThingResult } from '@podverse/orm';
+```
+
+Import at call sites from the canonical package (`@podverse/orm`, `@podverse/helpers`, etc.) instead.
+
+## When a local file is OK
+
+- **Real logic or app-specific adaptation** — serialization, auth context, env wiring, HTTP mapping.
+- **Configured UI wrappers** — same `@podverse/ui` + i18n wiring at 2+ callsites in one app (**`app-local-ui-wrappers`**, **`reusable-components`**). Bare `export { X } from '…'` is not a wrapper.
+- **Framework-required barrels** — e.g. `packages/*/src/index.ts` public API surface.
+
+## Review habit
+
+Before adding `apps/<app>/src/lib/<name>.ts`, ask: does this file add behavior, or only shorten an import path? If only re-export, skip the file and import directly.
 
 ---
 > Source: [podverse/podverse](https://github.com/podverse/podverse) — distributed by [TomeVault](https://tomevault.io).
