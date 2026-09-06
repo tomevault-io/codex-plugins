@@ -1,0 +1,44 @@
+{
+  "name": "garmin-grafana-mcp-server",
+  "owner": "ghighi3f",
+  "repo": "garmin-grafana-mcp-server",
+  "description": "Bring your Garmin data to AI. An MCP server that bridges the garmin-grafana InfluxDB ecosystem with AI agents.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/ghighi3f/garmin-grafana-mcp-server",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-09-06T09:45:25Z"
+}
