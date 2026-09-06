@@ -1,0 +1,44 @@
+{
+  "name": "Manware-s-AI-Learning-Toolkit",
+  "owner": "i-am-manware",
+  "repo": "Manware-s-AI-Learning-Toolkit",
+  "description": "An AI toolkit that turns agents into teachers rather than code yapping machines",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/i-am-manware/Manware-s-AI-Learning-Toolkit",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-09-06T15:31:34Z"
+}
