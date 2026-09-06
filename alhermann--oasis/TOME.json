@@ -4,7 +4,7 @@
   "repo": "OASiS",
   "description": "Experimental development fork of OASiS (Open Agentic Simulation System) \u2014 official repo: github.com/Hereon-InstituteMS/OASiS",
   "type": "config",
-  "source_format": ".cursor/rules/*.mdc",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/alhermann/OASiS",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-09-06T06:32:09Z"
+  "distributed_at": "2026-09-06T06:36:11Z"
 }
