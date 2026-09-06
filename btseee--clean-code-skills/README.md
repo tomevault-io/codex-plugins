@@ -7,15 +7,15 @@ Clean Coding and Clean Archictecture skills for Agents
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.windsurf/rules/*.md` in [btseee/clean-code-skills](https://github.com/btseee/clean-code-skills).
+Original source: `copilot-instructions.md` in [btseee/clean-code-skills](https://github.com/btseee/clean-code-skills).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
 
 From [btseee/clean-code-skills](https://github.com/btseee/clean-code-skills) — a repo with 9+ stars on GitHub.
 
