@@ -7,13 +7,13 @@ Experimental development fork of OASiS (Open Agentic Simulation System) — offi
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [alhermann/OASiS](https://github.com/alhermann/OASiS).
+Original source: `copilot-instructions.md` in [alhermann/OASiS](https://github.com/alhermann/OASiS).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
