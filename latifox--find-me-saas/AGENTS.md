@@ -1,5 +1,5 @@
 
-See [skills/decision-memo/SKILL.md](../../skills/decision-memo/SKILL.md) for full instructions and output schema.
+See [skills/desire-evaluator/SKILL.md](../../skills/desire-evaluator/SKILL.md) for full instructions and output schema.
 
 ---
 > Source: [Latifox/find-me-saas](https://github.com/Latifox/find-me-saas) — distributed by [TomeVault](https://tomevault.io).
