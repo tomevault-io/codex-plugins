@@ -1,5 +1,5 @@
 
-See [skills/cac-modeler/SKILL.md](../../skills/cac-modeler/SKILL.md) for full instructions and output schema.
+See [skills/competitor-mapper/SKILL.md](../../skills/competitor-mapper/SKILL.md) for full instructions and output schema.
 
 ---
 > Source: [Latifox/find-me-saas](https://github.com/Latifox/find-me-saas) — distributed by [TomeVault](https://tomevault.io).
