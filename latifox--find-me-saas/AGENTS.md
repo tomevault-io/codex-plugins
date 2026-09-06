@@ -1,5 +1,5 @@
 
-See [skills/trend-to-product-mapper/SKILL.md](../../skills/trend-to-product-mapper/SKILL.md) for full instructions and output schema.
+See [skills/user-background-interviewer/SKILL.md](../../skills/user-background-interviewer/SKILL.md) for full instructions and output schema.
 
 ---
 > Source: [Latifox/find-me-saas](https://github.com/Latifox/find-me-saas) — distributed by [TomeVault](https://tomevault.io).
