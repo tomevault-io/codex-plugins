@@ -1,24 +1,42 @@
 
-# MARK Circuits
+# MARK Contracts
 
-Follow root `AGENTS.md` for validation routing. Circuits are security-critical because proof verification must imply knowledge of valid witness data.
+Follow root `AGENTS.md`, then `contracts/AGENTS.md`, then `contracts/ARCHITECTURE.md`.
+
+## Architecture
+
+Current production source domains live under `contracts/src`:
+
+- `access`
+- `bridge`
+- `settlement`
+- `pool`
+- `withdraw`
+- `token`
+- `crypto`
+- `interfaces`
+- `errors`
+
+Keep `bridge`, `settlement`, `pool`, and `withdraw` isolated. Shared dependencies belong only in approved shared domains such as `interfaces`, `errors`, `token`, and `crypto`.
 
 ## Security Rules
 
-- No unconstrained `<--` assignments.
-- No unused signals.
-- No `block.timestamp` or chain-time assumptions inside circuits.
-- Preserve public-signal ordering expected by contracts.
-- Nullifier and commitment logic must prevent double-spends and preserve privacy.
+- State changes for nullifiers, nonces, replay markers, and claims must happen before external calls.
+- Bridge adapters must not set Merkle roots, mint pool notes, withdraw pool funds, or mark/reuse pool nullifiers.
+- Do not use `tx.origin` for authorization.
+- Treat governance, multisig, relayer honesty, or operator policy as secondary controls, never primary safety.
+- Check `contracts/KNOWN_ISSUES.md`, but verify each known issue against current source before treating it as accepted.
 
 ## Validation
 
-- JS/test harness only: `pnpm circuits:test`
-- `.circom` changes: `pnpm circuits:test` and `mise run circomspect`
-- Soundness: `pnpm --filter @mark/circuits run test:soundness`
-- Completeness: `pnpm --filter @mark/circuits run test:completeness`
+Use the smallest command that proves the touched surface:
 
-If Circom fails with `/usr/local/bin/circom: line 1: Not: command not found` or `Not Found/usr/local/bin/circom`, treat it as a local toolchain issue first, not proof of a circuit regression.
+- Scoped unit: `cd contracts && FOUNDRY_PROFILE=default forge test --match-contract <Name>`
+- Contract domain gate: `cd contracts && FOUNDRY_PROFILE=default make ci-fast`
+- Import boundary: `cd contracts && FOUNDRY_PROFILE=default make architecture-guard layering-guard`
+- Reorg-sensitive: `mise run reorg-sim` only when `OP_SEPOLIA_RPC` is available
+
+Root `package.json` does not define `contracts:ci-fast`; use `mise run ci-fast` from root or contract Makefile targets from `contracts/`.
 
 ---
 > Source: [trade/mark](https://github.com/trade/mark) — distributed by [TomeVault](https://tomevault.io).
