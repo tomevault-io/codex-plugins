@@ -4,7 +4,7 @@
   "repo": "Svelto.Tasks",
   "description": "",
   "type": "config",
-  "source_format": "GEMINI.md",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/sebas77/Svelto.Tasks",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-09-06T11:49:01Z"
+  "distributed_at": "2026-09-06T12:15:38Z"
 }
