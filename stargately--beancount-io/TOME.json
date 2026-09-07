@@ -3,8 +3,8 @@
   "owner": "stargately",
   "repo": "beancount-io",
   "description": "",
-  "type": "tome",
-  "source_format": "CLAUDE.md",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -37,69 +37,8 @@
       "platform": "Windsurf"
     }
   ],
-  "skills": [
-    {
-      "name": "beancount-io",
-      "path": "skills/.claude/skills/pm/SKILL.md",
-      "github_url": "https://github.com/stargately/beancount-io/tree/main/skills/.claude/skills/pm/SKILL.md",
-      "description": ""
-    },
-    {
-      "name": "beancount-io",
-      "path": "skills/.claude/skills/ship/SKILL.md",
-      "github_url": "https://github.com/stargately/beancount-io/tree/main/skills/.claude/skills/ship/SKILL.md",
-      "description": ""
-    },
-    {
-      "name": "beancount-io",
-      "path": "mobile/.agents/skills/mermaid/SKILL.md",
-      "github_url": "https://github.com/stargately/beancount-io/tree/main/mobile/.agents/skills/mermaid/SKILL.md",
-      "description": ""
-    },
-    {
-      "name": "beancount-io",
-      "path": "skills/.claude/skills/beancount-ask/SKILL.md",
-      "github_url": "https://github.com/stargately/beancount-io/tree/main/skills/.claude/skills/beancount-ask/SKILL.md",
-      "description": ""
-    },
-    {
-      "name": "beancount-io",
-      "path": "skills/.claude/skills/pm-brainstorm/SKILL.md",
-      "github_url": "https://github.com/stargately/beancount-io/tree/main/skills/.claude/skills/pm-brainstorm/SKILL.md",
-      "description": ""
-    },
-    {
-      "name": "beancount-io",
-      "path": "skills/.claude/skills/beancount-close/SKILL.md",
-      "github_url": "https://github.com/stargately/beancount-io/tree/main/skills/.claude/skills/beancount-close/SKILL.md",
-      "description": ""
-    },
-    {
-      "name": "beancount-io",
-      "path": "skills/.claude/skills/beancount-import/SKILL.md",
-      "github_url": "https://github.com/stargately/beancount-io/tree/main/skills/.claude/skills/beancount-import/SKILL.md",
-      "description": ""
-    },
-    {
-      "name": "beancount-io",
-      "path": "skills/.claude/skills/beancount-reconcile/SKILL.md",
-      "github_url": "https://github.com/stargately/beancount-io/tree/main/skills/.claude/skills/beancount-reconcile/SKILL.md",
-      "description": ""
-    },
-    {
-      "name": "beancount-io",
-      "path": "skills/.claude/skills/beancount-importer-author/SKILL.md",
-      "github_url": "https://github.com/stargately/beancount-io/tree/main/skills/.claude/skills/beancount-importer-author/SKILL.md",
-      "description": ""
-    },
-    {
-      "name": "beancount-io",
-      "path": "skills/.claude/skills/mermaid/SKILL.md",
-      "github_url": "https://github.com/stargately/beancount-io/tree/main/skills/.claude/skills/mermaid/SKILL.md",
-      "description": ""
-    }
-  ],
+  "skills": [],
   "source_url": "https://github.com/stargately/beancount-io",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-09-06T11:30:11Z"
+  "distributed_at": "2026-09-07T05:35:24Z"
 }
