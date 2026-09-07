@@ -4,7 +4,7 @@
   "repo": "aspire-htmx-feature-flagged",
   "description": "An Aspire application with a simple ASP.NET htmx front end feature flags stored in App Configuration. Demonstrates local App Config, Aspire deployment, and azd pipeline setup.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/mikewild-wcl/aspire-htmx-feature-flagged",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-09-07T02:41:19Z"
+  "distributed_at": "2026-09-07T03:09:32Z"
 }
