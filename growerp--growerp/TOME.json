@@ -4,7 +4,7 @@
   "repo": "growerp",
   "description": "",
   "type": "config",
-  "source_format": "CLAUDE.md",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/growerp/growerp",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-09-04T05:45:01Z"
+  "distributed_at": "2026-09-07T05:38:12Z"
 }
