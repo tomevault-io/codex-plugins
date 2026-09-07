@@ -1,79 +1,163 @@
 
-# Codebase Structure and Commands
+# Coding Style Guidelines
 
-## Project Structure
+## Technology-Specific Guidelines
 
-pnpm + Turborepo monorepo. Scope is `@transcripts-mcp/*`. Libraries export TypeScript source (`"exports": { ".": "./src/index.ts" }`).
+### TypeScript
 
-### Workspaces
+- **NEVER use `any` or `unknown` types** - Always provide proper type definitions (see 031-never-use-any.mdc)
+- Parse untrusted input with Zod into closed types instead of `any` or `unknown`
+- Use interfaces for object shapes that will be extended
+- Use type aliases for complex types and unions
+- Use the latest TypeScript features appropriately
+- **Avoid dynamic imports** - use static imports at the top of files for better performance and code clarity
 
-- `apps/mcp` — `@transcripts-mcp/mcp`: stdio MCP server, tool registration, adapter wiring
-- `apps/www` — `@transcripts-mcp/www`: marketing site (Vite + React), Cloudflare Workers static assets
-- `packages/core` — `@transcripts-mcp/core`: types, `defineJsonlAdapter`, jsonl reader, registry, `walkGlob`
-- `packages/contracts` — `@transcripts-mcp/contracts`: serializable MCP tool metadata with no runtime-specific dependencies
-- `packages/adapters` — `@transcripts-mcp/adapters`: Cursor, Claude Code, Codex (`allAdapters`)
-- `packages/search` — `@transcripts-mcp/search`: grep (fff), FTS5, optional semantic search
-- `tools/oxlint-plugins` — `@transcripts-mcp/oxlint-plugins`: custom OxLint rules (`anti-slop`)
-- `tools/typescript-config` — `@transcripts-mcp/typescript-config`: shared tsconfig
-- `distribution/plugin` — `@transcripts-mcp/plugin`: Cursor Plugin manifest, skill, and `mcp.json`
+```typescript
+// ✅ Good: Proper type definitions
+interface UserData {
+  id: string;
+  name: string;
+  email: string;
+}
 
-`adapters` and `search` depend on `core`. Search also consumes the runtime-independent tool contract limits. `apps/mcp` depends on adapters, contracts, core, and search and is the only place that creates the registry from `allAdapters`. The website consumes contracts without importing Bun or server code. Search never imports adapters.
+function processUser(user: UserData): void {
+  // Implementation
+}
 
-### Config
+// ✅ Good: Parse untrusted input with Zod into a closed type
+const userDataSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  email: z.string(),
+});
 
-- `package.json` — root scripts and engines (`bun >= 1.2`, `node >= 26.8.1`, `pnpm@12`)
-- `pnpm-workspace.yaml` — workspaces + catalog
-- `turbo.json` — `dev`, `build`, `check-types`
-- `.oxlintrc.json` — OxLint + anti-slop
-- `.husky/` — git hooks
-- `.changeset/` — versioning
+function parseUser(text: string): UserData {
+  return userDataSchema.parse(JSON.parse(text));
+}
 
-## Commands
+// ❌ Bad: Using any or unknown
+function parseJson(text: string): unknown {
+  return JSON.parse(text);
+}
 
-Run from the repo root.
+function processData(data: any): any {
+  return data.someProperty;
+}
 
-```bash
-pnpm dev                    # turbo dev (apps/mcp: bun --watch src/index.ts)
-pnpm lint                   # oxlint
-pnpm lint:fix
-pnpm test                   # vitest
-pnpm check-types            # turbo tsc --noEmit
-pnpm format                 # oxfmt
-pnpm format:check
+// ✅ Good: Generic types instead of any or unknown
+function processData<T>(data: T): T {
+  return data;
+}
 ```
 
-Launch the server:
+### React Components
 
-```bash
-bun apps/mcp/src/index.ts
-pnpm --filter @transcripts-mcp/mcp start
+- Use functional components with hooks
+- Use named exports for components
+- Keep components small and focused on a single responsibility
+- Use proper prop typing
+
+### Backend (Bun/Node + Hono)
+
+- Use middleware for cross-cutting concerns
+- Validate request data with Zod
+- Use proper error handling with structured responses
+- Structure routes logically by resource
+
+## Comments and Documentation
+
+- Write self-documenting code, no need to add extra comments
+- **Avoid obvious comments** that just repeat what the code does
+- Add comments only for complex logic, business rules, or non-obvious decisions
+- Document public APIs and interfaces
+- Use meaningful variable and function names instead of explanatory comments
+
+```typescript
+// ✅ Good: Meaningful names, minimal comments
+async function fetchUsers(
+  page: number,
+  limit: number
+): Promise<PaginatedResponse<User>> {
+  const users = await userRepository.findPaginated(page, limit);
+  return transformToResponse(users);
+}
+
+// ❌ Bad: Obvious comments that repeat the code
+async function fetchUsers(page: number, limit: number) {
+  // Create write stream for direct streaming to file
+  const writeStream = createWriteStream(filePath);
+
+  // Convert Web ReadableStream to Node.js stream
+  const nodeStream = Readable.fromWeb(response.body);
+}
+
+// ✅ Good: Comment explains WHY, not WHAT
+async function processLargeFile(filePath: string) {
+  // Use streaming to avoid loading entire file into memory for files > 100MB
+  if (fileSize > 100 * 1024 * 1024) {
+    return processWithStreaming(filePath);
+  }
+  return processInMemory(filePath);
+}
 ```
 
-Deploy the marketing site to Cloudflare:
+## Styling
 
-```bash
-pnpm deploy:www
+- Use Tailwind CSS for styling
+- Follow component-based styling practices
+- Use utility classes for one-off styling needs
+- Extract common patterns to shared components
+
+## Git Commit Guidelines
+
+For detailed git commit message format, branch naming conventions, and version control practices, see [100-git-conventions.mdc](mdc:.cursor/rules/100-git-conventions.mdc).
+
+**Quick Reference:**
+- Use conventional commits format: `<type>(<scope>): <description>`
+- Branch names: `<type>/<description>` in kebab-case
+- Types: `feat`, `fix`, `chore`, `docs`, `refactor`, `perf`, `test`, `build`, `ci`
+
+## Import and Module Guidelines
+
+### Static Imports
+
+- **Always use static imports** at the top of files instead of dynamic imports
+- Import all dependencies at the file beginning for better bundling and performance
+- Use tree-shaking friendly named imports when possible
+
+```typescript
+// ✅ Good: Static imports at top of file
+import { readFile, stat } from "node:fs/promises";
+import { pipeline } from "node:stream/promises";
+import { createReadStream } from "node:fs";
+
+// ❌ Bad: Dynamic imports
+const { pipeline } = await import("node:stream/promises");
 ```
 
-`deploy` is a reserved pnpm command, so `pnpm --filter @transcripts-mcp/www deploy` fails. Use the root script, or `pnpm --filter @transcripts-mcp/www run deploy`.
+### Memory-Efficient Patterns
 
-Filter a package: `pnpm --filter @transcripts-mcp/core check-types`. Add deps with `--filter @transcripts-mcp/<name>`. Shared versions use `catalog:`.
+- **Use streaming APIs** instead of loading large files into memory
+- **Avoid buffer accumulation** for large data processing
+- **Implement proper cleanup** for temporary files and streams
+- **Set appropriate file size limits** based on available memory
 
-## Runtime
+```typescript
+// ✅ Good: Streaming approach
+await pipeline(readStream, transformStream, writeStream);
 
-`apps/mcp` is a Bun stdio process. stdout is JSON-RPC; logs go to `console.error`. `packages/search/src/fts.ts` uses `bun:sqlite` and is imported by the app, not by adapters.
-
-Transcript roots: `CURSOR_HOME` (`~/.cursor`), `CLAUDE_HOME` (`~/.claude`), `CODEX_HOME` (`~/.codex`). Index path: `TRANSCRIPTS_MCP_INDEX` (`~/.transcripts-mcp/index.db`).
-
-Adding a harness: one file in `packages/adapters/src/` via `defineJsonlAdapter`, one entry in `allAdapters`, one fixture + spec. Grep, FTS5, and semantic search come for free. `walkGlob` is per-segment `*` only (no `**`).
-
-## Checks before commit
-
-```bash
-pnpm lint
-pnpm check-types
-pnpm test
+// ❌ Bad: Loading entire file into memory
+const fileData = await readFile(largePath);
 ```
+
+## Core Philosophy
+
+- Code is primarily written for humans to read and understand, not just for computers to execute
+- "Explicit is better than implicit. Simple is better than complex. Readability counts."
+- Maintain consistency with existing code style when modifying files
+- Keep code DRY (Don't Repeat Yourself)
+- Prefer verbose variable names and maintainability over concise code
+- **Optimize for memory efficiency** in data processing applications
 
 ---
 > Source: [Stormix/transcripts-mcp](https://github.com/Stormix/transcripts-mcp) — distributed by [TomeVault](https://tomevault.io).
