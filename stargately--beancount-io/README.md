@@ -5,28 +5,15 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [stargately/beancount-io](https://github.com/stargately/beancount-io).
+Original source: `copilot-instructions.md` in [stargately/beancount-io](https://github.com/stargately/beancount-io).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
-
-## Bundled Skills (10)
-
-- [beancount-io](https://github.com/stargately/beancount-io/tree/main/skills/.claude/skills/pm/SKILL.md)
-- [beancount-io](https://github.com/stargately/beancount-io/tree/main/skills/.claude/skills/ship/SKILL.md)
-- [beancount-io](https://github.com/stargately/beancount-io/tree/main/mobile/.agents/skills/mermaid/SKILL.md)
-- [beancount-io](https://github.com/stargately/beancount-io/tree/main/skills/.claude/skills/beancount-ask/SKILL.md)
-- [beancount-io](https://github.com/stargately/beancount-io/tree/main/skills/.claude/skills/pm-brainstorm/SKILL.md)
-- [beancount-io](https://github.com/stargately/beancount-io/tree/main/skills/.claude/skills/beancount-close/SKILL.md)
-- [beancount-io](https://github.com/stargately/beancount-io/tree/main/skills/.claude/skills/beancount-import/SKILL.md)
-- [beancount-io](https://github.com/stargately/beancount-io/tree/main/skills/.claude/skills/beancount-reconcile/SKILL.md)
-- [beancount-io](https://github.com/stargately/beancount-io/tree/main/skills/.claude/skills/beancount-importer-author/SKILL.md)
-- [beancount-io](https://github.com/stargately/beancount-io/tree/main/skills/.claude/skills/mermaid/SKILL.md)
 
 Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/stargately/beancount-io](https://github.com/stargately/beancount-io)
 
