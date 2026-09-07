@@ -1,0 +1,30 @@
+# uzi
+
+> Source: [vtmocanu/uzi](https://github.com/vtmocanu/uzi). Graded, signed and kept current as the models change by [TomeVault](https://tomevault.io)
+
+Uzinele Întunecate (uzi): an AI dark factory
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [vtmocanu/uzi](https://github.com/vtmocanu/uzi).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+From [vtmocanu/uzi](https://github.com/vtmocanu/uzi) — a repo with 14+ stars on GitHub.
+
+---
+
+Install this config instantly:
+```
+npx tomevault install vtmocanu/uzi
+```
+Source: [github.com/vtmocanu/uzi](https://github.com/vtmocanu/uzi).
+
+<!-- genome:d-i-s -->
