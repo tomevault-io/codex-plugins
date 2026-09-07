@@ -4,7 +4,7 @@
   "repo": "OpenRideMirror",
   "description": "A Garmin-powered cycling companion display for ESP32-S3 and reflective LCD.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/mihaelmiklosic/OpenRideMirror",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-09-07T00:31:35Z"
+  "distributed_at": "2026-09-07T01:22:39Z"
 }
