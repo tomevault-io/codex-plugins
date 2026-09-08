@@ -1,0 +1,26 @@
+# Girder
+
+> Source: [dhishwasher/Girder](https://github.com/dhishwasher/Girder). Graded, signed and kept current as the models change by [TomeVault](https://tomevault.io)
+
+Gives AI coding agents exactly the code they need instead of whole files. Semantic code graph, impact analysis, and MCP server in one static Rust binary.
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [dhishwasher/Girder](https://github.com/dhishwasher/Girder).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+From [dhishwasher/Girder](https://github.com/dhishwasher/Girder) — a repo with 10+ stars on GitHub.
+
+---
+
+Explore more instruction files on [TomeVault](https://tomevault.io), the platform that grades AI instruction files and catches silent drift across every major tool.
+
+<!-- genome:d-e-s -->
