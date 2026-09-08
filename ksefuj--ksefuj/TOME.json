@@ -4,7 +4,7 @@
   "repo": "ksefuj",
   "description": "\ud83e\uddfe Free, open-source KSeF FA(3) invoice validator. XSD + semantic rules, runs in the browser. CLI & npm package included.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/ksefuj/ksefuj",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-09-08T16:32:17Z"
+  "distributed_at": "2026-09-08T16:37:16Z"
 }
