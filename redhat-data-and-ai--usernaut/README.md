@@ -7,13 +7,13 @@ Manage teams and user accounts across the SaaS universe.
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [redhat-data-and-ai/usernaut](https://github.com/redhat-data-and-ai/usernaut).
+Original source: `copilot-instructions.md` in [redhat-data-and-ai/usernaut](https://github.com/redhat-data-and-ai/usernaut).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
