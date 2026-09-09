@@ -3,8 +3,8 @@
   "owner": "harsh-simform",
   "repo": "nestjs-temporal-core",
   "description": "NestJS integration for Temporal.io with Worker and Client support",
-  "type": "config",
-  "source_format": "copilot-instructions.md",
+  "type": "tome",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -37,8 +37,33 @@
       "platform": "Windsurf"
     }
   ],
-  "skills": [],
+  "skills": [
+    {
+      "name": "nestjs-temporal-core",
+      "path": ".agents/skills/nestjs/SKILL.md",
+      "github_url": "https://github.com/harsh-simform/nestjs-temporal-core/tree/main/.agents/skills/nestjs/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "nestjs-temporal-core",
+      "path": ".claude/skills/nestjs/SKILL.md",
+      "github_url": "https://github.com/harsh-simform/nestjs-temporal-core/tree/main/.claude/skills/nestjs/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "nestjs-temporal-core",
+      "path": ".agents/skills/temporal/SKILL.md",
+      "github_url": "https://github.com/harsh-simform/nestjs-temporal-core/tree/main/.agents/skills/temporal/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "nestjs-temporal-core",
+      "path": ".claude/skills/temporal/SKILL.md",
+      "github_url": "https://github.com/harsh-simform/nestjs-temporal-core/tree/main/.claude/skills/temporal/SKILL.md",
+      "description": ""
+    }
+  ],
   "source_url": "https://github.com/harsh-simform/nestjs-temporal-core",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-20T14:38:48Z"
+  "distributed_at": "2026-09-09T19:32:19Z"
 }
