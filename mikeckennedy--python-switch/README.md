@@ -1,0 +1,34 @@
+# AI instruction files for python-switch
+
+> Sourced from [mikeckennedy/python-switch](https://github.com/mikeckennedy/python-switch), graded against the public Tome Standard and kept consistent across every major platform by [TomeVault](https://tomevault.io)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [mikeckennedy/python-switch](https://github.com/mikeckennedy/python-switch).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+## Bundled Skills (3)
+
+- [python-switch](https://github.com/mikeckennedy/python-switch/tree/main/docs/skill.md)
+- [python-switch](https://github.com/mikeckennedy/python-switch/tree/main/docs/.well-known/skills/default/SKILL.md)
+- [python-switch](https://github.com/mikeckennedy/python-switch/tree/main/docs/.well-known/agent-skills/switchlang/SKILL.md)
+
+From [mikeckennedy/python-switch](https://github.com/mikeckennedy/python-switch) — a repo with 251+ stars on GitHub.
+
+---
+
+Install this config instantly:
+```
+npx tomevault install mikeckennedy/python-switch
+```
+Source: [github.com/mikeckennedy/python-switch](https://github.com/mikeckennedy/python-switch).
+
+<!-- genome:a-i-s -->
