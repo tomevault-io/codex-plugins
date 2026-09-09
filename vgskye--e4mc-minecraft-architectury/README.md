@@ -1,0 +1,28 @@
+# e4mc-minecraft-architectury
+
+> Tome by [vgskye](https://github.com/vgskye/e4mc-minecraft-architectury), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [vgskye/e4mc-minecraft-architectury](https://github.com/vgskye/e4mc-minecraft-architectury).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/vgskye/e4mc-minecraft-architectury](https://github.com/vgskye/e4mc-minecraft-architectury)
+
+---
+
+Install this config instantly:
+```
+npx tomevault install vgskye/e4mc-minecraft-architectury
+```
+Source: [github.com/vgskye/e4mc-minecraft-architectury](https://github.com/vgskye/e4mc-minecraft-architectury).
+
+<!-- genome:t-i-p -->
