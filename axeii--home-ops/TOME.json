@@ -1,0 +1,81 @@
+{
+  "name": "home-ops",
+  "owner": "axeII",
+  "repo": "home-ops",
+  "description": "",
+  "type": "tome",
+  "source_format": "CLAUDE.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "home-ops",
+      "path": ".opencode/skills/gitbutler/SKILL.md",
+      "github_url": "https://github.com/axeII/home-ops/tree/main/.opencode/skills/gitbutler/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "home-ops",
+      "path": ".opencode/skills/sops-secrets/SKILL.md",
+      "github_url": "https://github.com/axeII/home-ops/tree/main/.opencode/skills/sops-secrets/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "home-ops",
+      "path": ".opencode/skills/flux-validate/SKILL.md",
+      "github_url": "https://github.com/axeII/home-ops/tree/main/.opencode/skills/flux-validate/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "home-ops",
+      "path": ".claude/skills/gitbutler/SKILL.md",
+      "github_url": "https://github.com/axeII/home-ops/tree/main/.claude/skills/gitbutler/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "home-ops",
+      "path": ".claude/skills/sops-secrets/SKILL.md",
+      "github_url": "https://github.com/axeII/home-ops/tree/main/.claude/skills/sops-secrets/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "home-ops",
+      "path": ".claude/skills/flux-validate/SKILL.md",
+      "github_url": "https://github.com/axeII/home-ops/tree/main/.claude/skills/flux-validate/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/axeII/home-ops",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-09-09T19:39:18Z"
+}
