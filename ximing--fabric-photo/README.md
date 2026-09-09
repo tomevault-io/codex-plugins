@@ -15,6 +15,11 @@ Original source: `CLAUDE.md` in [ximing/fabric-photo](https://github.com/ximing/
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
+## Bundled Skills (2)
+
+- [fabric-photo](https://github.com/ximing/fabric-photo/tree/main/.agents/skills/km-progressive-project/SKILL.md)
+- [fabric-photo](https://github.com/ximing/fabric-photo/tree/main/.claude/skills/km-progressive-project/SKILL.md)
+
 Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/ximing/fabric-photo](https://github.com/ximing/fabric-photo)
 
 ---
