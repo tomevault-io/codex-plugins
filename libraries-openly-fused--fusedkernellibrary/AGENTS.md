@@ -1,269 +1,95 @@
-# Copilot Instructions for FusedKernelLibrary
+# CLAUDE.md
 
-## Project Overview
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-**FusedKernelLibrary (FKL)** is a C++20 header-only library that enables automatic GPU kernel fusion without requiring CUDA expertise. It implements four fusion techniques:
-- **Vertical Fusion**: Chain operations into a single kernel with no intermediate memory writes.
-- **Horizontal Fusion**: Process multiple data planes in parallel using `blockIdx.z`.
-- **Backwards Vertical Fusion**: Read-backwards through a pipeline (like OpenCV Filters), computing only required pixels.
-- **Divergent Horizontal Fusion**: Execute different kernels simultaneously using different SM components.
+## Overview
 
-The library has CPU and CUDA backends. HIP support is architecturally possible but not yet implemented.
+FusedKernelLibrary (FKL) is a header-only C++20 library for automatic GPU kernel fusion (Vertical, Horizontal, Backwards Vertical, and Divergent Horizontal Fusion), with CPU and CUDA backends. Only nvcc is supported as the CUDA compiler. `main` is the development branch (v0.2.0, API may break); `LTS-C++17` is the frozen-API branch.
 
-**License**: Apache 2.0  
-**Version**: 0.2.0 (main branch — API may break for maintainability)  
-**LTS branch**: `LTS-C++17` (frozen API, C++17 minimum, adds features cautiously)
+Deep per-topic docs live in `.github/skills/*/SKILL.md` (implementing operations, implementing DPPs, fusion techniques, data structures, using the library, language bindings, build/test). Read the relevant skill before nontrivial work. `.github/copilot-instructions.md` overlaps with them but contains stale claims — see "Stale documentation" below.
 
----
+## Build and test commands
 
-## Repository Layout
-
-```
-FusedKernelLibrary/
-├── .clang-format               # LLVM-based style, 4-space indent, 120-char column limit
-├── .github/workflows/          # CI: cmake-linux-amd64.yml, cmake-linux-arm64.yml, cmake-windows-amd64.yml
-├── CMakeLists.txt              # Root build (v0.2.0, requires CMake >= 3.24, C++ and optional CUDA)
-├── cmake/                      # CMake helpers: arch flags, CUDA init, test discovery, generators
-│   ├── archflags.cmake         # CPU SIMD flags (AVX2 default on MSVC x64, native on Unix)
-│   ├── cmake_init.cmake        # Global CMake settings
-│   ├── cuda_init.cmake         # CUDA language enablement and NVCC path (Ninja/Windows workaround)
-│   ├── libs/cuda/archs.cmake   # CUDA arch selection/filtering (requires compute_70+ for CUDA < 13)
-│   └── tests/                  # Test discovery and stub generation
-│       ├── discover_tests.cmake
-│       └── add_generated_test.cmake
-├── include/fused_kernel/       # All public headers (header-only library)
-│   ├── fused_kernel.h          # Main API entry point (includes executors.h)
-│   ├── algorithms/             # Operations: arithmetic, cast, image processing, etc.
-│   └── core/                   # Infrastructure: execution model, data types, utils
-│       ├── execution_model/    # Executors, DPP patterns, operation model
-│       ├── data/               # Ptr, Ptr2D, Tensor, RawPtr types
-│       └── utils/              # Macros (utils.h), compiler detection (compiler_macros.h)
-├── lib/                        # CMake library target definition and version config
-├── tests/                      # Integration tests (header .h files, auto-discovered)
-├── utests/                     # Unit tests (header .h files, auto-discovered)
-└── benchmarks/                 # Benchmarks (disabled by default, ENABLE_BENCHMARK=ON)
-```
-
----
-
-## Build System
-
-### Requirements
-- **CMake** >= 3.24
-- **C++ compiler** with C++20 support
-- **CUDA** (optional): requires NVCC. **Only nvcc is supported as the CUDA compiler**; clang-as-CUDA-compiler is not supported despite `CLANG_HOST_DEVICE` macro existing.
-- **MSVC**: Visual Studio 2019+ (MSVC_VERSION >= 1920) required; older versions disable the CPU backend.
-
-### Configure and Build (typical)
-```bash
-# Linux (Ninja)
-cmake -G "Ninja" -B build -DCMAKE_BUILD_TYPE=Release -S .
-cmake --build build --config Release
-
-# Windows (Ninja, inside VS Developer Shell)
-cmake -G "Ninja" -B build -DCMAKE_BUILD_TYPE=Release -S .
-cmake --build build --config Release
-```
-
-### Key CMake Options
-| Option | Default | Description |
-|--------|---------|-------------|
-| `ENABLE_CPU` | `ON` | Build CPU backend (auto-disabled for MSVC < 2019) |
-| `ENABLE_CUDA` | `ON` (if NVCC found) | Build CUDA backend |
-| `BUILD_TEST` | `ON` | Build integration tests |
-| `BUILD_UTEST` | `ON` | Build unit tests |
-| `ENABLE_BENCHMARK` | `OFF` | Build benchmark targets |
-| `CUDA_ARCH` | `"native"` | CUDA architecture(s); use `"native"`, `"all"`, `"all-major"`, or explicit list |
-| `ARCH_FLAGS` | `AVX2`/`native` | CPU SIMD flags (MSVC: AVX/AVX2/AVX512; Unix: native/haswell/…) |
-
-### CUDA Architecture Notes
-- **CUDA < 13**: Architectures below `compute_70` (Volta) are filtered out automatically. A GPU with compute < 70 will trigger an error.
-- **`native` with CUDA < 13**: `nvidia-smi --query-gpu=compute_cap` is executed at CMake configure time to detect the local GPU.
-- **CUDA >= 13**: All architectures allowed.
-
-### Windows-Specific Notes
-- CI uses self-hosted runners with LLVM 21.1.0 at `D:/clang+llvm-21.1.0-x86_64-pc-windows-msvc/bin/`.
-- The Ninja generator requires a workaround: after `cmake`, `rules.ninja` may contain a wrong NVCC path that must be patched (see `cmake-windows-amd64.yml`).
-- The VS Developer Shell (`Enter-VsDevShell`) must be activated for both configure and build steps on Windows.
-- `utf8cp.manifest` is embedded into test executables on Windows for UTF-8 codepage support.
-
----
-
-## Running Tests
+Requires CMake >= 3.28, a C++20 host compiler, and CUDA (nvcc). Project policy and CI treat CUDA as required, but CMake degrades gracefully: without nvcc it configures CPU-only and generates only `*_cpp` targets.
 
 ```bash
-cd build
-ctest --build-config Release --output-junit test_results.xml
+cmake -G Ninja -B build -DCMAKE_BUILD_TYPE=Release -S .   # configure
+cmake --build build --config Release                       # build everything (slow: ~50 nvcc TUs)
+cd build && ctest --build-config Release                   # run all tests (the merge gate)
 ```
 
-Tests are registered with CTest automatically. Individual targets follow the naming pattern `<TestName>_cpp` (CPU) and `<TestName>_cu` (CUDA).
+Single test — each test header generates an executable target whose name equals its ctest name:
 
----
-
-## Test Infrastructure
-
-### How Tests Are Discovered
-Tests in `tests/` and `utests/` are **not** written with a traditional test framework. Instead:
-
-1. Each test is a **header file** (`.h`) inside `tests/` or `utests/`.
-2. CMake's `discover_tests()` function (in `cmake/tests/discover_tests.cmake`) **recursively finds all `*.h` files** in the test directories, excluding files matching `*_common.*`.
-3. For each test header, a `launcher.cpp` or `launcher.cu` stub is generated from `tests/launcher.in` using `configure_file`. The stub includes the test header and calls `launch()`.
-4. Two executables are generated per test file (unless restricted):
-   - `<TestName>_cpp` — compiled as C++ (CPU backend)
-   - `<TestName>_cu` — compiled as CUDA (if NVCC is available)
-5. Use `// ONLY_CU` in a test header to suppress the `_cpp` target.
-6. Use `// ONLY_CPU` in a test header to suppress the `_cu` target.
-
-### Test File Structure
-Every test header must define a `launch()` function returning `int`:
-```cpp
-#include <tests/main.h>
-#include <fused_kernel/fused_kernel.h>
-// ... other FKL headers
-
-int launch() {
-    // test code here
-    return 0;  // 0 = pass, non-zero = fail
-}
+```bash
+cmake --build build --target utest_softmax_cu   # build just one test
+./build/bin/utest_softmax_cu                     # run directly (Ninja puts binaries in build/bin/)
+ctest -R '^utest_softmax_cu$'                    # or via ctest, from build/
+ctest -R '_cpp$'                                 # CPU-backend tests only (no GPU needed at runtime)
 ```
 
-Files ending in `_common.h` (matching `*_common.*`) are shared helpers, not test entry points — they are excluded from test discovery.
+Key CMake options: `ENABLE_CPU` (ON), `ENABLE_CUDA` (ON if nvcc found), `BUILD_TEST` (ON), `BUILD_UTEST` (ON), `ENABLE_BENCHMARK` (OFF), `CUDA_ARCH` ("native", passed verbatim to `CUDA_ARCHITECTURES` — no arch filtering exists), `ARCH_FLAGS` (CPU SIMD), `ENABLE_NVTX`, `ENABLE_DEBUG`, `TEMPLATE_DEPTH` (1000).
 
----
+There is no lint/format gate. Format manually with `clang-format -i` using the repo-root `.clang-format` (LLVM base, 4-space indent, 120-char lines, `PointerAlignment: Right`). The merge gate is the full ctest suite building and passing across CI's compiler matrix (no `-Werror` anywhere, though the skills' PR checklists ask for warning-clean nvcc and clang builds). CI runs only on PRs to `main` (self-hosted runners): Linux amd64/arm64 with g++-13 and clang++-21 + CUDA 13.3; Windows with cl 14.44 + CUDA 13.0, cl 14.51 + CUDA 13.3, and clang-cl 14.51 + CUDA 13.3.
 
-## Code Conventions
+## Test infrastructure (no framework — no GTest/Catch2)
 
-### Namespace
-All library code lives in namespace `fk`. Use `using namespace fk;` in test/example files.
+- Tests are header files auto-discovered by CMake (`cmake/tests/discover_tests.cmake`, GLOB_RECURSE with CONFIGURE_DEPENDS) inside immediate **subdirectories** of `tests/` and `utests/`. Top-level files (`tests/main.h`, `tests/operation_test_utils.h`) are never tests. Paths containing `_common` are excluded (shared helpers). Adding a new `.h` test requires no CMake edits.
+- Every test header defines `int launch()` returning 0 for pass. A generated launcher TU compiles the header twice: as C++ (`<name>_cpp` target, `ParArch::CPU`) and as CUDA (`<name>_cu`, `ParArch::GPU_NVIDIA`). The same source targets both backends because `defaultParArch` switches on `__NVCC__`.
+- Backend suppression is a raw **substring** search: any occurrence of `ONLY_CU` / `ONLY_CPU` anywhere in the file (even in a comment) suppresses the `_cpp` / `_cu` target. Repo convention: `#define __ONLY_CU__`.
+- Test harness helpers (`START_ADDING_TESTS`, `STOP_ADDING_TESTS`, `RUN_ALL_TESTS`, `TestCaseBuilder`, the `testCases` map) live in `tests/operation_test_utils.h`; `tests/main.h` only declares `launch()`.
+- Every public alias and `build()` overload needs a utest that instantiates it — template code only breaks on instantiation (see issue #244: shipped aliases that never compiled).
 
-### Function/Method Macros
-All functions in headers use one of these macros (from `include/fused_kernel/core/utils/utils.h`):
+## Architecture
 
-| Macro | Expands to (NVCC mode) | Use case |
-|-------|------------------------|----------|
-| `FK_HOST_DEVICE_FUSE` | `__host__ __device__ __forceinline__ static constexpr` | Dual-mode static constexpr |
-| `FK_HOST_DEVICE_CNST` | `__host__ __device__ __forceinline__ constexpr` | Dual-mode constexpr |
-| `FK_DEVICE_FUSE` | `__device__ __forceinline__ static constexpr` | Device-only static constexpr |
-| `FK_HOST_FUSE` | `__host__ __forceinline__ static constexpr` | Host-only static constexpr |
-| `FK_HOST_STATIC` | `__host__ __forceinline__ static` | Host-only static inline |
-| `FK_HOST_DEVICE_STATIC` | `__host__ __device__ __forceinline__ static` | Dual-mode static inline |
-| `FK_RESTRICT` | `__restrict__` | Restrict pointer qualifier |
+### The Operation / IOp / DPP / Executor model
 
-In CPU-only mode (no NVCC, no CLANG_HOST_DEVICE), these macros degrade to standard C++ equivalents.
+- **Operation**: a stateless static-only struct (`FK_STATIC_STRUCT` deletes all ctors) that is always **single-thread** code. Anything needing thread cooperation (shared memory, `__syncthreads`, shuffles) belongs in a **DPP** (Data Parallel Pattern), never in an Operation.
+- **IOp (InstantiableOperation)** = Operation type + runtime params, produced by `Op::build(...)`. Wrappers `Read<Op>`, `ReadBack<Op>`, `Unary<Op>`, `Binary<Op>`, `Ternary<Op>`, `MidWrite<Op>`, `Write<Op>` are defined in `core/execution_model/operation_model/instantiable_operations.h`. **Types define the kernel; `build()` values are runtime parameters** — changing a value never creates a new kernel, changing a type does.
+- The 11 OperationTypes and their exact `exec()` signatures are documented authoritatively in the comment table of `core/execution_model/operation_model/operation_types.h` (ReadType, WriteType, UnaryType, BinaryType, ReadBackType, TernaryType, MidWriteType, Incomplete*/Open/Closed). `IncompleteTernaryType` is declared but unused — do not implement against it.
+- **Entry point**: `fk::executeOperations<TransformDPP<>>(stream, readIOp, computeIOps..., writeIOp)` via `#include <fused_kernel/fused_kernel.h>`. First IOp must be a complete Read, last a Write; each op's `OutputType` must equal the next op's `InputType`.
+- **Fusion machinery**: vertical fusion is an `operator|` fold over IOps in `core/execution_model/data_parallel_patterns.h`; host-side fusion (`operator&`, `.then()`) is `Fuser` and backwards vertical fusion is `BackFuser::fuse_back` in `operation_model/iop_fuser.h`. Note `fuse_back` returns a `Tuple` of IOps (callers unpack with `get<0>`), and fusing onto an IncompleteReadBack continuation (Crop/Resize) completes that op's own IOp — a `FusedOperation` (`fused_operation.h`) is only produced for non-ReadBack continuations. Horizontal fusion: passing `std::array` params to `build()` produces `BatchRead`/`BatchWrite` (`batch_operations.h`), one grid z-plane per batch item.
+- **Grid sizing**: comes from the first read IOp's `getActiveThreads()` — the OUTPUT geometry (for a ReadBack stack, the last ReadBack), not the input size. Block size heuristics live in `core/execution_model/executors.h`.
+- **Executors/backends**: `ParArch::CPU` and `ParArch::GPU_NVIDIA` are the only implemented backends (`executors.h`, `parallel_architectures.h`). `Stream` = `Stream_<defaultParArch>`; default-constructed owns its cudaStream_t, constructing from an existing `cudaStream_t` is non-owning.
+- **Thread fusion** (vectorized loads, `core/execution_model/thread_fusion.h`): opt-in via `TransformDPP<PA, TF::ENABLED>`; requires both first read and last write to have `THREAD_FUSION=true`. Any ReadBack (Crop/Resize) or fused read chain silently disables it.
 
-### Compiler Macros Header
-`include/fused_kernel/core/utils/compiler_macros.h` only defines `CLANG_HOST_DEVICE` (1 when clang compiles CUDA code with `__CUDA__`, 0 otherwise). This macro enables Clang host-device compilation but **nvcc remains the only supported CUDA compiler**; clang-as-CUDA-compiler is not a supported configuration.
+### Implementing a new Operation
 
-### Static-Only Structs
-The `FK_STATIC_STRUCT(StructName, StructAlias)` macro marks a struct as non-constructible and non-copyable (deletes default/copy/move constructors and assignment operators).
+Pattern (see `Mul` in `algorithms/basic_ops/arithmetic.h`, `Crop` in `algorithms/image_processing/crop.h`):
+1. Private `using SelfType = MyOp<...>;` then `FK_STATIC_STRUCT(MyOp, SelfType)`.
+2. CRTP parent: `using Parent = BinaryOperation<I, P, O, SelfType>;` (parents in `operation_model/parent_operations.h`).
+3. A `DECLARE_*_PARENT` macro generates the typedefs and `build()` overloads. **ReadBack ops must use `DECLARE_READBACK_PARENT` from `batch_operations.h`**, not the `_BASIC` variant — the `_BASIC` one silently drops the `std::array` batch builders that enable horizontal fusion.
+4. Hand-write `FK_HOST_DEVICE_FUSE OutputType exec(...)` — it must also run on the CPU backend. Compute ops need nothing else; Read/ReadBack ops additionally hand-write geometry (`num_elems_x/y/z`, `getActiveThreads`) and extra `build()` overloads the macros don't generate (e.g. Crop's `build(backIOp, rect)`).
+- ReadBack ops (Crop, Resize, Warping, BorderReader) come in incomplete/complete pairs: `Crop<>` (BackIOp=NullType) is what users build with params only; `BackFuser` later calls the two-arg `build(backIOp, iOp)`.
+- **Golden rule**: values users change per call (factors, rects, sizes) go in `ParamsType`; anything that changes generated code (dtype, channel count, batch size, interpolation mode) is a template parameter.
+- Ops are grouped thematically per file (`arithmetic.h` holds Add/Sub/Mul/Div); the same op name is specialized on a trailing InstanceType tag rather than renamed. Note `SaturateCast` lives in `image_processing/saturate.h`, not `basic_ops/`.
+- Umbrella headers intentionally omit files: `basic_ops.h` omits `memory_operations.h`; `algorithms.h` omits `attention/` entirely. Header guards are `#ifndef` style (usually `FK_*`), never `#pragma once`.
 
-### Type Aliases
-The library defines CUDA-compatible type aliases (also available in CPU mode):
-```cpp
-using uchar    = unsigned char;
-using schar    = signed char;
-using uint     = unsigned int;
-using ushort   = unsigned short;
-using ulong    = unsigned long;
-using longlong = long long;
-using ulonglong = unsigned long long;
-```
+### Namespaces, macros, data types
 
-### CUDA Error Checking
-Use the `gpuErrchk(expr)` macro for CUDA API calls. It throws `std::runtime_error` on failure with file and line info.
+- `fk::` for nearly everything. `cxp::` is strictly reserved for `core/constexpr_libs/` — std functionality that is unavailable on GPU, not constexpr, or both.
+- Function macros from `core/utils/utils.h` branch on `__NVCC__` / `NVRTC_COMPILER` / plain C++: `FK_HOST_DEVICE_FUSE` (= `__host__ __device__ __forceinline__ static constexpr`), `FK_DEVICE_FUSE`, `FK_HOST_FUSE`, etc. Naming: `FUSE` = static constexpr, `CNST` = constexpr non-static, `STATIC` = static non-constexpr. `gpuErrchk(expr)` throws `std::runtime_error` (only defined under `__NVCC__`).
+- GPU-compatible std replacements: `fk::Tuple`/`fk::apply`/`fk::apply_d` in `core/data/tuple.h`, `fk::Array` in `core/data/array.h`, vector-type traits (`VBase`, `cn<>`, `make_`, `make_set`) and channel-wise operators in `core/utils/vector_utils.h`. CPU-only builds still get `uchar3`/`float4` etc. via `core/data/vector_types.h`.
+- `Ptr<ND,T>` (`core/data/ptr_nd.h`) is a ref-counted owner — copies are shallow and share memory; wrapping an external pointer is non-owning (FKL never frees it). Kernels only ever see the POD `RawPtr<ND,T>`; host code passes `container.ptr()` into `build()`. Default `MemType` under NVCC is `DeviceAndPinned` (device buffer + pinned host mirror, moved with `.upload(stream)`/`.download(stream)`); `Host` in CPU-only builds. `ND::_3D` dims are width × height × planes × color_planes (planes = batch). `Tensor<T>` forces contiguous pitch.
 
-### Code Formatting
-Run `clang-format` using the `.clang-format` file at the repo root:
-- Based on LLVM style
-- **4-space indentation**, no tabs
-- **120-character column limit**
-- `PointerAlignment: Right` (e.g., `int* ptr`)
-- `AlwaysBreakTemplateDeclarations: MultiLine`
+### attention/ — GPU-only exception to the rules
 
----
+`algorithms/attention/` (softmax, flash_attention, flash_attention_mma, flash_decode) contains self-contained cooperative DPPs (whole kernels: online softmax, FlashAttention-2 SIMT and mma.sync tensor-core variants, split-KV FlashDecoding), not composable Operations. The DPP structs are inside `#if defined(__NVCC__)` with **no CPU implementation** (unlike the DPP skill's stated rule), though the directory also holds composable CPU-compiling pieces outside the guard (e.g. `Int8TokenDequantRead`, a normal Read Operation usable in any FKL pipeline, plus host packing helpers). Nothing in `attention/` is included by any umbrella header. Cooperative exec bodies can't be constexpr (shared memory + barriers), so softmax and flash_attention use `FK_COOP_DEVICE_FUSE` while the mma and decode variants hand-write `static __device__ void exec`. Fusion happens via Read-IOp prologues (dequantization runs in-register at load time) and IOp-chain epilogues. `DivergentBatchTransformDPP` (Divergent HF) is likewise GPU-only in practice: no CPU executor specialization exists and its base class hardcodes `ParArch::GPU_NVIDIA`.
 
-## Core API Patterns
+### Decoding common compile failures
 
-### Executing Fused Operations
-The primary entry point is `fk::executeOperations<DPPType>(stream, op1, op2, ...)`:
-```cpp
-#include <fused_kernel/fused_kernel.h>
-using namespace fk;
+- Read nvcc/clang template errors **bottom-up**: the last "instantiation of" frame names your line; the first error names the real culprit.
+- `qualifiers dropped in binding reference of type 'X&&'` → explicit template args on a forwarding-reference helper (never call `BackFuser::fuse_back<Explicit...>`; let deduction happen).
+- `name followed by "::" must be a class or namespace name` inside `fused_operation.h` → a raw Operation was passed where an IOp was expected; wrap it (`Unary<...>`, `Binary<...>`).
+- In DPP code, pass the **whole IOp** to `IOp::Operation::exec(thread, ..., iop)` — passing `iop.params` routes to the wrong overload and fails to compile.
 
-Stream stream;
-executeOperations<TransformDPP<>>(stream,
-    PerThreadRead<ND::_2D, uchar3>::build(inputPtr),
-    Crop<>::build(crops),
-    Resize<InterpolationType::INTER_LINEAR>::build(outputSize),
-    SaturateCast<float3, uchar3>::build(),
-    TensorWrite<uchar3>::build(output.ptr()));
-stream.sync();
-```
+## Stale documentation — do not trust these claims
 
-### Operation Building Pattern
-Each operation type exposes a `static build(...)` factory method returning an instance containing the operation parameters. The kernel itself is encoded in the type — parameters are runtime values.
-
-### Data Types
-- `Ptr2D<T>`: 2D GPU pointer with width/height/pitch
-- `Tensor<T>`: Contiguous 3D GPU tensor (width × height × batch)
-- `Ptr<ND, T>`: Generic N-dimensional GPU pointer
-- `Stream` / `Stream_<PAR_ARCH>`: CUDA stream wrapper
-
-### Data Parallel Patterns (DPP)
-`TransformDPP<>` is the standard choice. It drives the kernel grid/block dimensions based on the operations in the pipeline.
-
----
-
-## CI / Workflow Details
-
-All three workflow files trigger on **pull requests to `main`** (push triggers are commented out). All runners are **self-hosted**.
-
-### Linux (cmake-linux-amd64.yml, cmake-linux-arm64.yml)
-- **Compilers**: `g++-13`, `clang++-21`
-- **CUDA**: 12.9, 13.2 (via `/usr/local/cuda-<version>/bin/nvcc`)
-- **CMake**: Custom installation at `/home/cudeiro/cmake-4.2.1-linux-x86_64/bin/` (added to PATH)
-- **Generator**: Ninja
-- **Build type**: Release
-
-### Windows (cmake-windows-amd64.yml)
-- **Host compilers**: `cl` (MSVC), `clang-cl`
-- **MSVC versions**: 14.44, 14.50 (via `-vcvars_ver`)
-- **CUDA**: 12.9, 13.2 (NVCC at `%ProgramFiles%\NVIDIA GPU Computing Toolkit\CUDA\v<version>\bin\nvcc.exe`)
-- **LLVM**: `D:/clang+llvm-21.1.0-x86_64-pc-windows-msvc/bin/` (added to PATH)
-- **Generator**: Ninja
-- **Workaround**: After CMake configure, `rules.ninja` may contain an empty NVCC path that is patched with PowerShell string replacement.
-
-### Environment Variables Set by CI
-| Variable | Value |
-|----------|-------|
-| `CUDACXX` | Path to nvcc executable |
-| `CC` | Host C compiler |
-| `CXX` | Host C++ compiler |
-
----
-
-## Adding a New Operation
-
-New operations follow the same pattern as existing ones in `include/fused_kernel/algorithms/`. Each operation is a struct with:
-- A `static build(...)` factory method
-- A `static exec(...)` or operator that performs the computation
-- Appropriate `FK_HOST_DEVICE_FUSE` / `FK_DEVICE_FUSE` function qualifiers
-- Placement in the `fk` namespace
-
-See existing operations like `Mul`, `Add`, `SaturateCast` in `include/fused_kernel/algorithms/basic_ops/` for reference patterns.
-
----
-
-## Known Issues and Workarounds
-
-1. **Windows Ninja + NVCC path**: After CMake configure on Windows with Ninja, `<build_dir>/CMakeFiles/rules.ninja` may contain an incorrect path to `nvcc.exe`. The CI workflow patches this with PowerShell `Set-Content`. If you hit this locally, check that `CUDACXX` env var is set before invoking CMake and verify the generated `rules.ninja`.
-
-2. **CUDA < 13 + old GPUs**: If your GPU has compute capability < 7.0 (pre-Volta), building will fail. Use a newer GPU or set `CUDA_ARCH` explicitly to a supported arch.
-
-3. **MSVC < 2019**: CPU backend is automatically disabled with a warning. The CUDA backend may still work if NVCC is available.
-
-4. **Clang as CUDA compiler**: While `CLANG_HOST_DEVICE` macro exists and Clang can be used as a host compiler (including `clang++-21` on Linux and `clang-cl` on Windows with nvcc as the CUDA compiler), **using Clang as the CUDA compiler itself (replacing nvcc) is not supported**.
+- `CLANG_HOST_DEVICE` does not exist; `core/utils/compiler_macros.h` defines only `_MSC_VER_EXISTS` (docs referencing it are stale).
+- No CUDA arch filtering / `nvidia-smi` detection / compute_70 minimum exists in cmake — `CUDA_ARCH` is passed verbatim (copilot-instructions claim is stale).
+- `ENABLE_CPU` is never auto-disabled for old MSVC.
+- The README example includes `<fused_kernel/core/execution_model/memory_operations.h>` — the real path is `include/fused_kernel/algorithms/basic_ops/memory_operations.h`.
+- `attention/` is absent from all skills, README, and copilot-instructions.
 
 ---
 > Source: [Libraries-Openly-Fused/FusedKernelLibrary](https://github.com/Libraries-Openly-Fused/FusedKernelLibrary) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-05-20 -->
+<!-- tomevault:4.0:agents_md:2026-09-09 -->
