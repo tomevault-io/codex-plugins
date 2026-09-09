@@ -1,0 +1,29 @@
+# awesome-physical-ai
+
+> Tome by [natnew](https://github.com/natnew/awesome-physical-ai), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [natnew/awesome-physical-ai](https://github.com/natnew/awesome-physical-ai).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+## Bundled Skills (2)
+
+- [awesome-physical-ai](https://github.com/natnew/awesome-physical-ai/tree/main/skills/changelog/SKILL.md)
+- [awesome-physical-ai](https://github.com/natnew/awesome-physical-ai/tree/main/skills/feature-spec/SKILL.md)
+
+Graded against the Tome Standard, TomeVault's public ruleset for whether AI instructions load, read clearly and stay safe. Source: [github.com/natnew/awesome-physical-ai](https://github.com/natnew/awesome-physical-ai)
+
+---
+
+Own this repo? Install the TomeVault Relay to keep every platform's copy in sync on every push: [https://tomevault.io/install](https://tomevault.io/install).
+
+<!-- genome:t-c-q -->
