@@ -3,8 +3,8 @@
   "owner": "Libraries-Openly-Fused",
   "repo": "FusedKernelLibrary",
   "description": "We aim to redefine Data Parallel libraries portabiliy, performance, programability and maintainability, by using C++ standard features, instead of creating new compilers.",
-  "type": "config",
-  "source_format": "copilot-instructions.md",
+  "type": "tome",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -37,8 +37,63 @@
       "platform": "Windsurf"
     }
   ],
-  "skills": [],
+  "skills": [
+    {
+      "name": "FusedKernelLibrary",
+      "path": ".github/skills/fkl-build-and-test/SKILL.md",
+      "github_url": "https://github.com/Libraries-Openly-Fused/FusedKernelLibrary/tree/main/.github/skills/fkl-build-and-test/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "FusedKernelLibrary",
+      "path": ".github/skills/fkl-data-structures/SKILL.md",
+      "github_url": "https://github.com/Libraries-Openly-Fused/FusedKernelLibrary/tree/main/.github/skills/fkl-data-structures/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "FusedKernelLibrary",
+      "path": ".github/skills/fkl-using-operations/SKILL.md",
+      "github_url": "https://github.com/Libraries-Openly-Fused/FusedKernelLibrary/tree/main/.github/skills/fkl-using-operations/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "FusedKernelLibrary",
+      "path": ".github/skills/fkl-using-the-library/SKILL.md",
+      "github_url": "https://github.com/Libraries-Openly-Fused/FusedKernelLibrary/tree/main/.github/skills/fkl-using-the-library/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "FusedKernelLibrary",
+      "path": ".github/skills/fkl-language-bindings/SKILL.md",
+      "github_url": "https://github.com/Libraries-Openly-Fused/FusedKernelLibrary/tree/main/.github/skills/fkl-language-bindings/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "FusedKernelLibrary",
+      "path": ".github/skills/fkl-fusion-techniques/SKILL.md",
+      "github_url": "https://github.com/Libraries-Openly-Fused/FusedKernelLibrary/tree/main/.github/skills/fkl-fusion-techniques/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "FusedKernelLibrary",
+      "path": ".github/skills/fkl-architecture-overview/SKILL.md",
+      "github_url": "https://github.com/Libraries-Openly-Fused/FusedKernelLibrary/tree/main/.github/skills/fkl-architecture-overview/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "FusedKernelLibrary",
+      "path": ".github/skills/fkl-implementing-operations/SKILL.md",
+      "github_url": "https://github.com/Libraries-Openly-Fused/FusedKernelLibrary/tree/main/.github/skills/fkl-implementing-operations/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "FusedKernelLibrary",
+      "path": ".github/skills/fkl-implementing-data-parallel-patterns/SKILL.md",
+      "github_url": "https://github.com/Libraries-Openly-Fused/FusedKernelLibrary/tree/main/.github/skills/fkl-implementing-data-parallel-patterns/SKILL.md",
+      "description": ""
+    }
+  ],
   "source_url": "https://github.com/Libraries-Openly-Fused/FusedKernelLibrary",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-20T10:47:17Z"
+  "distributed_at": "2026-09-09T17:31:24Z"
 }
