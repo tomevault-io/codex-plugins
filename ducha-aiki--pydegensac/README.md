@@ -1,0 +1,28 @@
+# pydegensac
+
+> Tome by [ducha-aiki](https://github.com/ducha-aiki/pydegensac), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [ducha-aiki/pydegensac](https://github.com/ducha-aiki/pydegensac).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/ducha-aiki/pydegensac](https://github.com/ducha-aiki/pydegensac)
+
+---
+
+Install this config instantly:
+```
+npx tomevault install ducha-aiki/pydegensac
+```
+Source: [github.com/ducha-aiki/pydegensac](https://github.com/ducha-aiki/pydegensac).
+
+<!-- genome:t-i-p -->
