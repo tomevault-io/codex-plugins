@@ -1,303 +1,84 @@
-# GitHub Copilot Instructions for NestJS Temporal Core
+# nestjs-temporal-core
 
-## 🚀 Project Overview
+NestJS integration library for Temporal.io. Provides auto-discovery, declarative scheduling, worker management, and enterprise features for running Temporal workflows in NestJS apps.
 
-**NestJS Temporal Core** is a comprehensive integration framework that bridges NestJS and Temporal.io, enabling developers to build robust, distributed, fault-tolerant applications using Temporal's workflow orchestration engine with NestJS's powerful dependency injection and modular architecture.
-
-### 🎯 What We're Building
-
-This framework provides:
-- **Modular Architecture**: Separate modules for client, worker, activities, and schedules
-- **Enterprise-Ready**: Production-grade error handling, monitoring, and health checks
-- **Developer Experience**: Type-safe decorators, automatic discovery, and comprehensive logging
-- **Scalable Integration**: Flexible registration patterns for different deployment scenarios
-- **Zero Configuration**: Smart defaults with extensive customization options
-
-### 🏗️ Current Architecture (Post-3.0 Refactor)
-
-#### **Modular Module System:**
-
-1. **Core Modules** (`src/`)
-   - `TemporalModule` - Main unified module with client + worker integration
-   - `TemporalClientModule` - Client-only operations (workflow execution, queries)
-   - `TemporalWorkerModule` - Worker-only operations (activity/workflow registration)
-   - `TemporalActivityModule` - Standalone activity management
-   - `TemporalSchedulesModule` - Standalone schedule management
-
-2. **Service Layer** (`src/services/`)
-   - `TemporalService` - Unified facade for all Temporal operations
-   - `TemporalClientService` - Workflow execution and management
-   - `TemporalWorkerManagerService` - Worker lifecycle and activity registration  
-   - `TemporalScheduleService` - Schedule management (cron, interval, calendar)
-   - `TemporalDiscoveryService` - Automatic component discovery
-   - `TemporalMetadataAccessor` - Metadata extraction and validation
-
-3. **Decorator Layer** (`src/decorators/`)
-   - `@Activity()` - Mark classes as Temporal activities
-   - `@ActivityMethod()` - Mark methods for activity discovery
-   - Workflow decorators (deprecated - use pure Temporal workflow functions)
-
-4. **Provider Layer** (`src/providers/`)
-   - `TemporalConnectionFactory` - Connection management and pooling
-   - Configuration providers and constants
-
-### 🔧 Key Integration Patterns
-
-#### **Module Registration Patterns**
-```typescript
-// 1. Unified Module (Client + Worker)
-TemporalModule.register({
-  connection: { address: 'localhost:7233' },
-  taskQueue: 'my-queue',
-  worker: { 
-    workflowsPath: './dist/workflows',
-    activityClasses: [PaymentActivity] 
-  }
-})
-
-// 2. Client-Only Module
-TemporalClientModule.register({
-  connection: { address: 'localhost:7233' }
-})
-
-// 3. Worker-Only Module  
-TemporalWorkerModule.register({
-  connection: { address: 'localhost:7233' },
-  taskQueue: 'worker-queue',
-  worker: { workflowsPath: './dist/workflows' }
-})
-
-// 4. Async Configuration
-TemporalModule.registerAsync({
-  imports: [ConfigModule],
-  useFactory: (config: ConfigService) => ({
-    connection: { address: config.get('TEMPORAL_ADDRESS') },
-    taskQueue: config.get('TEMPORAL_TASK_QUEUE')
-  }),
-  inject: [ConfigService]
-})
-```
-
-#### **Activity Development**
-```typescript
-@Injectable()
-@Activity({ name: 'payment-activities' })
-export class PaymentActivity {
-  @ActivityMethod('processPayment')
-  async processPayment(amount: number): Promise<PaymentResult> {
-    // Activity implementation with full NestJS DI support
-  }
-}
-```
-
-#### **Service Integration**
-```typescript
-@Injectable()
-export class OrderService {
-  constructor(private temporal: TemporalService) {}
-
-  async processOrder(orderId: string) {
-    // Start workflow
-    const { workflowId } = await this.temporal.startWorkflow(
-      'processOrder', [orderId], { workflowId: `order-${orderId}` }
-    );
-    
-    // Query status
-    const status = await this.temporal.queryWorkflow(workflowId, 'getStatus');
-    
-    // Send signal  
-    await this.temporal.signalWorkflow(workflowId, 'cancel', ['user-request']);
-  }
-}
-```
-
-### 🏛️ Project Structure
+## Architecture
 
 ```
 src/
-├── temporal.module.ts           # Main unified module
-├── interfaces.ts               # Core TypeScript interfaces
-├── constants.ts               # Framework constants
-├── index.ts                   # Public API exports
-├── decorators/               # Activity/workflow decorators
-│   └── activity.decorator.ts
-├── services/                # Core service layer
-│   ├── temporal.service.ts           # Unified facade service
-│   ├── temporal-client.service.ts    # Client operations
-│   ├── temporal-worker.service.ts    # Worker management
-│   ├── temporal-schedule.service.ts  # Schedule management  
-│   ├── temporal-discovery.service.ts # Component discovery
-│   └── temporal-metadata.service.ts  # Metadata extraction
-├── client/                  # Client-only module
-│   └── temporal-client.module.ts
-├── worker/                  # Worker-only module
-│   └── temporal-worker.module.ts
-├── activity/               # Activity-only module
-│   ├── temporal-activity.module.ts
-│   └── temporal-activity.service.ts
-├── schedules/              # Schedule-only module
-│   ├── temporal-schedules.module.ts
-│   └── temporal-schedules.service.ts
-├── health/                 # Health monitoring
-│   ├── temporal-health.controller.ts
-│   └── temporal-health.module.ts
-├── providers/             # Connection providers
-│   └── temporal-connection.factory.ts
-├── utils/                 # Utilities and helpers
-│   ├── logger.ts         # Logging utilities
-│   └── validation.ts     # Validation helpers
-└── types/                # TypeScript type definitions
+  temporal.module.ts          # Main DynamicModule (register / registerAsync)
+  interfaces.ts               # All TypeScript interfaces (TemporalOptions, etc.)
+  constants.ts                # DI tokens: TEMPORAL_CLIENT, TEMPORAL_CONNECTION, etc.
+  decorators/
+    activity.decorator.ts     # @Activity, @ActivityMethod
+    workflow.decorator.ts     # @SignalMethod, @QueryMethod, @UpdateMethod, @ChildWorkflow
+  services/
+    temporal.service.ts       # Public facade — start/signal/query/cancel workflows
+    temporal-client.service.ts     # Wraps @temporalio/client Client
+    temporal-connection.factory.ts # Connection pooling (client + worker connections)
+    temporal-discovery.service.ts  # Auto-discovers @Activity classes via NestJS DiscoveryModule
+    temporal-schedule.service.ts   # CRUD for Temporal schedules
+    temporal-worker.service.ts     # Worker lifecycle (start/stop/graceful shutdown)
+    temporal-metadata.service.ts   # Reads Reflect.metadata from decorators
+  providers/
+    temporal-connection.factory.ts # NestJS provider wrapping connection factory
+  health/
+    temporal-health.controller.ts  # /health endpoint
+    temporal-health.module.ts
+  utils/
+    logger.ts         # Singleton TemporalLoggerManager, createLogger()
+    metadata.ts       # Helpers for reading @Activity/@ActivityMethod metadata
+    validation.ts     # validateSignalName/validateQueryName/validateUpdateName
+    workflow-token.ts # Generates DI tokens for workflow proxies
+  workflow-proxy/
+    workflow-proxy.ts          # WorkflowProxy class
+    workflow-proxy.factory.ts  # WorkflowProxyFactory — typed proxy creation
+  types/
+    reflect-metadata.d.ts      # Ambient Reflect.metadata typings
 ```
 
-### 🎯 Development Principles
+Each folder (`decorators/`, `utils/`, `workflow-proxy/`) and `src/` itself re-exports its public surface via `index.ts`.
 
-#### **Type Safety First**
-- Comprehensive TypeScript coverage
-- Strict type checking enabled
-- Interface-driven development
-- Generic types for workflow/activity definitions
+## Key Patterns
 
-#### **NestJS Best Practices**
-- Dependency injection throughout
-- Module-based architecture
-- Lifecycle hooks integration
-- Exception filters and interceptors
+- **Module registration**: `TemporalModule.register(options)` or `TemporalModule.registerAsync({useFactory, useClass, useExisting})`
+- **DI tokens**: `TEMPORAL_CLIENT` (Temporal Client), `TEMPORAL_CONNECTION` (NativeConnection for workers)
+- **Decorators store metadata via `Reflect.defineMetadata`** on both constructor and prototype for compatibility with DiscoveryModule
+- **Auto-discovery**: `TemporalDiscoveryService` scans NestJS module graph for classes decorated with `@Activity`
+- **WorkflowProxy**: `WorkflowProxyFactory.createProxy<T>({workflowType, taskQueue})` returns a typed proxy that wraps `client.workflow.start`
+- **Graceful shutdown**: Worker shutdown hooks are registered on NestJS lifecycle; requires `app.enableShutdownHooks()` in main.ts
 
-#### **Temporal.io Integration**
-- Native Temporal SDK usage
-- Workflow determinism preservation
-- Activity idempotency support
-- Signal and query handling
+## Build & Test
 
-#### **Testing Excellence**
-- Unit tests for all services
-- Integration tests for workflows
-- Mocking strategies for external dependencies
-- Coverage-driven development
-
-## 📋 Current Development Focus: Quality & Test Excellence
-
-### Overview
-The project maintains a strong focus on code quality, comprehensive testing, and continuous improvement. Our testing strategy ensures:
-- Code reliability and maintainability
-- Comprehensive error scenario coverage
-- Production-ready quality standards
-- Enterprise-grade service excellence
-
-### Testing Strategy
-The framework employs a multi-layered testing approach:
-- **Unit Tests**: Comprehensive coverage for all services and utilities
-- **Integration Tests**: End-to-end workflow and activity testing
-- **Performance Tests**: Load testing for high-throughput scenarios
-- **Error Scenario Testing**: Comprehensive failure mode coverage
-
-*Note: Current test coverage status can be obtained by running `npm run test`*
-
-### 📋 **Testing Patterns Established**
-
-1. **Comprehensive Mock Setup**: All external dependencies properly mocked
-2. **Error Handling Coverage**: Every try-catch block tested with error scenarios
-3. **Edge Case Testing**: Null/undefined inputs, invalid parameters, boundary conditions
-4. **Branch Coverage**: All conditional logic paths covered
-5. **Private Method Testing**: Accessing private methods via `(service as any)` for complete coverage
-6. **Cache Management**: Testing internal caching mechanisms where applicable
-
-### 🛠 **Development Guidelines**
-
-#### When Working on Service Tests:
-
-1. **Follow Established Patterns**:
-   ```typescript
-   // Standard test structure
-   describe('ServiceName', () => {
-     let service: ServiceName;
-     let mockDependency: jest.Mocked<DependencyType>;
-
-     beforeEach(async () => {
-       // Setup mocks and module
-     });
-
-     afterEach(() => {
-       jest.restoreAllMocks();
-     });
-   });
-   ```
-
-2. **Mock External Dependencies**:
-   ```typescript
-   const mockClient = {
-     workflow: { start: jest.fn(), getHandle: jest.fn() },
-     connection: { close: jest.fn() }
-   } as any;
-   ```
-
-3. **Test Error Scenarios**:
-   ```typescript
-   it('should handle errors gracefully', async () => {
-     mockDependency.method.mockRejectedValue(new Error('Test error'));
-     // Suppress logger if needed
-     const loggerSpy = jest.spyOn((service as any).logger, 'error').mockImplementation();
-     
-     await expect(service.method()).rejects.toThrow();
-     loggerSpy.mockRestore();
-   });
-   ```
-
-4. **Cover All Branches**:
-   - Test both success and failure paths
-   - Test all conditional statements (if/else, switch cases)
-   - Test array/object property existence checks
-   - Test different parameter combinations
-
-### 🔍 **Key Implementation Details**
-
-#### Common Patterns:
-- All services use `createLogger()` from utils for consistent logging
-- Error handling follows try-catch patterns with logger integration
-- Services implement lifecycle hooks (OnModuleInit, OnModuleDestroy)
-- Dependency injection through NestJS module system
-
-###  **Tips for Copilot**
-
-- Focus on one service at a time for systematic progress
-- Always check actual implementation before writing tests
-- Use `jest.spyOn` for mocking internal dependencies
-- Test private methods using `(service as any)` pattern
-- Maintain consistency with established test file structure
-- Verify test changes don't break existing functionality
-
-## 🔍 **Essential Commands & Workflows**
-
-### **Development Commands**
 ```bash
-# Testing & Quality
-npm run test              # Run all tests with coverage
-npm run test:unit         # Unit tests only  
-npm run test:ci           # CI pipeline tests
-npm run fix-all           # Format + lint fix
-
-# Build & Release
-npm run build             # Clean build
-npm run release           # Build + publish
-npm run release:dry       # Test release
-
-# Documentation
-npm run docs:generate     # Generate API docs
-npm run docs:serve        # Serve docs locally
+npm run build          # tsc → dist/
+npm run test           # jest
+npm run lint           # eslint src/**/*.ts
+npm run format         # prettier
 ```
 
-### **Testing Patterns**
-- **Coverage Target**: 90% branches/functions/lines/statements
-- **Mock Pattern**: Use `jest.spyOn((service as any).methodName)` for private methods
-- **Error Testing**: Always test error scenarios with logger suppression
-- **Setup**: Standard `beforeEach`/`afterEach` with `jest.restoreAllMocks()`
+## Important Constraints
 
----
+- Workflows run in v8 isolated sandbox — no DI, no imports from NestJS context
+- Signal/Query/Update decorators register Reflect metadata only; actual handler wiring happens at worker runtime
+- Connection factory creates separate connections for client vs worker (different lifecycle)
+- `TemporalLoggerManager` is a singleton; call `getInstance()` then `configure()` to set log level
 
-*Last Updated: September 24, 2025*
-*Current Branch: feat/improvements*
-*Project: nestjs-temporal-core by harsh-simform*
+## graphify
+
+This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.
+
+Rules:
+- For codebase questions, first run `graphify query "<question>"` when graphify-out/graph.json exists. Use `graphify path "<A>" "<B>"` for relationships and `graphify explain "<concept>"` for focused concepts. These return a scoped subgraph, usually much smaller than GRAPH_REPORT.md or raw grep output.
+- If graphify-out/wiki/index.md exists, use it for broad navigation instead of raw source browsing.
+- Read graphify-out/GRAPH_REPORT.md only for broad architecture review or when query/path/explain do not surface enough context.
+- This rule holds for the entire session, not just the first message — and it applies to any subagent spawned for code exploration in this repo. When delegating exploration via the Agent tool, tell the subagent explicitly to run `graphify query`/`explain`/`path` before grepping or reading raw files.
+- `.claude/settings.json` runs `graphify update .` automatically via a PostToolUse hook after every Edit/Write to a `.ts` file made through Claude Code tools (incremental, ~1-2s) — the graph should already be current. Only run it manually after edits made outside Claude Code (a plain editor, a merge, a generated file).
+
+## claude-mem
+
+This project's memory (`~/.claude-mem`) is global, not project-scoped, and injects relevant context passively at session start and per prompt. For non-trivial tasks (multi-file changes, bug investigations, "did we solve this before" questions, or anything where past decisions matter), explicitly search it before drafting a solution rather than relying only on passive injection — use the `mcp__plugin_claude-mem_mcp-search__search` (or `smart_search`) tool. Skip this for trivial, single-file, no-context-needed edits — it's not worth the round trip.
 
 ---
 > Source: [harsh-simform/nestjs-temporal-core](https://github.com/harsh-simform/nestjs-temporal-core) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-05-20 -->
+<!-- tomevault:4.0:agents_md:2026-09-09 -->
