@@ -1,0 +1,28 @@
+# rebar3
+
+> Source: [lfe/rebar3](https://github.com/lfe/rebar3). Graded, signed and kept current as the models change by [TomeVault](https://tomevault.io)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [lfe/rebar3](https://github.com/lfe/rebar3).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+From [lfe/rebar3](https://github.com/lfe/rebar3) — a repo with 53+ stars on GitHub.
+
+---
+
+Install this config instantly:
+```
+npx tomevault install lfe/rebar3
+```
+Source: [github.com/lfe/rebar3](https://github.com/lfe/rebar3).
+
+<!-- genome:d-i-s -->
