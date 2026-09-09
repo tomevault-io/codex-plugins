@@ -1,0 +1,18 @@
+# CLAUDE.md
+
+Claude Code adapter (ADR-0009). The imports below load the binding docs into
+every session's context before any edit — `AGENTS.md` and the docs it points to
+stay the single homes (nothing is restated here). `.claude/` holds the Claude
+Code settings (adapter layer). Keep instructions in `AGENTS.md`, not here.
+
+@AGENTS.md
+
+@docs/conventions.md
+
+@docs/adr/README.md
+
+@docs/work-intake-and-triage.md
+
+---
+> Source: [bgauduch/terraform-aws-cli](https://github.com/bgauduch/terraform-aws-cli) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-09-09 -->
