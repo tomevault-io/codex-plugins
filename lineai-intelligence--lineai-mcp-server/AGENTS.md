@@ -1,8 +1,8 @@
-- Include MPL 2.0 copyright headers in all Python files
-- Use Google-style docstrings for modules/classes/functions
-- Always use Python type hints
-- Keep I/O operations asynchronous
-- Return markdown-formatted text in tool responses
+- Python 3.13+ with extensive use of async/await
+- Model Context Protocol SDK (`mcp[cli]`)
+- HTTPX for API requests
+- Environment variables via dotenv for configuration
+- Lineai HTTP API under `/api/` (formerly `/codelogic/server/`); graph routes under `/api/ai-retrieval/graph/` for `lineai-graph-*` tools
 
 ---
 > Source: [lineai-intelligence/lineai-mcp-server](https://github.com/lineai-intelligence/lineai-mcp-server) — distributed by [TomeVault](https://tomevault.io).
