@@ -1,0 +1,44 @@
+{
+  "name": "skillssss",
+  "owner": "wanaig",
+  "repo": "skillssss",
+  "description": "\u7279\u522b\u611f\u8c22B\u7ad9\u5927\u4f6c @[\u8d39\u66fc\u5b66\u5f92\u51ac\u74dc] ",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/wanaig/skillssss",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-09-09T07:23:53Z"
+}
