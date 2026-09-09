@@ -1,13 +1,13 @@
-# CoreTide
+# AI instruction files for CoreTide
 
-> Source: [OpenTideHQ/CoreTide](https://github.com/OpenTideHQ/CoreTide) — distributed by [TomeVault](https://tomevault.io)
+> Sourced from [opentidehq/CoreTide](https://github.com/opentidehq/CoreTide), graded against the public Tome Standard and kept consistent across every major platform by [TomeVault](https://tomevault.io)
 
-Backend for all data schema and automation running OpenTide instances
+[ARCHIVED] Engine is now OpenTideHQ/opentide — DetectionOps as a package
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [OpenTideHQ/CoreTide](https://github.com/OpenTideHQ/CoreTide).
+Original source: `copilot-instructions.md` in [opentidehq/CoreTide](https://github.com/opentidehq/CoreTide).
 
 ## Also available for
 
@@ -17,14 +17,10 @@ Original source: `copilot-instructions.md` in [OpenTideHQ/CoreTide](https://gith
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/OpenTideHQ/CoreTide](https://github.com/OpenTideHQ/CoreTide)
+Graded against the Tome Standard, TomeVault's public ruleset for whether AI instructions load, read clearly and stay safe. Source: [github.com/opentidehq/CoreTide](https://github.com/opentidehq/CoreTide)
 
 ---
 
-Install this config instantly:
-```
-npx tomevault install OpenTideHQ/CoreTide
-```
-Source: [github.com/OpenTideHQ/CoreTide](https://github.com/OpenTideHQ/CoreTide).
+Own this repo? Install the TomeVault Relay to keep every platform's copy in sync on every push: [https://tomevault.io/install](https://tomevault.io/install).
 
-<!-- genome:d-i-q -->
+<!-- genome:a-c-q -->
