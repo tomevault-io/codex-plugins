@@ -7,13 +7,13 @@ An MCP Server to utilize Lineai's rich software dependency data in your AI progr
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [lineai-intelligence/lineai-mcp-server](https://github.com/lineai-intelligence/lineai-mcp-server).
+Original source: `.cursor/rules/*.mdc` in [lineai-intelligence/lineai-mcp-server](https://github.com/lineai-intelligence/lineai-mcp-server).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
