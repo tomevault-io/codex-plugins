@@ -1,8 +1,8 @@
 {
   "name": "CoreTide",
-  "owner": "OpenTideHQ",
+  "owner": "opentidehq",
   "repo": "CoreTide",
-  "description": "Backend for all data schema and automation running OpenTide instances",
+  "description": "[ARCHIVED] Engine is now OpenTideHQ/opentide \u2014 DetectionOps as a package",
   "type": "config",
   "source_format": "copilot-instructions.md",
   "formats": [
@@ -38,7 +38,7 @@
     }
   ],
   "skills": [],
-  "source_url": "https://github.com/OpenTideHQ/CoreTide",
+  "source_url": "https://github.com/opentidehq/CoreTide",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-23T00:53:34Z"
+  "distributed_at": "2026-09-09T23:11:58Z"
 }
