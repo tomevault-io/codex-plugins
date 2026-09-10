@@ -1,74 +1,219 @@
-# Code review instructions
+# AGENTS.md
 
-These instructions apply to AI tools when they review pull requests in this repository, and when they answer questions about this codebase. They are guidance, not a checklist. Use judgment, prefer fewer high-signal comments over many low-signal ones, and skip points that don't apply to the diff in front of you. For human contributor guidance see [`README.md`](../README.md); for general agent rules see [`AGENTS.md`](../AGENTS.md).
+Instructions for AI coding agents working on Osprey. `README.md` is for humans; this file is for machines. The nearest `AGENTS.md` to the edited file wins; explicit user prompts override everything.
 
-## Repository at a glance
+## Architecture
 
-- Multi-language monorepo: Python (worker + UI API), TypeScript (UI), Rust (coordinator). Top-level modules are documented in [`AGENTS.md`](../AGENTS.md) § Architecture — `osprey_worker/`, `osprey_rpc/`, `osprey_ui/`, `osprey_coordinator/`, `proto/osprey/rpc/`, `example_plugins/`, `example_rules/`.
-- Python version pinned in `.python-version`, managed with [`uv`](https://docs.astral.sh/uv/). Linted and type-checked in CI by `ruff` + `mypy` via `pre-commit`. Unused-dep enforcement via `fawltydeps`.
-- TypeScript in `osprey_ui/` (React + Ant Design + Highcharts; Node version in `.github/workflows/code-quality.yml`). Formatted in CI by `prettier` (`npm run format:check`).
-- Rust in `osprey_coordinator/` (stable toolchain, `tokio` + `tonic` + `etcd` + `rdkafka`). `cargo fmt` and `cargo build` gate CI; `cargo clippy -- -D warnings` and `cargo test` run advisory (`continue-on-error: true`).
-- **Generated code**: `osprey_rpc/src/osprey/rpc/**/*_pb2*.py`, `*_pb2*.pyi`, and `osprey_coordinator/src/proto/` are produced by `./gen-protos.sh` from `proto/osprey/rpc/**/*.proto`. Hand-edits drift from the schema — regenerate instead. Generated files are excluded from `ruff` and `mypy` for a reason.
-- Plugin system: `pluggy` with `@hookimpl_osprey` hooks (`register_udfs`, `register_output_sinks`, `register_labels_service_or_provider`). Reference patterns live in `example_plugins/src/register_plugins.py`.
+Top-level modules:
+
+- `osprey_worker/` — main Python engine. Consumes events from Kafka, evaluates SML rules, emits verdicts and effects to output sinks. New worker/engine code belongs here (`osprey_worker/src/osprey/worker/`).
+- `osprey_rpc/` — generated protobuf/gRPC bindings under `osprey_rpc/src/osprey/rpc/`. Do not edit generated files (`*_pb2*.py`, `*_pb2*.pyi`) by hand; regenerate via `./gen-protos.sh` after editing the `.proto` files.
+- `osprey_ui/` — React + TypeScript frontend (Ant Design, ECharts; versions in `osprey_ui/package.json`). UI code belongs here.
+- `osprey_coordinator/` — Rust gRPC coordinator (tokio, tonic, etcd, rdkafka). Rust code belongs here.
+- `proto/osprey/rpc/` — protobuf source of truth for `osprey_rpc` and `osprey_coordinator` types.
+- `example_plugins/` — reference plugins (UDFs, output sinks, labels service) using the pluggy-based plugin system. Do not add production code here.
+- `example_atproto_plugins/` — reference plugin demonstrating a custom input stream that consumes the Bluesky firehose. Stack `docker-compose.atproto.yaml` on top of the main compose file (or use `./run-atproto.sh`) to run Osprey against live ATProto traffic. Do not add production code here.
+- `example_rules/` — sample SML rules and YAML config.
+- `example_atproto_rules/` — sample SML rules paired with `example_atproto_plugins/`.
+
+Reference files: `docs/development/local.md` (setup), `example_plugins/src/register_plugins.py` (plugin patterns), `example_plugins/src/services/labels_service.py` (labels service example).
+
+## Design
+
+- API: gRPC between `osprey_coordinator` and workers; HTTP/Flask for `osprey-ui-api` (port 5004); protobuf definitions under `proto/osprey/rpc/` are authoritative.
+- Rules: SML (Osprey's rule language) with user-defined functions registered via pluggy hooks (`@hookimpl_osprey`): `register_udfs`, `register_output_sinks`, `register_labels_service_or_provider`, `register_input_stream` (custom event source; see `example_atproto_plugins/`).
 - Data model conventions: Pydantic for models, SQLAlchemy for persistence (versions pinned in `pyproject.toml`).
 
-## Scope of review — focus on quality and security
+## Build and run
 
-Lint and formatting are enforced in CI, so please skip:
+Prerequisites: Python (version in `.python-version`), [uv](https://docs.astral.sh/uv/), Docker + Docker Compose v2, Node.js (version in `.github/workflows/code-quality.yml`, UI only), Rust stable + `protoc` (coordinator only).
 
-- formatting, whitespace, indentation, quote style, or import ordering
-- `ruff` / `mypy` / `prettier` / `cargo fmt` rule violations
-- typos in comments or doc grammar nits
-- missing docstrings on internal helpers
-- subjective style preferences not codified in a project rule
+```bash
+# Install Python deps (creates .venv, uses uv.lock)
+uv sync --dev
 
-If a finding would be caught by `uv run ruff check`, `uv run mypy .`, `npm run format:check` (in `osprey_ui/`), or `cargo fmt --check` (in `osprey_coordinator/`), it's redundant.
+# Install git hooks
+uv run pre-commit install --install-hooks
 
-## Security (cross-cutting)
+# Start full stack (Kafka, Postgres, Druid, MinIO, worker, UI, UI API)
+docker compose up -d
+# or
+./start.sh
+# with coordinator:
+./start.sh --with-coordinator
 
-Security findings are the highest-value comments you can leave. When you spot one, name the risk concretely and suggest a fix. Areas to watch across the whole codebase:
+# UI dev server (Corepack auto-resolves pnpm from osprey_ui/package.json's packageManager field)
+cd osprey_ui && corepack enable && pnpm install --frozen-lockfile && pnpm start
 
-- **Hard-coded secrets.** API keys, tokens, passwords, OAuth secrets, JWT signing keys, DB connection strings (Postgres, Druid, Kafka SASL, MinIO, Bigtable), or webhook secrets in source or committed config. `docker-compose.yaml` uses environment variables intentionally — flag any secret that leaks into committed files.
-- **Injection.** String-built SQL, shell commands, file paths, HTML, or LLM prompts are usually a smell. Look for SQLAlchemy bound parameters (or `text()` with `bindparams`), `subprocess` arg arrays (no `shell=True`), context-aware HTML encoding, and a clear separation between trusted system prompts and untrusted user content.
-- **Sensitive logging.** Secrets, JWTs, full `Authorization` headers, full request/response bodies, raw Kafka payloads, or PII in logs, traces, metric labels, or error responses are risky. Error responses from the UI API (port 5004) shouldn't leak Python stack traces.
-- **Weak crypto.** MD5 or SHA-1 used for security, ECB mode, reused IVs, `random.random()` / `random.choice()` for tokens or IDs (prefer `secrets` in Python, `OsRng` / `getrandom` in Rust), or hand-rolled crypto are worth questioning. JWTs should reject the `none` algorithm, use strong secrets, and have short access-token expirations.
-- **Unsafe deserialization or evaluation.** `eval`, `exec`, `pickle.loads`, `yaml.load` without `SafeLoader`, and `marshal.loads` on untrusted input are risky. Same for `eval` / the `Function` constructor / `setTimeout` with string arguments in TypeScript.
-- **Removing security controls.** If a diff disables authentication, authorization, CSRF, CORS, rate limiting, or the default `127.0.0.1` bindings in `docker-compose.yaml` (see `docs/DEVELOPMENT.md` §6), ask whether it's intentional and justified.
-- **Untrusted protobuf toolchain.** Per `AGENTS.md` § Security, only regenerate bindings via `./gen-protos.sh`. Flag generated-file diffs that don't match a corresponding `.proto` change.
+# Regenerate protobuf bindings after editing proto/osprey/rpc/**/*.proto
+./gen-protos.sh
+```
 
-Path-specific concerns (UI API views, output sinks, plugin adaptor, Rust coordinator, raw `.proto` changes, dependency manifests, restricted infra) are scoped in [`.coderabbit.yaml`](../.coderabbit.yaml) under `reviews.path_instructions`. When reviewing those areas, apply the same general principles — authorization checks on UI-API-supplied IDs, parameterized queries, XSS care on the client, panic-safety in Rust, license/CVE attention on dependency bumps.
+UI: http://localhost:5002 · UI API: http://localhost:5004 · Worker (port 5001)
 
-## Code quality (cross-cutting)
+## Testing
 
-Use judgment — these patterns tend to cause bugs or maintenance pain regardless of where they appear:
+Run the full integration suite (spins up all services via docker compose; ~8 GB RAM):
 
-- **Generated files.** `*_pb2*.py`, `*_pb2*.pyi`, and `osprey_coordinator/src/proto/` are produced by `./gen-protos.sh`; hand-edits drift from the `.proto` schema.
-- **Error handling.** Silently swallowed exceptions (`except Exception: pass` with no log or rethrow), Rust `let _ = result;` discarding an error, unhandled promise rejections in TS, and missing `await` on a coroutine whose result matters tend to cause production surprises.
-- **Async correctness (Python).** Calling sync I/O inside an `async def` blocks the event loop. `asyncio.gather(...)` without `return_exceptions=True` or explicit handling can mask failures.
-- **Async correctness (Rust).** Holding a `std::sync::Mutex` guard across `.await` deadlocks the tokio runtime; long-lived `tokio::sync` guards can starve other tasks.
-- **Type safety.** New `# type: ignore` / `Any` / `cast(...)` in Python, `any` / `as unknown as` / non-null `!` / `@ts-ignore` in TypeScript, or `unwrap()` / `expect()` / `unsafe` on user-driven paths in Rust are worth questioning. Narrowly-scoped `# type: ignore[<code>]` and `@ts-expect-error` with a justifying comment are preferred when an escape hatch is genuinely needed (matches `AGENTS.md` § Security).
-- **Tests.** New behavior generally warrants a test; bug fixes generally warrant a regression test (`AGENTS.md` § "Code review"). Integration tests run via `./run-tests.sh`.
-- **Duplicated logic.** If a helper already exists in the same package, prefer it over a parallel implementation.
-- **Dead code.** Commented-out blocks and TODOs without an issue link are worth a nudge.
+```bash
+./run-tests.sh
+```
 
-## What not to flag
+Pass pytest args through:
 
-These categories of comments tend to add noise without surfacing real risk — please skip them:
+```bash
+./run-tests.sh path/to/test_file.py::test_name
+./run-tests.sh -k some_keyword
+./run-tests.sh --junitxml=/tmp/test-results/junit-pytest.xml
+```
 
-- "Consider adding a `None` check" on a value already typed as non-`None` by mypy or non-`null`/`undefined` by TypeScript.
-- "Consider adding error handling" on a wrapper that already propagates errors via `async`/`await` or `?` in Rust.
-- "This could be a constant" on a string literal used in a single place.
-- "Add a docstring" on an internal helper.
-- Rhetorical questions like "have you considered…" without a concrete risk attached.
-- Defensive-coding suggestions on values whose types already prevent the failure mode.
-- "Add a test" on a config-only, doc-only, or comment-only change.
-- Suggestions to rename a symbol "for clarity" without a concrete ambiguity.
-- Style nits in generated protobuf files (`*_pb2*.py`, `*_pb2*.pyi`, `osprey_coordinator/src/proto/`) — they're excluded from `ruff` and `mypy` for a reason.
+Python lint / format / type-check (no Docker needed):
 
-## Tone
+```bash
+uv run ruff check
+uv run ruff format --diff
+uv run mypy .
+uv run pre-commit run --all-files
+```
 
-Be specific and concise. When you flag something, name the concrete risk ("possible SQL injection via string-built `text()`", "missing authorization check — possible IDOR", "secret logged at info level", "`unwrap()` on RPC input — panics will crash the worker") and, where helpful, show the fix in code. Skip nits, and stay quiet when nothing in this list applies.
+UI checks (in `osprey_ui/`):
+
+```bash
+pnpm run format:check
+```
+
+Rust checks (in `osprey_coordinator/`; requires `protoc`). CI only gates on `fmt` and `build`; `clippy` and `test` are advisory (`continue-on-error: true`):
+
+```bash
+cargo fmt --check
+cargo build --verbose
+cargo clippy -- -D warnings   # advisory
+cargo test --verbose          # advisory
+```
+
+## Browser MCP (UI verification)
+
+A project-scoped MCP server (`.mcp.json` at repo root) registers `@playwright/mcp@0.0.73` via `npx`. When Claude Code launches in this repo it gets `browser_navigate`, `browser_snapshot`, `browser_evaluate`, `browser_take_screenshot`, and the rest of the `browser_*` tool surface — useful for verifying visual UI changes against the running dev server without a full automated test suite. There is intentionally no `playwright.config.ts` / `@playwright/test` integration and no devDep in `osprey_ui/package.json`; the MCP is for ad-hoc verification, not CI.
+
+All commands in this section — including any `--dry-run` previews — are **operator-run only**. Agents must never execute them. If a prereq is missing, the agent surfaces *what the operator should run* and waits.
+
+The MCP needs Playwright's bundled Chromium binary plus its system shared libs. Setup is platform-specific — Playwright's docs cover it across macOS / Windows / WSL / Linux: <https://playwright.dev/docs/browsers#install-browsers>.
+
+**Operator runs the binary install** (no sudo, user-cache only). Pinned via `@playwright/mcp@0.0.73`'s bundled `playwright-core`, so the downloaded Chromium build matches what the MCP server will launch:
+
+```bash
+npx -y @playwright/mcp@0.0.73 install-browser chromium
+```
+
+System libs:
+
+- **macOS, recent Windows / WSL**: nothing extra to install.
+- **Linux**: distro-specific. **The operator** runs the dry-run to preview the package list `install-deps` would apt-install:
+
+  ```bash
+  npx -y playwright install-deps chromium --dry-run
+  ```
+
+  …and then **the operator** runs the printed `apt-get install` line themselves. The agent does neither step.
+
+  `install-deps` only auto-supports recent Ubuntu / Debian. Fedora, Arch, Alpine, and NixOS need manual lib installation — Playwright's troubleshooting docs cover their package names.
+
+Before calling `browser_navigate("http://localhost:5002")`, **the operator** starts the dev server (`cd osprey_ui && pnpm start`, listens on `:5002`).
+
+If the MCP approval prompt doesn't fire on a fresh `claude` launch, **the operator** runs `claude mcp reset-project-choices` and re-launches.
+
+## CI
+
+CI runs entirely via GitHub Actions on `pull_request` and `push` to `main`. Each line below is one literal CI `run:` step, in workflow order. Run them in your shell (paste-as-is — no `&&` chaining, no error suppression — so each step's exit code matches the corresponding CI step's exit code):
+
+```bash
+# code-quality.yml → python-quality
+uv sync --dev
+uv run pre-commit install --install-hooks
+SKIP=prettier-osprey-ui uv run pre-commit run --show-diff-on-failure --color=always --all-files
+uv tool run fawltydeps --check-unused --pyenv .venv
+
+# code-quality.yml → ui-quality (CI `working-directory: osprey_ui`)
+( cd osprey_ui
+  pnpm install --frozen-lockfile
+  pnpm run format:check )
+
+# code-quality.yml → rust-quality (CI `working-directory: osprey_coordinator`)
+# Note: in CI the `cargo clippy` and `cargo test` steps are marked `continue-on-error: true`,
+# so they currently print failures but do not fail the job. Locally, expect the same output.
+( cd osprey_coordinator
+  cargo fmt --check
+  cargo clippy -- -D warnings
+  cargo build --verbose
+  cargo test --verbose )
+
+# integration-tests.yml
+./run-tests.sh
+```
+
+`mdbook.yml`, `publish-coordinator-image.yml`, and `release-osprey-rpc.yml` are release/deploy workflows — do not modify without human approval (see "Human-approval-required actions" below).
+
+## Security
+
+- No secrets in code or committed files. Use environment variables via `docker-compose.yaml`.
+- Do not disable lint or type rules to silence errors. Fix the underlying issue, or use a narrowly-scoped `# noqa: <code>` / `# type: ignore[<code>]` with a comment explaining why.
+- Before adding a new dependency, check it for known CVEs and confirm the license is compatible with `LICENSE.md`.
+- Do not commit generated protobuf files from an untrusted toolchain; always regenerate via `./gen-protos.sh`.
+- Default Docker bindings are `127.0.0.1`; do not change bind addresses without explicit instruction (see `docs/development/local.md` §6).
+
+## Code review
+
+- Keep diffs small and focused; split unrelated changes into separate PRs.
+- PR titles are descriptive and imperative ("Add X", "Fix Y").
+- New behavior requires a test. Bug fixes require a regression test.
+- All CI checks (above) must pass before requesting review.
+
+## Code style
+
+- Python: version in `.python-version`. Lint + format with `ruff`, type-check with `mypy` (versions and config in `pyproject.toml` under `[tool.ruff]` and `[tool.mypy]`).
+- TypeScript / React in `osprey_ui/` (versions in `osprey_ui/package.json`). Formatter is Prettier (`pnpm run format:check`); config in `osprey_ui/.prettierrc`. Node version in `.github/workflows/code-quality.yml`. pnpm version pinned via `packageManager` field in `osprey_ui/package.json`; resolved everywhere via Corepack.
+- Rust stable in `osprey_coordinator/` (edition and toolchain in `osprey_coordinator/Cargo.toml`). Formatter `cargo fmt`; linter `cargo clippy -- -D warnings`.
+- Protobuf generated files (`*_pb2*.py`, `*_pb2*.pyi`) are excluded from ruff and mypy — do not edit.
+
+## Changelog
+
+- `CHANGELOG.md` follows [Keep a Changelog](https://keepachangelog.com/en/2.0.0/): _notable_ changes only, one line each, written for humans. Most PRs need no entry — skip dependency bumps, CI-only changes, internal refactors, tests, and docs.
+- Add entries under `## [Unreleased]`. Never add to a published version's section; those are a record of what actually shipped in that tag.
+- Match the existing categories (Added, Changed, Fixed, Removed) and line format: `- <change> ([#123](https://github.com/roostorg/osprey/pull/123) by [@user](https://github.com/user))`.
+- Keep the line to what changed; details belong in the linked PR.
+
+## CD
+
+- Releases are cut by publishing a GitHub Release; the tag triggers `.github/workflows/release-osprey-rpc.yml` to build and attach the `osprey_rpc` sdist. Tags follow semver with no `v` prefix (`MAJOR.MINOR.PATCH`, e.g. `1.1.0`); see `docs/development/releases.md`.
+- Coordinator image publishes to `ghcr.io` via `.github/workflows/publish-coordinator-image.yml` on push to `main` and on release.
+- mdBook docs deploy via `.github/workflows/mdbook.yml` to GitHub Pages on push to `main`.
+- Release/deploy workflows, production Dockerfiles, and signing/tagging are restricted — see "Human-approval-required actions" below.
+
+## Dependencies
+
+- Python deps are pinned in `pyproject.toml` and locked in `uv.lock`. Add with `uv add <pkg>` (runtime) or `uv add --dev <pkg>` (dev); commit the updated `uv.lock`.
+- Node deps live in `osprey_ui/package.json`; add with `pnpm add <pkg>` and commit the updated `osprey_ui/pnpm-lock.yaml`. The lockfile is the parity contract — `pnpm add` will re-resolve transitives, so review the `pnpm-lock.yaml` diff for unintended version bumps before committing.
+- Rust deps live in `osprey_coordinator/Cargo.toml`. Note: `Cargo.lock` is currently in `.gitignore` — do not commit it without first un-ignoring it.
+- Every new or upgraded package including transitive dependencies requires human approval. Confirm the license is compatible with `LICENSE.md` and that there are no known CVEs.
+- `fawltydeps` enforces that every declared Python dep is used; add intentional exceptions to `[tool.fawltydeps].ignore_unused` in `pyproject.toml` with a comment.
+
+## ROOST guiding principles
+
+- **Commands over prose.** Prefer `./run-tests.sh path/to/test_file.py::test_name` over descriptive paragraphs.
+- **Same review bar.** PRs authored with agent assistance are held to the same standards as any other PR.
+- **Boundaries with alternatives.** When stating a restriction, provide the alternative path (e.g. don't edit `*_pb2*.py` — regenerate via `./gen-protos.sh`).
+- **Iterate over time.** Start minimal. When you give an agent the same instruction twice, add it to this file.
+- **Contributors update `AGENTS.md`.** When you find a gap, update this file as part of your PR.
+
+## Human-approval-required actions
+
+Stop and get explicit human approval before:
+
+- Changing license headers, copyright notices, or any legal text (including `LICENSE.md`).
+- Modifying release, signing, or deploy workflows: `.github/workflows/publish-coordinator-image.yml`, `.github/workflows/release-osprey-rpc.yml`, `.github/workflows/mdbook.yml`, production Dockerfiles (`osprey_coordinator/Dockerfile`, `osprey_worker/Dockerfile`, `osprey_ui/Dockerfile`), `docker-compose.yaml`, `start.sh`, or `entrypoint.sh`.
+- Adding, removing, or upgrading any library or package (including transitive dependencies in `uv.lock` or `osprey_ui/pnpm-lock.yaml`) — confirm licenses are compatible.
+- Editing generated code under `osprey_rpc/src/osprey/rpc/` by hand instead of regenerating via `./gen-protos.sh`.
 
 ---
 > Source: [roostorg/osprey](https://github.com/roostorg/osprey) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-24 -->
+<!-- tomevault:4.0:agents_md:2026-09-09 -->
