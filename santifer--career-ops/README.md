@@ -1,18 +1,16 @@
 # AI instruction files for career-ops
 
-> Sourced from [santifer/career-ops](https://github.com/santifer/career-ops) and converted for every major platform by [TomeVault](https://tomevault.io)
-
-AI-powered job search system built on Claude Code. 14 skill modes, Go dashboard, PDF generation, batch processing.
+> Sourced from [santifer/career-ops](https://github.com/santifer/career-ops), graded against the public Tome Standard and kept consistent across every major platform by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [santifer/career-ops](https://github.com/santifer/career-ops).
+Original source: `copilot-instructions.md` in [santifer/career-ops](https://github.com/santifer/career-ops).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
