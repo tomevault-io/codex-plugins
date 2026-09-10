@@ -7,12 +7,12 @@ Efficiently convert XML data to Apache Arrow format for high-performance data pr
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [mluttikh/xml2arrow](https://github.com/mluttikh/xml2arrow).
+Original source: `CLAUDE.md` in [mluttikh/xml2arrow](https://github.com/mluttikh/xml2arrow).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
