@@ -15,7 +15,7 @@ Original source: `CLAUDE.md` in [callstackincubator/react-native-node-api](https
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [callstackincubator/react-native-node-api](https://github.com/callstackincubator/react-native-node-api) — a repo with 186+ stars on GitHub.
+From [callstackincubator/react-native-node-api](https://github.com/callstackincubator/react-native-node-api) — a repo with 188+ stars on GitHub.
 
 ---
 
