@@ -1,150 +1,113 @@
-# Auto Clicker AutoFill Documentation
+# acf-docs
 
-This is an Astro-based documentation site for Auto Clicker AutoFill at `getautoclicker.com`. The documentation provides comprehensive guides, tutorials, and reference material for the extension.
+The user documentation for Auto Clicker AutoFill — how to install it, how to use it, and what every feature does. Astro site published at **getautoclicker.com/docs/5.x**.
 
-## Working Effectively
+**Updating these docs is part of every release.** Any user-facing change ships with its doc update, the same way it ships with a release-note post in `acf-blog`.
 
-- Bootstrap and build the documentation:
-  - `npm install` -- installs Astro, Bootstrap, and development dependencies
-  - `npm run docs-build` -- builds the site to `_site/` directory via Astro
-  - `npm run docs-serve` -- starts Astro dev server on port 9001 with hot reload
-  - `npm run docs` -- runs full build and lint sequence
+Only the current version (`5.x`) is maintained. Older versions are not updated — they survive as `aliases` redirects on the pages that replaced them.
 
-- Development workflow:
-  - Use `npm run docs-serve` for local development
-  - Always run `npm run docs-lint` before committing
-  - Astro builds from `site/` to `site/dist` then copies to `_site/`
-  - Use `npm run docs-prettier-format` to auto-format files
-
-## Project Structure
+## Layout
 
 ```
-/site
-├── src/                  # Astro source files
-│   ├── content/         # Documentation content (Markdown/MDX)
-│   ├── layouts/         # Astro layouts
-│   ├── components/      # Astro/React components
-│   └── pages/           # Route pages
-├── public/              # Static assets (images, favicons)
-├── static/              # Additional static files
-├── data/                # YAML/JSON data files
-└── astro.config.ts      # Astro configuration
+config.yml                     — site-wide config (versions, social, Algolia app id, GTM)
+site/astro.config.ts
+site/content.config.ts         — the Zod front-matter schema (authoritative)
+site/data/sidebar.yml          — navigation
+site/src/content/docs/<section>/<page>.mdx
+site/src/components/shortcodes/ — MDX components usable in pages
 ```
 
-## Tech Stack & Key Libraries
+Sections: `getting-started`, `side-panel`, `automations`, `automation`, `step`, `step-value`, `settings`, `extension`, `userscript`, `about`, `faq`.
 
-- **Static Site Generator**: Astro (v6.1.8)
-- **Markdown**: MDX with Prism for syntax highlighting
-- **CSS Framework**: Bootstrap 5.3.8 with Sass customization
-- **JavaScript**: Vanilla JS with clipboard.js for code copying
-- **Search**: Algolia DocSearch integration
-- **Build Tooling**:
-  - Astro for site generation
-  - Autoprefixer for CSS processing
-  - Prettier for code formatting (120 line width, single quotes, no semicolons)
-  - VNU for HTML validation
-  - TypeScript for type checking
+Note `automations` (plural — managing the list: export, import, explore, reorder) and `automation` (singular — configuring one: url, settings, schedule, loop, monitor) are different sections. Easy to put a page in the wrong one.
 
-## Astro Configuration
+## Front matter
 
-- **Root Directory**: `site/`
-- **Output Directory**: `site/dist` (copied to `_site/`)
-- **Port**: 9001
-- **Base URL**: `https://getautoclicker.com`
-- **Integrations**: MDX, Sitemap, Prism
-- **Features**: Auto-import, Algolia search, StackBlitz integration
+`site/content.config.ts` is the schema and it is enforced at build time. Valid keys:
 
-## Content Guidelines
+| Key                                                     | Notes                                                                                                                                     |
+| ------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `title`                                                 | **required**                                                                                                                              |
+| `description`                                           | **required**                                                                                                                              |
+| `subscription`                                          | `PLUS` or `PRO` — renders the tier badge. Omit for free features.                                                                         |
+| `tags`                                                  | keyword array — emitted as `docsearch:tags` + `keywords` meta and indexed by Algolia. All 68 pages carry them; keep new pages consistent. |
+| `added`                                                 | `{ version: '5.0.0', show_badge?: bool }` — "new in" badge                                                                                |
+| `aliases`                                               | string or array — redirects from old URLs; carry these forward, they're how 3.x/4.x links keep working                                    |
+| `toc`                                                   | bool                                                                                                                                      |
+| `thumbnail`, `direction: 'rtl'`, `extra_js`, `sections` | occasional use                                                                                                                            |
 
-- Write documentation in Markdown or MDX (for interactive components)
-- Use semantic headings: H1 for page title, H2-H6 for sections
-- Include code examples with proper syntax highlighting
-- Use frontmatter for page metadata (title, description, version)
-- Cross-reference related pages with proper links
-- Keep content organized by version (`docs/5.x/`, etc.)
-- Include screenshots/images in `site/public/` with descriptive alt text
+Anything else is **silently dropped** — Zod strips unknown keys rather than erroring. See "Known gaps" about `tags`.
 
-## Common Development Tasks
+## Adding a page
 
-### Creating New Documentation Pages
-1. Create MDX file in `site/src/content/` under appropriate category
-2. Add frontmatter with title, description, and version
-3. Write content using Markdown/MDX syntax
-4. Preview with `npm run docs-serve`
-5. Format with `npm run docs-prettier-format`
-6. Validate with `npm run docs-lint`
+1. Create `site/src/content/docs/<section>/<page>.mdx` with valid front matter.
+2. **Add it to `site/data/sidebar.yml`** under the right group, by `title`.
 
-### Working with Components
-1. Create Astro components in `site/src/components/`
-2. Use TypeScript for props and type safety
-3. Import in MDX files for interactive examples
-4. Follow existing component patterns for consistency
+`DocsSidebar.astro` throws if `sidebar.yml` references a page that doesn't exist — a typo in either place fails the build, so the two must agree.
 
-### Search Integration
-- Algolia DocSearch is configured
-- App ID: `S4D9IW396R`
-- Index: `test-getautoclicker`
-- Search updates automatically on build
+## Writing pages
 
-## Build & Deployment
+- `[[config:docs_version]]` interpolates from `config.yml` — use it in asset paths rather than hardcoding `5.x`: `<img src="/docs/[[config:docs_version]]/assets/img/loop.png" />`
+- Shortcodes live in `site/src/components/shortcodes/`: `Callout`, `Code`, `Table`, `BsTable`, `Video`, `AddedIn`, `DeprecatedIn`, `SubscriptionBadge`, `Placeholder`, `IncludeMdx`, `Example`, `ExampleAutomation`.
+- `<ExampleAutomation file="loop" plus>` offers a downloadable sample automation and points at **test.getautoclicker.com** (the `acf-test` page) as the place to try it. The `plus` prop labels it as needing the PLUS plan.
 
-- Production build: `npm run docs-build`
-- Preview build: `npm run astro-preview` (port 9001)
-- Output: `_site/` directory
-- Site is deployed to `getautoclicker.com`
-- Includes sitemap, robots.txt, and analytics (GTM)
+## Never link to PRs or branches
 
-## Quality Checks
+**Don't reference pull requests, branches, or commits in a doc page.** Some work happens in private branches, so those links are dead or inaccessible for readers. Describe behaviour in user-facing terms. The same rule applies in `acf-blog`.
 
-Before committing, ensure:
-1. **Prettier**: `npm run docs-prettier-check` -- code formatting
-2. **VNU**: `npm run docs-vnu` -- HTML5 validation
-3. **Build**: `npm run docs-build` -- successful Astro build
+## Local development
 
-## Code Style
+```bash
+npm run docs-serve     # astro dev on port 9001
+npm run docs           # build + lint (prettier check + HTML validation)
+```
 
-- **Line Width**: 120 characters
-- **Quotes**: Single quotes
-- **Semicolons**: No semicolons (Prettier enforced)
-- **Arrow Functions**: Always use parentheses
-- **Trailing Commas**: None
-- **TypeScript**: Use for all configuration and component props
+In dev the site origin is `http://localhost:9001`; in production it's `baseURL` from `config.yml`.
 
-## Rules for Copilot
+## Deploy
 
-- Use ES modules (`import`/`export`), never `require()`
-- Follow Astro component syntax for layouts and pages
-- Use MDX for documentation with interactive components
-- Maintain Bootstrap 5.3 compatibility
-- Use semantic HTML5 elements
-- Follow Prettier formatting rules (run auto-format before committing)
-- Ensure all internal links are valid
-- Include proper TypeScript types
+Push a tag `v*` → `gh-pages.yml` builds, validates HTML (`vnu`, needs Java), runs `linkinator`, and publishes to GitHub Pages. Nothing deploys on merge to main.
 
-## Relationship to Other Projects
+Broken links and invalid HTML fail the deploy, so they are worth checking locally first.
 
-This documentation site is part of the Auto Clicker AutoFill ecosystem:
-- Main extension: `auto-clicker-auto-fill` workspace (monorepo)
-- Blog: `acf-blog` project at `blog.getautoclicker.com`
-- Backend: `acf-firebase` project (Firebase Functions)
-- Translations: `acf-i18n` project
-- Options page: Hosted at `stable.getautoclicker.com`
+## Downstream: the Discord bot
 
-When referencing other projects or creating cross-links, use:
-- Blog: `https://blog.getautoclicker.com`
-- Stable app: `https://stable.getautoclicker.com`
-- Configs: `https://configs.getautoclicker.com`
-- Beta: `https://beta.getautoclicker.com`
-- Dev: `https://dev.getautoclicker.com`
+`acf-bot` answers user questions from a **Pinecone index built by crawling getautoclicker.com/docs/5.x**. Editing a page here does not change the bot's answers until `npm run ingest` is re-run in `acf-bot`. A docs fix intended to correct bot behaviour is only half done at merge.
 
-## Version Management
+## Search
 
-Documentation is versioned:
-- Current version: `5.0.0` (`docs_version: 5.x`)
-- Keep version-specific docs in separate folders
-- Update `current_version` in `config.yml` for new releases
-- Maintain backwards compatibility for older versions
+Algolia **DocSearch** runs its own crawler on a schedule (Tuesdays), re-scanning the deployed site and rebuilding the index. Nothing in this repo pushes an index and there is no post-deploy step — a published change appears in search on the crawler's next pass.
+
+**Only what appears in the rendered HTML is searchable.** Front matter that isn't rendered contributes nothing, because the crawler sees HTML, not the content collection.
+
+That's why `tags` and `aliases` are emitted as meta tags in `Head.astro`:
+
+```html
+<meta name="docsearch:tags" content="loop,batch,automation" />
+<meta name="keywords" content="loop, batch, automation" />
+<meta name="docsearch:aliases" content="/docs/4.x/automation/batch/,…" />
+```
+
+`aliases` go in for backward compatibility — searching an old URL still finds the page.
+
+**`algolia/crawler.config.js` mirrors the crawler configuration** so it is reviewable and recoverable, but the live config is in the Algolia dashboard — editing the file changes nothing until it's pasted there. Its `recordExtractor` reads those meta tags and attaches `tags` / `aliases` to every record, since `helpers.docsearch()` only extracts the DOM selectors it's given. `tags` is a facet and ranks above body content; `aliases` ranks last.
+
+The crawler API key must not be committed in this repo (it has write access to the index). Keep `algolia/crawler.config.js` using a placeholder and paste the real key only in the Algolia dashboard. The key in `config.yml` (`algolia.api_key`) is the search-only key and is safe to expose.
+
+`algolia-plugin.js` substitutes app id / index name / search key into `search.js` at build time. `Head.astro` also emits `docsearch:version` to scope the index to `5.x`.
+
+## Known gaps
+
+1. **`subscription` badges are maintained by hand** and nothing verifies them against what `acf-firebase` actually enforces. They can drift from real entitlement — treat a badge as a claim about intent, not proof of behaviour.
+2. **`prettier-plugin-astro` is installed but not enabled** — `site/.prettierrc.json` has no `plugins` entry, so all 64 `.astro` files are skipped by `docs-prettier-check` (prettier can't infer a parser and silently ignores them). Upstream Bootstrap fixed this in commit `d70b829`. `docs-prettier-check` is also not in the PR gate.
+3. **Undeclared dependencies**: `site/src/libs/utils.ts` imports `github-slugger`, `mdast-util-from-markdown` and `mdast-util-to-string`, none of which are in `package.json` — they resolve only as hoisted transitive deps.
+
+## Relationship to upstream Bootstrap
+
+This site is a fork of the Astro docs in `twbs/bootstrap` (`site/`), with ACF content. **Don't blanket-sync from upstream — this fork is ahead**: Astro 7.x here vs 5.18.2 there, Content Layer API (`loader: glob()`, `src/content.config.ts`) vs their legacy `src/content/config.ts`, `getEntry` vs their deprecated `getEntryBySlug`. Cherry-pick only.
+
+Upstream has had ~4 docs-infrastructure commits in 12 months, so there is little to track. `tags` is an ACF addition — upstream has no such concept.
 
 ---
 > Source: [Dhruv-Techapps/acf-docs](https://github.com/Dhruv-Techapps/acf-docs) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-24 -->
+<!-- tomevault:4.0:agents_md:2026-09-09 -->
