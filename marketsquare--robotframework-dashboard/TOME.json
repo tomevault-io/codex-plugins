@@ -2,9 +2,9 @@
   "name": "robotframework-dashboard",
   "owner": "MarketSquare",
   "repo": "robotframework-dashboard",
-  "description": "Robot Framework Dashboard and Result Database command line tool",
+  "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/MarketSquare/robotframework-dashboard",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-06-02T21:31:35Z"
+  "distributed_at": "2026-09-10T01:53:15Z"
 }
