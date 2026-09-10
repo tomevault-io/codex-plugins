@@ -5,10 +5,11 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [dionysos-dev/Dionysos.jl](https://github.com/dionysos-dev/Dionysos.jl).
+Original source: `` in [dionysos-dev/Dionysos.jl](https://github.com/dionysos-dev/Dionysos.jl).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
