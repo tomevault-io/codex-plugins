@@ -5,10 +5,11 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [rudderlabs/rudder-sdk-js](https://github.com/rudderlabs/rudder-sdk-js).
+Original source: `` in [rudderlabs/rudder-sdk-js](https://github.com/rudderlabs/rudder-sdk-js).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
