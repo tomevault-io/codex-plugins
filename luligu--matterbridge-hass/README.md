@@ -1,6 +1,6 @@
 # matterbridge-hass
 
-> Source: [Luligu/matterbridge-hass](https://github.com/Luligu/matterbridge-hass). Graded, signed and kept in sync across platforms by [TomeVault](https://tomevault.io)
+> Source: [Luligu/matterbridge-hass](https://github.com/Luligu/matterbridge-hass). Graded, signed and kept current as the models change by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
