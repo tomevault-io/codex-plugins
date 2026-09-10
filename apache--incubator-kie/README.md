@@ -5,11 +5,10 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `` in [apache/incubator-kie](https://github.com/apache/incubator-kie).
+Original source: `CLAUDE.md` in [apache/incubator-kie](https://github.com/apache/incubator-kie).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
