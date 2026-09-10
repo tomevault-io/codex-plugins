@@ -1,21 +1,22 @@
 # yamlizr
 
-> Tome by [f2calv](https://github.com/f2calv/yamlizr) — distributed by [TomeVault](https://tomevault.io)
+> Tome by [f2calv](https://github.com/f2calv/yamlizr), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [f2calv/yamlizr](https://github.com/f2calv/yamlizr).
+Original source: `` in [f2calv/yamlizr](https://github.com/f2calv/yamlizr).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/f2calv/yamlizr](https://github.com/f2calv/yamlizr)
+Graded against the Tome Standard, TomeVault's public ruleset for whether AI instructions load, read clearly and stay safe. Source: [github.com/f2calv/yamlizr](https://github.com/f2calv/yamlizr)
 
 ---
 
