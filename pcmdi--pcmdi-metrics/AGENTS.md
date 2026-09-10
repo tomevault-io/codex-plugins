@@ -1,110 +1,82 @@
-# PCMDI/pcmdi_metrics — Copilot onboarding instructions
+# CLAUDE.md
 
-This file tells an automated coding agent how to work efficiently in this repository. Trust these instructions and only run repository-wide searches when the guidance below is incomplete or contradicted by the current repository state.
+## Project Overview
 
-## High level summary
-- What this repo does: The PCMDI Metrics Package (PMP) is an open-source Python package that computes objective summary metrics and diagnostics for Earth System Models (ESMs) and observations. It provides drivers, analysis routines, plotting utilities, and example/demo notebooks focused on climate model metrics (mean climate, ENSO, MJO, monsoons, precipitation statistics, cloud feedbacks, sea ice, extremes, etc.).
-- Size & type: A Python library + docs and tests. Primary language: Python (>=3.10, up to <3.14). Small amount of shell scripts for docs and CI.
-- Key frameworks/runtime: Python, conda-forge packages (cartopy, xarray/xcdat, netcdf4, rasterio, shapely, xclim), Sphinx for docs, pre-commit hooks for formatting/linting, GitHub Actions for CI.
+The PCMDI Metrics Package (PMP) is a scientific Python package for evaluating Earth System Models (ESMs). It provides objective comparisons of climate models with observations across multiple metrics including climatology, variability modes (ENSO, MJO), precipitation patterns, cloud feedback, and more.
 
-## Build & validation (always follow these exact steps first)
-These are the canonical steps to bootstrap, build, lint, and test changes. The CI workflow (.github/workflows/build_workflow.yml) uses a conda-based environment created from conda-env/ci.yml and runs pre-commit and the build matrix on Python 3.10–3.13.
+## Critical Constraints
+**MUST NOT alter existing computational logic** - metrics are published/validated. Changing computational logic invalidates scientific results.
+**MUST maintain backward compatibility** - driver scripts and parameter files used in operational workflows
+**MUST use xCDAT, not CDAT** - CDAT is fully deprecated
 
-1) Bootstrap (create the environment)
-- Always use conda-forge. Recommended commands:
-  - conda env create -f conda-env/ci.yml -n pcmdi_metrics_dev
-  - conda activate pcmdi_metrics_dev
-- NOTE: conda env files reference many compiled packages (cartopy, rasterio, shapely). Installation can be slow and may require system libraries. Use the provided conda-env/ci.yml to match CI.
+## Architecture Overview
 
-2) Install the package
-- Preferred (editable): python -m pip install -e .
-  - The project uses a pyproject.toml with a custom backend (backend-path = ["_custom_build"]). If editable install fails, try: python -m pip install .
-- Verify installation: python -c "import pcmdi_metrics; print(pcmdi_metrics.__version__)" (package exposes metadata)
+### Module Organization
+- Metric-specific modules under `pcmdi_metrics/` (e.g., `mean_climate/`, `enso/`, `mjo/`)
+- Each metric has `lib/` (core functions), `param/` (examples), optionally `*_driver.py`
+- Shared utilities in `io/`, `utils/`, `stats/`, `graphics/`
 
-3) Lint & formatting (pre-commit)
-- Pre-commit is enforced in CI. Run locally before pushing:
-  - pre-commit install
-  - pre-commit run --all-files
-- Configured formatters/linters: black, isort, flake8 (see .pre-commit-config.yaml and .flake8.cfg). flake8 max-line-length is 119 (see .flake8.cfg).
-- CI runs pre-commit under Python 3.13; use the same or ensure your local pre-commit hooks use the same versions.
+### Driver scripts (Legacy Interface)
+- Existing driver scripts (e.g., `mean_climate_driver.py`) are legacy interfaces used by operational workflows and MUST NOT BREAK.
+- Driver scripts read parameter files (`.py` or `.json`) that define paths, variables, and options.
+- New metrics should use standard Python API structure: importable functions, not standalone executable scripts.
+- Always maintain backward compatibility: add new optional params with defaults, don't remove/change existing behavior.
 
-4) Run tests
-- Two supported ways:
-  - Lightweight (pytest): pytest -q
-    - Good for incremental work and fast feedback. Use -k to select tests. Many tests rely only on Python packages already in the conda env.
-  - Legacy test runner (matches some older test automation): python run_tests.py
-    - This uses testsrunner.TestRunnerBase and may perform extra setup (download sample data). Use when requested by maintainers or when reproducing CI behavior.
-- Note: Some tests depend on heavy geospatial packages and sample data files; running the full test suite locally can be slow and may require additional system libraries. Prefer running a targeted subset while developing.
+### API Design (New Development)
 
-5) Docs (optional for changes affecting docs)
-- Docs build requires sphinx and dev packages (see conda-env/dev.yml). To build docs locally:
-  - conda env create -f conda-env/dev.yml -n pcmdi_metrics_dev_docs
-  - conda activate pcmdi_metrics_dev_docs
-  - cd docs
-  - make clean && make html
-- GitHub Actions deploy docs automatically on merges to main.
+#### API Design Principles:
+- Accept standard data structures (xarray.Dataset, numpy arrays)
+- Return standard data structures (dict, DataFrame, Dataset)
+- Use keyword arguments for options with sensible defaults
+- Type hints required for main functions, optional for helpers
+- Comprehensive docstrings
+- Minimal side effects (no global state, file I/O optional)
 
-6) CI (replicate when needed)
-- The canonical CI is .github/workflows/build_workflow.yml and uses Miniforge + environment-file conda-env/ci.yml and runs on ubuntu-latest.
-- To reproduce locally use act (or run on a VM) configured to match ubuntu-latest and Python matrix or run the same conda env steps and commands in a shell.
+#### PMP API Code Quality:
+- Use NumPy style docstrings with a short one-line description at the top of each function.
+- Include citations for any scientific references used.
+- Prioritize readability and correctness over premature optimization.
+- Use classes minimally.
+- Avoid hard coding values, especially if units or order may vary among different datasets.
+- Prioritize API flexibility for commonly used climate model and observation datasets. (i.e., functions should handle data inputs with different grids or non-standard units).
+- See `pcmdi_metrics.mjo.compute_mjo_ewr_from_dataset` in the docs for a well-designed API example.
 
-Common gotchas & mitigations
-- Heavy compiled dependencies: cartopy, rasterio, shapely, etc. Use conda-forge and allow extra time for installation. If install fails on pip wheel build, prefer conda install from conda-forge.
-- Custom build backend: pyproject.toml uses a backend wrapper in _custom_build — avoid changing build configuration unless necessary and test install after changes.
-- Pre-commit formatting: black may reformat many files — run pre-commit before opening PR to avoid CI failures.
-- Tests requiring sample data or external resources: some legacy tests download or expect share/test data. If a test fails due to missing data, check tests or run_tests.py options (UPDATE_TESTS env var) or run targeted pytest selection.
+### Key Dependencies
+- All CDAT functionality has been transitioned to **xCDAT** (imported as `xcdat`).
+- Do not introduce any new CDAT dependencies or use CDAT-specific APIs.
+- Use **xarray** as the primary data structure for N-dimensional arrays.
 
-## Project layout & important files
-- Top-level files you will use frequently:
-  - README.md — project description and usage
-  - pyproject.toml — packaging and build config (PEP 621); dynamic versioning; custom backend in _custom_build
-  - conda-env/ci.yml — canonical conda environment used by CI (always use this for CI parity)
-  - .github/workflows/build_workflow.yml — CI matrix and steps (pre-commit, conda setup, install, test)
-  - .pre-commit-config.yaml — formatting and lint rules (black, isort, flake8)
-  - .flake8.cfg — flake8 configuration (max-line-length 119)
-  - docs/ — Sphinx docs and build scripts; docs/README.md has instructions for local preview
-  - tests/ — unit tests (pytest style) and several legacy/deprecated tests
-  - run_tests.py — legacy test harness used by some maintainers
-  - pcmdi_metrics/ — main Python package (modules, drivers, scripts)
+### JSON Output Structure
+- Metrics saved as JSON with nested structure: DIMENSIONS (metadata about structure), RESULTS (nested by model/reference/region/statistic/season), PROVENANCE (tracking). See existing outputs for schema.
+- Use `pcmdi_metrics.resources.resource_path()` for package data
+- Maintain provenance tracking via `generateProvenance()` when adding new metrics
 
-- How to find where to change code:
-  - Quick rule: pcmdi_metrics/<area> contains modules by function (diurnal, enso, cloud_feedback, mean_climate, io, utils, graphics, etc.). Search for the function/class name when given a task.
-  - Use the package entry points defined in pyproject.toml (project.scripts) to find driver scripts and mapping to modules.
+## Development Process
 
-- Tests & static checks run in CI before merge:
-  - pre-commit hooks (black, isort, flake8) — fail-fast
-  - Conda environment consistency and package install
-  - Test matrix across Python 3.10–3.13 (see build_workflow.yml)
+### Testing
+- Test driver scripts with sample parameter files to ensure backward compatibility.
+- For expensive computations, test on a data slice (temporal subset or coarser grid) appropriate to the metric's science.
+- Always run pytest before committing changes.
+- Tests are defined in ./share/test_data_files.txt.
+- Use @pytest.mark.parameterize for testing multiple configurations.
+- Legacy tests in ./tests/deprecated/ (exclude from test runs).
+- Always run `pre-commit run --all-files` before committing changes.
 
-Explicit validation checks you can run locally to mirror CI:
-- Create the conda env from conda-env/ci.yml and activate it
-- pip install -e .
-- pre-commit run --all-files
-- pytest -q
-- Build docs (if relevant): cd docs && make html
+## Git Workflow
+- Never push changes directly to Main branch
+- Reference issue in new branches and pull requests
+- Follow this pattern for naming new branches: <issue-number>_<username>_<change-description>
+- Always use a clear, descriptive commit message and reference any relevant issue numbers.
 
-## Steps to follow when making a change (agent workflow)
-1. Read this file (trust it). Only run repo-wide searches if you cannot find required information here.
-2. Create a feature branch. Make minimal changes and include a clear commit message.
-3. Run pre-commit hooks locally. Fix formatting/lint issues until pre-commit passes.
-4. Run the relevant subset of tests (pytest -k <name>) and make sure they pass locally.
-5. Run full test suite or run_tests.py only if maintainers expect it or if the change touches core functionality.
-6. Run docs build locally if your change affects documentation or API docs.
-7. Open a PR against main. Include short description, testing performed (commands and results), and note any CI caveats (heavy packages, external data requirements).
+## Common Pitfalls (gotchas)
+- **Changing existing logic**: If changes are needed, describe the issue, show current vs proposed behavior, and wait for explicit approval before proceeding.
+- **CMEC compatibility**: Preserve CMEC (Climate Model Evaluation Collective) output format when modifying existing metrics that support it.
+- **Helper functions**: Only create when the same logic is used in 3+ places
 
-## Tips for rapid iteration
-- Use targeted pytest selection (-k, -m) to run only relevant tests while developing.
-- If install from source is slow, consider creating a conda environment once and reusing it across iterations.
-- Respect the formatter/linter configuration to avoid churn in PRs.
-- If a failing CI job references missing system dependencies, check whether conda installation (conda-forge) fixes it before adding workarounds.
-
-## Final rules for the automated agent
-- Always prefer conda-env/ci.yml for environment replication and the CI workflow for validation.
-- Always run pre-commit locally (pre-commit run --all-files) before pushing code.
-- Do not change packaging/build backend (_custom_build) or top-level CI files unless the change is explicitly related and tests/documentation are updated.
-- Add or update tests for behavioral changes. If you cannot run heavy tests locally, add focused unit tests that avoid large compiled deps where possible.
-- If any step here contradicts a file in the repository, run a targeted search to resolve the discrepancy and update this file (with a maintainer-reviewed PR).
+**Avoid**:
+- Single-use helper functions
+- Over-engineering or premature abstractions
 
 ---
 > Source: [PCMDI/pcmdi_metrics](https://github.com/PCMDI/pcmdi_metrics) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-24 -->
+<!-- tomevault:4.0:agents_md:2026-09-09 -->
