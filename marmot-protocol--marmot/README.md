@@ -1,8 +1,6 @@
 # marmot
 
-> Tome by [marmot-protocol](https://github.com/marmot-protocol/marmot) — distributed by [TomeVault](https://tomevault.io)
-
-The Marmot Protocol is a messaging protocol that specifies how to do efficient end-to-end encrypted group messaging using Nostr's decentralized identity & relay network combined with the MLS Protocol.
+> Tome by [marmot-protocol](https://github.com/marmot-protocol/marmot), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
