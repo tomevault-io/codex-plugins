@@ -1,33 +1,37 @@
 
-# Package versioning & rebuild
+# Pre-push checks
 
-## When it applies
+Before **any** `git push` (or asking the user to push), run this sequence and fix failures. Do not push with red checks.
 
-Any edit under `packages/<name>/` (source, tests that change public API, `package.json` exports) or `src/` (main Nuxt module).
+```bash
+pnpm run prepack
+pnpm run format
+pnpm run lint
+pnpm run typecheck
+pnpm run check:versions -- --npm
+pnpm run release:source
+pnpm run compare:published
+```
 
-## Workflow (once per push/PR, not per commit)
+## Order
 
-1. Finish the logical change set on the branch.
-2. **Before push**, for each affected package, bump `version` in `packages/<name>/package.json` **one patch** (`1.2.3` → `1.2.4`). If `src/` changed, bump root `package.json` patch once too.
-3. Rebuild every bumped package that has a build step:
-   ```bash
-   pnpm --filter @i18n-micro/utils build
-   pnpm --filter @i18n-micro/core build
-   # …same for each touched package
-   ```
-4. Include in the commit: source + `package.json` version + updated `dist/` (when published).
+1. **`prepack`** — build packages + main module (needed before compare/publish gates).
+2. **`format`** / **`lint`** / **`typecheck`** — style and types.
+3. **`check:versions -- --npm`** — bumped packages match registry expectations.
+4. **`release:source`** / **`compare:published`** — release source integrity vs published artifacts.
+
+## Rules
+
+- Run **all** commands above; do not skip because “only docs” or “only one package” unless the user explicitly waives them.
+- If `format` rewrites files, stage them and continue the rest of the list.
+- Pair with [package-versioning](package-versioning.mdc): version bump + `dist/` rebuild belong in the change set **before** these gates.
+- Full `pnpm run test` is still recommended when touching runtime/routing; it is **not** a substitute for this list.
 
 ## Do not
 
-- Bump version on every small follow-up commit in the same branch.
-- Push package source changes without rebuilding `dist/` when the package ships built artifacts.
-- Manually edit root `CHANGELOG.md` unless the user requested a release.
-
-## Release vs day-to-day
-
-- **Day-to-day**: patch bump in affected `packages/*/package.json` (+ root if `src/` changed), rebuild, push.
-- **Formal release**: root version/changelog via `pnpm run release:*` / changelogen; news in `docs/news/index.md`.
+- Push after only `lint` + `test:unit`.
+- Treat `pnpm run preflight` or `release:check` as identical — this list is the required gate (includes `prepack`).
 
 ---
 > Source: [s00d/nuxt-i18n-micro](https://github.com/s00d/nuxt-i18n-micro) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-26 -->
+<!-- tomevault:4.0:agents_md:2026-09-10 -->
