@@ -4,7 +4,7 @@
   "repo": "parlot",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/sebastienros/parlot",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-06-30T08:55:16Z"
+  "distributed_at": "2026-09-10T11:20:53Z"
 }
