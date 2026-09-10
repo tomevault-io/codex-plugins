@@ -1,0 +1,51 @@
+{
+  "name": "lcc-license-generator",
+  "owner": "open-license-manager",
+  "repo": "lcc-license-generator",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "lcc-license-generator",
+      "path": ".agents/skills/compile/SKILL.md",
+      "github_url": "https://github.com/open-license-manager/lcc-license-generator/tree/main/.agents/skills/compile/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/open-license-manager/lcc-license-generator",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-09-10T04:39:53Z"
+}
