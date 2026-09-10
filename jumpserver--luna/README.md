@@ -1,0 +1,28 @@
+# luna
+
+> Tome by [jumpserver](https://github.com/jumpserver/luna), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `.cursor/rules/*.mdc` in [jumpserver/luna](https://github.com/jumpserver/luna).
+
+## Also available for
+
+- **Claude Code** — `CLAUDE.md`
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+From [jumpserver/luna](https://github.com/jumpserver/luna) — a repo with 310+ stars on GitHub.
+
+---
+
+Install this config instantly:
+```
+npx tomevault install jumpserver/luna
+```
+Source: [github.com/jumpserver/luna](https://github.com/jumpserver/luna).
+
+<!-- genome:t-i-s -->
