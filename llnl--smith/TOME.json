@@ -1,0 +1,63 @@
+{
+  "name": "smith",
+  "owner": "LLNL",
+  "repo": "smith",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "smith",
+      "path": "skills/building/SKILL.md",
+      "github_url": "https://github.com/LLNL/smith/tree/main/skills/building/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "smith",
+      "path": "skills/cpp-style/SKILL.md",
+      "github_url": "https://github.com/LLNL/smith/tree/main/skills/cpp-style/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "smith",
+      "path": "skills/cpp-unit-testing/SKILL.md",
+      "github_url": "https://github.com/LLNL/smith/tree/main/skills/cpp-unit-testing/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/LLNL/smith",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-09-10T06:30:21Z"
+}
