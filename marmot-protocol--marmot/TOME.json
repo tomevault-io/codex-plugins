@@ -2,7 +2,7 @@
   "name": "marmot",
   "owner": "marmot-protocol",
   "repo": "marmot",
-  "description": "The Marmot Protocol is a messaging protocol that specifies how to do efficient end-to-end encrypted group messaging using Nostr's decentralized identity & relay network combined with the MLS Protocol.",
+  "description": "",
   "type": "config",
   "source_format": "CLAUDE.md",
   "formats": [
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/marmot-protocol/marmot",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-13T02:43:57Z"
+  "distributed_at": "2026-09-10T17:28:49Z"
 }
