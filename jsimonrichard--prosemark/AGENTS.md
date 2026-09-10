@@ -1,16 +1,62 @@
 
-# Pre-push quality (build, lint, format)
+# House rules
 
-Before **every** `git push` (including the first push on a branch), agents must ensure the project builds cleanly, passes lint, and is formatted according to repo tooling.
+Rationale, examples, and this repo's specifics: **`AGENTS.md` § House rules**.
+Short form — check each before handing work back:
 
-1. **Format** — Apply the repository’s formatter (for this workspace: `bun run format` from the repo root).
-2. **Lint** — Run lint across affected packages or the whole workspace (for this workspace: `bunx turbo run lint` from the repo root, or the equivalent documented in `package.json` / CI).
-3. **Build** — Run a full or workspace build so TypeScript and bundlers succeed (for this workspace: `bunx turbo run build` from the repo root, or the equivalent used in CI).
+1. **No silent fallbacks.** Impossible state → throw, don't degrade. Unclear
+   permission → deny. Dangerous capability → the guard is a *required* argument.
+   User-reachable error → surface it in the UI, not just the log. Expected
+   failures are data, not exceptions.
+2. **Upstream before workaround.** Prefer the framework's own mechanism, even if
+   local code already works. Needed a workaround? Name the upstream mechanism you
+   checked and why it failed. Derive values from their source; never restate
+   them. Type guard over cast. Check sibling repos for prior art.
+3. **Generalize; don't special-case.** Fixed one case? Check whether the general
+   rule holds and unify on one path. A host never branches on plugin identity —
+   add the hook to the contract instead. Then **delete** the special case or
+   fallback you replaced.
+4. **One concern per change.** No batching unrelated modules. N modules = N
+   changes. Stop between steps of a multi-step feature. Narrower and complete
+   beats wider and unpickable.
+5. **Plan first for anything substantial.** Write it to a file: Goal /
+   Principles / numbered sections / out of scope / success criteria. Get the plan
+   reviewed before writing code.
+6. **State what is not done.** Gaps, deferrals, and assumptions as precisely as
+   the work. Skipped a check — say so. Quote failing output. Baseline
+   pre-existing failures and report them as inherited. Verify doc claims against
+   behavior, not against the prose around them.
 
-If a command fails, fix the underlying issues and re-run the failing step before pushing. Do not push with known build, lint, or format failures unless the user has explicitly agreed to that exception for a specific change.
+## Required outputs
 
-When instructions from cloud agents or CI already require tests or other checks, treat those as additive: still satisfy build, lint, and format before push unless they are clearly redundant with a single combined script you are instructed to run instead.
+- **Before writing code — reuse survey.** Name the existing modules, tables,
+  routes, and helpers that already touch this area and say which you are
+  extending. Adding instead of extending? Say why the existing abstraction did
+  not fit.
+- **At handoff — diff shape.** Files changed, lines added/removed, and what the
+  change let you delete. Adding far more than you remove is a signal to
+  re-check, not progress.
+
+## Where these bite in this repo
+
+- **Layer first.** `packages/core` is the CodeMirror toolkit. `packages/{latex,
+  render-html,paste-rich-text,spellcheck-frontend}` are opt-in extensions.
+  `apps/vscode-extensions/*`, `apps/demo`, `apps/docs` are hosts. A behavior that
+  belongs to an optional feature is a package, not a core flag.
+- **Rule 1** — a missing `.cm-line`, a null `syntaxTree` node, or an absent
+  webview API means a broken editor state: throw rather than fall back. See
+  ProseMark #147, which removed exactly such a `coordsAtPos` fallback.
+- **Rule 2** — CodeMirror, MathJax, and the VS Code webview API are upstream.
+  Prefer a documented facet, `eq()`, or a type guard over coordinate math,
+  `posAtDOM` probing, or an `as` cast.
+- **Rule 3** — one measurement/decoration path for all nesting levels, not a
+  branch per case. A single keymap facet, not per-field maps.
+- **Rule 6** — user-facing changes get a `.changeset/` file; never hand-edit a
+  package `CHANGELOG.md` (`.cursor/rules/changesets.mdc`).
+
+Gate before every push: `bun run turbo build check-types lint format:check` —
+the exact set CI runs. See `.cursor/rules/pre-push-quality.mdc`.
 
 ---
 > Source: [jsimonrichard/ProseMark](https://github.com/jsimonrichard/ProseMark) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-06-03 -->
+<!-- tomevault:4.0:agents_md:2026-09-10 -->
