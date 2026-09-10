@@ -1,0 +1,28 @@
+# Terminal.Gui
+
+> Tome by [tui-cs](https://github.com/tui-cs/Terminal.Gui), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [tui-cs/Terminal.Gui](https://github.com/tui-cs/Terminal.Gui).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+From [tui-cs/Terminal.Gui](https://github.com/tui-cs/Terminal.Gui) — a repo with 11206+ stars on GitHub.
+
+---
+
+Install this config instantly:
+```
+npx tomevault install tui-cs/Terminal.Gui
+```
+Source: [github.com/tui-cs/Terminal.Gui](https://github.com/tui-cs/Terminal.Gui).
+
+<!-- genome:t-i-s -->
