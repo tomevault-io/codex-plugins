@@ -4,7 +4,7 @@
   "repo": "zephyr",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/zephyrproject-rtos/zephyr",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-29T03:15:33Z"
+  "distributed_at": "2026-09-10T03:01:51Z"
 }
