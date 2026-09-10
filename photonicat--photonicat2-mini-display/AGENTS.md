@@ -1,0 +1,9 @@
+# Claude Development Guidelines
+
+## Hardware Settings
+- Don't change my hardware settings
+- Always try to use the best performance
+
+---
+> Source: [photonicat/photonicat2_mini_display](https://github.com/photonicat/photonicat2_mini_display) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-09-09 -->
