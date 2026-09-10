@@ -1,41 +1,80 @@
-# Copilot Instructions — BlazorGoogleMaps
+# CLAUDE.md
 
-## Project overview
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-**BlazorGoogleMaps** is a Blazor component library (`BlazorGoogleMaps` NuGet package) that wraps the Google Maps JavaScript API via JS interop. It targets `net8.0`, `net9.0`, and `net10.0` simultaneously and is consumed by two demo apps (server-side and client-side/WASM).
+## Project Overview
 
+**BlazorGoogleMaps** is a Blazor component library that wraps the Google Maps JavaScript API via JS interop. It's published as a NuGet package and consumed by two demo applications.
+
+**Architecture:**
 ```
-GoogleMapsComponents/          # Main library (multi-targeted net8/9/10)
+GoogleMapsComponents/          # Main library (multi-targeted: net8.0, net9.0, net10.0)
+├── Maps/                      # Core map components and services
+├── Serialization/             # Custom JSON converters (JsObjectRef, OneOf, EnumMember)
+└── wwwroot/                   # Embedded JavaScript interop files
+
 Demos/
-  Demo.Ui.Shared/              # Shared Razor class library (net10.0)
-  ServerSideDemo/              # Blazor Server demo app
-  ClientSideDemo/              # Blazor WebAssembly demo app
+├── Demo.Ui.Shared/            # Shared Razor class library (net10.0)
+├── ServerSideDemo/            # Blazor Server demo app
+└── ClientSideDemo/            # Blazor WebAssembly demo app
 ```
 
 ---
 
-## Build & language settings
+## Build & Common Commands
 
-- **TFMs**: `net8.0;net9.0;net10.0` — never change these unless explicitly asked.
-- **C# version**: `LangVersion=latest` — modern C# syntax is encouraged.
-- **Nullable**: `<Nullable>enable</Nullable>` in all projects — always handle nullability.
-- **Implicit usings**: enabled only in demo/shared projects, **not** in the main library. Add explicit `using` directives in `GoogleMapsComponents`.
-- **Namespaces**: always use **file-scoped namespaces** (`namespace Foo.Bar;`).
+### Build
+```bash
+dotnet build BlazorGoogleMaps.sln
+```
+
+### Build Specific Configuration
+```bash
+dotnet build BlazorGoogleMaps.sln -c Release
+```
+
+### Pack the Library (NuGet)
+```bash
+dotnet pack GoogleMapsComponents/GoogleMapsComponents.csproj -c Release
+```
+Output: `GoogleMapsComponents/bin/Release/BlazorGoogleMaps.*.nupkg`
+
+### Run Server-Side Demo
+```bash
+dotnet run --project Demos/ServerSideDemo/ServerSideDemo.csproj
+```
+
+### Run Client-Side (WASM) Demo
+```bash
+dotnet run --project Demos/ClientSideDemo/ClientSideDemo.csproj
+```
+
+### Clean Build Artifacts
+```bash
+dotnet clean BlazorGoogleMaps.sln
+```
 
 ---
 
-## Core architecture patterns
+## Project Configuration
 
-### JS interop via `JsObjectRef`
+- **Target Frameworks:** `net8.0`, `net9.0`, `net10.0` — Never change these unless explicitly requested
+- **C# Version:** `LangVersion=latest` — Modern C# syntax is encouraged
+- **Nullable:** `<Nullable>enable</Nullable>` — Always handle nullability in the main library
+- **Implicit Usings:** Enabled only in demos; add explicit `using` directives in `GoogleMapsComponents`
+- **Namespaces:** Always use file-scoped namespaces (`namespace Foo.Bar;`)
+- **JSON:** `System.Text.Json` only (never Newtonsoft.Json)
 
-Every Google Maps object (map, marker, service, etc.) holds a `JsObjectRef` that tracks a live JavaScript object by GUID.
+---
 
-- **Never** instantiate map objects with `new` from outside the library. Always use the `static async Task<T> CreateAsync(IJSRuntime, ...)` factory pattern.
-- **Always** implement `IDisposable` (and `IAsyncDisposable` where async cleanup is needed) and call `_jsObjectRef.Dispose()`.
-- Pass `IJSRuntime` directly to `CreateAsync`; do **not** inject it into constructors.
+## Core Architecture Patterns
 
+### 1. JS Interop via `JsObjectRef`
+
+Every Google Maps object holds a `JsObjectRef` that tracks a live JavaScript object by GUID. This is the foundation of the library's interop strategy.
+
+**Factory Pattern (Required):**
 ```csharp
-// Correct pattern for a new map object
 public class MyMapObject : IDisposable
 {
     private readonly JsObjectRef _jsObjectRef;
@@ -46,37 +85,44 @@ public class MyMapObject : IDisposable
         return new MyMapObject(jsObjectRef);
     }
 
-    private MyMapObject(JsObjectRef jsObjectRef)
-    {
-        _jsObjectRef = jsObjectRef;
-    }
+    private MyMapObject(JsObjectRef jsObjectRef) => _jsObjectRef = jsObjectRef;
 
     public void Dispose() => _jsObjectRef.Dispose();
 }
 ```
 
-### Blazor components
+**Key Rules:**
+- Never instantiate map objects with `new` from outside the library — always use the `CreateAsync` factory
+- Always implement `IDisposable` and call `_jsObjectRef.Dispose()`
+- Pass `IJSRuntime` directly to `CreateAsync`; don't inject it into constructors
 
-- All map Razor components inherit from `MapComponent` (which provides `IJSRuntime JsRuntime` and `IServiceProvider ServiceProvider`).
-- Use `[Parameter]` for public inputs and `EventCallback` / `EventCallback<T>` for events.
-- Map initialization logic goes in `OnAfterInit` callbacks, not in `OnInitialized`.
-- Razor components with significant code-behind use the partial class pattern: `MyComponent.razor` + `MyComponent.razor.cs`.
+### 2. Blazor Components
 
-### Options / response types
+- Inherit from `MapComponent` (provides `IJSRuntime JsRuntime` and `IServiceProvider ServiceProvider`)
+- Use `[Parameter]` for inputs and `EventCallback` for outputs
+- Map initialization logic goes in `OnAfterInit`, not `OnInitialized`
+- Use partial class pattern for code-behind: `MyComponent.razor` + `MyComponent.razor.cs`
 
-- Use **`record`** types (or `class` with init-only properties) for option bags and response DTOs.
-- Use **`class`** for stateful objects that wrap a `JsObjectRef`.
+### 3. Options & Response Types
+
+- Use **`record`** types for option bags and DTOs:
+  ```csharp
+  public record MapOptions
+  {
+      public int Zoom { get; init; }
+      public LatLngLiteral Center { get; init; }
+  }
+  ```
+- Use **`class`** for stateful objects that wrap a `JsObjectRef`
 
 ---
 
-## Serialization — `System.Text.Json` only
+## Serialization & Custom Converters
 
-Never use Newtonsoft.Json. All serialization goes through `System.Text.Json`.
+All serialization uses `System.Text.Json`. Key patterns:
 
-### Enum serialization
-
-Enums that map to Google Maps JS string values **must** use `[EnumMember(Value = "camelCase")]` and be annotated with `[JsonConverter(typeof(EnumMemberConverter<TEnum>))]` (or applied via `JsonSerializerOptions`).
-
+### Enum Serialization
+Enums mapping to Google Maps JS strings use `[EnumMember(Value = "camelCase")]` and `[JsonConverter(...)]`:
 ```csharp
 [JsonConverter(typeof(EnumMemberConverter<TravelMode>))]
 public enum TravelMode
@@ -86,41 +132,49 @@ public enum TravelMode
 }
 ```
 
-### `JsObjectRef` serialization
+### Union Types
+Use the `OneOf` library for multi-type properties (e.g., `string | LatLngLiteral`). A `OneOfConverterFactory` is already registered.
 
-Use `JsObjectRefConverter<T>` (already registered) when a type containing a `JsObjectRef` needs to be serialized for interop.
+### JsObjectRef Serialization
+Use `JsObjectRefConverter<T>` when a type containing a `JsObjectRef` needs interop serialization.
 
-### Union types
-
-Use the **`OneOf`** library for properties that accept multiple JS types (e.g., `string | LatLngLiteral`). A `OneOfConverterFactory` is already registered.
-
----
-
-## Naming & style conventions
-
-| Concern | Convention |
-|---|---|
-| Factory methods | `CreateAsync` |
-| Async methods | Suffix `Async` |
-| Private fields | `_camelCase` |
-| Public members | `PascalCase` |
-| JS method names | Pass as literal string matching the Google Maps JS API exactly (e.g., `"getPlacePredictions"`) |
-| Namespace root | `GoogleMapsComponents` for library; `Demo.Ui.Shared`, `ClientSideDemo`, `ServerSideDemo` for demos |
-| Sub-namespaces | Mirror the Google Maps API grouping: `Maps`, `Maps.Places`, `Maps.Drawing`, `Maps.Data`, `Maps.Visualization`, `Maps.Extension` |
+Custom converters are in `GoogleMapsComponents/Serialization/`.
 
 ---
 
-## Error handling
+## Namespace Structure
 
-- Use `ArgumentNullException.ThrowIfNull(x)` for null guards; `string.IsNullOrWhiteSpace` for strings.
-- Prefer precise exception types (`InvalidOperationException`, `ArgumentException`).
-- Do **not** swallow exceptions silently.
+- **Root:** `GoogleMapsComponents` for the library
+- **Key Namespaces:**
+  - `GoogleMapsComponents.Maps` — Core map, markers, shapes, services
+  - `GoogleMapsComponents.Maps.Places` — Places API
+  - `GoogleMapsComponents.Maps.Drawing` — Drawing tools
+  - `GoogleMapsComponents.Maps.Data` — Data layers (GeoJSON, etc.)
+  - `GoogleMapsComponents.Maps.Visualization` — Heat maps, clustering
+  - `GoogleMapsComponents.Maps.Extension` — Extension methods
 
 ---
 
-## DI registration
+## Dependency Injection
 
-The library is registered via `AddBlazorGoogleMaps` extension methods in `DependencyInjectionExtensions.cs`. When adding new injectable services, add a corresponding `AddBlazorGoogleMaps` overload or integrate into the existing one rather than creating a new registration mechanism.
+DI registration is centralized in `GoogleMapsComponents/DependencyInjectionExtensions.cs` via `AddBlazorGoogleMaps` overloads. When adding new injectable services, integrate into the existing extension methods rather than creating new registration points.
+
+Example (from demos):
+```csharp
+builder.Services.AddBlazorGoogleMaps("YOUR_API_KEY");
+```
+
+---
+
+## Key Files to Know
+
+| File | Purpose |
+|------|---------|
+| `GoogleMapsComponents/DependencyInjectionExtensions.cs` | DI registration |
+| `GoogleMapsComponents/JsObjectRef.cs` | Core JS interop tracking |
+| `GoogleMapsComponents/EnumMemberConverter.cs` | Enum ↔ JSON serialization |
+| `GoogleMapsComponents/Serialization/` | Custom JSON converters |
+| `GoogleMapsComponents/Maps/MapComponent.cs` | Base class for all map Razor components |
 
 ---
 
@@ -128,24 +182,53 @@ The library is registered via `AddBlazorGoogleMaps` extension methods in `Depend
 
 There is currently no test project. When adding tests:
 
-- Create a project named `GoogleMapsComponents.Tests` using **xUnit**.
-- Required packages: `Microsoft.NET.Test.Sdk`, `xunit`, `xunit.runner.visualstudio`.
-- Mirror source class names: `AutocompleteService` → `AutocompleteServiceTests`.
-- Name tests by behavior: `WhenRequestIsNull_GetPlacePredictions_ThrowsArgumentNullException`.
-- Do not test JS interop calls directly — mock `IJSRuntime`.
-- Do not change member visibility (`InternalsVisibleTo`) to enable testing; test through public APIs.
+- Create `GoogleMapsComponents.Tests` using **xUnit**
+- Required packages: `Microsoft.NET.Test.Sdk`, `xunit`, `xunit.runner.visualstudio`
+- Mirror source names: `AutocompleteService` → `AutocompleteServiceTests`
+- Name tests by behavior: `WhenRequestIsNull_GetPlacePredictions_ThrowsArgumentNullException`
+- Mock `IJSRuntime` for JS interop; don't test actual JS calls
+- Test through public APIs — don't change member visibility to enable testing
 
 ---
 
-## What to avoid
+## Naming & Style Conventions
 
-- **Do not** edit auto-generated files (`*.g.cs`, files under `obj/`, files with `// <auto-generated>`).
-- **Do not** add abstractions/interfaces unless the type is an external dependency or needs to be mocked in tests.
-- **Do not** add Newtonsoft.Json or any second JSON library.
-- **Do not** use `sync-over-async` (`Task.Result`, `.Wait()`).
-- **Do not** change `<TargetFrameworks>`, `<LangVersion>`, or SDK version unless explicitly requested.
-- **Do not** use `public` unless the member is part of the library's public surface; prefer `internal` or `private`.
+| Concern | Convention |
+|---------|-----------|
+| Factory methods | `CreateAsync` |
+| Async methods | Suffix `Async` |
+| Private fields | `_camelCase` |
+| Public members | `PascalCase` |
+| JS method names | Pass as literal string matching Google Maps JS API exactly |
+
+---
+
+## Error Handling
+
+- Use `ArgumentNullException.ThrowIfNull(x)` for null guards
+- Use `string.IsNullOrWhiteSpace` for string validation
+- Prefer precise exception types (`InvalidOperationException`, `ArgumentException`)
+- Do not swallow exceptions silently
+
+---
+
+## What to Avoid
+
+- Do not edit auto-generated files (`*.g.cs`, `obj/`, files with `// <auto-generated>`)
+- Do not add abstractions/interfaces unless the type is an external dependency or needs testing
+- Do not add Newtonsoft.Json or any competing JSON library
+- Do not use sync-over-async (`Task.Result`, `.Wait()`)
+- Do not change `<TargetFrameworks>`, `<LangVersion>`, or SDK version without explicit request
+- Do not use `public` unless the member is part of the library's public surface — prefer `internal` or `private`
+
+---
+
+## References
+
+- **Full Architecture Guide:** See `.github/copilot-instructions.md` for complete patterns, DI structure, and conventions
+- **Usage & Features:** See `README.md` for quick-start, examples, and feature list
+- **Demo Examples:** `Demos/Demo.Ui.Shared/Pages/` contains reference implementations of all major features
 
 ---
 > Source: [rungwiroon/BlazorGoogleMaps](https://github.com/rungwiroon/BlazorGoogleMaps) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-24 -->
+<!-- tomevault:4.0:agents_md:2026-09-09 -->
