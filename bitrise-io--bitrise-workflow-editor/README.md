@@ -5,10 +5,11 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [bitrise-io/bitrise-workflow-editor](https://github.com/bitrise-io/bitrise-workflow-editor).
+Original source: `` in [bitrise-io/bitrise-workflow-editor](https://github.com/bitrise-io/bitrise-workflow-editor).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
