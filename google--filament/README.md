@@ -15,7 +15,7 @@ Original source: `copilot-instructions.md` in [google/filament](https://github.c
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [google/filament](https://github.com/google/filament) — a repo with 20294+ stars on GitHub.
+From [google/filament](https://github.com/google/filament) — a repo with 20473+ stars on GitHub.
 
 ---
 
