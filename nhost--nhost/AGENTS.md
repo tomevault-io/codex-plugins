@@ -1,77 +1,95 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides project-specific guidance for the Nhost AI service.
 
-## Project Overview
+## Project overview
 
-pgx is a PostgreSQL driver and toolkit for Go (`github.com/jackc/pgx/v5`). It provides both a native PostgreSQL interface and a `database/sql` compatible driver. Requires Go 1.25+ and supports PostgreSQL 14+ and CockroachDB.
+The service is written in Go and provides two features:
 
-## Build & Test Commands
+- **Auto-embeddings** — generates OpenAI embeddings for database rows, keeps vector columns synchronized, and deploys permission-aware search functions.
+- **Multi-provider agents** — streams agent responses through explicitly configured OpenAI Chat Completions, OpenAI Responses, Anthropic Messages, and Google Gemini adapter instances and supports GraphQL, MCP, web search, and web fetch tools.
+
+## Build and development commands
+
+The service uses the monorepo Nix flake. Run these commands from `services/ai` (or enter the shell from the repository root with `nix develop .#ai`).
 
 ```bash
-# Run all tests (requires PGX_TEST_DATABASE to be set)
+make develop
+make check
+make build
+make build-docker-image
+make dev-env-up
+make dev-env-up-short
+make dev-env-down
+make migrations-add MIGRATION_NAME=xxx
+```
+
+### Tests
+
+```bash
 go test ./...
-
-# Run a specific test
-go test -run TestFunctionName ./...
-
-# Run tests for a specific package
-go test ./pgconn/...
-
-# Run tests with race detector
-go test -race ./...
-
-# DevContainer: run tests against specific PostgreSQL versions
-./test.sh pg18                      # Default: PostgreSQL 18
-./test.sh pg16 -run TestConnect     # Specific test against PG16
-./test.sh crdb                      # CockroachDB
-./test.sh all                       # All targets (pg14-18 + crdb)
-
-# Format (always run after making changes)
-goimports -w .
-
-# Lint
-golangci-lint run ./...
+go test -v ./path/to/package
+go test -run TestName ./...
 ```
 
-## Test Database Setup
-
-Tests require `PGX_TEST_DATABASE` environment variable. In the devcontainer, `test.sh` handles this. For local development:
-
-```bash
-export PGX_TEST_DATABASE="host=localhost user=postgres password=postgres dbname=pgx_test"
-```
-
-The test database needs extensions: `hstore`, `ltree`, and a `uint64` domain. See `testsetup/postgresql_setup.sql` for full setup. Many tests are skipped unless additional `PGX_TEST_*` env vars are set (for TLS, SCRAM, MD5, unix socket, PgBouncer testing).
+Tests that need PostgreSQL require the development environment. The full CI check runs linting, tests, and code-generation verification.
 
 ## Architecture
 
-The codebase is a layered architecture, bottom-up:
+### Code generation
 
-- **pgproto3/** — PostgreSQL wire protocol v3 encoder/decoder. Defines `FrontendMessage` and `BackendMessage` types for every protocol message.
-- **pgconn/** — Low-level connection layer (roughly libpq-equivalent). Handles authentication, TLS, query execution, COPY protocol, and notifications. `PgConn` is the core type.
-- **pgx** (root package) — High-level query interface built on `pgconn`. Provides `Conn`, `Rows`, `Tx`, `Batch`, `CopyFrom`, and generic helpers like `CollectRows`/`ForEachRow`. Includes automatic statement caching (LRU).
-- **pgtype/** — Type system mapping between Go and PostgreSQL types (70+ types). Key interfaces: `Codec`, `Type`, `TypeMap`. Custom types (enums, composites, domains) are registered through `TypeMap`.
-- **pgxpool/** — Concurrency-safe connection pool built on `puddle/v2`. `Pool` is the main type; wraps `pgx.Conn`.
-- **stdlib/** — `database/sql` compatibility adapter.
+- **gqlgenc** (`gqlgenc.yml`) generates the Hasura client and models from `hasura/client.graphqls`. After starting a clean development environment and applying the service migrations and metadata, run `GOEXPERIMENT= go generate .` from `services/ai`. Clearing `GOEXPERIMENT` keeps generated JSON fields compatible with standard Go builds. `make check` runs the same directive and fails if generation changes tracked files. Keep the explicit `package: hasura` settings: generation removes its output files before recreating them, and package inference can otherwise select the black-box test package.
+- Generate against the migrated live schema, not a schema file or stale Hasura container. Provider identity is a bounded string throughout PostgreSQL, Hasura, GraphQL, and Go; there is no provider catalog, foreign key, tracked enum table, generated enum, or provider-specific metadata reload. After migration changes, perform the documented full volume reset, verify the live schema and metadata, run generation twice to prove stability, and never hand-edit generated files.
+- **mockgen** generates package-local mocks for retained boundary interfaces.
 
-Supporting packages:
-- **internal/stmtcache/** — Prepared statement cache with LRU eviction
-- **internal/sanitize/** — SQL query sanitization
-- **tracelog/** — Logging adapter that implements tracer interfaces
-- **multitracer/** — Composes multiple tracers into one
-- **pgxtest/** — Test helpers for running tests across connection types
+### Key packages
 
-## Key Design Conventions
+- `cmd/` — CLI commands, HTTP routing, auto-embeddings webhooks, and service startup.
+- `agents/` — multi-provider agent orchestration, SSE streaming, approval flow, and tools.
+- `agents/provider/` — strict aggregate configuration plus OpenAI Chat Completions, OpenAI Responses, Anthropic Messages, and Google Gemini adapters. Each instance owns one trusted startup endpoint and header set and never supplies auto-embedding configuration.
+- `agents/tool/` — GraphQL, MCP, web search, and web fetch tools.
+- `autoai/` — auto-embeddings configuration and database functionality.
+- `autoai/embeddings/` — background embedding synchronization.
+- `openai/` — narrow OpenAI embedding client built on `github.com/openai/openai-go`.
+- `hasura/` — generated GraphQL client plus metadata helpers.
+- `migrations/` — PostgreSQL migrations and Hasura table, relationship, and event-trigger setup.
 
-- **Semantic versioning** — strictly followed. Do not break the public API (no removing or renaming exported types, functions, methods, or fields; no changing function signatures).
-- **Minimal dependencies** — adding new dependencies is strongly discouraged (see CONTRIBUTING.md).
-- **Context-based** — all blocking operations take `context.Context`.
-- **Tracer interfaces** — observability via `QueryTracer`, `BatchTracer`, `CopyFromTracer`, `PrepareTracer` on `ConnConfig.Tracer`.
-- **Formatting** — always run `goimports -w .` after making changes to ensure code is properly formatted. CI checks formatting via `gofmt -l -s -w . && git diff --exit-code`. `gofumpt` with extra rules is also enforced via `golangci-lint`.
-- **Linters** — `govet` and `ineffassign` only (configured in `.golangci.yml`).
-- **CI matrix** — tests run against Go 1.25/1.26 × PostgreSQL 14-18 + CockroachDB, on Linux and Windows. Race detector enabled on Linux only.
+### Request flow
+
+1. Gin serves health/version routes, agent SSE routes, and auto-embeddings webhooks.
+2. Hasura event triggers notify the service when auto-embeddings configuration changes.
+3. The background synchronization process fetches pending rows through Hasura, generates vectors through the OpenAI SDK, and writes results through the configured mutation.
+4. Agent routes load agent/session/message data through Hasura and stream provider events to clients.
+
+### Database
+
+Tables live in the `ai` schema. Auto-embeddings use `auto_embeddings_configuration`; agents use `agents`, `agent_sessions`, and `agent_messages`. Provider declarations are configuration-only and are never persisted. PostgreSQL requires `vector`, `http`, and `pg_jsonschema`.
+
+## Code standards
+
+- Follow the repository Go rules in `.claude/docs/go-design-rules.md`.
+- Use the root `go.mod` and `vendor/`; never add service-local dependency files.
+- Do not hand-edit generated files; regenerate them from their source definitions.
+- Handle errors with call-site context.
+- `AGENT_PROVIDERS` is the sole authority for agent-provider identity. Keep registry keys and persisted provider values as strings; do not add built-in identities, provider tables, foreign keys, or GraphQL/Go enums.
+- Construct configured provider clients once in `cmd.buildAgentProviders`, store them in `provider.Registry`, and keep per-agent models request-scoped in `provider.StreamRequest`; do not add models to reusable provider clients.
+- Agent adapters must use only declared endpoints and headers, refuse redirects, pin OpenAI and Anthropic retry counts explicitly, and sanitize SDK errors. Do not permit SDK ambient credentials, endpoints, backends, projects, locations, or ADC behavior to affect requests.
+- Build every Google instance from a fresh explicit client config. Preserve the private sentinel-removal transport, clone requests and headers before scrubbing the generated key, and never mutate `http.DefaultTransport`.
+- Before passing per-request options such as `option.WithResponseInto` to a shared `openai-go` service, clone the service's `Options` slice. The SDK appends request options and can otherwise mutate shared slice storage during concurrent streams.
+- Treat `provider.ToolCall.ProviderMetadata` as opaque adapter continuation state: persist and replay it with tool calls, but never expose or log it; build SSE payloads from explicit `{id, name, arguments}` projections and never marshal `provider.ToolCall` directly.
+- If a second adapter needs private continuation state, replace the tool-call carrier with a versioned, message-level provider-state envelope persisted separately from public SSE DTOs; do not add more adapter-specific state to `provider.ToolCall`.
+- Prefer table-driven parallel tests and `cmp.Diff`.
+- Avoid `//nolint` except for justified false positives or external types.
+
+## Validation workflow
+
+1. Update schemas or migrations.
+2. Regenerate the Hasura client when its operations or schema change.
+3. Add or update tests.
+4. From the repository root run `golines -w --base-formatter=gofumpt .`.
+5. From the repository root run `golangci-lint run --fix ./...`.
+6. Run `go test ./services/ai/...` and `make check` when the required development services are available.
 
 ---
 > Source: [nhost/nhost](https://github.com/nhost/nhost) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-25 -->
+<!-- tomevault:4.0:agents_md:2026-09-09 -->
