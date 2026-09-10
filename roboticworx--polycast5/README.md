@@ -7,12 +7,12 @@ PolyCast5 is a multi-tool everything remote to control all your devices wireless
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [RoboticWorx/PolyCast5](https://github.com/RoboticWorx/PolyCast5).
+Original source: `CLAUDE.md` in [RoboticWorx/PolyCast5](https://github.com/RoboticWorx/PolyCast5).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
