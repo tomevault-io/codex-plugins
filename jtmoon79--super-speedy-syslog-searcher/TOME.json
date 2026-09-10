@@ -1,0 +1,57 @@
+{
+  "name": "super-speedy-syslog-searcher",
+  "owner": "jtmoon79",
+  "repo": "super-speedy-syslog-searcher",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "super-speedy-syslog-searcher",
+      "path": ".claude/skills/s4-log-search/SKILL.md",
+      "github_url": "https://github.com/jtmoon79/super-speedy-syslog-searcher/tree/main/.claude/skills/s4-log-search/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "super-speedy-syslog-searcher",
+      "path": ".claude/skills/ere-regex-increment/SKILL.md",
+      "github_url": "https://github.com/jtmoon79/super-speedy-syslog-searcher/tree/main/.claude/skills/ere-regex-increment/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/jtmoon79/super-speedy-syslog-searcher",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-09-10T06:35:39Z"
+}
