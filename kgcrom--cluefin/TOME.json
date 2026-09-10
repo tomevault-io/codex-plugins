@@ -2,7 +2,7 @@
   "name": "cluefin",
   "owner": "kgcrom",
   "repo": "cluefin",
-  "description": "Your financial investment assistant",
+  "description": "",
   "type": "config",
   "source_format": "CLAUDE.md",
   "formats": [
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/kgcrom/cluefin",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-13T14:30:38Z"
+  "distributed_at": "2026-09-10T19:16:52Z"
 }
