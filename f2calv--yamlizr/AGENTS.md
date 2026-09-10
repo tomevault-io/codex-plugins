@@ -1,226 +1,82 @@
-# Copilot Instructions for yamlizr
 
-## Repository Overview
+# GitHub Actions
 
-**yamlizr** is a .NET Global Tool that converts Azure DevOps Classic Designer Build/Release Definitions and Task Groups into YAML Pipeline or GitHub Actions equivalents. The tool uses the Azure DevOps .NET Client Libraries to pre-cache data and converts it into pipeline objects using YamlDotNet.
+## General
 
-### Repository Details
-- **Type**: .NET Console Application (CLI tool) packaged as a NuGet global tool
-- **Size**: Small (~3.7 MB, ~126 files)
-- **Target Frameworks**: Multi-targeted for net8.0, net9.0, and net10.0
-- **Primary Language**: C# (19 source files)
-- **Solution Format**: Modern XML-based solution file (`yamlizr.slnx`)
-- **Runtime**: .NET 10.0.102 SDK is available
+- Always leave **one blank line between steps** within a job for readability.
+- Pin actions to the **major version tag version by default** (e.g. `actions/checkout@v6`, `softprops/action-gh-release@v2`). Do not use SHA pinning or include minor/patch versions.
+- Set `fetch-depth: 0` on `actions/checkout` whenever GitVersion is used so it can read the full commit history. For lint-only workflows where history is unnecessary, `fetch-depth: 1` is acceptable.
+- Use explicit `permissions` blocks on every job; default to the minimum required (e.g. `contents: read`). Set global workflow-level permissions to `permissions: {}` (deny all) and grant per-job.
 
-## Project Structure
+## Step Naming
 
-### Main Projects
-1. **CasCap.DevOpsYamlizrCli** - CLI tool (executable, packaged as global tool)
-   - Location: `src/CasCap.DevOpsYamlizrCli/`
-   - Entry Point: `Program.cs`
-   - Output: `yamlizr` command-line tool
+- **One-liners**: When a step's `run` block is a single command, use that command (or a slightly abbreviated form) as the step `name` rather than a descriptive prose label (e.g. `name: npm install --global json5`, not `name: setup json5`).
+- **Multi-part setup**: When a setup requires multiple steps, name each step with a `(N of M)` suffix (e.g. `name: setup yq (1 of 3)`, `name: setup yq (2 of 3)`, `name: setup yq (3 of 3)`).
+- **Matrix-based names**: Include matrix variables in step names for identification (e.g. `name: test (${{ matrix.gv-source }}, ${{ matrix.gv-config }})`).
 
-2. **CasCap.Api.AzureDevOps** - Core library
-   - Location: `src/CasCap.Api.AzureDevOps/`
-   - Contains: Models/, Services/, Utilities/
+## Naming Conventions
 
-3. **CasCap.Api.AzureDevOps.Tests** - Test project (xUnit)
-   - Location: `src/CasCap.Api.AzureDevOps.Tests/`
-   - Framework: xUnit with coverlet for code coverage
+- **Inputs/outputs**: kebab-case (e.g. `image-registry`, `tag-override`, `git-user-name`).
+- **Environment variables**: ALL_UPPERCASE with underscores (e.g. `IMAGE_REGISTRY`, `TAG_OVERRIDE`, `MANIFEST_PATHS`).
+- **Secrets**: ALL_UPPERCASE with underscores (e.g. `GITHUB_TOKEN`, `GH_PAT_GITOPS`, `NUGET_API_KEY`).
 
-### Key Configuration Files
-- **Root Directory**:
-  - `Directory.Build.props` - Common MSBuild properties for all projects
-  - `Directory.Packages.props` - Central Package Management (CPM) configuration
-  - `global.json` - .NET SDK configuration
-  - `GitVersion.yml` - Semantic versioning configuration
-  - `.editorconfig` - C# code style preferences
-  - `.pre-commit-config.yaml` - Pre-commit hooks configuration
+## Descriptions
 
-- **CI/CD**:
-  - `.github/workflows/ci.yml` - Main CI workflow
-  - Uses reusable workflows from `f2calv/gha-workflows@v1`
+- **Keep every `description:` to one short line.** It states what the value *is*, not how or why to use it. Prefer `e.g. <example>` over prose describing the format.
+- **Applies to workflow inputs (`workflow_dispatch`, `workflow_call`) as well as action inputs.** `workflow_dispatch` descriptions render as field labels in the *Run workflow* dialog, where a long sentence wraps and makes the form look messy.
+- **Move rationale, caveats, deprecation notices and cross-references into a `#` comment directly above the input**, not into the description string. Use the repo's `#no-space-after-hash` comment style.
+- Avoid multi-sentence descriptions — they bloat the file and make the input list hard to scan.
+- Keeping `key: value` pairs out of descriptions also avoids the colon-space sequence that would otherwise force the whole scalar to be quoted.
 
-## Build & Test Instructions
+  ```yaml
+  #DEPRECATED, superseded by nuget-user (Trusted Publishing). Ignored when nuget-user is set.
+  NUGET_API_KEY:
+    description: Long-lived NuGet API key e.g. secrets.NUGET_API_KEY
+    type: string
+  ```
 
-### Prerequisites
-- .NET 8.0, 9.0, or 10.0 SDK (any will work due to multi-targeting)
-- No need to install pre-commit locally unless running linting
+## YAML Style
 
-### Build Process
+- **2-space indentation** for all workflow and action YAML files.
+- Do not quote strings unless YAML requires it (e.g. values containing special characters, reserved words like `true`/`false`/`null`, or strings that could be misinterpreted as another type).
+- For `workflow_dispatch` string inputs that represent booleans, use quoted defaults (e.g. `default: 'true'`).
+- Use `|` (pipe) for multi-line `run` scripts. Use `>` for flowing multi-line description text.
+- One blank line between major YAML sections (`on:`, `env:`, `jobs:`). No blank lines within input/output lists.
 
-**IMPORTANT**: Always run these commands from the repository root directory (`/home/runner/work/yamlizr/yamlizr`).
+## Reusability
 
-1. **Restore Dependencies** (run first):
-   ```bash
-   dotnet restore
-   ```
-   - Duration: ~5-10 seconds
-   - Expected warnings: NU1903 warnings about System.Data.SqlClient vulnerability (these are known and can be ignored)
+- **Reusability is a key requirement.** Factor cross-cutting GitHub Actions logic (build, test, lint, versioning, container/Helm packaging, EF migration-drift checks, etc.) into reusable `workflow_call` workflows in the `f2calv/gha-workflows` repo wherever it makes sense, so every repository consumes one implementation. Keep logic inline or in a repo-local reusable workflow only when it is genuinely repo-specific and unlikely to be reused.
+- **`gha-workflows` is the ideal home** for shared workflows. Parameterize them with `inputs` (paths, project/context names, configuration, flags) so they stay repo-agnostic; a consumer passes specifics via `with:`.
+- **Filename convention differs by scope:**
+  - *Shared* (cross-repo, in `gha-workflows`): non-underscore filename with a `_`-prefixed `name:` (e.g. file `app-build-dotnet.yml`, `name: _app-build-dotnet`), consumed via `uses: f2calv/gha-workflows/.github/workflows/<file>.yml@v1`.
+  - *Local* (same-repo): underscore-prefixed filename (e.g. `_gitops-helm-update.yml`), consumed via `uses: ./.github/workflows/_filename.yml`.
 
-2. **Build the Solution**:
-   ```bash
-   dotnet build
-   ```
-   - Duration: ~10-15 seconds
-   - Builds all 3 projects for all target frameworks (net8.0, net9.0, net10.0)
-   - Configuration: Debug (default) or Release
-   - Expected warnings: Same NU1903 warnings as restore
-   - Success criteria: "Build succeeded" with 0 errors
+## Reusable Workflows
 
-3. **Run Tests**:
-   ```bash
-   dotnet test
-   ```
-   - Duration: ~10-15 seconds
-   - Runs xUnit tests with code coverage via coverlet
-   - Currently: 1 test in the test project
-   - Success criteria: "Passed! - Failed: 0, Passed: 1, Skipped: 0"
+- **File naming**: Prefix local (same-repo) reusable workflow filenames with an underscore to distinguish them from top-level entry-point workflows (e.g. `_gitops-helm-update.yml`, `_deploy-maui-android.yml`).
+- **Same repo**: `uses: ./.github/workflows/_filename.yml`
+- **Cross-repo**: `uses: owner/repo/.github/workflows/filename.yml@v1`
+- Prefer `secrets: inherit` unless there is a specific reason to restrict secrets passed to the called workflow.
 
-4. **Clean Build Artifacts**:
-   ```bash
-   dotnet clean
-   ```
-   OR use the PowerShell script:
-   ```powershell
-   pwsh clean.ps1
-   ```
-   - Removes all bin/ and obj/ directories recursively
+## Composite Actions
 
-### Build Sequence for Code Changes
-**ALWAYS follow this order**:
-1. `dotnet restore` - Required before building
-2. `dotnet build` - Build and check for compilation errors
-3. `dotnet test` - Verify tests pass
-4. Commit changes
+- Declare `shell: bash` explicitly on every `run` step — composite actions do not inherit a default shell.
+- Reference scripts relative to the action root using `${{ github.action_path }}/.scripts/name.sh`.
+- **Extract sizeable or critical `run` logic into an external script** under `.scripts/` (e.g. `.scripts/check-release-exists.sh`, `.scripts/Invoke-CheckReleaseExists.ps1`) rather than inlining it in the composite action YAML. An external script can be run and tested standalone — locally or from a `.github/workflows/test.yml` — before it's ever exercised by a real Actions run; a `run: |` block embedded in YAML cannot be. Keep genuinely trivial one-liners inline.
 
-**Note**: Do not skip `dotnet restore` after modifying `.csproj` files or `Directory.Packages.props`.
+## Security
 
-## CI/CD Pipeline
+- Deny all permissions at workflow level (`permissions: {}`), grant only what each job requires.
+- Skip bot-triggered runs conditionally: `if: github.actor != 'dependabot[bot]'`.
+- Pass tokens via `stdin` for registry logins (e.g. `echo "$TOKEN" | docker login --password-stdin`).
+- OCI registry, repository and tag values must be forced to lowercase (e.g. `${IMAGE_REGISTRY,,}`).
 
-### GitHub Actions Workflows
-The CI pipeline consists of two reusable workflows:
+## GitVersion
 
-1. **Lint Job** (`f2calv/gha-workflows/.github/workflows/lint.yml@v1`):
-   - Runs pre-commit hooks via Python
-   - Checks: XML, YAML, JSON5, large files, trailing whitespace, markdown formatting
-   - Pre-commit version: 3.7.1
-   - **Limitation**: Some hooks may fail locally due to network restrictions (e.g., gitlab.com access)
-
-2. **Build & Publish Job** (`f2calv/gha-workflows/.github/workflows/dotnet-publish-nuget.yml@v1`):
-   - Performs versioning using GitVersion
-   - Builds in Release configuration by default
-   - Executes tests (can be disabled with `execute-tests: false`)
-   - Publishes NuGet packages when on main branch
-   - Creates GitHub releases when appropriate
-
-### Triggers
-- Push to any branch except `preview/**` (ignoring LICENSE, README.md)
-- Pull requests to main branch
-- Manual workflow dispatch
-
-## Code Style & Conventions
-
-### C# Conventions (enforced via .editorconfig)
-- **Indentation**: 4 spaces
-- **Line endings**: LF (Unix-style)
-- **Braces**: Always use braces for control flow
-- **Namespaces**: Block-scoped (not file-scoped)
-- **var usage**: Prefer explicit types (`false` for all var preferences)
-- **Expression bodies**: Use for properties, accessors, lambdas; avoid for methods
-- **Naming**: PascalCase for types/members, interfaces start with "I"
-
-### Build Properties
-- **LangVersion**: C# 14.0
-- **Nullable**: Not enabled globally (per-project basis)
-- **ImplicitUsings**: Enabled
-- **Warnings**: IDE1006, IDE0079, IDE0042, CS0162, S125, NETSDK1233 are suppressed
-
-## Known Issues & Workarounds
-
-### Package Vulnerabilities
-- **System.Data.SqlClient 4.8.5**: Known high severity vulnerability (GHSA-98g6-xh36-x2p7)
-- This is a transitive dependency from Azure DevOps client libraries
-- **Workaround**: Currently accepted as known issue; not blocking builds
-
-### Pre-commit Hooks
-- Pre-commit hooks reference gitlab.com which may be blocked in some environments
-- **Workaround**: CI runs pre-commit in isolated Python venv; local pre-commit runs may fail due to network restrictions
-
-### Multi-Targeting
-- Projects target net8.0, net9.0, and net10.0
-- NETSDK1233 warning is suppressed for .NET 10 support
-- All frameworks must build successfully for CI to pass
-
-## Dependencies
-
-### Key External Dependencies
-- Azure DevOps .NET Client Libraries (Microsoft.TeamFoundation.*, Microsoft.VisualStudio.Services.*)
-- YamlDotNet - YAML serialization
-- AzurePipelinesToGitHubActionsConverter.Core - GitHub Actions conversion
-- McMaster.Extensions.CommandLineUtils - CLI framework
-- xUnit - Testing framework
-- coverlet - Code coverage
-
-### Package Management
-- Uses Central Package Management (CPM) via `Directory.Packages.props`
-- All package versions are defined centrally
-- Projects reference packages without version attributes
-
-## Validation Steps
-
-### Before Committing
-1. Ensure code builds: `dotnet build`
-2. Ensure tests pass: `dotnet test`
-3. Check for code style issues (local .editorconfig compliance)
-4. Review changes against existing conventions
-
-### CI Will Validate
-- Pre-commit hooks (YAML, JSON, markdown, file sizes, whitespace)
-- Multi-framework builds (net8.0, net9.0, net10.0)
-- All tests pass
-- NuGet package creation succeeds
-
-## Additional Notes
-
-### Solution File
-- Uses modern XML solution format (`.slnx`) instead of legacy `.sln`
-- Contains 3 projects and solution items folder
-- Visual Studio 2022 and later support this format
-
-### Tool Usage
-The CLI tool is intended to:
-- Connect to Azure DevOps using a PAT token
-- Download and convert Build/Release definitions to YAML
-- Output can be Azure Pipelines or GitHub Actions format
-- See README.md for full CLI usage documentation
-
-### Architecture
-- **CLI Layer**: Commands, parsing, progress bars
-- **API Layer**: Azure DevOps integration, model conversion
-- **Tests**: Configuration-based testing with user secrets support
-
-## Quick Reference
-
-```bash
-# Full build validation sequence
-cd /home/runner/work/yamlizr/yamlizr
-dotnet restore
-dotnet build
-dotnet test
-
-# Expected output: Build succeeded with ~12 NU1903 warnings (safe to ignore)
-# Expected tests: 1 passed
-
-# Clean artifacts
-dotnet clean
-
-# Build for specific configuration
-dotnet build -c Release
-```
-
-**Trust these instructions** - they have been validated against the actual repository. Only perform additional searches if you encounter unexpected errors or need information not covered here.
+- Always set `fetch-depth: 0` on checkout when GitVersion is in use.
+- Default config file is `GitVersion.yml` in the repository root.
+- Prefer `semVer` for tags and releases; use `fullSemVer` (via the `version` output) for build versioning and pre-release identifiers.
 
 ---
 > Source: [f2calv/yamlizr](https://github.com/f2calv/yamlizr) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-06-29 -->
+<!-- tomevault:4.0:agents_md:2026-09-10 -->
