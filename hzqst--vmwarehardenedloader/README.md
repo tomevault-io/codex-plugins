@@ -5,18 +5,17 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `` in [hzqst/VmwareHardenedLoader](https://github.com/hzqst/VmwareHardenedLoader).
+Original source: `CLAUDE.md` in [hzqst/VmwareHardenedLoader](https://github.com/hzqst/VmwareHardenedLoader).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [hzqst/VmwareHardenedLoader](https://github.com/hzqst/VmwareHardenedLoader) — a repo with 2361+ stars on GitHub.
+From [hzqst/VmwareHardenedLoader](https://github.com/hzqst/VmwareHardenedLoader) — a repo with 2359+ stars on GitHub.
 
 ---
 
