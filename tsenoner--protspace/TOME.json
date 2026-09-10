@@ -2,7 +2,7 @@
   "name": "protspace",
   "owner": "tsenoner",
   "repo": "protspace",
-  "description": "ProtSpace is program that helps in visualizing and investigating our protein embedding space.",
+  "description": "",
   "type": "config",
   "source_format": "CLAUDE.md",
   "formats": [
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/tsenoner/protspace",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-06-03T19:56:33Z"
+  "distributed_at": "2026-09-10T20:44:09Z"
 }
