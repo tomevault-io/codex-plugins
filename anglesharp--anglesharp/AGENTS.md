@@ -1,0 +1,12 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+The guidance is shared with every AI agent working here, so it lives in AGENTS.md and is
+imported below. Record new guidance there rather than in this file.
+
+@AGENTS.md
+
+---
+> Source: [AngleSharp/AngleSharp](https://github.com/AngleSharp/AngleSharp) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-09-09 -->
