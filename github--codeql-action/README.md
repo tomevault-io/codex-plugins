@@ -1,16 +1,17 @@
 # codeql-action
 
-> Source: [github/codeql-action](https://github.com/github/codeql-action). Graded, signed and kept in sync across platforms by [TomeVault](https://tomevault.io)
+> Source: [github/codeql-action](https://github.com/github/codeql-action). Graded, signed and kept current as the models change by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [github/codeql-action](https://github.com/github/codeql-action).
+Original source: `` in [github/codeql-action](https://github.com/github/codeql-action).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
