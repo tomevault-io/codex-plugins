@@ -1,21 +1,21 @@
 # FloatingX
 
-> Source: [Petterpx/FloatingX](https://github.com/Petterpx/FloatingX). Graded, signed and kept in sync across platforms by [TomeVault](https://tomevault.io)
+> Source: [Petterpx/FloatingX](https://github.com/Petterpx/FloatingX). Graded, signed and kept current as the models change by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [Petterpx/FloatingX](https://github.com/Petterpx/FloatingX).
+Original source: `CLAUDE.md` in [Petterpx/FloatingX](https://github.com/Petterpx/FloatingX).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [Petterpx/FloatingX](https://github.com/Petterpx/FloatingX) — a repo with 1494+ stars on GitHub.
+From [Petterpx/FloatingX](https://github.com/Petterpx/FloatingX) — a repo with 1500+ stars on GitHub.
 
 ---
 
