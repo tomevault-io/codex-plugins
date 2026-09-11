@@ -5,7 +5,7 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [AnandPilania/eloquentjs](https://github.com/AnandPilania/eloquentjs).
+Original source: `.windsurf/rules/*.md` in [AnandPilania/eloquentjs](https://github.com/AnandPilania/eloquentjs).
 
 ## Also available for
 
@@ -13,9 +13,9 @@ Original source: `GEMINI.md` in [AnandPilania/eloquentjs](https://github.com/Ana
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
-- **Windsurf** — `project-config.md`
+- **Gemini CLI** — `GEMINI.md`
 
-From [AnandPilania/eloquentjs](https://github.com/AnandPilania/eloquentjs) — a repo with 73+ stars on GitHub.
+From [AnandPilania/eloquentjs](https://github.com/AnandPilania/eloquentjs) — a repo with 74+ stars on GitHub.
 
 ---
 
