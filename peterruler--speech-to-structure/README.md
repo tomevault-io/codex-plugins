@@ -7,12 +7,12 @@ local text to structure using gpt-oss-20 and whisper in swissgerman
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [peterruler/speech-to-structure](https://github.com/peterruler/speech-to-structure).
+Original source: `copilot-instructions.md` in [peterruler/speech-to-structure](https://github.com/peterruler/speech-to-structure).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
