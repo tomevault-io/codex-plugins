@@ -1,0 +1,43 @@
+
+## Config
+- Frontend apps (`apps/web`) use **Playwright E2E only** — no Vitest/Testing Library unit or integration tests
+- No webServer; URLs from `PLAYWRIGHT_APP_URL` / `PLAYWRIGHT_API_URL` (env or `--app` / `--api` params)
+- Fastify: only `--api` param; `test:e2e` = URL-based, `test:e2e:local` = spawn API, poll, run, cleanup
+- Param format: `--app=URL` or `--app URL`, `--api=URL` or `--api URL`
+- CI: test:e2e:local only (spawn local servers; no Vercel URLs)
+- Local: Next `test:e2e:local` = spawn Fastify + Next, poll, run all projects, kill. Fastify `test:e2e:local` = spawn API only. Root `pnpm test:e2e` = run both via scripts/run-e2e.mjs
+- workers: 1, fullyParallel: false — PGLite does not support concurrent writers; tests must run in series
+- Do not filter `--project=` in spawn scripts; run the full project DAG
+- Local/CI API spawn sets `ALLOW_TEST=true` and `RATE_LIMIT_MAX=10000` (default 100/min breaks magic-link after several logins)
+- Local/CI API spawn sets `WEBAUTHN_RP_NAME=Test App` when unset (passkey registration requires an RP display name)
+- Confirm dialogs use `getByRole('alertdialog')` (shadcn AlertDialog), not `dialog`
+
+## Projects (dependency graph)
+`public` → `auth` → `setup` → `{chromium, security, passkey-login}`; `chromium` → `chat` (chat omitted without a real Anthropic key)
+
+- **public**: no storageState
+- **auth**: empty storageState; numbered `01-`…`06-` specs (file-name order is the convention — `testMatch` only selects files, it does not impose execution order)
+- **setup**: `auth.setup.ts` writes `test-results/.auth/user.json` (depends on auth)
+- **chromium** / **security** / **chat**: `storageState` from setup file
+- **passkey-login**: empty storageState; dedicated `e2e-passkey@test.ai`
+- **chat**: omitted when `hasRealAnthropicKey()` is false (`e2e/anthropic-key.ts`; empty, `sk-ant-xxx`, `sk-ant-dummy*`)
+
+## Session model
+- Setup project logs in once; authed projects reuse `user.json` with a **new context per test**
+- Logout and passkey-login tests use empty storage — never revoke the shared setup sid
+- Security specs never call `/auth/logout`
+
+## Auth helpers
+- Import `page` from `@playwright/test`; use `authHelpers` from `e2e/auth-helpers.ts`
+- Tokens: `GET /test/verification/last?type=magic_link|change_email&email=` (email required, `@test.ai` only)
+- `GET /test/magic-link/last?email=` (email required, `@test.ai` only)
+- TOTP in-progress code: `GET /test/totp/current` with Bearer from `extractSessionToken`
+
+## Test email
+- `test@test.ai` — setup, chromium, security (cleanup CRUD at end of file)
+- `e2e-passkey@test.ai` — passkey-login only
+- `e2e-email@test.ai` — change-email request user; unique target email per run
+
+---
+> Source: [blockmatic/basilic](https://github.com/blockmatic/basilic) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-09-11 -->
