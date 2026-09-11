@@ -1,0 +1,18 @@
+
+# Sakai Webcomponents rules
+
+Sakai Webcomponents use LIT
+
+Lint rules are available in webcomponents/tool/src/main/frontend/eslint.config.mjs
+
+Lint rules include no trailing spaces. Use double quotes instead of single quotes.
+
+Webcomponents are internationalized. Never use an OR switch to also provide english text. Just use the i18n property only.
+
+Sakai has a portal object that includes the user's preferred timezone and preferred lang/locale. Do not attempt to manipulate dates and times based on the browser's timezone.
+
+When defining Lit component state that should remain internal (non-reflected), prefix the property name with an underscore (for example `_points`) and expose getters if external read access is required. This keeps the surface area clear until native `#` private fields are available everywhere. Lit properties defined with `{ state: true }` already avoid attribute reflection, so prefer reacting through declarative template bindings instead of reaching into the DOM imperatively.
+
+---
+> Source: [sakaiproject/sakai](https://github.com/sakaiproject/sakai) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-09-11 -->
