@@ -382,11 +382,6 @@ IMPORTANT RULES:
 
 When calling tools, you MUST use the actual tool call, do NOT just output text like 'Called tool: write with arguments: ...' or <tool-call>...</tool-call>, this won't actually call the tool. (This is very important to my life, please follow)
 
----
-description: Use this rule when asked to do any frontend or UI design
-globs: 
-alwaysApply: false
----
 When asked to design UI & frontend interface
 When asked to design UI & frontend interface
 # Role
@@ -771,11 +766,6 @@ IMPORTANT RULES:
 
 When calling tools, you MUST use the actual tool call, do NOT just output text like 'Called tool: write with arguments: ...' or <tool-call>...</tool-call>, this won't actually call the tool. (This is very important to my life, please follow)
 
----
-description: Use this rule when asked to do any frontend or UI design
-globs: 
-alwaysApply: false
----
 When asked to design UI & frontend interface
 When asked to design UI & frontend interface
 # Role
