@@ -15,10 +15,11 @@ Original source: `CLAUDE.md` in [zhu1090093659/spec_driven_develop](https://gith
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-## Bundled Skills (2)
+## Bundled Skills (3)
 
 - [spec_driven_develop](https://github.com/zhu1090093659/spec_driven_develop/tree/main/plugins/spec-driven-develop/skills/deep-discuss/SKILL.md)
 - [spec_driven_develop](https://github.com/zhu1090093659/spec_driven_develop/tree/main/plugins/spec-driven-develop/skills/spec-driven-develop/SKILL.md)
+- [spec_driven_develop](https://github.com/zhu1090093659/spec_driven_develop/tree/main/plugins/spec-driven-develop/skills/review-spd/SKILL.md)
 
 Graded against the Tome Standard, TomeVault's public ruleset for whether AI instructions load, read clearly and stay safe. Source: [github.com/zhu1090093659/spec_driven_develop](https://github.com/zhu1090093659/spec_driven_develop)
 
