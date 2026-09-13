@@ -7,12 +7,12 @@ AI Testing Agent Framework · 16 experts + 32 skills + 49 utils · Multi-LLM (Cl
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [Wool-xing/Test-Agent](https://github.com/Wool-xing/Test-Agent).
+Original source: `CLAUDE.md` in [Wool-xing/Test-Agent](https://github.com/Wool-xing/Test-Agent).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
