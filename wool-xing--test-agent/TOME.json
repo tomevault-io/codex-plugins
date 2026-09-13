@@ -4,7 +4,7 @@
   "repo": "Test-Agent",
   "description": "AI Testing Agent Framework \u00b7 16 experts + 32 skills + 49 utils \u00b7 Multi-LLM (Claude/OpenAI/Qwen/etc) \u00b7 MCP-native \u00b7 Open-source \u00b7 Learn-while-using",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/Wool-xing/Test-Agent",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-09-13T08:39:31Z"
+  "distributed_at": "2026-09-13T09:40:51Z"
 }
