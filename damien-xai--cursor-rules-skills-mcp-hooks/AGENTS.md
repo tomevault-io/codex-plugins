@@ -1,0 +1,19 @@
+
+# Always-on project rule
+
+This is an **Always Apply** project rule (`alwaysApply: true`).
+
+- Stack is SvelteKit. Put new code where the user says. Do not invent a
+  second project at the repo root unless they ask.
+- There is no existing application source tree. List the directory before
+  claiming files exist. Do not assume a previous demo.
+- Prefer editing rules, skills, MCP config, and hooks over drive-by refactors.
+- GitHub issues, PRs, and repo facts go through the connected GitHub MCP.
+- Do not commit `.cursor/logs/*.log` or `.cursor/logs/*.jsonl`.
+  Tail `.cursor/logs/hooks.log` to see every hook run.
+- Never put credentials in source or client code. Hooks block `.env` paths and
+  credential-like strings.
+
+---
+> Source: [damien-xai/cursor-rules-skills-mcp-hooks](https://github.com/damien-xai/cursor-rules-skills-mcp-hooks) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-09-14 -->
