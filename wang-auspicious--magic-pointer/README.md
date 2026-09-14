@@ -1,0 +1,25 @@
+# Magic-Pointer
+
+> Tome by [Wang-auspicious](https://github.com/Wang-auspicious/Magic-Pointer), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `` in [Wang-auspicious/Magic-Pointer](https://github.com/Wang-auspicious/Magic-Pointer).
+
+## Also available for
+
+- **Claude Code** — `CLAUDE.md`
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+From [Wang-auspicious/Magic-Pointer](https://github.com/Wang-auspicious/Magic-Pointer) — a repo with 101+ stars on GitHub.
+
+---
+
+Own this repo? Install the TomeVault Relay to keep every platform's copy in sync on every push: [https://tomevault.io/install](https://tomevault.io/install).
+
+<!-- genome:t-c-s -->
