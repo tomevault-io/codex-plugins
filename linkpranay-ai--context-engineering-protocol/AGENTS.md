@@ -1,8 +1,8 @@
 
-# Demo: Writing User Stories (worked example)
+# ult-autoscaffold-content
 
 This repository packages its capabilities as portable skills for AI
-coding agents. Read `.github/skills/demo-write-user-stories/SKILL.md` and follow it
+coding agents. Read `.github/skills/ult-autoscaffold-content/SKILL.md` and follow it
 when this rule applies.
 
 ---
