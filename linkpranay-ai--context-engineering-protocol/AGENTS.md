@@ -1,8 +1,8 @@
 
-# CEP Retrofit
+# ult-cep-wizard
 
 This repository packages its capabilities as portable skills for AI
-coding agents. Read `.github/skills/ult-cep-retrofit/SKILL.md` and follow it
+coding agents. Read `.github/skills/ult-cep-wizard/SKILL.md` and follow it
 when this rule applies.
 
 ---
