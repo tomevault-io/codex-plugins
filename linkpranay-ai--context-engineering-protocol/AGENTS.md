@@ -1,8 +1,8 @@
 
-# Demo: Consuming a Context Package (worked example)
+# Demo: Writing User Stories (worked example)
 
 This repository packages its capabilities as portable skills for AI
-coding agents. Read `.github/skills/demo-consume-context/SKILL.md` and follow it
+coding agents. Read `.github/skills/demo-write-user-stories/SKILL.md` and follow it
 when this rule applies.
 
 ---
