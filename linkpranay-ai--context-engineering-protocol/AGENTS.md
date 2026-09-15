@@ -1,8 +1,8 @@
 
-# Distilling Institutional Memory (Trip-Wire)
+# ult-onboarding-index
 
 This repository packages its capabilities as portable skills for AI
-coding agents. Read `.github/skills/ult-institutional-memory-distill/SKILL.md` and follow it
+coding agents. Read `.github/skills/ult-onboarding-index/SKILL.md` and follow it
 when this rule applies.
 
 ---
