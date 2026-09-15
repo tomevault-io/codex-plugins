@@ -1,8 +1,8 @@
 
-# ult-autoscaffold-content
+# CEP Retrofit
 
 This repository packages its capabilities as portable skills for AI
-coding agents. Read `.github/skills/ult-autoscaffold-content/SKILL.md` and follow it
+coding agents. Read `.github/skills/ult-cep-retrofit/SKILL.md` and follow it
 when this rule applies.
 
 ---
