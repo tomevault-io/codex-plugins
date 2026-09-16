@@ -1,0 +1,44 @@
+{
+  "name": "sc64-savestates",
+  "owner": "john-steinmeyer",
+  "repo": "sc64-savestates",
+  "description": "Save states, a virtual Controller Pak, suspend/resume and slow motion for the SummerCart64: a fork of N64FlashcartMenu, one file to drop on the card",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/john-steinmeyer/sc64-savestates",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-09-16T22:32:02Z"
+}
