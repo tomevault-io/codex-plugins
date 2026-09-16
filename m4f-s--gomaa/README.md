@@ -7,13 +7,13 @@ Gomaa — Autonomous Agent Memory OS. Persistent memory system for AI agents wit
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [M4F-S/gomaa](https://github.com/M4F-S/gomaa).
+Original source: `CLAUDE.md` in [M4F-S/gomaa](https://github.com/M4F-S/gomaa).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
