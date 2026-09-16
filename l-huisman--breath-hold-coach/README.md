@@ -7,12 +7,12 @@ E-Health E-Learning application for practicing Deep Inspirational Breath Hold (D
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [l-huisman/Breath-Hold-Coach](https://github.com/l-huisman/Breath-Hold-Coach).
+Original source: `CLAUDE.md` in [l-huisman/Breath-Hold-Coach](https://github.com/l-huisman/Breath-Hold-Coach).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
