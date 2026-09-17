@@ -1,9 +1,8 @@
-# GitHub Copilot instructions
 
-The agent instructions for this project live in [`AGENTS.md`](../AGENTS.md) at
-the repository root. Read it before writing code. `AGENTS.md` is the single
-source of truth, shared with Claude Code (via `CLAUDE.md`) and Cursor (via
-`.cursor/rules/`).
+The agent instructions for this project live in `AGENTS.md` at the repository
+root. Read it before writing code. This file exists so Cursor picks up the
+same rules; `AGENTS.md` is the single source of truth (Claude Code reads it
+via `CLAUDE.md`, Copilot via `.github/copilot-instructions.md`).
 
 ---
 > Source: [openstarterkit/nextjs-saas-starter-kit](https://github.com/openstarterkit/nextjs-saas-starter-kit) — distributed by [TomeVault](https://tomevault.io).
