@@ -5,12 +5,12 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [TigerMonday/super-access-analytics-public](https://github.com/TigerMonday/super-access-analytics-public).
+Original source: `copilot-instructions.md` in [TigerMonday/super-access-analytics-public](https://github.com/TigerMonday/super-access-analytics-public).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
