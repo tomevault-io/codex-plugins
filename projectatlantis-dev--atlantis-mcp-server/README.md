@@ -7,13 +7,13 @@ Multix virtual filesystem node, MCP-compatible, really just a glorified function
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [ProjectAtlantis-dev/atlantis-mcp-server](https://github.com/ProjectAtlantis-dev/atlantis-mcp-server).
+Original source: `CLAUDE.md` in [ProjectAtlantis-dev/atlantis-mcp-server](https://github.com/ProjectAtlantis-dev/atlantis-mcp-server).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
