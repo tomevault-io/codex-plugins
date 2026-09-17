@@ -7,13 +7,13 @@ Clone any website into a pixel-accurate Next.js app with AI — Playwright-measu
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [Mahanaicoach/ai-site-cloner](https://github.com/Mahanaicoach/ai-site-cloner).
+Original source: `.cursor/rules/*.mdc` in [Mahanaicoach/ai-site-cloner](https://github.com/Mahanaicoach/ai-site-cloner).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
