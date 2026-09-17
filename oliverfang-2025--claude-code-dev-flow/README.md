@@ -7,14 +7,14 @@ dev-flow: 完整工程开发整套 skill（13-phase 编排 + gates 执行保障 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [Oliverfang-2025/claude-code-dev-flow](https://github.com/Oliverfang-2025/claude-code-dev-flow).
+Original source: `GEMINI.md` in [Oliverfang-2025/claude-code-dev-flow](https://github.com/Oliverfang-2025/claude-code-dev-flow).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
-- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/Oliverfang-2025/claude-code-dev-flow](https://github.com/Oliverfang-2025/claude-code-dev-flow)
