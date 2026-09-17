@@ -4,7 +4,7 @@
   "repo": "ai-marketplace",
   "description": "A personal marketplace of AI-oriented plugins for the GitHub Copilot CLI.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/urikanonov/ai-marketplace",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-09-17T00:38:29Z"
+  "distributed_at": "2026-09-17T01:13:56Z"
 }
