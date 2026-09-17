@@ -7,12 +7,12 @@ Unofficial open source AI skills for Bevy, inspired by PixiJS Skills. These skil
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [chrisgliddon/bevy-skills](https://github.com/chrisgliddon/bevy-skills).
+Original source: `CLAUDE.md` in [chrisgliddon/bevy-skills](https://github.com/chrisgliddon/bevy-skills).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
