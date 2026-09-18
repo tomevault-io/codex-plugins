@@ -1,0 +1,152 @@
+# WSL Container Desktop — Copilot instructions
+
+A native **WinUI 3 / .NET 10** desktop app (Docker-Desktop-like) that manages **WSL containers**
+via the `wslc.exe` preview CLI, a single-node **k3s** cluster inside WSL, and container registries.
+It is a packaged (MSIX-identity) app that minimizes to the system tray.
+
+For deep design detail read `docs/ARCHITECTURE.md`; user-facing features live in `README.md`.
+
+## Dependency policy (supply-chain security)
+
+**Never add or upgrade to a dependency version published less than 7 days ago.** A just-released
+version is exactly when a compromised, hijacked, or typosquatted package is most likely to be live
+and least likely to have been reported and pulled. Age is therefore treated as a security control
+in its own right, independent of how reputable the publisher is or how badly a fix is wanted.
+
+- **Scope is every dependency**, not just NuGet: direct, transitive, and build/test-only packages,
+  plus GitHub Actions, CLI tools, container images, and scripts the build or tests fetch.
+- **Verify the publication date from an authoritative source** — the nuget.org registration index
+  or the upstream release feed — *before* restoring it. "Looks established" is not evidence, and a
+  package's own build timestamp is not its publication date.
+- **If the date cannot be verified, stop and say so.** Never assume compliance. Waiting a few days
+  is always cheaper than tracing a compromised dependency through a shipped build.
+- **Prefer what is already referenced.** Adding a package needs the same justification as any other
+  change; it is not a free shortcut. Most feature work here needs no new dependency at all.
+- A version that is otherwise required but too new is a **blocker to raise**, not a judgment call to
+  make silently. (This mirrors the MSIT dependency-age requirement.)
+
+## Environment & build
+
+- **Requires Windows 11** with the WSL container preview (`wslc.exe`, default
+  `C:\Program Files\WSL\wslc.exe`) and the **.NET 10 SDK**. The app cannot fully build on Linux —
+  the WindowsAppSDK XAML compiler step requires Windows.
+- Work from `src\WslContainerDesktop`. Always target the **x64** platform.
+- **Build:** `dotnet build -c Debug -p:Platform=x64`
+- **Run (dev):** `dotnet run -c Debug -p:Platform=x64`. Use `dotnet run`, **not** the bare
+  `bin\...\WslContainerDesktop.exe` — this is a packaged app; running the raw exe crashes at
+  startup with `REGDB_E_CLASSNOTREG`. `dotnet run` registers the debug MSIX identity, refreshes the
+  loose layout, and launches with package identity. A plain `dotnet build` leaves the *registered*
+  app pointing at a stale layout.
+- **Fast dev loop:** `tools\launcher\Build-And-Run.ps1` rebuilds, redeploys, and launches in one step.
+- **Release:** `.github/workflows/release.yml` (manual `workflow_dispatch`) builds a signed MSIX;
+  publish profiles live in `Properties/PublishProfiles/`. **Update `CHANGELOG.md` first** — see
+  [Releasing](#releasing) below.
+- **Tests:** `dotnet test tests\WslContainerDesktop.Tests\WslContainerDesktop.Tests.csproj -c Debug -p:Platform=x64`
+  from the repository root; use focused filters for changed behavior. Build to **0 warnings**.
+  Coordinate packaged smoke runs: deployment affects the registered app, even from another worktree.
+
+## Releasing
+
+`CHANGELOG.md` is the user-facing record of each release, and the generated release notes link to
+it at the release's own tag. **Update and commit it before starting the release workflow**: the tag
+is created from the repository as it stands, so a changelog written afterwards leaves that release's
+link pointing at an entry that does not mention it.
+
+Between releases, accumulate entries under a `## [Unreleased]` heading at the top. Add to it as
+user-facing work lands rather than reconstructing the whole release at the end — that is when the
+detail is still known, and it keeps an unreleased entry from claiming a version and date that do
+not exist yet.
+
+Steps, in order:
+
+1. **Promote `[Unreleased]` to the new version** — `## [X.Y.Z] — YYYY-MM-DD`, newest at the top —
+   and update the link list at the bottom of the file: point `[X.Y.Z]` at
+   `…/releases/tag/vX.Y.Z`, and re-point `[Unreleased]` at `…/compare/vX.Y.Z...main`. Keep the list
+   in the same newest-first order.
+2. **Group entries under the headings that apply** — `Added`, `Changed`, `Fixed`, `Removed`,
+   `Deprecated`, `Security` — and omit headings with nothing under them.
+3. **Write for someone using the app**, not someone reading the diff. State what they can now do,
+   what behaves differently, or what was broken and now isn't; when a fix is non-obvious, say what
+   the user would have seen. Leave out pure refactoring, test-only work, and internal renames unless
+   they change observable behavior or a default.
+4. **Call out anything that changes an existing default** (a template's published port, a provider
+   default, a settings value), because that is what silently breaks a working setup.
+5. **Derive entries from the actual commit range** (`git log --no-merges vPREV..HEAD`), not from
+   memory. Verify a claim before writing it; an inaccurate changelog is worse than a terse one.
+6. **Commit the changelog**, then run **Actions → Build & Release (MSIX) → Run workflow** with the
+   same `X.Y.Z`. The workflow stamps the manifest version, tags `vX.Y.Z`, and publishes the signed
+   MSIX plus the `.cer` and `Install.ps1`.
+
+Versions follow SemVer, and the workflow refuses to reuse an existing tag. Windows only treats a
+package as an in-place update when the version increases.
+
+## Architecture (the big picture)
+
+Strict **MVVM + constructor DI** (`Microsoft.Extensions.DependencyInjection`, wired in
+`App.xaml.cs ConfigureServices`). Layer boundaries, top to bottom:
+
+- **Views/** (XAML + thin code-behind) — no business logic. `Views/Controls/` holds extracted `UserControl`s.
+- **ViewModels/** — CommunityToolkit `[ObservableProperty]` / `[RelayCommand]`; one VM per page.
+- **Services/** — all I/O and orchestration; interface-backed (`IWslcService`, `IKubernetesService`, …).
+- **Models/**, **Helpers/** (converters, `NativeMethods` P/Invoke, `UiSafe`), **Tray/**.
+
+Key cross-cutting services to understand before changing behavior:
+
+- **All external process calls funnel through `ProcessExecutor.RunAsync`.** `ProcessRunner` wraps
+  `wslc.exe`; `WslRootShell` wraps `wsl.exe -u root -e sh -c "…"` for k3s and owns shell escaping.
+  Long-lived streams (`logs -f`, `port-forward`) are owned by `LogStreamer` / `PortForwardManager`,
+  not `ProcessExecutor`.
+- **`StatusMonitor`** is the *single* background poller and source of truth for engine + cluster
+  health (tray, status bar, pages all observe it). It raises events on the UI thread via a captured
+  `DispatcherQueue`, so it is registered with a DI **factory** and first resolved in `OnLaunched`.
+- **`KubernetesService`** is a thin facade over collaborators (`K8sInstaller`, `K8sResourceClient`,
+  `PortForwardManager`, `K8sManifestSanitizer`). k3s status probes use sentinel markers
+  (`@@STATE=`, `@@NODES`, …) — never hand-write them; use the constants in `K8sStatusProtocol`.
+- **Compose** is "desktop-as-daemon": `ComposeImporter` parses `docker-compose.yml`;
+  `ComposeProjectSupervisor` brings a project up/down/restart as a unit, and `HealthWatchdog` /
+  `RestartPolicyWatchdog` enforce app probes, auto-heal & `restart:` policies while the app is open.
+  Native checks are engine-owned; `StatusMonitor` owns their bounded inspect observations. Never use
+  the port metadata cache for live health or duplicate engine command probes.
+  See the compose feature matrix in `docs/ARCHITECTURE.md`.
+- **`Program.cs`** is a custom entry point (`DISABLE_XAML_GENERATED_MAIN`) enforcing a single
+  running instance via `AppInstance` before starting WinUI.
+
+## Conventions specific to this codebase
+
+- **Every source file starts with the GPLv3 header** (see any file in `Services/`). Keep it on new files.
+- Nullable reference types and implicit usings are **on**; keep the build at **0 warnings**.
+- File-scoped namespaces; one primary type per file. Prefer primary constructors for simple services.
+- **Never build a command line by string concatenation.** Route all external process calls through
+  `ProcessExecutor` (or `WslRootShell` for k3s), and escape *every* interpolated value; prefer
+  `ArgumentList` where a shell isn't required. **Secrets never touch a command line** — use
+  `--password-stdin` and keep tokens in memory only; never log them.
+- Native copy's `WslcCopyInput` is the sole narrow fixed-template exception: seekable archive stdin
+  via `cmd /d /v:off`, with validated quoted environment data. Never generalize it into a shell
+  command builder. Native copy is not tar-free; browsing/diff remain separate shell-based features.
+- **Keep WSLC 2.9.9.0 supported.** Use `IWslcCapabilitiesService.GetAsync` for optional commands
+  and run/create health flags; `Supported` permits native selection, `Unsupported` permits a
+  documented legacy fallback, and `Unknown` must surface a diagnostic. Never infer availability
+  from version alone or retry a failed native mutation via a legacy backend.
+- **Inspect schemas vary:** use `ContainerMounts` and normalized `ContainerInfo`; missing metadata
+  is unknown, not empty. List failures throw; successful empty inventory is valid.
+- **Remaining advertised gaps:** no `--add-host` (`extra_hosts` uses `exec` after start), native
+  restart policy or Compose command. Do not conflate native health checks with app-owned auto-heal.
+- Framework `async void` handlers must route work through **`Helpers/UiSafe.Run`** (awaits inside
+  try/catch and logs) so a failing handler can't crash the app. Log swallowed exceptions (≥ Debug)
+  or leave a one-line comment justifying a silent catch.
+- Extracted section `UserControl`s expose the page's VM as a `DependencyProperty` whose change
+  callback calls `Bindings.Update()` so compiled `x:Bind` re-evaluates.
+- **MSIX AppData redirection gotcha:** for the packaged app, writes to `%LOCALAPPDATA%` are
+  redirected to `...\Packages\<PFN>\LocalCache\Local`. Any path handed to an external process
+  (`wslc`) must use `ApplicationData.Current.LocalCacheFolder.Path`, not the literal `%LOCALAPPDATA%`.
+- Persisted state is plain JSON under the app's local data folder (`settings.json`,
+  `run-profiles.json`, `compose-projects.json`); load/parse failures must **never crash the app**
+  (fall back to defaults + log).
+- **Adding a page:** register the VM in `App.xaml.cs ConfigureServices`, add a `NavigationViewItem`
+  (with `Tag`) in `MainWindow.xaml`, add a matching case in `MainWindow.xaml.cs
+  NavView_SelectionChanged`, and create `Views/XxxPage.xaml(.cs)` that resolves the VM via
+  `App.Current.Services` and calls `RefreshAsync` in `OnNavigatedTo`.
+
+---
+> Source: [mhackermsft/wslcontainerdesktop](https://github.com/mhackermsft/wslcontainerdesktop) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-09-18 -->
