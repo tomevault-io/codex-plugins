@@ -7,13 +7,13 @@ fully local web research and report writing assistant based on PydanticAI
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [lars20070/deepresearcher2](https://github.com/lars20070/deepresearcher2).
+Original source: `.cursor/rules/*.mdc` in [lars20070/deepresearcher2](https://github.com/lars20070/deepresearcher2).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
