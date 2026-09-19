@@ -4,7 +4,7 @@
   "repo": "fuku",
   "description": "lightweight CLI orchestrator for running and managing services in development environment",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/tab/fuku",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-09-19T08:33:02Z"
+  "distributed_at": "2026-09-19T08:34:23Z"
 }
