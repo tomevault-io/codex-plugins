@@ -1,85 +1,90 @@
-This rule encourages avoiding heap allocations and temporary copies, especially in hot paths and library code.
+# cel-rs Copilot Instructions
 
-## General Principle
+## Workspace and commands
 
-Prefer stack allocation, references, and fixed-size or slice-based APIs over heap allocation. Avoid allocating or cloning when a reference, generic, or slice would suffice.
+This is an unreleased Rust 2024 workspace. Its public API is deliberately unstable: prefer
+clean redesigns over compatibility layers or incremental patches.
 
-## Guidelines
+```bash
+# Format (required before committing; the pre-commit hook enforces it)
+cargo fmt --all
 
-### Prefer references over `clone()`
+# Build and test all workspace crates
+cargo build --workspace
+cargo test --workspace
+cargo test --doc --workspace
 
-- Do not call `.clone()` (or `.to_owned()`, `.to_string()`) just to satisfy a type when a reference (`&T`, `&str`) would work.
-- Pass `&str` or `&[T]` through call chains instead of cloning into `String` or `Vec<T>` unless ownership is required.
-- Use `Cow<'_, T>` when a function might need either borrowed or owned data.
+# Run a focused test
+cargo test -p adam-rs --lib planner::tests::execution_order_respects_producer_consumer_dependency
+# Or filter across workspace tests
+cargo test --workspace <test_name>
 
-**Good:**
-```rust
-fn format_names(infos: &[StackInfo]) -> String {
-    let mut s = String::new();
-    for (i, info) in infos.iter().enumerate() {
-        if i > 0 { s.push_str(", "); }
-        s.push_str(&info.type_name);  // or take &str in API
-    }
-    s
-}
+# Lint all relevant targets; keep all three begin checks
+cargo clippy --workspace --exclude begin --all-targets -- -D warnings
+cargo clippy -p begin --no-default-features --all-targets -- -D warnings
+cargo clippy -p begin --all-targets -- -D warnings
 ```
 
-**Bad:**
-```rust
-let type_names: Vec<String> = infos.iter().map(|i| i.type_name.clone()).collect();
-format(type_names.join(", "))
-```
+CI currently builds and tests the workspace excluding `begin`, and checks `begin` with
+`--no-default-features`. Before opening a PR, run the complete commands above and ensure
+the plain build and test commands emit no warnings. Run `cargo doc --workspace --no-deps --lib`
+when changing library documentation.
 
-### Prefer generics or function pointers over `Box<dyn Trait>`
+Activate shared hooks after cloning with `git config core.hooksPath .githooks`. Make changes in
+a separate git worktree and never commit directly to `main`.
 
-- Use generic parameters (`fn f<T: Trait>(t: T)`) or function pointers (`fn(fn(A) -> B)`) when the set of types or functions is known at compile time and you do not need runtime extensibility.
-- Reserve `Box<dyn Trait>` (or `&dyn Trait`) for cases where you truly need type erasure or a dynamic set of implementations.
+## Architecture
 
-**Good:**
-```rust
-pub type ScopeFn = Box<dyn Fn(&str, &mut DynSegment, usize) -> Result<bool> + Send + Sync>;
-// Only when you need to store heterogeneous closures. Prefer:
-fn with_callback<F: Fn(&str, &mut DynSegment, usize) -> Result<bool>>(f: F) { ... }
-```
+- The root `cel-rs` crate is a façade that re-exports `cel-runtime`, `cel-parser`, and
+  `cel-rs-macros`.
+- `cel-runtime` is the stack-based evaluator. It layers `RawStack` (unsafe aligned storage),
+  `RawSegment` (operations and droppers), `DynSegment` (runtime type checks), and
+  `Segment<Args, Stack>` (compile-time checks via heterogeneous cons-cell type lists).
+  Operations use `opN`; fallible operations use `opNr`.
+- `cel-parser` turns proc-macro token streams through `LexLexer` and the recursive-descent
+  `CELParser` into `DynSegment`. `OpLookup` resolves custom scopes in LIFO order before static
+  built-ins, overloading by arity and `TypeId`. `cel-rs-macros` currently validates CEL at
+  compile time; it does not generate a native compiled CEL backend.
+- The property-model stack flows `cel-parser`/`cel-runtime` -> `adam-rs` -> `adam-lang` ->
+  `begin`. `adam-rs` plans and executes multi-way constraint relationships over type-erased
+  cells. `adam-lang` parses and type-checks sheets into live `adam-rs` graphs. `adam-lsp`
+  publishes adam-lang syntax and type diagnostics to the VS Code extension.
+- `begin` is the desktop-first Dioxus property-model environment, with graph visualization and
+  an Inspector. `editors/vscode-adam-lang` supplies `.adm2` syntax highlighting, formatting,
+  and diagnostics via `adam-lsp`. `xtask` owns repository maintenance commands such as
+  `cargo xtask fetch-assets` and `cargo xtask build-js`.
 
-**Prefer when possible:**
-```rust
-fn apply<F>(f: F) where F: Fn(u32) -> u32 { ... }
-// or
-type OpFn = fn(&mut DynSegment) -> Result<()>;
-```
+Read `docs/VISION.md` for roadmap, rationale, or cross-crate design direction. Dated feature
+designs live under `docs/superpowers/specs/`.
 
-### Prefer slices over `Vec` for read-only or temporary views
+## Repository conventions
 
-- Take or return `&[T]` (or `&mut [T]` when modifying in place) instead of `Vec<T>` when the caller does not need ownership.
-- Avoid allocating a `Vec` only to pass a slice: e.g. use a block that borrows from the source so the borrow ends before the next use (`let ok = { let s = x.peek(); s.len() == n };`).
-- Use `slice.iter()` and work with references instead of collecting into a new `Vec` for matching or inspection.
-
-**Good:**
-```rust
-let matches = {
-    let top = segment.peek_stack_infos(num_operands);
-    top.len() == 2 && top[0].type_id == expected
-};
-if matches { segment.apply_op()?; }
-```
-
-**Bad:**
-```rust
-let type_ids: Vec<TypeId> = segment.peek_stack_infos(n).iter().map(|i| i.type_id).collect();
-if type_ids.len() == 2 && type_ids[0] == expected { ... }
-```
-
-### Avoid unnecessary temporaries
-
-- Do not allocate a `Vec` or `String` just to build a single message or slice when a loop or iterator over the source can build the result directly (e.g. one `String` or no intermediate collection).
-- Prefer `impl Iterator<Item = &T>` or slice returns over returning a new `Vec` when the underlying data is already stored elsewhere.
-
-## Exceptions
-
-- Use `Vec` when you need an owned, growable sequence or when an API requires ownership.
-- Use `Box<dyn Trait>` when you need type erasure, dynamic dispatch, or to store heterogeneous types in a collection.
-- Use `clone()` when you genuinely need an independent copy (e.g. to pass across thread boundaries or to store in a structure that outlives the source).
+- For book prose, prefer direct active constructions with concrete subjects.
+  Replace indirect phrasing such as “The chapters are written...” with a clear
+  actor and action such as “Each chapter follows...”; preserve passive voice
+  when it states a precise language or implementation fact.
+- Write contract-style `///` documentation for every function. Use a present-tense summary
+  ending in a period; add non-obvious `- Precondition:` and `- Postcondition:` bullets,
+  `# Errors`, or `# Safety` as applicable. Document non-O(1) complexity. Public APIs need
+  `# Examples`; modules use `//!` tutorials. Parser functions document their grammar production.
+  Use `debug_assert!` for preconditions instead of documenting consequences of violations.
+- Derive unit tests from public contracts, not implementation details. Cover documented errors,
+  postconditions, and interface-implied edge cases; do not test unspecified precondition
+  violations.
+- Avoid avoidable heap allocation: pass `&str` and slices, prefer iterators or borrowed views,
+  and use generics or function pointers instead of trait objects when type erasure is not needed.
+  Signed integer arithmetic must use `checked_*`. Use `.op1r`/`.op2r` (and other `opNr`)
+  variants for operations that can fail.
+- Changes to `begin` UI require rendered verification, not only Cargo checks. Use the
+  `verifying-begin-ui` skill to serve the web build and inspect a screenshot/DOM; the normal
+  desktop WebView2 window is not headless-browser attachable.
+- `begin/assets/swc.js` is a committed bundle. Regenerate it only when updating Spectrum or its
+  bundle inputs with `cargo xtask build-js` (or `npm ci && npm run build` in `begin`), and commit
+  the resulting bundle with the package manifest/lockfile changes. Node is otherwise unnecessary
+  for building `begin`.
+- For the VS Code extension, run its Node commands from `editors/vscode-adam-lang`; use
+  `npm run compile` and `npm test` for extension changes. Build `adam-lsp` with
+  `cargo build -p adam-lsp` before exercising its diagnostics.
 
 ---
 > Source: [stlab/cel-rs](https://github.com/stlab/cel-rs) — distributed by [TomeVault](https://tomevault.io).
