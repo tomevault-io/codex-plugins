@@ -7,13 +7,13 @@ WIP of library for type-safe concatenative languace
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [stlab/cel-rs](https://github.com/stlab/cel-rs).
+Original source: `.cursor/rules/*.mdc` in [stlab/cel-rs](https://github.com/stlab/cel-rs).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
