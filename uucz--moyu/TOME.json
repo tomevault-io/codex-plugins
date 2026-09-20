@@ -4,7 +4,7 @@
   "repo": "moyu",
   "description": "",
   "type": "tome",
-  "source_format": "copilot-instructions.md",
+  "source_format": "",
   "formats": [
     {
       "format": "claude_md",
@@ -131,5 +131,5 @@
   ],
   "source_url": "https://github.com/uucz/moyu",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-24T13:39:43Z"
+  "distributed_at": "2026-09-20T01:32:22Z"
 }
