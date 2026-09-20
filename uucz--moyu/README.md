@@ -1,16 +1,17 @@
 # moyu
 
-> Source: [uucz/moyu](https://github.com/uucz/moyu). Graded, signed and kept in sync across platforms by [TomeVault](https://tomevault.io)
+> Source: [uucz/moyu](https://github.com/uucz/moyu). Graded, signed and kept current as the models change by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [uucz/moyu](https://github.com/uucz/moyu).
+Original source: `` in [uucz/moyu](https://github.com/uucz/moyu).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
