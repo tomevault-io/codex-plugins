@@ -4,7 +4,7 @@
   "repo": "CoffeeShotTimer",
   "description": "Espresso timer with analytics for home baristas",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/jodli/CoffeeShotTimer",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-09-21T22:32:27Z"
+  "distributed_at": "2026-09-21T22:33:55Z"
 }
