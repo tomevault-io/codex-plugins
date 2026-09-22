@@ -1,40 +1,41 @@
-# Copilot Instructions — Revenue Cloud Base Foundations
 
-This repository uses `AGENTS.md` (at the repo root) as the canonical
-AI agent instructions file. Read it for:
+# Generated Analysis Artifacts → `.agents/artifacts/` (never the public repo)
 
-- Project overview and technology stack
-- Safety-critical DO NOT rules
-- SFDMU v5 compliance rules
-- Org identity (CCI vs SF CLI aliases)
-- Common workflows and PR review checklist
-- Skill index with detailed guides for every task type
+Any **AI-generated** analysis, investigation, audit, feature-gap, research,
+resume/handoff, or scratch working document **must** be written to
+`.agents/artifacts/` — a **private, nested git repository** that is gitignored
+by the main repo (`.gitignore` → `.agents/artifacts/`). These artifacts must
+**never** be committed to the public `rlm-base-dev` repository.
 
-## Quick Start
+## Rule
 
-1. Read `AGENTS.md` at the repo root
-2. Find the relevant skill in the Skill Index section
-3. Read that skill's `SKILL.md` for detailed guidance
-4. When creating, updating, registering, or testing skills, read `.cursor/skills/skill-authoring/SKILL.md`
-5. For a focused topic, use the skill's **sub-files** — each `SKILL.md` lists its own, which is the only registry (`AGENTS.md` carries no second-level index). E.g. Robot setup UI + shadow DOM (`.cursor/skills/robot-testing/setup-ui-shadow-dom.md`), UX assembly vs retrieve (`.cursor/skills/repo-integration/ux-assembly-retrieve.md`)
-6. Before a PR: follow **Pre-merge checklists for AI agents** in `AGENTS.md` (SFDMU, `cumulusci.yml`, merge diffs)
+- ✅ Write generated analysis docs to `.agents/artifacts/<name>.md`.
+- ❌ Do **not** create them under `docs/analysis/`, `docs/`, repo root, or any
+  other path tracked by the main repo.
+- If you find a generated artifact tracked in the public repo, move it:
+  `cp docs/analysis/<f>.md .agents/artifacts/<f>.md && git rm -f docs/analysis/<f>.md`,
+  and update any references to point at the `.agents/artifacts/` path.
 
-## Reviewing a pull request
+## Distinction
 
-Read **`REVIEW.md`** at the repo root — severity rubric, what to look for, the defect
-classes this repository actually produces, and push discipline. Its governing rule:
-**only report findings that are real problems; if there are none, say so and return
-nothing.** An empty review on a clean diff is a correct review.
+- `docs/analysis/` is reserved for **curated, intentional, human-authored**
+  technical analysis that is part of the product documentation. Do not add new
+  agent-generated working docs there. When unsure whether a doc is "curated" vs
+  "generated working artifact," treat it as a generated artifact and put it in
+  `.agents/artifacts/`.
+- `.agents/artifacts/` is for **agent working output**: investigations, audit
+  findings, cross-validation reports, feature-gap notes, resume/handoff notes,
+  experiment reports, etc.
 
-## Entry Points
+## Example
 
-| File | Purpose |
-|------|---------|
-| `AGENTS.md` | Canonical AI agent instructions |
-| `REVIEW.md` | How pull requests get reviewed: severity rubric, defect classes, push discipline |
-| `.cursor/skills/*/SKILL.md` | Detailed per-topic guides (plain markdown) |
-| `.cursor/rules/*.mdc` | Cursor-specific auto-injection rules |
-| `scripts/ai/` | AI utility scripts (ERD query, CCI reference generator) |
+```
+# ❌ BAD — public, tracked by main repo
+docs/analysis/collections-ux-baseline-feature-gaps.md
+
+# ✅ GOOD — private nested repo, gitignored by main
+.agents/artifacts/collections-ux-baseline-feature-gaps.md
+```
 
 ---
 > Source: [SalesforceLabs/revenue-cloud-foundations](https://github.com/SalesforceLabs/revenue-cloud-foundations) — distributed by [TomeVault](https://tomevault.io).
