@@ -1,0 +1,44 @@
+{
+  "name": "baby-monitor",
+  "owner": "felschatz",
+  "repo": "baby-monitor",
+  "description": "A real-time baby monitor web application using Server-Sent Events for peer-to-peer audio/video streaming between two devices. Designed for use with two phones (Android/iOS) over a local network or the internet. Talk back to the baby supported. No data storage.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/felschatz/baby-monitor",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-09-22T04:38:59Z"
+}
