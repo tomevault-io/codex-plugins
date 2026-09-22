@@ -7,13 +7,13 @@ Sovereign AI substrate for memory, orchestration, skills, governance, and evals 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [frankxai/Starlight-Intelligence-System](https://github.com/frankxai/Starlight-Intelligence-System).
+Original source: `.cursor/rules/*.mdc` in [frankxai/Starlight-Intelligence-System](https://github.com/frankxai/Starlight-Intelligence-System).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
