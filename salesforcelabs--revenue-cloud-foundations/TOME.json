@@ -4,7 +4,7 @@
   "repo": "revenue-cloud-foundations",
   "description": "Salesforce Revenue Cloud Foundations Launchpad",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": ".cursor/rules/*.mdc",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/SalesforceLabs/revenue-cloud-foundations",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-09-22T02:37:05Z"
+  "distributed_at": "2026-09-22T02:57:36Z"
 }
