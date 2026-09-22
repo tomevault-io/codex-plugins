@@ -4,7 +4,7 @@
   "repo": "typescript-patterns",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": ".cursor/rules/*.mdc",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/fellipeutaka/typescript-patterns",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-09-22T10:42:33Z"
+  "distributed_at": "2026-09-22T10:47:35Z"
 }
