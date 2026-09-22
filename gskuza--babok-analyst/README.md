@@ -7,12 +7,12 @@ An AI agent for professional business analysis compliant with BABOK v3 (Internat
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [GSkuza/BABOK_ANALYST](https://github.com/GSkuza/BABOK_ANALYST).
+Original source: `CLAUDE.md` in [GSkuza/BABOK_ANALYST](https://github.com/GSkuza/BABOK_ANALYST).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
