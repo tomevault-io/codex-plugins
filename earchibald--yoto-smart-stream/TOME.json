@@ -1,0 +1,44 @@
+{
+  "name": "yoto-smart-stream",
+  "owner": "earchibald",
+  "repo": "yoto-smart-stream",
+  "description": "A service package to stream audio to a yoto device, monitor events from that device with MQTT and change what it is doing in response., with a web UI to configure, upload, record and manage audio and card scripts. Should support \"Choose Your Own Adventure\" style as one option.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/earchibald/yoto-smart-stream",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-09-22T06:35:13Z"
+}
