@@ -7,13 +7,13 @@ A modern starter template using React 19, Shadcn, Vite, and TanStack Router.
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [whereissam/React-Vite-Tanstack-Starter-Template](https://github.com/whereissam/React-Vite-Tanstack-Starter-Template).
+Original source: `.cursor/rules/*.mdc` in [whereissam/React-Vite-Tanstack-Starter-Template](https://github.com/whereissam/React-Vite-Tanstack-Starter-Template).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
-- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
