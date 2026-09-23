@@ -1,114 +1,103 @@
----
-description: Guidelines for implementing and using PostHog feature flags for early access features and A/B tests
-globs: apps/web/hooks/useFeatureFlags.ts
-alwaysApply: false
----
-# PostHog Feature Flags
+# Task List Management
 
-Guidelines for implementing feature flags using PostHog for early access features and A/B testing.
+Guidelines for creating and managing task lists in markdown files to track project progress
 
-## Overview
+## Task List Creation
 
-We use PostHog for two main purposes:
-1. **Early Access Features** - Features that users can opt into via the Early Access page
-2. **A/B Testing** - Testing different variants of features to measure impact
+1. Create task lists in a markdown file (in the project root):
+   - Use `TASKS.md` or a descriptive name relevant to the feature (e.g., `ASSISTANT_CHAT.md`)
+   - Include a clear title and description of the feature being implemented
 
-## Implementation Guidelines
+2. Structure the file with these sections:
+   ```markdown
+   # Feature Name Implementation
+   
+   Brief description of the feature and its purpose.
+   
+   ## Completed Tasks
+   
+   - [x] Task 1 that has been completed
+   - [x] Task 2 that has been completed
+   
+   ## In Progress Tasks
+   
+   - [ ] Task 3 currently being worked on
+   - [ ] Task 4 to be completed soon
+   
+   ## Future Tasks
+   
+   - [ ] Task 5 planned for future implementation
+   - [ ] Task 6 planned for future implementation
+   
+   ## Implementation Plan
+   
+   Detailed description of how the feature will be implemented.
+   
+   ### Relevant Files
+   
+   - path/to/file1.ts - Description of purpose
+   - path/to/file2.ts - Description of purpose
+   ```
 
-### 1. Creating Feature Flag Hooks
+## Task List Maintenance
 
-All feature flag hooks should be defined in `apps/web/hooks/useFeatureFlags.ts`:
+1. Update the task list as you progress:
+   - Mark tasks as completed by changing `[ ]` to `[x]`
+   - Add new tasks as they are identified
+   - Move tasks between sections as appropriate
 
-```typescript
-// For early access features (boolean flags with env override)
-export function useFeatureNameEnabled() {
-  return useFeatureFlagEnabled("feature-flag-key") || env.NEXT_PUBLIC_FEATURE_NAME_ENABLED;
-}
+2. Keep "Relevant Files" section updated with:
+   - File paths that have been created or modified
+   - Brief descriptions of each file's purpose
+   - Status indicators (e.g., ✅) for completed components
 
-// For A/B test variants
-export function useFeatureVariant() {
-  return (
-    (useFeatureFlagVariantKey("variant-flag-key") as VariantType) ||
-    "control"
-  );
-}
+3. Add implementation details:
+   - Architecture decisions
+   - Data flow descriptions
+   - Technical components needed
+   - Environment configuration
+
+## AI Instructions
+
+When working with task lists, the AI should:
+
+1. Regularly update the task list file after implementing significant components
+2. Mark completed tasks with [x] when finished
+3. Add new tasks discovered during implementation
+4. Maintain the "Relevant Files" section with accurate file paths and descriptions
+5. Document implementation details, especially for complex features
+6. When implementing tasks one by one, first check which task to implement next
+7. After implementing a task, update the file to reflect progress
+
+## Example Task Update
+
+When updating a task from "In Progress" to "Completed":
+
+```markdown
+## In Progress Tasks
+
+- [ ] Implement database schema
+- [ ] Create API endpoints for data access
+
+## Completed Tasks
+
+- [x] Set up project structure
+- [x] Configure environment variables
 ```
 
-Early access features should support both PostHog flags AND environment variables using an OR (`||`). This allows:
-- Production users to opt-in via PostHog Early Access
-- Developers to enable features locally via `.env`
-- Self-hosted users to enable features without PostHog
+Should become:
 
-### 2. Early Access Features
+```markdown
+## In Progress Tasks
 
-Early access features are automatically displayed on the Early Access page (`/early-access`) through the `EarlyAccessFeatures` component. No manual configuration needed.
+- [ ] Create API endpoints for data access
 
-**Example:**
-```typescript
-// In useFeatureFlags.ts
-export function useCleanerEnabled() {
-  return useFeatureFlagEnabled("inbox-cleaner") || env.NEXT_PUBLIC_CLEANER_ENABLED;
-}
+## Completed Tasks
 
-// Usage in components
-function MyComponent() {
-  const isCleanerEnabled = useCleanerEnabled();
-  
-  if (!isCleanerEnabled) {
-    return null;
-  }
-  
-  return <CleanerFeature />;
-}
+- [x] Set up project structure
+- [x] Configure environment variables
+- [x] Implement database schema
 ```
-
-When adding a new early access feature:
-1. Add the hook with PostHog flag + env override
-2. Add the env variable to `apps/web/env.ts` (schema + runtimeEnv)
-3. Gate the UI component with the hook
-
-### 3. A/B Test Variants
-
-For A/B tests, define the variant types and provide a default fallback:
-
-```typescript
-// Define variant types
-type PricingVariant = "control" | "variant-a" | "variant-b";
-
-// Create hook with fallback
-export function usePricingVariant() {
-  return (
-    (useFeatureFlagVariantKey("pricing-options-2") as PricingVariant) ||
-    "control"
-  );
-}
-
-// Usage
-function PricingPage() {
-  const variant = usePricingVariant();
-  
-  switch (variant) {
-    case "variant-a":
-      return <PricingVariantA />;
-    case "variant-b":
-      return <PricingVariantB />;
-    default:
-      return <PricingControl />;
-  }
-}
-```
-
-### 4. Best Practices
-
-1. **Naming Convention**: Use kebab-case for flag keys (e.g., `inbox-cleaner`, `pricing-options-2`)
-2. **Hook Naming**: Use `use[FeatureName]Enabled` for boolean flags, `use[FeatureName]Variant` for variants
-3. **Type Safety**: Always define types for variant flags
-4. **Fallbacks**: Always provide a default/control fallback for variant flags
-5. **Centralization**: Keep all feature flag hooks in `useFeatureFlags.ts`
-
-### 5. PostHog Configuration
-
-Feature flags are configured in the PostHog dashboard. The Early Access page automatically displays features to users for them to enable new features.
 
 ---
 > Source: [nathanpenny520/inbox-zero-Nmail](https://github.com/nathanpenny520/inbox-zero-Nmail) — distributed by [TomeVault](https://tomevault.io).
