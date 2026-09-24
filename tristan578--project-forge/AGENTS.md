@@ -1,190 +1,67 @@
-# SpawnForge — Copilot Instructions
+# Project File Map
 
-## Project Overview
+## Engine Structure (`engine/src/`)
 
-SpawnForge is a browser-based, AI-native 2D/3D game engine. It is a polyglot monorepo:
+### `bridge/` — JS Interop (ONLY module that touches `web_sys`/`js_sys`/`wasm_bindgen`)
+- `mod.rs` — `#[wasm_bindgen]` exports + `SelectionPlugin::build()` orchestrator
+- `events.rs` — `emit_event()` + typed emit functions
+- `core_systems.rs` — Selection, picking, mode changes, transforms, rename, snap
+- `material.rs` — Material/light emit, environment, skybox, post-processing, shader
+- `physics.rs` — 3D + 2D physics, collisions, raycasts, joints
+- `audio.rs` — Audio updates/removals/playback, bus CRUD
+- `query.rs` — Query request processing
+- `animation.rs` — GLTF animation registration, playback
+- `particles.rs` — Particle system sync
+- `scene_io.rs` — Scene export/load, GLTF import
+- `procedural.rs` — CSG boolean ops, extrude, lathe
+- `mesh_ops.rs` — Array entity, combine meshes, prefab
+- `scripts.rs` — Script updates/removals
+- `game.rs` — Game component CRUD, game camera
+- `skeleton2d.rs` — 2D skeletal animation
 
-- **engine/** — Rust (Bevy 0.18) compiled to WebAssembly via wasm-bindgen. Pure game logic in `engine/src/core/`, JS interop bridge in `engine/src/bridge/`.
-- **web/** — TypeScript/React (Next.js 16) editor frontend. State via Zustand store slices. Strict TypeScript, zero ESLint warnings.
-- **mcp-server/** — TypeScript MCP server exposing engine commands as AI-callable tools via WebSocket.
+### `core/` — Pure Rust, Platform-Agnostic (NO browser deps)
+- `core/commands/` — Command dispatch (domain modules)
+- `core/pending/` — Thread-local command queue (domain modules)
 
-## Build & Test Commands
+## Web Structure (`web/src/`)
 
-```bash
-# Web — install deps, lint, typecheck, unit tests (run from web/)
-cd web && npm install  # use npm ci in CI environments
-npx eslint --max-warnings 0 .
-npx tsc --noEmit
-npx vitest run
+### Stores
+- `editorStore.ts` — Composition root from domain slices
+- `stores/slices/` — 16 domain state slice files
+- `chatStore.ts` — Chat messages, token balance
+- `userStore.ts` — Tier, permissions
 
-# MCP server tests (run from mcp-server/)
-cd mcp-server && npm install
-npx vitest run
+### Key Hooks
+- `useEngine.ts` — WASM loading singleton (WebGPU detect, fallback)
+- `useEngineEvents.ts` — Event delegation hub
+- `hooks/events/` — Domain event handlers (8 files)
 
-# WASM engine build (requires Rust stable + wasm32-unknown-unknown target + wasm-bindgen-cli 0.2.127)
-cd engine && cargo build --target wasm32-unknown-unknown --release --features webgl2
-cd engine && cargo build --target wasm32-unknown-unknown --release --features webgpu
-```
+### Libraries (`lib/`)
+- `chat/executor.ts` — Handler registry dispatcher
+- `chat/handlers/` — Domain tool handlers
+- `scripting/` — Web Worker sandbox
+- `audio/` — Web Audio API manager
+- `export/` — Export pipeline
+- `db/` — Drizzle + Neon client
 
-## Architecture Rules
+### MCP Server (`mcp-server/`)
+- `manifest/commands.json` — 379 commands across 41 categories (measured: `bash .claude/tools/validate-mcp.sh sync`; pinned by `web/src/lib/config/__tests__/capabilityMatrix.test.ts`)
+- `src/docs/` — Doc loader, BM25 search
 
-- **Bridge isolation**: Only `engine/src/bridge/` may import `web_sys`/`js_sys`/`wasm_bindgen`. `core/` is pure Rust.
-- **Command-driven**: All engine operations go through `handle_command()` JSON commands. Never create UI-only shortcuts that bypass the command system.
-- **Event-driven**: Bevy → bridge → JS callback → Zustand store → React re-render.
-- **Store slices**: Each Zustand concern gets its own slice. Use selectors to prevent unnecessary re-renders.
-- **WASM calls**: Only `web/src/hooks/useEngine.ts` may make direct WASM calls.
+### Docs Site (`apps/docs/`)
 
-## Coding Standards
+Deploys with `rootDirectory: apps/docs`, so nothing above `apps/docs/` exists on Vercel. Every repo-root artifact the site needs has an in-root copy under `apps/docs/data/`, loaded by **static import** — a runtime `readFileSync` from a `__dirname`-derived path is invisible to Next.js output file tracing and is what 500'd `/mcp` in production (#9718).
 
-### Rust (engine/)
-- Target: `wasm32-unknown-unknown`. Never use `std::fs`, `std::net`, or other non-WASM APIs.
-- All `unsafe` blocks MUST have a `// SAFETY:` comment.
-- Use `serde` with `serde_wasm_bindgen` for JS ↔ Rust serialization.
-- Prefer `Result<T, E>` over panics. Feature flags: `webgl2` and `webgpu`.
+- `data/commands.json` — copy of `mcp-server/manifest/commands.json` (guarded by `scripts/check-manifest-sync.ts`)
+- `data/capability-matrix.json` — `{ source, lines[] }` generated from `docs/capability-matrix.md` by `scripts/sync-capability-matrix.ts` (`npm run sync:capability-matrix` at the repo root). Never hand-edit; the docs gate and the web gate both fail on a stale copy
+- `lib/capabilityMatrix.ts` — parser for the markdown subset the matrix is written in, plus `readCapabilityMatrix()` over the statically imported JSON
+- `components/CapabilityMatrixDocument.tsx` — server-renderable renderer for `/capability-matrix`: `#` is the page h1 and `##` the h2 (no skipped level), the row-key column is `<th scope="row">`, every header cell `<th scope="col">`, each scrolling table wrapper is a focusable `role="region"`
 
-### TypeScript (web/, mcp-server/)
-- Strict mode. Never use `any`. Avoid `as` casts.
-- All chat handler arguments MUST be validated before use (manual validation via `parseArgs()` pattern — Zod is not used for runtime validation).
-- Use named exports. Prefer `const` over `let`. Never use `var`.
-- Tailwind CSS for all styling. No inline styles or CSS modules.
+## Communication Pattern
 
-## MANDATORY: Taskboard-Driven Development
+**JS → Rust:** editorStore action → `dispatchCommand()` → `handle_command()` → pending queue → Bevy drains next frame
 
-**No code changes without a ticket.** This is enforced by hooks on all AI tools.
-
-Before writing ANY code:
-1. Check the taskboard at http://localhost:3010 (API: http://localhost:3010/api)
-2. Pick an existing ticket OR create a new one with ALL required fields
-3. Move the ticket to `in_progress`
-
-Required ticket fields: User Story, Description (20+ chars), Acceptance Criteria (3+ Given/When/Then scenarios), Priority, Team (Engineering or PM — use the team IDs in **Canonical Project Facts** below), Subtasks (3+).
-
-<!-- AGENTIC-SYNC:START -->
-<!-- Generated from tools/agentic-sync/canonical.json by tools/agentic-sync/sync.mjs.
-     Do NOT hand-edit between these markers — edit canonical.json and run
-     `node tools/agentic-sync/sync.mjs --write`. CI gate: scripts/check-agentic-sync.sh. -->
-
-### Canonical Project Facts
-
-**Taskboard** — the single source of truth for all work:
-- Project: **Project Forge** (`01KMM9ZA6SBZ7RKJZJTZS9VR4R`, prefix `PF`)
-- Teams: Engineering `01KMR5E36TP59PRQA8GQEWJVM1`, PM `01KMR5E3852BWXAZ219W47CSKS`
-- API: `http://localhost:3010/api` · Web UI: `http://localhost:3010`
-- Start: `taskboard start --port 3010`  *(do not pass `--db` — it uses the OS-default DB)*
-- These IDs are board-local; if a query 404s, rediscover with `curl -s http://localhost:3010/api/projects`
-
-**Pinned versions:** Next.js 16.3.5 · React 19.3.0 · wasm-bindgen 0.2.127 · Bevy 0.18 *(wasm-bindgen must match Cargo.lock exactly)*
-
-**Coverage thresholds (CI-enforced):** statements 85 · branches 77 · functions 80 · lines 86
-
-**Quick validation:** `cd web && npx eslint --max-warnings 0 . && npx tsc --noEmit && npx vitest run`
-<!-- AGENTIC-SYNC:END -->
-
-See `AGENTS.md` for full taskboard setup, workflow, and GitHub Project sync details.
-
-### Sync Architecture (Non-Negotiable)
-- `github_issue_number` (SQLite column) is the SOLE link between local tickets and GitHub Issues. NEVER match by title.
-- `sync_repo` (SQLite column) controls which repo a ticket syncs to. Only `sync_repo = 'project-forge'` tickets are synced.
-- The JSON map file is a cache. SQLite columns are authoritative.
-- Tickets from other local projects are NEVER synced (they have `sync_repo = NULL`).
-
-## Security
-
-- All chat input passes through `sanitizeChatInput()` in `web/src/lib/chat/sanitizer.ts`. Never bypass.
-- API keys encrypted with AES-256-GCM in `web/src/lib/encryption.ts`. Never log or expose.
-- All API routes require auth via `web/src/lib/auth/api-auth.ts`.
-- Never commit secrets. Use `.env.local` (gitignored).
-- **Worktree safety:** When working in a git worktree, commit after every logical chunk of work. Agent processes can be terminated at any time — uncommitted work is permanently lost. The stop hook (`.claude/hooks/on-stop.sh`) auto-commits as a safety net, but agents MUST commit frequently themselves.
-
-## CI/CD Enforcement
-
-**All PRs must pass CI before merge.** Branch protection is enabled on `main`.
-
-GitHub Actions (`.github/workflows/ci.yml`) runs on every PR:
-- Lint (ESLint zero warnings), TypeScript check, Web tests (vitest), MCP tests
-- WASM build (WebGL2 + WebGPU), Next.js production build
-- E2E UI tests (Playwright), Security audit (npm audit + cargo audit)
-- CodeQL analysis (JS/TS, Python, Rust, Actions)
-
-**Never skip CI checks.** If CI fails, fix the code — do not force-merge.
-
-## Testing Patterns
-
-- Web tests: `foo.ts` → `foo.test.ts` alongside source. Use `describe`/`it`/`expect`. Mock WASM bridge with `vi.mock()`.
-- Store slice tests: Use `sliceTestTemplate.ts` pattern with `createSliceStore()` and `createMockDispatch()`.
-- mock*Once leak guard (`web/vitest.mockOnceGuard.ts`): a test that queues `mock*Once` on a mock it did not create (module-scoped `vi.fn`, `vi.mock` factory mock, or bare automock) and never consumes it FAILS, naming the still-armed line. Consume the value or build the mock inside the test; `vi.clearAllMocks()` does not drain the once-queue.
-- MCP tests: Test command manifests, search, tool registration.
-
-## CI Pipeline
-
-GitHub Actions (`.github/workflows/ci.yml`) runs on every PR to main:
-- Lint (ESLint), TypeScript check, Web tests (vitest), MCP tests, WASM build (WebGL2 + WebGPU), Next.js production build, E2E UI tests (Playwright), Security audit (npm audit + cargo audit).
-
-## Hook Scripts (shared across all tools)
-
-All hooks live in `.claude/hooks/` and are shared across all AI tools:
-
-| Script | Purpose | Trigger |
-|--------|---------|---------|
-| `on-session-start.sh` | Auto-start taskboard + GitHub pull + backlog display | Session start |
-| `on-prompt-submit.sh` | Ticket enforcement gate + stale reminders | Before prompt |
-| `on-stop.sh` | Worktree safety commit + GitHub push | After response |
-| `post-edit-lint.sh` | ESLint on changed files | After file edit |
-| `worktree-safety-commit.sh` | Auto-commit uncommitted work in worktrees | Called by on-stop |
-
-## Key File Locations
-
-| Area | Path |
-|------|------|
-| Engine core | `engine/src/core/` |
-| Engine bridge | `engine/src/bridge/` |
-| Web pages/routes | `web/src/app/` |
-| React components | `web/src/components/` |
-| Zustand stores | `web/src/stores/` |
-| Chat system | `web/src/lib/chat/` |
-| Chat handlers | `web/src/lib/chat/handlers/` |
-| WASM lifecycle | `web/src/hooks/useEngine.ts` |
-| MCP server | `mcp-server/src/` |
-| CI/CD | `.github/workflows/ci.yml` |
-| Shared hooks | `.claude/hooks/` |
-| Full constitution | `.claude/CLAUDE.md` |
-| Cross-tool instructions | `AGENTS.md` |
-
-## Domain Skills
-
-Specialized development patterns in `.claude/skills/`:
-
-| Skill | Use When |
-|-------|----------|
-| `rust-engine/SKILL.md` | Writing engine/ code (ECS, commands, bridge) |
-| `frontend/SKILL.md` | Writing web/ code (React, Zustand, Tailwind) |
-| `mcp-commands/SKILL.md` | Adding MCP commands or chat handlers |
-| `testing/SKILL.md` | Writing tests, improving coverage |
-| `docs/SKILL.md` | Updating documentation |
-| `design/SKILL.md` | Designing features, architecture decisions |
-| `developer-experience/SKILL.md` | DX audits, DoQ/DoD, onboarding |
-
-## Validation Tools
-
-```bash
-bash .claude/tools/validate-rust.sh check      # After engine changes
-bash .claude/tools/validate-frontend.sh quick   # After frontend changes
-bash .claude/tools/validate-mcp.sh full         # After MCP changes
-bash .claude/tools/validate-tests.sh coverage   # Test coverage
-bash .claude/tools/validate-docs.sh             # Doc integrity
-bash .claude/tools/dx-audit.sh                  # DX audit
-bash .claude/tools/validate-all.sh              # Everything
-```
-
-## Detailed Reference
-
-For full architecture rules, ECS patterns, and library APIs, see:
-- `.claude/CLAUDE.md` — Full project constitution
-- `.claude/rules/bevy-api.md` — Bevy 0.18 API patterns
-- `.claude/rules/entity-snapshot.md` — ECS snapshot patterns
-- `.claude/rules/web-quality.md` — ESLint & React patterns
-- `.claude/rules/library-apis.md` — Third-party library APIs
-- `.claude/rules/file-map.md` — Project file structure
+**Rust → JS:** Bevy system → `emit_event()` → JS callback → `useEngineEvents` → Zustand `set()` → React re-render
 
 ---
 > Source: [Tristan578/project-forge](https://github.com/Tristan578/project-forge) — distributed by [TomeVault](https://tomevault.io).
