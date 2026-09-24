@@ -4,7 +4,7 @@
   "repo": "lucia-dotnet",
   "description": "",
   "type": "tome",
-  "source_format": "copilot-instructions.md",
+  "source_format": "",
   "formats": [
     {
       "format": "claude_md",
@@ -563,5 +563,5 @@
   ],
   "source_url": "https://github.com/seiggy/lucia-dotnet",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-09-24T18:04:43Z"
+  "distributed_at": "2026-09-24T18:05:11Z"
 }
