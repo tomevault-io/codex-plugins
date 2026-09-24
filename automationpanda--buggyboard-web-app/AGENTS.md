@@ -1,4 +1,3 @@
-
 # BuggyBoard: Use Specs as Context
 
 When working on the **BuggyBoard** web app (bug tracker SUT for the Playwright course):
