@@ -1,9 +1,9 @@
 
-# Git / GitHub workflow
+# Solution format
 
-Follow **[AGENTS.md](../../AGENTS.md)** — section **“Git and GitHub workflow”** and **“Code and review expectations”**.
+Follow **[AGENTS.md](../../AGENTS.md)** — section **“Solution format — prefer SLNX over SLN”**.
 
-Issue first for substantive work; PR to `master`; squash merge; CI green.
+Do not add a default `.sln` for the product solution.
 
 ---
 > Source: [MvvmAIO/Prism.SourceGenerators](https://github.com/MvvmAIO/Prism.SourceGenerators) — distributed by [TomeVault](https://tomevault.io).
