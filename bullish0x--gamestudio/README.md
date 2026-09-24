@@ -7,13 +7,13 @@ Turn any supported coding-agent harness into a full game-dev studio - 55 special
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [bullish0x/GameStudio](https://github.com/bullish0x/GameStudio).
+Original source: `CLAUDE.md` in [bullish0x/GameStudio](https://github.com/bullish0x/GameStudio).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
