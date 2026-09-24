@@ -7,12 +7,12 @@ Fast open-source log explorer for Windows, macOS and Linux. Search multi-gigabyt
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [64x-lunicorn/LogSquirl](https://github.com/64x-lunicorn/LogSquirl).
+Original source: `CLAUDE.md` in [64x-lunicorn/LogSquirl](https://github.com/64x-lunicorn/LogSquirl).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
