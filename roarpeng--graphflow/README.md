@@ -7,14 +7,14 @@ Local-first code knowledge graph and context harness for coding agents. MCP + De
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [Roarpeng/GraphFlow](https://github.com/Roarpeng/GraphFlow).
+Original source: `copilot-instructions.md` in [Roarpeng/GraphFlow](https://github.com/Roarpeng/GraphFlow).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 From [Roarpeng/GraphFlow](https://github.com/Roarpeng/GraphFlow) — a repo with 12+ stars on GitHub.
