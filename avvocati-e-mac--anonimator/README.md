@@ -7,14 +7,14 @@ App desktop per pseudoanonimizzazione offline di documenti legali italiani
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [avvocati-e-mac/anonimator](https://github.com/avvocati-e-mac/anonimator).
+Original source: `CLAUDE.md` in [avvocati-e-mac/anonimator](https://github.com/avvocati-e-mac/anonimator).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/avvocati-e-mac/anonimator](https://github.com/avvocati-e-mac/anonimator)
