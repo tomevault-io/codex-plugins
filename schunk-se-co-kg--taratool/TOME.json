@@ -1,0 +1,44 @@
+{
+  "name": "TARATool",
+  "owner": "SCHUNK-SE-Co-KG",
+  "repo": "TARATool",
+  "description": "TARA Tool - Threat Analysis and Risk Assessment for EU Cyber Resilience Act (CRA) compliance",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/SCHUNK-SE-Co-KG/TARATool",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-09-24T10:01:42Z"
+}
