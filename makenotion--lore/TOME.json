@@ -2,7 +2,7 @@
   "name": "lore",
   "owner": "makenotion",
   "repo": "lore",
-  "description": "Persistent, shared AI memory backed by Notion for MCP-compatible assistants.",
+  "description": "",
   "type": "config",
   "source_format": "CLAUDE.md",
   "formats": [
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/makenotion/lore",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-08-19T04:43:20Z"
+  "distributed_at": "2026-09-25T09:28:13Z"
 }
