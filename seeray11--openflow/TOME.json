@@ -1,0 +1,69 @@
+{
+  "name": "OpenFlow",
+  "owner": "SeeRay11",
+  "repo": "OpenFlow",
+  "description": "OpenFlow \u2014 a visual builder for multi-agent AI workflows, built on the opencode engine",
+  "type": "tome",
+  "source_format": "CLAUDE.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "OpenFlow",
+      "path": ".opencode/skills/effect/SKILL.md",
+      "github_url": "https://github.com/SeeRay11/OpenFlow/tree/main/.opencode/skills/effect/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "OpenFlow",
+      "path": ".opencode/skills/rtl-aware-development/SKILL.md",
+      "github_url": "https://github.com/SeeRay11/OpenFlow/tree/main/.opencode/skills/rtl-aware-development/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "OpenFlow",
+      "path": "packages/opencode/test/fixture/skills/cloudflare/SKILL.md",
+      "github_url": "https://github.com/SeeRay11/OpenFlow/tree/main/packages/opencode/test/fixture/skills/cloudflare/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "OpenFlow",
+      "path": "packages/opencode/test/fixture/skills/agents-sdk/SKILL.md",
+      "github_url": "https://github.com/SeeRay11/OpenFlow/tree/main/packages/opencode/test/fixture/skills/agents-sdk/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/SeeRay11/OpenFlow",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-09-25T01:07:55Z"
+}
