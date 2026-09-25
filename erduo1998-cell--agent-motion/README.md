@@ -7,13 +7,13 @@ Agent-driven Three.js talking-head video production. Source available for noncom
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [erduo1998-cell/agent-motion](https://github.com/erduo1998-cell/agent-motion).
+Original source: `.cursor/rules/*.mdc` in [erduo1998-cell/agent-motion](https://github.com/erduo1998-cell/agent-motion).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
