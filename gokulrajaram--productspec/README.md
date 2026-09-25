@@ -1,0 +1,30 @@
+# AI instruction files for ProductSpec
+
+> Sourced from [gokulrajaram/ProductSpec](https://github.com/gokulrajaram/ProductSpec), graded against the public Tome Standard and kept consistent across every major platform by [TomeVault](https://tomevault.io)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [gokulrajaram/ProductSpec](https://github.com/gokulrajaram/ProductSpec).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+## Bundled Skills (3)
+
+- [ProductSpec](https://github.com/gokulrajaram/ProductSpec/tree/main/skills/productspec/SKILL.md)
+- [ProductSpec](https://github.com/gokulrajaram/ProductSpec/tree/main/skills/productspec-authoring/SKILL.md)
+- [ProductSpec](https://github.com/gokulrajaram/ProductSpec/tree/main/starter-kit/skills/productspec/SKILL.md)
+
+Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/gokulrajaram/ProductSpec](https://github.com/gokulrajaram/ProductSpec)
+
+---
+
+Own this repo? Install the TomeVault Relay to keep every platform's copy in sync on every push: [https://tomevault.io/install](https://tomevault.io/install).
+
+<!-- genome:a-c-p -->
