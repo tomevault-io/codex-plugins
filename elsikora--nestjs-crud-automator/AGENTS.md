@@ -1,40 +1,11 @@
+# Claude Code Guidance
 
-# No Noisy Micro-Abstractions
+This repository keeps its canonical CRUD Automator agent instructions in `ai/crud-automator/SKILL.md`.
 
-Do not extract local-only types, constants, maps, or helpers just to name a one-off detail.
+Read that skill before changing implementation, tests, examples, README content, or documentation for `@elsikora/nestjs-crud-automator`.
 
-Prefer inline code when the abstraction:
-- is used once or only inside one small function;
-- only restates obvious enum/key mapping;
-- exists only to satisfy style preferences, not domain meaning;
-- makes the reader jump away from the code path to understand simple logic.
-
-Extract only when it carries real project meaning, removes meaningful duplication, or clarifies a non-trivial invariant.
-
-For project constants, do not export raw leaf constants directly from `src/constant/**` for new internal metadata keys or defaults. Export a grouped `*_CONSTANT` object and make callers use object properties.
-
-```typescript
-// Bad: exported raw key invites direct imports and bypasses the grouped constant API.
-export const DTO_AUTO_CONTEXT_METADATA_KEY = "crud-automator:auto-dto-context";
-
-// Good: consumers use AUTO_CONTEXT_DTO_CONSTANT.METADATA_KEY.
-export const AUTO_CONTEXT_DTO_CONSTANT = {
-	METADATA_KEY: "crud-automator:auto-dto-context",
-} as const;
-```
-
-```typescript
-// Bad: noisy top-level extraction for a one-off mapping.
-const PARAMETER_TYPE_BY_DTO_TYPE = {
-	[EApiDtoType.BODY]: RouteParamtypes.BODY,
-};
-
-// Good: keep the mapping where the route metadata is built.
-for (const { dto, parameterType } of [{ dto: bodyDto, parameterType: RouteParamtypes.BODY }]) {
-	// ...
-}
-```
+Do not duplicate the skill content here. Keeping this file as a pointer avoids drift between Claude Code, Cursor, Codex-style agents, and other environments.
 
 ---
 > Source: [ElsiKora/NestJS-Crud-Automator](https://github.com/ElsiKora/NestJS-Crud-Automator) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-27 -->
+<!-- tomevault:4.0:agents_md:2026-09-25 -->
