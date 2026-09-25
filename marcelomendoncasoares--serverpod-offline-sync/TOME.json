@@ -1,0 +1,44 @@
+{
+  "name": "serverpod_offline_sync",
+  "owner": "marcelomendoncasoares",
+  "repo": "serverpod_offline_sync",
+  "description": "A non-invasive plugin implementation of offline-first features for Serverpod that uses CRDT (conflict-free replicated data types) for conflict resolution.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/marcelomendoncasoares/serverpod_offline_sync",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-09-25T03:33:41Z"
+}
