@@ -2,8 +2,6 @@
 
 > Source: [makenotion/lore](https://github.com/makenotion/lore). Graded, signed and kept current as the models change by [TomeVault](https://tomevault.io)
 
-Persistent, shared AI memory backed by Notion for MCP-compatible assistants.
-
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
