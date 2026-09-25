@@ -1,8 +1,6 @@
 # AI instruction files for foreman
 
-> Sourced from [fatihguner/foreman](https://github.com/fatihguner/foreman) and converted for every major platform by [TomeVault](https://tomevault.io)
-
-AI-powered strategic advisor for entrepreneurs. 158 skills, 24 diagnostics, 21 playbooks, 9   industry packs. Claude Code + Codex + OpenClaw.
+> Sourced from [fatihguner/foreman](https://github.com/fatihguner/foreman), graded against the public Tome Standard and kept consistent across every major platform by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
@@ -17,7 +15,7 @@ Original source: `CLAUDE.md` in [fatihguner/foreman](https://github.com/fatihgun
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/fatihguner/foreman](https://github.com/fatihguner/foreman)
+Graded against the Tome Standard, TomeVault's public ruleset for whether AI instructions load, read clearly and stay safe. Source: [github.com/fatihguner/foreman](https://github.com/fatihguner/foreman)
 
 ---
 
