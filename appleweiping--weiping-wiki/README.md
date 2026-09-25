@@ -2,8 +2,6 @@
 
 > Source: [appleweiping/WEIPING_WIKI](https://github.com/appleweiping/WEIPING_WIKI). Graded, signed and kept current as the models change by [TomeVault](https://tomevault.io)
 
-knowledge base managed with an LLM workflow
-
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
@@ -17,7 +15,7 @@ Original source: `CLAUDE.md` in [appleweiping/WEIPING_WIKI](https://github.com/a
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [appleweiping/WEIPING_WIKI](https://github.com/appleweiping/WEIPING_WIKI) — a repo with 103+ stars on GitHub.
+From [appleweiping/WEIPING_WIKI](https://github.com/appleweiping/WEIPING_WIKI) — a repo with 119+ stars on GitHub.
 
 ---
 
