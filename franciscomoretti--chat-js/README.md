@@ -1,0 +1,43 @@
+# chat-js
+
+> Tome by [FranciscoMoretti](https://github.com/FranciscoMoretti/chat-js), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [FranciscoMoretti/chat-js](https://github.com/FranciscoMoretti/chat-js).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+## Bundled Skills (16)
+
+- [chat-js](https://github.com/FranciscoMoretti/chat-js/tree/main/.agents/skills/review-docs/SKILL.md)
+- [chat-js](https://github.com/FranciscoMoretti/chat-js/tree/main/.agents/skills/trpc-patterns/SKILL.md)
+- [chat-js](https://github.com/FranciscoMoretti/chat-js/tree/main/.agents/skills/worktree-ports/SKILL.md)
+- [chat-js](https://github.com/FranciscoMoretti/chat-js/tree/main/.agents/skills/dev-auth-bypass/SKILL.md)
+- [chat-js](https://github.com/FranciscoMoretti/chat-js/tree/main/.agents/skills/strategic-testing/SKILL.md)
+- [chat-js](https://github.com/FranciscoMoretti/chat-js/tree/main/.agents/skills/generate-code-snippet/SKILL.md)
+- [chat-js](https://github.com/FranciscoMoretti/chat-js/tree/main/.agents/skills/lazy-prefetch-pattern/SKILL.md)
+- [chat-js](https://github.com/FranciscoMoretti/chat-js/tree/main/.agents/skills/create-vercel-ai-issue/SKILL.md)
+- [chat-js](https://github.com/FranciscoMoretti/chat-js/tree/main/.agents/skills/next-dev-loop/SKILL.md)
+- [chat-js](https://github.com/FranciscoMoretti/chat-js/tree/main/.agents/skills/next-cache-components-adoption/SKILL.md)
+- [chat-js](https://github.com/FranciscoMoretti/chat-js/tree/main/.agents/skills/next-partial-prefetching-adoption/SKILL.md)
+- [chat-js](https://github.com/FranciscoMoretti/chat-js/tree/main/.agents/skills/making-ui-changes/SKILL.md)
+- [chat-js](https://github.com/FranciscoMoretti/chat-js/tree/main/.agents/skills/check-visual-changes/SKILL.md)
+- [chat-js](https://github.com/FranciscoMoretti/chat-js/tree/main/.agents/skills/vitest-visual-testing/SKILL.md)
+- [chat-js](https://github.com/FranciscoMoretti/chat-js/tree/main/.agents/skills/triage-visual-changes/SKILL.md)
+- [chat-js](https://github.com/FranciscoMoretti/chat-js/tree/main/.agents/skills/economical-visual-tests/SKILL.md)
+
+From [FranciscoMoretti/chat-js](https://github.com/FranciscoMoretti/chat-js) — a repo with 1198+ stars on GitHub.
+
+---
+
+Own this repo? Install the TomeVault Relay to keep every platform's copy in sync on every push: [https://tomevault.io/install](https://tomevault.io/install).
+
+<!-- genome:t-c-s -->
