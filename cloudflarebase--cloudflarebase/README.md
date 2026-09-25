@@ -2,8 +2,6 @@
 
 > Source: [cloudflarebase/cloudflarebase](https://github.com/cloudflarebase/cloudflarebase). Graded, signed and kept current as the models change by [TomeVault](https://tomevault.io)
 
-The open-source Firebase for Cloudflare.
-
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
@@ -17,7 +15,7 @@ Original source: `CLAUDE.md` in [cloudflarebase/cloudflarebase](https://github.c
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [cloudflarebase/cloudflarebase](https://github.com/cloudflarebase/cloudflarebase) — a repo with 210+ stars on GitHub.
+From [cloudflarebase/cloudflarebase](https://github.com/cloudflarebase/cloudflarebase) — a repo with 228+ stars on GitHub.
 
 ---
 
