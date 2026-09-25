@@ -7,14 +7,14 @@ Elon Musk's 5-step algorithm as skills for AI agents.
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [wezendy/elon-musk-algorithm-skills](https://github.com/wezendy/elon-musk-algorithm-skills).
+Original source: `.cursor/rules/*.mdc` in [wezendy/elon-musk-algorithm-skills](https://github.com/wezendy/elon-musk-algorithm-skills).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
-- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/wezendy/elon-musk-algorithm-skills](https://github.com/wezendy/elon-musk-algorithm-skills)
