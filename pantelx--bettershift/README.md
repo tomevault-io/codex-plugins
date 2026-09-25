@@ -1,26 +1,24 @@
 # BetterShift
 
-> Tome by [panteLx](https://github.com/panteLx/BetterShift) — distributed by [TomeVault](https://tomevault.io)
-
-Your favorite shift management application!
+> Tome by [panteLx](https://github.com/panteLx/BetterShift), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [panteLx/BetterShift](https://github.com/panteLx/BetterShift).
+Original source: `CLAUDE.md` in [panteLx/BetterShift](https://github.com/panteLx/BetterShift).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [panteLx/BetterShift](https://github.com/panteLx/BetterShift) — a repo with 165+ stars on GitHub.
+From [panteLx/BetterShift](https://github.com/panteLx/BetterShift) — a repo with 210+ stars on GitHub.
 
 ---
 
-Explore more instruction files on [TomeVault](https://tomevault.io) — the open index of AI config files for every platform.
+Explore more instruction files on [TomeVault](https://tomevault.io), the platform that grades AI instruction files and catches silent drift across every major tool.
 
 <!-- genome:t-e-s -->
