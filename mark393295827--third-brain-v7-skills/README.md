@@ -2,8 +2,6 @@
 
 > Sourced from [Mark393295827/third-brain-v7-skills](https://github.com/Mark393295827/third-brain-v7-skills), graded against the public Tome Standard and kept consistent across every major platform by [TomeVault](https://tomevault.io)
 
-agent wiki +engineering skills 
-
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
