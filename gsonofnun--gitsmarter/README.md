@@ -1,8 +1,6 @@
 # GitSmarter
 
-> Tome by [GSonofNun](https://github.com/GSonofNun/GitSmarter) — distributed by [TomeVault](https://tomevault.io)
-
-A fast, dependency-free native Git client for Windows. C++20, Direct2D, direct git-internals parsing, single ~2.5 MB executable.
+> Tome by [GSonofNun](https://github.com/GSonofNun/GitSmarter), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
@@ -17,7 +15,7 @@ Original source: `CLAUDE.md` in [GSonofNun/GitSmarter](https://github.com/GSonof
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/GSonofNun/GitSmarter](https://github.com/GSonofNun/GitSmarter)
+Graded against the Tome Standard, TomeVault's public ruleset for whether AI instructions load, read clearly and stay safe. Source: [github.com/GSonofNun/GitSmarter](https://github.com/GSonofNun/GitSmarter)
 
 ---
 
