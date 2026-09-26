@@ -1,0 +1,32 @@
+# MuseDock
+
+> Source: [renmengwen/MuseDock](https://github.com/renmengwen/MuseDock). Graded, signed and kept current as the models change by [TomeVault](https://tomevault.io)
+
+MuseDock 是一个本地优先的内容采集、素材整理和 AI 创作工作台。它把抖音内容采集、评论缓存、素材准备、音频转写、AI 拆解改写、TTS 口播、AI 分镜、人工校正和 HyperFrames MP4 渲染串在同一个 Web GUI 里，适合把短视频素材沉淀为可复用的本地创作资产。
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [renmengwen/MuseDock](https://github.com/renmengwen/MuseDock).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+## Bundled Skills (3)
+
+- [MuseDock](https://github.com/renmengwen/MuseDock/tree/main/server/resources/hyperframes-skills/SKILL.md)
+- [MuseDock](https://github.com/renmengwen/MuseDock/tree/main/server/resources/hyperframes-skills-official/SKILL.md)
+- [MuseDock](https://github.com/renmengwen/MuseDock/tree/main/opendesign/design-systems/tech-minimal-product/SKILL.md)
+
+Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/renmengwen/MuseDock](https://github.com/renmengwen/MuseDock)
+
+---
+
+Explore more instruction files on [TomeVault](https://tomevault.io), the platform that grades AI instruction files and catches silent drift across every major tool.
+
+<!-- genome:d-e-p -->
