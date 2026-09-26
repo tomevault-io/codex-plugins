@@ -1,83 +1,84 @@
-# CLAUDE.md
-
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
-
-This file is adapted from the hand-crafted [.github/copilot-instructions.md](.github/copilot-instructions.md), which has proven to work well for coding agents on this repo. Keep the two in sync when changing project-wide guidance.
+# OpenSfM AI Coding Instructions
 
 ## 1. Architecture & "Big Picture"
 OpenSfM is a Structure-from-Motion library with a hybrid architecture:
-- **Core Logic (C++)**: Heavy computational tasks (geometry, bundle adjustment, features, dense, map) live in C++ under `opensfm/src/lib/`. Each library (e.g., `geometry`, `bundle`, `sfm`, `map`) is laid out as `src/` (implementation), `test/` (gtest `*_test.cc`), and `python/` (PyBind11 bindings). They are exposed to Python as compiled modules (e.g., `pygeometry`, `pybundle`, `pymap`) and imported from the root package (e.g., `from opensfm import pygeometry`).
-- **Pipeline Layout (Python)**: Application logic, pipeline orchestration, and the CLI are in the Python `opensfm/` package.
-- **Two-layer commands**: `opensfm/commands/<name>.py` are thin CLI wrappers (subclass `CommandBase`, define `name`/`help`, parse args) that delegate to `opensfm/actions/<name>.py`, where the real `run_dataset(data, ...)` logic lives. Add new pipeline steps in both places.
+- **Core Logic (C++)**: Heavy computational tasks (geometry, bundle adjustment, features) are implemented in C++ under `opensfm/src/`. These are exposed to Python as compiled modules (e.g., `pygeometry`, `pymap`, `pfm`) using **PyBind11**.
+- **Pipeline Layout (Python)**: The application logic, pipeline orchestration, and user interface are in Python (`opensfm/` package).
 - **Data Abstraction**: The `DataSet` class (`opensfm/dataset.py`) is the central definition for filesystem interactions. All pipeline stages read/write to a hardcoded directory structure (`images/`, `config.yaml`, `reconstruction.json`) managed by this class.
 - **State Management**: The `Reconstruction` class (`opensfm/types.py`) wraps the C++ `pymap.Map` object. This pattern (Python class holding a C++ handle) is pervasive.
 
 ## 2. Key Developer Workflows
 
-> Always activate the conda environment at least once before building, running, or testing: `conda activate opensfm`.
-
 ### Building
-The project uses `scikit-build-core` to compile C++ extensions (config in `pyproject.toml`).
-- **Full Build**: `pip install -e .[test]` — builds C++ extensions plus tests and installs the package in editable mode. The build directory is `build/` (compiled `.so` files live there via editable redirect mode).
-- **Rebuild C++**: Re-run `pip install -e .` after changing `.cc` files.
-- **Dependencies**: Python deps are in `pyproject.toml`. The outer environment (C++ toolchain, libraries) is set up through `conda` and `conda.yml`. Any change to `conda.yml` requires recreating the env: `conda env create --file conda.yml --yes` then `conda activate opensfm`.
+The project uses `scikit-build-core` to compile C++ extensions.
+- **Full Build**: `pip install -e .[test]` (Builds C++ extensions and tests, and installs the package in editable mode).
+- **Rebuild C++**: Re-running `pip install -e .` is usually required after changing `.cc` files.
+- **Dependencies**: Managed via `pyproject.toml` for managing Python dependencies. Outer envinvironment (C++ toolchain, libraries) is set up through `conda` and the `conda.yml` file. Any change to `conda.yml` requires recreating the conda environment with `conda env create --file conda.yml --yes`, then activating it with `conda activate opensfm`. Note that before running the build commands, the conda environment must be activated once.
 
 ### Testing
-- **Frameworks**:
-    - Python: `pytest`, tests in `opensfm/test/test_*.py`.
-    - C++: `gtest`, tests in `opensfm/src/lib/<XXX>/test/*_test.cc`.
-- **Run Python tests**: `pytest opensfm/test/`. First run `export LD_PRELOAD=$CONDA_PREFIX/lib/libtcmalloc.so` (tcmalloc is mandatory). Run a single test with `pytest opensfm/test/test_foo.py::test_bar`. `not slow` excludes long integration tests.
-- **Run C++ tests**: built with `OPENSFM_BUILD_TESTS=ON`; run via `ctest --output-on-failure` from the CMake build directory.
-- **Coverage**: `./run_coverage.bash` (handles conda activation; defaults to `not slow`).
-- **Style**: favor many small tests with few asserts, ideally one function per test; only 1-2 larger integration tests per file. Prefer toy/synthetic examples that verify correctness, not just return semantics.
-- **Synthetic Data**: Python tests rely heavily on synthetic scenes generated in `opensfm/test/conftest.py` (e.g., fixtures `scene_synthetic`, `scene_synthetic_cube`).
+- **Framework**: 
+    - Python : `pytest` is used, and tests are in files `test_YYY.py` under `opensfm/test`.
+    - C++ : `gtest` is used. For a given library XXX, tests are put under `opensfm/src/XXX/test/` as `YYY_test.cc`.
+- **Style**: we favor many tests with few asserts and ideally one function to be tested. Only a few (1-2) larger integration tests per file. We also strive to test using toy examples to check for function correctness and not just check return semantics.
+- **Location**: `opensfm/test/` for Python tests. C++ tests are in `./cmake_build`.
+- **Synthetic Data**: Python tests heavily rely on synthetic scenes generated in `opensfm/test/conftest.py`. Look for fixtures like `scene_synthetic` or `scene_synthetic_cube`.
+- **Run Tests**: `pytest opensfm/test/` for Python tests. C++ tests can be run via `ctest` with `cd cmake_build && ctest --output-on-failure && cd ..`. Don't forget to activate the conda environment before running tests, and run `export LD_PRELOAD=$CONDA_PREFIX/lib/libtcmalloc.so` before running.
 
 ### Running the Pipeline
-- **Entry Point**: `bin/opensfm` (bash, sets `LD_PRELOAD` for tcmalloc) → `bin/opensfm_main.py` → `commands.command_runner`.
-- **Example**: `bin/opensfm reconstruct path/to/dataset` invokes `Command.run_impl` in `opensfm/commands/reconstruct.py`, which calls `actions/reconstruct.py::run_dataset`.
+- **Entry Point**: `bin/opensfm` (shell script) -> `bin/opensfm_main.py`.
+- **Commands**: Each CLI command (e.g., `detect_features`, `reconstruct`) is implemented as a module in `opensfm/commands/`.
+- **Example**: `bin/opensfm reconstruct path/to/dataset` invokes the `run()` method in `opensfm/commands/reconstruct.py`.
 
 ## 3. Coding Conventions & Patterns
 
 ### Python/C++ Interop
-- **Wrappers**: Prefer Python wrappers over raw C++ objects (e.g., use `opensfm.types.Reconstruction` instead of `opensfm.pymap.Map` where possible).
+- **Wrappers**: Do not use C++ objects directly if a Python wrapper exists (e.g., use `opensfm.types.Reconstruction` instead of `opensfm.pymap.Map` where possible). 
+- **Extensions**: C++ extensions are imported from the root package (e.g., `from opensfm import pygeometry`).
+
 
 ### Code Philosophy
-- **Readability**: Prioritize clear, simple, maintainable code. You're a seasoned engineer who knows real-world trade-offs — apply frameworks/design patterns only when strictly justified now, not for hypothetical futures. Use descriptive names; break complex functions into smaller, focused ones.
-- **Documentation**: Docstrings for all public functions/classes. For complex algorithms, comment the rationale and key steps.
-- **C++ Style**: Follow existing style; format with `clang-format` (`.clang-format` at repo root). Key points:
-    * Stick to STL and Eigen for data structures. Avoid OpenCV datastructures in C++, except for image resizing.
-    * Use SoA (Structure of Arrays) for performance-critical data like point clouds.
-    * Minimize heap allocation/fragmentation: prefer stack-allocated buffers; reuse heap buffers; avoid tiny allocations inside long loops.
-- **Design**: Reuse the core lib's data structures. Manipulating large reconstructions efficiently is paramount — minimize copies, apply Data-Oriented Design, and leverage GPU acceleration where possible.
+- **Readability**: Prioritize clear, simple and maintainable code. Avoid complicated constructs : you're an seasoned engineer that knows about real-world trade-offs, not a rookie trying to expose its design patterns knowledge. You'll use frameworks and design pattern when they're strictly justified at the present moment, not for an hypothetical future. Use descriptive variable and function names, and break down complex functions into smaller, focused ones.
+- **Documentation**: Document all public functions and classes with docstrings. For complex algorithms, include comments explaining the rationale and key steps.
+- **Testing**: Write tests for new features and bug fixes. Use the existing test suite as a reference for style and structure.
+- **C++ Style**: Follow the existing C++ style in the codebase. Use `clang-format` for consistent formatting. Key points:
+    * Stick to use STL and Eigen for data structures. Avoid using OpenCV datastructures in C++, except for image resizing.
+    * Use SoA structuring for performance critical data like point clouds.
+    * Strive to minimize heap allocation and fragmentation by using stack-allocated buffer. In case of heap-allocated, re-use buffers, and avoid tiny buffers in long for loops.
+- **Design**: For the data, try to re-use core lib's data structures. In addition, it is of upmost importance to be able to manipulate large reconstructions efficiently. We strive to handle large amounts of data, so minimize copy operations, use Data-Oriented Design principles, and leverage GPU acceleration where possible (e.g., for map rendering).
 
 ### Type Hinting
-- Codebase uses `pyre-strict`. New code needs complete type annotations; files often carry a `# pyre-strict` header.
+- **Strictness**: The codebase uses `pyre-strict`. Ensure all new code has complete type annotations. A comment `# pyre-strict` is often present at the top of files.
 
 ### Configuration
-- **Definition**: Default parameters are in `opensfm/config.py` (dataclass `OpenSfMConfig`) — also the reference doc for tunable parameters.
-- **Overrides**: Overridden by `config.yaml` in the dataset directory.
-- **Access**: `data.config['param_name']` where `data` is a `DataSet`.
+- **Definition**: Default parameters are in `opensfm/config.py` (dataclass `OpenSfMConfig`).
+- **Overrides**: Parameters are overridden by `config.yaml` in the dataset directory.
+- **Access**: Access config values via `data.config['param_name']` (where `data` is a `DataSet` instance).
 
 ## 4. Essential Files
-- `opensfm/dataset.py`: **READ THIS FIRST** for file I/O — defines where every file lives.
-- `opensfm/types.py`: Key data structures (`Reconstruction`, `Shot`, `Camera`).
-- `opensfm/config.py`: All tunable parameters.
-- `opensfm/src/lib/map/map.cc`: C++ backing implementation for `Reconstruction`.
-- `opensfm/commands/` + `opensfm/actions/`: CLI wrappers and their implementations.
+- `opensfm/dataset.py`: **READ THIS FIRST** when dealing with file I/O. Defines where every file lives.
+- `opensfm/types.py`: Defines key data structures (`Reconstruction`, `Shot`, `Camera`).
+- `opensfm/config.py`: Documentation for all tunable parameters.
+- `opensfm/src/map/map.cc`: The backing C++ implementation for `Reconstruction`.
+- `opensfm/commands/`: Implementation of individual pipeline steps.
 
 ## 5. Common Pitfalls
-- **Direct File Access**: Avoid manual `open()`. Use `dataset.load_*` / `dataset.save_*` to stay consistent with the expected directory structure.
-- **Geometry Types**: Be careful with rotation representations (angle-axis vs matrices). Check `pygeometry` helpers / `opensfm/src/lib/geometry/` when behavior is unclear.
-- **Skipping Conda**: Activate the conda environment at least once before building/running.
-- **tcmalloc**: Required at runtime — set `LD_PRELOAD=$CONDA_PREFIX/lib/libtcmalloc.so` (the `bin/opensfm` wrapper does this for you).
+- **Direct File Access**: Avoid manual `open()` calls. Use `dataset.load_*` and `dataset.save_*` methods to ensure consistency with the expected directory structure.
+- **Geometry Types**: Be careful with rotation representations (angle-axis vs matrices). `pygeometry` exposes helper functions; check `opensfm/src/geometry/` for implementation details if behavior is unclear.
+- **Skipping Conda**: when running or building the library, don't forget to activate the conda environment at least once.
 
-## 6. General Notes
-- **Multi-Platform**: Runs on Windows, Linux, macOS. Avoid platform-specific code; use cross-platform libraries (Qt for GUI, STL/Eigen for C++).
-- **Code edits**: Favor `sed`/`awk` for complex code replacements over ad-hoc Python scripts that open/write files directly, so changes stay clear and auditable.
+## 6. General Algorithmic Notes
+- **Multi-Platforms**: The codebase is designed to run on Windows, Linux, and macOS. Avoid platform-specific code unless absolutely necessary, and use cross-platform libraries (e.g., Qt for GUI, STL/Eigen for C++).
 
-## 7. Policy for Coding Agents
-- **No Git operations**: This is a shared repository. Do **not** perform Git operations (commit, push, pull, merge, rebase, etc.) — leave them to human developers so proper code review and collaboration are preserved. Only do so if the user explicitly asks in the current session.
+Always refer to instructions/memory.instructions.md for project-specific commands, style guides, and recent progress updates.
+
+If and only if the prompt iS MEMUPDATE, summarize the current state of the project in instructions/memory.instructions.md, including recent progress, lessons learned, and known technical debt. This information should be concise and focused on actionable insights for developers.
+
+## 7. For coding agents:
+- **STRICTLY FORBIDDEN**:
+    - Do not perform any Git operations (commits, pushes, pulls, merges, rebases, etc.). This is a shared repository and all Git operations must be performed by human developers to ensure proper code review and collaboration.
+- **BEST PRACTICES**:
+    - You will favor using bash tools such as sed or awk to perform complex code replacements, and avoid doing complex string manipulation in Python with ad-hoc scripts that open and write to files directly. This is to ensure that code changes are made in a clear and auditable way for humans, and to leverage the power of existing command-line tools for code transformation.
 
 ---
 > Source: [OpenSfM/OpenSfM](https://github.com/OpenSfM/OpenSfM) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-09-25 -->
+<!-- tomevault:4.0:agents_md:2026-09-26 -->
