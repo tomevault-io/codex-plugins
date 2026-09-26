@@ -1,0 +1,63 @@
+{
+  "name": "discovery",
+  "owner": "microsoft",
+  "repo": "discovery",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "discovery",
+      "path": ".github/skills/discovery-catalog/SKILL.md",
+      "github_url": "https://github.com/microsoft/discovery/tree/main/.github/skills/discovery-catalog/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "discovery",
+      "path": ".github/skills/discovery-services-agent-deployer/SKILL.md",
+      "github_url": "https://github.com/microsoft/discovery/tree/main/.github/skills/discovery-services-agent-deployer/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "discovery",
+      "path": ".github/skills/discovery-services-starter-kit-deployer/SKILL.md",
+      "github_url": "https://github.com/microsoft/discovery/tree/main/.github/skills/discovery-services-starter-kit-deployer/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/microsoft/discovery",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-09-26T08:35:11Z"
+}
