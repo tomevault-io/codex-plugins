@@ -1,15 +1,6 @@
-# spec-superflow v2.0.1 | opt-in
+# spec-superflow — opt-in
 
-Use the bundled agent skills in `skills/` to run the spec-superflow workflow.
-
-Start from `workflow-start` when a user wants to start, continue, resume, plan, implement, review, debug, close, or inspect a spec-superflow change.
-
-The workflow is self-contained and does not require OpenSpec or Superpowers at runtime. It uses OpenSpec-style planning artifacts and Superpowers-style execution discipline with direct or planned execution; contracts are legacy compatibility only.
-
-
-<!-- spec-superflow-phase-guard-start -->
-Use workflow-start only for an explicit spec-superflow request or a request to continue an active change containing `.spec-superflow.yaml`. Otherwise this workflow adds no constraints.
-<!-- spec-superflow-phase-guard-end -->
+仅当用户明确要求 spec-superflow，或用户要求继续的活动 change 含 `.spec-superflow.yaml` 时使用 `workflow-start`。否则正常处理任务，不应用 spec-superflow 门禁。通用 proposal、spec、design、tasks、contract 文件不是触发信号。
 
 ---
 > Source: [MageByte-Zero/spec-superflow](https://github.com/MageByte-Zero/spec-superflow) — distributed by [TomeVault](https://tomevault.io).
