@@ -1,141 +1,37 @@
-# Copilot Instructions — Shadmin
+## Principles
 
-Shadmin is a full-stack RBAC admin dashboard: Go backend (Gin + Ent ORM + Casbin) and React 19 frontend (Shadcn UI + TanStack Router/Query + Zustand).
+**Dependencies point one way.** Each module declares its contracts first; every layer knows only the layer beneath it, and frameworks stay at the edges. When an inner layer starts reaching outward, the design has broken — that, not a missing feature, is what degrades this template. Change the pattern on purpose, never by accident.
 
-## Build, Test, and Lint
+**Authorization is data, not code.** Permissions are facts in a database, resolved once at the boundary — not conditionals scattered through handlers. Adding a protected capability should mean *registering* it, never editing a permission list. The same instinct applies to menus: the backend owns them, the frontend only renders what it is given.
 
-### Backend (Go)
+**Security composes from independent gates.** Authentication, token validity, account state and authorization each stand alone, so no single mistake is enough to grant access.
 
-```bash
-go run .                        # Dev server on :55667
-go build -o shadmin .           # Production build
-go test ./...                   # All tests
-go test ./usecase/...           # Single package
-go test -run TestFuncName ./pkg/...  # Single test
-go fmt ./... && go vet ./...    # Format + lint (required before commit)
-go generate ./ent               # Regenerate Ent after schema changes
-go generate ./...               # Ent + Swagger (needs swag CLI)
-```
+**Every answer has one shape.** Requests, responses and pagination follow a single contract, defined once and reused everywhere. Uniformity here is a feature, not a style preference.
 
-### Frontend (web/)
+**Infrastructure is a choice, not an assumption.** Databases, storage and caches sit behind contracts and are selected by configuration, so swapping one out never reaches business logic. New behavior should be configurable by default, not hardcoded.
 
-```bash
-cd web
-pnpm install                    # Install deps (npm also works)
-pnpm dev                        # Dev server on :5173, proxies /api to :55667
-pnpm build                      # Type-check + Vite build → web/dist/
-pnpm lint                       # ESLint
-pnpm format:check               # Prettier check
-pnpm format                     # Prettier auto-fix
-```
+**Less is more.** The smallest change that fully answers the problem wins. Prefer deleting a branch over adding a flag, one obvious path over a configurable many, fewer files over more. Every line added is a line someone must read, test and maintain, so new code has to earn its place — if it can be simpler without losing behavior, it is not finished.
 
-### Pre-commit hook
+**Keep it simple (KISS).** Design for the problem in front of you, not the one you imagine later. Code that reads top-to-bottom beats clever indirection, and abstractions arrive when a second concrete caller proves them, never before. When two designs both work, choose the one with fewer moving parts.
 
-`.githooks/pre-commit` runs `go fmt`, `go vet`, `go test`, and frontend lint/format automatically.
+## Working here
 
-## Architecture
+- Keep changes minimal and in-scope; follow the idiom already in the file you are touching.
+- Verify before you claim done. The gates are cheap — run them.
+- This file and the skill describe one design. If you change the design, update both.
 
-### Backend — Clean Architecture Layers
+## Specifics live in the skill
 
-```
-main.go → cmd.Run() → bootstrap.App() → api.SetupRoutes() → api.Run()
-```
+`.agent/skills/shadmin-dev/` is the authoritative, step-by-step source for how things are actually built — read it before writing feature code. Everything under `.agent/` is the single source of truth; each agent's own directory (`.github/`, `.pi/`, `.claude/`) links back to it.
 
-Request flow: **Route → Middleware (JWT + Casbin) → Controller → Usecase → Repository → Ent/DB**
-
-| Layer | Directory | Responsibility |
-|-------|-----------|---------------|
-| Domain | `domain/` | Entities, DTOs, Repository/UseCase interfaces, errors, `RespSuccess()`/`RespError()` response helpers |
-| Schema | `ent/schema/` | Ent ORM schema definitions (run `go generate ./ent` after changes) |
-| Repository | `repository/` | Ent data access + domain↔ent model conversion |
-| Usecase | `usecase/` | Business logic with `context.WithTimeout`, error wrapping (`%w`) |
-| Controller | `api/controller/` | HTTP parsing only (`ShouldBindJSON`/`Query`/`Param`), Swagger annotations, no business logic |
-| Route | `api/route/` | Route registration, middleware wiring |
-| Factory | `api/route/factory.go` | DI: creates Repository → Usecase → Controller chains |
-| Bootstrap | `bootstarp/` | App init, DB, Casbin, storage, seed data (note: directory has a typo) |
-
-### Frontend — Feature-Based Structure
-
-```
-web/src/
-├── routes/            # TanStack file-based routing (auto code-split)
-│   ├── (auth)/        # Public auth routes
-│   ├── (errors)/      # Error pages
-│   └── _authenticated/ # Protected routes (JWT guard in beforeLoad)
-├── features/          # Feature modules (pages, components, hooks, schemas)
-├── services/          # API wrappers using Axios (return response.data.data)
-├── stores/            # Zustand stores (auth-store with permissions)
-├── components/ui/     # Shadcn UI primitives
-├── hooks/             # Custom hooks (useDebounce, usePermission, useTableUrlState)
-├── types/             # Shared TypeScript interfaces
-├── lib/               # Utilities (cn(), handleServerError, menu-utils)
-└── context/           # Providers (theme, font, layout, search)
-```
-
-### Auth & Permissions
-
-- **Authentication**: JWT access + refresh tokens. Middleware extracts claims into Gin context (`x-user-*` keys).
-- **Authorization**: Casbin checks `(userID, path, method)` on `/api/v1/system/*` routes via `CheckAPIPermission()` middleware.
-- **Frontend**: `auth-store` exposes `hasPermission()`, `hasRole()`, `canAccessMenu()`. Use `PermissionButton`/`PermissionGuard` for gated UI.
-- **Login security**: 3 failed attempts → 1-minute lockout (`internal/login_security.go`).
-
-### Database & Storage
-
-- Default SQLite (`.database/data.db`). Set `DB_TYPE=postgres|mysql` + `DB_DSN` for others.
-- Auto-migration on startup.
-- File storage: `STORAGE_TYPE=disk|minio` with abstract interface in `domain/`.
-
-## Key Conventions
-
-### Adding a Backend Feature (layer-by-layer order)
-
-1. `domain/<resource>.go` — Entity struct, Create/Update request DTOs, QueryFilter (embed `domain.QueryParams`), Repository + UseCase interfaces, sentinel errors
-2. `ent/schema/<resource>.go` — DB schema → run `go generate ./ent`
-3. `repository/<resource>_repository.go` — Ent CRUD, domain↔ent converters, pagination via `domain.ValidateQueryParams()`
-4. `usecase/<resource>_usecase.go` — `context.WithTimeout`, validation, cross-repo orchestration, `fmt.Errorf("...: %w", err)`
-5. `api/controller/<resource>_controller.go` — Parse request, call usecase, return `domain.RespSuccess()`/`domain.RespError()` with proper HTTP status
-6. `api/route/` — Register routes (REST: GET list, POST create, GET :id, PUT :id, DELETE :id). Protected system routes use `casbinMiddleware.CheckAPIPermission()`
-7. `api/route/factory.go` — Wire Repository → Usecase → Controller using `f.db`/`f.app`/`f.timeout`
-
-### Adding a Frontend Feature
-
-1. `web/src/types/` — Request/response types aligned with backend domain
-2. `web/src/services/<resource>Api.ts` — Axios CRUD wrappers using `apiClient`
-3. `web/src/features/<feature>/` — Page index, `components/` (table, dialog, form), `hooks/` (React Query), `data/schema.ts` (Zod)
-4. `web/src/routes/_authenticated/` — Route file referencing feature component
-
-### Response Format (backend)
-
-All API responses use `domain.Response{Code, Msg, Data}`. Code `0` = success, `1` = error. Paginated results use `domain.PagedResult[T]` with `list`, `total`, `page`, `page_size`, `total_pages`.
-
-### Naming
-
-- **Go files/packages**: `lower_snake` (e.g., `loginlog_repository.go`)
-- **Go exports**: PascalCase; receivers: short and meaningful
-- **Frontend components**: PascalCase `.tsx` (e.g., `UsersTable.tsx`)
-- **Frontend utilities/hooks**: kebab-case `.ts` (e.g., `use-debounce.ts`, `handle-server-error.ts`)
-- **Frontend imports**: always use `@/` alias, never relative paths beyond `./`
-
-### Commits
-
-Conventional Commits (`feat:`, `fix:`, `chore:`, `docs:`). Subject ≤ 72 chars. Branches: `feat/*`, `fix/*`, `chore/*`, `docs/*`.
-
-### Quality Gates
-
-Before committing:
-- Backend: `go fmt ./...` → `go vet ./...` → `go test ./...`
-- Frontend (if changed): `pnpm lint` → `pnpm format:check`
-- Schema changes: `go generate ./ent`
-- API changes: regenerate Swagger
-
-### Don'ts
-
-- No business logic in controllers or routes
-- No bypassing Casbin on protected APIs
-- No unnecessary third-party dependencies
-- No touching unrelated files in a change
-- No hardcoded menus in frontend (menus come from backend `/api/v1/resources`)
+| Need | Read |
+| --- | --- |
+| Workflow, layer responsibilities, boundaries, permissions | `.agent/skills/shadmin-dev/SKILL.md` |
+| Backend patterns — domain, Ent, repository, usecase, controller, routes | `.agent/skills/shadmin-dev/references/backend.md` |
+| Frontend patterns — types, services, features, hooks, forms, routes | `.agent/skills/shadmin-dev/references/frontend.md` |
+| Build/test/lint commands, bootstrap, config, conventions | `.agent/CONTRIBUTING.md` |
+| Architecture walkthrough | `docs/getting-started/architecture.en.md` |
 
 ---
 > Source: [ahaodev/shadmin](https://github.com/ahaodev/shadmin) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-04-20 -->
+<!-- tomevault:4.0:agents_md:2026-09-25 -->
