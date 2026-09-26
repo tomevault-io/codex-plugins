@@ -1,0 +1,34 @@
+# agentic-reports
+
+> Tome by [ruvnet](https://github.com/ruvnet/agentic-reports), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [ruvnet/agentic-reports](https://github.com/ruvnet/agentic-reports).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+## Bundled Skills (3)
+
+- [agentic-reports](https://github.com/ruvnet/agentic-reports/tree/main/.harness/generated/.claude/skills/evolve/SKILL.md)
+- [agentic-reports](https://github.com/ruvnet/agentic-reports/tree/main/.harness/generated/.claude/skills/plan-change/SKILL.md)
+- [agentic-reports](https://github.com/ruvnet/agentic-reports/tree/main/.harness/generated/.claude/skills/memory-inspect/SKILL.md)
+
+From [ruvnet/agentic-reports](https://github.com/ruvnet/agentic-reports) — a repo with 53+ stars on GitHub.
+
+---
+
+Install this config instantly:
+```
+npx tomevault install ruvnet/agentic-reports
+```
+Source: [github.com/ruvnet/agentic-reports](https://github.com/ruvnet/agentic-reports).
+
+<!-- genome:t-i-s -->
