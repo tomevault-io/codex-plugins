@@ -2,15 +2,14 @@
 
 > Tome by [spytensor](https://github.com/spytensor/openmozi), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
 
-A custom Agent OS built to be hackable, heavily inspired by OpenClaw.
-
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [spytensor/openmozi](https://github.com/spytensor/openmozi).
+Original source: `` in [spytensor/openmozi](https://github.com/spytensor/openmozi).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
