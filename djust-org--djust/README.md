@@ -1,16 +1,15 @@
 # djust
 
-> Source: [djust-org/djust](https://github.com/djust-org/djust) — distributed by [TomeVault](https://tomevault.io)
-
-Phoenix LiveView-style reactive server-side rendering for Django with Rust-powered performance
+> Source: [djust-org/djust](https://github.com/djust-org/djust). Graded, signed and kept current as the models change by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [djust-org/djust](https://github.com/djust-org/djust).
+Original source: `` in [djust-org/djust](https://github.com/djust-org/djust).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
@@ -21,6 +20,6 @@ Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Sou
 
 ---
 
-Explore more instruction files on [TomeVault](https://tomevault.io) — the open index of AI config files for every platform.
+Explore more instruction files on [TomeVault](https://tomevault.io), the platform that grades AI instruction files and catches silent drift across every major tool.
 
 <!-- genome:d-e-p -->
