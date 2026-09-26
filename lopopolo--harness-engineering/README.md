@@ -1,8 +1,6 @@
 # harness-engineering
 
-> Source: [lopopolo/harness-engineering](https://github.com/lopopolo/harness-engineering) — distributed by [TomeVault](https://tomevault.io)
-
-Ryan Lopopolo’s anthology, field guide, and agent context bundle for harness engineering
+> Source: [lopopolo/harness-engineering](https://github.com/lopopolo/harness-engineering). Graded, signed and kept current as the models change by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
@@ -17,7 +15,7 @@ Original source: `CLAUDE.md` in [lopopolo/harness-engineering](https://github.co
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [lopopolo/harness-engineering](https://github.com/lopopolo/harness-engineering) — a repo with 14+ stars on GitHub.
+From [lopopolo/harness-engineering](https://github.com/lopopolo/harness-engineering) — a repo with 2699+ stars on GitHub.
 
 ---
 
