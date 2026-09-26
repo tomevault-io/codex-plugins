@@ -1,0 +1,255 @@
+{
+  "name": "GuideAnts",
+  "owner": "Elumenotion",
+  "repo": "GuideAnts",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "GuideAnts",
+      "path": "samples/skills/_template/SKILL.md",
+      "github_url": "https://github.com/Elumenotion/GuideAnts/tree/main/samples/skills/_template/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "GuideAnts",
+      "path": "samples/skills/html-craft/SKILL.md",
+      "github_url": "https://github.com/Elumenotion/GuideAnts/tree/main/samples/skills/html-craft/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "GuideAnts",
+      "path": "samples/skills/mssql-query/SKILL.md",
+      "github_url": "https://github.com/Elumenotion/GuideAnts/tree/main/samples/skills/mssql-query/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "GuideAnts",
+      "path": "samples/skills/searxng-search/SKILL.md",
+      "github_url": "https://github.com/Elumenotion/GuideAnts/tree/main/samples/skills/searxng-search/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "GuideAnts",
+      "path": "samples/skills/transcript-to-pdf/SKILL.md",
+      "github_url": "https://github.com/Elumenotion/GuideAnts/tree/main/samples/skills/transcript-to-pdf/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "GuideAnts",
+      "path": "samples/skills/audiocpp skills/audiocpp/SKILL.md",
+      "github_url": "https://github.com/Elumenotion/GuideAnts/tree/main/samples/skills/audiocpp skills/audiocpp/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "GuideAnts",
+      "path": "samples/skills/host-ssh skills/host-ssh/SKILL.md",
+      "github_url": "https://github.com/Elumenotion/GuideAnts/tree/main/samples/skills/host-ssh skills/host-ssh/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "GuideAnts",
+      "path": "samples/skills/audiocpp skills/audiocpp-asr/SKILL.md",
+      "github_url": "https://github.com/Elumenotion/GuideAnts/tree/main/samples/skills/audiocpp skills/audiocpp-asr/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "GuideAnts",
+      "path": "samples/skills/qwen-image skills/qwen-image/SKILL.md",
+      "github_url": "https://github.com/Elumenotion/GuideAnts/tree/main/samples/skills/qwen-image skills/qwen-image/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "GuideAnts",
+      "path": "samples/skills/video-production/video-timeline/SKILL.md",
+      "github_url": "https://github.com/Elumenotion/GuideAnts/tree/main/samples/skills/video-production/video-timeline/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "GuideAnts",
+      "path": "samples/skills/audiocpp skills/audiocpp-diarize/SKILL.md",
+      "github_url": "https://github.com/Elumenotion/GuideAnts/tree/main/samples/skills/audiocpp skills/audiocpp-diarize/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "GuideAnts",
+      "path": "samples/skills/talking-head skills/talking-head/SKILL.md",
+      "github_url": "https://github.com/Elumenotion/GuideAnts/tree/main/samples/skills/talking-head skills/talking-head/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "GuideAnts",
+      "path": "samples/guides/Audiocpp/Skills/audiocpp-diarize/SKILL.md",
+      "github_url": "https://github.com/Elumenotion/GuideAnts/tree/main/samples/guides/Audiocpp/Skills/audiocpp-diarize/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "GuideAnts",
+      "path": "samples/guides/Audiocpp/Skills/audiocpp-extended/SKILL.md",
+      "github_url": "https://github.com/Elumenotion/GuideAnts/tree/main/samples/guides/Audiocpp/Skills/audiocpp-extended/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "GuideAnts",
+      "path": "samples/skills/qwen-image skills/qwen-image-edit/SKILL.md",
+      "github_url": "https://github.com/Elumenotion/GuideAnts/tree/main/samples/skills/qwen-image skills/qwen-image-edit/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "GuideAnts",
+      "path": "samples/skills/audiocpp skills/audiocpp-host-tts/SKILL.md",
+      "github_url": "https://github.com/Elumenotion/GuideAnts/tree/main/samples/skills/audiocpp skills/audiocpp-host-tts/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "GuideAnts",
+      "path": "samples/guides/Audiocpp/Skills/audiocpp-host-tts/SKILL.md",
+      "github_url": "https://github.com/Elumenotion/GuideAnts/tree/main/samples/guides/Audiocpp/Skills/audiocpp-host-tts/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "GuideAnts",
+      "path": "samples/skills/audiocpp skills/audiocpp-voice-clone/SKILL.md",
+      "github_url": "https://github.com/Elumenotion/GuideAnts/tree/main/samples/skills/audiocpp skills/audiocpp-voice-clone/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "GuideAnts",
+      "path": "samples/skills/qwen-image skills/qwen-image-inpaint/SKILL.md",
+      "github_url": "https://github.com/Elumenotion/GuideAnts/tree/main/samples/skills/qwen-image skills/qwen-image-inpaint/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "GuideAnts",
+      "path": "samples/guides/Audiocpp/Skills/audiocpp-voice-clone/SKILL.md",
+      "github_url": "https://github.com/Elumenotion/GuideAnts/tree/main/samples/guides/Audiocpp/Skills/audiocpp-voice-clone/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "GuideAnts",
+      "path": "src/client/playwright/fixtures/skills/searxng-search/SKILL.md",
+      "github_url": "https://github.com/Elumenotion/GuideAnts/tree/main/src/client/playwright/fixtures/skills/searxng-search/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "GuideAnts",
+      "path": "samples/skills/audiocpp skills/audiocpp-tts-controls/SKILL.md",
+      "github_url": "https://github.com/Elumenotion/GuideAnts/tree/main/samples/skills/audiocpp skills/audiocpp-tts-controls/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "GuideAnts",
+      "path": "samples/skills/qwen-image skills/qwen-image-generate/SKILL.md",
+      "github_url": "https://github.com/Elumenotion/GuideAnts/tree/main/samples/skills/qwen-image skills/qwen-image-generate/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "GuideAnts",
+      "path": "samples/skills/audiocpp skills/audiocpp-deferred-tts/SKILL.md",
+      "github_url": "https://github.com/Elumenotion/GuideAnts/tree/main/samples/skills/audiocpp skills/audiocpp-deferred-tts/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "GuideAnts",
+      "path": "samples/guides/Audiocpp/Skills/audiocpp-deferred-tts/SKILL.md",
+      "github_url": "https://github.com/Elumenotion/GuideAnts/tree/main/samples/guides/Audiocpp/Skills/audiocpp-deferred-tts/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "GuideAnts",
+      "path": "samples/guides/Audiocpp/Skills/audiocpp-tts-controls/SKILL.md",
+      "github_url": "https://github.com/Elumenotion/GuideAnts/tree/main/samples/guides/Audiocpp/Skills/audiocpp-tts-controls/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "GuideAnts",
+      "path": "samples/guides/Audiocpp/Skills/audiocpp-asr-extended/SKILL.md",
+      "github_url": "https://github.com/Elumenotion/GuideAnts/tree/main/samples/guides/Audiocpp/Skills/audiocpp-asr-extended/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "GuideAnts",
+      "path": "src/client/playwright/fixtures/skills/docker-management/SKILL.md",
+      "github_url": "https://github.com/Elumenotion/GuideAnts/tree/main/src/client/playwright/fixtures/skills/docker-management/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "GuideAnts",
+      "path": "src/client/playwright/fixtures/skills/ocr-and-documents/SKILL.md",
+      "github_url": "https://github.com/Elumenotion/GuideAnts/tree/main/src/client/playwright/fixtures/skills/ocr-and-documents/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "GuideAnts",
+      "path": "samples/skills/audiocpp skills/audiocpp-timed-transcript/SKILL.md",
+      "github_url": "https://github.com/Elumenotion/GuideAnts/tree/main/samples/skills/audiocpp skills/audiocpp-timed-transcript/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "GuideAnts",
+      "path": "src/client/playwright/fixtures/skills/invalid-missing-name/SKILL.md",
+      "github_url": "https://github.com/Elumenotion/GuideAnts/tree/main/src/client/playwright/fixtures/skills/invalid-missing-name/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "GuideAnts",
+      "path": "src/client/playwright/fixtures/skills/pptx-author-collision/SKILL.md",
+      "github_url": "https://github.com/Elumenotion/GuideAnts/tree/main/src/client/playwright/fixtures/skills/pptx-author-collision/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "GuideAnts",
+      "path": "samples/skills/video-production/session-ingestion-scripting/SKILL.md",
+      "github_url": "https://github.com/Elumenotion/GuideAnts/tree/main/samples/skills/video-production/session-ingestion-scripting/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "GuideAnts",
+      "path": "src/client/playwright/fixtures/skills/kanban-video-orchestrator/SKILL.md",
+      "github_url": "https://github.com/Elumenotion/GuideAnts/tree/main/src/client/playwright/fixtures/skills/kanban-video-orchestrator/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "GuideAnts",
+      "path": "src/server/GuideAntsApi/Resources/bootstrap/guides/pptx-guide/Skills/pptx-author/SKILL.md",
+      "github_url": "https://github.com/Elumenotion/GuideAnts/tree/main/src/server/GuideAntsApi/Resources/bootstrap/guides/pptx-guide/Skills/pptx-author/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/Elumenotion/GuideAnts",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-09-26T08:38:26Z"
+}
