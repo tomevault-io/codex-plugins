@@ -1,0 +1,29 @@
+# AI instruction files for agentic-orchestrator
+
+> Sourced from [doordash-oss/agentic-orchestrator](https://github.com/doordash-oss/agentic-orchestrator), graded against the public Tome Standard and kept consistent across every major platform by [TomeVault](https://tomevault.io)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `` in [doordash-oss/agentic-orchestrator](https://github.com/doordash-oss/agentic-orchestrator).
+
+## Also available for
+
+- **Claude Code** — `CLAUDE.md`
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+From [doordash-oss/agentic-orchestrator](https://github.com/doordash-oss/agentic-orchestrator) — a repo with 108+ stars on GitHub.
+
+---
+
+Install this config instantly:
+```
+npx tomevault install doordash-oss/agentic-orchestrator
+```
+Source: [github.com/doordash-oss/agentic-orchestrator](https://github.com/doordash-oss/agentic-orchestrator).
+
+<!-- genome:a-i-s -->
