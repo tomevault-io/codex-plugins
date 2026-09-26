@@ -2,9 +2,9 @@
   "name": "LayerScape",
   "owner": "splrad",
   "repo": "LayerScape",
-  "description": "CAD \u5b57\u4f53\u7f3a\u5931\u68c0\u6d4b\u4e0e\u81ea\u52a8\u66ff\u6362\u63d2\u4ef6",
+  "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/splrad/LayerScape",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-08-11T20:49:04Z"
+  "distributed_at": "2026-09-26T20:18:47Z"
 }
