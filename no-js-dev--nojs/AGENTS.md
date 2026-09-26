@@ -1,97 +1,111 @@
-# CLAUDE.md
+# No.JS Framework — Project Guidelines
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+## Overview
 
-## What This Is
-
-Static HTML/CSS documentation site for the NoJS framework. No build step, no bundler, no package manager — just plain `.html` files and one shared `style.css`. Designed to be opened directly in a browser or served from any static host.
-
-## Development
-
-```bash
-# Serve locally (any static server works)
-npx serve .              # or python3 -m http.server 8000
-open index.html          # or just open files directly in a browser
-```
-
-There are no tests, no linting, and no CI. Changes are verified visually in a browser. After editing, open the affected page and check both desktop and mobile (≤600px) viewports.
+No.JS is an HTML-first reactive framework with zero dependencies. Users build dynamic web apps using HTML attributes only — no JavaScript required. Distributed via CDN (`cdn.no-js.dev`).
 
 ## Architecture
 
-### Architecture
-
-Single-page application (SPA) powered by NoJS's `route-view` directive with file-based routing. Two entry points (`index.html` and `404.html`) share the same layout shell and load page content from `templates/*.tpl` files.
-
-| Route | Template | Purpose |
-|-------|----------|---------|
-| `/` (home) | `templates/home.tpl` | Landing page with hero, feature cards, directive showcases, and getting-started |
-| `/features` | `templates/features.tpl` | Feature overview grid |
-| `/docs` | `templates/docs.tpl` | Reference documentation with sidebar navigation and TOC |
-| `/examples` | `templates/examples.tpl` | Interactive code examples organized by directive category |
-| `/faq` | `templates/faq.tpl` | Accordion-style Q&A |
-| `/playground` | `templates/playground.tpl` | Split-pane code editor with live preview |
-
-### Shared Layout Pattern
-
-Both `index.html` and `404.html` follow the same DOM skeleton:
-
 ```
-<div class="layout-container">
-  <div class="nojs-glow" />        ← radial glow background
-  <div class="nojs-grid" />        ← dotted grid background
-  <nav class="sticky-nav" />       ← shared sticky header (logo + links + GitHub)
-  <div class="page-transition-wrapper">
-    <div route-view />              ← SPA route outlet (loads templates/*.tpl)
-    <footer class="site-footer" />  ← 3-column footer
-  </div>
-</div>
+src/
+├── index.js          # Public API: NoJS.config(), init(), directive(), filter(), validator(), etc.
+├── cdn.js            # CDN entry: exposes window.NoJS, auto-inits on DOMContentLoaded
+├── globals.js        # All shared state (_config, _filters, _stores, _eventBus, etc.)
+├── context.js        # Reactive proxy contexts with change tracking and batching
+├── evaluate.js       # Expression parser: evaluate(), resolve(), _interpolate()
+├── registry.js       # registerDirective(), processTree() — DOM tree walking
+├── dom.js            # DOM helpers, template loading, HTML sanitization
+├── router.js         # SPA router: path matching, guards, nested routes, prefetch
+├── i18n.js           # Locale switching, namespace loading, pluralization
+├── filters.js        # 32+ built-in filters (side-effect registration)
+├── animations.js     # Transitions and stagger support
+├── fetch.js          # Declarative HTTP (get/post/put/patch/delete)
+├── devtools.js       # Browser devtools bridge
+└── directives/       # One file per directive category (state, http, binding, loops, etc.)
 ```
 
-The `route-view` element uses `src="templates/"` and `route-index="home"` for file-based routing. Page templates are `.tpl` files with i18n namespace auto-derivation via the `i18n-ns` attribute.
-
-### Inline JavaScript
-
-Minimal — only vanilla `<script>` blocks at the end of `<body>` in the entry HTML files:
-
-- **index.html / 404.html**: Playground engine lazy-loader, hero editor init, diamond animation delay shuffler, TOC builder + scrollspy, sticky nav scroll handler, custom `highlight` directive registration
-- **playground/engine.js**: Full playground engine (syntax highlighting, file management, preview iframe)
-- **playground/editor.js**: Reusable lightweight code editor component
-
-NoJS framework and NoJS Elements are loaded from CDN (`cdn.no-js.dev`, `cdn-elements.no-js.dev`).
-
-### CSS Design System (`style.css`)
-
-Single 3000+ line file. Key tokens in `:root`:
-
-- Fonts: `--font-sans` (Geist), `--font-mono` (Geist Mono) — loaded from Google Fonts
-- Colors: `--bg-color` (#07080b), `--accent-blue` (#2563eb), `--text-primary/secondary/muted`, `--glass-bg`, `--border-color`
-- Semantic: `--error` (#ef4444), `--success` (#22c55e)
-- Layout: `--max-width-section` (72rem / 1152px), `--max-width-content` (48rem / 768px)
-
-Major CSS features:
-- **View Transitions API**: `@view-transition { navigation: auto }` with named transitions on `.sticky-nav`, `.page-transition-wrapper`, and `.hero-header` for cross-page fades
-- **Isometric background**: `.nojs-diamond` elements use `scaleY(0.57735) rotate(±45°)` to create a projected grid; `moving-highlight` keyframe animation cycles border glow across 8 staggered delay classes
-- **Responsive breakpoints**: 768px (stack showcases, fade diamonds) and 600px (single-column, hide GitHub button, hide isometric overlay)
-
-### Design Reference
-
-`DESIGN.md` contains the formal design system spec (YAML frontmatter + markdown) defining exact color values, typography scales, spacing tokens, component definitions, and isometric grid rules. Treat it as the source of truth for visual decisions.
-
-### Other Files
-
-- `index.bkp.html` — backup of an earlier index.html version
-- `isometric-grid.glsl` — GLSL fragment shader reference for the isometric grid visual (not used at runtime)
-- `design.pen` — Penpot design file export
-- `design-md-repo/` — cloned reference repo for the DESIGN.md spec format
+- **Directives** register via `registerDirective(name, handler)` and are invoked by `processTree()` during DOM walking
+- **Directive priority**: 0 (state/store) → 1 (fetch/i18n/head) → 2 (computed/watch) → 5 (ref) → 10 (structural: if/each/for/use) → 15 (dnd) → 20 (bind/events/style/model) → 30 (validate)
+- **Reactivity** uses JavaScript `Proxy` objects in `createContext()` with `_startBatch()` / `_endBatch()` for batched updates
+- **Global state** lives exclusively in `globals.js` — all modules import from there
 
 ## Conventions
 
-- Dark theme only — all colors assume `--bg-color: #07080b` background
-- Syntax highlighting in code blocks uses manual `<span>` classes: `.hl-tag`, `.hl-attr`, `.hl-str`, `.hl-cmt`, `.hl-kw`, `.hl-fn`, `.hl-num`, `.hl-op`, `.hl-prop`, `.hl-sel` (docs pages). The landing page hero editor uses a legacy set: `.tok-tag`, `.tok-attr`, `.tok-str`, `.tok-punc`, `.tok-mustache`
-- SVG icons are inlined, not loaded from an icon library
-- No `<div>` soup — semantic elements (`<nav>`, `<main>`, `<header>`, `<footer>`, `<article>`, `<section>`, `<details>`) are used throughout
-- When adding a new page: create a new `templates/<name>.tpl` file — file-based routing resolves it automatically. Add a nav link with `route="/<name>"` and i18n keys to the shell locale files
+- **Private API**: prefix with `_` (e.g., `_config`, `_loadRemoteTemplates()`)
+- **Public API**: exported via `src/index.js` on the `NoJS` object
+- **Side-effect imports**: directives and filters self-register on import
+- **Logging**: use `_log()` / `_warn()` (respects `_config.debug`), never `console.log`
+- **Cache maps**: use `Map` objects (`_templateHtmlCache`, `_i18nCache`)
+
+## Build
+
+```sh
+node build.js        # → dist/iife/no.js (esbuild, minified + sourcemaps)
+```
+
+Build target is ES2020. Single output format: IIFE (`src/cdn.js`). Version must be updated in **both** `package.json:3` and `src/index.js:493`.
+
+## Testing
+
+```sh
+npm test                  # Jest unit tests (jsdom environment)
+npm run test:e2e          # Playwright E2E tests (chromium, firefox, webkit)
+npm run test:all          # Both unit + E2E
+npm run bench             # Performance benchmarks (__benchmarks__/)
+```
+
+- Unit tests: `__tests__/*.test.js`, one file per module. Coverage target: ≥80% on new code.
+- E2E tests: `e2e/tests/*.spec.ts` + fixtures in `e2e/examples/*.html`. Use `data-test` attributes for selectors. Cross-browser required.
+- Single file: `npx jest --no-coverage __tests__/filters.test.js`
+- Environment: `jest-environment-jsdom` with `@testing-library/jest-dom`
+
+## Documentation Site
+
+- Dev server: `npm start` → `http://localhost:3000`
+- Templates: `docs/templates/*.tpl` — no hardcoded text, always `t="key.path"` i18n placeholders
+- Locales: `docs/locales/{en,es,pt,fr,it}/` — JSON files per namespace, `en` is source of truth
+- Production: loads `https://cdn.no-js.dev/`. Switch to `./no.js` in `docs/index.html` for local testing.
+
+## Safety Rules
+
+These are mandatory — each originated from a real tracked bug.
+
+1. **Disposal before clearing**: Always `_disposeTree()` children before `innerHTML = ""`. Iterate `el.children`, not the parent.
+2. **Listener cleanup**: `_onDispose(() => el.removeEventListener(...))` immediately after every `addEventListener`. Exception: `{ once: true }`.
+3. **Watcher unsubscribe**: Capture `ctx.$watch()` return, register via `_onDispose()`.
+4. **Timer guards**: `if (!el.isConnected) { clearInterval(id); return; }` + `_onDispose(() => clearInterval(id))`.
+5. **HTML sanitization**: DOMParser-based, never regex. URL attrs pass through `_sanitizeAttrValue()`.
+6. **Expression resolution**: Allow-list only (`_SAFE_GLOBALS`, `_BROWSER_GLOBALS`). Never eval/Function.
+7. **Expression errors**: Catch, `_warn()`, return `undefined`. One bad attr must not kill the page.
+8. **Cloned elements**: Strip directive attributes before `processTree()`.
+
+## Commit & Release
+
+Conventional commits: `<type>[scope][!]: <description>`. Types: `feat` (MINOR), `fix` (PATCH), `perf` (MINOR), `docs`/`chore`/`refactor`/`test`/`style`/`ci` (PATCH). `BREAKING CHANGE:` or `!` → MAJOR.
+
+### Ecosystem versioning
+
+All 3 repos share the same version — never bump individually:
+
+| Repo | Version locations | Publish |
+|------|-------------------|---------|
+| **NoJS** | `package.json:3` + `src/index.js:493` | nothing (CDN-only) |
+| **NoJS-LSP** | `package.json:5` | `npx vsce package` (VSIX) |
+| **NoJS-Skill** | `SKILL.md:4` (frontmatter) | none |
+
+### Release order
+
+bump → changelog → build → commit on `release/v<x.y.z>` → push → PR → merge → tag (`git tag v<x.y.z>`) → publish → cleanup branches → verify.
+
+### Sync mapping
+
+| Framework change | LSP updates | Skill updates |
+|-----------------|-------------|---------------|
+| New/changed directive | `directives.json`, `snippets/nojs.json`, `nojs-custom-data.json` | `references/directives.md`, `SKILL.md` |
+| New/changed filter | `filters.json` | `references/filters.md`, `SKILL.md` |
+| New/changed validator | `validators.json` | `references/validation.md` |
+| New config/API | config support | `references/api.md`, `SKILL.md` |
 
 ---
 > Source: [no-js-dev/nojs](https://github.com/no-js-dev/nojs) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-09-25 -->
+<!-- tomevault:4.0:agents_md:2026-09-26 -->
