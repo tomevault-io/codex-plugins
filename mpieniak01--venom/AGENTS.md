@@ -1,21 +1,43 @@
-## Copilot Coding Agent — Minimal Operating Contract
 
-Pełne zasady są w `docs/AGENTS.md` (source of truth). Ten plik jest skrótem.
+# Coding Agent Hard Gate (Repository Instruction)
 
-1. Przed zakończeniem zadania uruchom `make pr-fast`.
-2. Jeśli gate failuje, napraw i uruchom ponownie do zielonego wyniku (lub użyj ścieżki blokera środowiskowego z `docs/AGENTS.md`).
-3. Dla zmian markdown-only (wszystkie zmienione pliki to `*.md`, niezależnie od katalogu) hard gate można pominąć.
-4. W raporcie końcowym podaj: komendy, pass/fail, changed-lines coverage (lub `N/A` dla markdown-only), ryzyka/skipy z uzasadnieniem.
-5. Nie maskuj statusu walidacji pipeline bez `set -o pipefail`.
-6. Dla workspace Venom trzymaj local-first jako domyślny kontrakt:
-   - start od `git status --short`, `git diff --stat` i `#codebase`,
-   - traktuj local semantic index jako canonical knowledge base,
-   - używaj `.github/agents/*` i `.github/prompts/*` jako jawnych kontraktów ról i promptow,
-   - nie dokładaj drugiego, równoległego stosu wiedzy bez jawnej decyzji w planie.
-7. Dla repo-truth intentow (`sprawdz status git`, `stan repo`, `git status`, `repo git`) aktywny agent ma najpierw wykonac handoff przez `agent` / `runSubagent` do `Venom Local-First Orchestrator` albo `Venom Full Agent`, a nie uruchamiac bezposrednio `terminal`; po powrocie zwraca evidence, nie plan ani liste komend.
-8. Jeśli handoff lub tool nie jest dostępny, odpowiedz jawnie `tool_unavailable_or_unsupported_session` zamiast symulowac routing.
-9. Domyslny jezyk odpowiedzi agenta w workspace Venom to polski; angielski uzywaj tylko gdy user poprosi albo dokument/format wymaga angielskiego.
+Default response language for workspace agents is Polish unless the user explicitly asks for English or an external format requires it.
+
+Before declaring task completion, always run:
+
+1. `make pr-fast`
+
+Exception:
+1. For markdown-only change sets (all changed files end with `.md`), `make pr-fast` may be skipped.
+
+If any command fails:
+
+1. fix the issue,
+2. rerun until it passes or there is a confirmed environment blocker.
+
+Final completion summary (and PR description) must include:
+
+1. executed validation commands,
+2. pass/fail for each command,
+3. changed-lines coverage percentage,
+4. known skips/risks with explicit justification.
+
+Never mark work as done with failing required quality gates.
+
+## Execution Guardrails (Mandatory)
+
+1. Do not invoke the same sub-agent in a loop.
+2. Re-invoking a sub-agent is allowed only after a real state change:
+   - new failing check class,
+   - new user requirement,
+   - or explicit recovery after tool crash.
+3. Do not rerun `make pr-fast` without code or environment change.
+4. Do not claim pass/fail from partial logs (`grep`, `head`, `tail`) without validating command exit status.
+5. Run heavy optional checks (for example CodeQL/code review tooling) once per session.
+6. If optional security tooling times out due to environment, report it as a blocker and do not rerun in the same session.
+7. After first confirmed green `make pr-fast` and final report generation, stop execution.
+8. Do not produce duplicate final reports or trigger additional implementation loops after completion.
 
 ---
 > Source: [mpieniak01/Venom](https://github.com/mpieniak01/Venom) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-06-28 -->
+<!-- tomevault:4.0:agents_md:2026-09-26 -->
