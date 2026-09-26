@@ -1,15 +1,17 @@
-# CodeLoops contributor instructions
 
-This is CodeLoops, a Rust session-history service with a small TypeScript OpenCode
-bridge. Follow [AGENTS.md](../AGENTS.md) for issue tracking, code standards, and
-verification. Use [development](../docs/DEVELOPMENT.md) for the code map and checks.
+# CodeLoops bridge standards
 
-Use `bd` for issues and `--json` for programmatic commands. In worktrees, respect
-the designated canonical tracker. Include its current `.beads/issues.jsonl` with
-related changes. Publish commits or PRs only when requested.
+Follow [AGENTS.md](../../AGENTS.md). Keep the TypeScript bridge small, type-safe,
+and limited to forwarding client events. Preserve source payloads and propagate
+capture failures without changing prompts or tool results.
 
-Run `make check` for code changes and `make e2e` when changing installation,
-recovery, or export. Keep test archives and client configuration isolated.
+Use `npm run typecheck`, `npm run lint`, and `npm test`. Biome applies the Ultracite
+preset through `npm run lint`; the Ultracite wrapper is not the check gate.
+Use `npm exec -- biome check --write adapters/opencode` for safe fixes.
+
+Prefer `unknown` over `any`, explicit narrowing, `const`, `for...of`, and specific
+imports. Await promises. Avoid barrel files and implementation-mirroring tests.
+Run the full `make check` when the bridge changes.
 
 ---
 > Source: [silvabyte/codeloops](https://github.com/silvabyte/codeloops) — distributed by [TomeVault](https://tomevault.io).
