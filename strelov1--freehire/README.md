@@ -2,18 +2,16 @@
 
 > Tome by [strelov1](https://github.com/strelov1/freehire), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
 
-freehire — the open-source search engine for job seekers
-
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [strelov1/freehire](https://github.com/strelov1/freehire).
+Original source: `.cursor/rules/*.mdc` in [strelov1/freehire](https://github.com/strelov1/freehire).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
-- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
