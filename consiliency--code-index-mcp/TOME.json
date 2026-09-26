@@ -2,9 +2,9 @@
   "name": "Code-Index-MCP",
   "owner": "Consiliency",
   "repo": "Code-Index-MCP",
-  "description": "Code indexing MCP server to provide context to coding agents. ",
+  "description": "",
   "type": "config",
-  "source_format": ".cursor/rules/*.mdc",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/Consiliency/Code-Index-MCP",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-16T05:35:44Z"
+  "distributed_at": "2026-09-26T03:30:45Z"
 }
