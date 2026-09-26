@@ -2,9 +2,9 @@
   "name": "cynative",
   "owner": "cynative",
   "repo": "cynative",
-  "description": "Build your own security agents. Open-source framework for agents with live, read-only access to your infrastructure, with no path to widen it. Reasons across AWS, GCP, Azure, Kubernetes, GitHub and GitLab as one system.",
+  "description": "",
   "type": "config",
-  "source_format": "CLAUDE.md",
+  "source_format": "GEMINI.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/cynative/cynative",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-08-19T23:34:03Z"
+  "distributed_at": "2026-09-26T07:33:09Z"
 }
