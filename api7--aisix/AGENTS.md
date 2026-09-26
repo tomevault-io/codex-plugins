@@ -1,76 +1,88 @@
-# aisix-proxy
+# aisix-guardrails
 
-## Response-body streams and spawned tasks must re-attach the request span
+## A provider's per-call size limit is handled by `chunk::chunk_text`, never by truncating
 
-`request_id::ensure_request_id` opens the `request{request_id=…}` span that puts a
-`request_id` on every log line a request emits — that field is what joins a deep
-diagnostic (e.g. the Aliyun guardrail's `aliyun_request_id`) back to the
-`x-aisix-request-id` the caller was handed.
+Every remote kind talks to an API that caps how much text one call may
+carry. When you add or change one, do not re-decide what happens at that
+cap — the family already answered it, and answering it again in isolation
+reintroduces the defect this section exists to prevent:
 
-Two places fall outside it, and neither errors when missed — the logs are just
-silently uncorrelated, which reads exactly like working code:
+- **Split, never clip.** Over-limit content is chunked and *every* chunk
+  is submitted. Truncating hands the caller a bypass they control: the
+  text is assembled oldest-message-first, so clipping drops the newest
+  turn — the one being screened — and the call still returns a clean
+  verdict, so nothing logs, counts, or looks wrong.
+- **No cap on chunk count.** A per-request chunk budget is unscanned
+  content through the back door. Cost scales with content; that is the
+  trade.
+- **The split is lossless** (`chunks.concat() == text`). Kinds that write
+  masked text back rebuild the caller's content from per-chunk
+  replacements, so any "clever" normalising split silently corrupts
+  bodies rather than failing.
+- **Count characters, not bytes.** The vendor limits are documented in
+  characters, and byte slicing halves a multi-byte character.
 
-- **Streamed response bodies.** Hyper polls the generator after the middleware has
-  returned. Wrap it in `request_id::in_request_span(…)` **from the handler's
-  stack** (it captures `Span::current()`, so calling it elsewhere attaches a no-op
-  span). Every `async_stream::stream!` returned as a body needs this.
-- **Detached tasks.** Anything reached via `tokio::spawn` or axum's
-  `WebSocketUpgrade::on_upgrade` inherits nothing; attach the span to the future
-  with `.instrument()` (see `realtime::realtime`).
+A kind whose provider documents no usable limit submits whole — its
+bound is the provider's own. Do not invent a local one for it, and do
+not treat "we could not find the number" as "nobody looked": the numbers
+were looked for, and they are not there to hold.
+Bedrock's ceiling is a service quota that varies by region, policy type
+and tier and is adjustable per account; Lakera publishes no size limit
+and no error shape at all; OpenAI documents no input limit for
+`/moderations` (the real constraint is the tokens-per-minute budget, so
+its refusal is a genuine 429 and chunking would not help); Presidio's
+ceiling is whichever spaCy pipeline the operator deployed. `crate::
+too_large` carries the sources.
 
-Do not hold a span guard across an await to work around this — it leaks the span
-onto whatever the executor runs next on that thread.
+When a provider refuses a payload for its size, that is its own failure
+class — never `Throttled` and never `ConfigError`. Both mislead: waiting
+does not help, and neither does fixing credentials. Bedrock goes further
+and re-sends the content in pieces rather than failing; the recursion is
+only safe because every step is guaranteed to make progress (batch →
+halve the slots → halve the text), so keep that property if you touch
+it. A batch budget is not a limit — it is what to try after a refusal,
+and it may be larger than the account's real ceiling.
 
-A `text/event-stream` body needs a second wrapper for the same reason — nothing
-errors when it is missed. Pass it through `sse_keepalive::with_heartbeat(…,
-sse_keepalive::interval())` (or, on an axum `Sse`, `keep_alive` with that
-interval) so a model that is slow to its first token doesn't look like an
-abandoned connection to a proxy in front. Only for SSE: the same wrapper on an
-opaque binary passthrough (audio, images) corrupts it.
+## Fail policies default closed
 
-## A per-model gate must say whether it binds the requested entry or each target
+`fail_open`, `output_fail_open` and `on_buffer_exceeded` all default to
+the blocking side: a check that could not run must not release the
+request. Any new failure path gets the same default, and an operator who
+prefers availability opts in explicitly.
 
-`resolve_attempt_models` expands a routing model into targets, so `model_entry` /
-`virtual_entry` is the **group**, which carries none of a member's config. A gate
-written against it silently never runs for group traffic, and nothing errors —
-requests keep succeeding on a target that should have been excluded.
+A guardrail that could not evaluate reaches the request through two
+shapes, both carrying the same bounded per-kind failure tag and neither
+allowed to carry matched content: an explicitly fail-open row
+emits `Bypass`, a fail-closed row emits `Block { unavailable: Some(tag) }`.
 
-**The default is that a per-model gate binds each target.** Anything an operator
-configures ON a model — rate limits, `allowed_cidrs`, cooldown, health, timeouts —
-is a statement about that model, and reaching it through a group must not strip it.
-The only deliberately entry-scoped gate is the group's own copy of any of the
-above. Anything else that only checks `model_entry` / `virtual_entry` is a bug.
+**Carry that tag all the way to the caller.** A fail-closed availability
+block and a content block are the same 422 with the same `error.type`, so
+the tag is the only thing that separates "your policy fired" from "your
+guardrail is broken" — drop it and an operator debugs a policy that is
+fine while their traffic is refused. Every block site in `aisix-proxy`
+therefore builds its message through `error::guardrail_block_message` /
+`guardrail_block_error` and passes the verdict's `unavailable` through;
+the tag also lands on `error.code = "guardrail_unavailable"`, the audit
+hit's `blocked_unavailable`, and the histogram's `error_type`. A refusal
+the proxy raises on a guardrail's behalf (a hold-back cap, a failed mask
+splice) carries one too — see `error::TAG_*`.
 
-Guardrail attachment is the **known open exception, not a settled design**: the
-chain resolves from `RequestContext.model_id` before dispatch, so a guardrail
-scoped to a member never runs for group traffic (measured: direct 422, via group
-200). It is unfixed because the semantics are undecided, not because entry scope
-is correct — input guardrails run before a target is picked, and under failover
-there is no single "winning member" to resolve against. Tracked in
-AISIX-Cloud#1090; do not cite it as precedent for scoping a new gate to the entry.
+**Give each failure cause its own tag.** Tags are what a dashboard shows,
+so collapsing distinct operator mistakes into one catch-all costs the
+operator the diagnosis: `custom_unknown_action` (a word we do not know)
+and `custom_no_verdict` (no decision at all) need different fixes, and
+neither is `custom_script_error` (their service is down). And a verdict
+we cannot read is always a FAILURE, never an Allow — reading silence as
+consent is the open door `fail_open: false` exists to close.
 
-Two shapes, both already implemented — copy the nearest one:
-
-- **Filter the candidate set** (static per-caller predicates like `allowed_cidrs`):
-  drop ineligible targets in `routing::resolve_attempt_models` *before* the strategy
-  picks, so `max_fallbacks` budgets attempts across reachable targets and a
-  metric-based strategy ranks only those. Empty result → the gate's own error.
-  Do NOT fold these into `filter_attempt_models`: its
-  `when_all_unavailable: try_anyway` policy hands back the unfiltered list, which
-  would defeat an allowlist. See `routing::targets_allowed_for_ip`.
-- **Check per attempt** (dynamic/stateful gates like a rate-limit reservation):
-  resolve from the attempt model *inside* the dispatch loop, in all four
-  group-capable endpoints (chat, messages, count_tokens, responses) and in both the
-  streaming and non-streaming branches; skip the target and continue rather than
-  failing the whole request. See `quota::reserve_routing_target`, which also shows
-  the non-double-charge rule: it returns `None` for non-routing dispatch, whose
-  model layers the pre-dispatch `quota::enforce*` already reserved.
-
-Whichever shape, the group's own gate stays enforced pre-dispatch — the two tiers
-are additive, not either/or — and a caller-visible rejection must keep the
-direct-model envelope (`ModelIpRestricted` names no model and no CIDR), so a group
-never becomes a probe for which members exist.
+**`enforcement_mode: monitor` is unconditional.** A monitored row never
+blocks, for any reason — not a content match, not a provider outage, not
+a failure policy. Do not add an exception: the value of the mode is that
+it is safe to turn on, and one edge that refuses traffic destroys it.
+Wanting an unreachable provider to refuse traffic is wanting
+enforcement, and `block` mode with `fail_open: false` is how that is
+spelled.
 
 ---
 > Source: [api7/aisix](https://github.com/api7/aisix) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-25 -->
+<!-- tomevault:4.0:agents_md:2026-09-25 -->
