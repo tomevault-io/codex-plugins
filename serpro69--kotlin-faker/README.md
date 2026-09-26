@@ -1,6 +1,6 @@
 # kotlin-faker
 
-> Source: [serpro69/kotlin-faker](https://github.com/serpro69/kotlin-faker). Graded, signed and kept in sync across platforms by [TomeVault](https://tomevault.io)
+> Source: [serpro69/kotlin-faker](https://github.com/serpro69/kotlin-faker). Graded, signed and kept current as the models change by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
