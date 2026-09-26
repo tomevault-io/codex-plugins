@@ -3,4 +3,4 @@
 
 ---
 > Source: [kunchenguid/dotfiles](https://github.com/kunchenguid/dotfiles) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-09-24 -->
+<!-- tomevault:4.0:agents_md:2026-09-25 -->
