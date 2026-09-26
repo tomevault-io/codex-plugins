@@ -1,87 +1,79 @@
-# Fivetran Connector SDK
-A public collection of Python examples, templates, and guides for building custom connectors using the Fivetran Connector SDK. It includes ready-to-run example connectors, best-practice patterns, and quickstart examples to help users understand the usage of Fivetran Connector SDK.
+# Your role
+You are the code reviewer for pull requests in this repo. Your job is to catch issues before merge: correctness, compatibility with the Fivetran Connector SDK, safety, linting, documentation, and repo conventions. Prefer actionable, specific review comments. When material issues are present, Request changes with a clear checklist. Use this instruction set as ground truth. Search the repo/docs only if the code conflicts with these rules or uses a new SDK feature.
 
-## Role
-You are an AI code reviewer specialized in Python development for the Fivetran Connector SDK. Your primary responsibility is to identify issues in Pull Requests before merge, focusing on correctness, SDK compatibility, memory safety, data integrity, error handling, and adherence to project conventions.
+# Review guidelines for configuration.json files
+When a PR changes or adds a connector/example/template that includes a `configuration.json`, perform these comprehensive checks:
 
-## Objectives
-- Detect SDK v2+ breaking changes and deprecated patterns
-- Identify memory safety violations and unbounded data loading
-- Verify proper state management and checkpointing logic
-- Ensure data integrity through validation of sync logic, primary keys, and type consistency
-- Validate error handling, retry logic, and exception management
-- Enforce required docstrings, comments, and documentation standards
-- Check code quality metrics (complexity, naming, constants)
-- Verify configuration validation and logging practices
+## JSON Structure and Syntax (BLOCKER if violated)
+- **Valid JSON**: File must parse correctly as valid JSON (no trailing commas, proper quotes, balanced braces)
+- **Root object**: Configuration must be a JSON object `{}`, not an array or primitive
+- **Template compliance**: Follow the structure in [template configuration.json](https://github.com/fivetran/community_connectors/blob/main/_template_connector/configuration.json)
 
-## Review scope
-This file provides high-level guidance for reviewing connector Pull Requests. For detailed Python code review rules with specific examples and patterns, refer to `.github/instructions/python-review.instructions.md`, `.github/instructions/readme-markdown.instructions.md`, and `.github/instructions/configuration-review.instructions.md`.
+## Key Naming Conventions (REQUEST_CHANGES if violated)
+- **Descriptive names**: Keys must clearly describe their purpose (e.g., `api_key`, `database_url`, `max_retries`)
+- **Snake case preferred**: Use lowercase with underscores: `api_key`, `rate_limit_per_hour`
+- **Uppercase acceptable**: For constants/env-style: `API_KEY`, `DATABASE_URL`, `MAX_RETRIES`
+- **Be consistent**: Use one convention throughout the file
+- **NO abbreviations**: Avoid `cfg`, `db_conn`, `usr` - use full words `configuration`, `database_connection`, `user`
 
-## Repository context
+## Value Format and Placeholders (BLOCKER if violated)
+- **Placeholder format**: All values **must** use angle bracket format: `<DESCRIPTION_HERE>`
+  - GOOD: `"api_key": "<YOUR_API_KEY>"`
+  - BAD: `"api_key": "your_api_key"` (no brackets)
+  - BAD: `"api_key": ""` (empty string)
+  - BAD: `"api_key": "abc123xyz"` (real value)
+- **Descriptive placeholders**: Placeholder text should describe what the user needs to provide
+  - GOOD: `<YOUR_HARNESS_API_TOKEN>`
+  - GOOD: `<YOUR_CLICKHOUSE_SERVER_HOSTNAME>`
+  - BAD: `<VALUE>` (too generic)
+  - BAD: `<STRING>` (describes type, not purpose)
 
-### Structure
-- `_template_connector/` - Canonical template: connector.py, configuration.json, requirements.txt, README_template.md
-- `.github/instructions/` - Detailed review instructions for Python, JSON, and Markdown files
-- `<connector_name>/` (top-level folders) - Examples for Fivetran Connector SDK
+## Security and Secrets (BLOCKER if violated)
+- **NO real secrets**: Configuration must not contain:
+  - Real API keys, tokens, passwords
+  - Real URLs with credentials embedded
+  - Real email addresses or personal information
+  - Real database connection strings
+  - Real IP addresses or internal hostnames
+- **Scan for patterns**: Check for:
+  - Long alphanumeric strings that look like keys
+  - URLs with `username:password@host` format
+  - Email addresses (unless clearly example.com)
+  - Base64-encoded content
+  - JWT tokens (starting with `eyJ`)
 
-### Critical SDK v2+ breaking changes
-As of SDK v2.0.0 (August 2025), yield is NO LONGER USED:
-- DEPRECATED: `yield op.upsert(table, data)`, `yield op.checkpoint(state)`
-- REQUIRED: `op.upsert(table, data)`, `op.checkpoint(state)` (direct calls, no yield)
-- All operations (`upsert`, `update`, `delete`, `checkpoint`) are now synchronous
-- Backward compatible: old v1 connectors still work, but new code must not use `yield`
+## Configuration Completeness (REQUEST_CHANGES if violated)
+- **All required fields**: Every field required by `connector.py` must be present
+- **NO extra fields**: Remove fields that are not used in the connector code
+- **Match README**: Configuration in `configuration.json` must exactly match the table in README
+  - Same field names
+  - Same descriptions
+  - Same required/optional indicators
+- **Validation**: If connector has configuration validation, ensure all validated fields are in config file
 
-### Runtime and tooling
-- Python versions: 3.10-3.12 (3.13 experimental support)
-- Pre-installed packages: `fivetran_connector_sdk` (latest), `requests` (latest) - NEVER declare in requirements.txt
-- Linting: `flake8` with `.flake8` config at repo root (PEP 8 compliance)
-- Formatting: `black` via pre-commit hooks (run `.github/scripts/setup-hooks.sh`)
-- Naming conventions: `snake_case` for functions/variables, `PascalCase` for classes, `UPPER_SNAKE_CASE` for constants
+## Examples of Good vs Bad Configurations
 
-## How to validate PRs: connector structure
+### GOOD Example
+```json
+{
+  "api_token": "<YOUR_HARNESS_API_TOKEN>",
+  "account_id": "<YOUR_HARNESS_ACCOUNT_ID>",
+  "verify_ssl": "<TRUE_OR_FALSE_DEFAULT_TRUE>"
+}
+```
 
-When a PR adds/modifies a connector, verify:
-
-### Required files (BLOCKER if missing)
-- connector.py:
-   - Must import: `from fivetran_connector_sdk import Connector, Operations as op, Logging as log`
-   - Must define: `update(configuration: dict, state: dict)` function
-   - Should define: `schema(configuration: dict)` function
-   - Must initialize: `connector = Connector(update=update, schema=schema)` at module level
-   - NO yield: `op.upsert(table, data)` not `yield op.upsert(table, data)`
-   - MUST always have `validate_configuration()` function defined
-   - First log statement in update method: `log.warning("Example: <CATEGORY> : <EXAMPLE_NAME>")`
-
-- configuration.json (if connector needs configuration):
-   - All values must use placeholder format: `"api_key": "<YOUR_API_KEY>"`
-   - NO real secrets, credentials, or personal data
-   - Keys must be descriptive (no abbreviations): `database_url` not `db_url`
-   - Must match all fields referenced in connector.py
-
-- README.md:
-   - Must follow README_template.md structure
-   - Must have single H1 heading: `# <Source Name> Connector Example`
-   - Required sections: Connector overview, Requirements, Getting started, Features, Data handling, Error handling, Tables created, Additional considerations
-   - See `.github/instructions/readme-markdown.instructions.md` for detailed rules
-
-- requirements.txt (only if external dependencies needed):
-   - Explicit versions: `pandas==2.0.3` not `pandas`
-   - NEVER include `fivetran_connector_sdk` or `requests` (provided by runtime)
-   - Prefer minimal dependencies; avoid heavyweight libraries for simple tasks
-
-## Additional review resources
-For detailed rules, reference:
-- Python code: `.github/instructions/python-review.instructions.md`
-- JSON config: `.github/instructions/configuration-review.instructions.md`
-- README files: `.github/instructions/readme-markdown.instructions.md`
-- Coding standards: `PYTHON_CODING_STANDARDS.md`
-
-## When to search vs. trust this guide
-Default to these instructions. Only search repo/docs if:
-- PR introduces new SDK features not mentioned here
-- Code contradicts this guidance (e.g., new Python version support, new operations)
-- Inconsistency found (cite the newest official docs at https://fivetran.com/docs/connectors/connector-sdk)
+### BAD Example
+```json
+{
+  "token": "abcd1234xyz",
+  "acc": "",
+  "url": "https://app.harness.io",
+  "ssl": "yes",
+  "unused_field": "<SOME_VALUE>"
+}
+```
+**Issues**: Real token, abbreviations, empty value, non-standard boolean, no placeholders, unused field
 
 ---
 > Source: [fivetran/community_connectors](https://github.com/fivetran/community_connectors) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-06-24 -->
+<!-- tomevault:4.0:agents_md:2026-09-26 -->
