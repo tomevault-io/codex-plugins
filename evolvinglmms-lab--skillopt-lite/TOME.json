@@ -1,0 +1,195 @@
+{
+  "name": "SkillOpt-Lite",
+  "owner": "EvolvingLMMs-Lab",
+  "repo": "SkillOpt-Lite",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "SkillOpt-Lite",
+      "path": "skillopt_lite_ckpt/docvqa/gpt4o/skill.md",
+      "github_url": "https://github.com/EvolvingLMMs-Lab/SkillOpt-Lite/tree/main/skillopt_lite_ckpt/docvqa/gpt4o/skill.md",
+      "description": ""
+    },
+    {
+      "name": "SkillOpt-Lite",
+      "path": "skillopt_lite_ckpt/docvqa/gpt5.5/skill.md",
+      "github_url": "https://github.com/EvolvingLMMs-Lab/SkillOpt-Lite/tree/main/skillopt_lite_ckpt/docvqa/gpt5.5/skill.md",
+      "description": ""
+    },
+    {
+      "name": "SkillOpt-Lite",
+      "path": "skillopt_lite_ckpt/docvqa/gpt5.4/skill.md",
+      "github_url": "https://github.com/EvolvingLMMs-Lab/SkillOpt-Lite/tree/main/skillopt_lite_ckpt/docvqa/gpt5.4/skill.md",
+      "description": ""
+    },
+    {
+      "name": "SkillOpt-Lite",
+      "path": "skillopt_lite_ckpt/alfworld/gpt4o/skill.md",
+      "github_url": "https://github.com/EvolvingLMMs-Lab/SkillOpt-Lite/tree/main/skillopt_lite_ckpt/alfworld/gpt4o/skill.md",
+      "description": ""
+    },
+    {
+      "name": "SkillOpt-Lite",
+      "path": "skillopt_lite_ckpt/livemath/gpt4o/skill.md",
+      "github_url": "https://github.com/EvolvingLMMs-Lab/SkillOpt-Lite/tree/main/skillopt_lite_ckpt/livemath/gpt4o/skill.md",
+      "description": ""
+    },
+    {
+      "name": "SkillOpt-Lite",
+      "path": "skillopt_lite_ckpt/officeqa/gpt5.5/skill.md",
+      "github_url": "https://github.com/EvolvingLMMs-Lab/SkillOpt-Lite/tree/main/skillopt_lite_ckpt/officeqa/gpt5.5/skill.md",
+      "description": ""
+    },
+    {
+      "name": "SkillOpt-Lite",
+      "path": "skillopt_lite_ckpt/searchqa/gpt5.5/skill.md",
+      "github_url": "https://github.com/EvolvingLMMs-Lab/SkillOpt-Lite/tree/main/skillopt_lite_ckpt/searchqa/gpt5.5/skill.md",
+      "description": ""
+    },
+    {
+      "name": "SkillOpt-Lite",
+      "path": "skillopt_lite_ckpt/livemath/gpt5.4/skill.md",
+      "github_url": "https://github.com/EvolvingLMMs-Lab/SkillOpt-Lite/tree/main/skillopt_lite_ckpt/livemath/gpt5.4/skill.md",
+      "description": ""
+    },
+    {
+      "name": "SkillOpt-Lite",
+      "path": "skillopt_lite_ckpt/livemath/gpt5.5/skill.md",
+      "github_url": "https://github.com/EvolvingLMMs-Lab/SkillOpt-Lite/tree/main/skillopt_lite_ckpt/livemath/gpt5.5/skill.md",
+      "description": ""
+    },
+    {
+      "name": "SkillOpt-Lite",
+      "path": "skillopt_lite_ckpt/searchqa/gpt5.4/skill.md",
+      "github_url": "https://github.com/EvolvingLMMs-Lab/SkillOpt-Lite/tree/main/skillopt_lite_ckpt/searchqa/gpt5.4/skill.md",
+      "description": ""
+    },
+    {
+      "name": "SkillOpt-Lite",
+      "path": "skillopt_lite_ckpt/officeqa/gpt5.4/skill.md",
+      "github_url": "https://github.com/EvolvingLMMs-Lab/SkillOpt-Lite/tree/main/skillopt_lite_ckpt/officeqa/gpt5.4/skill.md",
+      "description": ""
+    },
+    {
+      "name": "SkillOpt-Lite",
+      "path": "skillopt_lite_ckpt/docvqa/gpt5.4-mini/skill.md",
+      "github_url": "https://github.com/EvolvingLMMs-Lab/SkillOpt-Lite/tree/main/skillopt_lite_ckpt/docvqa/gpt5.4-mini/skill.md",
+      "description": ""
+    },
+    {
+      "name": "SkillOpt-Lite",
+      "path": "skillopt_lite_ckpt/docvqa/gpt5.4-nano/skill.md",
+      "github_url": "https://github.com/EvolvingLMMs-Lab/SkillOpt-Lite/tree/main/skillopt_lite_ckpt/docvqa/gpt5.4-nano/skill.md",
+      "description": ""
+    },
+    {
+      "name": "SkillOpt-Lite",
+      "path": "skillopt_lite_ckpt/alfworld/gpt5.4-nano/skill.md",
+      "github_url": "https://github.com/EvolvingLMMs-Lab/SkillOpt-Lite/tree/main/skillopt_lite_ckpt/alfworld/gpt5.4-nano/skill.md",
+      "description": ""
+    },
+    {
+      "name": "SkillOpt-Lite",
+      "path": "skillopt_lite_ckpt/livemath/gpt5.4-mini/skill.md",
+      "github_url": "https://github.com/EvolvingLMMs-Lab/SkillOpt-Lite/tree/main/skillopt_lite_ckpt/livemath/gpt5.4-mini/skill.md",
+      "description": ""
+    },
+    {
+      "name": "SkillOpt-Lite",
+      "path": "skillopt_lite_ckpt/officeqa/gpt5.4-mini/skill.md",
+      "github_url": "https://github.com/EvolvingLMMs-Lab/SkillOpt-Lite/tree/main/skillopt_lite_ckpt/officeqa/gpt5.4-mini/skill.md",
+      "description": ""
+    },
+    {
+      "name": "SkillOpt-Lite",
+      "path": "skillopt_lite_ckpt/searchqa/gpt5.4-nano/skill.md",
+      "github_url": "https://github.com/EvolvingLMMs-Lab/SkillOpt-Lite/tree/main/skillopt_lite_ckpt/searchqa/gpt5.4-nano/skill.md",
+      "description": ""
+    },
+    {
+      "name": "SkillOpt-Lite",
+      "path": "skillopt_lite_ckpt/livemath/gpt5.4-nano/skill.md",
+      "github_url": "https://github.com/EvolvingLMMs-Lab/SkillOpt-Lite/tree/main/skillopt_lite_ckpt/livemath/gpt5.4-nano/skill.md",
+      "description": ""
+    },
+    {
+      "name": "SkillOpt-Lite",
+      "path": "skillopt_lite_ckpt/alfworld/gpt5.4-mini/skill.md",
+      "github_url": "https://github.com/EvolvingLMMs-Lab/SkillOpt-Lite/tree/main/skillopt_lite_ckpt/alfworld/gpt5.4-mini/skill.md",
+      "description": ""
+    },
+    {
+      "name": "SkillOpt-Lite",
+      "path": "skillopt_lite_ckpt/searchqa/gpt5.4-mini/skill.md",
+      "github_url": "https://github.com/EvolvingLMMs-Lab/SkillOpt-Lite/tree/main/skillopt_lite_ckpt/searchqa/gpt5.4-mini/skill.md",
+      "description": ""
+    },
+    {
+      "name": "SkillOpt-Lite",
+      "path": "skillopt_lite_ckpt/spreadsheetbench/gpt4o/skill.md",
+      "github_url": "https://github.com/EvolvingLMMs-Lab/SkillOpt-Lite/tree/main/skillopt_lite_ckpt/spreadsheetbench/gpt4o/skill.md",
+      "description": ""
+    },
+    {
+      "name": "SkillOpt-Lite",
+      "path": "skillopt_lite_ckpt/spreadsheetbench/gpt5.4/skill.md",
+      "github_url": "https://github.com/EvolvingLMMs-Lab/SkillOpt-Lite/tree/main/skillopt_lite_ckpt/spreadsheetbench/gpt5.4/skill.md",
+      "description": ""
+    },
+    {
+      "name": "SkillOpt-Lite",
+      "path": "skillopt_lite_ckpt/spreadsheetbench/gpt5.5/skill.md",
+      "github_url": "https://github.com/EvolvingLMMs-Lab/SkillOpt-Lite/tree/main/skillopt_lite_ckpt/spreadsheetbench/gpt5.5/skill.md",
+      "description": ""
+    },
+    {
+      "name": "SkillOpt-Lite",
+      "path": "skillopt_lite_ckpt/spreadsheetbench/gpt5.4-mini/skill.md",
+      "github_url": "https://github.com/EvolvingLMMs-Lab/SkillOpt-Lite/tree/main/skillopt_lite_ckpt/spreadsheetbench/gpt5.4-mini/skill.md",
+      "description": ""
+    },
+    {
+      "name": "SkillOpt-Lite",
+      "path": "skillopt_lite_ckpt/spreadsheetbench/gpt5.4-nano/skill.md",
+      "github_url": "https://github.com/EvolvingLMMs-Lab/SkillOpt-Lite/tree/main/skillopt_lite_ckpt/spreadsheetbench/gpt5.4-nano/skill.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/EvolvingLMMs-Lab/SkillOpt-Lite",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-09-26T08:32:37Z"
+}
