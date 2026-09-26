@@ -4,7 +4,7 @@
   "repo": "mega",
   "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/gitmono-dev/mega",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-09-26T13:10:57Z"
+  "distributed_at": "2026-09-26T14:38:20Z"
 }
