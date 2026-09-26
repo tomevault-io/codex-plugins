@@ -2,8 +2,6 @@
 
 > Tome by [weave-os](https://github.com/weave-os/router), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
 
-Model router for agentic systems. Routes every prompt to the right model in <50ms. Cut costs 40-70% with just an endpoint change.
-
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
