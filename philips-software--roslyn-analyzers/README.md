@@ -5,15 +5,22 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [philips-software/roslyn-analyzers](https://github.com/philips-software/roslyn-analyzers).
+Original source: `CLAUDE.md` in [philips-software/roslyn-analyzers](https://github.com/philips-software/roslyn-analyzers).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
+
+## Bundled Skills (4)
+
+- [roslyn-analyzers](https://github.com/philips-software/roslyn-analyzers/tree/main/.claude/skills/new-analyzer/SKILL.md)
+- [roslyn-analyzers](https://github.com/philips-software/roslyn-analyzers/tree/main/.agents/skills/new-analyzer/SKILL.md)
+- [roslyn-analyzers](https://github.com/philips-software/roslyn-analyzers/tree/main/.claude/skills/new-code-fixer/SKILL.md)
+- [roslyn-analyzers](https://github.com/philips-software/roslyn-analyzers/tree/main/.agents/skills/new-code-fixer/SKILL.md)
 
 Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/philips-software/roslyn-analyzers](https://github.com/philips-software/roslyn-analyzers)
 
