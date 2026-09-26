@@ -2,8 +2,6 @@
 
 > Tome by [lecoix](https://github.com/lecoix/mica-music), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
 
-一款以极简直角为设计语言的本地音乐播放器
-
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
