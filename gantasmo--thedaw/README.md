@@ -1,18 +1,16 @@
 # theDAW
 
-> Source: [gantasmo/theDAW](https://github.com/gantasmo/theDAW) — distributed by [TomeVault](https://tomevault.io)
-
-theDAW — an all-in-one studio for AI music creation, editing, mixing, DJing, and live visuals, by GANTASMO.
+> Source: [gantasmo/theDAW](https://github.com/gantasmo/theDAW). Graded, signed and kept current as the models change by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [gantasmo/theDAW](https://github.com/gantasmo/theDAW).
+Original source: `copilot-instructions.md` in [gantasmo/theDAW](https://github.com/gantasmo/theDAW).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
