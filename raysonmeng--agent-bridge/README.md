@@ -1,19 +1,17 @@
 # AI instruction files for agent-bridge
 
-> Sourced from [raysonmeng/agent-bridge](https://github.com/raysonmeng/agent-bridge) and converted for every major platform by [TomeVault](https://tomevault.io)
-
-A local bridge for bidirectional collaboration between Claude Code and Codex. 连接 Claude Code 与 Codex 的本地实时协作桥接工具。
+> Sourced from [raysonmeng/agent-bridge](https://github.com/raysonmeng/agent-bridge), graded against the public Tome Standard and kept consistent across every major platform by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [raysonmeng/agent-bridge](https://github.com/raysonmeng/agent-bridge).
+Original source: `.cursor/rules/*.mdc` in [raysonmeng/agent-bridge](https://github.com/raysonmeng/agent-bridge).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
-- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
