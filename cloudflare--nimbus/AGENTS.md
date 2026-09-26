@@ -1,178 +1,133 @@
-# Nimbus — agent context
+# This Nimbus docs site
 
-> Read this first if you're an AI agent picking up work on the Nimbus codebase. Sister file [`CLAUDE.md`](./CLAUDE.md) mirrors this content — keep them in sync.
+> `CLAUDE.md` delegates here. Keep project instructions canonical in this file.
 
-## What this project is
+Astro-based docs. The `nimbus-docs` package handles content schemas, sidebar/TOC, MDX→markdown, build hooks, and the `nimbus` CLI. Everything in `src/` is yours to edit.
 
-Nimbus builds documentation sites on Astro. The architecture splits into three tiers:
-
-- **User-owned starter files** — visible UI components, layouts, and styling. Copied into the user's repo by `create-nimbus-docs` and edited freely from then on.
-- **`nimbus-docs` npm package** — invisible plumbing (data helpers, validation, integration wiring, behavior primitives). Imported, not forked.
-- **Registry** — optional components, utilities, and agent-handoff features installed on demand via `nimbus-docs add <slug>`.
-
-Cloudflare is a first-class deploy target (the scaffolder defaults to it and ships `wrangler.jsonc`), but the framework is deploy-target agnostic — static output runs anywhere.
-
-## Repo layout
+## File layout
 
 ```
-monorepo/
-├── packages/
-│   ├── nimbus-docs/                       framework — integration, helpers, schemas, types, `nimbus` CLI
-│   ├── nimbus-starter-source/             canonical source — fat tree; doubles as kitchen-sink dev app
-│   │   ├── src/                           components, layouts, pages (incl. pages/dev/), demo content
-│   │   ├── templates/                     per-variant content overrides (empty/, …)
-│   │   └── starter.manifest.mjs           declarative generation policy (registry-only slugs, dev-only paths, variants)
-│   └── create-nimbus-docs/                scaffolder (`pnpm create @cloudflare/nimbus-docs`) — CLI only, no templates
-│       └── scripts/copy-template.mjs      generator: canonical source + manifest → variant dirs (--out)
-├── apps/
-│   └── www/                               docs site + registry hosting
-│       └── registry/                      manifests.ts (source), components/, features/, registry.json
-├── examples/
-│   └── local/                             local sandbox (not drift-mirrored)
-├── scripts/
-│   ├── release.mjs                        release orchestration (detect → generate → verify → sync+tag → publish)
-│   ├── sync-templates-repo.mjs            sync generator output to the orphan templates branch + tag templates-v<version> (idempotent)
-│   ├── templates-check.mjs                PR CI: generate + scaffold + build
-│   ├── check-no-major.mjs / freshness-guard.mjs  release guards
-│   ├── local.mjs / local-add.mjs          local sandbox helpers
-├── .generated/                            gitignored generator output (templates); scratch for local/CI/release
-├── pnpm-workspace.yaml
-└── tsconfig.base.json
+astro.config.ts              # imports nimbus + defineNimbusConfig
+nimbus.json                  # records the last reviewed Nimbus package version
+src/
+├── components.ts            # MDX globals registry — every component used in .mdx must be listed
+├── components/              # AgentDirective, Header, Render + ui/<slug>/
+├── content/
+│   ├── docs/*.mdx
+│   └── partials/*.mdx       # referenced via <Render file="..." />
+├── content.config.ts        # registers docsCollection() + partialsCollection()
+├── layouts/                 # BaseLayout (NimbusHead), DocsLayout (sidebar/TOC/breadcrumbs)
+├── lib/cn.ts                # Tailwind className merger
+├── pages/
+│   ├── [...slug].astro
+│   ├── [...slug]/index.md.ts   # Markdown version of every page, all collections
+│   ├── [...slug]/index.mdx.ts  # authored source of every page, all collections
+│   ├── llms.txt.ts
+│   ├── og.png.ts                # site-level OG card
+│   ├── og/
+│   │   ├── _og-card-config.ts   # shared OG theme tokens (underscore = not a route)
+│   │   └── [...slug].ts         # per-page OG cards
+│   └── robots.txt.ts
+└── styles/                  # globals.css, prose.css
 ```
 
-## Build / dev / test
+Cloudflare deploys also have `wrangler.jsonc` at the project root.
 
-```sh
-pnpm -r build                                    # build all packages and apps
-pnpm --filter nimbus-docs build                  # framework only
-pnpm --filter nimbus-docs typecheck              # tsc --noEmit
-pnpm --filter nimbus-starter-source build        # build the canonical source (kitchen-sink)
-pnpm --filter nimbus-starter-source dev          # run kitchen-sink dev server (every component visible)
-pnpm dev                                         # alias for the above
-pnpm build:templates                             # generate template variants into .generated/templates
-pnpm templates:check                             # generate + scaffold + build one variant (CI runs on relevant PRs)
-pnpm local                                       # spin up the local sandbox (generates + scaffolds offline)
+## Writing docs
+
+Frontmatter validates against `docsSchema` (`nimbus-docs/schemas`). Required: `title`.
+
+```mdx
+---
+title: My page
+description: One-line summary.
+---
+
+Content here. The page H1 comes from `title` — don't repeat it in the body.
+
+## Section heading
 ```
 
-Root `build` runs at default concurrency; `pnpm -r` topo order builds `nimbus-docs` first. `apps/www`'s `build` no longer builds `nimbus-docs`, so a bare `pnpm --filter @nimbus/www build` on a clean checkout fails — deploy via `pnpm run deploy` (its `predeploy` builds the framework) or root `pnpm build`.
+Rules:
 
-## The boundary test (read before adding any file)
+- **Components must be PascalCase and registered in `src/components.ts`.** A pre-build validator catches typos with a "did you mean" hint.
+- **Partials use `<Render file="..." />`.** Don't import `.mdx` directly. Shared content lives in `src/content/partials/<slug>.mdx`.
+- **Icons use `astro-icon` + Phosphor.** `<Icon name="ph:<glyph>" class="w-4 h-4" />` from `astro-icon/components`. Glyphs: [phosphoricons.com](https://phosphoricons.com).
+- **Don't remove `<AgentDirective />` from `BaseLayout.astro`.** It points agents at `/llms.txt`.
 
-The architecture splits into three tiers, one test per tier:
+## Adding things
 
-| Tier | Lives in | Test |
-|---|---|---|
-| **Framework** | `packages/nimbus-docs/` | *"If I edit this, am I changing taste or fixing a bug?"* Bug = framework. |
-| **Starter source** | `packages/nimbus-starter-source/` | *"Do edits change Tailwind classes or layout, or do they change call signatures?"* Tailwind/layout = starter source. |
-| **Registry** | `apps/www/registry/` | *"Does every docs site need this on day 1?"* No = registry, install via `nimbus-docs add`. |
-
-**When in doubt, default to framework; the starter should grow slowly.**
-
-## Derived templates
-
-**Drift discipline: canonical source → generator → orphan branch → tagged.** Hand-edits happen in one place, `packages/nimbus-starter-source/`. The generator (`packages/create-nimbus-docs/scripts/copy-template.mjs`) emits one directory per variant from that source plus the manifest. The CLI tarball carries **no templates**; distribution lives in this repo — the variants live on an orphan `templates` branch (no shared history with `main`), synced and **tagged `templates-v<create-nimbus-docs version>`** by the release job. At scaffold time `create-nimbus-docs` fetches its matching tag via giget (`github:cloudflare/nimbus/<variant>#templates-v<version>`); the tag's tree is templates-only, so the tarball stays small even though the repo also holds all of `main`. A starter edit therefore still produces a diff touching only `packages/nimbus-starter-source/**`; the `templates` branch is sync output, never hand-edited (a branch ruleset rejects human pushes, and `templates-v*` tags are immutable for everyone — including the bot).
-
-The scaffolder never fetches a branch — every fetch is pinned to `#templates-v<own version>`, so `create-nimbus-docs@0.2.0` fetches templates tagged `templates-v0.2.0`, reproducibly. `--template-dir <path>` bypasses the network entirely (offline dev, and how `pnpm local` works).
-
-The generation policy is declarative — `packages/nimbus-starter-source/starter.manifest.mjs` declares:
-
-- `registryOnlyComponents` — UI slugs present in the fat tree but stripped from generated templates; users install on demand via `nimbus-docs add <slug>`.
-- `devOnlyPaths` — path prefixes stripped from generated templates.
-- `templates` — one entry per variant, with its content override. `template/` reuses the canonical `src/content/docs/`; `template-empty/` swaps in `templates/empty/content/docs/`. **Adding a variant is one manifest entry + one content dir** — the generator iterates this map.
-
-Workflow when editing:
-
-```sh
-# 1. Make the edit in packages/nimbus-starter-source/
-# 2. Generate the variants (into .generated/templates)
-pnpm build:templates
-# 3. Generate + scaffold + build one variant end to end (CI runs this on relevant PRs)
-pnpm templates:check
-# 4. Record a create-nimbus-docs changeset — a starter edit reaches users ONLY
-#    through a CLI release that re-syncs + re-tags the templates branch. The
-#    freshness guard fails the PR without it.
-pnpm changeset
-```
-
-`examples/local/` is a sandbox — scaffolded by `pnpm local`, not part of template generation. `.generated/` is gitignored scratch.
-
-## Key files to know
-
-| File | What it does |
+| Goal | Action |
 |---|---|
-| `packages/nimbus-docs/src/integration.ts` | Astro integration entry — wires MDX, sitemap, Sätteri, MDX validator, Pagefind hook, virtual config module |
-| `packages/nimbus-docs/src/index.ts` | Public API — data helpers (`getSidebar`, `getPrevNext`, `getTOC`, `getBreadcrumbs`, `getEditUrl`), page composition helpers (`getDocsStaticPaths`, `getDocsPageProps`), `defineConfig`, `renderEntryAsMarkdown` |
-| `packages/nimbus-docs/src/types.ts` | Public types — `NimbusConfig`, `SidebarItem`, etc. Imports must come from `nimbus-docs/types` (never from main entry) |
-| `packages/nimbus-docs/src/schemas.ts` | Content-collection schemas — `docsSchema`, `partialsSchema`, `defineDocSchema` |
-| `packages/nimbus-docs/src/content.ts` | `docsCollection()`, `partialsCollection()` factories |
-| `packages/nimbus-docs/src/_internal/validate.ts` | Zod config validation — content-author-friendly errors, offending-value echo, `editPattern` `{path}` enforcement |
-| `packages/nimbus-docs/src/_internal/validate-mdx-content.ts` | Pre-build MDX PascalCase validator (content pass; see Sätteri note below) |
-| `packages/nimbus-docs/src/_internal/parse-components-registry.ts` | Parses user's `src/components.ts` for the MDX globals registry |
-| `packages/nimbus-docs/src/_internal/sidebar.ts` | Sidebar tree building, cross-collection refs, `sidebarHash` |
-| `packages/nimbus-starter-source/src/components.ts` | User-side MDX globals registry — parsed by validator at build time |
-| `packages/nimbus-starter-source/starter.manifest.mjs` | Declarative generation policy (registry-only slugs, dev-only paths, template variants) |
-| `packages/create-nimbus-docs/scripts/copy-template.mjs` | Generator — canonical source + manifest → variant dirs (`--out`, or `generateTemplates()`) |
-| `packages/create-nimbus-docs/src/scaffold.ts` | Scaffolder — giget fetch pinned to `#templates-v<version>`, plus the `--template-dir` offline path |
-| `apps/www/registry/manifests.ts` | Registry source of truth — 33 component/utility/feature entries |
-| `scripts/release.mjs` | Release orchestration — detect → generate → verify → sync+tag → publish (the changesets `publish` command) |
-| `scripts/sync-templates-repo.mjs` | Idempotent sync of generator output to the orphan `templates` branch + `templates-v<version>` tag |
-| `scripts/templates-check.mjs` | PR CI — generate + scaffold + build a variant |
-| `scripts/check-no-major.mjs`, `scripts/freshness-guard.mjs` | Release guards (no unattended 1.0.0; CLI changeset required when templates change) |
-| `scripts/local.mjs`, `scripts/local-add.mjs` | Local sandbox helpers |
+| New doc page | Create `src/content/docs/<slug>.mdx`. Sidebar picks it up. |
+| New partial | Create `src/content/partials/<slug>.mdx`. Use via `<Render file="<slug>" />`. |
+| UI from registry | `pnpm exec nimbus-docs add <slug>`. Register in `src/components.ts` if used in MDX. |
+| Feature recipe | `pnpm exec nimbus-docs add <feature-slug>`. Pipe the printed brief to your agent. |
+| Check it builds | `pnpm exec nimbus-docs check` — build-free preflight (env + structure + authoring + types). `--json` for an agent loop, `--fix` to repair what's safe. |
+| Custom page route | Add a file under `src/pages/`. |
+| Custom OG style | Edit `src/pages/og/_og-card-config.ts`. |
+| Check for updates | `pnpm exec nimbus-docs outdated` — starter files behind their tag + registry components behind. |
+| Upgrade Nimbus | Update the package, then run `pnpm exec nimbus-docs migrate --dry-run --diff`. Review every change and required manual step before applying. |
+| Upgrade a starter file | `pnpm exec nimbus-docs diff <file>` to review, `diff --apply <file>` to pull a clean upstream change. |
+| Upgrade a registry component | `pnpm exec nimbus-docs add <slug> --overwrite`, then review with `git diff`. |
 
-## Sätteri trade-off (known constraint)
+Extend Sätteri using `markdown.mdastPlugins` for Markdown AST transformations or `markdown.hastPlugins` for HTML AST transformations.
+If the site replaces Sätteri with another processor, set `admonitions: false` and keep that processor's existing callout implementation.
 
-The integration sets `markdown.processor = satteri()` (Rust-based, fast) instead of unified. **Consequence:** remark plugins attached via `mdx({ remarkPlugins })` silently no-op. The MDX validator hit this and now runs as a pre-build content pass at `astro:config:setup` (see `validate-mdx-content.ts` for the pattern).
+List installable items: `pnpm exec nimbus-docs list`.
 
-If you need framework-side validation/transformation, **use the content-pass pattern, not remark plugins**. User-facing remark plugins (Mermaid, diagrams, math, custom callouts) are not currently supported.
+## Upgrading Nimbus
 
-## Commit style
+Keep `nimbus.json` committed. Its `lastReviewedNimbusVersion` is the baseline Nimbus uses to select the versioned reviews crossed by a package upgrade; state-detected migrations come from the current project files. It is not a package pin and should not be edited by hand.
 
-Short imperative phrases, sentence case. Examples from `git log`:
+1. Update `@cloudflare/nimbus-docs` with the project's package manager.
+2. Preview the complete plan with `pnpm exec nimbus-docs migrate --dry-run --diff`. If no baseline exists yet, add `--from <previous-version>`.
+3. Review every versioned entry and resolve each blocked/manual item.
+4. Apply safe edits only with explicit consent: `pnpm exec nimbus-docs migrate --yes`. Review the resulting diff, then rerun the preview.
+5. When no migration remains, run `pnpm exec nimbus-docs migrate --yes` again to record the completed review in `nimbus.json`.
+6. Run the project's typecheck and production build, then run `pnpm exec nimbus-docs check` again for post-build coverage.
 
-- *Ship MDX PascalCase validator and small polish improvements*
-- *Add starter polish utilities*
-- *Refresh registry output and sidebar collection docs*
-- *Keep static markdown route in Cloudflare scaffolds*
+Except for task-printing mode (`--print`), `migrate` exits nonzero while work or review remains; that is a pending-upgrade signal, not necessarily a command failure. Never skip versions by changing `nimbus.json` directly.
 
-No conventional-commit prefixes (no `feat:`/`fix:`). Each commit targets one cohesive change. Use a body paragraph to explain *why* when non-obvious.
+## Audit this site
 
-When committing inside a session where other unrelated WIP exists (the user's working tree may have in-progress changes), use `git commit --only -- <paths>` to commit only the listed files without disturbing other staged work.
+Start with `pnpm exec nimbus-docs check --json`. It runs the environment, structural, authoring, and type checks build-free — config validity, `site` placeholder, route collisions, MDX component resolution, the lint rules, and a `tsc` type-check — and returns three top-level signals plus per-scope detail:
 
-## Releasing
+- **`status`** (`passed` | `failed` | `partial`) and **`readiness`** (`buildable` | `blocked` | `unknown`) are the primary signals. `status` is the whole-run verdict; `readiness` answers "does env + structure say it builds?". `ok` (=== zero errors) is kept for back-compat only.
+- **`findings[{scope,code,severity,file,line,message,fixable,fix}]`** are problems we evaluated. Apply each `fix` (or `check --fix`).
+- **`scopes[].notes[{code,reason,requiresBuild?,requiresInput?}]`** are checks we *couldn't* evaluate yet (e.g. types before a build). A note is never a finding and never carries a `fix` — you resolve it by making the missing thing exist (usually a build), not by `--fix`. `summary.notes` counts them.
 
-Releases are automated with [Changesets](https://github.com/changesets/changesets). `nimbus-docs` and `create-nimbus-docs` version independently; the private packages (`nimbus-starter-source`, `@nimbus/www`) are never versioned or published.
+Loop terminates on `status !== "failed" && summary.fixable === 0` — a `partial` run with nothing left to fix is a **stop** (optionally build, then re-check), not a `--fix` retry. Exit is `1` only when `status` is `"failed"`. For full coverage (types + link-checking) run a build first, then `check` again.
 
-- **In your PR**, record user-facing changes with a changeset — this is the only human step, no hand-editing of `version` fields or `CHANGELOG.md`:
+Then walk the categories below for what `check` doesn't cover yet — route-file existence, registry hygiene, the AI surface, post-build search, and Cloudflare config. Emit findings as:
 
-```sh
-pnpm changeset        # pick the package(s) + bump, write a summary
+```
+- [error|warn|info] FILE:LINE — what + why + fix.
 ```
 
-  Commit the generated `.changeset/*.md` file alongside your change.
+End with `Summary: N errors, N warnings.`
 
-- **On merge to `main`**, `.github/workflows/release.yml` opens or updates a "chore: bump package versions" PR (branch `changeset-release/main`) that applies the pending changesets (bumps versions, writes each package's `CHANGELOG.md`).
-- **Merging that PR** runs `scripts/release.mjs publish`, which: detects what's in the release, generates + verifies the templates against the exact `nimbus-docs` bits, **syncs + tags the orphan `templates` branch (`templates-v<version>`) before publishing**, publishes `nimbus-docs` before the CLI (so a live CLI never pins an unpublished dep), then dispatches the in-repo verify smoke — all unattended, with npm provenance.
-- A half-failed release recovers via the `publish_only` `workflow_dispatch` input (sync is idempotent; an orphan tag is harmless).
-- **Hard requirement: the monorepo must be public before the first release.** Unauthenticated giget scaffolds only work against a public repo, and this repo can't expose templates without exposing source. Until the flip, scaffolds need `GIGET_AUTH`. Run a full-history secret scan before going public. The `templates` branch and `templates-v*` tags are protected by repo rulesets (branch: bot-App-only updates; tag: App-only creation + empty-bypass update/delete, so published tags are immutable for everyone).
+- **Config** — `astro.config.ts` calls `nimbus(defineNimbusConfig({ ... }))`; `site` is set; `editPattern` (if set) contains `{path}`; `output:` matches the deploy target.
+- **Content** — `content.config.ts` registers `docsCollection()` (and `partialsCollection()` if used); every `.mdx` is inside a registered collection; frontmatter validates.
+- **Sidebar** — every sidebar ref resolves to a content entry; no orphans; no slug collisions.
+- **MDX** — every PascalCase component in `*.mdx` is registered; every `<Render file=...>` resolves; code-fence languages are valid.
+- **Routes** — `llms.txt.ts`, `robots.txt.ts`, `[...slug]/index.md.ts`, `og.png.ts`, `og/[...slug].ts` all exist.
+- **Registry hygiene** — every `src/components/ui/<slug>/` is either MDX-registered or imported in `src/`; transitive deps (`lib/cn.ts`, etc.) exist.
+- **AI surface** — `<AgentDirective />` renders in `BaseLayout.astro`; doc `<head>` has `<link rel="alternate" type="text/markdown" ...>`.
+- **Search** — `data-pagefind-body` is on the docs main wrapper; after `pnpm build`, `dist/pagefind/` exists with ≥1 indexed page.
+- **Cloudflare** (if applicable) — `wrangler.jsonc` has `name`, `compatibility_date`, `assets.directory = "./dist"`, `not_found_handling`.
 
-The root `CHANGELOG.md` is frozen; per-release notes live in `packages/*/CHANGELOG.md`.
+## Don't
 
-## What to read first
+- Hand-add components under `src/components/ui/` that exists in the nimbus-docs registry — use `nimbus-docs add` so deps resolve.
+- Import `.mdx` files directly — use `<Render file="..." />`.
+- Remove `<AgentDirective />` unless asked.
+- Edit `src/components.ts` to bypass registration — if a component is used in `.mdx`, register it.
 
-If you're picking up a new piece of work:
+## Project home
 
-1. This file + [`README.md`](./README.md) — architecture, the boundary rule, and the build/dev/test workflows
-2. *Key files to know* (above) and the package source under `packages/nimbus-docs/src/`
-3. Public feature docs under `apps/www/src/content/docs/`
-
-## Operating principles for agents
-
-- **Edits to UI / starter content happen in `packages/nimbus-starter-source/`, never on the `templates` branch.** The `templates` branch is sync output; direct edits are rejected by its branch ruleset and would be clobbered by the next release sync. A starter edit needs a `create-nimbus-docs` changeset to reach users (the freshness guard enforces this).
-- **Run the build before claiming work is done.** `pnpm --filter nimbus-docs build` for framework changes, `pnpm --filter nimbus-starter-source build` for end-to-end verification of the canonical source, `pnpm templates:check` to confirm the generator + scaffolder + template build still work.
-- **Don't add `nimbus-docs add` recipes for things that belong in the framework.** The boundary test applies to feature placement, not just file placement.
-- **Prefer asking about design intent over inferring it from code.** The framework's decisions are explicit and often non-obvious, and the rationale isn't always in the codebase.
+[nimbus-docs.com](https://nimbus-docs.com)
 
 ---
 > Source: [cloudflare/nimbus](https://github.com/cloudflare/nimbus) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-22 -->
+<!-- tomevault:4.0:agents_md:2026-09-26 -->
