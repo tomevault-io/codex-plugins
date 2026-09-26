@@ -1,8 +1,6 @@
 # saev
 
-> Tome by [Imageomics](https://github.com/Imageomics/saev) — distributed by [TomeVault](https://tomevault.io)
-
-Sparse autoencoders for vision
+> Tome by [Imageomics](https://github.com/Imageomics/saev), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
