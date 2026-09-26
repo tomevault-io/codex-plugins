@@ -1,23 +1,22 @@
 # mxc
 
-> Tome by [microsoft](https://github.com/microsoft/mxc) — distributed by [TomeVault](https://tomevault.io)
-
-Policy-driven, layered isolation and containment 
+> Tome by [microsoft](https://github.com/microsoft/mxc), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [microsoft/mxc](https://github.com/microsoft/mxc).
+Original source: `` in [microsoft/mxc](https://github.com/microsoft/mxc).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/microsoft/mxc](https://github.com/microsoft/mxc)
+Graded against the Tome Standard, TomeVault's public ruleset for whether AI instructions load, read clearly and stay safe. Source: [github.com/microsoft/mxc](https://github.com/microsoft/mxc)
 
 ---
 
