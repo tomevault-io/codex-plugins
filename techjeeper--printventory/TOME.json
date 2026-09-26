@@ -1,0 +1,345 @@
+{
+  "name": "Printventory",
+  "owner": "TechJeeper",
+  "repo": "Printventory",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "Printventory",
+      "path": ".github/skills/testdriver-ai/SKILL.md",
+      "github_url": "https://github.com/TechJeeper/Printventory/tree/main/.github/skills/testdriver-ai/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Printventory",
+      "path": ".github/skills/testdriver-mcp/SKILL.md",
+      "github_url": "https://github.com/TechJeeper/Printventory/tree/main/.github/skills/testdriver-mcp/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Printventory",
+      "path": ".github/skills/testdriver-find/SKILL.md",
+      "github_url": "https://github.com/TechJeeper/Printventory/tree/main/.github/skills/testdriver-find/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Printventory",
+      "path": ".github/skills/testdriver-exec/SKILL.md",
+      "github_url": "https://github.com/TechJeeper/Printventory/tree/main/.github/skills/testdriver-exec/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Printventory",
+      "path": ".github/skills/testdriver-type/SKILL.md",
+      "github_url": "https://github.com/TechJeeper/Printventory/tree/main/.github/skills/testdriver-type/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Printventory",
+      "path": ".github/skills/testdriver-wait/SKILL.md",
+      "github_url": "https://github.com/TechJeeper/Printventory/tree/main/.github/skills/testdriver-wait/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Printventory",
+      "path": ".github/skills/testdriver-click/SKILL.md",
+      "github_url": "https://github.com/TechJeeper/Printventory/tree/main/.github/skills/testdriver-click/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Printventory",
+      "path": ".github/skills/testdriver-parse/SKILL.md",
+      "github_url": "https://github.com/TechJeeper/Printventory/tree/main/.github/skills/testdriver-parse/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Printventory",
+      "path": ".github/skills/testdriver-hover/SKILL.md",
+      "github_url": "https://github.com/TechJeeper/Printventory/tree/main/.github/skills/testdriver-hover/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Printventory",
+      "path": ".github/skills/testdriver-cache/SKILL.md",
+      "github_url": "https://github.com/TechJeeper/Printventory/tree/main/.github/skills/testdriver-cache/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Printventory",
+      "path": ".github/skills/testdriver-cloud/SKILL.md",
+      "github_url": "https://github.com/TechJeeper/Printventory/tree/main/.github/skills/testdriver-cloud/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Printventory",
+      "path": ".github/skills/testdriver-ci-cd/SKILL.md",
+      "github_url": "https://github.com/TechJeeper/Printventory/tree/main/.github/skills/testdriver-ci-cd/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Printventory",
+      "path": ".github/skills/testdriver-events/SKILL.md",
+      "github_url": "https://github.com/TechJeeper/Printventory/tree/main/.github/skills/testdriver-events/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Printventory",
+      "path": ".github/skills/testdriver-client/SKILL.md",
+      "github_url": "https://github.com/TechJeeper/Printventory/tree/main/.github/skills/testdriver-client/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Printventory",
+      "path": ".github/skills/testdriver-errors/SKILL.md",
+      "github_url": "https://github.com/TechJeeper/Printventory/tree/main/.github/skills/testdriver-errors/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Printventory",
+      "path": ".github/skills/testdriver-scroll/SKILL.md",
+      "github_url": "https://github.com/TechJeeper/Printventory/tree/main/.github/skills/testdriver-scroll/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Printventory",
+      "path": ".github/skills/testdriver-redraw/SKILL.md",
+      "github_url": "https://github.com/TechJeeper/Printventory/tree/main/.github/skills/testdriver-redraw/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Printventory",
+      "path": ".github/skills/testdriver-assert/SKILL.md",
+      "github_url": "https://github.com/TechJeeper/Printventory/tree/main/.github/skills/testdriver-assert/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Printventory",
+      "path": ".github/skills/testdriver-hosted/SKILL.md",
+      "github_url": "https://github.com/TechJeeper/Printventory/tree/main/.github/skills/testdriver-hosted/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Printventory",
+      "path": ".github/skills/testdriver-caching/SKILL.md",
+      "github_url": "https://github.com/TechJeeper/Printventory/tree/main/.github/skills/testdriver-caching/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Printventory",
+      "path": ".github/skills/testdriver-elements/SKILL.md",
+      "github_url": "https://github.com/TechJeeper/Printventory/tree/main/.github/skills/testdriver-elements/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Printventory",
+      "path": ".github/skills/testdriver-mouse-up/SKILL.md",
+      "github_url": "https://github.com/TechJeeper/Printventory/tree/main/.github/skills/testdriver-mouse-up/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Printventory",
+      "path": ".github/skills/testdriver-examples/SKILL.md",
+      "github_url": "https://github.com/TechJeeper/Printventory/tree/main/.github/skills/testdriver-examples/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Printventory",
+      "path": ".github/skills/testdriver-aws-setup/SKILL.md",
+      "github_url": "https://github.com/TechJeeper/Printventory/tree/main/.github/skills/testdriver-aws-setup/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Printventory",
+      "path": ".github/skills/testdriver-provision/SKILL.md",
+      "github_url": "https://github.com/TechJeeper/Printventory/tree/main/.github/skills/testdriver-provision/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Printventory",
+      "path": ".github/skills/testdriver-variables/SKILL.md",
+      "github_url": "https://github.com/TechJeeper/Printventory/tree/main/.github/skills/testdriver-variables/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Printventory",
+      "path": ".github/skills/testdriver-testdriver/SKILL.md",
+      "github_url": "https://github.com/TechJeeper/Printventory/tree/main/.github/skills/testdriver-testdriver/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Printventory",
+      "path": ".github/skills/testdriver-screenshot/SKILL.md",
+      "github_url": "https://github.com/TechJeeper/Printventory/tree/main/.github/skills/testdriver-screenshot/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Printventory",
+      "path": ".github/skills/testdriver-press-keys/SKILL.md",
+      "github_url": "https://github.com/TechJeeper/Printventory/tree/main/.github/skills/testdriver-press-keys/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Printventory",
+      "path": ".github/skills/testdriver-mouse-down/SKILL.md",
+      "github_url": "https://github.com/TechJeeper/Printventory/tree/main/.github/skills/testdriver-mouse-down/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Printventory",
+      "path": ".github/skills/testdriver-enterprise/SKILL.md",
+      "github_url": "https://github.com/TechJeeper/Printventory/tree/main/.github/skills/testdriver-enterprise/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Printventory",
+      "path": ".github/skills/testdriver-quickstart/SKILL.md",
+      "github_url": "https://github.com/TechJeeper/Printventory/tree/main/.github/skills/testdriver-quickstart/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Printventory",
+      "path": ".github/skills/testdriver-test-writer/SKILL.md",
+      "github_url": "https://github.com/TechJeeper/Printventory/tree/main/.github/skills/testdriver-test-writer/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Printventory",
+      "path": ".github/skills/testdriver-right-click/SKILL.md",
+      "github_url": "https://github.com/TechJeeper/Printventory/tree/main/.github/skills/testdriver-right-click/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Printventory",
+      "path": ".github/skills/testdriver-screenshots/SKILL.md",
+      "github_url": "https://github.com/TechJeeper/Printventory/tree/main/.github/skills/testdriver-screenshots/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Printventory",
+      "path": ".github/skills/testdriver-self-hosted/SKILL.md",
+      "github_url": "https://github.com/TechJeeper/Printventory/tree/main/.github/skills/testdriver-self-hosted/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Printventory",
+      "path": ".github/skills/testdriver-mcp-workflow/SKILL.md",
+      "github_url": "https://github.com/TechJeeper/Printventory/tree/main/.github/skills/testdriver-mcp-workflow/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Printventory",
+      "path": ".github/skills/testdriver-double-click/SKILL.md",
+      "github_url": "https://github.com/TechJeeper/Printventory/tree/main/.github/skills/testdriver-double-click/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Printventory",
+      "path": ".github/skills/testdriver-device-config/SKILL.md",
+      "github_url": "https://github.com/TechJeeper/Printventory/tree/main/.github/skills/testdriver-device-config/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Printventory",
+      "path": ".github/skills/testdriver-running-tests/SKILL.md",
+      "github_url": "https://github.com/TechJeeper/Printventory/tree/main/.github/skills/testdriver-running-tests/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Printventory",
+      "path": ".github/skills/testdriver-generating-tests/SKILL.md",
+      "github_url": "https://github.com/TechJeeper/Printventory/tree/main/.github/skills/testdriver-generating-tests/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Printventory",
+      "path": ".github/skills/testdriver-focus-application/SKILL.md",
+      "github_url": "https://github.com/TechJeeper/Printventory/tree/main/.github/skills/testdriver-focus-application/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Printventory",
+      "path": ".github/skills/testdriver-test-results-json/SKILL.md",
+      "github_url": "https://github.com/TechJeeper/Printventory/tree/main/.github/skills/testdriver-test-results-json/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Printventory",
+      "path": ".github/skills/testdriver-locating-elements/SKILL.md",
+      "github_url": "https://github.com/TechJeeper/Printventory/tree/main/.github/skills/testdriver-locating-elements/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Printventory",
+      "path": ".github/skills/testdriver-making-assertions/SKILL.md",
+      "github_url": "https://github.com/TechJeeper/Printventory/tree/main/.github/skills/testdriver-making-assertions/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Printventory",
+      "path": ".github/skills/testdriver-what-is-testdriver/SKILL.md",
+      "github_url": "https://github.com/TechJeeper/Printventory/tree/main/.github/skills/testdriver-what-is-testdriver/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Printventory",
+      "path": ".github/skills/testdriver-performing-actions/SKILL.md",
+      "github_url": "https://github.com/TechJeeper/Printventory/tree/main/.github/skills/testdriver-performing-actions/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Printventory",
+      "path": ".github/skills/testdriver-testdriver-mechanic/SKILL.md",
+      "github_url": "https://github.com/TechJeeper/Printventory/tree/main/.github/skills/testdriver-testdriver-mechanic/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Printventory",
+      "path": ".github/skills/testdriver-waiting-for-elements/SKILL.md",
+      "github_url": "https://github.com/TechJeeper/Printventory/tree/main/.github/skills/testdriver-waiting-for-elements/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Printventory",
+      "path": ".github/skills/testdriver-debugging-with-screenshots/SKILL.md",
+      "github_url": "https://github.com/TechJeeper/Printventory/tree/main/.github/skills/testdriver-debugging-with-screenshots/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/TechJeeper/Printventory",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-09-26T08:41:18Z"
+}
