@@ -3,8 +3,8 @@
   "owner": "philips-software",
   "repo": "roslyn-analyzers",
   "description": "",
-  "type": "config",
-  "source_format": "copilot-instructions.md",
+  "type": "tome",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -37,8 +37,33 @@
       "platform": "Windsurf"
     }
   ],
-  "skills": [],
+  "skills": [
+    {
+      "name": "roslyn-analyzers",
+      "path": ".claude/skills/new-analyzer/SKILL.md",
+      "github_url": "https://github.com/philips-software/roslyn-analyzers/tree/main/.claude/skills/new-analyzer/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "roslyn-analyzers",
+      "path": ".agents/skills/new-analyzer/SKILL.md",
+      "github_url": "https://github.com/philips-software/roslyn-analyzers/tree/main/.agents/skills/new-analyzer/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "roslyn-analyzers",
+      "path": ".claude/skills/new-code-fixer/SKILL.md",
+      "github_url": "https://github.com/philips-software/roslyn-analyzers/tree/main/.claude/skills/new-code-fixer/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "roslyn-analyzers",
+      "path": ".agents/skills/new-code-fixer/SKILL.md",
+      "github_url": "https://github.com/philips-software/roslyn-analyzers/tree/main/.agents/skills/new-code-fixer/SKILL.md",
+      "description": ""
+    }
+  ],
   "source_url": "https://github.com/philips-software/roslyn-analyzers",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-25T06:47:29Z"
+  "distributed_at": "2026-09-26T00:48:57Z"
 }
