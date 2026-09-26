@@ -2,22 +2,20 @@
 
 > Tome by [agentlas-ai](https://github.com/agentlas-ai/Agentlas-OS), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
 
-Agent OS: keep specialist agents in a hub, spin up a temporary orchestrator per task. Local-first, works with any model.
-
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [agentlas-ai/Agentlas-OS](https://github.com/agentlas-ai/Agentlas-OS).
+Original source: `GEMINI.md` in [agentlas-ai/Agentlas-OS](https://github.com/agentlas-ai/Agentlas-OS).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
-- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [agentlas-ai/Agentlas-OS](https://github.com/agentlas-ai/Agentlas-OS) — a repo with 1119+ stars on GitHub.
+From [agentlas-ai/Agentlas-OS](https://github.com/agentlas-ai/Agentlas-OS) — a repo with 1393+ stars on GitHub.
 
 ---
 
