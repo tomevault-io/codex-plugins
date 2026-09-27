@@ -1,47 +1,19 @@
-# Repository Guidelines
+# CLAUDE.md — acme-widgets
 
-## Project Structure
+Guidance for coding agents working in this fixture project.
 
-This is the Tons of Skills Claude Code plugin marketplace. Author plugins under `plugins/<category>/<plugin-name>/`; a plugin commonly contains `skills/`, `commands/`, `.claude-plugin/plugin.json`, and a README. The editable catalog is `.claude-plugin/marketplace.extended.json`; its `marketplace.json`, generated plugin `package.json` files, and the README table of contents are derived. Shared tooling lives in `scripts/`, workspace packages in `packages/`, Python regression tests in `tests/`, and the Astro site in `marketplace/`.
+Status: scaffold only — no application code yet.
 
-## Build, Test, and Development
+## Key documents
 
-Use Node 20+ and pnpm 9.15.9+ at the repository root; `marketplace/` deliberately uses npm.
-
-```bash
-pnpm install
-./scripts/quick-test.sh                 # fast repository sanity check
-pnpm test && pnpm typecheck && pnpm lint
-pnpm run verify                         # CI-equivalent verification pipeline
-pnpm run sync-marketplace               # regenerate catalog-derived files
-cd marketplace && npm run dev           # local Astro site, port 4321
-cd marketplace && npx playwright test   # website end-to-end tests
-```
-
-Do not hand-edit generated catalog artifacts. Run `pnpm run sync-marketplace` before committing catalog or plugin changes. Validate skill metadata with `python3 scripts/validate-skills-schema.py --marketplace --verbose`; use `python3 scripts/validate-unicode-hygiene.py` for changed skill content.
-
-## Style and Naming
-
-Follow the existing file’s style; use Prettier for JavaScript, TypeScript, JSON, YAML, and Markdown (`pnpm run format:check`) and ESLint (`pnpm lint`) for code. Use two-space indentation in JS/TS and JSON. Name plugin folders lowercase kebab-case (for example, `plugins/mcp/example-plugin`) and skills as `skills/<skill-name>/SKILL.md`. Keep frontmatter compliant with the schema validator rather than inventing local variants.
-
-## Tests
-
-Add or update focused tests beside the affected package or in `tests/`; Python tests use `test_*.py` and TypeScript tests commonly use `*.test.ts`. Run the narrowest relevant test first, then the commands above. Changes to validators, schemas, or catalog generation require their targeted regression suite plus the marketplace schema validation.
-
-## Commits and Pull Requests
-
-Use Conventional Commit-style subjects visible in history, such as `fix(ci): harden validation` or `docs(contributing): clarify workflow`. Keep each commit scoped. PRs should explain the user-facing change, link the beads issue, include screenshots for visual site changes, and include regenerated derived files when applicable. Use `bd` for task tracking: run `bd ready`, claim the issue, and close it when complete. Before finishing, commit, pull/rebase, run `bd sync`, push, and confirm `git status` is up to date.
-
-## Merge gates (do not weaken)
-
-Required branch-protection contexts on `main`: **`ci-required`**, **`gitleaks`**, **`skill-conform`**.
-
-- `skill-conform` is a **separate** always-report workflow (`audit-harness conform --strict`). Never add it (or any path-scoped / provider-dependent job) to `ci-required`'s `needs:`.
-- Behavioral skill eval (`skill-eval-advisory.yml`) is **advisory only** until explicitly graduated.
-- Full gate architecture, validator SSoT rules, and non-negotiables: see `CLAUDE.md`.
-- Which document owns which fact class: blueprint `000-docs/727` § 11 (the authority map),
-  indexed publicly by `STANDARDS.md § Canonical documents`. Point at owners; don't restate.
+| Path                       | Purpose                    |
+| -------------------------- | -------------------------- |
+| `docs/index.md`            | Documentation landing page |
+| `docs/architecture.md`     | Architecture overview      |
+| `000-docs/000-INDEX.md`    | Filed-document index       |
+| `planning/roadmap.md`      | Feature roadmap            |
+| `.github/workflows/ci.yml` | CI pipeline                |
 
 ---
 > Source: [jeremylongshore/tons-of-skills-marketplace](https://github.com/jeremylongshore/tons-of-skills-marketplace) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-08-27 -->
+<!-- tomevault:4.0:agents_md:2026-09-25 -->
