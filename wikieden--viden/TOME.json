@@ -2,7 +2,7 @@
   "name": "viden",
   "owner": "wikieden",
   "repo": "viden",
-  "description": "Rust-first reimplementation of a local agent CLI inspired by Claude Code.",
+  "description": "",
   "type": "config",
   "source_format": "CLAUDE.md",
   "formats": [
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/wikieden/viden",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-08-12T09:12:40Z"
+  "distributed_at": "2026-09-27T03:26:50Z"
 }
