@@ -2,8 +2,6 @@
 
 > Tome by [potatobeanradio](https://github.com/potatobeanradio/circuitRF), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
 
-Lightweight cross-platform RF circuit simulator — DC, S-parameters, harmonic balance, loadpull/sourcepull. Not a SPICE simulator.
-
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
