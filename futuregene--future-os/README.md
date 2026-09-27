@@ -2,8 +2,6 @@
 
 > Source: [futuregene/future-os](https://github.com/futuregene/future-os). Graded, signed and kept current as the models change by [TomeVault](https://tomevault.io)
 
-Local-first AI agent workspace — terminal, desktop, and messaging platforms, all through one backend.
-
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
@@ -17,7 +15,7 @@ Original source: `CLAUDE.md` in [futuregene/future-os](https://github.com/future
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [futuregene/future-os](https://github.com/futuregene/future-os) — a repo with 13+ stars on GitHub.
+From [futuregene/future-os](https://github.com/futuregene/future-os) — a repo with 104+ stars on GitHub.
 
 ---
 
