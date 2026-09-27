@@ -1,8 +1,6 @@
 # detroit-ai-player
 
-> Source: [Baba88611/detroit-ai-player](https://github.com/Baba88611/detroit-ai-player). Graded, signed and kept in sync across platforms by [TomeVault](https://tomevault.io)
-
-Let Your AI Play Detroit：Become Human
+> Source: [Baba88611/detroit-ai-player](https://github.com/Baba88611/detroit-ai-player). Graded, signed and kept current as the models change by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
