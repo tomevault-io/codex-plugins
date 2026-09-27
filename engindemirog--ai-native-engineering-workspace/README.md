@@ -1,0 +1,24 @@
+# ai-native-engineering-workspace
+
+> Source: [engindemirog/ai-native-engineering-workspace](https://github.com/engindemirog/ai-native-engineering-workspace). Graded, signed and kept current as the models change by [TomeVault](https://tomevault.io)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `copilot-instructions.md` in [engindemirog/ai-native-engineering-workspace](https://github.com/engindemirog/ai-native-engineering-workspace).
+
+## Also available for
+
+- **Claude Code** — `CLAUDE.md`
+- **Codex** — `AGENTS.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+From [engindemirog/ai-native-engineering-workspace](https://github.com/engindemirog/ai-native-engineering-workspace) — a repo with 75+ stars on GitHub.
+
+---
+
+Own this repo? Install the TomeVault Relay to keep every platform's copy in sync on every push: [https://tomevault.io/install](https://tomevault.io/install).
+
+<!-- genome:d-c-s -->
