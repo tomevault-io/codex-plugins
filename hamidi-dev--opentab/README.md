@@ -1,0 +1,28 @@
+# opentab
+
+> Tome by [hamidi-dev](https://github.com/hamidi-dev/opentab), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [hamidi-dev/opentab](https://github.com/hamidi-dev/opentab).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+From [hamidi-dev/opentab](https://github.com/hamidi-dev/opentab) — a repo with 88+ stars on GitHub.
+
+---
+
+Install this config instantly:
+```
+npx tomevault install hamidi-dev/opentab
+```
+Source: [github.com/hamidi-dev/opentab](https://github.com/hamidi-dev/opentab).
+
+<!-- genome:t-i-s -->
