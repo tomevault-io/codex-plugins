@@ -4,7 +4,7 @@
   "repo": "Maki",
   "description": "Self-hosted manga collection manager and reader. Auto-monitors sources for new chapters, downloads them, and packages into CBZ+ComicInfo.xml. Can be read via built-in reader, Kavita integration, or OPDS.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/OrbitMPGH/Maki",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-09-25T10:53:11Z"
+  "distributed_at": "2026-09-28T02:53:22Z"
 }
