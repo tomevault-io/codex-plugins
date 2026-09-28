@@ -7,13 +7,13 @@ C#/.NET client library for the DeepCoin.com cryptocurrency exchange REST and Web
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [JKorf/DeepCoin.Net](https://github.com/JKorf/DeepCoin.Net).
+Original source: `.cursor/rules/*.mdc` in [JKorf/DeepCoin.Net](https://github.com/JKorf/DeepCoin.Net).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
