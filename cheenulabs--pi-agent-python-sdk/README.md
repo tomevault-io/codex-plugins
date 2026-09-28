@@ -7,12 +7,12 @@ Use your installed Pi coding agent as a Python API. Stream responses, continue c
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [cheenulabs/pi-agent-python-sdk](https://github.com/cheenulabs/pi-agent-python-sdk).
+Original source: `CLAUDE.md` in [cheenulabs/pi-agent-python-sdk](https://github.com/cheenulabs/pi-agent-python-sdk).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
