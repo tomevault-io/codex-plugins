@@ -7,12 +7,12 @@ Enterprise-grade PowerShell development standards, shipped as GitHub Copilot ins
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [fadwen/ai-powershell-standards](https://github.com/fadwen/ai-powershell-standards).
+Original source: `CLAUDE.md` in [fadwen/ai-powershell-standards](https://github.com/fadwen/ai-powershell-standards).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
