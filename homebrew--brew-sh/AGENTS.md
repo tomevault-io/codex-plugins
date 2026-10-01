@@ -1,0 +1,41 @@
+# Website content
+
+- Reread relevant files and `git diff` before editing; keep changes small and preserve user edits.
+- Update every `_data/locales/` file when changing shared text, preserving HTML, URLs, commands, product names and paths in translations.
+- Keep `CLAUDE.md` as a relative symlink to `AGENTS.md` and exclude both from Jekyll output.
+
+# Release notes
+
+## Research
+
+- Use recent release posts as style references, not content templates. Read PR bodies and code changes, especially `odeprecated`, `odisabled` and command parsers, before describing behaviour or replacements.
+- Prefer bulk GitHub GraphQL queries; fall back to public REST and patches. Organisation discussions belong to the `Homebrew/discussions` repository.
+- Account for every supplied PR in exhaustive drafts. Group related changes; omit maintenance fixes, reverted changes or follow-up fixes only when authorised. Preserve existing links during restructuring.
+- For incremental reviews, record the highest reviewed PR number and latest merge timestamp outside the post; include lower-numbered PRs merged later.
+- Verify advisories, support schedules, branch transitions and application availability against code and prior announcements. Respect the user's publication-time assumptions and distinguish completed work from plans.
+
+## Writing and structure
+
+- Explain final behaviour and its user benefit. Use UK spelling, no em dashes or Oxford commas; avoid second-person wording, filler and unnecessary implementation details.
+- Open with a short announcement, at most five significant changes with positive news first, then a fuller summary. Keep upgrade actions prominent and use `{:toc}` instead of manual quick links.
+- Group shared changes under all users; separate platform-specific changes, non-default prefixes, security tooling, CI and tap-maintainer guidance. Keep migrations with their audience and give each behaviour one main home.
+- Start substantive sections with one to three summary sentences and aim for three to 25 bullets. Combine small sections rather than adding filler. Keep acknowledgements, funding and community news in `Finally` with an emoji.
+- Use `- [User-focused sentence.](URL)` for single-PR bullets; combine related PRs with links on relevant clauses. Name new commands, flags, environment variables and DSLs explicitly in backticks.
+- Order command-led bullets, then environment variables, then prose. Rank commands by their parent command's event count in one [90-day analytics snapshot](https://formulae.brew.sh/api/analytics/brew-command-run/90d.json) per pass; preserve ties and place unreported commands last. Record the snapshot dates outside the post.
+
+## Migrations and security
+
+- Use aligned Markdown tables with interface, status, timing and replacement columns. Sort from `Now` to latest date, using `YYYY-MM-DD`; distinguish deprecated warnings, disabled use and removed code. Name the replacement or state there is none.
+- Use third-party tap dates for maintainer migrations and explain official-tap enforcement separately. State agreed dates directly and put staged rollout status in its own paragraph.
+- Distinguish loss of support or new bottles from software ceasing to run. Link prior announcements and maintained migration targets; recommend action releases or full SHAs where applicable.
+- Lead Security with one concise bullet per advisory: identifier, severity, affected behaviour and fixed release. Explain sandbox protections and limitations accurately, including optional-kernel fallbacks and compatibility trade-offs.
+- Verify platform limits and staged features from code. Explain installation improvements separately from author migration details; avoid universal performance claims from individual benchmarks.
+
+## Verification
+
+- Keep `redirect_from: /blog/<version>/`. Use `_config.test.yml` for future-dated posts and local links.
+- Run `./bin/jekyll build --config _config.yml,_config.test.yml`, `bundle exec rake test` and `vale --config="$(brew --repository)"/.vale.ini _posts/` when available.
+
+---
+> Source: [Homebrew/brew.sh](https://github.com/Homebrew/brew.sh) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-10-01 -->
