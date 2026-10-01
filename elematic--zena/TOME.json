@@ -2,9 +2,9 @@
   "name": "zena",
   "owner": "elematic",
   "repo": "zena",
-  "description": "A new programming language for WASM",
+  "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/elematic/zena",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-05T03:10:04Z"
+  "distributed_at": "2026-10-01T17:45:33Z"
 }
