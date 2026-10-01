@@ -1,86 +1,76 @@
-# Evolve SDK
 
-Run CLI agents (Claude, Codex, Gemini, Qwen) in secure sandboxes with built-in observability.
+Register an install script or agent directory, plus a command to run. Use the registration's name with `evolve run -a`.
 
-## Repo Structure
+### Install script
 
-```
-evolve/
-├── packages/
-│   ├── sdk-ts/                  # TypeScript SDK (@evolvingmachines/sdk) — PRIMARY
-│   │   └── src/
-│   │       ├── evolve.ts        # Evolve builder class
-│   │       ├── agent.ts         # Agent runtime
-│   │       ├── registry.ts      # Agent registry (type → config)
-│   │       ├── types.ts         # Shared types
-│   │       ├── constants.ts     # Constants
-│   │       ├── index.ts         # Public exports
-│   │       ├── parsers/         # CLI output parsers (claude, codex, gemini, qwen, kimi, opencode)
-│   │       ├── integrations.ts  # Managed integration helpers
-│   │       ├── mcp/             # MCP server config (json, toml, validation)
-│   │       ├── swarm/           # Swarm (map/filter/reduce/bestOf/verify, semaphore)
-│   │       ├── pipeline/        # Pipeline (fluent chaining)
-│   │       ├── storage/         # Cloud-backed filesystem (S3 snapshots)
-│   │       ├── observability/   # Session logger + dashboard integration
-│   │       ├── prompts/         # Agent & user prompt templates (agent_md/, user/)
-│   │       └── utils/           # Config, files, retry, sandbox, schema helpers
-│   ├── sdk-py/                  # Python SDK (evolve-sdk) — bridges to TS via JSON-RPC
-│   │   ├── evolve/              # Python package (agent, bridge, integrations, pipeline, swarm, schema)
-│   │   ├── bridge/              # Node.js bridge subprocess (bundle.mjs)
-│   │   └── tests/
-│   ├── e2b/                     # E2B sandbox provider (@evolvingmachines/e2b)
-│   │   └── src/
-│   ├── daytona/                 # Daytona sandbox provider (@evolvingmachines/daytona)
-│   │   └── src/
-│   └── modal/                   # Modal sandbox provider (@evolvingmachines/modal)
-│       └── src/
-├── assets/                      # Sandbox templates & build scripts
-│   ├── e2b/                     # E2B template (build.ts, template.ts)
-│   ├── daytona/                 # Daytona template (build.ts, template.ts)
-│   ├── modal/                   # Modal template (build.ts, template.ts)
-│   ├── docker/                  # Docker image (Dockerfile, build.ts)
-│   ├── build.sh                 # Master build script
-│   └── README.md
-├── skills/                      # Agent skills (43 total)
-│   ├── pdf, docx, pptx, xlsx   # Document processing
-│   ├── agent-browser, dev-browser, webapp-testing  # Browser automation
-│   ├── frontend-design, shadcn-webapp-design, web-design-guidelines  # Design
-│   ├── evolve, evolve-orchestrator  # SDK development
-│   ├── skill-creator, skill-share, template-skill  # Skill tooling
-│   ├── remotion, slides-as-code, canvas-design  # Media & presentations
-│   ├── mcp-builder              # MCP server builder
-│   └── ...                      # content-research, lead-research, invoice, image-enhancer, etc.
-├── cookbooks/                   # Example applications
-│   ├── typescript/
-│   └── python/
-├── docs/                        # Documentation (source of truth)
-│   ├── _meta.ts                 # Nextra navigation config
-│   ├── index.md                 # Docs landing page
-│   ├── changelog.md             # Symlink → ../CHANGELOG.md
-│   ├── typescript/              # TS SDK reference (5 chapters + index)
-│   └── python/                  # Python SDK reference (5 chapters + index)
-├── docs-site/                   # Nextra docs site (Next.js 16 + Nextra 4.6)
-│   ├── src/app/                 # Next.js app (layout, page)
-│   ├── tests/                   # Unit, integration, e2e, visual tests
-│   ├── next.config.mjs          # Next.js config (basePath: /evolve)
-│   └── package.json             # Workspace: docs-site
-├── .claude/
-│   └── skills/evolve/           # Evolve skill (auto-synced from docs/)
-├── .github/workflows/
-│   ├── docs.yml                 # Build + test + deploy docs to GitHub Pages
-│   ├── sync-docs-to-skill.yml   # Sync docs/ → skills/ + .claude/skills/
-│   └── publish.yml              # NPM publish
-├── logo/                        # Brand assets (PNG, GIF, 3D HTML)
-├── package.json                 # Monorepo root
-└── tsconfig.json                # Root TS config
+```bash
+evolve agent add my-agent \
+  --install-script ./install.sh \
+  --run "my-agent --headless"
 ```
 
-## Development
+Evolve uploads the script's contents.
 
-- **Commits**: Conventional (`feat:`, `fix:`, `docs:`, `chore:`), single line, no co-authors
-- **Code**: TypeScript SDK is primary (Python wraps via bridge), registry-based (agent differences = data)
-- **Edit existing files**, don't create new ones unless necessary
+### Agent directory
+
+```bash
+evolve agent add my-agent \
+  --dir ./my-agent \
+  --run "./bin/my-agent --headless" \
+  --agent-env MODE=eval
+```
+
+Evolve uploads the directory as an archive.
+
+Use exactly one source. Both forms require `--run`.
+
+## Registration options
+
+| Option | Meaning |
+| --- | --- |
+| `--install-script <path>` | Local install script. |
+| `--dir <path>` | Local agent directory. |
+| `--run <command>` | Required command, executed with `sh -c`. |
+| `--agent-env <KEY=VALUE>`, `--ae <KEY=VALUE>` | Runtime environment variables. Repeatable. |
+| `--org <name>` | Owning organization; otherwise the saved CLI default, then personal. |
+
+The registration belongs to you and an organization. Its members can use it in jobs; only you can change or remove it.
+
+For the execution contract and model access, see [Agents](/core-concepts/agents).
+
+## List and inspect
+
+```bash
+evolve agent list --scope org
+evolve agent show my-agent
+```
+
+`agent list` accepts `--scope <my|shared|org>` and all shared [list options](/cli-reference/index#list-options).
+
+`agent show` takes the registered agent's name. This group manages custom registrations; it is not the list of built-in harnesses.
+
+## Run it
+
+```bash
+evolve run \
+  -d harbor-examples@1.0 -i hello-world \
+  -a my-agent -m gpt-6-luna \
+  --max-trial-spend 0.30 --max-retries 0 \
+  --watch
+```
+
+The supplied model must be suitable for your agent's implementation.
+
+## Remove a registration
+
+```bash
+evolve agent remove my-agent
+```
+
+Past jobs keep their recorded agent configuration. Removal has no CLI confirmation prompt.
+
+[Global options](/cli-reference/index#global-options) apply. The plural `agents` is reserved; use `agent`.
 
 ---
 > Source: [evolving-machines-lab/evolve](https://github.com/evolving-machines-lab/evolve) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-06-19 -->
+<!-- tomevault:4.0:agents_md:2026-10-01 -->
