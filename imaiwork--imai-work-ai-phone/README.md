@@ -15,7 +15,7 @@ Original source: `CLAUDE.md` in [imaiwork/IMAI.WORK-AI-Phone](https://github.com
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [imaiwork/IMAI.WORK-AI-Phone](https://github.com/imaiwork/IMAI.WORK-AI-Phone) — a repo with 194+ stars on GitHub.
+From [imaiwork/IMAI.WORK-AI-Phone](https://github.com/imaiwork/IMAI.WORK-AI-Phone) — a repo with 234+ stars on GitHub.
 
 ---
 
