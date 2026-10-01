@@ -5,21 +5,21 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `` in [PowerShell/DSC](https://github.com/PowerShell/DSC).
+Original source: `copilot-instructions.md` in [PowerShell/DSC](https://github.com/PowerShell/DSC).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-## Bundled Skills (2)
+## Bundled Skills (3)
 
 - [DSC](https://github.com/PowerShell/DSC/tree/main/.github/skills/create-dsc-resource/SKILL.md)
 - [DSC](https://github.com/PowerShell/DSC/tree/main/.github/skills/create-resource-doc/SKILL.md)
+- [DSC](https://github.com/PowerShell/DSC/tree/main/.github/skills/code-review/SKILL.md)
 
 Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/PowerShell/DSC](https://github.com/PowerShell/DSC)
 
