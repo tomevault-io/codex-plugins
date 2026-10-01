@@ -1,57 +1,62 @@
-# Vue3 + TypeScript 开发规范
+# CLAUDE.md
 
-## Vue 组件规范
-- 使用 Composition API 和 `<script setup>` 语法
-- 组件文件使用 PascalCase 命名
-- 页面文件放在 `src/pages/` 目录下
-- 全局组件文件放在 `src/components/` 目录下
-- 局部组件文件放在页面的 `/components/` 目录下
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Vue SFC 组件规范
-- `<script setup lang="ts">` 标签必须是第一个子元素
-- `<template>` 标签必须是第二个子元素
-- `<style scoped>` 标签必须是最后一个子元素（因为推荐使用原子化类名，所以很可能没有）
+**See `AGENTS.md` first** for the authoritative module map, build/lint commands, the web-page and
+backend-service "必做清单" checklists, and commit conventions. This file adds the backend
+architecture picture that AGENTS.md does not cover; it does not repeat those checklists.
 
-## TypeScript 规范
-- 严格使用 TypeScript，避免使用 `any` 类型
-- 为 API 响应数据定义接口类型
-- 使用 `interface` 定义对象类型，`type` 定义联合类型
-- 导入类型时使用 `import type` 语法
+## Repository shape
+Monorepo, three independently-buildable modules — change only the module you're targeting:
+- `api/`   — .NET backend, solution at `api/SimpleAdmin/SimpleAdmin.sln`.
+- `web/`   — Vue 3 + Vite + TS admin console (npm).
+- `uniapp/` — uni-app mobile client (pnpm).
 
-## 状态管理
-- 使用 Pinia 进行状态管理
-- Store 文件放在 `src/store/` 目录下
-- 使用 `defineStore` 定义 store
-- 支持持久化存储
+## Common commands
+Backend (run from `api/SimpleAdmin`):
+- `dotnet build SimpleAdmin.sln` — build (multi-targets net6/7/8).
+- `dotnet run --project SimpleAdmin.Web.Entry` — run the API host.
 
-## 示例代码结构
-```vue
-<script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import type { UserInfo } from '@/types/user'
+Web (`web/`): `npm run dev` · `npm run type:check` · `npm run lint:eslint` · `npm run build:pro`
 
-const userInfo = ref<UserInfo | null>(null)
+Uniapp (`uniapp/`): `pnpm dev:h5` · `pnpm type-check` · `pnpm lint` · `pnpm build:h5`
 
-onMounted(() => {
-  // 初始化逻辑
-})
-</script>
+There is no automated test project. Verify changes with the module's lint + type-check + build,
+plus manual walk-through of the affected flow (login → dynamic route → permission → CRUD/API).
 
-<template>
-  <view class="container">
-    <!-- 模板内容 -->
-  </view>
-</template>
+## Backend architecture (the part that spans many files)
+- **Framework: MoYu** (a Furion fork; `MoYu.Pure`). The host in
+  `SimpleAdmin.Web.Entry/Program.cs` is just `Serve.Run(...)`; there is no manual DI wiring of
+  services. Controllers and services are discovered by convention:
+  - Services implementing `ITransient` / `IScoped` / `ISingleton` are auto-registered — inject via
+    constructor; don't new them up or register manually.
+  - API endpoints are convention-based dynamic controllers under `SimpleAdmin.Web.Core/Controllers`
+    (`System/` for system features, `Application/` for business features).
+- **Layering** (host → web → domain → data → core):
+  `Web.Entry` (startup) → `Web.Core` (controllers, filters, middleware, unified result/logging)
+  → `Application` (business services) + `System` (system services, entities, seed data, UserManager)
+  → `SqlSugar` (DbContext, CodeFirst) → `Cache` / `Core` (attributes, enums, extensions, utils).
+- **Plugin projects** are optional, self-contained capability modules:
+  `Background` (jobs), `MessageCenter` (messaging), `UploadCleanup`, `Plugin`. Keep new capabilities
+  isolated in the matching project rather than bloating the core layers.
+- **Data layer — SqlSugar, single-instance + CodeFirst + repository**
+  (`SimpleAdmin.SqlSugar/Db/`). Entities derive from `BaseEntity`. On first run the app
+  **auto-creates tables and seeds data** (`SimpleAdmin.System/SeedData/`, `Utils/CodeFirstUtils.cs`)
+  — no migration step. To change schema, edit the entity; to change/seed defaults, edit SeedData.
+- **AuthZ: RBAC + multi-org data-scope**, enforced by controller attributes
+  (`[SuperAdmin]`, `[RolePermission]`). Interface-level data-scope permission is the project's
+  headline feature — respect it when adding endpoints (see AGENTS.md backend checklist).
+- **Config**: each project ships `<Name>.Development.json` / `<Name>.Production.json`
+  (SqlSugar, System, Web, Core, Application), selected by `ASPNETCORE_ENVIRONMENT`. The DB provider
+  and connection string live in `SimpleAdmin.SqlSugar/SqlSugar.Development.json`
+  (SQLite/MySQL/SqlServer blocks; switch by commenting). These dev JSON files hold real
+  credentials and are often locally modified — **do not commit local connection-string/secret edits.**
 
-<style lang="scss" scoped>
-.container {
-  // 样式
-}
-</style>
----
-globs: *.vue,*.ts,*.tsx
----
+## Conventions worth remembering
+- C# fields: `_camelCase` for private/internal, `ALL_UPPER` for const/static-readonly (`.editorconfig`).
+- Front-end: UTF-8/LF/spaces; component & page entry files are `index.vue`.
+- Commits: Conventional Commits `type(scope): summary`; `web`/`uniapp` enforce commitlint + lint-staged.
 
 ---
 > Source: [DotNet-MoYu/SimpleAdmin](https://github.com/DotNet-MoYu/SimpleAdmin) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-26 -->
+<!-- tomevault:4.0:agents_md:2026-10-01 -->
