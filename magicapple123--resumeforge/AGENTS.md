@@ -1,10 +1,8 @@
-# CLAUDE.md
+# Copilot 指令
 
-本仓库的全部规则在 [AGENTS.md](AGENTS.md)——**动手前先读它**。这里只重复一条影响每次提交的硬性要求（它在 AGENTS.md 的「提交署名」一节里也有完整说明）：
+本仓库的完整规则见根目录 [AGENTS.md](../AGENTS.md)，请以其为准（含 Conventional Commits 前缀、CHANGELOG、验证命令、安全边界与使用指南同步）。
 
-**不要在提交信息里添加任何 AI 或工具署名**：`Co-Authored-By:`、`Generated-by:`、`Assisted-by:`、`Signed-off-by:` 等尾注一律不写，也不要写 AI 服务商的邮箱。GitHub 会把这些邮箱解析成账号并计入仓库的贡献者列表，而维护者要求公开仓库的贡献者列表里不出现 AI 账号。确实需要说明某个改动由 AI 协助完成时，写进提交正文的普通句子即可。
-
-其余约定（Conventional Commits 前缀、CHANGELOG、验证命令、提交署名、安全边界、使用指南同步）见 [AGENTS.md](AGENTS.md)。
+其中一条与每次提交直接相关，这里重复一遍：**不要在提交信息里添加 AI 或工具署名**（`Co-Authored-By:`、`Generated-by:`、`Assisted-by:` 等，也不要写 AI 服务商邮箱）。GitHub 会把这类邮箱解析成账号，把这些提交算进仓库的贡献者列表，而维护者要求公开的贡献者列表里不出现 AI 账号。需要说明 AI 协助时，写进提交正文的普通句子。
 
 ---
 > Source: [magicapple123/ResumeForge](https://github.com/magicapple123/ResumeForge) — distributed by [TomeVault](https://tomevault.io).
