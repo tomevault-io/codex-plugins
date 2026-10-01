@@ -2,8 +2,6 @@
 
 > Tome by [PersonalJarvis](https://github.com/PersonalJarvis/PersonalJarvis), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
 
-Self-hosted voice assistant. Speak to your computer: it answers aloud, types your dictation, and operates your apps.
-
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
