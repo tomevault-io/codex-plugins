@@ -7,12 +7,12 @@ VS Code級の機能を、ネイティブの速さで。
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [tsuyoshi-otake/sakura-editor-next](https://github.com/tsuyoshi-otake/sakura-editor-next).
+Original source: `CLAUDE.md` in [tsuyoshi-otake/sakura-editor-next](https://github.com/tsuyoshi-otake/sakura-editor-next).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
