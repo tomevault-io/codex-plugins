@@ -1,0 +1,225 @@
+{
+  "name": "Deer-flow-s",
+  "owner": "shunbao-p",
+  "repo": "Deer-flow-s",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "Deer-flow-s",
+      "path": "skills/public/bootstrap/SKILL.md",
+      "github_url": "https://github.com/shunbao-p/Deer-flow-s/tree/main/skills/public/bootstrap/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Deer-flow-s",
+      "path": "skills/public/find-skills/SKILL.md",
+      "github_url": "https://github.com/shunbao-p/Deer-flow-s/tree/main/skills/public/find-skills/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Deer-flow-s",
+      "path": "skills/public/surprise-me/SKILL.md",
+      "github_url": "https://github.com/shunbao-p/Deer-flow-s/tree/main/skills/public/surprise-me/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Deer-flow-s",
+      "path": "skills/public/data-analysis/SKILL.md",
+      "github_url": "https://github.com/shunbao-p/Deer-flow-s/tree/main/skills/public/data-analysis/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Deer-flow-s",
+      "path": "skills/public/deep-research/SKILL.md",
+      "github_url": "https://github.com/shunbao-p/Deer-flow-s/tree/main/skills/public/deep-research/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Deer-flow-s",
+      "path": "skills/public/ppt-generation/SKILL.md",
+      "github_url": "https://github.com/shunbao-p/Deer-flow-s/tree/main/skills/public/ppt-generation/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Deer-flow-s",
+      "path": "skills/public/frontend-design/SKILL.md",
+      "github_url": "https://github.com/shunbao-p/Deer-flow-s/tree/main/skills/public/frontend-design/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Deer-flow-s",
+      "path": "skills/public/image-generation/SKILL.md",
+      "github_url": "https://github.com/shunbao-p/Deer-flow-s/tree/main/skills/public/image-generation/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Deer-flow-s",
+      "path": "skills/public/video-generation/SKILL.md",
+      "github_url": "https://github.com/shunbao-p/Deer-flow-s/tree/main/skills/public/video-generation/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Deer-flow-s",
+      "path": "skills/public/podcast-generation/SKILL.md",
+      "github_url": "https://github.com/shunbao-p/Deer-flow-s/tree/main/skills/public/podcast-generation/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Deer-flow-s",
+      "path": "skills/public/consulting-analysis/SKILL.md",
+      "github_url": "https://github.com/shunbao-p/Deer-flow-s/tree/main/skills/public/consulting-analysis/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Deer-flow-s",
+      "path": "skills/public/chart-visualization/SKILL.md",
+      "github_url": "https://github.com/shunbao-p/Deer-flow-s/tree/main/skills/public/chart-visualization/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Deer-flow-s",
+      "path": "skills/public/github-deep-research/SKILL.md",
+      "github_url": "https://github.com/shunbao-p/Deer-flow-s/tree/main/skills/public/github-deep-research/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Deer-flow-s",
+      "path": "skills/public/runtime-tool-builder/SKILL.md",
+      "github_url": "https://github.com/shunbao-p/Deer-flow-s/tree/main/skills/public/runtime-tool-builder/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Deer-flow-s",
+      "path": "skills/public/runtime-skill-builder/SKILL.md",
+      "github_url": "https://github.com/shunbao-p/Deer-flow-s/tree/main/skills/public/runtime-skill-builder/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Deer-flow-s",
+      "path": "skills/public/web-design-guidelines/SKILL.md",
+      "github_url": "https://github.com/shunbao-p/Deer-flow-s/tree/main/skills/public/web-design-guidelines/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Deer-flow-s",
+      "path": "skills/public/vercel-deploy-claimable/SKILL.md",
+      "github_url": "https://github.com/shunbao-p/Deer-flow-s/tree/main/skills/public/vercel-deploy-claimable/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Deer-flow-s",
+      "path": "backend/.deerflow/threads/ls-02-S3-70238afd/user-data/workspace/runtime-skills/defect-triage/SKILL.md",
+      "github_url": "https://github.com/shunbao-p/Deer-flow-s/tree/main/backend/.deerflow/threads/ls-02-S3-70238afd/user-data/workspace/runtime-skills/defect-triage/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Deer-flow-s",
+      "path": "backend/.deerflow/threads/3f4d6a1d-367c-4e23-9b81-a6c386703ac1/user-data/workspace/news-skill/SKILL.md",
+      "github_url": "https://github.com/shunbao-p/Deer-flow-s/tree/main/backend/.deerflow/threads/3f4d6a1d-367c-4e23-9b81-a6c386703ac1/user-data/workspace/news-skill/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Deer-flow-s",
+      "path": "backend/.deerflow/threads/d6cf145b-6a84-468f-85bf-eeb4be1b4fdc/user-data/workspace/weather-skill/SKILL.md",
+      "github_url": "https://github.com/shunbao-p/Deer-flow-s/tree/main/backend/.deerflow/threads/d6cf145b-6a84-468f-85bf-eeb4be1b4fdc/user-data/workspace/weather-skill/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Deer-flow-s",
+      "path": "backend/.deerflow/threads/ls-04-S1-ffaf026c/user-data/workspace/runtime-skills/feature-plan-review/SKILL.md",
+      "github_url": "https://github.com/shunbao-p/Deer-flow-s/tree/main/backend/.deerflow/threads/ls-04-S1-ffaf026c/user-data/workspace/runtime-skills/feature-plan-review/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Deer-flow-s",
+      "path": "backend/.deerflow/threads/ls-03-S2-2d8aef9e/user-data/workspace/runtime-skills/function-plan-review/SKILL.md",
+      "github_url": "https://github.com/shunbao-p/Deer-flow-s/tree/main/backend/.deerflow/threads/ls-03-S2-2d8aef9e/user-data/workspace/runtime-skills/function-plan-review/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Deer-flow-s",
+      "path": "backend/.deerflow/threads/ls-04-S2-07ff54a2/user-data/workspace/runtime-skills/operation-plan-review/SKILL.md",
+      "github_url": "https://github.com/shunbao-p/Deer-flow-s/tree/main/backend/.deerflow/threads/ls-04-S2-07ff54a2/user-data/workspace/runtime-skills/operation-plan-review/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Deer-flow-s",
+      "path": "backend/.deerflow/threads/ls-02-R2-92f59a51/user-data/workspace/runtime-skills/user-feedback-analysis/SKILL.md",
+      "github_url": "https://github.com/shunbao-p/Deer-flow-s/tree/main/backend/.deerflow/threads/ls-02-R2-92f59a51/user-data/workspace/runtime-skills/user-feedback-analysis/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Deer-flow-s",
+      "path": "backend/.deerflow/threads/ls-04-R1-090dbbc3/user-data/workspace/runtime-skills/activity-title-expansion/SKILL.md",
+      "github_url": "https://github.com/shunbao-p/Deer-flow-s/tree/main/backend/.deerflow/threads/ls-04-R1-090dbbc3/user-data/workspace/runtime-skills/activity-title-expansion/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Deer-flow-s",
+      "path": "backend/.deerflow/threads/ls-02-S2-d611f8ca/user-data/workspace/runtime-skills/customer-service-analysis/SKILL.md",
+      "github_url": "https://github.com/shunbao-p/Deer-flow-s/tree/main/backend/.deerflow/threads/ls-02-S2-d611f8ca/user-data/workspace/runtime-skills/customer-service-analysis/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Deer-flow-s",
+      "path": "backend/.deerflow/threads/ls-03-S1-23247f40/user-data/workspace/runtime-skills/product-requirement-analysis/SKILL.md",
+      "github_url": "https://github.com/shunbao-p/Deer-flow-s/tree/main/backend/.deerflow/threads/ls-03-S1-23247f40/user-data/workspace/runtime-skills/product-requirement-analysis/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Deer-flow-s",
+      "path": "backend/.deerflow/threads/d6cf145b-6a84-468f-85bf-eeb4be1b4fdc/user-data/workspace/skill-install/weather-skill/SKILL.md",
+      "github_url": "https://github.com/shunbao-p/Deer-flow-s/tree/main/backend/.deerflow/threads/d6cf145b-6a84-468f-85bf-eeb4be1b4fdc/user-data/workspace/skill-install/weather-skill/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Deer-flow-s",
+      "path": "backend/.deerflow/threads/ls-04-R2-0c9a2b31/user-data/workspace/runtime-skills/merchant-operation-retro-analysis/SKILL.md",
+      "github_url": "https://github.com/shunbao-p/Deer-flow-s/tree/main/backend/.deerflow/threads/ls-04-R2-0c9a2b31/user-data/workspace/runtime-skills/merchant-operation-retro-analysis/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "Deer-flow-s",
+      "path": "backend/.deerflow/threads/f491170e-71f0-4a9a-84f8-545bfa0efe62/user-data/workspace/runtime-skills/expense-audit-card/SKILL.md",
+      "github_url": "https://github.com/shunbao-p/Deer-flow-s/tree/main/backend/.deerflow/threads/f491170e-71f0-4a9a-84f8-545bfa0efe62/user-data/workspace/runtime-skills/expense-audit-card/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/shunbao-p/Deer-flow-s",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-10-01T11:37:08Z"
+}
