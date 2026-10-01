@@ -2,8 +2,6 @@
 
 > Source: [puppyone-ai/puppyone-cloud](https://github.com/puppyone-ai/puppyone-cloud). Graded, signed and kept current as the models change by [TomeVault](https://tomevault.io)
 
-Context drive for your AI agents
-
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
