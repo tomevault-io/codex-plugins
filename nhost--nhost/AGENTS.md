@@ -1,95 +1,39 @@
-# CLAUDE.md
+# betterleaks - Secret-Scanning Configuration Guide
 
-This file provides project-specific guidance for the Nhost AI service.
+**Important**: Always load the root `CLAUDE.md` at the repository root for general monorepo conventions before working on this project.
 
-## Project overview
+This project has no Go or TypeScript of its own. It owns the `betterleaks` configuration the monorepo is scanned with, a thin Nix wrapper that bakes that configuration into the pinned upstream binary, and a fixture-based test suite for the configuration. The upstream build itself is pinned in `nixops/overlays/go.nix`.
 
-The service is written in Go and provides two features:
+## Core Principles
 
-- **Auto-embeddings** — generates OpenAI embeddings for database rows, keeps vector columns synchronized, and deploys permission-aware search functions.
-- **Multi-provider agents** — streams agent responses through explicitly configured OpenAI Chat Completions, OpenAI Responses, Anthropic Messages, and Google Gemini adapter instances and supports GraphQL, MCP, web search, and web fetch tools.
+- **CI runs the base revision's config and toolchain.** `.github/workflows/ci_betterleaks.yaml` checks out the *base* revision and fetches the PR's commits as data only, so `betterleaks.toml`, the Nix toolchain and the base `.betterleaksignore` all come from already-merged code. Do not reintroduce a PR-head checkout for these. **Deliberate exception:** the scan *merges* the base `.betterleaksignore` with the copy on the PR head (`git show refs/nhost/under-review:...`), so a PR can add a fingerprint to suppress its own reviewed false positive. The merge only adds — a PR cannot drop or empty a base suppression — but it does mean a PR can suppress a finding in its own run, so the reviewer must read the `.betterleaksignore` diff. This is gated by `check-permissions` (write access or the `safe_to_test` label).
+- **The path filter must cover this whole directory.** When the config is supplied through `--config`/`BETTERLEAKS_CONFIG` (which the wrapper does) its own git history is scanned, and `betterleaks.toml`, `README.md` and `tests/` all contain fake secrets. The global `filter` excludes the directory with a single anchored prefix, `` `^tools/betterleaks/` ``. Keep it anchored (`^`); a non-anchored or optional-group form (e.g. `\.?`) was observed to stop matching.
+- **The wrapper is a separate derivation.** Never copy the configuration into the Go build in `nixops/overlays/go.nix`: that puts the file in the Go derivation's hash, so every allowlist tweak forces a full recompile and a Nix cache miss. `project.nix` feeds the two files to a `runCommand` wrapper instead.
+- **Every *reported* rule gets a fixture.** `tests/<rule-id>.sh` holds a few inline files the rule must report and a few it must not; add a fixture for the case you are changing and run `make test`. The three `skipReport` component rules (`nhost-project-url`/`-subdomain`/`-region`) have no script — they produce no findings to assert, and are exercised indirectly whenever the admin-secret validator resolves a target. If one regresses, validation silently falls back to the hard-coded projects; tighten them with care.
+- **The test does not cover validation.** CI runs `--validation-status valid,none`; the admin-secret rule has a validator, so its findings fail CI only when confirmed live. The test proves matching and filtering, nothing more.
+- **Prefer `betterleaks:allow` over `.betterleaksignore`.** An inline comment documents the false positive where it lives. The ignore file is for reviewed false positives that cannot carry a comment, one fingerprint per line.
 
-## Build and development commands
+## Directory Structure
 
-The service uses the monorepo Nix flake. Run these commands from `services/ai` (or enter the shell from the repository root with `nix develop .#ai`).
-
-```bash
-make develop
-make check
-make build
-make build-docker-image
-make dev-env-up
-make dev-env-up-short
-make dev-env-down
-make migrations-add MIGRATION_NAME=xxx
+```
+tools/betterleaks/
+├── betterleaks.toml      # Global CEL path/secret filter, per-rule allowlists, nhost-hasura-admin-secret rule + validator
+├── .betterleaksignore    # Reviewed false positives by fingerprint
+├── project.nix           # check (config check + tests/*.sh), package (wrapper), devShell
+├── tests/
+│   └── nhost-hasura-admin-secret.sh   # Inline fixtures: detect/ must be reported, ignore/ must not
+└── Makefile              # check, test, develop
 ```
 
-### Tests
+## Commands
 
-```bash
-go test ./...
-go test -v ./path/to/package
-go test -run TestName ./...
+```sh
+make check            # nix build of checks.<system>.betterleaks (config check + tests/*.sh)
+make test             # per-rule tests, in the dev shell
+nix develop .\#betterleaks --command betterleaks git . \
+  --log-opts='--diff-merges=first-parent origin/main..HEAD'   # what CI runs, without validation
 ```
-
-Tests that need PostgreSQL require the development environment. The full CI check runs linting, tests, and code-generation verification.
-
-## Architecture
-
-### Code generation
-
-- **gqlgenc** (`gqlgenc.yml`) generates the Hasura client and models from `hasura/client.graphqls`. After starting a clean development environment and applying the service migrations and metadata, run `GOEXPERIMENT= go generate .` from `services/ai`. Clearing `GOEXPERIMENT` keeps generated JSON fields compatible with standard Go builds. `make check` runs the same directive and fails if generation changes tracked files. Keep the explicit `package: hasura` settings: generation removes its output files before recreating them, and package inference can otherwise select the black-box test package.
-- Generate against the migrated live schema, not a schema file or stale Hasura container. Provider identity is a bounded string throughout PostgreSQL, Hasura, GraphQL, and Go; there is no provider catalog, foreign key, tracked enum table, generated enum, or provider-specific metadata reload. After migration changes, perform the documented full volume reset, verify the live schema and metadata, run generation twice to prove stability, and never hand-edit generated files.
-- **mockgen** generates package-local mocks for retained boundary interfaces.
-
-### Key packages
-
-- `cmd/` — CLI commands, HTTP routing, auto-embeddings webhooks, and service startup.
-- `agents/` — multi-provider agent orchestration, SSE streaming, approval flow, and tools.
-- `agents/provider/` — strict aggregate configuration plus OpenAI Chat Completions, OpenAI Responses, Anthropic Messages, and Google Gemini adapters. Each instance owns one trusted startup endpoint and header set and never supplies auto-embedding configuration.
-- `agents/tool/` — GraphQL, MCP, web search, and web fetch tools.
-- `autoai/` — auto-embeddings configuration and database functionality.
-- `autoai/embeddings/` — background embedding synchronization.
-- `openai/` — narrow OpenAI embedding client built on `github.com/openai/openai-go`.
-- `hasura/` — generated GraphQL client plus metadata helpers.
-- `migrations/` — PostgreSQL migrations and Hasura table, relationship, and event-trigger setup.
-
-### Request flow
-
-1. Gin serves health/version routes, agent SSE routes, and auto-embeddings webhooks.
-2. Hasura event triggers notify the service when auto-embeddings configuration changes.
-3. The background synchronization process fetches pending rows through Hasura, generates vectors through the OpenAI SDK, and writes results through the configured mutation.
-4. Agent routes load agent/session/message data through Hasura and stream provider events to clients.
-
-### Database
-
-Tables live in the `ai` schema. Auto-embeddings use `auto_embeddings_configuration`; agents use `agents`, `agent_sessions`, and `agent_messages`. Provider declarations are configuration-only and are never persisted. PostgreSQL requires `vector`, `http`, and `pg_jsonschema`.
-
-## Code standards
-
-- Follow the repository Go rules in `.claude/docs/go-design-rules.md`.
-- Use the root `go.mod` and `vendor/`; never add service-local dependency files.
-- Do not hand-edit generated files; regenerate them from their source definitions.
-- Handle errors with call-site context.
-- `AGENT_PROVIDERS` is the sole authority for agent-provider identity. Keep registry keys and persisted provider values as strings; do not add built-in identities, provider tables, foreign keys, or GraphQL/Go enums.
-- Construct configured provider clients once in `cmd.buildAgentProviders`, store them in `provider.Registry`, and keep per-agent models request-scoped in `provider.StreamRequest`; do not add models to reusable provider clients.
-- Agent adapters must use only declared endpoints and headers, refuse redirects, pin OpenAI and Anthropic retry counts explicitly, and sanitize SDK errors. Do not permit SDK ambient credentials, endpoints, backends, projects, locations, or ADC behavior to affect requests.
-- Build every Google instance from a fresh explicit client config. Preserve the private sentinel-removal transport, clone requests and headers before scrubbing the generated key, and never mutate `http.DefaultTransport`.
-- Before passing per-request options such as `option.WithResponseInto` to a shared `openai-go` service, clone the service's `Options` slice. The SDK appends request options and can otherwise mutate shared slice storage during concurrent streams.
-- Treat `provider.ToolCall.ProviderMetadata` as opaque adapter continuation state: persist and replay it with tool calls, but never expose or log it; build SSE payloads from explicit `{id, name, arguments}` projections and never marshal `provider.ToolCall` directly.
-- If a second adapter needs private continuation state, replace the tool-call carrier with a versioned, message-level provider-state envelope persisted separately from public SSE DTOs; do not add more adapter-specific state to `provider.ToolCall`.
-- Prefer table-driven parallel tests and `cmp.Diff`.
-- Avoid `//nolint` except for justified false positives or external types.
-
-## Validation workflow
-
-1. Update schemas or migrations.
-2. Regenerate the Hasura client when its operations or schema change.
-3. Add or update tests.
-4. From the repository root run `golines -w --base-formatter=gofumpt .`.
-5. From the repository root run `golangci-lint run --fix ./...`.
-6. Run `go test ./services/ai/...` and `make check` when the required development services are available.
 
 ---
 > Source: [nhost/nhost](https://github.com/nhost/nhost) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-09-09 -->
+<!-- tomevault:4.0:agents_md:2026-10-01 -->
