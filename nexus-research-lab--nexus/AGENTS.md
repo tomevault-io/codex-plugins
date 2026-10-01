@@ -1,29 +1,24 @@
-# 外部技能
+# default-models/
+
+L4 | 父级: web/src/features/settings
 
 ## 职责
 
-- `external-skill-model.ts` 统一外部技能身份、来源、安装量、导入状态和预览内容投影。
-- `external-results-model.ts` 统一来源分组、筛选回退、排序和结果阶段判定。
-- `skills-external-results.tsx` 消费 controller 的来源作用域，并按结果阶段组合筛选器和列表。
-- `external-result-card.tsx` 通过共享 Skill 目录卡渲染单条结果、稳定数学曲线身份及其导入动作。
-- 预览、来源管理和私有来源编辑分别使用独立弹窗，只消费自身声明的具体模型或窄接口；私有来源表单不得读取或回显 Token。
-- 外部预览以 Skill 名称和正文为主，来源/导入状态进入正文首行元数据，不用头像或组合副标题重复目录卡；来源管理使用扁平行和 Switch，删除必须复用共享确认框，禁止调用浏览器原生 `confirm`。
+- `settings-default-models-section.tsx`: 模型设置独立入口与纯视图，集中展示默认对话、生图、视觉理解、后台任务模型。
+- `use-default-model-preferences.ts`: 当前 owner 与 runtime 的 Provider 模型目录读取、显式重试及模型选择保存编排；复用 `general/use-user-preferences.ts` 的版本化事务。
+- `default-model-preferences-model.ts`: 按用途投影可选模型、推荐排序和显示值，编码与解码精确 Provider / Model 选择。
+- `settings-default-model-row.tsx`: 复用共享选择器的四类模型行；模型行不维护业务快照或恢复状态。
 
-## 不变量
+用户偏好是保存选择的唯一状态源。当前目录未包含已保存的精确 Provider / Model 时，显示值为空；视觉模型另显示失效的已保存选择，提示到供应商模型设置核实能力。目录清空后四类选择器均展示空态，不回填失效模型，不自动改写偏好，不借用其他 Provider 的同名模型。原选择重新进入可用目录时恢复显示。无显式对话或生图偏好时，仅采用后端返回且仍在可用目录中的对应默认选择。
 
-- 搜索请求、预览请求和竞态仍由 `controller/` 管理，纯模型不得触发副作用。
-- 来源选择必须下推为服务端 `source_id`，禁止先联合搜索再只在浏览器过滤私有来源。
-- 外部技能身份必须使用 `externalSkillKey`，禁止在列表、弹窗或命令中重新拼接。
-- 已导入、同名冲突和可导入是封闭状态，展示与动作可用性必须来自同一状态表。
-- 来源缺失、筛选来源失效和无结果由结果模型统一归一化，视图不得各自修正。
-- 第三方提供的标题、说明和正文保持原文；Nexus 生成的缺省说明、状态、计数和来源说明必须由当前界面语言投影，服务端不得注入固定语言占位文案。
-- 来源管理列表不展示各适配器的教程式说明；实现差异留在服务合同和必要错误中，用户只需看到来源身份、地址和可操作状态。
-- 搜索阶段、来源空态、来源选择、来源列表和导入加载状态分别复用 ResourceState、Panel、ChoiceButton、Typography 与 Spinner；外部来源视图不得再创建私有状态卡或把选择态塞进普通动作按钮。
-- 私有来源的认证方式复用 `UiSegmentedControl showLabel`，以 pressed 状态暴露当前值且只显示一个具名 group；编辑草稿、切换时保留 Token、已保存凭证留空和 loading 锁继续归来源编辑器，公共选择器不解析或转换这些业务值。
-- 来源管理以 filled Panel 和静态 flush ListRow 拥有表面/行密度；名称和地址完整换行，凭据状态及错误使用 supporting，独立动作以来源名分组，Switch 关联该行地址和状态说明。编辑字段按实例关联，服务地址使用 code 字体，提交显式投影 busy；不改变列表排序、Token 留空、不可编辑地址、确认删除及保存结果语义。
+模型目录随 owner、运行时类型和显式重试加载，迟到响应须匹配当前 owner 代次；同一作用域读取失败保留最后成功快照，并提供分区级重试。Provider 启停、换 Key、清除 Key 与模型卡管理属于相邻 `provider-settings/`，模型页不复制凭据动作。
 
-- 社区搜索和来源目录首读失败不得显示空结果；提供 ResourceState 只读恢复。来源未知写入不能因任意列表 GET 成功而解锁，只有已提交状态允许读取恢复后解锁；unknown 在用户核对后显式开启新意图，accepted 继续只读核对。外部预览标题使用实例 ID，原文链接保留 noopener noreferrer，导入按钮显式 aria-busy。
+选择保存复用 Preferences 的版本、首次读取门禁与未知结果对账，不发布第二份选择镜像；加载、保存、未对账写入期间禁用选择，目录读取期间也禁用选择及重复重试。所有保存操作共用模型角色锁，避免同页并发覆盖。
+
+模型行只显示一次标题和说明，不重复提供“服务 / 模型”标签。桌面端选择器占 300px 列宽，窄屏为整行；菜单布局、键盘、焦点及忙碌样式由共享控件拥有。
+
+共置行为测试覆盖中英文可访问名称、四类用途的精确选择分派、加载与保存锁、目录重试防重，以及目录清空和恢复时保留偏好的空值展示与视觉选择失效提示。
 
 ---
 > Source: [nexus-research-lab/nexus](https://github.com/nexus-research-lab/nexus) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-09-25 -->
+<!-- tomevault:4.0:agents_md:2026-10-01 -->
