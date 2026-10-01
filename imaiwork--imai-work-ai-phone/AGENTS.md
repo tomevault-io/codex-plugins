@@ -1,303 +1,127 @@
-# CLAUDE.md
+# CLAUDE.md — imai 工程约定
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+本文件记录跨功能的工程铁律，改代码前先读。规矩来自真实事故，别复踩。
 
-## Common Commands
+## 1. `.env` 是 `parse_ini_file` 解析的（三条铁律）
 
-### Testing
-- Run all tests: `./vendor/bin/phpunit`
-- Run tests with coverage: `./vendor/bin/phpunit --coverage-clover=build/logs/clover.xml`
-- Run specific test: `./vendor/bin/phpunit test/JiebaTest.php`
-- Run custom POS tag tests: `./vendor/bin/phpunit test/CustomPosTagTest.php`
-- Run security tests: `./vendor/bin/phpunit test/SecurityTest.php`
-- Run user dictionary tests: `./vendor/bin/phpunit test/UserDictTest.php`
-- Run memory management tests: `./vendor/bin/phpunit test/MemoryManagementTest.php`
+ThinkPHP 用 `parse_ini_file($file, true, INI_SCANNER_RAW)` 读 `.env`，PHP7+ 里
+`#` 并不是真正的注释符，`#` 行会被当内容解析。由此三条铁律：
 
-### Code Quality
-- Code style check: `./vendor/bin/phpcs`
-- PSR2 standard check: `./vendor/bin/phpcs --standard=PSR2 --extensions=php --ignore="*/test/*" ./src/class`
-- Code linting: `./vendor/bin/phpcs --standard=PSR2 src/`
+1. **注释只写纯文字**：出现 `( ) | & ~ " [ ]` 等 ini 保留字符会直接 syntax error，
+   **整个 `.env` 作废**——数据库配置全丢，症状是莫名的 `root@localhost 拒绝访问`。
+2. **顶级键必须放在所有 `[段]` 之前**：键一旦出现在某个段之后就归属该段，
+   `env('KEY')` 取不到（得用 `env('段.KEY')`）。往尾部追加配置时开一个自己的段。
+3. **段内键用 `env('段.KEY')` 读**，如 `env('NOTIFY.TOKEN')`、`env('DATABASE.DATABASE')`。
 
-### Demo Scripts
-- Basic segmentation: `php src/cmd/demo.php`
-- Keyword extraction: `php src/cmd/demo_extract_tags.php`
-- Part-of-speech tagging: `php src/cmd/demo_posseg.php`
-- Custom dictionary: `php src/cmd/demo_user_dict.php`
-- Tokenization with positions: `php src/cmd/demo_tokenize.php`
-- **Custom POS tagging**: `php src/cmd/demo_custom_pos_tag.php`
-- **TF-IDF and POS integration**: `php src/cmd/demo_tf_idf_pos.php`
-- **Mixed CJK language processing**: `php src/cmd/demo_mixed_cjk.php`
+改完 `.env` 用一行自检：`php -r "var_dump(parse_ini_file('.env', true, INI_SCANNER_RAW) !== false);"`
 
-### Memory Requirements
-All operations require significant memory allocation: `ini_set('memory_limit', '1024M');`
+## 2. 免登录回调接口统一用 `CallbackTokenService`（全站共用回调令牌）
 
-## Architecture Overview
+异步生成类功能（视频/音频/数字人等）的回调接口必须免登录——上游服务器直调，
+没有用户会话，等于公网敞开的门。不设防则任何人可伪造终态报文改任务状态、触发退款。
 
-This is a PHP port of the Python jieba Chinese text segmentation library. The core architecture consists of:
+统一方案（`app/common/service/CallbackTokenService.php`）：
 
-### Core Classes (src/class/)
-- **Jieba**: Main segmentation engine with three modes (accurate, full, search)
-  - Supports custom word addition with `addWord($word, $freq, $tag)`
-  - Enhanced input validation and security measures
-  - Memory management improvements
-  - **NEW**: Support for `with_pos` and `with_scores` options in `cut()` method
-- **Finalseg**: HMM-based final segmentation for unknown words using Viterbi algorithm
-- **JiebaAnalyse**: TF-IDF keyword extraction functionality
-  - **NEW**: Modular TF calculation with `calculateTF($words)`
-  - **NEW**: Flexible TF-IDF calculation with `calculateTFIDF($tf_values, $detailed)`
-- **Posseg**: Part-of-speech tagging with HMM model
-  - **Custom POS tag support**: Add custom tags with `addWordTag($word, $tag)`
-  - **Input validation**: Secure tag validation with length limits and character restrictions
-  - **Memory cleanup**: `removeWordTag($word)` for tag cleanup
-  - **NEW**: Support for `with_scores` option in `cut()` method
-- **JiebaMemory**: NEW unified memory management utility
-  - **Memory management**: `destroyAll()`, `initAll()`, `clearAllCaches()`
-  - **Statistics**: `getMemoryStats()`, `getAllCacheStats()`, `getInitializationStatus()`
-  - **Convenience**: `isAllInitialized()` for checking all classes
+- 配置：`.env` 的 `[NOTIFY]` 段 `TOKEN` 键，各站自定随机长串（`openssl rand -hex 24`），
+ 令牌只在本站闭环、上游仅透传，无需与任何一方协调；不配置 = 回调通道关闭，
+ 纯靠定时任务兜底同步（功能不坏，状态更新慢一拍）。
+ **新装站点由安装器自动生成**（`public/install/YxEnv.php::putEnv()`，2026-09-09 起；
+ 2026-09-14 起 `LEGACY_UNTIL` 也一并填成安装时刻 + 1 天的时间戳）；
+ 存量站点升级不重写 `.env`，仍需站长按 2.1 的顺序手动开启。
+- 发出回调地址：`CallbackTokenService::appendTo($url)`（令牌未配置返回空串，表示不开启）。
+- 校验回调：`CallbackTokenService::verify($this->request->get('token'))`，
+  内部 `hash_equals` 防时序攻击；未配置令牌恒拒。
+- **新增免登录回调接口一律接入本服务，禁止各自造轮子或裸奔**；存量未防护的
+  notify 接口（闪剪/数字人等）逐步迁移接入。
+- 接入示例见 `app/api/controller/PlayVideoController.php::notify`。
 
-### Dictionary System (src/dict/)
-- **dict.txt**: Default dictionary with word frequencies
-- **dict.big.txt**: Traditional Chinese dictionary
-- **dict.small.txt**: Compact dictionary for memory-constrained environments
-- **user_dict.txt**: Custom user dictionary
-- **idf.txt/idf.big.txt**: IDF values for keyword extraction
-- **stop_words.txt**: Stop words for analysis
-- **pos_tag_readable.txt**: Part-of-speech tag descriptions
+### 2.1 存量接口迁移用 `guard`，不要直接换成 `verify`
 
-### Model Files (src/model/)
-- **prob_start.json**: HMM start probabilities
-- **prob_trans.json**: HMM transition probabilities  
-- **prob_emit.json**: HMM emission probabilities
-- **pos/**: Part-of-speech specific HMM models
+`verify()` 在令牌未配置时恒拒。新接口无所谓（本来就没发出过回调地址），
+但存量接口上线前一直靠回调推业务，直接换 `verify` 等于「站长没改 .env 就把回调通道关了」。
+迁移一律用 `CallbackTokenService::guard($日志通道, $接口名, $token)`，三档判定见 `judge()`：
 
-### Key Algorithms
-1. **Trie-based DAG construction**: Efficient word graph scanning
-2. **Dynamic programming**: Maximum probability path finding
-3. **HMM + Viterbi**: Unknown word recognition
-4. **TF-IDF**: Keyword extraction
+| 本站 `NOTIFY.TOKEN` | 请求带的令牌 | 结果 |
+| --- | --- | --- |
+| 未配置 | 任意 | 放行（与接入前行为一致，写 info 日志） |
+| 已配置 | 正确 | 放行 |
+| 已配置 | 错误 | 拒绝 |
+| 已配置 | 没带 | `NOTIFY.LEGACY_UNTIL` 宽限期内放行并写 warning，过期则拒绝 |
 
-### Initialization Pattern
-All classes follow this pattern:
-```php
-Jieba::init($options);      // Load dictionary and build trie
-Finalseg::init();           // Load HMM models
-JiebaAnalyse::init();       // Load IDF data
-Posseg::init();             // Load POS models
+发出方对应传 `setRequestAndNotifyUrl(..., withToken: true)`（令牌未配置时回落成不带令牌的老地址）。
+回调报文里的令牌写日志前用 `maskForLog()` 打码。
+**`guard` 通过后立刻 `unset($data['token'])`**：令牌在 query 上，`$this->request->all()` 会把它并进 `$data`，
+不剥掉就会跟着 `$data` 流进业务层——2026-09-09 审核发现 `AudioLogic::updateAudioInfo()` 把整包 `$data`
+存进 `audio_info.response`，列表/详情接口又原样回传，等于任何登录用户转写一次就能拿到全站回调令牌。
+控制器层打码日志挡不住这条路径，只有在入口剥掉才彻底。
 
-// NEW: Convenient initialization of all classes
-JiebaMemory::initAll($options);  // Initialize all classes at once
-```
+**站长开启鉴权的顺序**：先在 `.env` 里把 `LEGACY_UNTIL` 填成「当前时间 + 1 天」，
+再填 `TOKEN`，两个一起生效——在途任务提交时回调地址还没有令牌，靠宽限期兜住；
+新任务从提交那一刻起就带令牌。宽限期到点自动收紧，不用回头再改配置。
 
-### Dictionary Modes
-- `'dict'=>'default'`: Standard dictionary
-- `'dict'=>'big'`: Traditional Chinese support
-- `'dict'=>'small'`: Memory-efficient mode
-- `'dict'=>'test'`: Testing dictionary
+**已接入**：闪剪视频 `notify` / 封面 `covernotify` / 音色 `notify`（2026-09-03）；
+`/api/shanjian.shanjianAnchor/anchornotify`、`voicenotify`、`/api/videoImitation.task/notify`、
+`/api/sora.*`、`/api/sv.*`（含 `clipnotify`）、`/api/human/notify`、`/api/human/clipnotify`、
+`/api/draw.draw/notify`、`/api/audio/notify`、`/api/minimax.voice/asrnotify`（2026-09-09，
+全部 `ToolsService` 免登录回调发出点已带 `withToken: true`；`clip()` 与画图 `MidPlatformDrawClient::buildNotifyUrl()`
+是手拼地址，走 `appendTo()`）。至此 `api` 模块下除支付回调外的免登录 notify 已全部接入，
+新增回调接口照 `PlayVideoController::notify` 用 `verify`。
 
-### Memory Management
-- Dictionary caching with .cache.json files
-- Static class variables for model storage
-- Large memory footprint requires 1GB+ allocation
+⚠️ **拒绝一次回调 = 永久丢一次终态**：中台把 2xx 当投递成功（`fail()` 也是 HTTP 200），
+不会重推；下一次只能等定时任务兜底。所以开鉴权前先确认该链路真有兜底轮询。当前各链路兜底：
 
-### Multi-language Support
-- Primary: Simplified/Traditional Chinese
-- Secondary: Japanese, Korean (with `'cjk'=>'all'`)
-- **ENHANCED**: Improved mixed-language text processing
-- **NEW**: Better handling of complex mixed CJK scenarios
-- Custom dictionaries can extend language support
-- **NEW Demo**: `demo_mixed_cjk.php` for testing multi-language capabilities
+| 链路 | 兜底 | 能否取回真实结果 |
+| --- | --- | --- |
+| 闪剪视频 | `ShanjianVideoTaskLogic::check()`（每 3 分钟，2h~24h 窗口）+ `ShanjianVideoSettingLogic::check()` 24 小时收口 + `checkOrphanTasks()` 孤儿扫尾 | 能（收口那两层只判失败退费） |
+| 闪剪封面 | `checkCover()`（每 3 分钟，>30 分钟） | 能 |
+| 闪剪音色 | `VoiceLogic::check()`（挂在 `shanjian_video_task`，>30 分钟查状态补偿 notify，>24h 标失败退费，2026-09-09 补） | 能 |
+| Sora 视频/形象 | `SoraVideoTaskLogic::checkStatus()`、`SoraAnchorLogic::checkStatus()` / `checkVideoStatus()` | 能 |
+| 爆款复刻 | `ShanjianQueueStatusCron` → `VideoImitationTaskLogic::handleQueueStatus()` | 能 |
+| 批量生产文案 | `SvCopywritingTaskLogic::queryCopywritingCron()` | 能 |
+| 数字人 | `HumanLogic::videoTaskCron()`（仅视频）+ `DigitalHumanLogic::*AnchorStatusCron()`（仅形象） | 部分：音色/音频无兜底 |
+| 闪剪形象/形象音色、音频转文字、闪剪 ASR、批量生产数字人/剪辑、AI 画图 | **无**（画图仅详情页顺带 poll） | 否——回调被拒即永久丢终态 |
 
-## Enhanced TF-IDF and POS Integration Features
+后六条链路（2026-09-09 接入 `guard`）目前没有轮询兜底：站长开鉴权时 **必须** 先填 `LEGACY_UNTIL`
+（当前时间 + 1 天）再填 `TOKEN`，让在途任务靠宽限期过渡；宽限期过后被拒的只会是伪造报文或
+配置错误。给这些链路补兜底轮询是后续项。
 
-### NEW: Integrated TF-IDF Scoring
-```php
-// Jieba::cut() with POS tags
-$pos_result = Jieba::cut($text, false, array('with_pos' => true));
+轮询走中台 `/api/shanjian/status`，场景码 `shanjian_status` 为 **free 计费（unit_price=0）**，
+轮询本身不吃算力；该场景在中台 `scene_pricings` 里必须存在且 enabled，否则轮询直接 400。
 
-// Jieba::cut() with TF-IDF scores
-$scored_result = Jieba::cut($text, false, array('with_scores' => true));
+`ShanjianVideoTaskLogic::check()` 曾自 2026-07-02（e84b0ade8，理由「以回调为准，轮询冗余」）
+起被摘出定时任务、空转两个月，2026-09-03 随回调鉴权迁移重新挂回。重新挂回时补了**年龄上界**：
+只捞 120~1440 分钟的任务，防止查无此单的老任务把 `order id asc + limit 3` 的名额占死。
+**改这里的筛选条件时务必保留上界。**
 
-// Jieba::cut() with both POS tags and TF-IDF scores
-$full_result = Jieba::cut($text, false, array(
-    'with_pos' => true,
-    'with_scores' => true
-));
+### 2.2 收口三层各管一段，孤儿子任务单独扫尾
 
-// Posseg::cut() with TF-IDF scores
-$posseg_scored = Posseg::cut($text, array('with_scores' => true));
-```
+`ShanjianVideoSettingLogic::check()` 只按**父设置** `status IN (1,2)` 捞：父设置一旦被
+`notify` 推成终态（3/4/5），底下没跑完的子任务就再也没人管——不标失败、不退费、
+列表一直显示「生成中」。`checkOrphanTasks()` 反过来按子任务查已终态的父设置补这个口，
+两条路径共用 `closeSettingUnfinishedTasks()`（同一份行锁 + 退费 + 父计数回写）。
+收口只动过了 1440 分钟横线的子任务，父设置终态后新提交的重试任务仍归回调和轮询，不误杀。
 
-### NEW: Modular TF-IDF Calculation
-```php
-// Calculate Term Frequency
-$words = array('測試', '中文', '分詞', '測試');
-$tf_values = JiebaAnalyse::calculateTF($words);
+⚠️ **查这张表的僵尸行必须带 `delete_time IS NULL`**：`ShanjianVideoTask` 是软删模型，
+所有模型查询自带该条件。2026-09-03 测试库「40 条 `status=1` 僵尸」的口径漏了这个过滤——
+那 40 条**全部是软删行**（多数 4~5 月就删了），应用侧任何地方都看不到、也不占任何 limit 名额；
+按模型口径当时的活跃未完成子任务是 **0 条**。裸 SQL 统计前先加过滤，别把删除记录当事故。
 
-// Calculate TF-IDF (simple format)
-$tfidf_simple = JiebaAnalyse::calculateTFIDF($tf_values, false);
+## 2.3 任务失败退费统一走 `AccountLogLogic::refundTaskOnce()`
 
-// Calculate TF-IDF (detailed format with TF, IDF, TF-IDF)
-$tfidf_detailed = JiebaAnalyse::calculateTFIDF($tf_values, true);
-```
+「回调判失败 / 轮询超时收口 → 按 task_id 退一次」这类退费，一律调
+`AccountLogLogic::refundTaskOnce($userId, $changeType, $taskId)`，不要再手写
+「`action=1` 条数 < `action=2` 条数才退」那五行（2026-09-09 已把 27 处手写替换掉）。
+它在同样的幂等判定外加了一把 redis 锁：回调与轮询、两条 cron 同时判失败时不会各退一次；
+退费主体仍由 `recordUserTokensLog(false)` 按原始扣费流水归属退回。
+按金额差退的「结余退费」（爆款复刻、GEO、爆款玩法等）不属于这一类，保持各自逻辑。
 
-## Custom POS Tagging Features
+## 3. 升级 SQL（`public/update/`）
 
-### Adding Custom Tags
-```php
-// Method 1: Via Jieba::addWord()
-Jieba::addWord('自定義詞', 100, 'custom_tag');
-
-// Method 2: Direct tag addition
-Posseg::addWordTag('詞彙', 'tag');
-```
-
-### Tag Management
-```php
-// Remove custom tag
-Posseg::removeWordTag('詞彙');
-
-// Tag validation (automatic)
-// - Length limit: 50 characters
-// - Allowed characters: alphanumeric, underscore, hyphen, Chinese characters
-// - Security: Prevents injection attacks
-```
-
-### Mixed Character Type Support
-- Supports words with mixed Chinese/numeric characters (e.g., "詞1", "ABC中文")
-- Handles complex segmentation scenarios
-- Prioritizes custom tags over HMM predictions
-
-## Security Features
-
-### Input Validation
-- **POS Tag Validation**: Comprehensive security checks for all tag inputs
-- **Length Limits**: Maximum 50 characters for POS tags
-- **Character Restrictions**: Only safe characters allowed (no HTML, JavaScript, etc.)
-- **Injection Prevention**: Blocks potential XSS, template injection, and script injection
-
-### Error Handling
-- **Consistent Error Handling**: Clear distinction between dictionary loading and direct API calls
-- **Graceful Degradation**: Invalid tags in user dictionaries log warnings but don't stop processing
-- **Exception Safety**: Proper exception handling with meaningful error messages
-
-### Memory Management
-- **Tag Cleanup**: Automatic cleanup when words are overridden
-- **Memory Leak Prevention**: Old tags are properly removed
-- **Efficient Processing**: Optimized for large dictionary operations
-
-## Testing Framework
-
-### Test Categories
-- **Core Functionality**: Basic segmentation and POS tagging tests
-- **Custom POS Tags**: Comprehensive testing of custom tagging features
-- **Security**: Input validation and injection prevention tests
-- **User Dictionaries**: Dictionary loading and processing tests
-- **Memory Management**: Memory cleanup and leak prevention tests
-- **NEW: TF-IDF Integration**: Enhanced TF-IDF and POS tagging features (`TfIdfPosTest.php`)
-- **NEW: Mixed CJK Support**: Multi-language text processing tests (`MixedCJKTest.php`)
-
-### Test Coverage
-- 70+ tests with 300+ assertions
-- PSR2 coding standard compliance
-- Edge case coverage for mixed character types
-- Security vulnerability testing
-- **NEW**: Comprehensive TF-IDF integration testing
-- **NEW**: Multi-language CJK text processing validation
-- **NEW**: Backward compatibility verification
-
-## Memory Management with JiebaMemory
-
-### NEW: Unified Memory Management
-```php
-use Fukuball\Jieba\JiebaMemory;
-
-// Initialize all classes at once
-JiebaMemory::initAll($options);
-
-// Check which classes are initialized
-$status = JiebaMemory::getInitializationStatus();
-if (!JiebaMemory::isAllInitialized()) {
-    // Handle partial initialization
-}
-
-// Get comprehensive memory statistics
-$stats = JiebaMemory::getMemoryStats();
-echo "Current Memory: " . $stats['current_memory_usage_formatted'] . "\n";
-echo "Peak Memory: " . $stats['peak_memory_usage_formatted'] . "\n";
-
-// Clear all caches while keeping classes initialized
-JiebaMemory::clearAllCaches();
-
-// Destroy all classes and free memory
-JiebaMemory::destroyAll();
-```
-
-### NEW: Cache Statistics Monitoring
-```php
-// Get detailed cache statistics for all classes
-$cacheStats = JiebaMemory::getAllCacheStats();
-
-// Monitor individual class cache usage
-echo "Jieba DAG Cache: " . $cacheStats['jieba']['dag_cache_size'] . "\n";
-echo "Posseg Word Tags: " . $cacheStats['posseg']['word_tag_size'] . "\n";
-echo "JiebaAnalyse IDF: " . $cacheStats['jieba_analyse']['idf_freq_size'] . "\n";
-```
-
-## Best Practices & Guidelines
-
-### Custom Word Addition
-```php
-// Always initialize first
-Jieba::init();
-Finalseg::init();
-Posseg::init();
-// OR use convenient initialization
-JiebaMemory::initAll();
-
-// Add words with proper error handling
-try {
-    Jieba::addWord('自定義詞', 100, 'custom_tag');
-} catch (InvalidArgumentException $e) {
-    error_log("Invalid tag: " . $e->getMessage());
-}
-```
-
-### NEW: Enhanced Feature Usage
-```php
-// Use integrated TF-IDF and POS features
-$result = Jieba::cut($text, false, array(
-    'with_pos' => true,
-    'with_scores' => true
-));
-
-// Automatic JiebaAnalyse initialization when needed
-// No need to manually call JiebaAnalyse::init() for scoring features
-
-// Use modular TF-IDF calculation for custom workflows
-$tf_values = JiebaAnalyse::calculateTF($words);
-$tfidf_scores = JiebaAnalyse::calculateTFIDF($tf_values, true);
-```
-
-### Security Considerations
-- Always validate user input before adding custom tags
-- Use safe characters only: alphanumeric, underscore, hyphen, Chinese characters
-- Avoid dynamic tag generation from untrusted sources
-- Monitor memory usage with large custom dictionaries
-
-### Performance Optimization
-- Load user dictionaries during initialization, not runtime
-- Use appropriate dictionary modes ('small' for memory-constrained environments)
-- Clear unused tags with `removeWordTag()` to prevent memory leaks
-- **NEW**: Use `JiebaMemory::clearAllCaches()` for comprehensive cache management
-- **NEW**: Monitor memory with `JiebaMemory::getMemoryStats()` and `getAllCacheStats()`
-- Cache initialization results when possible
-
-### Error Handling Patterns
-- **Dictionary Loading**: Log warnings for invalid entries, continue processing
-- **Direct API Calls**: Throw exceptions for immediate feedback
-- **Batch Operations**: Use try-catch blocks for individual items
-- **Production**: Always handle `InvalidArgumentException` for tag operations
+- 当前开发版本的 SQL 文件在发布前可直接改（含改建表/INSERT 语句本身），
+  不要往尾部叠 UPDATE 补丁；历史版本已存在的表才用可重入 ALTER 追加。
+- SQL 注释与字段 COMMENT 用中性措辞，不出现内部架构称呼。
+- INSERT 一律 `WHERE NOT EXISTS` 幂等；表前缀仓库写 `la_`，执行时按环境实际前缀换。
 
 ---
 > Source: [imaiwork/IMAI.WORK-AI-Phone](https://github.com/imaiwork/IMAI.WORK-AI-Phone) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-23 -->
+<!-- tomevault:4.0:agents_md:2026-10-01 -->
