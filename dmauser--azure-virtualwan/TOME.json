@@ -319,9 +319,69 @@
       "path": ".squad/templates/skills/cross-machine-coordination/SKILL.md",
       "github_url": "https://github.com/dmauser/azure-virtualwan/tree/main/.squad/templates/skills/cross-machine-coordination/SKILL.md",
       "description": ""
+    },
+    {
+      "name": "azure-virtualwan",
+      "path": ".squad/skills/vwan-dynamic-validate/SKILL.md",
+      "github_url": "https://github.com/dmauser/azure-virtualwan/tree/main/.squad/skills/vwan-dynamic-validate/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "azure-virtualwan",
+      "path": ".squad/skills/er-circuit-vhub-connect/SKILL.md",
+      "github_url": "https://github.com/dmauser/azure-virtualwan/tree/main/.squad/skills/er-circuit-vhub-connect/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "azure-virtualwan",
+      "path": ".squad/skills/azure-validation-queries/SKILL.md",
+      "github_url": "https://github.com/dmauser/azure-virtualwan/tree/main/.squad/skills/azure-validation-queries/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "azure-virtualwan",
+      "path": ".squad/skills/vwan-nva-routing/SKILL.md",
+      "github_url": "https://github.com/dmauser/azure-virtualwan/tree/main/.squad/skills/vwan-nva-routing/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "azure-virtualwan",
+      "path": ".squad/skills/pa-vmseries-bootstrap/SKILL.md",
+      "github_url": "https://github.com/dmauser/azure-virtualwan/tree/main/.squad/skills/pa-vmseries-bootstrap/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "azure-virtualwan",
+      "path": ".squad/skills/bicep-nsg-spoke-module/SKILL.md",
+      "github_url": "https://github.com/dmauser/azure-virtualwan/tree/main/.squad/skills/bicep-nsg-spoke-module/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "azure-virtualwan",
+      "path": ".squad/skills/panos-vmseries-bootstrap/SKILL.md",
+      "github_url": "https://github.com/dmauser/azure-virtualwan/tree/main/.squad/skills/panos-vmseries-bootstrap/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "azure-virtualwan",
+      "path": ".squad/skills/azure-ilb-probe-symmetry/SKILL.md",
+      "github_url": "https://github.com/dmauser/azure-virtualwan/tree/main/.squad/skills/azure-ilb-probe-symmetry/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "azure-virtualwan",
+      "path": ".squad/skills/readable-az-route-output/SKILL.md",
+      "github_url": "https://github.com/dmauser/azure-virtualwan/tree/main/.squad/skills/readable-az-route-output/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "azure-virtualwan",
+      "path": ".squad/skills/az-cli-extension-isolation/SKILL.md",
+      "github_url": "https://github.com/dmauser/azure-virtualwan/tree/main/.squad/skills/az-cli-extension-isolation/SKILL.md",
+      "description": ""
     }
   ],
   "source_url": "https://github.com/dmauser/azure-virtualwan",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-24T11:51:19Z"
+  "distributed_at": "2026-10-01T11:31:42Z"
 }
