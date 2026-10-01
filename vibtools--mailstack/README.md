@@ -7,13 +7,13 @@ Self-hosted open-source team email server with Django, Postfix, Dovecot, MariaDB
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [vibtools/MailStack](https://github.com/vibtools/MailStack).
+Original source: `.cursor/rules/*.mdc` in [vibtools/MailStack](https://github.com/vibtools/MailStack).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
