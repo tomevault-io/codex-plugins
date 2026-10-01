@@ -17,7 +17,7 @@ Original source: `CLAUDE.md` in [adriannoes/awesome-agentic-ai](https://github.c
 
 ## Bundled Skills (1)
 
-- [frontend-design](https://github.com/adriannoes/awesome-agentic-ai/tree/main/cursor-claude-codex/skills/frontend-design)
+- [frontend-design](https://github.com/adriannoes/awesome-agentic-ai/tree/main/cursor-claude-codex/skills/frontend-design/SKILL.md)
 
 Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/adriannoes/awesome-agentic-ai](https://github.com/adriannoes/awesome-agentic-ai)
 
