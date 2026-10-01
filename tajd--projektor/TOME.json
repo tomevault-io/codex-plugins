@@ -2,9 +2,9 @@
   "name": "projektor",
   "owner": "TAJD",
   "repo": "projektor",
-  "description": "Self hosted Wiki + Jira-style AI native issue tracker on Cloudflare Workers",
+  "description": "",
   "type": "config",
-  "source_format": "CLAUDE.md",
+  "source_format": "",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/TAJD/projektor",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-08-25T08:08:09Z"
+  "distributed_at": "2026-10-01T19:51:55Z"
 }
