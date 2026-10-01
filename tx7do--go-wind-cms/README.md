@@ -1,6 +1,6 @@
 # AI instruction files for go-wind-cms
 
-> Sourced from [tx7do/go-wind-cms](https://github.com/tx7do/go-wind-cms) and converted for every major platform by [TomeVault](https://tomevault.io)
+> Sourced from [tx7do/go-wind-cms](https://github.com/tx7do/go-wind-cms), graded against the public Tome Standard and kept consistent across every major platform by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
@@ -15,14 +15,10 @@ Original source: `CLAUDE.md` in [tx7do/go-wind-cms](https://github.com/tx7do/go-
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-## Bundled Skills (1)
-
-- [go-wind-cms](https://github.com/tx7do/go-wind-cms/tree/main/frontend/admin/.qoder/skills/scaffold-dev-guide/SKILL.md)
-
-Quality verified by TomeVault's automated analysis pipeline. Source: [github.com/tx7do/go-wind-cms](https://github.com/tx7do/go-wind-cms)
+Graded against the Tome Standard, TomeVault's public ruleset for whether AI instructions load, read clearly and stay safe. Source: [github.com/tx7do/go-wind-cms](https://github.com/tx7do/go-wind-cms)
 
 ---
 
-Explore more instruction files on [TomeVault](https://tomevault.io) — the open index of AI config files for every platform.
+Explore more instruction files on [TomeVault](https://tomevault.io), the platform that grades AI instruction files and catches silent drift across every major tool.
 
 <!-- genome:a-e-q -->
