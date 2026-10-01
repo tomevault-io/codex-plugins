@@ -1,0 +1,44 @@
+{
+  "name": "copilot-desktop-gtk",
+  "owner": "sirredbeard",
+  "repo": "copilot-desktop-gtk",
+  "description": "Unofficial desktop app for Microsoft Copilot on Linux ",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/sirredbeard/copilot-desktop-gtk",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-10-01T23:45:37Z"
+}
