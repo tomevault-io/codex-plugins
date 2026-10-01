@@ -15,7 +15,7 @@ Original source: `copilot-instructions.md` in [dmauser/azure-virtualwan](https:/
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-## Bundled Skills (47)
+## Bundled Skills (57)
 
 - [azure-virtualwan](https://github.com/dmauser/azure-virtualwan/tree/main/.squad/templates/skill.md)
 - [azure-virtualwan](https://github.com/dmauser/azure-virtualwan/tree/main/.squad/templates/skills/nap/SKILL.md)
@@ -64,6 +64,16 @@ Original source: `copilot-instructions.md` in [dmauser/azure-virtualwan](https:/
 - [azure-virtualwan](https://github.com/dmauser/azure-virtualwan/tree/main/.squad/templates/skills/windows-compatibility/SKILL.md)
 - [azure-virtualwan](https://github.com/dmauser/azure-virtualwan/tree/main/.squad/templates/skills/architectural-proposals/SKILL.md)
 - [azure-virtualwan](https://github.com/dmauser/azure-virtualwan/tree/main/.squad/templates/skills/cross-machine-coordination/SKILL.md)
+- [azure-virtualwan](https://github.com/dmauser/azure-virtualwan/tree/main/.squad/skills/vwan-dynamic-validate/SKILL.md)
+- [azure-virtualwan](https://github.com/dmauser/azure-virtualwan/tree/main/.squad/skills/er-circuit-vhub-connect/SKILL.md)
+- [azure-virtualwan](https://github.com/dmauser/azure-virtualwan/tree/main/.squad/skills/azure-validation-queries/SKILL.md)
+- [azure-virtualwan](https://github.com/dmauser/azure-virtualwan/tree/main/.squad/skills/vwan-nva-routing/SKILL.md)
+- [azure-virtualwan](https://github.com/dmauser/azure-virtualwan/tree/main/.squad/skills/pa-vmseries-bootstrap/SKILL.md)
+- [azure-virtualwan](https://github.com/dmauser/azure-virtualwan/tree/main/.squad/skills/bicep-nsg-spoke-module/SKILL.md)
+- [azure-virtualwan](https://github.com/dmauser/azure-virtualwan/tree/main/.squad/skills/panos-vmseries-bootstrap/SKILL.md)
+- [azure-virtualwan](https://github.com/dmauser/azure-virtualwan/tree/main/.squad/skills/azure-ilb-probe-symmetry/SKILL.md)
+- [azure-virtualwan](https://github.com/dmauser/azure-virtualwan/tree/main/.squad/skills/readable-az-route-output/SKILL.md)
+- [azure-virtualwan](https://github.com/dmauser/azure-virtualwan/tree/main/.squad/skills/az-cli-extension-isolation/SKILL.md)
 
 Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/dmauser/azure-virtualwan](https://github.com/dmauser/azure-virtualwan)
 
