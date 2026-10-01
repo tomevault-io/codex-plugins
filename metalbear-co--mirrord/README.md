@@ -15,7 +15,7 @@ Original source: `CLAUDE.md` in [metalbear-co/mirrord](https://github.com/metalb
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [metalbear-co/mirrord](https://github.com/metalbear-co/mirrord) — a repo with 5230+ stars on GitHub.
+From [metalbear-co/mirrord](https://github.com/metalbear-co/mirrord) — a repo with 5347+ stars on GitHub.
 
 ---
 
