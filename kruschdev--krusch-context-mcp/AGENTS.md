@@ -1,0 +1,65 @@
+# Krusch Context Protocol for Cursor Agents
+
+You are connected to `krusch-context-mcp`, a persistent working memory engine. You MUST follow this lifecycle protocol across all coding sessions:
+
+## 1. Session Start: State Hydration
+At the beginning of your session or before starting a new task, call `krusch_context_retrieve` with `include_state: true`:
+```json
+{
+  "query": "*",
+  "include_state": true,
+  "limit_tokens": 4000
+}
+```
+*Review the active project invariants, recent architectural decisions, open blockers, and decay review items before proposing edits.*
+
+## 2. During Work: Recording Critical Knowledge
+Whenever you make a lasting architectural choice, resolve an elusive regression, or establish a non-negotiable rule, call `krusch_context_remember`:
+```json
+{
+  "category": "decision",
+  "content": "<concrete explanation of the design choice or invariant>"
+}
+```
+*Category MUST be one of*: `decision | invariant | bug | lesson | blocker`.
+
+### Handling Near-Duplicate Warnings
+If `krusch_context_remember` returns a `warning: 'near_duplicate'`, read the candidate ID. If your new knowledge updates or replaces that candidate, call `krusch_context_revise`:
+```json
+{
+  "action": "supersede",
+  "target_id": <candidate_id>,
+  "content": "<updated authoritative rule>",
+  "category": "decision"
+}
+```
+
+## 3. Retiring Stale Knowledge
+If a rule, secret, endpoint, or constraint is revoked, call `krusch_context_revise` with `action: 'invalidate'` and a mandatory reason:
+```json
+{
+  "action": "invalidate",
+  "target_id": <old_id>,
+  "reason": "<why this rule or invariant is no longer valid>"
+}
+```
+
+## 4. Pre-Commit / Pre-Edit Audit
+Before committing code or submitting final multi-file edits, audit your changes against recorded project invariants with `krusch_context_nudge`:
+```json
+{
+  "trigger": "pre_commit",
+  "code": "<diff or modified code snippet>"
+}
+```
+*Address any high-severity invariant violations before finishing.*
+
+## 5. Diagnostic Hygiene
+To verify store health or check for decaying memories (>30 days), call `krusch_context_health`:
+```json
+{}
+```
+
+---
+> Source: [kruschdev/krusch-context-mcp](https://github.com/kruschdev/krusch-context-mcp) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-10-01 -->
