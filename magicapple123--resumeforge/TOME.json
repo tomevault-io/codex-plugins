@@ -4,7 +4,7 @@
   "repo": "ResumeForge",
   "description": "",
   "type": "config",
-  "source_format": "CLAUDE.md",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/magicapple123/ResumeForge",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-10-01T10:25:57Z"
+  "distributed_at": "2026-10-01T14:03:24Z"
 }
