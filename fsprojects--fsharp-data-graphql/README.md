@@ -5,12 +5,12 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [fsprojects/FSharp.Data.GraphQL](https://github.com/fsprojects/FSharp.Data.GraphQL).
+Original source: `CLAUDE.md` in [fsprojects/FSharp.Data.GraphQL](https://github.com/fsprojects/FSharp.Data.GraphQL).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
