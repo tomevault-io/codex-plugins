@@ -1,0 +1,24 @@
+# AI instruction files for fhir-tools
+
+> Sourced from [ballerina-platform/fhir-tools](https://github.com/ballerina-platform/fhir-tools), graded against the public Tome Standard and kept consistent across every major platform by [TomeVault](https://tomevault.io)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [ballerina-platform/fhir-tools](https://github.com/ballerina-platform/fhir-tools).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+From [ballerina-platform/fhir-tools](https://github.com/ballerina-platform/fhir-tools) — a repo with 108+ stars on GitHub.
+
+---
+
+Explore more instruction files on [TomeVault](https://tomevault.io), the platform that grades AI instruction files and catches silent drift across every major tool.
+
+<!-- genome:a-e-s -->
