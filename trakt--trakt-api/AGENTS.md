@@ -1,27 +1,66 @@
-# trakt-api
 
-Deno monorepo: `@trakt/api` (typed ts-rest + Zod contract and client, published
-to JSR) in `projects/api/`, and the SvelteKit developer portal in
-`projects/developer/`.
+# Developer Portal Performance Guidelines
 
-The rules live in `.agents/rules/` and are linked into `.github/instructions/`,
-so each one applies to the paths in its `applyTo`:
+The framework-agnostic parts of trakt-web's performance rules. Read when the
+work touches animations, scroll/resize/pointer handlers, observers, large
+rendered lists (the endpoint sidebar, JSON viewers), the bundle, or images.
 
-- `project.md` - structure, tooling, restrictions, commits (all files)
-- `code-principles.md` - functional style, early exits, type safety (all files)
-- `jsr.md`, `schemas.md` - the published package and its contract schemas
-- `developer.md` - the developer portal
-- `developer-ui.md` - portal `.svelte` / `.scss` / `.css`
-- `developer-performance.md` - portal perf work
+## Animation
 
-Key restrictions:
+- **Animate only `transform` and `opacity`.** Other properties (`top`, `width`,
+  `height`, `margin`) re-run layout or paint every frame.
+  [web.dev: Animations guide](https://web.dev/articles/animations-guide).
+- **Do not blanket-declare `will-change`** or `translateZ(0)`. Every promoted
+  layer costs GPU memory.
+  [MDN: `will-change`](https://developer.mozilla.org/en-US/docs/Web/CSS/will-change).
+- For progress or fill bars, use `width` or `clip-path: inset(...)`, not
+  `scaleX` (it stretches the corner radius).
 
-- Never edit generated output (`projects/api/types/`,
-  `projects/developer/static/openapi.json`, `.svelte-kit/`) or hand-edit
-  `deno.lock`.
-- No new dependencies without asking. Do not touch the publish flow.
-- Conventional Commits, scoped `(api)` or `(developer)`. No em-dashes or
-  en-dashes.
+## Event Listeners
+
+- **Touch and wheel listeners are `{ passive: true }`** unless the handler calls
+  `preventDefault()`.
+  [Chrome: passive listeners](https://developer.chrome.com/docs/lighthouse/best-practices/uses-passive-event-listeners).
+- **Coalesce scroll/resize work with `requestAnimationFrame`**: at most one
+  frame queued, cancelled on teardown. Do not rAF-throttle `pointermove` (panel
+  resizing) - browsers already coalesce it.
+- **Always remove listeners and cancel timers/rAFs on teardown** (the `$effect`
+  cleanup or the action's `destroy`).
+
+## Observers and Large Lists
+
+- One `IntersectionObserver` / `ResizeObserver` per config, observing many
+  targets. Keep threshold lists short.
+- **Try `content-visibility: auto` before a custom observer** for long
+  off-screen content, with `contain-intrinsic-size` to avoid layout shift.
+  [web.dev: `content-visibility`](https://web.dev/articles/content-visibility).
+- Filter and group large lists (endpoints, response history) in `$derived`, not
+  in the template, so the work runs once per change.
+
+## Bundle
+
+- SvelteKit already splits per route. Do not add manual `import()` splits
+  without a measured win.
+- Large data such as `openapi.json` is served from `static/` and fetched at
+  runtime, not imported into a component's bundle.
+- Every dependency ships to the browser - ask before adding one (see the
+  restrictions in `project.md`).
+
+## Images
+
+- Set explicit `width` and `height` on `<img>` to avoid layout shift.
+- Non-critical images get `loading="lazy"` and `decoding="async"`. Never lazy
+  load above-the-fold images.
+- Content images use `<img>` with `alt`, not `background-image`.
+
+## When Not to Optimize
+
+- **Do not micro-optimize cold paths.** Optimize per-frame, per-keystroke, and
+  per-scroll work, or what shows up in a profile.
+- **Measure before and after** in DevTools Performance or Lighthouse. If you
+  cannot show the difference, the optimization may not exist.
+- When a production change adds a delay (rAF, debounce), update the spec in the
+  same commit.
 
 ---
 > Source: [trakt/trakt-api](https://github.com/trakt/trakt-api) — distributed by [TomeVault](https://tomevault.io).
