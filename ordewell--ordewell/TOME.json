@@ -1,0 +1,63 @@
+{
+  "name": "ordewell",
+  "owner": "ordewell",
+  "repo": "ordewell",
+  "description": "Multi-agent task orchestration for coding agents. Turn one goal into an ordered plan of tasks \u2014 each with its own runner, model and mode \u2014 then execute and verify the results.",
+  "type": "tome",
+  "source_format": "CLAUDE.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "ordewell",
+      "path": "packages/core/skills/to-spec/SKILL.md",
+      "github_url": "https://github.com/ordewell/ordewell/tree/main/packages/core/skills/to-spec/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "ordewell",
+      "path": "packages/core/skills/grilling/SKILL.md",
+      "github_url": "https://github.com/ordewell/ordewell/tree/main/packages/core/skills/grilling/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "ordewell",
+      "path": "packages/core/skills/improve-codebase-architecture/SKILL.md",
+      "github_url": "https://github.com/ordewell/ordewell/tree/main/packages/core/skills/improve-codebase-architecture/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/ordewell/ordewell",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-10-01T07:36:23Z"
+}
