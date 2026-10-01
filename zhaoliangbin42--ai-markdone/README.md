@@ -1,8 +1,6 @@
 # AI instruction files for AI-MarkDone
 
-> Sourced from [zhaoliangbin42/AI-MarkDone](https://github.com/zhaoliangbin42/AI-MarkDone) and converted for every major platform by [TomeVault](https://tomevault.io)
-
-Immersive reading mode, messages folding, bookmark system, Markdown & PDF export, one‑click LaTeX copy for ChatGPT / Gemini / Claude / DeepSeek.
+> Sourced from [zhaoliangbin42/AI-MarkDone](https://github.com/zhaoliangbin42/AI-MarkDone), graded against the public Tome Standard and kept consistent across every major platform by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
