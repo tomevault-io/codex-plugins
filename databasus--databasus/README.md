@@ -15,6 +15,18 @@ Original source: `CLAUDE.md` in [databasus/databasus](https://github.com/databas
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
+## Bundled Skills (9)
+
+- [databasus](https://github.com/databasus/databasus/tree/main/.agents/skills/humanizer/SKILL.md)
+- [databasus](https://github.com/databasus/databasus/tree/main/.agents/skills/openspec-explore/SKILL.md)
+- [databasus](https://github.com/databasus/databasus/tree/main/.agents/skills/openspec-propose/SKILL.md)
+- [databasus](https://github.com/databasus/databasus/tree/main/.agents/skills/openspec-sync-specs/SKILL.md)
+- [databasus](https://github.com/databasus/databasus/tree/main/.agents/skills/openspec-apply-change/SKILL.md)
+- [databasus](https://github.com/databasus/databasus/tree/main/.agents/skills/openspec-update-change/SKILL.md)
+- [databasus](https://github.com/databasus/databasus/tree/main/.agents/skills/openspec-archive-change/SKILL.md)
+- [databasus](https://github.com/databasus/databasus/tree/main/.agents/skills/git-commits/SKILL.md)
+- [databasus](https://github.com/databasus/databasus/tree/main/.claude/skills/humanizer/SKILL.md)
+
 Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/databasus/databasus](https://github.com/databasus/databasus)
 
 ---
