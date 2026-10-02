@@ -1,13 +1,13 @@
-# aikon
+# AI instruction files for AIKON
 
-> Source: [emir/aikon](https://github.com/emir/aikon). Graded, signed and kept current as the models change by [TomeVault](https://tomevault.io)
+> Sourced from [emir/AIKON](https://github.com/emir/AIKON), graded against the public Tome Standard and kept consistent across every major platform by [TomeVault](https://tomevault.io)
 
 A 2007 Nokia can't search Google anymore, so I gave it Claude, ChatGPT, Gemini and Grok. J2ME app for Nokia S40/S60 + tiny Go server.
 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [emir/aikon](https://github.com/emir/aikon).
+Original source: `CLAUDE.md` in [emir/AIKON](https://github.com/emir/AIKON).
 
 ## Also available for
 
@@ -17,10 +17,14 @@ Original source: `CLAUDE.md` in [emir/aikon](https://github.com/emir/aikon).
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [emir/aikon](https://github.com/emir/aikon) — a repo with 310+ stars on GitHub.
+From [emir/AIKON](https://github.com/emir/AIKON) — a repo with 314+ stars on GitHub.
 
 ---
 
-Own this repo? Install the TomeVault Relay to keep every platform's copy in sync on every push: [https://tomevault.io/install](https://tomevault.io/install).
+Install this config instantly:
+```
+npx tomevault install emir/AIKON
+```
+Source: [github.com/emir/AIKON](https://github.com/emir/AIKON).
 
-<!-- genome:d-c-s -->
+<!-- genome:a-i-s -->
