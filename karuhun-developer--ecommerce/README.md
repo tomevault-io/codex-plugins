@@ -7,13 +7,13 @@ A modern, multi-shop e-commerce platform built with Laravel 13, Livewire 4, and 
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [karuhun-developer/ecommerce](https://github.com/karuhun-developer/ecommerce).
+Original source: `.cursor/rules/*.mdc` in [karuhun-developer/ecommerce](https://github.com/karuhun-developer/ecommerce).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **Cursor** — `project-config.mdc`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
