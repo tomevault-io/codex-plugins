@@ -2,9 +2,9 @@
   "name": "neko-master",
   "owner": "foru17",
   "repo": "neko-master",
-  "description": "A modern and elegant dashboard for network traffic visualization and analysis.",
+  "description": "",
   "type": "tome",
-  "source_format": "CLAUDE.md",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -77,5 +77,5 @@
   ],
   "source_url": "https://github.com/foru17/neko-master",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-25T08:32:38Z"
+  "distributed_at": "2026-10-03T05:00:15Z"
 }
