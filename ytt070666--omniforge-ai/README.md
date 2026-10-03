@@ -7,12 +7,12 @@ OmniForge AI：大模型、RAG、Agent 与多语言服务学习合集
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [ytt070666/OmniForge-AI](https://github.com/ytt070666/OmniForge-AI).
+Original source: `CLAUDE.md` in [ytt070666/OmniForge-AI](https://github.com/ytt070666/OmniForge-AI).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
