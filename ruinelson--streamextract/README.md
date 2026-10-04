@@ -1,0 +1,26 @@
+# StreamExtract
+
+> Tome by [RuiNelson](https://github.com/RuiNelson/StreamExtract), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
+
+Save time, battery and disk space by uploading files from RAR, ZIP, 7z, exFAT, and other archive formats directly to an FTP server without extracting them to disk first.
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [RuiNelson/StreamExtract](https://github.com/RuiNelson/StreamExtract).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/RuiNelson/StreamExtract](https://github.com/RuiNelson/StreamExtract)
+
+---
+
+Explore more instruction files on [TomeVault](https://tomevault.io), the platform that grades AI instruction files and catches silent drift across every major tool.
+
+<!-- genome:t-e-p -->
