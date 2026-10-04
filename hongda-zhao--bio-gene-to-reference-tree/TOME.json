@@ -1,0 +1,44 @@
+{
+  "name": "bio-gene-to-reference-tree",
+  "owner": "Hongda-Zhao",
+  "repo": "bio-gene-to-reference-tree",
+  "description": "Auditable agent skill for resolving protein queries, selecting references, and planning reproducible phylogenetic trees.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/Hongda-Zhao/bio-gene-to-reference-tree",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-10-04T22:36:16Z"
+}
