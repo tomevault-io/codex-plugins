@@ -1,0 +1,26 @@
+# agents
+
+> Source: [rivet-dev/agents](https://github.com/rivet-dev/agents). Graded, signed and kept current as the models change by [TomeVault](https://tomevault.io)
+
+A durable process per agent, with memory that survives restarts
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `CLAUDE.md` in [rivet-dev/agents](https://github.com/rivet-dev/agents).
+
+## Also available for
+
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Graded against the Tome Standard, TomeVault's public ruleset for whether AI instructions load, read clearly and stay safe. Source: [github.com/rivet-dev/agents](https://github.com/rivet-dev/agents)
+
+---
+
+Explore more instruction files on [TomeVault](https://tomevault.io), the platform that grades AI instruction files and catches silent drift across every major tool.
+
+<!-- genome:d-e-q -->
