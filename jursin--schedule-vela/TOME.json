@@ -1,0 +1,44 @@
+{
+  "name": "Schedule-Vela",
+  "owner": "Jursin",
+  "repo": "Schedule-Vela",
+  "description": "\u4e00\u6b3e\u9002\u7528\u4e8e Xiaomi Vela OS \u64cd\u4f5c\u7cfb\u7edf\u7684\u8bfe\u7a0b\u8868\u5feb\u5e94\u7528\uff0c\u8ba9\u6bcf\u4e00\u6b21\u67e5\u770b\u8bfe\u8868\u90fd\u62ac\u8155\u5373\u5f97",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/Jursin/Schedule-Vela",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-10-06T20:06:49Z"
+}
