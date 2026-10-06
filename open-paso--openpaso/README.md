@@ -7,13 +7,13 @@ openPASO (formerly OASiS): an MCP server that lets an AI model run nine finite-e
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [open-PASO/openPASO](https://github.com/open-PASO/openPASO).
+Original source: `copilot-instructions.md` in [open-PASO/openPASO](https://github.com/open-PASO/openPASO).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
