@@ -7,12 +7,12 @@ Adaptive memory for AI agents & teams — beyond RAG. Self-hosted MCP server tha
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [kagura-ai/memory-cloud](https://github.com/kagura-ai/memory-cloud).
+Original source: `CLAUDE.md` in [kagura-ai/memory-cloud](https://github.com/kagura-ai/memory-cloud).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
