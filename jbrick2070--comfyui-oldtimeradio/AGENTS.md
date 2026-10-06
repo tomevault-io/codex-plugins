@@ -1,0 +1,14 @@
+
+# Canonical workflow
+
+`workflows/otr_canonical.json` is the workflow. Any node, wiring, or widget change goes in that file in the **same** change as the code. Unwired code is dead.
+
+- Headless / soak / API runs load this real JSON — never a `.gen.json` or ad-hoc graph.
+- `widgets_values` is positional. Only APPEND an optional widget at the END. Mid-list insert shifts every saved value (BUG-LOCAL-097).
+- Removing a widget: drop the `widgets_values` slot, drop the `inputs` descriptor, then repair every later `dst_slot` by identity (the input whose `.link` equals that link id). Check `tests/test_workflow_link_target_indexes.py`.
+- Variants are generated: fix canonical, then `python scripts/build_variants.py --all` and `--check`. Do not hand-edit `workflows/variants/`.
+- After edits, re-validate with `OTR_WorkflowValidator` plus widget/link audits (`test_widget_value_alignment.py`, `test_canonical_widget_input_parity.py`).
+
+---
+> Source: [jbrick2070/ComfyUI-OldTimeRadio](https://github.com/jbrick2070/ComfyUI-OldTimeRadio) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-10-06 -->
