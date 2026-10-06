@@ -1,0 +1,26 @@
+# Schedule-Vela
+
+> Tome by [Jursin](https://github.com/Jursin/Schedule-Vela), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
+
+一款适用于 Xiaomi Vela OS 操作系统的课程表快应用，让每一次查看课表都抬腕即得
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `copilot-instructions.md` in [Jursin/Schedule-Vela](https://github.com/Jursin/Schedule-Vela).
+
+## Also available for
+
+- **Claude Code** — `CLAUDE.md`
+- **Codex** — `AGENTS.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Graded against the Tome Standard, TomeVault's public ruleset for whether AI instructions load, read clearly and stay safe. Source: [github.com/Jursin/Schedule-Vela](https://github.com/Jursin/Schedule-Vela)
+
+---
+
+Explore more instruction files on [TomeVault](https://tomevault.io), the platform that grades AI instruction files and catches silent drift across every major tool.
+
+<!-- genome:t-e-q -->
