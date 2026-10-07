@@ -1,6 +1,6 @@
 # streamarr
 
-> Source: [nickelsh1ts/streamarr](https://github.com/nickelsh1ts/streamarr). Graded, signed and kept in sync across platforms by [TomeVault](https://tomevault.io)
+> Source: [nickelsh1ts/streamarr](https://github.com/nickelsh1ts/streamarr). Graded, signed and kept current as the models change by [TomeVault](https://tomevault.io)
 
 ## Codex Config
 
