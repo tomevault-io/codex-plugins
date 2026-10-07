@@ -16,7 +16,7 @@ Original source: `` in [uhh-lt/dats](https://github.com/uhh-lt/dats).
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [uhh-lt/dats](https://github.com/uhh-lt/dats) — a repo with 47+ stars on GitHub.
+From [uhh-lt/dats](https://github.com/uhh-lt/dats) — a repo with 50+ stars on GitHub.
 
 ---
 
