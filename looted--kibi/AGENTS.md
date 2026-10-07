@@ -1,32 +1,13 @@
-# GitHub Copilot Instructions
 
-This repository is **Kibi**, an agent-native requirements compiler: a repo-local, per-branch knowledge base of requirements, scenarios, tests, ADRs, flags, events, symbols and facts, checked by Prolog.
+Before changing production code, discover linked requirements with `kb_search` and `kb_query(sourceFile=...)`.
 
-All agent policy lives in [AGENTS.md](../AGENTS.md); follow it. Development setup is in [CONTRIBUTING.md](../CONTRIBUTING.md).
+After meaningful source edits, run `kb_check({sourceFiles:[...], includeImpactDiagnostics:true, includeWorkingTreeDiff:true})` while the edit context is fresh. Review symbol granularity and whether linked requirements, scenarios, and tests still cover the changed behavior or UI copy.
 
-## Stack
+Preserve the canonical chain `REQ-* -> SCEN-* -> TEST-*` when modeling behavior.
 
-- Bun 1.4 (package manager and runtime), Node.js 24 for npm publishing
-- SWI-Prolog 9.0+ on `PATH` (or `KIBI_SWIPL`) in a source checkout; published packages bundle it
-- Bun workspaces under `packages/*`; the core engine is `packages/core`, the CLI `packages/cli`, the MCP server `packages/mcp`, and agent-host integrations `packages/{claude,codex,cursor,opencode,zcode,vscode}`
+Prefer symbol manifest + `executable_for` for test/e2e code. Inline `// implements REQ-xxx` remains acceptable for quick code-only changes.
 
-## Commands
-
-```bash
-bun install            # use --frozen-lockfile in CI
-bun run build          # build all packages
-bun run test:unit      # unit tests
-bun run test           # unit + local e2e
-bun run check          # Biome lint
-bun run format         # Biome format --write
-swipl -g "load_test_files([]),run_tests" -t halt packages/core/tests/kb.plt
-```
-
-## Reminders
-
-- Query Kibi (`kb_search`, then `kb_query`) before grepping, never edit `.kb/` directly, and run `kb_check` after KB mutations.
-- Conventional Commits; changes to npm packages need a changeset.
-- Meaningful user-facing changes update `README.md` and the docs-site landing page in the same PR.
+Route durable domain facts to strict `fact` entities. Use `fact_kind: observation` or `meta` for bugs and workarounds, not `flag`.
 
 ---
 > Source: [Looted/kibi](https://github.com/Looted/kibi) — distributed by [TomeVault](https://tomevault.io).
