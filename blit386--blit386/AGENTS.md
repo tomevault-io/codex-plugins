@@ -1,29 +1,40 @@
+# BLIT386 - Copilot instructions
 
-# Docs sync required
+This repo is a pnpm workspace of five packages (`packages/blit386`, `demos`, `website`, `kit`, `create-blit386`). GitHub
+Copilot only reads root-level instruction files, so this is the one place every contributor agent sees regardless of
+which package they're touching; each package carries its own `AGENTS.md` / `CLAUDE.md` with package-specific conventions
+\- read the nearest one before non-trivial work.
 
-Documentation is part of the implementation, not a follow-up step, in every package of this monorepo.
+This file is a pointer for GitHub Copilot. Root [`AGENTS.md`](../AGENTS.md) is the workspace quick start, root
+[`CLAUDE.md`](../CLAUDE.md) has the package table and shared monorepo conventions, and
+[`packages/blit386/CLAUDE.md`](../packages/blit386/CLAUDE.md) is canonical for the engine's architecture routing, API
+conventions, and documentation rules.
 
-- Behavior, API, or workflow changes: update the affected docs (guides, README, API reference) in the same change that
-  makes the change, not a later cleanup pass.
-- Public API changes in a published library (`packages/blit386`, `@blit386/kit`): update the relevant reference docs and
-  examples; a new or changed public symbol needs the versioning discipline described in that package's own rules.
-- Adding, removing, or renaming a published doc page: update whatever manifest or navigation config governs that
-  package's docs site or README in the same change.
-- Architecture or structural changes: update that package's own architecture notes or rule files and the "Where to Find
-  Information" table in its `CLAUDE.md`.
-- Script, hook, or preflight changes: update the matching `.claude/skills/*/SKILL.md`.
-- Onboarding surface changes (a `README.md` Quick Start, a scaffolder default, a minimal example shape): check every
-  downstream package that documents or generates from that surface - `packages/create-blit386` templates, `packages/kit`
-  docs, and any pinned version range.
-- Update a package's `README.md` only when its quick start, prerequisites, features list, or compatibility claims are
-  affected.
-- If no docs update is needed, state why explicitly in the final response.
+## Hard rules
 
-Each package's own `CLAUDE.md` and `.claude/rules/` describe the concrete documentation mechanics for that package
-(doc-site sync scripts, MDX conventions, versioning tags, kit-content drift) - follow those for the how; this file is
-the shared why.
+- No emoji anywhere - code, docs, commits, PR titles, errors, logs.
+- American English spelling - `color`, `optimization`, `canceled`, never British equivalents (see `CLAUDE.md` for
+  spec-mandated exemptions).
+- Conventional Commits format (`<type>(<scope>): <description>`) with DCO sign-off (`git commit -s`) on every commit.
+- Package manager is pnpm, not npm or yarn.
+- Formatting/lint ownership is per package, not repo-wide: `packages/website`, `packages/kit`, and
+  `packages/create-blit386` are Biome-only (no ESLint); `packages/blit386` and `packages/demos` pair Biome with ESLint.
+  Prettier always owns Markdown/MDX/YAML. Check the package's own `CLAUDE.md` before assuming a tool applies.
+- In `packages/website`, everything under `content/docs/{api,guides,performance,reference}/` and
+  `src/data/api-history.generated.json` is generated - never hand-edit it. Edit the canonical copy in
+  `packages/blit386/docs/` and run `pnpm run sync:docs` instead.
+- Integer coordinates always in the engine - use `Vector2i` / `Rect2i` for rendering, never raw floats.
+- Use the `BT` namespace in the engine - never access the internal `BTAPI` singleton directly from demo code.
 
-Claude: `.claude/rules/docs-sync-required.md` (same content, `paths:` frontmatter instead of `globs:`).
+## Where to go next
+
+Root [`AGENTS.md`](../AGENTS.md) has the workspace's package table and points into each package's own docs. Root
+[`CLAUDE.md`](../CLAUDE.md) has the shared conventions (commit format, DCO, dash typography, American English).
+[`packages/blit386/CLAUDE.md`](../packages/blit386/CLAUDE.md) has the engine's "Where to Find Information" routing
+table, BT API conventions, TypeScript file structure, and the engine's command list - the annotated `src/` architecture
+tree lives in `packages/blit386/.claude/rules/architecture.md`.
+[`packages/website/CLAUDE.md`](../packages/website/CLAUDE.md) has the docs site's generated-vs-hand-authored map and the
+`sync:docs` workflow.
 
 ---
 > Source: [blit386/blit386](https://github.com/blit386/blit386) — distributed by [TomeVault](https://tomevault.io).
