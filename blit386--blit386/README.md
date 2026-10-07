@@ -7,13 +7,13 @@ A palette-first WebGPU retro engine for TypeScript, inspired by RetroBlit.
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [blit386/blit386](https://github.com/blit386/blit386).
+Original source: `copilot-instructions.md` in [blit386/blit386](https://github.com/blit386/blit386).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
