@@ -1,15 +1,58 @@
-# Kaoto Project Instructions
+# kaoto-camel-bridge
 
-**IMPORTANT: Read [AGENTS.md](./AGENTS.md) BEFORE starting any work for complete project documentation**
+A host-agnostic Java library that is added to a running Camel application and connects it to the
+Kaoto Companion over WebSocket. It is a strict no-op when the two required system properties
+(`kaoto.kompanion.address` and `kaoto.kompanion.execution-id`) are absent. `kaoto.kompanion.token`
+is sent as bearer token at the handshake when the companion requires one.
 
-Task (read AGENTS.md): Planning, asking questions, writing code, investigating, running commands, searching the codebase for work purposes
+## Sub-modules
 
-Key rules:
-- Never push to branches you didn't create
-- Use forks for all contributions
+| Module           | Artifact        | Purpose                                                                          |
+| ---------------- | --------------- | -------------------------------------------------------------------------------- |
+| `core`           | `bridge-core`   | Main library: `KaotoCamelBridge`, protocol POJOs, WebSocket transport, SPI hooks |
+| `plugin`         | `bridge-plugin` | `ContextServicePlugin` for zero-config activation on Camel ≥ 4.15                |
+| `dist`           | `bridge-dist`   | Shaded uber-jar that bundles core + plugin for consumers                         |
+| `it-spring-boot` | —               | Integration test — bridge on a Spring Boot Camel app                             |
+| `it-quarkus`     | —               | Integration test — bridge on a Quarkus Camel app                                 |
 
-All project-specific instructions, commands, and conventions are maintained in AGENTS.md.
+## Key classes (core)
+
+- [`KaotoCamelBridge`](core/src/main/java/io/kaoto/camel/bridge/KaotoCamelBridge.java) — entry
+  point; implements both `CamelContextCustomizer` and `CamelConfiguration` so every activation
+  path (camel-main, Spring Boot, Quarkus, plugin) converges here.
+- [`WorkerWebSocketClient`](core/src/main/java/io/kaoto/camel/bridge/transport/WorkerWebSocketClient.java) —
+  manages the outbound WebSocket connection to the companion.
+- [`BridgeLifecycleStrategy`](core/src/main/java/io/kaoto/camel/bridge/spi/BridgeLifecycleStrategy.java) —
+  dispatches incoming commands to the `CamelContext` (start/stop/suspend/resume route, inject
+  exchange, stop worker).
+- [`BridgeEventNotifier`](core/src/main/java/io/kaoto/camel/bridge/spi/BridgeEventNotifier.java) —
+  listens for Camel management events and forwards them to the companion as JSON frames.
+
+## Activation by runtime
+
+| Runtime                 | How to activate                                                                                     |
+| ----------------------- | --------------------------------------------------------------------------------------------------- |
+| camel-main / Quarkus    | `camel.beans.kaotoBridge=#class:io.kaoto.camel.bridge.KaotoCamelBridge` in `application.properties` |
+| Spring Boot             | Automatic — `AutoConfiguration.imports` in the jar registers the bean                               |
+| Camel ≥ 4.15 (any host) | Automatic — `ContextServicePlugin` calls `configure` during context startup                         |
+
+## Build
+
+```bash
+# From the repo root — builds all bridge sub-modules
+mvn clean install -pl kaoto-camel-bridge -am
+```
+
+## Test
+
+```bash
+# Unit tests only (core)
+mvn test -pl kaoto-camel-bridge/core
+
+# All sub-modules including integration tests
+mvn verify -pl kaoto-camel-bridge/it-spring-boot,kaoto-camel-bridge/it-quarkus
+```
 
 ---
 > Source: [KaotoIO/kaoto](https://github.com/KaotoIO/kaoto) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-24 -->
+<!-- tomevault:4.0:agents_md:2026-10-07 -->
