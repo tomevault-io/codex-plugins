@@ -1,40 +1,35 @@
-# BLIT386 - Copilot instructions
 
-This repo is a pnpm workspace of five packages (`packages/blit386`, `demos`, `website`, `kit`, `create-blit386`). GitHub
-Copilot only reads root-level instruction files, so this is the one place every contributor agent sees regardless of
-which package they're touching; each package carries its own `AGENTS.md` / `CLAUDE.md` with package-specific conventions
-\- read the nearest one before non-trivial work.
+# Named constants over repeated literals
 
-This file is a pointer for GitHub Copilot. Root [`AGENTS.md`](../AGENTS.md) is the workspace quick start, root
-[`CLAUDE.md`](../CLAUDE.md) has the package table and shared monorepo conventions, and
-[`packages/blit386/CLAUDE.md`](../packages/blit386/CLAUDE.md) is canonical for the engine's architecture routing, API
-conventions, and documentation rules.
+A string or numeric literal that is **compared** - `===`, `switch`, a discriminant check, an `includes()` membership
+test - at more than one comparison site gets one named constant, or in TypeScript one literal-union type constraining
+every use. Never re-type the literal.
 
-## Hard rules
+Scope the constant to its consumers. Repeats inside a single file stay a module-local `const`; the moment a second file
+or a second package needs the value, export it once and import it everywhere. Do not export a constant nothing outside
+its own file reads.
 
-- No emoji anywhere - code, docs, commits, PR titles, errors, logs.
-- American English spelling - `color`, `optimization`, `canceled`, never British equivalents (see `CLAUDE.md` for
-  spec-mandated exemptions).
-- Conventional Commits format (`<type>(<scope>): <description>`) with DCO sign-off (`git commit -s`) on every commit.
-- Package manager is pnpm, not npm or yarn.
-- Formatting/lint ownership is per package, not repo-wide: `packages/website`, `packages/kit`, and
-  `packages/create-blit386` are Biome-only (no ESLint); `packages/blit386` and `packages/demos` pair Biome with ESLint.
-  Prettier always owns Markdown/MDX/YAML. Check the package's own `CLAUDE.md` before assuming a tool applies.
-- In `packages/website`, everything under `content/docs/{api,guides,performance,reference}/` and
-  `src/data/api-history.generated.json` is generated - never hand-edit it. Edit the canonical copy in
-  `packages/blit386/docs/` and run `pnpm run sync:docs` instead.
-- Integer coordinates always in the engine - use `Vector2i` / `Rect2i` for rendering, never raw floats.
-- Use the `BT` namespace in the engine - never access the internal `BTAPI` singleton directly from demo code.
+## Reach for the existing type first
 
-## Where to go next
+Before adding a constant, check whether a literal-union type already describes the domain. Widening that union is better
+than standing a parallel constant next to it.
 
-Root [`AGENTS.md`](../AGENTS.md) has the workspace's package table and points into each package's own docs. Root
-[`CLAUDE.md`](../CLAUDE.md) has the shared conventions (commit format, DCO, dash typography, American English).
-[`packages/blit386/CLAUDE.md`](../packages/blit386/CLAUDE.md) has the engine's "Where to Find Information" routing
-table, BT API conventions, TypeScript file structure, and the engine's command list - the annotated `src/` architecture
-tree lives in `packages/blit386/.claude/rules/architecture.md`.
-[`packages/website/CLAUDE.md`](../packages/website/CLAUDE.md) has the docs site's generated-vs-hand-authored map and the
-`sync:docs` workflow.
+## When it applies
+
+| Situation | Applies |
+| --- | --- |
+| The same literal compared in two or more files | yes |
+| The same literal compared twice in one file | yes - as a module-local `const`, not an export |
+| A literal that names something in another package | yes |
+| A literal that also has to appear in a shader source, a JSON config, or a generated project file | yes - thread it through, or document the duplication as a manual-sync hazard at both sites |
+| A literal used exactly once | no |
+| Structural values (`0`, `1`, `-1`) as an index, a length, or a bound | no |
+| A test that deliberately hardcodes the expected wire value | no |
+| The constant's own definition site | no |
+
+Full policy, per-package notes, and worked examples: `CLAUDE.md`.
+
+Claude: `.claude/rules/named-constants.md` (same content, `paths:` frontmatter instead of `globs:`).
 
 ---
 > Source: [blit386/blit386](https://github.com/blit386/blit386) — distributed by [TomeVault](https://tomevault.io).
