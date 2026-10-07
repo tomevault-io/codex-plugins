@@ -7,13 +7,13 @@ Excel VBA xlsm development toolkit for module import/export with UTF-8 conversio
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `.cursor/rules/*.mdc` in [minipoisson/xlsm_devkit](https://github.com/minipoisson/xlsm_devkit).
+Original source: `copilot-instructions.md` in [minipoisson/xlsm_devkit](https://github.com/minipoisson/xlsm_devkit).
 
 ## Also available for
 
 - **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
