@@ -4,7 +4,7 @@
   "repo": "blit386",
   "description": "A palette-first WebGPU retro engine for TypeScript, inspired by RetroBlit.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": ".cursor/rules/*.mdc",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/blit386/blit386",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-10-07T17:38:59Z"
+  "distributed_at": "2026-10-07T17:39:55Z"
 }
