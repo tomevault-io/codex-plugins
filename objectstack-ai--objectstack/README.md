@@ -2,15 +2,14 @@
 
 > Tome by [objectstack-ai](https://github.com/objectstack-ai/objectstack), graded and kept true across every major AI platform by [TomeVault](https://tomevault.io)
 
-A complex business system in 170k tokens. ObjectStack compresses an entire app — data model, UI, workflows, permissions — into typed metadata, an AI agent can hold in context, reason about, and refactor whole.
-
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [objectstack-ai/objectstack](https://github.com/objectstack-ai/objectstack).
+Original source: `` in [objectstack-ai/objectstack](https://github.com/objectstack-ai/objectstack).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
