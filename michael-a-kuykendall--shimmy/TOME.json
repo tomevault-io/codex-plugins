@@ -2,9 +2,9 @@
   "name": "shimmy",
   "owner": "Michael-A-Kuykendall",
   "repo": "shimmy",
-  "description": "\u26a1 Python-free Rust inference server \u2014 OpenAI-API compatible. GGUF + SafeTensors, hot model swap, auto-discovery, single binary. FREE now, FREE forever.",
+  "description": "",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/Michael-A-Kuykendall/shimmy",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-05-04T10:58:22Z"
+  "distributed_at": "2026-10-07T12:34:46Z"
 }
