@@ -1,0 +1,28 @@
+# nim-allographer
+
+> Source: [dumblepy/nim-allographer](https://github.com/dumblepy/nim-allographer). Graded, signed and kept current as the models change by [TomeVault](https://tomevault.io)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `.cursor/rules/*.mdc` in [dumblepy/nim-allographer](https://github.com/dumblepy/nim-allographer).
+
+## Also available for
+
+- **Claude Code** — `CLAUDE.md`
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+Available for 6 platforms including Claude Code, Cursor, Windsurf, and more. Source: [github.com/dumblepy/nim-allographer](https://github.com/dumblepy/nim-allographer)
+
+---
+
+Install this config instantly:
+```
+npx tomevault install dumblepy/nim-allographer
+```
+Source: [github.com/dumblepy/nim-allographer](https://github.com/dumblepy/nim-allographer).
+
+<!-- genome:d-i-p -->
