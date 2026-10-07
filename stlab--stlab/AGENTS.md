@@ -1,158 +1,90 @@
-# CLAUDE.md
+# Copilot instructions for STLab
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+## Repository overview
 
-## Repository Overview
+STLab is a C++ library in the `stlab` namespace providing concurrency primitives: futures, channels, executors, serial queues, and related utilities. The public API lives under `include/stlab/`; the implementation is concentrated in a small number of source files under `src/`. Tests are in `test/`, documentation under `docs/`, and build configuration is driven by CMake presets in `CMakePresets.json`.
 
-STLab is a C++ library (Boost Software License 1.0) providing concurrency primitives — futures, channels, executors, and serial queues — in the `stlab` namespace. The library supports C++17/20/23 and targets Linux (GCC, Clang), macOS (Apple Clang), Windows (MSVC), and WebAssembly (Emscripten).
+This is a header-heavy library with platform-specific scheduling support. Most functionality is implemented as reusable concurrency primitives rather than application-level frameworks.
 
-Public headers live in `include/stlab/`. There are two `.cpp` implementation files in `src/`. Everything else is tests, documentation, or build infrastructure.
+## Build, test, and lint
 
-## Build Commands
-
-All builds use **CMake + Ninja** via presets defined in `CMakePresets.json`. The build directory is always `build/<preset-name>/`.
+Use the project CMake presets rather than ad hoc build commands.
 
 ```bash
-# Standard debug build (C++20)
+# Configure + build the default debug C++20 configuration
 cmake --preset=debug-cpp20
 cmake --build --preset=debug-cpp20
 
-# Run all tests
+# Run the full test suite for that preset
 ctest --preset=debug-cpp20
 
-# Run a single test executable
+# Run one test binary directly
 ./build/debug-cpp20/test/stlab.test.future
 
-# Run with a doctest filter
+# Filter doctest cases in a single executable
 ./build/debug-cpp20/test/stlab.test.future -tc="future_test_*"
-```
 
-Key presets:
-
-| Preset | Purpose |
-|--------|---------|
-| `debug-cpp20` | Standard debug build (default for development) |
-| `debug-cpp17` | C++17 compatibility build |
-| `debug-sanitizer` | TSan + UBSan |
-| `debug-asan` | Address sanitizer |
-| `debug-portable` | Force portable task system (no platform scheduler) |
-| `debug-clang-libcxx` | Clang + libc++ on Linux |
-| `clang-tidy-win64` | Static analysis on Windows (use from VS Developer Prompt) |
-| `docs` | Doxygen API reference |
-| `install` | Release build for installation |
-
-## Testing
-
-The test framework is **doctest** v2.5.2. Test executables are named `stlab.test.<component>`:
-
-- `stlab.test.future` — futures/promises (includes coroutine tests on C++20)
-- `stlab.test.channel` — channels and pipelines
-- `stlab.test.executor` — executor implementations
-- `stlab.test.serial_queue` — serial queues
-- `stlab.test.forest` — forest/tree container
-- `stlab.test.cow`, `stlab.test.task`, `stlab.test.traits`, `stlab.test.utility`, `stlab.test.tuple`, `stlab.test.tuple_algorithm`, `stlab.test.system_timer`
-
-Run a subset of tests with CTest's `-R` flag:
-```bash
+# Run only matching CTest entries
 ctest --preset=debug-cpp20 -R future
 ```
 
-## Documentation
+Common presets:
 
-Doxygen comments in `include/stlab/**/*.hpp` are the authoritative API docs. Group definitions live in `docs/doxygen/stlab_groups.hpp` (not compiled). The main page is `docs/doxygen/mainpage.dox`.
+- `debug-cpp20` — default development configuration
+- `debug-cpp17` — C++17 compatibility build
+- `debug-sanitizer` — TSan + UBSan
+- `debug-portable` — portable task system
+- `debug-asan` — address sanitizer build
+- `docs` — Doxygen API reference build
+- `clang-tidy` / `clang-tidy-win64` — static analysis
+- `install` — release install configuration
 
-```bash
-# Build API reference locally → build/docs/html/
-cmake --preset=docs
-cmake --build --preset=docs
-```
+Formatting and linting are configured with `.clang-format` and `.clang-tidy`. The project expects the repository's standard formatting and the header lint checks used by the CI setup.
 
-For the full Jekyll + Doxygen site (requires Ruby, Bundler, CMake, Ninja, Doxygen):
-```bash
-./docs/tools/docs/build-site.sh
-```
+## High-level architecture
 
-## Platform/Scheduler Configuration
+The library is organized around a small set of core concurrency concepts:
 
-The library auto-detects the platform's threading and task systems. You can override with CMake variables:
+- `include/stlab/concurrency/` holds the main concurrency API:
+  - `future.hpp` — `stlab::future<T>` and `stlab::package()`; lazy, value-semantic futures with chaining and coroutine support.
+  - `channel.hpp` — `stlab::sender<T>` / `stlab::receiver<T>` for reactive pipelines.
+  - `executor_base.hpp` / `default_executor.hpp` — executor abstractions and task dispatch.
+  - `serial_queue.hpp` — serial queue built on executors.
+  - `main_executor.hpp` — main-thread executor.
+  - `task.hpp` — move-only callable wrapper.
+  - `system_timer.hpp` — timer-based scheduling.
+- Non-concurrency pieces such as `forest.hpp`, `forest_algorithms.hpp`, `copy_on_write.hpp`, and `pre_exit.hpp` are more general library utilities, but they still fit the same value-semantics and platform-aware patterns.
+- `src/` contains the implementation glue; the library is intentionally compact and centered on a few patterns rather than many unrelated subsystems.
+- `test/` contains component-level doctest executables such as `stlab.test.future`, `stlab.test.channel`, and `stlab.test.executor`.
 
-- `STLAB_THREAD_SYSTEM` — `win32`, `pthread`, `pthread-apple`, `none`
-- `STLAB_TASK_SYSTEM` — `libdispatch` (Apple GCD), `portable`, `windows`
-- `STLAB_MAIN_EXECUTOR` — `libdispatch`, `qt5`, `qt6`, `emscripten`, `none`
-- `STLAB_NO_STD_COROUTINES=ON` — suppress C++20 coroutines for non-conforming compilers
+The big-picture design is that higher-level concurrency abstractions are built on a small set of scheduler and executor primitives, with platform differences abstracted behind those interfaces.
 
-The `portable` task system is the cross-platform fallback that works on all platforms including Emscripten.
+## Key repository conventions
 
-## Code Style
+- The project uses CMake + Ninja presets in `CMakePresets.json`; prefer those when configuring or building.
+- Public API and behavior are documented with Doxygen contract comments in `///` style adjacent to declarations. These comments are treated as the authoritative API contract.
+- Function contracts are intentionally simple and concise; they usually include a summary and any necessary preconditions/postconditions/complexity notes.
+- Tests should validate observable behavior from the public interface, not implementation details. This repository treats tests as specification checks, not white-box implementation coverage.
+- The library targets C++17/20/23 and is designed to work across Linux, macOS, Windows, and Emscripten; scheduler and executor selection is intentionally platform-aware.
+- Keep changes consistent with the surrounding header-only/public-API style: avoid introducing application-level patterns or ad hoc build scripts when the existing CMake/preset structure already covers the need.
+- Code formatting follows `.clang-format` conventions: 100-column limit, 4-space indentation, left-aligned pointer declarators, sorted includes/using declarations.
 
-Formatting is enforced by `.clang-format`:
-- 100-column limit
-- 4-space indentation, no tabs
-- Left-aligned pointer declarators
-- Sorted includes and using declarations
+## Documentation and API expectations
 
-Linting via `.clang-tidy` checks `cert-*`, `performance-*`, `modernize-*`, and `misc-include-cleaner` against headers in `include/stlab/**/*.hpp`. `modernize-use-trailing-return-type` is disabled.
+- Doxygen comments in `include/stlab/**/*.hpp` are the canonical API documentation.
+- Use the repository's contract style when adding or changing declarations.
+- When documenting behavior, prefer the public contract over implementation-specific details.
 
-## Architecture
+## Typical workflow
 
-The concurrency subsystem (`include/stlab/concurrency/`) is the core of the library:
+When making a change:
 
-- **`future.hpp`** — `stlab::future<T>` and `stlab::package()`. Futures are lazy/value-semantic, not `std::future`. Supports `.then()`, `.recover()`, `.detach()`, and C++20 coroutines (`co_await`).
-- **`channel.hpp`** — `stlab::sender<T>` / `stlab::receiver<T>` for reactive pipelines. Multiple process stages can be composed.
-- **`executor_base.hpp`** / **`default_executor.hpp`** — Executors are `stlab::executor_t` (a type-erased callable). The default executor dispatches to the platform task pool.
-- **`serial_queue.hpp`** — A serial dispatch queue built on executors.
-- **`main_executor.hpp`** — Executor that runs on the application main thread (platform-specific).
-- **`task.hpp`** — `stlab::task<Sig>` — a move-only type-erased callable (like `std::function` but non-copyable).
-- **`system_timer.hpp`** — Timer-based future scheduling.
+1. Build the relevant preset (`debug-cpp20` unless the change specifically targets C++17 compatibility or sanitizer coverage).
+2. Run the smallest related test target or CTest filter.
+3. Prefer a focused validation path over broad rebuilds; this repository's test binaries are component-oriented and easy to target.
 
-Non-concurrency headers:
-- **`forest.hpp`** / **`forest_algorithms.hpp`** — A node-based tree container with cursor-based traversal.
-- **`copy_on_write.hpp`** (via `stlab-copy-on-write` dependency) — Value-semantic CoW wrapper.
-- **`pre_exit.hpp`** — Register cleanup functions to run before `std::exit()`. Must be called before exiting to avoid races with the task pool.
-
-## Development Process
-
-### Function Contracts
-
-Every function declaration must have a documentation comment written in contract style, using `///` syntax. The contract lives adjacent to the declaration so it stays synchronized with the code.
-
-**Required sections** (include only those that apply):
-
-1. **Summary** — A sentence fragment describing what the function does or returns. Concise; omit needless words.
-2. **Preconditions** — `/// - Precondition: <condition>` — document only when not obviously implied by the summary.
-3. **Postconditions** — `/// - Postcondition: <condition>` — document only when not implicit in the summary.
-4. **Complexity** — `/// - Complexity: <description>` — required whenever the operation is not O(1). Use prose, e.g. `at most N log N comparisons`.
-
-**Example:**
-```cpp
-/// Removes and returns the last element.
-///
-/// - Precondition: the container is non-empty.
-/// - Complexity: O(1).
-T pop_back();
-```
-
-Project-wide policy: assume O(1) time and space unless a `Complexity:` note says otherwise.
-
-If you cannot write a simple contract for a function, treat that as a signal that the design needs improvement.
-
-### Unit Tests
-
-When writing unit tests, derive them from the **contract and public interface only** — do not read or consider the implementation. The test suite should verify observable behavior as specified by the contract:
-
-- Each precondition violation (if testable) should have a corresponding test.
-- Each postcondition should be asserted.
-- Edge cases implied by the summary (empty input, single element, etc.) should be covered.
-- Complexity guarantees are not typically tested, but correctness under the specified conditions is.
-
-Tests written against the implementation risk encoding bugs rather than verifying intent.
-
-## CI
-
-CI runs via GitHub Actions (`.github/workflows/stlab.yml`). The build matrix is defined in `.github/matrix.json` and flattened by `scripts/flatten_json.py`. CI tests: Linux GCC, Linux Clang, macOS Apple Clang, Windows MSVC, and Emscripten/WASM. macOS additionally runs with TSan+UBSan on both the native and portable task systems.
-
-CPM package downloads are cached in `.cache/cpm/` (gitignored).
+This keeps the feedback loop tight while matching the library's build/test layout.
 
 ---
 > Source: [stlab/stlab](https://github.com/stlab/stlab) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-08-09 -->
+<!-- tomevault:4.0:agents_md:2026-10-07 -->
