@@ -1,83 +1,95 @@
+# VisualGasic — Copilot Instructions
 
-# Visual Gasic + Godot
+## Model selection (check before starting)
 
-This repo is **Visual Gasic (VG)**: a VB6-style language (`.vg`) with a C++ tokenizer/parser/VM (GDExtension) and a Godot 4.6.1 editor plugin (`addons/visual_gasic/`).
+| Task | Model to use |
+|---|---|
+| C++ parser / runtime bugs (M1) | **Claude Opus 4.8** — max mode |
+| GDScript plugin architecture (M4 UI Forms) | **Claude Opus 4.8** — max mode |
+| AST walker / algorithm design (M6) | **Claude Opus 4.8** — standard mode |
+| Extending existing GDScript files (M3) | **Claude Sonnet 4.6** — standard mode |
+| Examples audit / mechanical fixes (M2) | **Claude Sonnet 4.6** — standard mode |
+| Narcea prompt engineering (M5) | **Claude Sonnet 4.6** — standard mode |
+| README / docs / issue bodies | **Claude Sonnet 4.6** — standard mode |
+| Quick questions / one-liners | **Claude Haiku** |
 
-## Active product scope (until v6.0 stable)
+Switch the model in the Copilot chat dropdown before pasting a large prompt.
 
-- **In scope:** Godot IDE integration — Toolbox, Properties, Code Navigator, Narcea Vibe Code, autocomplete, Godot-native 2D/3D editors (default).
-- **Alpha (not v6.0 core):** Standalone VG IDE shell / legacy Form Designer — experimental; see `docs/manual/VG_IDE_ALPHA.md`. Off unless `vg/enable_experimental_plugins` is on. Prefer Godot Script + floating VG panels (`vg/editor/floating_vg_code_editor_on_script`).
+---
 
-## Languages & style
+## Project context
 
-| Area | Convention |
-|------|------------|
-| GDScript | `snake_case` functions/vars, `PascalCase` classes, `@tool` on editor scripts |
-| VG (`.vg`) | VB6-style: `Sub`/`Function`, `Dim x As String`, `If … Then … End If`, `Connect node, "signal", "Handler"` |
-| C++ (`src/`) | Match existing style; tabs; actionable errors with line numbers; no drive-by refactors |
+- **Language:** VB6-style BASIC (`VisualGasic` / `.vg` files), tokenizer/parser/AST/VM in C++
+- **Runtime:** Godot 4.6.1 plugin via GDExtension (`.gdextension`)
+- **Primary IDE:** Godot's native Script editor — VG extends it with autocomplete, Code Navigator, dot-completion
+- **VG custom IDE shell / legacy Form Designer:** **experimental Alpha** — **not** on the v6.0 EOY critical path; mothballed unless `vg/enable_experimental_plugins = true`. User-facing status: `docs/manual/VG_IDE_ALPHA.md` (standalone Form Designer repo extraction is **planned**, not shipped yet).
+- **Godot IDE integration (active scope):** Toolbox panel, Properties window, Immediate window, Narcea Vibe Code, Code Navigator, autocomplete, dot-completion — these are docked inside Godot's editor and are **in scope for all milestones**
+- **Focus until v6.0:** VG Script language quality + Godot IDE integration. Do NOT expand the VG standalone IDE shell.
+- **AI providers:** `addons/visual_gasic/vg_ai_providers.gd` — Ollama, OpenAI, Claude, Gemini
+- **Canonical Claude models (Anthropic direct API):** `claude-opus-4-8`, `claude-sonnet-4-6`, `claude-haiku-4-5` (verified 2026-06-29)
+- **GitHub Copilot model dropdown:** also exposes `claude-opus-4-6`, `claude-opus-4-7` — these are Copilot-specific variants not on the direct API
 
-## GDScript pitfalls (Godot 4.6)
+## Milestone schedule
 
-- `StringName + String` fails — use `str(name) + suffix`.
-- `ProjectSettings.clear_setting()` is **not** in GDScript — use `ProjectSettings.set_setting(key, null)`.
-- After editing `addons/visual_gasic/*.gd`, **always** run headless smoke before finishing:
-  ```bash
-  scripts/ci_smoke.sh projects/vg_narcea_test
-  ```
-  One parse error in `visual_gasic_plugin.gd` disables the entire addon.
+| Milestone | Due | Status | Focus |
+|---|---|---|---|
+| M1 | Jul 31 | ✅ DONE (Jun 29) | 4 critical bugs — all fixed |
+| M2 | Aug 15 | ✅ DONE (Jun 30) | 44/44 corpus examples passing |
+| M3 | Aug 31 | ✅ DONE (Jul 1) | Code Navigator upgrade (#7) |
+| M4 | Sep 30 | ✅ DONE (Jul 1) | UI Forms experimental (#8–12) |
+| M5 | Oct 15 | 🔄 NEXT | Narcea Vibe Code (#13) |
+| M6 | Oct 31 | ✅ **Partial** | Causal Chain text-mode (#14) — C++ `vg_analyze_causal_graph`, Code Navigator button, Context Rail preview, 8 headless fixtures |
+| M7 | Nov 15 | 🟡 **Close-out** | Python Library Integration — C2 typed msgpack **default-on** for new projects; large-array binary lane shipped (`test_py_large_array.vg`); Windows CI M7 smoke; macOS e2e still deferred |
+| M8 | Nov 22 | — | Language parity (Try/Catch/Lambda/`?.` tests), `Let` keyword, C++ interop |
+| M9 | Nov 28 | — | Asset Library submission, installer smoke test, 50+ corpus, docs |
+| Stable v6.0 | Jan 1 2027 | — | — |
 
-## VG property aliases (never use raw Godot names in user-facing VG code)
+## Code conventions
 
-Writes like `ctrl.position.x = N` **silently fail**. Use VB6 names:
+- GDScript: `snake_case` for functions and variables, `PascalCase` for classes
+- VG language: VB6-style — `Sub`, `Function`, `End Sub`, `Dim x As String`, `If ... Then ... End If`
+- **Unicode text:** VG controls are Godot controls (Unicode-native). The VB6 pitfall where standard TextBox/Label show `???` for non-ANSI text does **not** apply. `StrConv(..., vbUnicode/vbFromUnicode)` are no-ops. Save `.vg` as UTF-8; use `vbCrLf`/`vbTab` for control chars in source; choose fonts with needed glyphs for CJK/emoji.
+- C++: follow existing style in `src/` — no trailing whitespace, tabs not spaces
+- C++ memory: strict manual management within GDExtension bounds; verify zero leaks on node destruction
+- C++ errors: no generic panics — use clean, actionable error messages with exact line numbers
+- Do not add docstrings, comments, or type annotations to code you didn't change
+- Do not refactor or rename symbols outside the scope of the current task
 
-- `Caption` → `.text`
-- `Left` / `Top` / `Width` / `Height` → position/size setters
-- `Visible`, `Enabled` on controls and timers
-- Timer: `Interval` (ms), `Enabled = True/False`, handler `Sub tmr_Timer()`
+## Documentation tone
 
-Event handlers wire by name: `Sub btnOK_Click()`, `Sub Form_Load()`.
+- Technical, precise, highly instructional — no marketing language
 
-**Do not hallucinate:** `ConnectSignal`, `HasMember`, `PropertyGet`, `ArrayLen` — use `Connect`, `UBound`, direct property access.
+## Known open bugs
 
-## Key paths
+- **AST evaluator missing Godot type-constructor dispatch (OPEN, found Jul 30 2026)** — the bytecode compiler recognizes `Vector2i`/`Rect2i`/`Color`/etc. as type constructors (`_godot_type_ctors[]` in `src/visual_gasic_compiler.cpp` ~line 6953, emits `OP_NEW_OBJECT`), but the AST tree-walk evaluator has no equivalent dispatch — calling e.g. `Rect2i(...)` in a Sub that's fallen back to AST interpretation (see ByRef fallback landmine in `/memories/repo/v6.0_blockers.md` §0) throws `Sub or Function not defined`. Found while fixing the C64 emulator's `BlitImage` bug below. Not yet fixed.
+- **C64/GBA Emulator `BlitImage` no-op — FIXED Jul 30 2026** — both `samples/demos/C64_Emulator/c64_main.vg` and `samples/demos/GBA_Emulator/gba_main.vg` called `BlitImage` with `Rect2`/`Vector2` (float) instead of the required `Rect2i`/`Vector2i`/plain-int form, so the VIC/GPU framebuffer was never actually copied to the display texture (silent no-op, zero pixels copied, every frame, forever). Fixed by switching to `BlitImage`'s plain-integer 8-arg overload.
+- **C64 Emulator VIC frame-wipe/BlitImage race — FIXED Jul 30 2026 (`3569dbc7`)** — `Vic_RenderFrame()` wiped the entire framebuffer (border + interior) with border color every raster wrap, and `c64_main.vg`'s cycle-counted display trigger snapshotted the framebuffer right after that wipe, before the new frame's scanlines had redrawn the interior — so the screen always showed a uniform border color (looked black/white/blue depending on register pokes, never showing real content). Fixed by making `Vic_RenderFrame()` only paint the border region, leaving the interior for the scanline renderers. Verified: border and interior pixels now read genuinely different colors matching their registers; 777/777 regression suite passes. Full details: `/memories/repo/c64_vic_render_bug.md`.
+- **C64 Emulator black gap in 38-column (CSEL=0) mode — FIXED Jul 30 2026 (`b075af25`)** — VIC-II narrows the visible text window by 8px/side when CSEL=0; scanline renderers shifted content via `xOff` but never painted the vacated strip, leaving it at the framebuffer's black init fill instead of the border color. Fixed with `Vic_PaintNarrowGap()` in `c64_vic.vg`. 777/777 regression suite passes.
+- **C64 Emulator boot never reaches "READY." — FIXED Sep 2026 (was misdiagnosed as a perf issue)** — the emulator now boots all the way to the authentic `**** COMMODORE 64 BASIC V2 ****` / `64K RAM SYSTEM  38911 BASIC BYTES FREE` / `READY.` screen with a blinking cursor (verified via headless screen-RAM decode; PC settles into the KERNAL keyboard-wait idle loop `$E5CD-$E5D4`). **Real root cause: a correctness bug in the `OP_JUMP_TABLE` optimization**, NOT interpreter speed. `try_compile_jump_table()` (`src/visual_gasic_compiler.cpp` ~line 3212) sized the O(1) dispatch table by `case_count` (~170 distinct opcode Case values) but the VM INDEXES it by `(value - jt_min)` which spans the full value RANGE (~255). The VM bounds check `idx < num_cases` therefore silently routed every opcode `>= jt_min + case_count` (value ≥ ~170: BNE `$D0`, BEQ `$F0`, INX `$E8`, LDA abs,X `$BD`, CMP `$C9/$CD`, DEX `$CA`, SBC `$FD`, +~80 more) to `Case Else` — a 2-cycle no-op that only advances PC by 1, so `C64_Step()`'s `Select Case gC64_op` opcode dispatch was broken for ~half the opcode space and the KERNAL could never execute branches/compares. **Fix: one line — `jt_count = (int)range;` instead of `jt_count = case_count;`** (sparse table slots fill with `default_off`); the VM handler, optimizer, and length-skip scan all derive table length from the emitted COUNT header, so no VM change was needed. 799/799 regression passes. NOTE: the earlier "~600-700 cyc/sec, 20-30 min to clear RAMTAS" perf estimate was measured while the CPU was mis-dispatching (never running KERNAL correctly), so it was invalid; a RAMTAS-skip boot stub at `$C000` was also already in place. This fix also likely resolves the long-standing "Incomplete binary operation" busy-loop (bug #6 in `/memories/repo/build_and_test.md`), whose traced opcodes (`$CA/$D0/$FD`) were all in the dropped range. Full details: `/memories/repo/vg_bytecode_perf.md`.
+- **VG arithmetic codegen bug `CONST + VAR` / `CONST * VAR` → `CONST + CONST` — FIXED Sep 2026** — a binary `+` or `*` whose LEFT operand is a constant/literal and whose RIGHT operand is a variable/expression used to mis-evaluate: `1024 + (srow * 40)` yielded `2048` (=1024+1024) regardless of `srow`; `2 * x` had the identical bug. **Root cause**: `src/visual_gasic_compiler.cpp`'s `BINARY_OP` codegen (CSE fast-path ~line 6862 and generic path ~line 7010) had an `else if (b->left->type == LITERAL)` fallback for `+`/`*` that emitted `OP_ADD_I64_CONST`/`OP_MUL_I64_CONST` embedding the LEFT literal — but that opcode's VM handler (`src/visual_gasic_instance_bytecode_vm.cpp` ~line 2665) assumes stack layout `[real_operand, literal_operand]` (literal pushed LAST) and unconditionally discards the TOP of stack as "the literal" before combining the embedded constant with what's left — so a left-hand literal discarded the real operand instead. **Fixed** by removing all 4 `else if (b->left->type == LITERAL)` fallback branches (2 for `+`, 2 for `*`); left-hand literals now always fall through to the generic `OP_ADD_I64`/`OP_MUL_I64` opcode. Verified via a 6-case headless test; 855/855 regression suite passes. `CONST + VAR` / `CONST * VAR` are now safe in either operand order — no workaround needed. Full details: `/memories/repo/build_and_test.md`.
+- **C64 Emulator native `FOR`/assignment statements always raise `?SYNTAX ERROR` — FIXED Sep 2026** — initially suspected to be a 6502 CPU-core/BASIC-ROM emulation gap requiring deep C++ single-stepping, but single-instruction CPU tracing (see technique in `/memories/repo/c64_native_for_loop_bug.md`) proved the real, unmodified ROM executes correctly. **Real root cause: VG's own tokenizer** — `TokenizeLine()` in `samples/demos/C64_Emulator/c64_main.vg` never tokenized the 8 single-character BASIC operators (`+ - * / ^ > = <`); real C64 BASIC V2 tokenizes these into `$AA`-`$B3` alongside its 68 keyword tokens (verified via c64-wiki.com), but VG wrote literal ASCII instead (e.g. `=` as `$3D` instead of token `$B2`), so the real ROM's parser (which expects the token byte at each parse step) correctly rejected any statement containing them — including virtually every `FOR`/assignment statement. Looked "FOR-specific" only because PRINT-only literal-text programs never use these operators. **Fixed** by adding `OperatorToken()` and calling it as a fallback in `TokenizeLine`'s main scan loop (gated by existing `inQuotes`/`inRem` state so operators inside strings/REM remain literal). Verified: `FOR X=1 TO 5 / PRINT X / NEXT X` now prints 1-5; 855/855 regression suite unaffected. Full details: `/memories/repo/c64_native_for_loop_bug.md`.
+- **C64 Emulator border not surrounding interior ("thick and off-center") — FIXED Jul 30 2026 (`6c4e4468`)** — NOT a VIC-II bug; `_Draw()` in `c64_main.vg` used `Screen.Width`/`Screen.Height` (physical monitor resolution via `DisplayServer::screen_get_size()`) instead of the actual game-window size to compute its fit-to-window scale factor, so the texture was drawn far larger than the window and only its top-left sliver (mostly interior color) was visible. Confirmed the VIC framebuffer itself was already symmetric via a temporary 4-corner `GetImagePixel` probe. Fixed by using `GetViewportRect().Size` (the documented pattern, see `docs/tutorials/your_first_2d_game.md`) and centering the drawn texture instead of anchoring at `(0,0)`. 777/777 regression suite passes. Full details: `/memories/repo/c64_vic_render_bug.md`.
 
-| What | Where |
-|------|--------|
-| Main editor plugin | `addons/visual_gasic/visual_gasic_plugin.gd` |
-| Vibe Code / Narcea panel | `addons/visual_gasic/vg_ai_help.gd` |
-| Narcea system prompt / VG knowledge | `addons/visual_gasic/vg_ai_narcea.gd` |
-| AI providers (Ollama, Claude, Gemini, …) | `addons/visual_gasic/vg_ai_providers.gd` |
-| MCP server (Cursor can call VG tools) | `addons/visual_gasic/vg_mcp_server.gd` — `127.0.0.1:8766` |
-| Plugin settings | Project Settings → **Vg → Plugins** (`vg/plugins/<id>`) |
-| Scene editor mode | **Vg → Scene Editors → Simple 2d 3d** (`vg/scene_editors/simple_2d_3d`) |
+## Recent fixes (Jul 15, 2026)
 
-## Pairing Cursor with VG (today)
+- `IsNot` operator — IMPLEMENTED. Parser (`parse_comparison`), bytecode compiler (constant-fold, class type-check negation via `OP_IS_CLASS`+`OP_NOT`, `OP_NOT_EQUAL` emission), and both evaluator paths (tree-walk `evaluate_expression` + `VisualGasicExpressionEvaluator`) all handle it as the negation of `Is`. Verified via `test_isnot_operator.vg` / `test_isnot_simple.vg` / `test_isnot_simple2.vg` (7/7 assertions).
+- **ByRef write-back bug in expression-level function calls — FOUND & FIXED.** Distinct from the Jun 29 recursion fix (`b130dd8e`). When a `ByRef` function was called as part of an expression (e.g. `result = DoubleAndReturn(val)`) rather than as a standalone `Call` statement, the caller's variable was never updated — `call_internal()` erases the callee's parameter slots from `variables[]` after the call (stashing the real post-call value in `_last_byref_captures`), but the expression-evaluator write-back path in `visual_gasic_instance_evaluate.inc` was reading the already-erased `variables[param.name]` instead of `_last_byref_captures`. Fixed to match the working `STMT_CALL` path in `visual_gasic_instance_execute.inc`. Full regression suite: 763/763 assertions pass (was 762/763 before fix).
 
-1. Open this repo in **Cursor**; rules in `.cursor/rules/` apply automatically.
-2. Run the project in **Godot** with Visual Gasic enabled — MCP starts on port **8766**.
-3. In **Vibe Code**, click **↗ Cursor** (Tier 1 handoff) to write `.vg/cursor_handoff.md`, copy a Composer prompt, and open the project in Cursor.
-4. Use **Narcea** inside Godot for in-IDE context; use **Cursor Composer** for multi-file refactors.
+## Shipped features (Sep 2026 — verify docs when touching these areas)
 
-## When editing AI / Narcea
+- **Python bridge C2 typed msgpack** — `vg/python/use_typed_protocol` (default `false`); msgpack wire preserves int/float. Test: `test_py_msgpack_typed.vg`. JSON remains default for compat.
+- **C++ causal-graph API** — `VisualGasicLanguage.vg_analyze_causal_graph(code, roots)`; `vg_causal_chain.gd` prefers C++ then regex fallback. IDE: Code Navigator **Show Causal Chain** button.
+- **Tagged-stack VM prototype** — `scons tagged_stack=1`, `VG_TAGGED_STACK`, selftest via `VG_STACKVALUE_SELFTEST=1`. **NOT pursued for shipping** (~6% arith win, net loss on realistic workloads). See `docs/vm_tagged_stack_migration.md`.
+- **Narcea Live Debug Capture** — opt-in local viewport/stack/locals/UI tree while debugging (`vg/narcea/live_debug_capture*`, Vibe Code per-run checkbox). Knowledge in `vg_ai_narcea.gd`; spec `docs/development/NARCEA_LIVE_DEBUG_CAPTURE.md`.
+- **`Interface … End Interface`** — signature-only blocks parse. Same-file `Implements` matches `Method`, `InterfaceName_MethodName`, or `Implements InterfaceName.MethodName`. A missing method warns; the script still runs. Cross-file interfaces only check the VB6 prefix. Test: `test_interface_block.vg`.
+- **Do not emit:** `Using … End Using` (not parsed — use `Close` or `Try/Finally`); `ConnectSignal` / `DisconnectSignal` (use `Connect` / `Disconnect`); `DataFile` / `LoadData` as global calls (they are statements).
 
-- Providers are OpenAI-compatible HTTP streams except Ollama (local) and **Cursor** (optional SDK subprocess — `pip install cursor-sdk`, API key in ⚙️).
-- **Cursor (Composer)** — Tier 2 embedded provider; use **↗ Cursor** for Tier 1 handoff to full Cursor IDE.
-- Narcea persona id: `"narcea"` — injects VG control catalog, AGCK, Working Nodes, and tutorial index into the system prompt.
-- Narcea knowledge for **canvas Node2D games**: poll `Input.IsActionJustPressed` / `IsKeyJustPressed` in `_Process` (not `ev.IsActionPressed` on `InputEvent`). **climatist_poc**: five nav buttons (`EnsureNavUi`), Pattern load on `InputPoll` timer (`PatternLoadTick`), screens Now/Pattern/Discussion/Settings. See `samples/apps/climatist_poc/Main.vg` (novice comments).
-- **web_hello** (HTML5 smoke at `build/web/web_hello`) ≠ **climatist_poc** (James weather POC — F5 `samples/apps/climatist_poc/`). Open-Meteo CONUS: `models=ncep_hrrr_conus` (not `hrrr_conus`).
+## Recent fixes (Jun 30, 2026)
 
-## Docs to consult
-
-- `.github/copilot-instructions.md` — milestone context, known bugs, model guidance
-- `docs/manual/ide_tools.md` — plugin activation, 2D/3D routing
-- `docs/manual/IDE_SHORTCUTS.md` — editor shortcuts
-- `addons/visual_gasic/PLUGIN_SDK.md` — sub-plugin API
-
-## Change discipline
-
-- Minimize diff scope; match surrounding code.
-- Do not commit unless the user asks.
-- Do not expand docs unless requested.
+- `dict.Count` / `dict.Keys` / `dict.Items` without parens — FIXED (commit 9d37ddd8)
+- `arr.Count` / `arr.Length` without parens — FIXED (commit 4dca1b16)
+- `Join()` integer formatting (no `.0` suffix) — FIXED (commit 5612c339)
+- ByRef default parameters in recursive calls — FIXED (commit b130dd8e)
 
 ---
 > Source: [xgreenrx-star/VisualGasic](https://github.com/xgreenrx-star/VisualGasic) — distributed by [TomeVault](https://tomevault.io).
