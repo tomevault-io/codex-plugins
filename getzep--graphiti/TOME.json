@@ -2,9 +2,9 @@
   "name": "graphiti",
   "owner": "getzep",
   "repo": "graphiti",
-  "description": "Build Real-Time Knowledge Graphs for AI Agents",
+  "description": "",
   "type": "config",
-  "source_format": "CLAUDE.md",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/getzep/graphiti",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-06-01T15:30:58Z"
+  "distributed_at": "2026-10-07T07:16:50Z"
 }
