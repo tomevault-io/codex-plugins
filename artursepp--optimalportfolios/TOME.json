@@ -4,7 +4,7 @@
   "repo": "OptimalPortfolios",
   "description": "",
   "type": "config",
-  "source_format": "CLAUDE.md",
+  "source_format": "",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/ArturSepp/OptimalPortfolios",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-06-30T21:12:45Z"
+  "distributed_at": "2026-10-07T09:01:53Z"
 }
