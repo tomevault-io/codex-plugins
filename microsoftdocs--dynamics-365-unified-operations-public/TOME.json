@@ -4,7 +4,7 @@
   "repo": "dynamics-365-unified-operations-public",
   "description": "",
   "type": "config",
-  "source_format": "",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/MicrosoftDocs/dynamics-365-unified-operations-public",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-30T00:46:40Z"
+  "distributed_at": "2026-10-07T06:44:36Z"
 }
