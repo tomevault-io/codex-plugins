@@ -4,7 +4,7 @@
   "repo": "plasma-ai-usage-monitor",
   "description": "KDE Plasma 6 widget for local AI provider usage, spend, limits, and coding-tool activity",
   "type": "config",
-  "source_format": "GEMINI.md",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/loofiboss-bit/plasma-ai-usage-monitor",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-10-07T17:44:41Z"
+  "distributed_at": "2026-10-07T17:52:36Z"
 }
