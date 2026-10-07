@@ -5,19 +5,24 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `copilot-instructions.md` in [semaphoreui/semaphore](https://github.com/semaphoreui/semaphore).
+Original source: `CLAUDE.md` in [semaphoreui/semaphore](https://github.com/semaphoreui/semaphore).
 
 ## Also available for
 
-- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-## Bundled Skills (1)
+## Bundled Skills (6)
 
 - [semaphore-third-party-licenses](https://github.com/semaphoreui/semaphore/tree/main/.claude/skills/semaphore-third-party-licenses)
+- [semaphore](https://github.com/semaphoreui/semaphore/tree/main/.claude/skills/semaphore-config-schema/SKILL.md)
+- [semaphore](https://github.com/semaphoreui/semaphore/tree/main/.claude/skills/semaphore-third-party-licenses/SKILL.md)
+- [semaphore](https://github.com/semaphoreui/semaphore/tree/main/.claude/skills/semaphore-cli-docs/SKILL.md)
+- [semaphore](https://github.com/semaphoreui/semaphore/tree/main/.claude/skills/semaphore-commit/SKILL.md)
+- [semaphore](https://github.com/semaphoreui/semaphore/tree/main/.claude/skills/semaphore-checkout/SKILL.md)
 
 Graded against the Tome Standard, TomeVault's public ruleset for whether AI instructions load, read clearly and stay safe. Source: [github.com/semaphoreui/semaphore](https://github.com/semaphoreui/semaphore)
 
