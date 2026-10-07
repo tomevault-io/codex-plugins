@@ -4,7 +4,7 @@
   "repo": "xlsm_devkit",
   "description": "Excel VBA xlsm development toolkit for module import/export with UTF-8 conversion and sheet map markdown export.",
   "type": "config",
-  "source_format": ".cursor/rules/*.mdc",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/minipoisson/xlsm_devkit",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-10-07T08:39:55Z"
+  "distributed_at": "2026-10-07T08:51:35Z"
 }
