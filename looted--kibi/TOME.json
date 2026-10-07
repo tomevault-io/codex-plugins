@@ -4,7 +4,7 @@
   "repo": "kibi",
   "description": "Kibi is a requirement-conformance layer for AI coding agents that keeps product intent connected to code and tests, and catches when implementations drift from it.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": ".cursor/rules/*.mdc",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/Looted/kibi",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-10-07T21:48:22Z"
+  "distributed_at": "2026-10-07T21:54:43Z"
 }
