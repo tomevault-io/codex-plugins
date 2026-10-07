@@ -1,0 +1,44 @@
+{
+  "name": "163MusicPro",
+  "owner": "9xhk-1",
+  "repo": "163MusicPro",
+  "description": "\u4e00\u6b3e\u9002\u4e8e\u5c0f\u5929\u624d\u7b49\u624b\u8868\u7684\u7f51\u6613\u4e91\u97f3\u4e50\u7b2c\u4e09\u65b9\u5ba2\u6237\u7aef",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/9xhk-1/163MusicPro",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-10-07T12:54:14Z"
+}
