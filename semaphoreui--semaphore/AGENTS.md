@@ -1,167 +1,100 @@
-# Semaphore UI Development Instructions
+# AGENTS.md — instructions for the agent
 
-**Always reference these instructions first and fallback to search or bash commands only when you encounter unexpected information that does not match the info here.**
+## About the project
 
-Semaphore UI is a modern web interface for managing popular DevOps tools like Ansible, Terraform, PowerShell, and Bash scripts. It's built with Go (backend) and Vue.js (frontend), using Task runner for build automation.
+One paragraph: what the project is, its stack, how it runs end to end, its single goal.
 
-## Working Effectively
+## Structure
 
-### Bootstrap, build, and test the repository:
-- Install Go 1.21+ (currently requires go version 1.21 or higher)
-- Install Node.js 16+ 
-- Install Task runner: `go install github.com/go-task/task/v3/cmd/task@latest`
-- Install dependencies: `task deps` -- takes 3 minutes first time (faster with cache). NEVER CANCEL. Set timeout to 5+ minutes.
-- Build the application: `task build` -- takes 1.5 minutes. NEVER CANCEL. Set timeout to 3+ minutes.
-- Run tests: `task test` -- takes 33 seconds. NEVER CANCEL. Set timeout to 2+ minutes.
+Top-level folders by role — developed, runs it, tests it, reference — not by technology.
 
-### Run the application:
-- ALWAYS run the bootstrapping steps first
-- Setup database and admin user: `./bin/semaphore setup` (interactive, use SQLite option 4 for development)
-- Start server: `./bin/semaphore server --config ./config.json`
-- Web UI: http://localhost:3000 (login: admin / changeme)
-- API: http://localhost:3000/api/ (test with: `curl http://localhost:3000/api/ping`)
+## Inventory: dev / prod / test
 
-## Validation
+Where runtime artifacts live per environment — databases, caches, logs, build output — and what is
+never committed.
 
-- **CRITICAL**: Always manually validate any new code by building and running the application.
-- ALWAYS run through at least one complete end-to-end scenario after making changes:
-  1. Build the application: `task build`
-  2. Start the server: `./bin/semaphore server --config ./config.json`
-  3. Test API endpoint: `curl http://localhost:3000/api/ping` (should return "pong")
-  4. Access web UI at http://localhost:3000 and verify it loads
-  5. For auth changes: Test login with admin/changeme
-- For significant changes, run full setup process to ensure setup still works
-- Always build and exercise your changes before considering the task complete
+## Running and building
 
-### Complete Validation Scenario (for major changes):
-```bash
-# 1. Clean build
-task build
+Commands to bring up, build and deploy; the single entry point; a link to the full runbook.
 
-# 2. Setup database (if config.json doesn't exist)
-./bin/semaphore setup  # Choose option 4 (SQLite), use admin/changeme
+## Testing
 
-# 3. Start server
-./bin/semaphore server --config ./config.json
+Suite layout — markers, layers, opt-in parts — and the exact commands; a link to the full doc.
 
-# 4. Test in another terminal
-curl http://localhost:3000/api/ping  # Should return "pong"
-curl -I http://localhost:3000/       # Should return HTTP 200
+## At session start
 
-# 5. Test web interface manually in browser at http://localhost:3000
-# 6. Test login with admin/changeme if auth-related changes
+| Read | When |
+| --- | --- |
+| [`AGENTS/memory/MEMORY.md`](AGENTS/memory/MEMORY.md) — short rules, gotchas, index of memory topic files | Every session |
+| [`AGENTS/tasks/INDEX.md`](AGENTS/tasks/INDEX.md) — workspace binding and task rules | Every session |
+| Every `INDEX.md` under `AGENTS/docs/` and `AGENTS/work/`, at any depth — list the folders, don't only follow links | Every session |
+| [`AGENTS/research/INDEX.md`](AGENTS/research/INDEX.md) — shortlist of `RESEARCH@` codes | Before any research |
+| [`AGENTS/tools/INDEX.md`](AGENTS/tools/INDEX.md) — project scripts for the environment | Before improvising a raw command |
+
+## Where a fact goes
+
+- Write a short rule or gotcha straight into `AGENTS/memory/MEMORY.md`, one or two lines — the fact
+  and its reason, not the story of how it was found.
+- Move entries that cluster around one topic into `AGENTS/memory/<topic>.md`; replace them in
+  `MEMORY.md` with one index row saying what the file holds.
+- Read a memory topic file only when the task touches its topic.
+- Keep `MEMORY.md` under 150 lines — it loads every session; past that, group entries into topic
+  files.
+- Put a fact that needs sections and prose in a doc in `docs/` or `work/`, not in memory.
+- Keep each topic in one place — never in both memory and a doc.
+- Follow this memory format over the harness's own — no file per fact, no front matter.
+- Put this project's subsystem, decision or open problem in [`work/`](AGENTS/work/INDEX.md).
+- Put an approach that would serve another project in [`docs/`](AGENTS/docs/INDEX.md).
+- Put a repeatable operation on the environment in a script in `tools/` — read
+  [`AGENTS/tools/CREATE.md`](AGENTS/tools/CREATE.md) first.
+- Put a temporary file or a one-off report in `AGENTS/tmp/`.
+- Check a fact from memory, docs or work against the code before relying on it — code wins; fix the
+  stale doc in the same pass.
+
+## Docs and work
+
+- Keep every doc inside a zone — a folder with its own `INDEX.md`, created with the folder. Nothing
+  sits loose in the root of `docs/` or `work/`.
+- Nest subzones in `docs/` only, each with its own `INDEX.md`.
+- Keep `work/` zones flat — a topic that outgrows its zone becomes a new zone.
+- Name a `work/` zone by subject, not by code module.
+- Write an `INDEX.md` in `docs/` and `work/` as an index of files only: one paragraph on what the folder covers, then a
+  `When you need it | Read` table. No facts or rules.
+- Give every doc and every child `INDEX.md` at least one row — one row per situation, so a file
+  may get several.
+- Write an index row as the reason to open the file, not a retelling.
+- Open a doc only for the zones the task touches. Don't search for a file by name past the indexes.
+- Link to a doc, never copy it.
+- Update the zone index in the same pass as the doc.
+- Flag a trap or a divergence from the code in the doc with ⚠️, dated — a stale doc is worse than
+  none.
+- Keep `docs/` portable — an app name, port or container name means the doc belongs in `work/`.
+- Split a subject with a shared half: the approach stays in `docs/`, the implementation goes to a
+  `work/` zone and links back.
+- Write a `docs/` doc only for what a config cannot express and code does not show.
+- Let the project win over a `docs/` convention — fix the doc in the same pass.
+
+## Tasks
+
+- Run, check and store every task and plan in the `workbench` MCP — rules in
+  `AGENTS/tasks/INDEX.md`.
+- Use workspace `WORKSPACE@16484a7f90` (Semaphore UI) — the only one for this project.
+- Bind it at session start, before any task call — the MCP client config does not pin it:
+
+```
+mcp__workbench__workspace_use(workspace_code="WORKSPACE@16484a7f90")
 ```
 
-### Linting and Code Quality
+## Research
 
-- Frontend linting: `cd web && npm run lint` (has known warnings about console statements and asset sizes - ignore existing issues)
-- Backend linting: `golangci-lint run --timeout=3m` (has known type errors due to module import issues - ignore existing issues) 
-- **DO NOT** try to fix existing linting issues unless specifically asked to
-- Always run linting on new code you add to ensure it follows project standards
-- Install golangci-lint if needed: `go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.57.2`
+- Do and store all research in the `research` MCP — the repo keeps only the code shortlist.
 
-## Common Tasks
+## Temporary files
 
-### Repository Structure
-```
-.
-├── README.md           - Project documentation  
-├── CONTRIBUTING.md     - Development guidelines
-├── Taskfile.yml       - Task runner configuration
-├── go.mod             - Go module dependencies
-├── web/               - Vue.js frontend application
-│   ├── package.json   - Frontend dependencies
-│   ├── src/           - Vue.js source code
-│   └── public/        - Static assets
-├── cli/               - Go CLI application entry point  
-├── api/               - Go API server endpoints
-├── db/                - Database models and interfaces
-├── services/          - Business logic services
-├── util/              - Utility functions and configuration
-├── bin/               - Built binaries (after build)
-└── config.json       - Runtime configuration (after setup)
-```
-
-### Key Commands Reference
-```bash
-# Install task runner
-go install github.com/go-task/task/v3/cmd/task@latest
-
-# Install all dependencies (backend + frontend + tools)
-task deps
-
-# Build application (frontend + backend)
-task build
-
-# Run tests
-task test  
-
-# Run linting
-task lint
-
-# Setup application (interactive)
-./bin/semaphore setup
-
-# Start server
-./bin/semaphore server --config ./config.json
-
-# View available task commands
-task --list
-```
-
-### Database Options for Development
-
-During setup, choose option 4 (SQLite) for the simplest development setup:
-
-- No external database server required
-- Database file stored at the path configured in `config.json` (default under `/tmp/`)
-- Perfect for development and testing
-
-> **Note:** BoltDB (option 2) was removed in Semaphore 2.19. If you have an existing
-> `database.boltdb` file, migrate to SQLite, MySQL, or PostgreSQL before upgrading.
-
-### Frontend Development
-- Vue.js 2.x application in `web/` directory
-- Built with Vue CLI and Vuetify components
-- Build output goes to `api/public/` for serving by Go backend
-- Development server not typically used - Go server serves built assets
-
-### Backend Development  
-- Go application with CLI and API server
-- Uses Gorilla Mux for routing
-- Supports multiple databases: MySQL, PostgreSQL, SQLite (BoltDB was removed in 2.19)
-- Configuration via JSON file or environment variables
-
-## Troubleshooting
-
-### Build Issues
-- If `task` command not found: Install with `go install github.com/go-task/task/v3/cmd/task@latest`
-- If Go version errors: Ensure Go 1.21+ is installed
-- If npm install fails: Ensure Node.js 16+ is installed
-- If build takes too long: This is normal - frontend build can take 60+ seconds
-
-### Runtime Issues  
-- If server won't start: Check config.json exists and database is accessible
-- If web UI shows errors: Check that frontend build completed successfully in `api/public/`
-- If API returns errors: Check server logs for specific error messages
-
-### Database Issues
-
-- For development, use SQLite (option 4) during setup
-- The SQLite database file is created automatically at the configured path
-- If database errors occur, remove the SQLite file and run setup again
-- Configs with `"dialect": "bolt"` will fail at startup — switch to `sqlite` and re-run setup
-
-## Important Notes
-
-- **NEVER CANCEL** long-running builds or dependency installations
-- Set appropriate timeouts: deps (5+ min), build (3+ min), tests (2+ min)  
-- The application serves the frontend from the Go backend - no separate frontend server needed
-- Configuration is stored in `config.json` after running setup
-- Default admin credentials after setup: admin / changeme
-- Linting has known issues - focus on not introducing new ones
-- Always test changes by running the full application, not just unit tests
+- Never read `AGENTS/tmp/` at session start.
+- Never link into `AGENTS/tmp/` from docs, memory or this file.
+- Move a result worth keeping to its own home before the work is done.
 
 ---
 > Source: [semaphoreui/semaphore](https://github.com/semaphoreui/semaphore) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-24 -->
+<!-- tomevault:4.0:agents_md:2026-10-06 -->
