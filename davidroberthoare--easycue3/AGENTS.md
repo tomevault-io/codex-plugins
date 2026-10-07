@@ -1,0 +1,32 @@
+# EasyCue3 Copilot Instructions
+
+## Core
+- **Project:** Rust theatrical lighting/media console (egui 0.31).
+- **Philosophy:** Simplicity, cross-platform, real-time (60 FPS UI, 40 Hz DMX).
+- **Terminology:** DMX (512 ch, 1-512, 0-255), Universe, Cue, Fade, GO, BACK.
+
+## Architecture
+- **UI:** `src/app.rs` (`EasyCueApp`), immediate-mode `update()` loop.
+- **State:** `Arc<Mutex<Universe>>` shared between UI, Playback, and DMX threads.
+- **DMX:** `DmxBackend` trait (Virtual, USB, Art-Net, sACN). Separate output thread.
+- **Modules:** `dmx/`, `cue/`, `show/`, `ui/`, `fixtures/`, `media/`.
+
+## Conventions
+- **Naming:** `snake_case` (funcs/vars), `CamelCase` (types), `SCREAMING_SNAKE` (consts).
+- **Errors:** `anyhow::Result`, propagate with `?`, handle gracefully in app logic.
+- **Logging:** `log::info!`, `debug!`, `warn!`, `error!`. No `println!`.
+- **Ownership:** Prefer `&T` and `&mut T`. `Arc<Mutex<T>>` for thread sharing.
+- **Docs:** `///` for public APIs. Explain *why*, not *what*.
+
+## Critical Patterns
+- **Fades:** Interpolate `prev + (next - prev) * progress` (clamp 0.0–1.0).
+- **Code:** Avoid allocations in hot paths. No `.unwrap()` in prod.
+- **Features:** Gate with `#[cfg(feature = "...")]` (usb, audio, video).
+
+## Constraints
+- **Scope:** 2–16 Universes, ~200 fixtures, 8-bit channels.
+- **Target:** Educational/small venues. Prioritize simplicity.
+
+---
+> Source: [davidroberthoare/easycue3](https://github.com/davidroberthoare/easycue3) — distributed by [TomeVault](https://tomevault.io).
+<!-- tomevault:4.0:agents_md:2026-10-07 -->
