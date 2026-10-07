@@ -1,52 +1,59 @@
+# Copilot instructions for Microsoft Learn
 
-# Conventions
+These instructions define a unified style and process standard for authoring and maintaining learn.microsoft.com documentation with GitHub Copilot or other AI assistance.
 
-[!INCLUDE [global-inventory-accounting-deprecation-banner](../includes/global-inventory-accounting-deprecation-banner.md)]
-[!include [banner](../includes/banner.md)]
+## Learn-wide instructions
 
-A convention is a container for a set of policies that affect system behavior. Based on your business requirements, you must define conventions by using a combination of the various policies that establish how costs should be accounted in Global Inventory Accounting. You can associate each convention with one or more ledgers to ensure consistency in accounting policies that are applied across ledgers.
+The following instructions apply to all Microsoft Learn documentation authored with AI assistance. The Learn product team updates this guidance periodically as needed. Each repository shouldn't update this guidance to avoid being overwritten, but update the repository-specific instructions as needed.
 
-To set up your conventions, go to **Global inventory accounting \> Setup \> Conventions**. For each convention, set the following fields:
+### AI usage and disclosure
+All Markdown content created or substantially modified with AI assistance must include an `ai-usage` front matter entry:
+- `ai-usage: ai-generated` - AI produced the initial draft with minimal human authorship.
+- `ai-usage: ai-assisted` - Human-directed, reviewed, and edited with AI support.
+- Omit only for purely human-authored legacy content.
 
-- **Name** – Enter the name of the convention.
-- **Description** – Enter a description of the convention.
-- **Cost Object policy** – Select a cost object policy. These policies determine the level of granularity that the system applies to calculate and maintain the inventory value. The following predefined options are available:
+If missing, **add it**. However, don't add or update the `ai-usage` tag if the changes proposed are confined solely to:
+- Links (link text and URLs).
+- Single words or short phrases, such as entries in table cells.
+- Less than 5% of the article's word count.
 
-    - Product – Site
-    - Product – Site – Warehouse
+### Writing style
 
-    For example, if you select *Product – Site*, for every inventory movement (inflow or outflow), the system calculates and maintains the inventory cost of each product at the site level. Therefore, inventory movements at lower levels, such as the warehouse level, don't affect the inventory value. (An example of a warehouse-level transfer is an item transfer between two warehouses in one site.) Likewise, you can't view the inventory cost at a lower level, such as the warehouse level.
+Follow the [Microsoft Writing Style Guide](https://learn.microsoft.com/style-guide/welcome/) with these specifics:
 
-- **Input measurement basis policy** – Select an input measurement basis policy. These policies determine the costs that should flow into the inventory account and the costs that should be charged. The following options are relevant for trading companies:
+#### Voice and tone
 
-    - **Normal historical** – All the cost components flow into the inventory account.
-    - **Standard** – Standard cost flows into the inventory accounts, and the difference between the applied cost and the actual costs is charged to variance accounts. If you want to create a *Standard* input measurement basis policy, you must first create a price list where the policy can look up the item's standard cost.
-    - **Price lists** – Global Inventory Accounting supports fetching item prices from multiple legal entities. You can define a price list that the input measurement basis policy uses. In this way, the system knows where to look up the item price. Follow these steps to set up price lists:
+- Active voice, second person addressing reader directly
+- Conversational tone with contractions
+- Present tense for instructions and descriptions
+- Imperative mood for instructions ("Call the method" not "You should call the method")
+- Use "might" instead of "may" for possibility
+- Avoid "we" and "our" when referring to documentation authors
 
-        1. In the **Name** field, enter a name.
-        1. In the **Description** field, enter a description.
-        1. In the **Costing type** field, select a costing type (*Standard cost* or *Planned cost*).
-        1. In the **Price type** field, select a price type (*Cost*, *Purchase*, or *Sales price*).
-        1. Add a costing version.
-        1. On the Action Pane, select **Price** to validate the item prices on the price list.
+#### Structure and format
 
-- **Cost flow assumption policy** – Select a cost flow assumption policy. These policies determine how costs are removed from inventory and reported as the cost of goods sold. The following predefined options are available:
+- Sentence case headings (no gerunds in titles)
+- Be concise, and break up long sentences
+- Use the Oxford comma in lists
+- Number all ordered lists sequentially like "1.", "2.", "3.".
+- Complete sentences with proper punctuation in all list items
+- Avoid "etc." or "and so on" - provide complete lists or use "for example"
+- No consecutive headings without content between them
 
-    - Average
-    - Specific – Batch
+#### Formatting conventions
 
-    > [!NOTE]
-    > Global Inventory Accounting is a perpetual inventory system. Therefore, the system tracks the inventory value on a transaction-by-transaction basis.
+- **Bold** for UI elements
+- `Code style` for file names, folders, custom types, and non-localizable text
+- Raw URLs in angle brackets
+- Use relative links for files in this repo
+- Remove `https://learn.microsoft.com/en-us` from learn.microsoft.com links
 
-- **Cost element policy** – You can define cost element policies and link them to this field. A *cost element* is the cost of a resource consumed by an event. You can use cost elements to track and categorize costs. To create cost element policies, enter information in the following places:
+## Repository-specific instructions
 
-    - **Name** field
-    - **Description** field
-    - **Cost element** list
-    - **Rules** grid
+The following instructions are specific to this repository. Repository maintainers might update these instructions as needed.
 
-    If you don't want to break down the inventory value further, you must still create a cost element list that has a single cost element. You must then create a cost element policy to map all the relevant measurement types (cost components) to that cost element.
+<!--- Add additional repository level instructions below. Do NOT update this line or above. --->
 
 ---
 > Source: [MicrosoftDocs/dynamics-365-unified-operations-public](https://github.com/MicrosoftDocs/dynamics-365-unified-operations-public) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-26 -->
+<!-- tomevault:4.0:agents_md:2026-10-07 -->
