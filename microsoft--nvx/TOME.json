@@ -1,0 +1,117 @@
+{
+  "name": "nvx",
+  "owner": "microsoft",
+  "repo": "nvx",
+  "description": "",
+  "type": "tome",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [
+    {
+      "name": "nvx",
+      "path": ".github/skills/nvx-run/SKILL.md",
+      "github_url": "https://github.com/microsoft/nvx/tree/main/.github/skills/nvx-run/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "nvx",
+      "path": ".github/skills/nvx-debug/SKILL.md",
+      "github_url": "https://github.com/microsoft/nvx/tree/main/.github/skills/nvx-debug/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "nvx",
+      "path": ".github/skills/create-pr/SKILL.md",
+      "github_url": "https://github.com/microsoft/nvx/tree/main/.github/skills/create-pr/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "nvx",
+      "path": ".github/skills/nvx-benchmark/SKILL.md",
+      "github_url": "https://github.com/microsoft/nvx/tree/main/.github/skills/nvx-benchmark/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "nvx",
+      "path": ".github/skills/commit-message/SKILL.md",
+      "github_url": "https://github.com/microsoft/nvx/tree/main/.github/skills/commit-message/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "nvx",
+      "path": ".github/skills/review-changes/SKILL.md",
+      "github_url": "https://github.com/microsoft/nvx/tree/main/.github/skills/review-changes/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "nvx",
+      "path": ".github/skills/nvx-host-connect/SKILL.md",
+      "github_url": "https://github.com/microsoft/nvx/tree/main/.github/skills/nvx-host-connect/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "nvx",
+      "path": ".github/skills/agentic-workflows/SKILL.md",
+      "github_url": "https://github.com/microsoft/nvx/tree/main/.github/skills/agentic-workflows/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "nvx",
+      "path": ".github/skills/nvx-openvmm-promote/SKILL.md",
+      "github_url": "https://github.com/microsoft/nvx/tree/main/.github/skills/nvx-openvmm-promote/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "nvx",
+      "path": ".github/skills/address-pr-comments/SKILL.md",
+      "github_url": "https://github.com/microsoft/nvx/tree/main/.github/skills/address-pr-comments/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "nvx",
+      "path": ".github/skills/rebase-and-validate/SKILL.md",
+      "github_url": "https://github.com/microsoft/nvx/tree/main/.github/skills/rebase-and-validate/SKILL.md",
+      "description": ""
+    },
+    {
+      "name": "nvx",
+      "path": ".github/skills/nvx-ci-investigation/SKILL.md",
+      "github_url": "https://github.com/microsoft/nvx/tree/main/.github/skills/nvx-ci-investigation/SKILL.md",
+      "description": ""
+    }
+  ],
+  "source_url": "https://github.com/microsoft/nvx",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-10-07T06:30:26Z"
+}
