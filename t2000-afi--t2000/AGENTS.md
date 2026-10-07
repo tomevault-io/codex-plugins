@@ -1,22 +1,22 @@
 
-# Env Validation Gate → `.claude/skills/t2000-env-gate/SKILL.md`
+# Financial Amounts → `.claude/skills/t2000-financial-amounts/SKILL.md`
 
-**The invariant:** every app with ≥1 REQUIRED env var validates at boot via a Zod
-schema and exposes values through a typed `env` proxy. Raw `process.env.X` reads
-outside the env module are banned (only `NODE_ENV` and `NEXT_RUNTIME` are exempt),
-and `process.env.X || 'default'` is banned outright — it masks a misconfig forever.
-Apps with ZERO required vars may validate inline instead.
+**The invariants:**
 
-Why: an empty-string var in the Vercel UI silently degraded production for ~4 days
-and surfaced three layers below the actual cause.
+1. **Floor, never round.** Any amount shown to a user or passed to an SDK builder
+   must be **≤** the actual on-chain balance. `Math.round` can round up and produce
+   more raw units than the user holds → "Insufficient balance".
+2. **Decimals are registry data, never call-site literals.** Read them from
+   `COIN_REGISTRY` / `SUPPORTED_ASSETS` in `packages/sdk/src/token-registry.ts` +
+   `constants.ts`. Never create a second token map.
 
-**Read the full pattern before editing any env code:**
-`.claude/skills/t2000-env-gate/SKILL.md` — the Zod schema shape, the client/server
-split, the boot hook, and the reference implementation at
-`audric/apps/web-v3/lib/env.ts`.
+**Read the full detail before touching amount math or token metadata:**
+`.claude/skills/t2000-financial-amounts/SKILL.md` — per-token display precision,
+chip/preset math for tiny balances, and the canonical-source table.
 
-*(Content moved there 2026-07-24 — do not re-inline it here; this file is a pointer
-so Cursor and Claude Code cannot drift.)*
+*(Content moved there 2026-07-24, merged with the former `token-data-architecture`
+rule — do not re-inline it here; this file is a pointer so Cursor and Claude Code
+cannot drift.)*
 
 ---
 > Source: [t2000-afi/t2000](https://github.com/t2000-afi/t2000) — distributed by [TomeVault](https://tomevault.io).
