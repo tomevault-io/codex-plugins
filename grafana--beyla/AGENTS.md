@@ -1,57 +1,46 @@
+# CLAUDE.md
 
-# OBI Integration Instructions
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-When working on or reviewing changes related to OBI (OpenTelemetry eBPF Instrumentation) integration in Beyla, follow these rules strictly.
+## Project
 
-## Forbidden directories
+`universal-translator` (`ut`) is a Go i18n library that wraps `github.com/go-playground/locales` (CLDR locale data) to provide translation registration, plural rule handling (cardinal, ordinal, range), and `{0}`-style parameter substitution. Translations can be registered programmatically or loaded from JSON files.
 
-Never modify files in these directories directly:
-- `vendor/` — vendored OBI code, managed by `go mod vendor`. If OBI CI passes, this code is correct by definition.
-- `.obi-src/` — the OBI submodule. Changes go upstream.
-- `internal/testgenerated/` — generated test output. Change `scripts/generate-obi-tests.sh` or Go source instead.
+## Commands
 
-## Config struct parity
+```bash
+# Run tests with race detection and coverage
+make test
 
-Beyla mirrors OBI config structs and uses `pkg/helpers/config/convert.go` (`Convert()`) to copy between them. This converter panics if the destination struct has an exported field the source does not have (and vice versa).
+# Run benchmarks
+make bench
 
-When OBI adds new config fields, Beyla mirrors must be updated with matching fields, including `BEYLA_`-prefixed env tags and matching defaults.
+# Lint
+make lint    # or: golangci-lint run
 
-Known mirror pairs:
-- `vendor/.../obi/pkg/kube/kubecache/config.go` (OBI) <-> `cmd/k8s-cache/cfg/config.go` (Beyla)
-- `vendor/.../obi/pkg/obi/config.go` (OBI) <-> `pkg/beyla/config.go` (Beyla), bridged via `pkg/beyla/config_obi.go`
+# Run a single test
+go test -run TestTranslatorAdd -race -v ./...
+```
 
-A config mismatch causes a startup panic. In k8s-cache this manifests as test timeouts — the cache process is dead and Beyla never receives K8s metadata, so tests hang rather than showing a panic.
+## Architecture
 
-## Test sync before patch
+Flat package `ut` at the repo root — no sub-packages.
 
-When a Beyla test fails on an assertion, do not simply adjust the assertion to make it pass. First locate the corresponding test in OBI (`.obi-src/`) and compare:
-- If the test block or sub-case has been **removed** in OBI, remove the same block from Beyla's copy (applying the OBI-to-Beyla translation rules from `scripts/generate-obi-tests.sh`). Do not patch the assertion.
-- If the test block still exists in OBI but the assertion changed, then adjust the assertion to match the new OBI behaviour.
+- **`universal_translator.go`** — `UniversalTranslator` struct: holds a `map[string]Translator` (keyed by lowercased locale) plus a fallback. Constructor: `New(fallback, ...supportedLocales)`. Methods: `FindTranslator`, `GetTranslator`, `AddTranslator`, `VerifyTranslations`.
+- **`translator.go`** — `Translator` interface (embeds `locales.Translator`) and private `translator` impl. Registration: `Add`, `AddCardinal`, `AddOrdinal`, `AddRange`. Resolution: `T`, `C`, `O`, `R`. Each translation key is `interface{}` (string or int). Parameter substitution indexes are precomputed at registration time via `transText`.
+- **`import_export.go`** — JSON import/export. `Export` writes per-locale JSON files. `Import` reads them (supports recursive directory traversal). `ImportByReader` for streaming.
+- **`errors.go`** — Typed error structs: `ErrUnknownTranslation`, `ErrExistingTranslator`, `ErrConflictingTranslation`, `ErrRangeTranslation`, `ErrOrdinalTranslation`, `ErrCardinalTranslation`, `ErrMissingPluralTranslation`, `ErrMissingBracket`, `ErrBadParamSyntax`, `ErrMissingLocale`, `ErrBadPluralDefinition`.
 
-Beyla's generated tests shadow OBI's tests. When OBI changes a test, Beyla's version should be updated to match — not worked around with a minimal assertion fix that hides the upstream intent.
+Note: the private field names `cardinalTanslations`, `ordinalTanslations`, `rangeTanslations` are historical typos — do not "fix" them as it would break serialization/deserialization compatibility.
 
-## Port over inject
+## Testing
 
-Prefer porting proper fixes from OBI into Beyla code over adding code injections in `scripts/generate-obi-tests.sh`. Code injections are a last resort.
+Tests live at the repo root alongside source files. Test data JSON files are in `testdata/`. The library is goroutine-safe for reads once translations are registered — benchmarks in `benchmarks_test.go` test both serial and parallel `T()` calls.
 
-## No test skipping
+## CI
 
-Do not skip, disable, or `t.Skip()` tests. Fix failures at the source.
-
-## Scope of OBI integration changes
-
-Changes should be limited to:
-- Beyla's own Go code (not in `vendor/`, not in `.obi-src/`)
-- Test synchronisation rules in `scripts/generate-obi-tests.sh` (`BEHAVIORAL_TRANSFORMS`, `CODE_INJECTIONS`)
-- Beyla-specific test extensions in `internal/test/beyla_extensions/`
-
-When reviewing OBI integration changes, flag:
-- Modifications to forbidden directories
-- Test skips
-- Assertion-only fixes that change expected values without also porting the corresponding OBI test inputs (config YAML fields, setup data, table entries) — this is the most common shortcut and defeats the purpose of the test
-- Assertion patches that do not match upstream OBI test values
-- Config struct mismatches
+GitHub Actions (`.github/workflows/workflow.yml`): Go 1.19.x matrix across ubuntu/macos/windows with race detection, coverage via goveralls, and golangci-lint.
 
 ---
 > Source: [grafana/beyla](https://github.com/grafana/beyla) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-27 -->
+<!-- tomevault:4.0:agents_md:2026-10-07 -->
