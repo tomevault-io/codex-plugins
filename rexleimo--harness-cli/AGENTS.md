@@ -1,11 +1,12 @@
-# AIOS For Gemini
+## AIOS Native Grok Build Layer
 
-This repository provides compatibility-tier native enhancements for Gemini through repo-local skills and AIOS runtime conventions.
-
-## Agent Self-Trigger
-
-This compatibility projection does not declare prompt hooks. When this client is launched through AIOS shell integration, use the shared workflow policy and continue normal single-agent work for `direct` and `guarded` tasks. Use an injected `team`, `subagent`, or `harness` command only for one explicit `planned` work item.
+- Prefer repo-local `.grok/skills` and `.grok/agents` for AIOS-enhanced surfaces.
+- Keep work grounded in the AIOS runtime and verification flow.
+- Native sync writes `.grok/hooks/aios-workflow.json` (`aios plan hook-user-prompt --client grok`). Absent until `aios internal native update`. Enable those project hooks with `/hooks-trust` once.
+- Follow the shared workflow policy before selecting a plan, skill, team, or harness route.
+- Grok Build also loads shared `.agents/skills` and Claude-compat paths; prefer AIOS-managed roots for project-shared skills.
+- Token compression is handled by community tools RTK + Caveman (installed via `aios init`).
 
 ---
 > Source: [rexleimo/harness-cli](https://github.com/rexleimo/harness-cli) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-08-30 -->
+<!-- tomevault:4.0:agents_md:2026-09-09 -->
