@@ -4,7 +4,7 @@
   "repo": "AIWorkHub",
   "description": "Open-source, local-first control plane for multi-model AI coding agents in VS Code and MCP: task DAGs, source intelligence, durable context and evidence-based review.",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/shrec/AIWorkHub",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-10-07T02:42:02Z"
+  "distributed_at": "2026-10-08T05:49:59Z"
 }
