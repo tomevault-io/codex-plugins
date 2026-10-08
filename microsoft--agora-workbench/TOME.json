@@ -4,7 +4,7 @@
   "repo": "agora-workbench",
   "description": "A workbench for wrapping your tooling with MCP",
   "type": "config",
-  "source_format": "copilot-instructions.md",
+  "source_format": "CLAUDE.md",
   "formats": [
     {
       "format": "claude_md",
@@ -40,5 +40,5 @@
   "skills": [],
   "source_url": "https://github.com/microsoft/agora-workbench",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-10-07T08:31:55Z"
+  "distributed_at": "2026-10-08T06:53:30Z"
 }
