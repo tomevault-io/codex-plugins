@@ -1,6 +1,5 @@
-
 <!-- codexai-agentic-workflow:start -->
-# CodexAI Core
+# AGENTS.md
 
 ## CodexAI Workflow Defaults
 
