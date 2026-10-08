@@ -1,0 +1,44 @@
+{
+  "name": "EssentialReader",
+  "owner": "Mupceet",
+  "repo": "EssentialReader",
+  "description": "\u300c\u58a8\u672c\u9605\u8bfb\u300d\u4e13\u4e3a\u58a8\u6c34\u5c4f\u800c\u6765  A quiet reading experience for E-Ink.",
+  "type": "config",
+  "source_format": "copilot-instructions.md",
+  "formats": [
+    {
+      "format": "claude_md",
+      "display": "CLAUDE.md",
+      "platform": "Claude Code"
+    },
+    {
+      "format": "agents_md",
+      "display": "AGENTS.md",
+      "platform": "Codex"
+    },
+    {
+      "format": "copilot_instructions",
+      "display": "copilot-instructions.md",
+      "platform": "GitHub Copilot"
+    },
+    {
+      "format": "cursor_mdc",
+      "display": ".cursor/rules/*.mdc",
+      "platform": "Cursor"
+    },
+    {
+      "format": "gemini_md",
+      "display": "GEMINI.md",
+      "platform": "Gemini CLI"
+    },
+    {
+      "format": "windsurf_rules",
+      "display": ".windsurf/rules/*.md",
+      "platform": "Windsurf"
+    }
+  ],
+  "skills": [],
+  "source_url": "https://github.com/Mupceet/EssentialReader",
+  "distributed_by": "TomeVault",
+  "distributed_at": "2026-10-08T01:37:45Z"
+}
