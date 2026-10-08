@@ -4,7 +4,7 @@
   "repo": "ripl",
   "description": "",
   "type": "tome",
-  "source_format": "CLAUDE.md",
+  "source_format": "copilot-instructions.md",
   "formats": [
     {
       "format": "claude_md",
@@ -43,9 +43,15 @@
       "path": ".claude/skills/ripl-charts/SKILL.md",
       "github_url": "https://github.com/andrewcourtice/ripl/tree/main/.claude/skills/ripl-charts/SKILL.md",
       "description": ""
+    },
+    {
+      "name": "ripl",
+      "path": ".claude/skills/ripl-pull-requests/SKILL.md",
+      "github_url": "https://github.com/andrewcourtice/ripl/tree/main/.claude/skills/ripl-pull-requests/SKILL.md",
+      "description": ""
     }
   ],
   "source_url": "https://github.com/andrewcourtice/ripl",
   "distributed_by": "TomeVault",
-  "distributed_at": "2026-07-25T21:00:33Z"
+  "distributed_at": "2026-10-08T06:07:08Z"
 }
