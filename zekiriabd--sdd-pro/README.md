@@ -5,7 +5,7 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `GEMINI.md` in [zekiriabd/SDD-Pro](https://github.com/zekiriabd/SDD-Pro).
+Original source: `` in [zekiriabd/SDD-Pro](https://github.com/zekiriabd/SDD-Pro).
 
 ## Also available for
 
@@ -13,6 +13,7 @@ Original source: `GEMINI.md` in [zekiriabd/SDD-Pro](https://github.com/zekiriabd
 - **Codex** — `AGENTS.md`
 - **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
 ## Bundled Skills (13)
