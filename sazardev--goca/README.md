@@ -1,0 +1,29 @@
+# goca
+
+> Source: [sazardev/goca](https://github.com/sazardev/goca). Graded, signed and kept current as the models change by [TomeVault](https://tomevault.io)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `` in [sazardev/goca](https://github.com/sazardev/goca).
+
+## Also available for
+
+- **Claude Code** — `CLAUDE.md`
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Cursor** — `project-config.mdc`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+## Bundled Skills (1)
+
+- [shiki](https://github.com/sazardev/goca/tree/main/.opencode/skill/deploy/SKILL.md)
+
+From [sazardev/goca](https://github.com/sazardev/goca) — a repo with 0+ stars on GitHub.
+
+---
+
+Explore more instruction files on [TomeVault](https://tomevault.io), the platform that grades AI instruction files and catches silent drift across every major tool.
+
+<!-- genome:d-e-s -->
