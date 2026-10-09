@@ -15,7 +15,11 @@ Original source: `CLAUDE.md` in [ssochi/hiphone](https://github.com/ssochi/hipho
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-From [ssochi/hiphone](https://github.com/ssochi/hiphone) — a repo with 51+ stars on GitHub.
+## Bundled Skills (1)
+
+- [hiphone](https://github.com/ssochi/hiphone/tree/main/docs/skills/hiphone-cloudflare-pages-deploy/SKILL.md)
+
+From [ssochi/hiphone](https://github.com/ssochi/hiphone) — a repo with 0+ stars on GitHub.
 
 ---
 
