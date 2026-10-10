@@ -5,12 +5,12 @@
 ## Codex Config
 
 The `AGENTS.md` file in this directory is the project config converted for Codex.
-Original source: `CLAUDE.md` in [wilsonfreitas/brasa](https://github.com/wilsonfreitas/brasa).
+Original source: `copilot-instructions.md` in [wilsonfreitas/brasa](https://github.com/wilsonfreitas/brasa).
 
 ## Also available for
 
+- **Claude Code** — `CLAUDE.md`
 - **Codex** — `AGENTS.md`
-- **GitHub Copilot** — `copilot-instructions.md`
 - **Cursor** — `project-config.mdc`
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
@@ -20,7 +20,7 @@ Original source: `CLAUDE.md` in [wilsonfreitas/brasa](https://github.com/wilsonf
 - [brasa](https://github.com/wilsonfreitas/brasa/tree/main/.claude/skills/brasa-db-explorer/SKILL.md)
 - [brasa](https://github.com/wilsonfreitas/brasa/tree/main/.claude/skills/brasa-template-writer/SKILL.md)
 
-From [wilsonfreitas/brasa](https://github.com/wilsonfreitas/brasa) — a repo with 48+ stars on GitHub.
+From [wilsonfreitas/brasa](https://github.com/wilsonfreitas/brasa) — a repo with 0+ stars on GitHub.
 
 ---
 
