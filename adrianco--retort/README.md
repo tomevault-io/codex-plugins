@@ -15,7 +15,7 @@ Original source: `CLAUDE.md` in [adrianco/retort](https://github.com/adrianco/re
 - **Gemini CLI** — `GEMINI.md`
 - **Windsurf** — `project-config.md`
 
-## Bundled Skills (61)
+## Bundled Skills (63)
 
 - [retort](https://github.com/adrianco/retort/tree/main/skills/run-summary/SKILL.md)
 - [retort](https://github.com/adrianco/retort/tree/main/skills/evaluate-run/SKILL.md)
@@ -78,8 +78,10 @@ Original source: `CLAUDE.md` in [adrianco/retort](https://github.com/adrianco/re
 - [retort](https://github.com/adrianco/retort/tree/main/experiments/adrianco/experiment-5/runs/language=python_model=claude-opus-4-8_tooling=beads/rep1-failed/.agents/skills/beads/SKILL.md)
 - [retort](https://github.com/adrianco/retort/tree/main/experiments/adrianco/experiment-5/runs/language=python_model=claude-opus-4-8_tooling=beads/rep3-failed/.agents/skills/beads/SKILL.md)
 - [retort](https://github.com/adrianco/retort/tree/main/experiments/adrianco/experiment-5/runs/language=typescript_model=claude-opus-4-7_tooling=beads/rep3-failed/.agents/skills/beads/SKILL.md)
+- [retort](https://github.com/adrianco/retort/tree/main/experiments/adrianco/experiment-67-quant-6bit-knee/rest-api-crud/runs/agent=hermes-0205_language=python_model=mlxlocal/mlx-community--Qwen3-Coder-30B-A3B-Instruct-6bit_prompt=neutral_stack=q6/rep1/SKILL.md)
+- [retort](https://github.com/adrianco/retort/tree/main/experiments/adrianco/experiment-67-quant-6bit-knee/rest-api-crud/runs/agent=hermes-0205_language=python_model=mlxlocal/mlx-community--Qwen3-Coder-30B-A3B-Instruct-6bit_prompt=neutral_stack=q6/rep1-failed/SKILL.md)
 
-From [adrianco/retort](https://github.com/adrianco/retort) — a repo with 170+ stars on GitHub.
+From [adrianco/retort](https://github.com/adrianco/retort) — a repo with 0+ stars on GitHub.
 
 ---
 
