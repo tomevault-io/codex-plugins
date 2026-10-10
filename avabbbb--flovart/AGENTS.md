@@ -1,29 +1,22 @@
-# Project Guidelines
+@AGENTS.md
 
-## Code Style
-- Keep changes minimal and consistent with the current React + TypeScript style used in App.tsx, components/, and services/.
-- Prefer existing utility functions and shared types from types.ts, translations.ts, and utils/ instead of introducing parallel abstractions.
-- For UI work, preserve the current CSS-variable driven styling in styles.css. Reuse existing compact layout helpers such as utils/uiScale.ts and existing compactMode-style props before adding new layout systems.
-- Keep user-facing copy aligned with the bilingual translation flow in translations.ts.
+## Claude Code
 
-## Architecture
-- The active app entry is index.tsx, which mounts the root-level App.tsx. Default to editing that path for product behavior and layout changes.
-- Treat root-level components/ as the primary UI layer used by the running app.
-- The services/ directory contains provider integrations and routing logic. Keep API-specific behavior there rather than inside UI components.
+Use [docs/index.md](../docs/index.md) as the document map and the canonical Flovart Skill under `.claude/skills/flovart` for operation details. Do not infer current architecture from archived reports, old ADRs, one-off plans, or historical evidence.
 
-## Build and Test
-- Install dependencies with `npm install`.
-- Start local development with `npm run dev`.
-- Build production output with `npm run build`.
-- There is a test script: `npm run test` (vitest). Use `npm run build` for production validation.
-- `npx tsc --noEmit` is useful for extra checking but currently surfaces pre-existing repository issues, so do not treat a failing typecheck as proof that a small isolated change is wrong unless the error points to files you touched.
+When operating Flovart from outside the app, prefer:
 
-## Conventions
-- This project mixes canvas state management, AI generation orchestration, and layout orchestration in the root App.tsx. Refactor only when necessary for the task; otherwise keep edits narrowly scoped.
-- When changing generation behavior, follow the existing provider inference and config flow in services/aiGateway.ts and services/geminiService.ts.
-- For prompt and attachment UX, prefer extending the current bottom-bar patterns in components/PromptBar.tsx instead of adding a second prompt surface.
-- For workspace chrome changes such as sidebars, floating panels, and compact layout behavior, update shared sizing and motion consistently across App.tsx, components/Toolbar.tsx, components/WorkspaceSidebar.tsx, components/RightPanel.tsx, and components/PromptBar.tsx so the UI scale remains coherent across desktop and mobile.
+- `ensure` for preparation;
+- `status`;
+- `workflow.inspect`;
+- `workflow.selection.get`;
+- `workflow.apply`;
+- `workflow.node.run`.
+
+The visible Browser Workflow remains the current authority for these stable operations. The top-level Agent page is connection/control only; the built-in Assistant stays beside Canvas/Table.
+
+Do not bypass Flovart by writing React/Zustand state, browser storage, Runtime databases or Provider private APIs directly. Use the same idempotency/revision rules documented by the canonical Skill.
 
 ---
 > Source: [avabbbb/Flovart](https://github.com/avabbbb/Flovart) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-06-28 -->
+<!-- tomevault:4.0:agents_md:2026-09-25 -->
