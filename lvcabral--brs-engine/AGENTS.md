@@ -1,530 +1,207 @@
-# BrightScript Engine - AI Agent Instructions
+# AGENTS.md
 
-## Project Overview
+This file provides guidance to Codex (Codex.ai/code) when working with code in this repository.
 
-**brs-engine** is a TypeScript-based interpreter for Roku's BrightScript language that runs on browsers, Node.js, and Electron. It simulates Roku's runtime environment, including the Draw 2D API and SceneGraph framework, enabling Roku app development and testing outside of Roku hardware.
+## Overview
 
-**Key Architecture:**
-- **Monorepo structure** with three packages: `packages/browser` (web/Electron) published as `brs-engine`, `packages/node` (CLI/server) published as `brs-node`, and `packages/scenegraph` published as `brs-scenegraph`
-- **Web Worker architecture**: Browser package runs interpreter in a Web Worker (`brs.worker.js`) with API library (`brs.api.js`) for host communication
-- **Lexer → Parser → Interpreter pipeline**: Code flows through `src/core/lexer` → `src/core/parser` → `src/core/interpreter`
-- **Component System**: BrightScript objects live in `src/core/brsTypes/components`; SceneGraph nodes live in `src/extensions/scenegraph/nodes`
-- **Extension System**: SceneGraph (and other future features) are plug-in extensions implementing `BrsExtension` interface (`src/core/extensions.ts`); registered with `registerExtension()`
-- **Device Simulation**: `BrsDevice` (in `src/core/device/`) maintains simulated Roku device state (registry, file system, device info)
-- **Roku OS Version**: Currently synchronized with Roku OS 15.x features and APIs
+**brs-engine** is a BrightScript Simulation Engine: an interpreter for the BrightScript language that runs Roku apps (channels) in web browsers and Node.js. It simulates the BrightScript runtime, the Draw 2D API (`roScreen`, `roCompositor`, `roRegion`, …), the SceneGraph framework, the Roku file system, registry, remote control, and the Micro Debugger — targeting compatibility up to Roku OS 15. It is **not** a Roku OS or hardware emulator; it is a development/automation tool. The repo was originally forked from [rokucommunity/brs](https://github.com/rokucommunity/brs).
 
-## Recent Major Improvements
+Node.js **v22 or newer** is required to build and to run the CLI.
 
-### SceneGraph Extension Architecture (v2.x)
-- **Third package**: `packages/scenegraph` (published as `brs-scenegraph` v0.1.0+) is a standalone addon that owns the XML component parser, `RoSGScreen`, all nodes, and Task execution helpers
-- **Extension system**: `BrsExtension` interface (`src/core/extensions.ts`) is the plug-in contract; `registerExtension()` wires extensions into every new interpreter instance without forking the core
-- **BrightScriptExtension class**: The entry point for the SceneGraph addon (`src/extensions/scenegraph/index.ts`), implements `BrsExtension`
-- **SGRoot singleton** (`src/extensions/scenegraph/SGRoot.ts`): Holds the active scene, `m.global`, focus, threads, timers, and animations
-- **SupportedExtension enum**: `SupportedExtension.SceneGraph` (`"brs-scenegraph"`), `SDK1` and `BrightSign` extensions are planned
+## Monorepo layout
 
-### SceneGraph Rendezvous & Threads (v2.1.0)
-- **Real Rendezvous**: SceneGraph now implements thread updates similar to Roku's Rendezvous pattern for safe cross-thread field access
-- **Multiple roMessagePort in Main thread**: Tasks and Main thread can each own multiple ports
-- **Task debugger support**: Task threads can be paused at breakpoints via the MicroDebugger
+This is an npm **workspaces** monorepo (root package `brs-engine-workspace`). All TypeScript source lives in the top-level `src/` directory and is compiled into three published packages under `packages/`:
 
-### RoSGNode Refactoring & Field System
-- **Abstract base class**: `RoSGNode` is abstract; all nodes must extend either `RoSGNode` or the concrete `Node` class
-- **Field type validation**: `Field.canAcceptValue()` validates typed arrays (`intarray`, `floatarray`, `boolarray`, `stringarray`, `colorarray`, `timearray`) and converts string values to the correct type
-- **Field aliases**: Nodes support multiple comma-separated field aliases; aliases fire observers correctly and support child change propagation
-- **System fields are protected**: Cannot be removed via `removeField()` or added via `setFields()`; use `addFields()` for new fields
-- **setValue vs setValueSilent**: `setValue()` triggers observers; `setValueSilent()` does not (used during initialization)
-- **`setValue()` signature**: Does NOT create a field if it does not already exist (prevents accidental field creation on assignment)
+- **brs-engine** (`packages/browser`) — browser / Web Worker interpreter for web, PWA, and Electron apps. Build output: `packages/browser/lib/brs.api.js` + `brs.worker.js`, types in `packages/browser/types/`.
+- **brs-node** (`packages/node`) — Node.js library plus the `brs-cli` command, ECP + SSDP servers. Build output: `packages/node/bin/{brs.cli.js, brs.ecp.js, brs.node.js}`.
+- **brs-scenegraph** (`packages/scenegraph`) — SceneGraph runtime shipped as a standalone **extension** bundle (`brs-sg.js` / `brs-sg.node.js`) that auto-loads when an app contains `pkg:/components/` assets.
 
-### New SceneGraph Nodes (v2.0 – v2.1)
-- **Animation system**: `Animation`, `ParallelAnimation`, `SequentialAnimation`, `FloatFieldInterpolator`, `ColorFieldInterpolator`, `Vector2DFieldInterpolator`
-- **Panel nodes**: `PanelSet`, `Panel`, `ListPanel`, `GridPanel`, `OverhangPanelSetScene`, `Overhang`
-- **Standard dialogs**: `StandardKeyboardDialog`, `StandardProgressDialog`, `StdDlgContentArea`, `StdDlgProgressItem`, `StdDlgTitleArea`
-- **Input nodes**: `PinPad`, `VoiceTextEditBox`, `ScrollableText`, `ScrollingLabel`
-- **Grid nodes**: `PosterGrid`, `MaskGroup`
-- **Other**: `InfoPane`, `RSGPalette`, `ChannelStore`
+### Required deployment asset: `assets/common.zip`
 
-### Content Handling Pattern
-- **Standardized content caching**: All list/grid nodes follow the `refreshContent()` pattern
-- **setValue override**: Content fields processed in `setValue()`, triggering `refreshContent()`
-- **Performance optimization**: Content cached once, never re-fetched per frame
+`packages/browser/assets/common.zip` (and its SceneGraph-aware counterpart in `packages/scenegraph/assets/common.zip`) is the **`common:/` volume** — it contains the default fonts, system audio, CA certificates, and BrightScript library stubs (`LibCore`, `roku_ads`, `roku_analytics`, `roku_browser`) that all BrightScript apps expect to be present. **Any web app that embeds the engine must serve this file at `./assets/common.zip` relative to `brs.api.js`.** The API library fetches it automatically on startup via `fetch('./assets/common.zip')` — if the file is missing, fonts and system libraries will be unavailable and most apps will fail or look broken.
 
-### File System Improvements
-- **Case preservation**: Writeable volumes (`tmp:`, `cachefs:`) preserve original case
-- **Shared volumes**: `tmp:` and `cachefs:` are shared among threads
-- **Pinned `@zenfs/core` v2.5.0**: Using synchronous config for reliability
+## Commands
 
-### Type System Enhancements
-- **Uninitialized validation**: Raises type mismatch error when passing `Uninitialized` to non-dynamic function parameters
-- **Double support**: Added `d` flag to `ParseJson()` for parsing to `double` type
-- **Type coercion**: Typed functions return `0` when no return statement is hit (user functions only)
-- **UTF-8 BOM support**: `Lexer` now correctly handles files with UTF-8 BOM
-- **DRM detection**: `roDeviceInfo.getDrmInfoEx()` populated in browser environments
+Run from the repo root (scripts fan out to workspaces):
 
-### API and Library Improvements
-- **Worker as Blob**: Browser API supports loading the Worker bundle from a `Blob`
-- **Log level management**: Device data and interpreter output now have configurable log levels
-- **LexerParser module**: Separated lexer and parser into reusable module
-- **Screenshot API**: `getScreenshot()` method returns full-resolution `ImageData`
-
-## Development Workflows
-
-### Build & Test
 ```bash
-npm run build          # Build all three packages (outputs to packages/*/lib and packages/*/bin)
-npm run build:web      # Build browser + scenegraph packages and launch dev server
-npm run build:cli      # Build Node.js package only
-npm run build:sg       # Build scenegraph extension package only
-npm run test           # Run Jest tests
-npm run start          # Start webpack dev server for browser package
+npm install              # install all workspace dependencies
+
+npm run build            # dev build of all packages (--workspaces)
+npm run build:api        # build only brs-engine (browser)
+npm run build:node        # build only brs-node (CLI/Node library)
+npm run build:sg         # build only brs-scenegraph
+npm run build:web        # build engine + scenegraph, then open the example web app
+npm run build:cli        # build Node + scenegraph
+npm run release          # minified production build of all packages
+npm run clean            # remove compiled lib/ bin/ types/ from all packages
+
+npm start                # webpack-dev-server for the example web app (brs-engine)
+
+npm run lint             # eslint over ./src
+npm run prettier         # check formatting (4-space indent, printWidth 120)
+npm run prettier:write   # auto-format
+
+npm test                 # vitest (config in vitest.config.mts)
 ```
 
-### Key Build Details
-- **Webpack** bundles TypeScript using `ts-loader` with separate configs per package
-- **ifdef-loader** enables conditional compilation with `/// #if BROWSER`, `/// #if DEBUG`, `/// #else`, `/// #endif` directives
-- Browser package creates two bundles: `brs.worker.js` (interpreter) and `brs.api.js` (host API)
-- Node package creates three: `brs.cli.js` (CLI), `brs.ecp.js` (ECP server), `brs.node.js` (library)
-- SceneGraph package creates two bundles: `brs-sg.js` (browser/Worker) and `brs-sg.node.js` (Node.js library)
-- SceneGraph build also assembles `assets/common.zip` (fonts, locale, images for `common:/` volume) and copies it to the browser and node packages
-- **Lint/format gate**: run `npm run lint` and `npm run prettier:write` before committing; both must be clean. ESLint enforces `no-case-declarations` — when a `switch` `case`/`default` declares a binding (`let`/`const`/`function`/`class`), wrap that case body in braces (`case X: { const y = ...; break; }`) so the binding doesn't leak into sibling cases. ESLint also enforces `unicorn/prefer-string-raw`: use `` String.raw`...` `` instead of string literals with escaped backslashes (`"C:\\folder"` → `` String.raw`C:\folder` ``, `"\\d+"` → `` String.raw`\d+` ``) — auto-fixable with `eslint --fix`. It only targets plain string literals (template literals and a lone trailing `"\\"` are left alone). And `unicorn/prefer-string-replace-all`: use `.replaceAll(/…/g, …)` instead of `.replace(/…/g, …)` for global replacements (also auto-fixable; the `g` flag stays because `replaceAll` requires it).
+Tests live in `test/` (`brsTypes/`, `core/`, `interpreter/`, `lexer/`, `parser/`, `preprocessor/`, `stdlib/`, `extensions/`, `simulator/`, `cli/`). The e2e suite in `test/e2e/` is driven by `test/e2e/E2ETests.js`, comparing interpreter output against `.brs` fixtures in `test/e2e/resources/`. Test files are plain `.test.js`.
 
-### Running the CLI
 ```bash
-# After building
-./packages/node/bin/brs.cli.js path/to/app.zip
-./packages/node/bin/brs.cli.js path/to/script.brs
+npx vitest run test/e2e/Functions.test.js   # run a single test file
+npx vitest run -t "name of the test"        # run by test name
+npx vitest run --update                     # refresh snapshots
 ```
 
-## Code Patterns & Conventions
+After `npm run build:cli`, link the CLI for local use: `cd packages/node && npm link`, then `brs-cli`.
 
-### BrightScript Type System
-- **All BrightScript values implement `BrsType`** from `src/core/brsTypes/BrsType.ts`
-- **Primitive types**: `BrsBoolean`, `BrsString`, `Int32`, `Int64`, `Float`, `Double` in `src/core/brsTypes/`
-- **Components** (Roku objects like `roArray`, `roAssociativeArray`): Extend `BrsComponent` in `src/core/brsTypes/components/`
-- **Nodes** (SceneGraph like `Group`, `RowList`): Extend base node classes in `src/extensions/scenegraph/nodes/`
-- **Callable functions**: Wrap native TypeScript functions using `Callable` class from `src/core/brsTypes/Callable.ts`
+## Core architecture
 
-Example adding a stdlib function:
-```typescript
-export const MyFunction = new Callable("myFunction", {
-    signature: {
-        args: [{ name: "input", type: ValueKind.String }],
-        returns: ValueKind.String,
-    },
-    impl: (_interpreter, input: BrsString) => {
-        return new BrsString(input.value.toUpperCase());
-    },
-});
-```
+### Two-thread split (browser model)
 
-### SceneGraph Node Implementation
-- **RoSGNode is now abstract**: All SceneGraph nodes extend `RoSGNode` (abstract) or `Node` (concrete base class)
-- **Fields are declared** in `defaultFields: FieldModel[]` array with `name`, `type`, `value`, optional `alwaysNotify`, optional `hidden`
-- **Field system improvements**: Supports typed arrays (`intarray`, `floatarray`, `boolarray`, `stringarray`, `colorarray`, `timearray`)
-- **Lazy per-node allocation (large content trees)**: `hidden` default fields (ContentNode metadata) are not materialized up front — they live in a shared per-class spec and are built on first access via `resolveField`/`hasNodeField`; a node's ~70 method Callables are built on demand via `BrsComponent.buildMethods()`/`ensureMethods()` (RoSGNode methods are prototype getters, the per-node `RoHttpAgent` is lazy). Use `resolveField`/`hasNodeField` for by-name lookups that must see hidden metadata, and never treat a method getter as an identity-stable field. See the "Per-node memory" section of `.claude/CLAUDE.md`. Coverage: `test/extensions/scenegraph/{HiddenFields,LazyMethods}.test.js`
-- **System fields are protected**: Cannot be removed via `removeField()` or added via `setFields()`; use `addFields()` for new fields
-- **setValue vs setValueSilent**: `setValue()` triggers observers, `setValueSilent()` does not (used during initialization)
-- **Custom rendering** overrides `renderNode()` method, receives `IfDraw2D` context
-- **Field observers** use `observeField()` to watch changes
-- **Node lifecycle**: `init()` called on creation, `deinit()` on destruction
-- See `src/extensions/scenegraph/nodes/RowList.ts` and `src/extensions/scenegraph/nodes/ZoomRowList.ts` as complex examples with focus handling and child rendering
+The browser build is two bundles that run on **separate threads** and communicate via `postMessage` + a shared `Int32Array` over `SharedArrayBuffer`:
 
-## SceneGraph Rendering Architecture
+- **API library** — entry `src/api/index.ts`, output `brs.api.js`. Runs on the **main thread**. Creates/manages the worker, renders the display canvas (expects a `canvas` named `display` and a `video` named `player` on `document`), plays audio, routes remote-control/gamepad input, and exposes the public API (`initialize`, `subscribe`, `execute`, `terminate`, `sendKeyPress`, `debug`, …). See `docs/engine-api.md`.
+- **Worker library** — entry `src/core/index.ts`, output `brs.worker.js`. Runs in a **Web Worker** (browser) or **Worker Thread** (Node). Its `onmessage` handler receives a msgpack-encoded `AppPayload`/`TaskPayload` (load + run an app) or the `SharedArrayBuffer` for control state (`BrsDevice.setSharedArray`). This is where the interpreter actually executes.
 
-### Node Hierarchy and Base Classes
+The Node CLI runs the interpreter on a **single thread**; remote control there requires the ECP server (`--ecp`).
 
-All SceneGraph nodes inherit from **RoSGNode** (`src/extensions/scenegraph/components/RoSGNode.ts`), which provides:
-- **Field management**: Dynamic field registration with `Field` class, aliases, observers, and notifications
-- **Child management**: Parent-child relationships via `ifSGNodeChildren` interface (appendChild, removeChild, etc.)
-- **Focus system**: Focus chain tracking via `ifSGNodeFocus` (hasFocus, setFocus, isInFocusChain)
-- **Bounding rectangles**: Three coordinate spaces tracked in every node:
-  - `rectLocal`: Node's own coordinate space (relative to itself)
-  - `rectToParent`: Transformed to parent's coordinate space
-  - `rectToScene`: Transformed to root Scene coordinate space
-- **Standard fields**: All nodes have `id`, `focusedChild`, `focusable`, `change` fields by default
+### Interpreter pipeline (`src/core/`)
 
-**Group** (`src/extensions/scenegraph/nodes/Group.ts`) extends Node (which extends RoSGNode) and is the base for all **visual/renderable nodes**:
-- **Transform fields**: `translation` [x,y], `rotation` (degrees), `scale` [x,y], `scaleRotateCenter` [x,y], `opacity` (0-1), `visible` (boolean)
-- **Layout fields**: `width`, `height`, `clippingRect` for cropping child rendering
-- **Child rendering**: `renderChildren()` recursively renders child nodes with inherited transforms
-- **Drawing utilities**: Helper methods for text (drawText, drawTextWrap, breakTextIntoLines, ellipsizeLine) and images (drawImage, loadBitmap)
-- **Coordinate transforms**: `inheritParentTransform` and `inheritParentOpacity` apply parent values to children
-- **Caching**: `isDirty` flag tracks when text measurements need recalculation, `cachedLines` stores text layout
+`lex → parse → preprocess → interpret`
 
-### Node Type Categories
+- `src/core/lexer/` — tokenizer.
+- `src/core/parser/` — builds the AST (`Expression.ts`, `Statement.ts`).
+- `src/core/preprocessor/` — BrightScript conditional compilation (`#const`, `#if`).
+- `src/core/interpreter/` — tree-walking interpreter (`index.ts`, ~2300 lines, the execution core), plus `Environment.ts`/`Scope.ts` (scoping), `MicroDebugger.ts`, `Network.ts`.
+- `src/core/LexerParser.ts` — orchestrates lex+parse and decodes precompiled/encrypted token streams.
+- `src/core/index.ts` — wires the pipeline together, handles app/task payloads, package (`.zip`/`.bpk`) loading and AES decryption, and re-exports the public surface.
 
-1. **Container Nodes** (manage children, no direct visual output):
-   - `Group`: Basic container with transforms
-   - `LayoutGroup`: Auto-layout children in rows/columns
-   - `Scene`: Root node, sets screen resolution (SD/HD/FHD), background color/image, dialog management
+### Runtime types and components
 
-2. **Visual Leaf Nodes** (render content, usually have no children):
-   - `Label`: Single/multi-line text with alignment, wrapping, ellipsization
-   - `Poster`: Image display with scaling modes (noScale, scaleToFit, scaleToZoom), 9-patch support
-   - `Rectangle`: Filled rectangle with color and optional rotation
-   - `BusySpinner`: Animated loading indicator
+- `src/core/brsTypes/` — BrightScript values: primitives (`Int32`, `Float`, `Double`, `BrsString`, `Boolean`), `Callable`, plus `Coercion.ts`/`Boxing.ts` rules.
+- `src/core/brsTypes/components/` — the `roXxx` component objects (`RoArray`, `RoAssociativeArray`, `RoBitmap`, `RoAudioPlayer`, `RoDeviceInfo`, `RoMessagePort`, …); `BrsObjects.ts` is the `CreateObject` registry.
 
-3. **Interactive Container Nodes** (visual + focus + children):
-   - `ArrayGrid`: Grid of items with focus management and scrolling (base for grids)
-   - `RowList`: Horizontal rows of items, each row is a scrollable list (fully implemented with row titles, focus feedback)
-   - `ZoomRowList`: Advanced row list with zoom animations and configurable row heights
-   - `PosterGrid`: Grid of poster images with focus handling
-   - `LayoutGroup`: Auto-layout container with horizontal/vertical arrangement and alignment
-   - `MarkupList`/`MarkupGrid`: Similar to above with markup text support
-   - `LabelList`, `CheckList`, `RadioButtonList`: Specialized list types
-   - `ButtonGroup`, `Button`: Interactive button controls
-   - `Keyboard`, `MiniKeyboard`, `TextEditBox`, `PinPad`, `VoiceTextEditBox`: Input controls
-   - `PanelSet`, `Panel`, `ListPanel`, `GridPanel`: Panel-based navigation layout
+#### Interfaces are method grouping, not separate types
 
-4. **Animation Nodes**:
-   - `Animation`, `ParallelAnimation`, `SequentialAnimation`: Animation container nodes
-   - `FloatFieldInterpolator`, `ColorFieldInterpolator`, `Vector2DFieldInterpolator`: Field interpolators
+Roku documents a component's methods under `ifXxx` interfaces, but **we do not implement each `ifXxx` as its own type/contract**. A component implements all its methods and registers them via `registerMethods({ ifXxx: [...callables] })`, where the `ifXxx` key is just **metadata grouping** that mirrors the docs. Most methods are defined inline on the component class itself (e.g. `RoArray`'s `join`/`sort`, all of `RoVideoPlayer`'s `ifVideoPlayer` methods).
 
-5. **Special Nodes**:
-   - `ContentNode`: Data-only node (no rendering), holds metadata for lists/grids
-   - `Task`: Background thread execution (runs BrightScript in separate Worker)
-   - `Timer`: Interval/timeout events
-   - `Video`, `Audio`, `SoundEffect`: Media playback
-   - `Dialog`, `KeyboardDialog`, `StandardDialog`, `StandardKeyboardDialog`, `StandardProgressDialog`: Modal overlays
-   - `Font`: Font resource definition
-   - `RSGPalette`: Color palette resource
-   - `ChannelStore`: In-channel purchasing
-   - `MaskGroup`: Masked rendering group
-   - `InfoPane`, `Overhang`, `OverhangPanelSetScene`: UI chrome nodes
-   - `ScrollingLabel`, `ScrollableText`: Scrolling text nodes
+`src/core/brsTypes/interfaces/` (`IfArray`, `IfEnum`, `IfHttpAgent`, `IfList`, `IfMessagePort`, `IfSocket`, `IfToStr`, `IfDraw2D`, …) holds a **small, deliberate set** of helper classes — effectively abstract/shared method bundles to **reduce duplication** across components that expose the same interface (e.g. `ifHttpAgent` is shared by many `roXxx`). They are instantiated with the owning component (`new IfArray(this)`) and their callables are spread into `registerMethods`. This is **not** a complete mirror of Roku's interface list — only the interfaces worth sharing live here; everything else is inline.
 
-### Rendering Pipeline and Flow
+### Device, filesystem, stdlib, errors
 
-**SceneGraph Rendering Architecture Overview**:
-The SceneGraph rendering system is triggered by `roSGScreen` (the display component) and flows through a hierarchy of `renderNode()` method calls. The entry point is always `Scene.renderNode()`, which then recursively calls `renderNode()` on child nodes. This is fundamentally different from a typical DOM-based rendering system - nodes must explicitly implement `renderNode()` to participate in the rendering pipeline.
+- `src/core/device/BrsDevice.ts` — simulated device state, the shared control array (`BrsDevice.sharedArray`, an `Int32Array`), registry, current `threadId`, stdout/stderr.
+- `src/core/device/FileSystem.ts` — virtual Roku volumes (`pkg:`, `tmp:`, `cachefs:`, `common:`, `ext1:`).
+- `src/core/stdlib/` — global BrightScript functions.
+- `src/core/error/` — `BrsError`, `RuntimeError`, `TypeMismatch`, `ArgumentMismatch`.
 
-**Key Principle**: Nodes that want custom rendering behavior MUST override `renderNode()`, not invent new methods like `renderContent()`. Group's base `renderNode()` only calls `renderChildren()` - it has no concept of "content rendering".
+## Extension model (`src/core/extensions.ts`)
 
-**Initialization (SceneGraph bootstrap)**:
-1. **Component XML parsing** (`src/extensions/scenegraph/parser/ComponentDefinition.ts`):
-   - Scan `pkg:/components/` for `.xml` files
-   - Parse XML with `xmldoc` library into `ComponentDefinition` objects
-   - Build inheritance tree (components can extend other components or built-in types)
-   - Extract `<interface>` (fields/functions), `<children>` (initial child nodes), `<script>` tags
-2. **Node factory** (`src/extensions/scenegraph/factory/NodeFactory.ts`):
-   - `createNode()` instantiates nodes from string type names
-   - Built-in types registered in `NodeFactory.ts` switch statement
-   - Custom components use `ComponentDefinition` to create nodes with inherited fields
-3. **Environment setup**:
-   - Each component gets its own `Environment` (scope) for BrightScript functions
-   - `init()` function called after node creation if defined in component script
-   - Field observers registered, initial field values set
+Optional functionality plugs into the interpreter through the `BrsExtension` contract. An extension implements any of these lifecycle hooks, all invoked from `src/core/index.ts`:
 
-**Frame Render Cycle** (triggered by roSGScreen display update):
-1. **roSGScreen.renderFrame()** initiates the cycle:
-   - Gets the Scene node from `sgRoot.scene`
-   - Calls `scene.renderNode(interpreter, [0, 0], 0, 1.0, draw2D)`
-   - This is the ONLY entry point to the rendering system
+| Hook | When it runs |
+| --- | --- |
+| `onInit(interpreter)` | After the interpreter is constructed (register `CreateObject` types here). |
+| `onBeforeExecute(interpreter, payload)` | Before the app's `Main` runs (may be async — e.g. load XML components). |
+| `updateSourceMap(sourceMap)` | While building the debug source map. |
+| `tick(interpreter)` | Each interpreter "tick"/event-loop iteration. |
+| `execTask(interpreter, payload)` | When the worker is spun up to run a SceneGraph `Task` (see Rendezvous below). |
 
-2. **Scene.renderNode()** called with:
-   - `interpreter`: Active interpreter instance
-   - `origin`: [x, y] position in screen coordinates (starts at [0, 0])
-   - `angle`: Accumulated rotation from parent chain (starts at 0)
-   - `opacity`: Accumulated opacity from parent chain (starts at 1.0)
-   - `draw2D`: `IfDraw2D` interface for canvas drawing
+Registration / loading:
 
-3. **Scene-specific rendering**:
-   - Clears canvas with `backgroundColor`
-   - Draws `backgroundURI` image if set (scaled to screen resolution)
-   - Calls `renderChildren()` to process child nodes
+- `registerExtension(() => new BrightScriptExtension())` adds a factory; `instantiateExtensions()` builds fresh instances per interpreter. `clearExtensions()` resets (used in tests).
+- In the browser worker, `loadExtension()` in `src/core/index.ts` calls `importScripts()` on the extension's bundle URL (resolved from `DeviceInfo.extensions: Map<SupportedExtension, string>`), exposes the engine to it via `globalThis.brsEngine = createWorkerExports()`, then reads `globalThis[moduleId].BrightScriptExtension`. So the extension imports `"brs-engine"` and at runtime is wired to the host's already-loaded engine, not a second copy.
+- **Extension paths in `DeviceInfo.extensions` are resolved by the worker (`brs.worker.js`), not the page.** Because `importScripts()` runs inside the Web Worker, the URL is relative to the worker bundle's location — not to `index.html`. If your worker lives at `lib/brs.worker.js` and `brs-sg.js` sits next to it (`lib/brs-sg.js`), the correct value is `"./brs-sg.js"`, **not** `"./lib/brs-sg.js"`. Getting this wrong produces a silent failure: SceneGraph apps load but `roSGScreen` / `roSGNode` are unregistered. The simplest layout is to keep all engine bundles in the same folder so the relative path is just `./brs-sg.js`.
+- `brs-node` and the CLI register the SceneGraph extension automatically; `--no-sg` disables it. The core stays SceneGraph-agnostic: it only knows the minimal `ISGNode` interface (`isSceneGraphNode()`), never the concrete node classes.
 
-4. **Group.renderNode()** recursion (for each child):
-   - **Visibility check**: Skip if `visible` field is false (ALWAYS check this first in custom renderNode)
-   - **Transform calculation**:
-     - Get node's `translation` field: `nodeTrans = this.getTranslation()`
-     - Calculate draw position: `drawTrans = [nodeTrans[0] + origin[0], nodeTrans[1] + origin[1]]`
-     - If parent has `angle`, rotate translation vector: `rotateTranslation(nodeTrans, angle)`
-   - **Accumulate transforms**:
-     - `rotation = parentAngle + this.getRotation()`
-     - `opacity = parentOpacity * this.getOpacity()`
-   - **Custom node rendering** (nodes override renderNode for this):
-     - Simple visual nodes (Label, Poster, Rectangle): Call IfDraw2D methods directly
-     - Complex nodes (ArrayGrid, RowList, ZoomRowList): Implement full custom rendering logic
-     - Container nodes: Just call `renderChildren()` to delegate to children
-   - **Bounding rect updates**:
-     - `updateBoundingRects(rect, origin, rotation)`: Updates `rectLocal`, `rectToParent`, `rectToScene`
-     - Used for hit testing, collision detection, debugging
-   - **Recurse to children**: `renderChildren(interpreter, drawTrans, rotation, opacity, draw2D)`
-   - **Parent rect propagation**: `updateParentRects(origin, angle)` updates parent's bounding rects
+## SceneGraph extension (`src/extensions/scenegraph/`)
 
-**Key Rendering Concepts**:
-- **Coordinate space transformations**: Every node maintains three rect representations for different use cases (local calculations, parent-relative layout, screen-absolute hit testing)
-- **Transform inheritance**: Children accumulate parent transforms (translation, rotation, opacity) at render time
-- **Depth-first traversal**: Parents render before children, ensuring proper z-ordering
-- **Canvas-based drawing**: All drawing operations use HTML5 Canvas 2D context via `IfDraw2D` interface
-- **Lazy evaluation**: Bounding rects and transforms calculated during render pass, not on field changes
+`BrightScriptExtension` (`index.ts`) is the entry. `onInit` registers `roSGScreen`, `roSGNode`, and a SceneGraph-aware `roMessagePort` with `BrsObjects`. `onBeforeExecute` scans `pkg:/components/`, parses every component `.xml`, and stores the results.
 
-**Implementing Custom renderNode()**:
-When creating a custom node that needs to render visual content, follow this pattern (see `ArrayGrid.ts`, `RowList.ts`, `ZoomRowList.ts`):
+Key pieces:
 
-```typescript
-renderNode(interpreter: Interpreter, origin: number[], angle: number, opacity: number, draw2D?: IfDraw2D) {
-    // 1. ALWAYS check visibility first
-    if (!this.isVisible()) {
-        return;
-    }
-    
-    // 2. Calculate transforms
-    const nodeTrans = this.getTranslation();
-    const drawTrans = nodeTrans.slice();
-    drawTrans[0] += origin[0];
-    drawTrans[1] += origin[1];
-    const rotation = angle + this.getRotation();
-    opacity = opacity * this.getOpacity();
-    
-    // 3. Do your custom rendering here
-    // - Use draw2D methods for drawing
-    // - Access cached data (e.g., this.content)
-    // - Create/update item components
-    // - Call itemComp.renderNode() for child items
-    
-    // 4. Update bounding rectangles
-    this.rectToScene = { x: drawTrans[0], y: drawTrans[1], width: ..., height: ... };
-    this.rectToParent = { x: nodeTrans[0], y: nodeTrans[1], width: ..., height: ... };
-    
-    // 5. Render children (if any non-content children exist)
-    this.renderChildren(interpreter, drawTrans, rotation, opacity, draw2D);
-    
-    // 6. Update parent rects and mark clean
-    this.updateParentRects(origin, angle);
-    this.isDirty = false;
-}
-```
+- **`SGRoot.ts`** — a singleton (`sgRoot`) holding interpreter, `m.global`, the root `Scene`/`RoSGScreen`, focused node, the per-thread task map, timers/animations/sfx, and `nodeDefMap` (component-name → `ComponentDefinition`). It also mirrors audio/video/sfx state out of `BrsDevice.sharedArray` via `Atomics.load` (`processAudio`, `processVideo`, `processSFX`).
+- **`parser/ComponentDefinition.ts`** — parses `<component>` XML (fields, children, scripts, `extends`) and builds a sub-environment per component so each component's BrightScript runs in its own scope.
+- **`factory/NodeFactory.ts`** — `createNode(type, interpreter)` resolves a type name to a node: built-in types via `SGNodeFactory.createNode` (a big `switch` over `SGNodeType`), or custom XML components via `initializeNode`, which walks the `extends` hierarchy (`updateTypeDefHierarchy` → `subtypeHierarchy`), adds inherited fields/children, sets up the `m` pointer (`m.top`, `m.global`), and calls each component's `init()` from base to derived.
+- **`factory/Serializer.ts`** — converts nodes/values to and from plain JS for cross-thread transfer (`fromSGNode`, `brsValueOf`, `jsValueOf`).
+- **`nodes/`** — one file per node type; `nodes/index.ts` re-exports them and defines the `SGNodeType` enum (types marked `// Not yet implemented` fall back to a plain `Node` with a warning).
+- **`components/RoSGNode.ts`** — the `ifSGNodeField` / `ifSGNodeChildren` method surface exposed to BrightScript.
 
-**Common Mistakes to Avoid**:
-- ❌ Creating methods like `renderContent()` - Group doesn't call them
-- ❌ Calling `getFieldValue()` repeatedly in render loop - cache data in `refreshContent()` or `setValue()`
-- ❌ Forgetting visibility check - causes rendering of invisible nodes
-- ❌ Not calling `updateParentRects()` and setting `isDirty = false` - breaks bounding box calculations
-- ❌ Not handling the case when content is empty - can cause crashes
+### Creating a new Node type
 
-### Drawing Interface (IfDraw2D)
+1. Add the type name to the `SGNodeType` enum in `nodes/index.ts` (and re-export the file).
+2. Create `nodes/MyNode.ts` extending the closest base (`Node`, `Group`, `ArrayGrid`, …). Pattern (see `nodes/Rectangle.ts` for a minimal example):
+   ```ts
+   export class MyNode extends Group {
+       readonly defaultFields: FieldModel[] = [
+           { name: "width", type: "float", value: "0.0" },
+           { name: "color", type: "color", value: "0xFFFFFFFF" },
+       ];
+       constructor(initializedFields: AAMember[] = [], readonly name: string = SGNodeType.MyNode) {
+           super([], name);
+           this.setExtendsType(name, SGNodeType.Group);
+           this.registerDefaultFields(this.defaultFields);
+           this.registerInitializedFields(initializedFields);
+       }
+       // Override to draw; renderable nodes draw themselves then renderChildren()
+       renderNode(interpreter, origin, angle, opacity, draw2D?) { /* ... */ }
+   }
+   ```
+3. Wire it into `SGNodeFactory.createNode`'s `switch` in `factory/NodeFactory.ts` so `CreateObject("roSGNode", "MyNode")` and XML `<MyNode>` resolve.
+4. Rendering contract: `renderNode` should early-return via `updateRenderTracking(true)` when not visible, apply translation/rotation/opacity, draw through the passed `IfDraw2D`, update bounding rects, then call `renderChildren(...)` and `nodeRenderingDone(...)`.
 
-**IfDraw2D interface** (`src/core/brsTypes/interfaces/IfDraw2D.ts`) provides BrightScript `ifDraw2D` API:
-- **Canvas management**: `doClearCanvas()`, `getContext()`, `getCanvas()`, `getRgbaCanvas()`
-- **Basic shapes**: `doDrawLine()`, `doDrawPoint()`, `doDrawRect()`, `doDrawRotatedRect()`
-- **Text rendering**: `doDrawText()` with font, color, alignment, rotation support
-- **Image drawing**:
-  - `doDrawObject()`: Draw bitmap at position
-  - `doDrawScaledObject()`: Draw with scale factors
-  - `doDrawRotatedObject()`: Draw with rotation around center point
-  - `doDrawTransformedObject()`: Combined scale + rotation + translation
-  - `doDrawCroppedBitmap()`: Draw portion of bitmap (for sprites, tiling)
-- **Collision detection**: `collision()` helper for RectRect, RectCircle, CircleCircle
+External consumers can also register node types at runtime without editing the factory via `SGNodeFactory.addNodeTypes([["mynode", (name) => new MyNode([], name)]])`.
 
-**BrsDraw2D Components** (implement IfDraw2D for off-screen rendering):
-- **RoBitmap** (`src/core/brsTypes/components/RoBitmap.ts`): In-memory image with alpha channel, supports 9-patch borders
-- **RoRegion** (`src/core/brsTypes/components/RoRegion.ts`): Sub-region of bitmap for sprite sheets, tiling
-- **RoScreen** (`src/core/brsTypes/components/RoScreen.ts`): Double-buffered main screen, SwapBuffers for frame display
-- **RoCompositor** (`src/core/brsTypes/components/RoCompositor.ts`): Layer compositor with sprites, z-ordering, collision
+### Rendezvous architecture (multi-threaded Tasks)
 
-**Canvas Pooling**: `createNewCanvas()` and `releaseCanvas()` manage reusable canvas contexts to avoid GC pressure
+SceneGraph `Task` nodes run their `functionName` on a **dedicated worker thread**, mirroring Roku's render-thread / task-thread model. The thread that owns the scene graph and renders it is **thread 0 ("Render")**; each running Task gets a thread id `> 0`. `sgRoot.threadId` (and `BrsDevice.threadId`) identify the current thread; `sgRoot.inTaskThread()` is `threadId > 0`. Every node records an `owner` thread id (Scene and Global are always owned by thread 0).
 
-### Content Handling Pattern
+Because a node's authoritative copy lives on its owner thread, reading/writing a node you don't own must **rendezvous**: a synchronous, blocking request to the owning thread. This is implemented in `nodes/Task.ts` + `nodes/Node.ts`:
 
-**ArrayGrid/RowList/ZoomRowList Content Processing**:
-Nodes that display dynamic content from ContentNode trees follow this pattern:
+- **Transport** — each Task owns a `SharedObject` wrapping a `SharedArrayBuffer`. `ThreadUpdate` messages (`action`: `get` / `set` / `call` / `resp` / `ack` / `nil`, plus `type`, `address`, `key`, `value`) are written into it; the receiver is woken with `Atomics`-based `taskBuffer.waitVersion(...)`. Task lifecycle/state transitions also flow over normal `postMessage` (`TaskData`, `TaskState`).
+- **Field writes** — `Node.setValue` calls `rendezvousSet`; if `shouldRendezvous()` (`inTaskThread() && owner !== threadId`) it forwards the change to the owner via `task.syncRemoteField`. Otherwise, on the render thread, it pushes the change to any Task that observes that field's port.
+- **Field reads / method calls** — `RoSGNode`/`ContentNode` methods call `rendezvousCall(interpreter, "<method>", [args])`. When `shouldRendezvous()`, it serializes args (node args are re-owned by thread 0) and calls `task.requestMethodCall(...)`, which blocks (with a default 10s timeout, logging a "Rendezvous timeout" warning) until a `resp`/`nil` comes back. `requestFieldValue` does the same for plain field reads.
+- **Crossing into a node sends ownership**: a `Node` value passed from a task to the render thread is re-owned (`setOwner(0)`) so subsequent access from the task rendezvouses back.
+- **Task startup** — when a Task's `control` becomes `"run"`, `checkTaskRun` posts a `TaskData` (with the shared buffer, serialized `m`, render-thread id, `tmp:`/`cachefs:` volumes). The core spins up a worker, which calls the extension's `execTask` → `initializeTask` to rebuild the node tree on the new thread and invoke the task function. The extension's `tick` hook drains incoming thread updates each iteration via `task.processThreadUpdate()`.
 
-1. **Content Field in setValue() Method** (note: `set()` method is deprecated, use `setValue()`):
-```typescript
-setValue(index: string, value: BrsType, alwaysNotify?: boolean, kind?: FieldKind, sync?: boolean) {
-    const fieldName = index.toLowerCase();
-    
-    if (fieldName === "content") {
-        // First, store the field value
-        super.setValue(index, value, alwaysNotify, kind);
-        
-        // Clear existing item components
-        this.itemComps.length = 0; // or this.rowItemComps.length = 0
-        
-        // Process content into cache
-        this.refreshContent();
-        
-        // Set initial focus if needed
-        if (this.content.length > 0 && this.focusIndex < 0) {
-            this.focusIndex = 0;
-        }
-        
-        return;
-    }
-    
-    super.setValue(index, value, alwaysNotify, kind, sync);
-}
-```
+See `docs/extensions.md` and `packages/scenegraph/README.md` for the consumer-facing view.
 
-2. **refreshContent() Method**:
-```typescript
-protected refreshContent() {
-    // Clear content cache
-    this.content.length = 0;
-    
-    // Get content field value
-    const contentNode = this.getFieldValue("content");
-    if (!(contentNode instanceof ContentNode)) {
-        return;
-    }
-    
-    // Extract children into flat array
-    const children = contentNode.getNodeChildren();
-    this.content = children.filter((child) => child instanceof ContentNode) as ContentNode[];
-    
-    // Initialize tracking arrays (focus, scroll, etc.)
-    for (let i = 0; i < this.content.length; i++) {
-        this.rowFocus[i] = this.rowFocus[i] ?? 0;
-        this.rowScrollOffset[i] = this.rowScrollOffset[i] ?? 0;
-    }
-}
-```
+## CLI
 
-3. **Use Cached Content in renderNode()**:
-```typescript
-renderNode(...) {
-    // Use cached content, NOT getFieldValue("content")
-    if (this.content.length === 0) {
-        return;
-    }
-    
-    for (let i = 0; i < this.content.length; i++) {
-        const contentItem = this.content[i]; // Already a ContentNode
-        // Render using cached data
-    }
-}
-```
+`src/cli/` builds into `packages/node/bin`. `brs-cli` runs `.brs` files, `.zip`/`.bpk` packages, or a REPL (no args). Key flags: `--ascii`/`--unicode` (render the screen as terminal art), `--ecp` (ECP control server on port 8060 + SSDP discovery), `--no-sg` (disable SceneGraph), `--pack`/`--out` (create encrypted `.bpk`), `--root` (mount `pkg:/` from a directory), `--ext-vol` (mount `ext1:`), `--deep-link`, `--registry`. See `docs/run-as-cli.md`.
 
-**Key Points**:
-- ALWAYS call `super.setValue()` first to store the field value
-- NEVER call `getFieldValue("content")` or `getNodeChildren()` in render methods - use cached `this.content` array
-- Process content once in `refreshContent()`, use cache everywhere else
-- This prevents infinite loops and improves performance
-- The `setValue()` method is the modern approach; `set()` is deprecated but maintained for compatibility
+## Conventions
 
-### Performance and Caching
-
-- **Text measurement caching**: Group.isDirty + cachedLines avoid re-measuring text on every frame
-- **Bitmap texture management**: `TextureManager` (global singleton) caches loaded images by URI; a separate global registry in `src/core/device/Graphics.ts` (gated by `BrsDevice.tracking`) tracks all live bitmaps/fonts for the `r2d2-bitmaps` debug query
-- **Lazy bounding rect updates**: Only recalculated during render pass when transforms change
-- **Conditional rendering**: Nodes check `visible` field early to skip invisible subtrees
-- **Transform accumulation**: Transforms calculated incrementally down tree, not recalculated from root
-
-### Component Lifecycle
-
-1. **Creation**: `createNode()` or `createChild()` instantiates node, sets initial fields
-2. **Initialization**: `init()` BrightScript function called if defined in component
-3. **Field changes**: Observers notified, `onChange` callbacks invoked
-4. **Rendering**: `renderNode()` called every frame if visible
-5. **Focus changes**: `onKeyEvent()` called when node has focus and receives key press
-6. **Destruction**: `deinit()` called, observers removed, children destroyed recursively
-
-### Event Handling
-
-- **Key events**: `Scene.handleOnKeyEvent()` walks focus chain from focused node up to Scene
-  - Each node's `onKeyEvent()` BrightScript function called if defined
-  - If returns `true`, event consumed; if `false`, bubbles to parent
-  - Built-in nodes (like Group) have `handleKey()` method for default behavior
-- **Field observers**: `observeField()` registers callback (function name or message port) for field changes
-- **Timer events**: Timer node posts messages to message port on interval/timeout
-
-### Conditional Compilation
-Use preprocessing directives for platform-specific code:
-```typescript
-/// #if BROWSER
-// Browser-only code (uses Web APIs)
-/// #else
-// Node.js code (uses Node APIs)
-/// #endif
-```
-
-Common pattern: `src/core/index.ts` uses `/// #if BROWSER` to set up Worker `onmessage` vs Node.js `postMessage` mock
-
-### Communication Patterns
-- **Browser**: Host ↔ Worker via `postMessage()` with typed payloads (`AppPayload`, `TaskPayload`)
-- **Shared memory**: `SharedArrayBuffer` for control signals between host and Worker (key events, display state)
-- **Events**: `BrsDevice.sharedArray` holds inter-thread communication buffer (see `src/core/device/BrsDevice.ts`)
-
-### File System Architecture
-- **Virtual FS**: `FileSystem` class (`src/core/device/FileSystem.ts`) uses `@zenfs/core` for in-memory file system
-- **Roku volumes**: `pkg:/`, `tmp:/`, `cachefs:/`, `ext1:/` (external) simulated as mount points
-- Zip packages auto-extracted to `pkg:/` on execution
-
-### Testing Patterns
-- **Jest** tests in `test/` mirror source structure
-- **End-to-end tests** in `test/e2e/` run full BrightScript files
-- **Simulator tests** in `test/simulator/` contain `.brs` files exercising runtime features
-- Use `execute(source)` helper from interpreter tests to run BrightScript code snippets
-
-## Common Tasks
-
-### Adding a New BrightScript Component
-1. Create file in `src/core/brsTypes/components/Ro<ComponentName>.ts`
-2. Extend `BrsComponent`, implement required interfaces (e.g., `IfArray`, `IfAssociativeArray`)
-3. Register in `src/core/stdlib/CreateObject.ts` factory function
-4. Add tests in `test/brsTypes/components/`
-
-### Adding a New SceneGraph Node
-1. Create file in `src/extensions/scenegraph/nodes/<NodeName>.ts`
-2. Extend appropriate base (`Node`, `Group`, `ArrayGrid`, etc.)
-3. Define `defaultFields` with all Roku-documented fields
-4. Implement `renderNode()` for rendering if visual node
-5. Register in `src/extensions/scenegraph/factory/NodeFactory.ts` node registry
-6. Export from `src/extensions/scenegraph/nodes/index.ts`
-
-### Working with the Debugger
-- **Developer vs production mode**: The Micro Debugger and all debug instrumentation are gated behind `debugOnCrash` (CLI `--debug` / API `options.debugOnCrash`), via the `BrsDevice.tracking` flag. Production is the default. Encrypted `.bpk` packages always run in production mode.
-- **Micro Debugger** (developer mode only): Set breakpoints with the `STOP` statement in BrightScript. In production mode the debugger is disabled, so `STOP` exits the app (`EXIT_BRIGHTSCRIPT_STOP`) and break requests are ignored.
-- **Debug API**: Call `debug("break")` from host to pause interpreter
-- **Console integration**: `print` statements route through `BrsDevice.stdout`
-- **Gating new instrumentation**: counters/registries that exist only for debug commands (`bscs`, `sgnodes`, `stats`, the `r2d2-bitmaps` texture registry) must be gated behind `BrsDevice.tracking` so they add no overhead in production.
-
-## Important Constraints
-
-- **No `eval()`**: BrightScript's `Eval()` not implemented (documented in `limitations.md`)
-- **Task threads limited to 10** per app (see `limitations.md`)
-- **`m.global` is shared**: Changes to `m.global` are now properly shared across Task threads
-- **Video/Audio lifecycle**: Must call `.stop()` before destroying player objects or playback continues
-- **CORS**: Web apps need CORS proxy for cross-origin `roUrlTransfer` calls (configurable in `DeviceInfo.corsProxy`)
-- **System fields protection**: Cannot remove system fields or use `setFields()` to add new fields (use `addFields()` instead)
-- **Field type validation**: Field assignment now validates types (e.g., `intarray`, `floatarray`) and converts values appropriately
-
-## Key Files to Reference
-
-- **Core entry**: `src/core/index.ts` - Interpreter initialization and main execution loop
-- **API surface**: `src/api/index.ts` - Browser package's public API (see `docs/engine-api.md`)
-- **Type definitions**: `src/core/brsTypes/BrsType.ts` - Foundation of type system
-- **Device state**: `src/core/device/BrsDevice.ts` - Registry, file system, device info singleton
-- **Manifest parsing**: `src/core/common.ts` - `parseManifest()` and device info types
-- **Extension contract**: `src/core/extensions.ts` - `BrsExtension` interface and `registerExtension()`
-- **SceneGraph entry**: `src/extensions/scenegraph/index.ts` - `BrightScriptExtension` class, exports all SG symbols
-- **SGRoot singleton**: `src/extensions/scenegraph/SGRoot.ts` - Active scene, `m.global`, focus, threads, timers
-- **SceneGraph bootstrap**: `src/extensions/scenegraph/parser/ComponentDefinition.ts` - Component XML parsing and node tree building
-- **Node factory**: `src/extensions/scenegraph/factory/NodeFactory.ts` - `createNode()` registry for all built-in node types
-- **Serializer**: `src/extensions/scenegraph/factory/Serializer.ts` - Node serialization for cross-thread messaging
-- **Lexer/Parser module**: `src/core/LexerParser.ts` - Separated lexer and parser functions for reusability
-- **Field system**: `src/extensions/scenegraph/nodes/Field.ts` - Field model, type validation, and conversion logic
-
-## Project-Specific Quirks
-
-- **`mod` keyword conflict**: Cannot use `mod` as variable name (BrightScript operator vs identifier)
-- **Memory info**: `roAppMemoryMonitor` only accurate in Node.js and Chromium (uses non-standard `performance.memory`)
-- **Prettier config**: Use 4-space tabs, 120 char line width (see `package.json`)
-- **Branch naming**: Current development branch is `master`
-- **Platform detection**: Use `BrsDevice.deviceInfo.customFeatures` array to check host-defined capabilities (e.g., `"touch_controls"`)
-- **Virtual File System**: Uses `@zenfs/core` with case-insensitive file system; writeable volumes preserve original case
-- **Type coercion**: Functions automatically convert between Integer and Float types when needed
-- **Typed returns**: User functions with typed returns automatically return `0` if no return statement is hit
-- **SceneGraph CLI flag**: The Node.js CLI loads the SceneGraph extension by default; pass `--no-sg` to skip it
-- **Node.js library**: Manually register SceneGraph extension with `registerExtension(() => new BrightScriptExtension())` from `brs-scenegraph`
+- **ALWAYS run `npm run lint` and `npm run prettier:write` before every commit.** Both must pass with no errors; fix any issues they surface before committing.
+- **Conditional compilation:** `/// #if BROWSER` … `/// #endif` blocks (via `ifdef-loader`) tailor the same `src/` to browser vs. node builds. Keep platform-specific imports inside these guards.
+- **ESLint** uses `@typescript-eslint` with the `prettier` config and type-aware rules (`await-thenable`, `promise-function-async`, `no-for-in-array`, `prefer-for-of`, `eqeqeq: smart`). `import/no-extraneous-dependencies` is enforced. Run `npm run lint` and `npm run prettier:write` before committing.
+- The SceneGraph extension imports the engine as the package `"brs-engine"`, never via relative `../core` paths — it is compiled as a separate bundle and bound to the host engine at load time.
+- A detailed `.github/copilot-instructions.md` exists in this repo with additional contributor guidance worth consulting.
 
 ## Documentation
 
-- **Limitations**: See `docs/limitations.md` for unsupported features and known issues
-- **Customization**: See `docs/customization.md` for DeviceInfo config and manifest options
-- **Extensions**: See `docs/extensions.md` for details on the extension system and `brs-scenegraph` integration
-- **Contributing**: See `docs/contributing.md` for PR guidelines
+`docs/` is the source of truth for usage: `build-from-source.md`, `integrating.md`, `engine-api.md`, `customization.md`, `run-as-cli.md`, `using-node-library.md`, `extensions.md`, `remote-control.md`, `limitations.md`, `contributing.md`.
+
+## Roku reference documentation (`external/dev-doc` submodule)
+
+Roku's official, open-sourced developer docs ([rokudev/dev-doc](https://github.com/rokudev/dev-doc), branch `v2.0`) are vendored as a **git submodule** at `external/dev-doc`. The BrightScript + SceneGraph reference lives under **`external/dev-doc/docs/REFERENCES/`** (Markdown with YAML frontmatter). **This is the authoritative spec** for what each component, interface, event, node, and global function should do — consult it whenever implementing, fixing, or verifying a missing/incomplete feature so the simulated behavior matches a real Roku device.
+
+> The submodule is pinned to a specific commit and only populated after `git submodule update --init external/dev-doc` (a plain checkout leaves the folder empty). It is **reference only** — never make build/runtime code depend on it. Update it with `git -C external/dev-doc pull origin v2.0`, then commit the new pointer.
+
+Layout under `external/dev-doc/docs/REFERENCES/` and how it maps to the source tree:
+
+| Reference path | Documents | Implement / verify in |
+| --- | --- | --- |
+| `brightscript/components/roXxx.md` | `roXxx` component: how it's created, which interfaces/events it supports | `src/core/brsTypes/components/RoXxx.ts` (registered in `BrsObjects.ts`) |
+| `brightscript/interfaces/ifXxx.md` | An interface's method signatures, args, return types, defaults | methods on the component, grouped under the `ifXxx` key in `registerMethods` (see "Interfaces are method grouping" above) — **not** a standalone type |
+| `brightscript/events/roXxxEvent.md` | Event objects returned via `roMessagePort` | the matching event component |
+| `brightscript/language/*.md` | Language spec: statements, expressions/types, error handling, conditional compilation, format strings, reserved words, and the global Math/String/Utility/Runtime functions | `src/core/lexer/`, `src/core/parser/`, `src/core/preprocessor/`, `src/core/stdlib/` |
+| `scenegraph/**/<node>.md` | SceneGraph node fields (name/type/default/access) and behavior, grouped by category (renderable, layout, list-and-grid, dialog, animation, media, …) | `src/extensions/scenegraph/nodes/<Node>.ts` (see "Creating a new Node type") |
+| `scenegraph/xml-elements/*.md`, `scenegraph/component-functions/*.md` | Component XML (`<component>`/`<interface>`/`<children>`/`<script>`) and `init`/`onKeyEvent` | `src/extensions/scenegraph/parser/`, `factory/` |
+| `deprecated-apis.md` | APIs Roku has deprecated — check before adding/relying on one | n/a (informational) |
+
+When implementing a node or component, match the documented **field names, types, defaults, and access permissions** exactly (e.g. a node's `defaultFields` should mirror the reference's Fields table). Use the `brs-reference` skill to look things up.
 
 ---
 > Source: [lvcabral/brs-engine](https://github.com/lvcabral/brs-engine) — distributed by [TomeVault](https://tomevault.io).
-<!-- tomevault:4.0:agents_md:2026-07-24 -->
+<!-- tomevault:4.0:agents_md:2026-08-09 -->
