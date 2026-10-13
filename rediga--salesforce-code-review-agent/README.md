@@ -1,0 +1,32 @@
+# AI instruction files for Salesforce-Code-Review-Agent
+
+> Sourced from [rediga/Salesforce-Code-Review-Agent](https://github.com/rediga/Salesforce-Code-Review-Agent), graded against the public Tome Standard and kept consistent across every major platform by [TomeVault](https://tomevault.io)
+
+## Codex Config
+
+The `AGENTS.md` file in this directory is the project config converted for Codex.
+Original source: `.cursor/rules/*.mdc` in [rediga/Salesforce-Code-Review-Agent](https://github.com/rediga/Salesforce-Code-Review-Agent).
+
+## Also available for
+
+- **Claude Code** — `CLAUDE.md`
+- **Codex** — `AGENTS.md`
+- **GitHub Copilot** — `copilot-instructions.md`
+- **Gemini CLI** — `GEMINI.md`
+- **Windsurf** — `project-config.md`
+
+## Bundled Skills (1)
+
+- [Salesforce-Code-Review-Agent](https://github.com/rediga/Salesforce-Code-Review-Agent/tree/main/.cursor/skills/salesforce-code-review/SKILL.md)
+
+From [rediga/Salesforce-Code-Review-Agent](https://github.com/rediga/Salesforce-Code-Review-Agent) — a repo with 0+ stars on GitHub.
+
+---
+
+Install this config instantly:
+```
+npx tomevault install rediga/Salesforce-Code-Review-Agent
+```
+Source: [github.com/rediga/Salesforce-Code-Review-Agent](https://github.com/rediga/Salesforce-Code-Review-Agent).
+
+<!-- genome:a-i-s -->
